@@ -386,14 +386,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
     }
 
     @Override
     public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroSalida, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -402,7 +402,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstado(registroSalida, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+        cambiarEstadoTrazabilidad(registroSalida, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 
@@ -515,7 +515,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public void cambiarEstado(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void cambiarEstadoTrazabilidad(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
         Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
         q.setParameter("idRegistro", registroSalida.getId());

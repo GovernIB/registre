@@ -116,7 +116,7 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
             // AnexoController.BASE_IFRAME_HEIGHT + scanWebModuleEjb.getMinHeight(request, tipusScan, registroID));
       } else {
         model.addAttribute("iframe_anexos_height",
-            AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
+                AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
       }
     }
 

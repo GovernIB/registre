@@ -324,6 +324,13 @@ public class SirBean implements SirLocal{
             oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
             oficioRemisionEjb.merge(oficioRemision);
 
+            // Marcamos el Registro original como ACEPTADO
+            if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+            }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+            }
+
         }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
 
             log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
@@ -499,6 +506,11 @@ public class SirBean implements SirLocal{
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
+            // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
+            registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
+            registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+
             // Actualizamos el registro
             registroEntrada = registroEntradaEjb.merge(registroEntrada);
 
@@ -564,6 +576,11 @@ public class SirBean implements SirLocal{
             registroDetalle.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+
+            // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
+            registroDetalle.setOficinaOrigen(registroSalida.getOficina());
+            registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+            registroDetalle.setFechaOrigen(registroSalida.getFecha());
 
             // Actualizamos el registro
             registroSalida = registroSalidaEjb.merge(registroSalida);

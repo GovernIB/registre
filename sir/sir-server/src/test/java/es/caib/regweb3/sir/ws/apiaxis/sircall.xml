@@ -10,9 +10,9 @@
         <Decodificacion_Unidad_Tramitacion_Origen />
     </De_Origen_o_Remitente>
     <De_Destino>
-        <Codigo_Entidad_Registral_Destino>O00017125</Codigo_Entidad_Registral_Destino>
-        <Decodificacion_Entidad_Registral_Destino/>
-        <Codigo_Unidad_Tramitacion_Destino/>
+        <Codigo_Entidad_Registral_Destino>O00015974</Codigo_Entidad_Registral_Destino>
+        <Decodificacion_Entidad_Registral_Destino>Oficina Principal Salut</Decodificacion_Entidad_Registral_Destino>
+        <Codigo_Unidad_Tramitacion_Destino>A04018961</Codigo_Unidad_Tramitacion_Destino>
         <Decodificacion_Unidad_Tramitacion_Destino/>
     </De_Destino>
     <De_Interesado>

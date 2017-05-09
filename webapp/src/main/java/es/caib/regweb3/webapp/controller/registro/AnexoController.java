@@ -1,12 +1,10 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -135,7 +133,7 @@ public class AnexoController extends BaseController {
       anexoForm.setOficioRemisionSir(isOficioRemisionSir);
       model.addAttribute("anexoForm" ,anexoForm);
       
-      loadCommonAttributes(request, model, registroID);
+     // loadCommonAttributes(request, model, registroID);
       return "registro/formularioAnexo";
     }
 
@@ -153,7 +151,7 @@ public class AnexoController extends BaseController {
 
 
 
-    protected void loadCommonAttributes(HttpServletRequest request, Model model,
+    /*protected void loadCommonAttributes(HttpServletRequest request, Model model,
         Long registroID) throws Exception {
           model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
           model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
@@ -190,7 +188,7 @@ public class AnexoController extends BaseController {
           }
       
     }
-
+*/
     
     
 
@@ -299,7 +297,7 @@ public class AnexoController extends BaseController {
       }
 
       // Errors
-      loadCommonAttributes(request, model, anexoForm.getRegistroID());
+      loadCommonAttributes(request, model);
 
       return "registro/formularioAnexo2";
      
@@ -355,7 +353,7 @@ public class AnexoController extends BaseController {
 
       model.addAttribute("anexoForm", anexoForm);
 
-      loadCommonAttributes(request, model, scanWebID);
+     // loadCommonAttributes(request, model, scanWebID);
 
       return "registro/formularioAnexo";
     
@@ -373,7 +371,7 @@ public class AnexoController extends BaseController {
 
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
         if(anexoForm.getOficioRemisionSir()){
-            variableReturn = validarLimitacionesSIRAnexos(anexoForm, request, model);
+           // variableReturn = validarLimitacionesSIRAnexos(anexoForm, request, model);
         }
         if(!variableReturn.isEmpty()){
             return variableReturn;
@@ -405,7 +403,7 @@ public class AnexoController extends BaseController {
         }
 
       
-      loadCommonAttributes(request, model, anexoForm.getRegistroID());
+     // loadCommonAttributes(request, model, anexoForm.getRegistroID());
       return "registro/formularioAnexo";
 
       
@@ -913,7 +911,7 @@ public class AnexoController extends BaseController {
      * @throws Exception
      * @throws I18NException
      */
-    public String validarLimitacionesSIRAnexos(AnexoForm anexoForm, HttpServletRequest request, Model model) throws Exception, I18NException{
+/*    public String validarLimitacionesSIRAnexos(AnexoForm anexoForm, HttpServletRequest request, Model model) throws Exception, I18NException{
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
@@ -943,7 +941,7 @@ public class AnexoController extends BaseController {
             return "registro/formularioAnexo";
         }
         return "";
-    }
+    }*/
 
     
     
