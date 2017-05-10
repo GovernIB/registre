@@ -173,7 +173,7 @@
                                            code="anexo.archivo"/></form:label>&nbsp;
                                 </div>
                                 <div class="col-xs-8">
-                                    <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
+                                    <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
                                             ${anexoForm.documentoCustody.name}
                                     </a>
                                 </div>
@@ -191,7 +191,7 @@
                                            code="anexo.firma"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
+                                    <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
                                             ${anexoForm.signatureCustody.name}
                                     </a>
                                 </div>

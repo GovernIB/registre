@@ -684,7 +684,6 @@ public class BaseController {
         if (docSize != 0) {
             tamanyoTotalAnexos += docSize;
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                log.info("XYZ ENTRO EN DOC FILE ERROR TAMANO");
                 String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
                 String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
                 result.rejectValue("documentoFile", "tamanymaxtotalsuperat", I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos) );
@@ -692,7 +691,6 @@ public class BaseController {
         } else {
             tamanyoTotalAnexos += firmaSize;
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                log.info("XYZ ENTRO EN DOC FILE ERROR TAMANO");
                 String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
                 String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
                 result.rejectValue("firmaFile", "tamanymaxtotalsuperat", I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos) );
@@ -703,12 +701,10 @@ public class BaseController {
         //Validamos las extensiones del documento y la firma
         String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
         if (!extensionesPermitidas.contains(docExtension)) {
-            log.info(" XYZ ENTRO EN DOC FILE ERROR EXTENSION");
             result.rejectValue("documentoFile", "formatonopermitido", I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
         }
 
         if (!extensionesPermitidas.contains(firmaExtension)) {
-            log.info("XYZ ENTRO EN FIRMA FILE ERROR EXTENSION");
             result.rejectValue("firmaFile", "formatonopermitido", I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
 
         }

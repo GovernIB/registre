@@ -61,6 +61,7 @@
                                  <th><dt><spring:message code="anexo.titulo"/></dt></th>
                                  <th><spring:message code="anexo.tipoDocumento"/></th>
                                  <th class="center"><spring:message code="anexo.tamano"/></th>
+                                 <th class="center">Doc</th>
                                  <th class="center">Firma</th>
                                  <th class="center"><spring:message code="regweb.acciones"/></th>
                              </tr>
@@ -88,37 +89,35 @@
                                                  ${tamanyAnexo } KB
                                              <c:set var="totalA" value="${totalA + tamanyAnexo }" />
                                          </td>
-                                         <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
-                                            <td class="center"><span class="label label-success">Si</span></td>
+
+
+                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED}">
+                                             <td><a class="btn btn-success btn-default btn-sm"
+                                                    href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                         class="fa fa-download"></span></a></td>
+                                             <td><a class="btn btn-info btn-default btn-sm"
+                                                    href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                         class="fa fa-download"></span></a></td>
                                          </c:if>
                                          <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
-                                             <td class="center"><span class="label label-danger">No</span></td>
+                                             <td><a class="btn btn-success btn-default btn-sm"
+                                                    href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                     class="fa fa-download"></span></a></td>
+                                             <td></td>
+                                         </c:if>
+                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
+                                             <td><a class="btn btn-success btn-default btn-sm"
+                                                    href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                     class="fa fa-download"></span></a></td>
+                                             <td></td>
                                          </c:if>
 
-                                         <td class="center">
-                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED}">
-                                                 <a class="btn btn-success btn-default btn-sm"
-                                                    href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
-                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                         class="fa fa-download"></span></a>
-                                                 <a class="btn btn-info btn-default btn-sm"
-                                                    href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
-                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                         class="fa fa-download"></span></a>
-                                             </c:if>
 
-                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_SINFIRMA}">
-                                                 <a class="btn btn-success btn-default btn-sm"
-                                                    href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
-                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                         class="fa fa-download"></span></a>
-                                             </c:if>
-                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                                 <a class="btn btn-success btn-default btn-sm"
-                                                    href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
-                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                         class="fa fa-download"></span></a>
-                                             </c:if>
+                                         <td class="center">
                                              <c:if test="${!anexo.justificante}">
                                                  <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
                                                      <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"  onclick="editarAnexoFull('${anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')" title="Editar"><span class="fa fa-pencil"></span></a>
