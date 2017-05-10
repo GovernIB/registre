@@ -355,7 +355,7 @@ public class AnexoController extends BaseController {
 
      // loadCommonAttributes(request, model, scanWebID);
 
-      return "registro/formularioAnexo";
+      return "registro/formularioAnexo2";
     
     }
     
@@ -763,6 +763,7 @@ public class AnexoController extends BaseController {
 
     }
 
+
     /**
     *  Función que obtiene los datos de un archivo para mostrarlo
      *
@@ -831,6 +832,81 @@ public class AnexoController extends BaseController {
              e.printStackTrace();
          }
     }
+
+    /**
+    * Función que nos permite mostrar el contenido de un documentCustody en session
+    */
+    @RequestMapping(value = "/descargarDocumentoCustody", method = RequestMethod.GET)
+    public void  descargarDocumentoCustody( HttpServletRequest request,
+                       HttpServletResponse response)  throws Exception, I18NException {
+
+        HttpSession session = request.getSession();
+        byte[] data = (byte[])session.getAttribute("documentCustodyData");
+        String contentType = (String)session.getAttribute("documentCustodyMime");
+        String filename= (String)session.getAttribute("documentCustodyName");
+
+        fullDownload( filename, contentType, data, response);
+    }
+
+
+    /**
+     * Función que nos permite mostrar el contenido de un signatureCustody en session
+     */
+    @RequestMapping(value = "/descargarSignatureCustody", method = RequestMethod.GET)
+    public void  descargarSignatureCustody(HttpServletRequest request,
+                       HttpServletResponse response)  throws Exception, I18NException {
+
+        HttpSession session = request.getSession();
+        byte[] data = (byte[])session.getAttribute("signatureCustodyData");
+        String contentType = (String)session.getAttribute("signatureCustodyMime");
+        String filename= (String)session.getAttribute("signatureCustodyName");
+        fullDownload( filename, contentType, data, response);
+    }
+
+    public void fullDownload(String filename, String contentType, byte[] data,
+                             HttpServletResponse response)  {
+
+        //FileInputStream input = null;
+
+
+        OutputStream output = null;
+        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+
+        try {
+                if (contentType == null) {
+                    try {
+                        File tmp = File.createTempFile("regweb_annex_", filename);
+                        FileOutputStream fos = new FileOutputStream(tmp);
+                        fos.write(data);
+                        fos.flush();
+                        fos.close();
+                        contentType = mimeTypesMap.getContentType(tmp);
+                        if (!tmp.delete()) {
+                            tmp.deleteOnExit();
+                        }
+                    } catch(Throwable th) {
+                        log.error("Error intentant obtenir el tipus MIME: " + th.getMessage() , th);
+                        contentType = "application/octet-stream";
+                    }
+                }
+                response.setContentType(contentType);
+                response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                response.setContentLength((int) data.length);
+
+                output = response.getOutputStream();
+                output.write(data);
+
+                output.flush();
+
+
+        } catch (NumberFormatException e) {
+            // TODO QUE FER
+            log.info(e);
+        }  catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Obtiene los anexos completos del registro indicado
