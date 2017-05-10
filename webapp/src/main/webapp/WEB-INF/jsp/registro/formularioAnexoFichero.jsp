@@ -141,9 +141,6 @@
             autofirma = 0;
         }
 
-        //Quitamos errores
-        //XYZ ZZZ quitarErrorAnexo('#firmaFile.errors');
-
 
         switch (autofirma) {
             case '0': <%--doc sense firma --%>
