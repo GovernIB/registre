@@ -735,8 +735,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setExpone(registroDetalle.getExpone());
         registroSir.setSolicita(registroDetalle.getSolicita());
 
-        // Segmento De_Interesados
-        registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
+        // Segmento De_Interesados: Irá siempre vacio, porque el destinatario va informado en el segmento DeDestino
+        //registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
 
         // Segmento De_Anexos
         registroSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), registroSir.getIdentificadorIntercambio()));
