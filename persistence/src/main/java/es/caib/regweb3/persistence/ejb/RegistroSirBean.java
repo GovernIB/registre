@@ -579,7 +579,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         } catch (Exception e) {
                             log.info("Error al crear el Anexo en el sistema de archivos", e);
                             am.processError();
-                            throw new ServiceException(Errores.ERROR_0045,e);
+                            throw new ServiceException(Errores.ERROR_0065,e);
                         }
 
                         anexo.setObservaciones(de_Anexo.getObservaciones());

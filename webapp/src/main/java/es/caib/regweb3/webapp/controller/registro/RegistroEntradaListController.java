@@ -13,10 +13,12 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
+import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.utils.Metadata;
 import org.fundaciobit.plugins.utils.MetadataConstants;
@@ -344,6 +346,49 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
+    }
+
+    @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.GET)
+    public String reenviarRegistroSir(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+
+        model.addAttribute("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
+        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
+        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
+        model.addAttribute("registro", registroEntradaEjb.findById(idRegistro));
+        model.addAttribute("reenviarForm", new ReenviarForm());
+
+        return "registro/reenvioSir";
+    }
+
+    /**
+     * Reenvia un {@link RegistroSir}
+     */
+    @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.POST)
+    public String reenviarRegistroSir(@PathVariable Long idRegistro, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
+            throws Exception, I18NException, I18NValidationException {
+
+        log.info("Oficina Destino reenvio: " + reenviarForm.getCodigoOficina());
+
+        //Montamos la oficina de reenvio seleccionada por el usuario
+        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
+        Oficina oficinaActiva = getOficinaActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        // Reenvia el RegistroSir
+        try{
+            if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
+                //Reenviamos
+                sirEjb.reenviarRegistro(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO, idRegistro, oficinaReenvio, oficinaActiva,usuarioEntidad,reenviarForm.getObservaciones());
+            }
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
+
+        }catch (Exception e){
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
     }
 
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)

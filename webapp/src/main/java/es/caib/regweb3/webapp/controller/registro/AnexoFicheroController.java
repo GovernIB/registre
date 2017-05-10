@@ -5,11 +5,7 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
-import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -121,45 +117,8 @@ public class AnexoFicheroController extends BaseController {
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
         boolean isSIR = anexoForm.getOficioRemisionSir();
 
-/* XYZ ZZZ
+
         if(isSIR){
-            log.info("Entramos en OficioSir");
-            variableReturn = validarLimitacionesSIRAnexos(anexoForm, request);
-        }
-        if(!variableReturn.isEmpty()){
-            log.info("Entramos en OficioSir variable return");
-            return variableReturn;
-        }
-        
-
-        try {
-
-            manageDocumentCustodySignatureCustody(request, anexoForm);
-
-            Entidad entidad = getEntidadActiva(request);
-            signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                isSIR, I18NUtils.getLocale());
-            
-            
-            log.info(" XYZ ZZZ anexoForm.getDocumentoCustody() ======> "  + anexoForm.getDocumentoCustody());
-            log.info(" XYZ ZZZ anexoForm.getSignatureCustody() ======> "  + anexoForm.getSignatureCustody());
-            
-            
-
-            loadCommonAttributes(request, model);
-            log.info("llego a aqui todo ha ido bien");
-            return "registro/formularioAnexo2";
-        } catch(I18NException i18n) {
-          String msg = I18NUtils.tradueix(i18n.getTraduccio());
-          log.error(msg, i18n);
-          Mensaje.saveMessageError(request, msg);
-
-        } catch(Exception e) {
-            log.error(e.getMessage(), e);
-            Mensaje.saveMessageError(request, e.getMessage());
-        }
-*/
-        //if(isSIR){
             long docSize = -1;
             String docExtension = "";
             if(anexoForm.getDocumentoFile()!= null){
@@ -175,7 +134,7 @@ public class AnexoFicheroController extends BaseController {
             }
             validarLimitacionesSIRAnexos(anexoForm.getRegistroID(),anexoForm.tipoRegistro, docSize,firmaSize, docExtension, firmaExtension, request, result);
 
-         //}
+         }
          if(result.hasErrors()){
              return "registro/formularioAnexoFichero";
          } else {
@@ -184,13 +143,26 @@ public class AnexoFicheroController extends BaseController {
                  manageDocumentCustodySignatureCustody(request, anexoForm);
 
                  Entidad entidad = getEntidadActiva(request);
-                 signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                     isSIR, I18NUtils.getLocale());
+                // signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
+                  //   isSIR, I18NUtils.getLocale());
                  
                  
                  log.info(" XYZ ZZZ anexoForm.getDocumentoCustody() ======> "  + anexoForm.getDocumentoCustody());
                  log.info(" XYZ ZZZ anexoForm.getSignatureCustody() ======> "  + anexoForm.getSignatureCustody());
-                 
+
+                 //Guardamos en session el documentCustody y el sigantureCustody para después descargarlos en la siguiente página
+                 HttpSession session = request.getSession();
+                 if(anexoForm.getDocumentoCustody()!=null) {
+                     session.setAttribute("documentCustodyData", anexoForm.getDocumentoCustody().getData());
+                     session.setAttribute("documentCustodyMime", anexoForm.getDocumentoCustody().getMime());
+                     session.setAttribute("documentCustodyName", anexoForm.getDocumentoCustody().getName());
+                 }
+                 if(anexoForm.getSignatureCustody()!= null) {
+                     session.setAttribute("signatureCustodyData", anexoForm.getSignatureCustody().getData());
+                     session.setAttribute("signatureCustodyMime", anexoForm.getSignatureCustody().getMime());
+                     session.setAttribute("signatureCustodyName", anexoForm.getSignatureCustody().getName());
+                 }
+
                  loadCommonAttributes(request, model);
                  return "registro/formularioAnexo2";
              } catch (I18NException i18n) {
