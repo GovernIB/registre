@@ -35,7 +35,6 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -520,29 +519,18 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 // Generam la Custòdia per tenir el CSV
                 Map<String,Object> custodyParameters = new HashMap<String, Object>();
                 custodyParameters.put("registre", registroSalida);
-                IDocumentCustodyPlugin plugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                String custodyID = plugin.reserveCustodyID(custodyParameters);
-                Metadata mcsv = plugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+                IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
+                Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
                 String csv = "";
                 if(mcsv != null){
                     csv = mcsv.getValue();
                 }
-                String url = plugin.getValidationUrl(custodyID, custodyParameters);
-                String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
-
-                // Obtenim el missatge d'Estampació de l'Entitat a les Propietats Globals
-                //String estampacion = PropiedadGlobalUtil.getMensajeEstampacionJustificante(idEntidad);
-                String estampacion = "Este es un mensaje de estampación {0} {1} {2}"; //TODO obtnerlo del plugin Justificante
-                // Si no existeix la propietat global, dóna error
-                if (estampacion == null || estampacion.trim().length() <= 0) {
-                    log.info("No hi ha cap propietat definint el misstge d'estampació del justificant");
-                    return null;
-                }
-                String urlVerificacio = url + specialValue;
-                String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
+                String url = documentCustodyPlugin.getValidationUrl(custodyID, custodyParameters);
+                String specialValue = documentCustodyPlugin.getSpecialValue(custodyID,custodyParameters);
 
                 // Obtenim el ByteArray per generar el pdf
-                byte[] baos = justificantePlugin.generarJustificante(registroSalida, estampat, urlVerificacio);
+                byte[] baos = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv);
 
                 // Cream l'annex justificant i el firmam
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,

@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -13,16 +12,11 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signature.api.*;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
-import org.fundaciobit.plugins.validatesignature.api.IValidateSignaturePlugin;
-import org.fundaciobit.plugins.validatesignature.api.SignatureRequestedInformation;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureRequest;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureResponse;
+import org.fundaciobit.plugins.validatesignature.api.*;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-
 import java.io.File;
 import java.util.Locale;
 
@@ -56,9 +50,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
 
         String reason = "FIRMA_JUSTIFICANT"; // Hem de canviar raó justificant????
-        
-        
-        final String signType = FileInfoSignature.SIGN_TYPE_CADES;
+
+
+        final String signType = FileInfoSignature.SIGN_TYPE_PADES;
         final int signMode = FileInfoSignature.SIGN_MODE_EXPLICIT;
         final boolean epes = true;
         

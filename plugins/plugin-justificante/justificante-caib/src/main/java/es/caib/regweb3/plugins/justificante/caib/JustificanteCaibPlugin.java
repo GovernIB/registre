@@ -2,23 +2,21 @@ package es.caib.regweb3.plugins.justificante.caib;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 import org.fundaciobit.plugins.utils.Base64;
 
 import javax.imageio.ImageIO;
-
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -58,8 +56,13 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
 
+    protected String getPropertyBase() {
+        return "mensaje.";
+    }
+
+
     @Override
-    public byte[] generarJustificante(RegistroEntrada registroEntrada, String estampat, String urlVerificacio) throws Exception{
+    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv) throws Exception{
 
         // Define idioma Español para el justificante
         Locale locale = new Locale("es");
@@ -99,7 +102,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 numeroRegistroFormateado, tipoDocumentacionFisica);
 
         // CSV Y TEXTO VERTICAL
-        csvRegistre(locale, document, dataActual, numeroRegistroFormateado, writer, estampat, urlVerificacio);
+        csvRegistre(document, dataActual, numeroRegistroFormateado, writer, url, specialValue, csv);
 
         // INTERESADOS
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
@@ -119,8 +122,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroSalida registroSalida,
-        String estampat, String urlVerificacio) throws Exception{
+    public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv) throws Exception{
 
         // Define idioma Español para el justificante
         Locale locale = new Locale("es");
@@ -156,7 +158,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 numeroRegistroFormateado, tipoDocumentacionFisica);
 
         // CSV Y TEXTO VERTICAL
-        csvRegistre(locale, document, dataActual, numeroRegistroFormateado, writer, estampat, urlVerificacio);
+        csvRegistre(document, dataActual, numeroRegistroFormateado, writer, url, specialValue, csv);
 
         // INTERESADOS
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
@@ -293,7 +295,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Pie de anexo
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
-            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + tradueixMissatge(locale,"justificante.mensaje.declaracion"), font8));
+            // Obtenim el missatge de Declaración de les propietats del Plugin
+            String declaracion = this.getProperty(this.getPropertyBase() + "declaracion");
+            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, font8));
             cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
             cellPeuAnnexe.setBorder(Rectangle.TOP);
@@ -307,7 +311,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Paràgraf Llei
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
-            PdfPCell cellLlei = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.ley"), font8));
+            // Obtenim el missatge de Ley de les propietats del Plugin
+            String ley = this.getProperty(this.getPropertyBase() + "ley");
+            PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
             cellLlei.setBackgroundColor(BaseColor.WHITE);
             cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
             cellLlei.setBorderColor(BaseColor.WHITE);
@@ -318,7 +324,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Paràgraf Plaços
             PdfPTable titolPlazos = new PdfPTable(1);
             titolPlazos.setWidthPercentage(100);
-            PdfPCell cellPlazos = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.plazos"), font8));
+            // Obtenim el missatge de Validez de les propietats del Plugin
+            String validez = this.getProperty(this.getPropertyBase() + "validez");
+            PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, font8));
             cellPlazos.setBackgroundColor(BaseColor.WHITE);
             cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
             cellPlazos.setBorderColor(BaseColor.WHITE);
@@ -400,7 +408,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 // Canal Notificacio
                 taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
                 if(interesado.getCanal() != null) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal()), font8negre));
+                    String canalNotif = tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal());
+                    taulaInteresado.addCell(new Paragraph(canalNotif, font8negre));
                 } else{ taulaInteresado.addCell(""); }
                 // Provincia
                 taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8gris));
@@ -478,7 +487,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                             // Canal Notificacio
                             taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
                             if(representante.getCanal() != null) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal()), font8negre));
+                                String canalNotifRep = tradueixMissatge(locale,"canalNotificacion." + representante.getCanal());
+                                taulaRepresentant.addCell(new Paragraph(canalNotifRep, font8negre));
                             } else{ taulaRepresentant.addCell(""); }
                             // Provincia
                             taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8gris));
@@ -601,13 +611,17 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     // Añade la información del pie, CSV, etc
-    protected void csvRegistre(Locale locale, Document document, String dataActual, String numeroRegistroFormateado,
-                               PdfWriter writer, String estampat, String urlVerificacio) throws Exception {
+    protected void csvRegistre(Document document, String dataActual, String numeroRegistroFormateado,
+                               PdfWriter writer, String url, String specialValue, String csv) throws Exception {
 
 //        Font font9Underline = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.UNDERLINE);
 //        Font font9 = FontFactory.getFont(FontFactory.HELVETICA, 9);
 //        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8);
         Font font7 = FontFactory.getFont(FontFactory.HELVETICA, 7);
+
+        // Obtenim el missatge d'Estampació de les propietats del Plugin
+        String estampacion = this.getPropertyRequired(this.getPropertyBase() + "estampacion");
+        String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 /*
         // Añadimos la separación
         PdfPTable csv = new PdfPTable(1);
