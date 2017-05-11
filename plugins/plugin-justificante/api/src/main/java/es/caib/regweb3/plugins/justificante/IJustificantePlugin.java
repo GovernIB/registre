@@ -17,22 +17,24 @@ public interface IJustificantePlugin extends IPlugin {
     /**
      * Metodo que genera el justificante de un registro de entrada.
      * @param registroEntrada registro de entrada del que se genera el justificante
-     * @param estampat
-     * @param urlVerificacio
+     * @param url
+     * @param specialValue
+     * @param csv
      * @return
      * @throws Exception
      */
 
-    byte[] generarJustificante(RegistroEntrada registroEntrada, String estampat, String urlVerificacio) throws Exception;
+    byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv) throws Exception;
 
     /**
      * Metodo que genera el justificante de un registro de entrada.
      * @param registroSalida registro de entrada del que se genera el justificante
-     * @param estampat
-     * @param urlVerificacio
+     * @param url
+     * @param specialValue
+     * @param csv
      * @return
      * @throws Exception
      */
-    byte[] generarJustificante(RegistroSalida registroSalida, String estampat, String urlVerificacio) throws Exception;
+    byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv) throws Exception;
 
 }

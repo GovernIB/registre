@@ -25,7 +25,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -492,14 +491,11 @@ public class SirBean implements SirLocal{
                     }
                     String url = plugin.getValidationUrl(custodyID, custodyParameters);
                     String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
-
-                    // TODO aixpo s'ha d'obtenir d'una property
-                    String urlVerificacio = url + specialValue;
-                    String estampat = MessageFormat.format("Este es un mensaje de estampación {0} {1}", url, specialValue, csv);
+//                    String urlVerificacio = url + specialValue;
 
                     // Generamos el pdf del Justificante
 
-                    byte[] data = justificantePlugin.generarJustificante(registroEntrada, estampat, urlVerificacio);
+                    byte[] data = justificantePlugin.generarJustificante(registroEntrada, url, specialValue, csv);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
                     AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
@@ -564,13 +560,9 @@ public class SirBean implements SirLocal{
                     String url = plugin.getValidationUrl(custodyID, custodyParameters);
                     String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
 
-                    // TODO aixpo s'ha d'obtenir d'una property
-                    String urlVerificacio = url + specialValue;
-                    String estampat = MessageFormat.format("Este es un mensaje de estampación {0} {1}", url, specialValue, csv);
-
                     // Generamos el pdf del Justificante
 
-                    byte[] data = justificantePlugin.generarJustificante(registroSalida, estampat, urlVerificacio);
+                    byte[] data = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv);
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
                     AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
