@@ -671,7 +671,9 @@ public class BaseController {
     }
 
 
-    public void validarLimitacionesSIRAnexos(Long registroID, String tipoRegistro,  long docSize, long firmaSize, String docExtension, String firmaExtension,   HttpServletRequest request, BindingResult result) throws Exception, I18NException{
+    public void validarLimitacionesSIRAnexos(Long registroID, String tipoRegistro,  long docSize,
+        long firmaSize, String docExtension, String firmaExtension,
+        HttpServletRequest request, BindingResult result) throws Exception, I18NException{
         Entidad entidadActiva = getEntidadActiva(request);
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido

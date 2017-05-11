@@ -73,7 +73,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             SignatureServerLocal.CONFIG_USERNAME, new Locale(languageUI), reason);
         
 
-        return sc; // XYZ ZZZ signPADES(pdfsource, languageUI, pluginInstance, name, reason);
+        return sc;
 
     }
     
@@ -87,7 +87,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       
     
       // XYZ ZZZ ERROR ERROR !!!!
-      // sir = true;
+      sir = true;
 
       try {
 
@@ -187,7 +187,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         if (perfil == null || tipo == null || formato == null) {
           // TODO XYZ ZZZ traduir
-          throw new I18NException("L'arxiu enviat o no és una firma o el plugin de validació ("
+          throw new I18NException( "error.desconegut","L'arxiu enviat o no és una firma o el plugin de validació ("
               + validatePlugin.getClass() + ") no ha retornat informació del tipus de firma "
               + "(T:" + tipo + ", P:" + perfil + ", F:" + formato + ")");
         }
@@ -347,7 +347,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       if (index == -1) {
         fileName = fileName + add;
       } else {
-        fileName = fileName.substring(0,index) + add + fileName.substring(index + 1);
+        fileName = fileName.substring(0,index) + add + fileName.substring(index);
       }
       return fileName;
     }
@@ -568,7 +568,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         byte[] endOfPdf = new byte[10];
         for (int i = 0; i <10; i++) {
           endOfPdf[i] = data[data.length - 10 + i];
-          //log.info(" XYZ ZZZ   data[data.length - " + i  + "] == 0x" + Integer.toHexString(data[data.length - i]));
         }
         
         String str = new String(endOfPdf); 
