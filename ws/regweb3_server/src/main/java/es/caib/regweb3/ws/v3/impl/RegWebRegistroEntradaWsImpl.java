@@ -112,7 +112,37 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @RolesAllowed({ROL_USUARI})
     @WebMethod
-    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroEntradaWs")
+    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")
+            RegistroEntradaWs registroEntradaWs)
+            throws Throwable, WsI18NException, WsValidationException {
+
+        Entidad entidad = null;
+
+        // Obtenemos la Entidad a la que se realiza el RegistroEntrada
+        if(UsuarioAplicacionCache.get().getEntidades().size() > 1){
+            log.info("Usuario asociado a varias Entidades");
+
+            Libro libro = libroEjb.findByCodigo(registroEntradaWs.getLibro());
+            // todo: Podría darse el hipotético caso que un mismo código de Libro esté presente en dos Entidades
+            if(libro != null){
+                entidad = libro.getOrganismo().getEntidad();
+            }
+        }else{
+            entidad = UsuarioAplicacionCache.get().getEntidades().get(0);
+        }
+
+        if(entidad != null){
+            return nuevoRegistroEntrada(entidad.getCodigoDir3(), registroEntradaWs);
+        }
+
+        throw new I18NException("error.valor.requerido.ws", "entidad");
+
+    }
+
+    @Override
+    @RolesAllowed({ROL_USUARI})
+    @WebMethod
+    public IdentificadorWs nuevoRegistroEntrada(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroEntradaWs")
                                                RegistroEntradaWs registroEntradaWs)
             throws Throwable, WsI18NException, WsValidationException {
 

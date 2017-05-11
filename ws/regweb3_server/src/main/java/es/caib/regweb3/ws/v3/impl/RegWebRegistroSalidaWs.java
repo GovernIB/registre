@@ -29,7 +29,20 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
      */
     @WebMethod
-    public IdentificadorWs altaRegistroSalida(@WebParam(name = "entidad")String entidad,
+    public IdentificadorWs altaRegistroSalida(
+            @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs)
+            throws Throwable,WsI18NException, WsValidationException;
+
+    /**
+     * Crea un {@link es.caib.regweb3.model.RegistroSalida}
+     * @param registroSalidaWs
+     * @return
+     * @throws Throwable
+     * @throws org.fundaciobit.genapp.common.ws.WsI18NException
+     * @throws org.fundaciobit.genapp.common.ws.WsValidationException
+     */
+    @WebMethod
+    public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad")String entidad,
         @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs)
         throws Throwable,WsI18NException, WsValidationException;
 

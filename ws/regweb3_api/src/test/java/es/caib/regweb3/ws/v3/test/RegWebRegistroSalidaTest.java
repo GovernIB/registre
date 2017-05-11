@@ -157,7 +157,8 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
 
 
         try {
-            IdentificadorWs identificadorWs = registroSalidaApi.altaRegistroSalida(getTestEntidadCodigoDir3(),registroSalidaWs);
+            //IdentificadorWs identificadorWs = registroSalidaApi.altaRegistroSalida(registroSalidaWs);
+            IdentificadorWs identificadorWs = registroSalidaApi.nuevoRegistroSalida(getTestEntidadCodigoDir3(),registroSalidaWs);
             System.out.println("NumeroSalida: " + identificadorWs.getNumero());
             System.out.println("Fecha: " + identificadorWs.getFecha());
         } catch (WsI18NException e) {
