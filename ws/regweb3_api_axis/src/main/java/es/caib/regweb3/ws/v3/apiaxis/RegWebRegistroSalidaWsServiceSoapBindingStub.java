@@ -122,6 +122,9 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
 
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("altaRegistroSalida");
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "registroSalidaWs"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "registroSalidaWs"), es.caib.regweb3.ws.v3.apiaxis.RegistroSalidaWs.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
@@ -500,7 +503,7 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
 }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.IdentificadorWs altaRegistroSalida(es.caib.regweb3.ws.v3.apiaxis.RegistroSalidaWs registroSalidaWs) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.IdentificadorWs altaRegistroSalida(java.lang.String entidad, es.caib.regweb3.ws.v3.apiaxis.RegistroSalidaWs registroSalidaWs) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -516,7 +519,7 @@ public class RegWebRegistroSalidaWsServiceSoapBindingStub extends org.apache.axi
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {registroSalidaWs});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, registroSalidaWs});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;

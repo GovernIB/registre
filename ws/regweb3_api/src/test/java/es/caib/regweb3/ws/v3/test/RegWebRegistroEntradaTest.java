@@ -126,14 +126,12 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
     @Test
     public void crearRegistroEntrada() throws Exception {
 
-
         for (int i = 0; i < 1; i++) {
-
 
             RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
             registroEntradaWs.setDestino(getTestDestinoCodigoDir3());
-            registroEntradaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+            registroEntradaWs.setOficina(getTestOficinaOrigenCodigoDir3());
             registroEntradaWs.setLibro(getTestDestinoLibro());
 
             registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
@@ -200,7 +198,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
             //registroEntradaWs.getAnexos().addAll(getAnexos());
 
             try {
-                IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(registroEntradaWs);
+                IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(getTestEntidadCodigoDir3(),registroEntradaWs);
                 System.out.println("NumeroEntrada: " + identificadorWs.getNumero());
                 System.out.println("Fecha: " + identificadorWs.getFecha());
             } catch (WsI18NException e) {
@@ -277,8 +275,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
             // registroEntradaWs.getAnexos().addAll(getAnexos());
 
             try {
-                IdentificadorWs identificadorWs = registroEntradaApi
-                        .altaRegistroEntrada(registroEntradaWs);
+                IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(getTestEntidadCodigoDir3(),registroEntradaWs);
                 System.out.println("NumeroEntrada: " + identificadorWs.getNumero());
                 System.out.println("Fecha: " + identificadorWs.getFecha());
             } catch (WsI18NException e) {
@@ -300,7 +297,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
         registroEntradaWs.setDestino(getTestDestinoCodigoDir3());
-        registroEntradaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+        registroEntradaWs.setOficina(getTestOficinaOrigenCodigoDir3());
         registroEntradaWs.setLibro(getTestDestinoLibro());
 
         registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
@@ -494,7 +491,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
 
 
         try {
-            IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(registroEntradaWs);
+            IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(getTestEntidadCodigoDir3(),registroEntradaWs);
             System.out.println("Numero: " + identificadorWs.getNumero());
             System.out.println("Fecha: " + identificadorWs.getFecha());
         } catch (WsI18NException e) {

@@ -58,8 +58,8 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
 
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    private TrazabilidadLocal trazabilidadEjb;
+    @EJB(mappedName = "regweb3/TrazabilidadSirEJB/local")
+    private TrazabilidadSirLocal trazabilidadSirEjb;
 
 
     /**
@@ -145,13 +145,11 @@ public class RegistroSirController extends BaseController {
             }
 
         }else{
-
-            model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroSir(registroSir.getId()));
             model.addAttribute("rechazarForm", new RechazarForm());
             model.addAttribute("reenviarForm", new ReenviarForm());
-
         }
 
+        model.addAttribute("trazabilidades", trazabilidadSirEjb.getByRegistroSir(registroSir.getId()));
         model.addAttribute("registroSir",registroSir);
 
         return "registroSir/registroSirDetalle";

@@ -55,67 +55,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AltaRegistroSalidaResponse }
-     * 
-     */
-    public AltaRegistroSalidaResponse createAltaRegistroSalidaResponse() {
-        return new AltaRegistroSalidaResponse();
-    }
-
-    /**
-     * Create an instance of {@link RegistroSalidaWs }
-     * 
-     */
-    public RegistroSalidaWs createRegistroSalidaWs() {
-        return new RegistroSalidaWs();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistroSalidaIDResponse }
-     * 
-     */
-    public ObtenerRegistroSalidaIDResponse createObtenerRegistroSalidaIDResponse() {
-        return new ObtenerRegistroSalidaIDResponse();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistroSalidaID }
-     * 
-     */
-    public ObtenerRegistroSalidaID createObtenerRegistroSalidaID() {
-        return new ObtenerRegistroSalidaID();
-    }
-
-    /**
      * Create an instance of {@link DatosInteresadoWs }
      * 
      */
     public DatosInteresadoWs createDatosInteresadoWs() {
         return new DatosInteresadoWs();
-    }
-
-    /**
-     * Create an instance of {@link InteresadoWs }
-     * 
-     */
-    public InteresadoWs createInteresadoWs() {
-        return new InteresadoWs();
-    }
-
-    /**
-     * Create an instance of {@link AnularRegistroSalidaResponse }
-     * 
-     */
-    public AnularRegistroSalidaResponse createAnularRegistroSalidaResponse() {
-        return new AnularRegistroSalidaResponse();
-    }
-
-    /**
-     * Create an instance of {@link WsI18NTranslation }
-     * 
-     */
-    public WsI18NTranslation createWsI18NTranslation() {
-        return new WsI18NTranslation();
     }
 
     /**
@@ -127,27 +71,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link GetVersion }
+     * Create an instance of {@link AnexoWs }
      * 
      */
-    public GetVersion createGetVersion() {
-        return new GetVersion();
+    public AnexoWs createAnexoWs() {
+        return new AnexoWs();
     }
 
     /**
-     * Create an instance of {@link AnularRegistroSalida }
+     * Create an instance of {@link WsFieldValidationError }
      * 
      */
-    public AnularRegistroSalida createAnularRegistroSalida() {
-        return new AnularRegistroSalida();
+    public WsFieldValidationError createWsFieldValidationError() {
+        return new WsFieldValidationError();
     }
 
     /**
-     * Create an instance of {@link RegistroWs }
+     * Create an instance of {@link AltaRegistroSalidaResponse }
      * 
      */
-    public RegistroWs createRegistroWs() {
-        return new RegistroWs();
+    public AltaRegistroSalidaResponse createAltaRegistroSalidaResponse() {
+        return new AltaRegistroSalidaResponse();
     }
 
     /**
@@ -159,11 +103,123 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link RegistroResponseWs }
+     * Create an instance of {@link GetVersionWs }
      * 
      */
-    public RegistroResponseWs createRegistroResponseWs() {
-        return new RegistroResponseWs();
+    public GetVersionWs createGetVersionWs() {
+        return new GetVersionWs();
+    }
+
+    /**
+     * Create an instance of {@link GetVersion }
+     * 
+     */
+    public GetVersion createGetVersion() {
+        return new GetVersion();
+    }
+
+    /**
+     * Create an instance of {@link WsI18NTranslation }
+     * 
+     */
+    public WsI18NTranslation createWsI18NTranslation() {
+        return new WsI18NTranslation();
+    }
+
+    /**
+     * Create an instance of {@link AltaRegistroSalida }
+     * 
+     */
+    public AltaRegistroSalida createAltaRegistroSalida() {
+        return new AltaRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link RegistroSalidaWs }
+     * 
+     */
+    public RegistroSalidaWs createRegistroSalidaWs() {
+        return new RegistroSalidaWs();
+    }
+
+    /**
+     * Create an instance of {@link ObtenerRegistroSalidaID }
+     * 
+     */
+    public ObtenerRegistroSalidaID createObtenerRegistroSalidaID() {
+        return new ObtenerRegistroSalidaID();
+    }
+
+    /**
+     * Create an instance of {@link RegistroWs }
+     * 
+     */
+    public RegistroWs createRegistroWs() {
+        return new RegistroWs();
+    }
+
+    /**
+     * Create an instance of {@link AnularRegistroSalida }
+     * 
+     */
+    public AnularRegistroSalida createAnularRegistroSalida() {
+        return new AnularRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link AnularRegistroSalidaResponse }
+     * 
+     */
+    public AnularRegistroSalidaResponse createAnularRegistroSalidaResponse() {
+        return new AnularRegistroSalidaResponse();
+    }
+
+    /**
+     * Create an instance of {@link WsValidationErrors }
+     * 
+     */
+    public WsValidationErrors createWsValidationErrors() {
+        return new WsValidationErrors();
+    }
+
+    /**
+     * Create an instance of {@link InteresadoWs }
+     * 
+     */
+    public InteresadoWs createInteresadoWs() {
+        return new InteresadoWs();
+    }
+
+    /**
+     * Create an instance of {@link IdentificadorWs }
+     * 
+     */
+    public IdentificadorWs createIdentificadorWs() {
+        return new IdentificadorWs();
+    }
+
+    /**
+     * Create an instance of {@link ObtenerRegistroSalida }
+     * 
+     */
+    public ObtenerRegistroSalida createObtenerRegistroSalida() {
+        return new ObtenerRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link GetVersionWsResponse }
+     * 
+     */
+    public GetVersionWsResponse createGetVersionWsResponse() {
+        return new GetVersionWsResponse();
+    }
+
+    /**
+     * Create an instance of {@link ObtenerRegistroSalidaIDResponse }
+     * 
+     */
+    public ObtenerRegistroSalidaIDResponse createObtenerRegistroSalidaIDResponse() {
+        return new ObtenerRegistroSalidaIDResponse();
     }
 
     /**
@@ -183,19 +239,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link IdentificadorWs }
+     * Create an instance of {@link RegistroResponseWs }
      * 
      */
-    public IdentificadorWs createIdentificadorWs() {
-        return new IdentificadorWs();
-    }
-
-    /**
-     * Create an instance of {@link WsValidationErrors }
-     * 
-     */
-    public WsValidationErrors createWsValidationErrors() {
-        return new WsValidationErrors();
+    public RegistroResponseWs createRegistroResponseWs() {
+        return new RegistroResponseWs();
     }
 
     /**
@@ -204,54 +252,6 @@ public class ObjectFactory {
      */
     public WsI18NArgument createWsI18NArgument() {
         return new WsI18NArgument();
-    }
-
-    /**
-     * Create an instance of {@link WsFieldValidationError }
-     * 
-     */
-    public WsFieldValidationError createWsFieldValidationError() {
-        return new WsFieldValidationError();
-    }
-
-    /**
-     * Create an instance of {@link GetVersionWsResponse }
-     * 
-     */
-    public GetVersionWsResponse createGetVersionWsResponse() {
-        return new GetVersionWsResponse();
-    }
-
-    /**
-     * Create an instance of {@link AltaRegistroSalida }
-     * 
-     */
-    public AltaRegistroSalida createAltaRegistroSalida() {
-        return new AltaRegistroSalida();
-    }
-
-    /**
-     * Create an instance of {@link GetVersionWs }
-     * 
-     */
-    public GetVersionWs createGetVersionWs() {
-        return new GetVersionWs();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistroSalida }
-     * 
-     */
-    public ObtenerRegistroSalida createObtenerRegistroSalida() {
-        return new ObtenerRegistroSalida();
-    }
-
-    /**
-     * Create an instance of {@link AnexoWs }
-     * 
-     */
-    public AnexoWs createAnexoWs() {
-        return new AnexoWs();
     }
 
     /**

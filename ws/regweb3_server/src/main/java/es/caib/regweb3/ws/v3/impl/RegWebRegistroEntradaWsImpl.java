@@ -64,73 +64,83 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
+    private OficinaLocal oficinaEjb;
 
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
+    private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
+    private TipoAsuntoLocal tipoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
-    public CodigoAsuntoLocal codigoAsuntoEjb;
+    private CodigoAsuntoLocal codigoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/LopdEJB/local")
-    public LopdLocal lopdEjb;
+    private LopdLocal lopdEjb;
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
+    private InteresadoLocal interesadoEjb;
 
     @EJB(mappedName = "regweb3/PersonaEJB/local")
-    public PersonaLocal personaEjb;
+    private PersonaLocal personaEjb;
 
     @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
+    private CatPaisLocal catPaisEjb;
 
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
+    private CatProvinciaLocal catProvinciaEjb;
 
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
+    private CatLocalidadLocal catLocalidadEjb;
+
+    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    private EntidadLocal entidadEjb;
 
 
     @Override
     @RolesAllowed({ROL_USUARI})
     @WebMethod
-    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")
+    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroEntradaWs")
                                                RegistroEntradaWs registroEntradaWs)
             throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
-        Entidad entidad = null;
 
-        // Obtenemos la Entidad a la que se realiza el RegistroEntrada
-        if(UsuarioAplicacionCache.get().getEntidades().size() > 1){
-            log.info("Usuario asociado a varias Entidades");
-
-            Libro libro = libroEjb.findByCodigo(registroEntradaWs.getLibro());
-            // todo: Podría darse el hipotético caso que un mismo código de Libro esté presente en dos Entidades
-            if(libro != null){
-                entidad = libro.getOrganismo().getEntidad();
-            }
-        }else{
-            entidad = UsuarioAplicacionCache.get().getEntidades().get(0);
+        // 1.- Validar campo obligatorio entidad
+        if(StringUtils.isEmpty(entidad)){
+            throw new I18NException("error.valor.requerido.ws", "entidad");
         }
 
-        // 1.- Comprobar que el Organismo destino está vigente
-        Organismo destinoInterno = organismoEjb.findByCodigoEntidad(registroEntradaWs.getDestino(), entidad.getId());
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        // 2.- Comprobar que la entidad existe y está activa
+        if(entidadActiva == null){
+            log.info("La entidad "+entidad+" no existe.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }else if(!entidadActiva.getActivo()){
+            throw new I18NException("registro.entidad.inactiva", entidad);
+        }
+
+        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
+        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
+            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }
+
+        // 4.- Comprobar que el Organismo destino está vigente
+        Organismo destinoInterno = organismoEjb.findByCodigoEntidad(registroEntradaWs.getDestino(), entidadActiva.getId());
         UnidadTF destinoExterno = null;
 
         if (destinoInterno == null) { // Se trata de un destino externo
@@ -150,8 +160,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throw new I18NException("registro.organismo.extinguido", destinoInterno.getNombreCompleto());
         }
 
-        // 2.- Comprobar que la Oficina está vigente
-        Oficina oficina = oficinaEjb.findByCodigoEntidad(registroEntradaWs.getOficina(), entidad.getId());
+        // 5.- Comprobar que la Oficina está vigente
+        Oficina oficina = oficinaEjb.findByCodigoEntidad(registroEntradaWs.getOficina(), entidadActiva.getId());
 
         if (oficina == null) { //No existe
             throw new I18NException("registro.oficina.noExiste", registroEntradaWs.getOficina());
@@ -160,8 +170,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
         }
 
-        // 3.- Comprobar que el Libro está vigente
-        Libro libro = libroEjb.findByCodigoEntidad(registroEntradaWs.getLibro(), entidad.getId());
+        // 6.- Comprobar que el Libro está vigente
+        Libro libro = libroEjb.findByCodigoEntidad(registroEntradaWs.getLibro(), entidadActiva.getId());
 
         if (libro == null) { //No existe
             throw new I18NException("registro.libro.noExiste", registroEntradaWs.getLibro());
@@ -170,12 +180,12 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throw new I18NException("registro.libro.inactivo", registroEntradaWs.getLibro());
         }
 
-        // 4.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
+        // 7.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
         // Nos pueden enviar el username en mayusculas
-        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(registroEntradaWs.getCodigoUsuario(), entidad.getId());
+        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(registroEntradaWs.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
-            throw new I18NException("registro.usuario.noExiste", registroEntradaWs.getCodigoUsuario(), entidad.getNombre());
+            throw new I18NException("registro.usuario.noExiste", registroEntradaWs.getCodigoUsuario(), entidadActiva.getNombre());
 
         } else if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_ENTRADA)) {
             throw new I18NException("registro.usuario.permisos", registroEntradaWs.getCodigoUsuario(), libro.getCodigo());
@@ -185,15 +195,15 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Recuperamos el username correcto 
         registroEntradaWs.setCodigoUsuario(usuario.getUsuario().getIdentificador());
 
-        // 5.- Convertir RegistroEntradaWs a RegistroEntrada
+        // 8.- Convertir RegistroEntradaWs a RegistroEntrada
         RegistroEntrada registroEntrada = RegistroEntradaConverter.getRegistroEntrada(
                 registroEntradaWs, usuario, libro, oficina, destinoInterno, destinoExterno,
                 codigoAsuntoEjb, tipoAsuntoEjb, oficinaEjb);
 
-        // 6.- Validar el RegistroEntrada
+        // 9.- Validar el RegistroEntrada
         validateRegistroEntrada(registroEntrada);
 
-        // 7.- Validar los Interesados
+        // 10.- Validar los Interesados
         List<Interesado> interesados = null;
         if (registroEntradaWs.getInteresados() != null && registroEntradaWs.getInteresados().size() > 0) {
 
@@ -206,19 +216,18 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throw new I18NException("interesado.registro.obligatorio");
         }
 
-        // 8.- Validar los Anexos
+        // 11.- Validar los Anexos
         List<AnexoFull> anexosFull = null;
         if (registroEntradaWs.getAnexos() != null && registroEntradaWs.getAnexos().size() > 0) {
 
             //Procesamos los anexos
-            anexosFull = procesarAnexos(registroEntradaWs.getAnexos(), entidad.getId());
-
+            anexosFull = procesarAnexos(registroEntradaWs.getAnexos(), entidadActiva.getId());
 
             //Asociamos los anexos al Registro de Entrada
             registroEntrada.getRegistroDetalle().setAnexos(null);
         }
 
-        // 7.- Creamos el Registro de Entrada
+        // 12.- Creamos el Registro de Entrada
         registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
 
         if (registroEntrada.getId() != null) {

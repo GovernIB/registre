@@ -8,7 +8,7 @@
         FIRMA bytea,
         FIRMAVALIDA bool,
         HASH bytea,
-        JUSTIFICANTE bool,
+        JUSTIFICANTE bool not null,
         MODOFIRMA int4,
         OBSERVACIONES varchar(50),
         ORIGEN int4,
@@ -456,8 +456,8 @@
         DESCRIPCION varchar(2000) not null,
         ENTIDAD int8,
         NOMBRE varchar(255) not null,
-        PROPIEDADES_ADMIN text,
-        PROPIEDADES_ENTIDAD text,
+        PROPIEDADES_ADMIN varchar(2000),
+        PROPIEDADES_ENTIDAD varchar(2000),
         TIPO int8,
         primary key (ID)
     );
@@ -687,6 +687,25 @@
         REGISTRO_SALIDA int8,
         REGISTRO_SALIDA_RECT int8,
         REGISTRO_SIR int8,
+        primary key (ID)
+    );
+
+    create table RWE_TRAZABILIDAD_SIR (
+        ID int8 not null,
+        APLICACION varchar(4),
+        COD_ENT_REG_DEST varchar(21) not null,
+        COD_ENT_REG_ORI varchar(21) not null,
+        COD_UNI_TRA_DEST varchar(21),
+        CONTACTO_USUARIO varchar(160),
+        DEC_ENT_REG_DEST varchar(80),
+        DEC_ENT_REG_ORI varchar(80),
+        DEC_UNI_TRA_DEST varchar(80),
+        FECHA timestamp not null,
+        NOMBRE_USUARIO varchar(80),
+        OBSERVACIONES varchar(2000),
+        tipo int8 not null,
+        REGISTRO_ENTRADA int8,
+        REGISTRO_SIR int8 not null,
         primary key (ID)
     );
 
@@ -1384,6 +1403,16 @@
 
     alter table RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_REGSIR_FK
+        foreign key (REGISTRO_SIR)
+        references RWE_REGISTRO_SIR;
+
+    alter table RWE_TRAZABILIDAD_SIR
+        add constraint RWE_TRASIR_REGENT_FK
+        foreign key (REGISTRO_ENTRADA)
+        references RWE_REGISTRO_ENTRADA;
+
+    alter table RWE_TRAZABILIDAD_SIR
+        add constraint RWE_TRASIR_REGSIR_FK
         foreign key (REGISTRO_SIR)
         references RWE_REGISTRO_SIR;
 

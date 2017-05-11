@@ -94,7 +94,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         RegistroSalidaWs registroSalidaWs = new RegistroSalidaWs();
 
         registroSalidaWs.setOrigen(getTestDestinoCodigoDir3());
-        registroSalidaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+        registroSalidaWs.setOficina(getTestOficinaOrigenCodigoDir3());
         registroSalidaWs.setLibro(getTestDestinoLibro());
 
         registroSalidaWs.setExtracto(System.currentTimeMillis() + " probando ws");
@@ -157,7 +157,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
 
 
         try {
-            IdentificadorWs identificadorWs = registroSalidaApi.altaRegistroSalida(registroSalidaWs);
+            IdentificadorWs identificadorWs = registroSalidaApi.altaRegistroSalida(getTestEntidadCodigoDir3(),registroSalidaWs);
             System.out.println("NumeroSalida: " + identificadorWs.getNumero());
             System.out.println("Fecha: " + identificadorWs.getFecha());
         } catch (WsI18NException e) {

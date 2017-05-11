@@ -67,6 +67,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private OficinaLocal oficinaEjb;
     @EJB private CatPaisLocal catPaisEjb;
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
 
 
     @Override
@@ -163,7 +164,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public RegistroSir crearRegistroSir(RegistroSir registroSir) throws Exception{
+    public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio) throws Exception{
+
+        RegistroSir registroSir = transformarFicheroIntercambio(ficheroIntercambio);
+        registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
 
         try{
 
@@ -193,6 +197,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 }
             }
             em.flush();
+
+            // Creamos la TrazabilidadSir
+            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECEPCION);
+            trazabilidadSir.setRegistroSir(registroSir);
+            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+            trazabilidadSir.setAplicacion(registroSir.getAplicacion());
+            trazabilidadSir.setNombreUsuario(registroSir.getNombreUsuario());
+            trazabilidadSir.setContactoUsuario(registroSir.getContactoUsuario());
+            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
+            trazabilidadSir.setFecha(new Date());
+            trazabilidadSirEjb.persist(trazabilidadSir);
 
         }catch (Exception e){
             log.info("Error al crear el RegistroSir, eliminamos los posibles anexos creados");

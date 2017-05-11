@@ -29,7 +29,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
-    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")RegistroEntradaWs registroEntradaWs) throws Throwable, WsI18NException, WsValidationException;
+    public IdentificadorWs altaRegistroEntrada(@WebParam(name = "entidad")String entidad, @WebParam(name = "registroEntradaWs")RegistroEntradaWs registroEntradaWs) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      * Anula un {@link es.caib.regweb3.model.RegistroEntrada}

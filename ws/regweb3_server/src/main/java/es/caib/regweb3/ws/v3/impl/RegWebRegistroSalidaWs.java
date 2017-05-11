@@ -29,7 +29,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
      */
     @WebMethod
-    public IdentificadorWs altaRegistroSalida(
+    public IdentificadorWs altaRegistroSalida(@WebParam(name = "entidad")String entidad,
         @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs)
         throws Throwable,WsI18NException, WsValidationException;
 

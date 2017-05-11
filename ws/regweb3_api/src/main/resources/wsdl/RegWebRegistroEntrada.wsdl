@@ -104,7 +104,6 @@
       <xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="csv" type="xs:string"/>
-      <xs:element minOccurs="0" name="firmacsv" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="interesadoWs">
@@ -195,6 +194,7 @@
   </xs:complexType>
   <xs:complexType name="altaRegistroEntrada">
     <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="registroEntradaWs" type="tns:registroEntradaWs"/>
     </xs:sequence>
   </xs:complexType>

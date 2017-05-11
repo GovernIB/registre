@@ -38,8 +38,6 @@ public class AnexoWs  implements java.io.Serializable {
 
     private java.lang.String csv;
 
-    private java.lang.String firmacsv;
-
     public AnexoWs() {
     }
 
@@ -58,8 +56,7 @@ public class AnexoWs  implements java.io.Serializable {
            java.lang.String nombreFirmaAnexada,
            byte[] firmaAnexada,
            java.lang.String tipoMIMEFirmaAnexada,
-           java.lang.String csv,
-           java.lang.String firmacsv) {
+           java.lang.String csv) {
            this.titulo = titulo;
            this.nombreFicheroAnexado = nombreFicheroAnexado;
            this.ficheroAnexado = ficheroAnexado;
@@ -75,7 +72,6 @@ public class AnexoWs  implements java.io.Serializable {
            this.firmaAnexada = firmaAnexada;
            this.tipoMIMEFirmaAnexada = tipoMIMEFirmaAnexada;
            this.csv = csv;
-           this.firmacsv = firmacsv;
     }
 
 
@@ -378,26 +374,6 @@ public class AnexoWs  implements java.io.Serializable {
         this.csv = csv;
     }
 
-
-    /**
-     * Gets the firmacsv value for this AnexoWs.
-     * 
-     * @return firmacsv
-     */
-    public java.lang.String getFirmacsv() {
-        return firmacsv;
-    }
-
-
-    /**
-     * Sets the firmacsv value for this AnexoWs.
-     * 
-     * @param firmacsv
-     */
-    public void setFirmacsv(java.lang.String firmacsv) {
-        this.firmacsv = firmacsv;
-    }
-
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof AnexoWs)) return false;
@@ -454,10 +430,7 @@ public class AnexoWs  implements java.io.Serializable {
               this.tipoMIMEFirmaAnexada.equals(other.getTipoMIMEFirmaAnexada()))) &&
             ((this.csv==null && other.getCsv()==null) || 
              (this.csv!=null &&
-              this.csv.equals(other.getCsv()))) &&
-            ((this.firmacsv==null && other.getFirmacsv()==null) || 
-             (this.firmacsv!=null &&
-              this.firmacsv.equals(other.getFirmacsv())));
+              this.csv.equals(other.getCsv())));
         __equalsCalc = null;
         return _equals;
     }
@@ -529,9 +502,6 @@ public class AnexoWs  implements java.io.Serializable {
         }
         if (getCsv() != null) {
             _hashCode += getCsv().hashCode();
-        }
-        if (getFirmacsv() != null) {
-            _hashCode += getFirmacsv().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -644,13 +614,6 @@ public class AnexoWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("csv");
         elemField.setXmlName(new javax.xml.namespace.QName("", "csv"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("firmacsv");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "firmacsv"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);

@@ -8,10 +8,13 @@ create table RWE_ANEXO (
     FIRMA raw(255),
     FIRMAVALIDA number(1,0),
     HASH raw(255),
-    JUSTIFICANTE number(1,0),
+    JUSTIFICANTE number(1,0) not null,
     MODOFIRMA number(10,0),
     OBSERVACIONES varchar2(50 char),
     ORIGEN number(10,0),
+    SIGNFORMAT varchar2(255 char),
+    SIGNPROFILE varchar2(255 char),
+    SIGNTYPE varchar2(255 char),
     TIMESTAMP raw(255),
     TIPODOC number(19,0),
     TITULO varchar2(200 char) not null,
@@ -658,6 +661,24 @@ create table RWE_TRAZABILIDAD (
     REGISTRO_SIR number(19,0)
 );
 
+create table RWE_TRAZABILIDAD_SIR (
+    ID number(19,0) not null,
+    APLICACION varchar2(4 char),
+    COD_ENT_REG_DEST varchar2(21 char) not null,
+    COD_ENT_REG_ORI varchar2(21 char) not null,
+    COD_UNI_TRA_DEST varchar2(21 char),
+    CONTACTO_USUARIO varchar2(160 char),
+    DEC_ENT_REG_DEST varchar2(80 char),
+    DEC_ENT_REG_ORI varchar2(80 char),
+    DEC_UNI_TRA_DEST varchar2(80 char),
+    FECHA timestamp not null,
+    NOMBRE_USUARIO varchar2(80 char),
+    OBSERVACIONES varchar2(2000 char),
+    tipo number(19,0) not null,
+    REGISTRO_ENTRADA number(19,0),
+    REGISTRO_SIR number(19,0) not null
+);
+
 create table RWE_TRA_CODIGOASUNTO (
     IDCODIGOASUNTO number(19,0) not null,
     NOMBRE varchar2(255 char) not null,
@@ -863,6 +884,8 @@ alter table RWE_TIPOASUNTO add constraint RWE_TIPOASUNTO_pk primary key (ID);
 alter table RWE_TIPODOCUMENTAL add constraint RWE_TIPODOCUMENTAL_pk primary key (ID);
 
 alter table RWE_TRAZABILIDAD add constraint RWE_TRAZABILIDAD_pk primary key (ID);
+
+alter table RWE_TRAZABILIDAD_SIR add constraint RWE_TRAZABILIDAD_SIR_pk primary key (ID);
 
 alter table RWE_TRA_CODIGOASUNTO add constraint RWE_TRA_CODIGOASUNTO_pk primary key (IDCODIGOASUNTO, LANG);
 
@@ -1413,6 +1436,16 @@ alter table RWE_TRAZABILIDAD
 foreign key (REGISTRO_SIR)
 references RWE_REGISTRO_SIR;
 
+alter table RWE_TRAZABILIDAD_SIR
+    add constraint RWE_TRASIR_REGENT_FK
+foreign key (REGISTRO_ENTRADA)
+references RWE_REGISTRO_ENTRADA;
+
+alter table RWE_TRAZABILIDAD_SIR
+    add constraint RWE_TRASIR_REGSIR_FK
+foreign key (REGISTRO_SIR)
+references RWE_REGISTRO_SIR;
+
 alter table RWE_TRA_CODIGOASUNTO
     add constraint RWE_CODASUNTO_TRACODASUNTO_FK
 foreign key (IDCODIGOASUNTO)
@@ -1507,6 +1540,7 @@ grant select,insert,delete,update on RWE_ROL to www_regweb3;
 grant select,insert,delete,update on RWE_TIPOASUNTO to www_regweb3;
 grant select,insert,delete,update on RWE_TIPODOCUMENTAL to www_regweb3;
 grant select,insert,delete,update on RWE_TRAZABILIDAD to www_regweb3;
+grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb3;
 grant select,insert,delete,update on RWE_TRA_CODIGOASUNTO to www_regweb3;
 grant select,insert,delete,update on RWE_TRA_TDOCUMENTAL to www_regweb3;
 grant select,insert,delete,update on RWE_TRA_TIPOASUNTO to www_regweb3;
