@@ -143,8 +143,8 @@ public class AnexoFicheroController extends BaseController {
                  manageDocumentCustodySignatureCustody(request, anexoForm);
 
                  Entidad entidad = getEntidadActiva(request);
-                // signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                  //   isSIR, I18NUtils.getLocale());
+                 signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
+                     isSIR, I18NUtils.getLocale());
                  
                  
                  log.info(" XYZ ZZZ anexoForm.getDocumentoCustody() ======> "  + anexoForm.getDocumentoCustody());
