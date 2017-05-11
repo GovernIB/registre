@@ -81,7 +81,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       
     
       // XYZ ZZZ ERROR ERROR !!!!
-      sir = true;
+      // sir = true;
 
       try {
 
