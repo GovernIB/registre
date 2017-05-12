@@ -210,6 +210,12 @@
       </exclusions> 
     </dependency>
 
+    <dependency>
+      <groupId>org.fundaciobit.plugins</groupId>
+      <artifactId>plugin-documentcustody-arxiudigitalcaib</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
 
     <!-- ====================================== -->
     <!-- ===== PLUGINS DE USERINFORMATION ===== -->
