@@ -46,7 +46,6 @@
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user"></i>
                         ${usuarioAutenticado.nombreCompleto}
-                        <%-- ${loginInfo.usuarioAutenticado.nombreCompleto} --%>
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -57,7 +56,6 @@
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
                         <li>
-                            <%--    <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>"> --%>
                             <a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>">
                                 <i class="fa fa-gear"></i>
                                 <spring:message code="menu.configuracion"/>
@@ -145,7 +143,7 @@
 
                         <%--Menú REGISTRO ENTRADA--%>
                         <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <spring:message code="menu.entradas"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
@@ -190,21 +188,26 @@
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
                                     <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
-                                    <c:if test="${entidadActiva.sir && oficinaActiva.sirRecepcion}">
-                                        <li class="divider"></li>
-                                        <li class="dropdown-submenu-left toggle-left">
-                                            <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i>
-                                                <spring:message code="regweb.sir"/></a>
-                                            <ul class="dropdown-menu">
-                                                <li class="submenu-complet"><a href="<c:url value="/registroSir/list"/>"><spring:message
-                                                        code="registroSir.listado"/></a></li>
-                                            </ul>
-                                        </li>
-                                    </c:if>
+
                                 </ul>
                             </div>
                         </c:if>
 
+                        <%--Menú SIR--%>
+                        <c:if test="${entidadActiva.sir && oficinaActiva.sirRecepcion}">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                    <spring:message code="menu.sir"/> <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="<c:url value="/registroSir/list"/>"><spring:message code="registroSir.listado"/></a></li>
+                                    <li><a href="<c:url value="/registroSir/recibidos/list/1"/>"><spring:message code="registroSir.recibidos"/></a></li>
+                                    <li><a href="<c:url value="/registroSir/rechazados/list/1"/>"><spring:message code="registroSir.rechazados"/></a></li>
+                                </ul>
+                            </div>
+                        </c:if>
+
+                        <%--Menú ADMINISTRACIÓN--%>
                         <div class="btn-group">
                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                 <spring:message code="menu.administracion"/> <span class="caret"></span>

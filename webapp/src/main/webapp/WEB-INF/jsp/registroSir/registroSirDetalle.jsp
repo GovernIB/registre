@@ -34,7 +34,7 @@
 
             <div class="col-xs-4">
 
-                <div class="panel panel-success">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong> <spring:message code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</strong>
@@ -327,7 +327,7 @@
 
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
-                                        <button type="button" class="btn btn-success btn-sm btn-block"
+                                        <button type="button" class="btn btn-primary btn-sm btn-block"
                                                 onclick="aceptarRegistroSir()"><spring:message
                                                 code="registroSir.aceptar"/></button>
                                     </div>

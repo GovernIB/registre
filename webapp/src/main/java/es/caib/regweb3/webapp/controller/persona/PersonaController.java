@@ -4,7 +4,6 @@ import es.caib.regweb3.model.CatPais;
 import es.caib.regweb3.model.CatProvincia;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Persona;
-import es.caib.regweb3.persistence.ejb.CatLocalidadLocal;
 import es.caib.regweb3.persistence.ejb.CatPaisLocal;
 import es.caib.regweb3.persistence.ejb.CatProvinciaLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
@@ -46,16 +45,13 @@ public class PersonaController extends BaseController {
     private PersonaWebValidator personaValidator;
 
     @EJB(mappedName = "regweb3/PersonaEJB/local")
-    public PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
+    private PersonaLocal personaEjb;
 
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
+    private CatProvinciaLocal catProvinciaEjb;
 
     @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
+    private CatPaisLocal catPaisEjb;
 
 
     /**

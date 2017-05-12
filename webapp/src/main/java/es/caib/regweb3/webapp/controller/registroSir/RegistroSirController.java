@@ -35,7 +35,7 @@ public class RegistroSirController extends BaseController {
 
 
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
-    private RegistroSirLocal registrosirSirEjb;
+    private RegistroSirLocal registroSirEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     private TipoAsuntoLocal tipoAsuntoEjb;
@@ -98,7 +98,7 @@ public class RegistroSirController extends BaseController {
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
-        Paginacion paginacion = registrosirSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), registroSir, getOficinaActiva(request).getCodigo(), busqueda.getEstado());
+        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), registroSir, getOficinaActiva(request).getCodigo(), busqueda.getEstado());
 
         busqueda.setPageNumber(1);
 
@@ -111,6 +111,40 @@ public class RegistroSirController extends BaseController {
 
     }
 
+    /**
+     * Listado de RegistroSir Recibidos
+     */
+    @RequestMapping(value = "/recibidos/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView recibidos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("registroSir/registrosSir");
+
+        Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECIBIDO.getValue());
+
+        mav.addObject("estado", EstadoRegistroSir.RECIBIDO);
+        mav.addObject("url", "recibidos");
+        mav.addObject("paginacion", paginacion);
+
+        return mav;
+    }
+
+    /**
+     * Listado de RegistroSir Rechazados
+     */
+    @RequestMapping(value = "/rechazados/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("registroSir/registrosSir");
+
+        Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECHAZADO.getValue());
+
+        mav.addObject("estado", EstadoRegistroSir.RECHAZADO);
+        mav.addObject("url", "rechazados");
+        mav.addObject("paginacion", paginacion);
+
+        return mav;
+    }
+
 
     /**
      * Carga el formulario para ver el detalle de un {@link RegistroSir}
@@ -118,7 +152,7 @@ public class RegistroSirController extends BaseController {
     @RequestMapping(value = "/{idRegistroSir}/detalle", method = RequestMethod.GET)
     public String detalleRegistroSir(@PathVariable Long idRegistroSir, Model model, HttpServletRequest request) throws Exception {
 
-        RegistroSir registroSir = registrosirSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
         //si el estado del registro sir  es RECIBIDO,DEVUELTO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("puedeReenviar",  sirEjb.puedeReenviarRegistroSir(registroSir.getEstado()));
@@ -163,7 +197,7 @@ public class RegistroSirController extends BaseController {
     public String confirmarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RegistrarForm registrarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        RegistroSir registroSir = registrosirSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
@@ -201,7 +235,7 @@ public class RegistroSirController extends BaseController {
 
         log.info("Observaciones: " + rechazarForm.getObservacionesRechazo());
 
-        RegistroSir registroSir = registrosirSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -232,7 +266,7 @@ public class RegistroSirController extends BaseController {
 
         model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
         model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
-        model.addAttribute("registroSir", registrosirSirEjb.findById(idRegistroSir));
+        model.addAttribute("registroSir", registroSirEjb.findById(idRegistroSir));
         model.addAttribute("reenviarForm", new ReenviarForm());
 
         return "registroSir/registroSirReenvio";
@@ -253,7 +287,7 @@ public class RegistroSirController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
 
-        RegistroSir registroSir  = registrosirSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir  = registroSirEjb.findById(idRegistroSir);
 
         // Comprobamos si ya ha sido reenviado
         if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){

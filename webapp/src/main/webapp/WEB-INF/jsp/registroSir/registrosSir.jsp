@@ -20,82 +20,34 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSir.registrosSir"/></strong></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSir.registrosSir"/> <spring:message code="registroSir.estado.${estado}" /></strong></li>
                 </ol>
             </div>
-        </div><!-- /.row -->
+        </div>
 
         <c:import url="../modulos/mensajes.jsp"/>
 
-        <!-- BUSCADOR -->
-
         <div class="row">
-
             <div class="col-xs-12">
 
                 <div class="panel panel-primary">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroSir.buscador"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i>
+                            <strong><spring:message code="registroSir.listado"/> <spring:message code="registroSir.estado.${estado}" /></strong>
+                        </h3>
                     </div>
 
-                    <form:form modelAttribute="registroSirBusqueda" method="post" cssClass="form-horizontal">
-                        <form:hidden path="pageNumber"/>
-
-                        <div class="panel-body">
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.numeroRegistro"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.estado"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="estado" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="estado" items="${estados}">
-                                            <form:option value="${estado.value}"><spring:message code="registroSir.estado.${estado.value}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.extracto"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroSir.resumen" cssClass="form-control"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.anyRegistro"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="anyo" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach items="${anys}" var="anyo">
-                                            <form:option value="${anyo}">${anyo}</form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
-                            </div>
-                    </form:form>
-
-                    <c:if test="${paginacion != null}">
+                    <div class="panel-body">
 
                         <div class="row">
                             <div class="col-xs-12">
 
                                 <c:if test="${empty paginacion.listado}">
                                     <div class="alert alert-warning alert-dismissable">
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="registroSir.registroSir"/></strong>
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <spring:message code="regweb.listado.vacio"/> <strong><spring:message
+                                            code="registroSir.registroSir"/></strong>
                                     </div>
                                 </c:if>
 
@@ -167,8 +119,8 @@
                                         </table>
 
                                         <!-- Paginacion -->
-                                        <c:import url="../modulos/paginacionBusqueda.jsp">
-                                            <c:param name="entidad" value="registroSir"/>
+                                        <c:import url="../modulos/paginacion.jsp">
+                                            <c:param name="entidad" value="registroSir/${url}"/>
                                         </c:import>
 
                                     </div>
@@ -178,21 +130,18 @@
                             </div>
                         </div>
 
-                    </c:if>
 
+                    </div>
 
                 </div>
             </div>
+
         </div>
+
+
     </div>
-
-    <!-- FIN BUSCADOR -->
-
-
-
-
 </div>
-</div> <!-- /container -->
+<!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
 

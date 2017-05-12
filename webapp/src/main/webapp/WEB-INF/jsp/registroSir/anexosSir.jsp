@@ -3,7 +3,7 @@
 
 <div class="col-xs-8 pull-right">
 
-    <div class="panel panel-success">
+    <div class="panel panel-primary">
 
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
