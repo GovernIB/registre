@@ -16,6 +16,8 @@
   <xs:element name="getVersionWsResponse" type="tns:getVersionWsResponse"/>
   <xs:element name="identificadorWs" type="tns:identificadorWs"/>
   <xs:element name="interesadoWs" type="tns:interesadoWs"/>
+  <xs:element name="nuevoRegistroSalida" type="tns:nuevoRegistroSalida"/>
+  <xs:element name="nuevoRegistroSalidaResponse" type="tns:nuevoRegistroSalidaResponse"/>
   <xs:element name="obtenerRegistroSalida" type="tns:obtenerRegistroSalida"/>
   <xs:element name="obtenerRegistroSalidaID" type="tns:obtenerRegistroSalidaID"/>
   <xs:element name="obtenerRegistroSalidaIDResponse" type="tns:obtenerRegistroSalidaIDResponse"/>
@@ -141,7 +143,6 @@
       <xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="csv" type="xs:string"/>
-      <xs:element minOccurs="0" name="firmacsv" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="interesadoWs">
@@ -192,8 +193,9 @@
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="altaRegistroSalida">
+  <xs:complexType name="nuevoRegistroSalida">
     <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="registroSalidaWs" type="tns:registroSalidaWs"/>
     </xs:sequence>
   </xs:complexType>
@@ -233,6 +235,16 @@
       <xs:element minOccurs="0" name="version" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="nuevoRegistroSalidaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:identificadorWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="altaRegistroSalida">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="registroSalidaWs" type="tns:registroSalidaWs"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="altaRegistroSalidaResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:identificadorWs"/>
@@ -260,12 +272,16 @@
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="WsI18NException">
-    <wsdl:part name="WsI18NException" element="tns:WsI18NError">
+  <wsdl:message name="nuevoRegistroSalida">
+    <wsdl:part name="parameters" element="tns:nuevoRegistroSalida">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="altaRegistroSalidaResponse">
     <wsdl:part name="parameters" element="tns:altaRegistroSalidaResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WsI18NException">
+    <wsdl:part name="WsI18NException" element="tns:WsI18NError">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVersionResponse">
@@ -312,6 +328,10 @@
     <wsdl:part name="parameters" element="tns:getVersionWsResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="nuevoRegistroSalidaResponse">
+    <wsdl:part name="parameters" element="tns:nuevoRegistroSalidaResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="WsValidationException">
     <wsdl:part name="WsValidationException" element="tns:WsValidationErrors">
     </wsdl:part>
@@ -348,6 +368,16 @@
     </wsdl:input>
       <wsdl:output name="obtenerRegistroSalidaIDResponse" message="tns:obtenerRegistroSalidaIDResponse">
     </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="nuevoRegistroSalida">
+      <wsdl:input name="nuevoRegistroSalida" message="tns:nuevoRegistroSalida">
+    </wsdl:input>
+      <wsdl:output name="nuevoRegistroSalidaResponse" message="tns:nuevoRegistroSalidaResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
@@ -417,6 +447,21 @@
       <wsdl:output name="obtenerRegistroSalidaIDResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="nuevoRegistroSalida">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="nuevoRegistroSalida">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="nuevoRegistroSalidaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
       <wsdl:fault name="WsI18NException">
         <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>

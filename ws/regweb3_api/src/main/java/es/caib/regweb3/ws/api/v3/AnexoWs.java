@@ -31,7 +31,6 @@ import java.sql.Timestamp;
  *         &lt;element name="firmaAnexada" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0"/>
  *         &lt;element name="tipoMIMEFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="csv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="firmacsv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -56,8 +55,7 @@ import java.sql.Timestamp;
     "nombreFirmaAnexada",
     "firmaAnexada",
     "tipoMIMEFirmaAnexada",
-    "csv",
-    "firmacsv"
+    "csv"
 })
 public class AnexoWs {
 
@@ -78,8 +76,7 @@ public class AnexoWs {
     protected String nombreFirmaAnexada;
     protected byte[] firmaAnexada;
     protected String tipoMIMEFirmaAnexada;
-    protected String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
-    protected String firmacsv;
+    protected String csv;
 
     /**
      * Gets the value of the titulo property.
@@ -435,30 +432,6 @@ public class AnexoWs {
      */
     public void setCsv(String value) {
         this.csv = value;
-    }
-
-    /**
-     * Gets the value of the firmacsv property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFirmacsv() {
-        return firmacsv;
-    }
-
-    /**
-     * Sets the value of the firmacsv property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFirmacsv(String value) {
-        this.firmacsv = value;
     }
 
 }

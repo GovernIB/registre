@@ -30,7 +30,6 @@
         </div><!-- Fin miga de pan -->
         <c:url value="/registroSir/aceptar/${registroSir.id}" var="urlAceptar" scope="request"/>
 
-
         <div class="row">
 
             <div class="col-xs-4">
@@ -38,8 +37,7 @@
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                            <strong> <spring:message
-                                    code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</strong>
+                            <strong> <spring:message code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</strong>
                         </h3>
                     </div>
                     <div class="panel-body">
@@ -88,16 +86,8 @@
                                     </c:if>
                                 </dd>
                             </c:if>
-                            <c:if test="${not empty registroSir.numeroRegistro}">
-                                <dt><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>: </dt>
-                                <dd>${registroSir.numeroRegistro}</dd>
-                            </c:if>
-                            <c:if test="${not empty registroSir.fechaRegistro}">
-                                <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistro"/>: </dt>
-                                <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
-                            </c:if>
-                            <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>:
-                            </dt>
+
+                            <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>:</dt>
                             <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
                                 <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
                             </c:if>
@@ -105,11 +95,21 @@
                                 <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
                             </c:if>
 
+                            <c:if test="${not empty registroSir.numeroRegistro}">
+                                <dt><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>: </dt>
+                                <dd>${registroSir.numeroRegistro}</dd>
+                            </c:if>
+
+                            <c:if test="${not empty registroSir.fechaRegistro}">
+                                <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistro"/>: </dt>
+                                <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+                            </c:if>
 
                             <c:if test="${not empty registroSir.nombreUsuario}">
                                 <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt>
                                 <dd> ${registroSir.nombreUsuario}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.contactoUsuario}">
                                 <dt><i class="fa fa-at"></i> <spring:message code="registroSir.contacto"/>: </dt>
                                 <dd> ${registroSir.contactoUsuario}</dd>
@@ -118,7 +118,8 @@
                                 <dt><i class="fa fa-qrcode"></i> <spring:message code="registroSir.identificadorIntercambio"/>: </dt>
                                 <dd> ${registroSir.identificadorIntercambio}</dd>
                             </c:if>
-                            <c:if test="${not empty registroSir.tipoAnotacion}">
+
+                            <%--<c:if test="${not empty registroSir.tipoAnotacion}">
                                 <dt><i class="fa fa-map-marker"></i> <spring:message code="registroSir.tipoAnotacion"/>: </dt>
                                 <dd>
                                     <c:if test="${registroSir.tipoAnotacion == '01'}">
@@ -142,8 +143,8 @@
                             <c:if test="${not empty registroSir.decodificacionTipoAnotacion}">
                                 <dt><i class="fa fa-newspaper-o"></i> <spring:message code="registroSir.descripcionTipoAnotacion"/>: </dt>
                                 <dd> ${registroSir.decodificacionTipoAnotacion}</dd>
-                            </c:if>
-                            <c:if test="${not empty registroSir.indicadorPrueba}">
+                            </c:if>--%>
+                            <%--<c:if test="${not empty registroSir.indicadorPrueba}">
                                 <dt><i class="fa fa-tag"></i> <spring:message code="registroSir.indicadorPrueba"/>: </dt>
                                 <dd>
                                     <c:if test="${registroSir.indicadorPrueba == 'NORMAL'}">
@@ -155,47 +156,56 @@
                                                 code="registroSir.indicadorPrueba.prueba"/></span>
                                     </c:if>
                                 </dd>
-                            </c:if>
+                            </c:if>--%>
+
                             <c:if test="${not empty registroSir.documentacionFisica}">
                                 <dt><i class="fa fa-file"></i> <spring:message code="registroSir.tipoDocumentacionFisica"/>: </dt>
                                 <dd><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.resumen}">
                                 <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroSir.extracto"/>: </dt>
                                 <dd> ${registroSir.resumen}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.codigoAsunto}">
                                 <dt><i class="fa fa-thumb-tack"></i> <spring:message code="codigoAsunto.codigoAsunto"/>: </dt>
                                 <dd> ${registroSir.codigoAsunto}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.referenciaExterna}">
                                 <dt><i class="fa fa-thumb-tack"></i> <spring:message code="registroSir.referenciaExterna"/>: </dt>
                                 <dd> ${registroSir.referenciaExterna}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.numeroExpediente}">
                                 <dt><i class="fa fa-newspaper-o"></i> <spring:message
                                         code="registroSir.expediente"/>:
                                 </dt>
                                 <dd> ${registroSir.numeroExpediente}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.tipoTransporte}">
                                 <dt><i class="fa fa-bus"></i> <spring:message code="registroSir.transporte"/>:
                                 </dt>
-                                <dd><spring:message
-                                        code="transporte.${registroSir.tipoTransporte}"/> ${registroSir.numeroTransporte}</dd>
+                                <dd><spring:message code="transporte.${registroSir.tipoTransporte}"/> ${registroSir.numeroTransporte}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.observacionesApunte}">
                                 <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroSir.observaciones"/>: </dt>
                                 <dd> ${registroSir.observacionesApunte}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.expone}">
                                 <dt><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.expone"/>: </dt>
                                 <dd> ${registroSir.expone}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.solicita}">
                                 <dt><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.solicita"/>: </dt>
                                 <dd> ${registroSir.solicita}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.estado}">
                                 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
                                 <dd>
@@ -215,18 +225,22 @@
                                     </c:if>
                                 </dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.fechaEstado}">
                                 <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaEstado"/>: </dt>
                                 <dd><fmt:formatDate value="${registroSir.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.numeroReintentos}">
                                 <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>: </dt>
                                 <dd> ${registroSir.numeroReintentos}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.codigoError}">
                                 <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>: </dt>
                                 <dd> ${registroSir.codigoError}</dd>
                             </c:if>
+
                             <c:if test="${not empty registroSir.descripcionError}">
                                 <dt><i class="fa fa-comment"></i> <spring:message code="registroSir.descripcionError"/>: </dt>
                                 <dd> ${registroSir.descripcionError}</dd>
@@ -356,13 +370,15 @@
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 
+            <!-- ANEXOS -->
+            <c:import url="anexosSir.jsp"/>
+
             <%--INTERESADOS--%>
             <c:import url="interesadosSir.jsp"/>
 
-            <!-- ANEXOS -->
-            <c:import url="anexosSir.jsp"/>
             </form:form>
-                <%--TRAZABILIDAD--%>
+
+            <%--TRAZABILIDAD--%>
             <c:if test="${not empty trazabilidades}">
                 <c:import url="../trazabilidad/trazabilidadSir.jsp"/>
             </c:if>

@@ -252,4 +252,32 @@ es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.password=<<
 es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
 es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);
 
+-- Nueva Tabla RWE_TRAZABILIDAD_SIR (11/05/2017)
+create table RWE_TRAZABILIDAD_SIR (
+        ID int8 not null,
+        APLICACION varchar(4),
+        COD_ENT_REG_DEST varchar(21) not null,
+        COD_ENT_REG_ORI varchar(21) not null,
+        COD_UNI_TRA_DEST varchar(21),
+        CONTACTO_USUARIO varchar(160),
+        DEC_ENT_REG_DEST varchar(80),
+        DEC_ENT_REG_ORI varchar(80),
+        DEC_UNI_TRA_DEST varchar(80),
+        FECHA timestamp not null,
+        NOMBRE_USUARIO varchar(80),
+        OBSERVACIONES varchar(2000),
+        tipo int8 not null,
+        REGISTRO_ENTRADA int8,
+        REGISTRO_SIR int8 not null,
+        primary key (ID)
+    );
+alter table RWE_TRAZABILIDAD_SIR
+    add constraint RWE_TRASIR_REGENT_FK
+    foreign key (REGISTRO_ENTRADA)
+    references RWE_REGISTRO_ENTRADA;
+
+alter table RWE_TRAZABILIDAD_SIR
+    add constraint RWE_TRASIR_REGSIR_FK
+    foreign key (REGISTRO_SIR)
+    references RWE_REGISTRO_SIR;
 

@@ -126,14 +126,12 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
     @Test
     public void crearRegistroEntrada() throws Exception {
 
-
         for (int i = 0; i < 1; i++) {
-
 
             RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
             registroEntradaWs.setDestino(getTestDestinoCodigoDir3());
-            registroEntradaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+            registroEntradaWs.setOficina(getTestOficinaOrigenCodigoDir3());
             registroEntradaWs.setLibro(getTestDestinoLibro());
 
             registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
@@ -200,7 +198,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
             //registroEntradaWs.getAnexos().addAll(getAnexos());
 
             try {
-                IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(registroEntradaWs);
+                //IdentificadorWs identificadorWs = registroEntradaApi.altaRegistroEntrada(registroEntradaWs);
+                IdentificadorWs identificadorWs = registroEntradaApi.nuevoRegistroEntrada(getTestEntidadCodigoDir3(),registroEntradaWs);
                 System.out.println("NumeroEntrada: " + identificadorWs.getNumero());
                 System.out.println("Fecha: " + identificadorWs.getFecha());
             } catch (WsI18NException e) {
@@ -213,86 +212,6 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
                 throw e;
             }
         }
-    }
-
-    // @Test
-    public void crearRegistroEntradaIndra() throws Exception {
-
-        for (int i = 0; i < 1; i++) {
-
-            RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
-
-            registroEntradaWs.setDestino("A04009204");
-            registroEntradaWs.setOficina("O00015093");
-            registroEntradaWs.setLibro("PRES");
-
-            registroEntradaWs.setExtracto("probando ws");
-            registroEntradaWs.setDocFisica((long) 1);
-            registroEntradaWs.setIdioma("es");
-            registroEntradaWs.setTipoAsunto("CONTR");
-
-            registroEntradaWs.setAplicacion("WsTest");
-            registroEntradaWs.setVersion("1");
-
-            registroEntradaWs.setCodigoUsuario("indraapp");
-            registroEntradaWs.setContactoUsuario("");
-
-            registroEntradaWs.setNumExpediente("");
-            registroEntradaWs.setNumTransporte("");
-            registroEntradaWs.setObservaciones("");
-
-            registroEntradaWs.setRefExterna("");
-            registroEntradaWs.setCodigoAsunto(null);
-            registroEntradaWs.setTipoTransporte("");
-
-            registroEntradaWs.setExpone("expone");
-            registroEntradaWs.setSolicita("solicita");
-
-            // Interesados
-            InteresadoWs interesadoWs = new InteresadoWs();
-
-            DatosInteresadoWs interesado = new DatosInteresadoWs();
-            interesado.setTipoInteresado((long) 2);
-            interesado.setNombre("Gerardo");
-            interesado.setApellido1("Martinez");
-            interesadoWs.setInteresado(interesado);
-
-            DatosInteresadoWs representante = new DatosInteresadoWs();
-            representante.setTipoInteresado((long) 3);
-            representante.setRazonSocial("Endesa");
-            interesadoWs.setRepresentante(representante);
-
-            registroEntradaWs.getInteresados().add(interesadoWs);
-
-            InteresadoWs interesadoWs2 = new InteresadoWs();
-            DatosInteresadoWs organismo = new DatosInteresadoWs();
-            organismo.setTipoInteresado((long) 1);
-            organismo.setNombre("Presidencia Govern de les Illes Balears");
-            interesadoWs2.setInteresado(organismo);
-
-            registroEntradaWs.getInteresados().add(interesadoWs2);
-
-            // Anexos
-
-            // registroEntradaWs.getAnexos().addAll(getAnexos());
-
-            try {
-                IdentificadorWs identificadorWs = registroEntradaApi
-                        .altaRegistroEntrada(registroEntradaWs);
-                System.out.println("NumeroEntrada: " + identificadorWs.getNumero());
-                System.out.println("Fecha: " + identificadorWs.getFecha());
-            } catch (WsI18NException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsI18NException: " + msg);
-                throw e;
-            } catch (WsValidationException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsValidationException: " + msg);
-                throw e;
-            }
-
-        }
-
     }
 
     //@Test
@@ -300,7 +219,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
 
         registroEntradaWs.setDestino(getTestDestinoCodigoDir3());
-        registroEntradaWs.setOficina(getTestDestinoOficinaCodigoDir3());
+        registroEntradaWs.setOficina(getTestOficinaOrigenCodigoDir3());
         registroEntradaWs.setLibro(getTestDestinoLibro());
 
         registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");

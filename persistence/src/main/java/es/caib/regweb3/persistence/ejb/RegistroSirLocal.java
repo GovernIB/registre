@@ -52,7 +52,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * Crea un RegistroSir
      * @throws Exception
      */
-    public RegistroSir crearRegistroSir(RegistroSir registroSir) throws Exception;
+    public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      * Comrueba si una Oficina tiene RegistroSir

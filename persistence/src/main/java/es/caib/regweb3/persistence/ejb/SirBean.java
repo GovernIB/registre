@@ -51,6 +51,7 @@ public class SirBean implements SirLocal{
     @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
     @EJB private PluginLocal pluginEjb;
+    @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
 
 
     /**
@@ -86,10 +87,8 @@ public class SirBean implements SirLocal{
                     registroSirEjb.remove(registroSir);
 
                     // Creamos un nuevo RegistroSir
-                    registroSir = registroSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
-                    registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+                    registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
 
-                    registroSirEjb.crearRegistroSir(registroSir);
                     log.info("El registroSir existía en el sistema, pero se ha eliminado y vuelto a crear: " + registroSir.getIdentificadorIntercambio());
 
                 }else if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
@@ -104,10 +103,8 @@ public class SirBean implements SirLocal{
             }else{
 
                 // Creamos un nuevo RegistroSir
-                registroSir = registroSirEjb.transformarFicheroIntercambio(ficheroIntercambio);
-                registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
 
-                registroSirEjb.crearRegistroSir(registroSir);
                 log.info("El registroSir no existía en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
@@ -622,6 +619,167 @@ public class SirBean implements SirLocal{
 
     }
 
+    /**
+     * Acepta un RegistroSir, creando un Registro de Entrada
+     * @param registroSir
+     * @throws Exception
+     */
+    @Override
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
+            throws Exception {
+
+        log.info("");
+        log.info("Aceptando RegistroSir " + registroSir.getIdentificadorIntercambio());
+
+        // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
+        RegistroEntrada registroEntrada = null;
+        try {
+            registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
+
+            // Creamos la TrazabilidadSir
+            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+            trazabilidadSir.setRegistroSir(registroSir);
+            trazabilidadSir.setRegistroEntrada(registroEntrada);
+            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+            trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+            trazabilidadSir.setContactoUsuario(usuario.getUsuario().getEmail());
+            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
+            trazabilidadSir.setFecha(new Date());
+            trazabilidadSirEjb.persist(trazabilidadSir);
+
+            // CREAMOS LA TRAZABILIDAD
+            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+            trazabilidad.setRegistroSir(registroSir);
+            trazabilidad.setRegistroEntradaOrigen(null);
+            trazabilidad.setOficioRemision(null);
+            trazabilidad.setRegistroSalida(null);
+            trazabilidad.setRegistroEntradaDestino(registroEntrada);
+            trazabilidad.setFecha(new Date());
+
+            trazabilidadEjb.persist(trazabilidad);
+
+            // Modificamos el estado del RegistroSir
+            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
+
+            // Enviamos el Mensaje de Confirmación
+            mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
+
+            return registroEntrada;
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    @Override
+    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
+
+        // Actualizamos la oficina destino con la escogida por el usuario
+        registroSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
+        registroSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+
+        // Actualizamos la oficina de origen con la oficina activa
+        registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+        registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+
+        // Actualizamos la unidad de tramitación destino con el organismo responsable de la oficina de reenvio
+        registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
+        registroSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
+
+        // Modificamos usuario, contacto, aplicacion
+        registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        registroSir.setNombreUsuario(usuario.getNombreCompleto());
+        registroSir.setContactoUsuario(usuario.getEmail());
+        registroSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
+        registroSir.setDecodificacionTipoAnotacion(observaciones);
+
+        // Actualizamos el RegistroSir
+        //registroSirEjb.merge(registroSir);
+
+        // Enviamos el Registro al Componente CIR
+        emisionEjb.reenviarFicheroIntercambio(registroSirEjb.getRegistroSirConAnexos(registroSir.getId()));
+
+        // Creamos la TrazabilidadSir para el Reenvio
+        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
+        trazabilidadSir.setRegistroSir(registroSir);
+        trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+        trazabilidadSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
+        trazabilidadSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+        trazabilidadSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
+        trazabilidadSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
+        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+        trazabilidadSir.setContactoUsuario(usuario.getEmail());
+        trazabilidadSir.setObservaciones(observaciones);
+        trazabilidadSir.setFecha(new Date());
+        trazabilidadSirEjb.persist(trazabilidadSir);
+
+        // Modificamos el estado del RegistroSir
+        registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO);
+    }
+
+    /**
+     *
+     * @param registroSir
+     * @param oficinaActiva
+     * @param usuario
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
+
+        // Modificamos la oficina destino con la de inicio
+        registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
+        registroSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
+
+        // Modificamos la oficina de origen con la oficina activa
+        registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+        registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+
+        // Modificamos usuario, contacto, aplicacion
+        registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        registroSir.setNombreUsuario(usuario.getNombreCompleto());
+        registroSir.setContactoUsuario(usuario.getEmail());
+
+        registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
+        registroSir.setDecodificacionTipoAnotacion(observaciones);
+
+        //registroSir = registroSirEjb.merge(registroSir);
+
+        // Rechazamos el RegistroSir
+        emisionEjb.rechazarFicheroIntercambio(registroSirEjb.getRegistroSirConAnexos(registroSir.getId()));
+
+        // Creamos la TrazabilidadSir para el Rechazo
+        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO);
+        trazabilidadSir.setRegistroSir(registroSir);
+        trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+        trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
+        trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
+        trazabilidadSir.setCodigoUnidadTramitacionDestino(null);
+        trazabilidadSir.setDecodificacionUnidadTramitacionDestino(null);
+        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+        trazabilidadSir.setContactoUsuario(usuario.getEmail());
+        trazabilidadSir.setObservaciones(observaciones);
+        trazabilidadSir.setFecha(new Date());
+        trazabilidadSirEjb.persist(trazabilidadSir);
+
+        // Modificamos el estado del RegistroSir
+        registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
+    }
+
     @Override
     public void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException {
 
@@ -717,38 +875,6 @@ public class SirBean implements SirLocal{
     }
 
     @Override
-    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
-
-        // Actualizamos la oficina destino con la escogida por el usuario
-        registroSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
-        registroSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
-
-        // Actualizamos la oficina de origen con la oficina activa
-        registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-        registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
-
-        // Actualizamos la unidad de tramitación destino con el organismo responsable de la oficina de reenvio
-        registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
-        registroSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
-
-        // Modificamos usuario, contacto, aplicacion
-        registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        registroSir.setNombreUsuario(usuario.getNombreCompleto());
-        registroSir.setContactoUsuario(usuario.getEmail());
-        registroSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
-        registroSir.setDecodificacionTipoAnotacion(observaciones);
-
-        // Actualizamos el RegistroSir
-        registroSirEjb.merge(registroSir);
-
-        // Enviamos el Registro al Componente CIR
-        emisionEjb.reenviarFicheroIntercambio(registroSirEjb.getRegistroSirConAnexos(registroSir.getId()));
-
-        // Modificamos el estado del RegistroSir
-        registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO);
-    }
-
-    @Override
     public void reintentarEnvios(Long idEntidad) {
 
         try {
@@ -799,88 +925,6 @@ public class SirBean implements SirLocal{
                 estado.equals(EstadoRegistroSir.DEVUELTO) ||
                 estado.equals(EstadoRegistroSir.REENVIADO) ||
                 estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
-
-    }
-
-    /**
-     *
-     * @param registroSir
-     * @param oficinaActiva
-     * @param usuario
-     * @return
-     * @throws Exception
-     */
-    @Override
-    public void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
-
-        // Modificamos la oficina destino con la de inicio
-        registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
-        registroSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
-
-        // Modificamos la oficina de origen con la oficina activa
-        registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-        registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
-
-        // Modificamos usuario, contacto, aplicacion
-        registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        registroSir.setNombreUsuario(usuario.getNombreCompleto());
-        registroSir.setContactoUsuario(usuario.getEmail());
-
-        registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
-        registroSir.setDecodificacionTipoAnotacion(observaciones);
-
-        registroSir = registroSirEjb.merge(registroSir);
-
-        // Rechazamos el RegistroSir
-        emisionEjb.rechazarFicheroIntercambio(registroSirEjb.getRegistroSirConAnexos(registroSir.getId()));
-
-        // Modificamos el estado del RegistroSir
-        registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
-    }
-
-    /**
-     * Acepta un RegistroSir, creando un Registro de Entrada
-     * @param registroSir
-     * @throws Exception
-     */
-    @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
-            throws Exception {
-
-        log.info("");
-        log.info("Aceptando RegistroSir " + registroSir.getIdentificadorIntercambio());
-
-        // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
-        RegistroEntrada registroEntrada = null;
-        try {
-            registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
-
-            // CREAMOS LA TRAZABILIDAD
-            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
-            trazabilidad.setRegistroSir(registroSir);
-            trazabilidad.setRegistroEntradaOrigen(null);
-            trazabilidad.setOficioRemision(null);
-            trazabilidad.setRegistroSalida(null);
-            trazabilidad.setRegistroEntradaDestino(registroEntrada);
-            trazabilidad.setFecha(new Date());
-
-            trazabilidadEjb.persist(trazabilidad);
-
-            // Modificamos el estado del RegistroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
-
-            // Enviamos el Mensaje de Confirmación
-            mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
-
-            return registroEntrada;
-
-        } catch (I18NException e) {
-            e.printStackTrace();
-        } catch (I18NValidationException e) {
-            e.printStackTrace();
-        }
-
-        return null;
 
     }
 
