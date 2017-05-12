@@ -13,7 +13,7 @@
 
 <c:if test="${not empty aviso}">
 
-    <div class="alert alert-warning alert-dismissable">
+    <div class="alert alert-grey alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong>${aviso}</strong>
         <c:remove var="aviso" scope="session"/>
