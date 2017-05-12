@@ -246,12 +246,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
 
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
+            
+            
+            // ---------- BBDD -------------
+            // Guardamos el anexo per a que tengui ID
+            anexo = this.persist(anexo);
+            
 
-            final Map<String, Object> custodyParameters = getCustodyParameters(registro, anexo);
+            // ----------- CUSTODIA -----------------
+            
+            final Map<String, Object> custodyParameters;
+            custodyParameters = getCustodyParameters(registro, anexo, anexoFull);
 
             //Reservamos el custodyID
             if(custodyID==null) {
                 custodyID = custody.reserveCustodyID(custodyParameters);
+                log.info("reserveCustodyID=" + custodyID);
             }
             anexo.setCustodiaID(custodyID);
 
@@ -259,13 +269,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
                     registro, isNew);
 
-            //Guardamos el anexo
+            // -----------  BBDD -----------------
+            
+            // Actualitzam anexo per a que tengui custodyID
             anexo = this.persist(anexo);
 
             //Creamos el histórico de las modificaciones del registro debido a los anexos
             if (!anexo.isJustificante()) {
                 crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
             }
+            
+            // -----------------------------------
 
             anexoFull.setAnexo(anexo);
 
@@ -334,7 +348,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
 
-            final Map<String, Object> custodyParameters = getCustodyParameters(registro, anexo);
+            final Map<String, Object> custodyParameters;
+            custodyParameters = getCustodyParameters(registro, anexo, anexoFull);
 
             final String custodyID = anexo.getCustodiaID();
 
@@ -584,14 +599,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // XMAS SAVEALL DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(),
             //      custody, custodyID, custodyParameters, anexo,  mimeFinal);
             documentCustody = anexoFull.getDocumentoCustody();
-            mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, custodyParameters,
-                anexo, mimeFinal);
+            mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, anexo, mimeFinal);
 
             //Guardamos la signatureCustody
             // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
             signatureCustody = anexoFull.getSignatureCustody();
-            mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, custodyID,
-                custodyParameters, anexo, mimeFinal);
+            mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody,
+                 anexo, mimeFinal);
             
             updateDate = true;
 
@@ -602,7 +616,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 //Guardamos el documentCustody
                 // XMAS SAVEALL guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                 documentCustody = anexoFull.getDocumentoCustody();
-                mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, custodyParameters,
+                mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, 
                   anexo, mimeFinal);
 
                 //Borrar lo que haya en signature custody
@@ -619,8 +633,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                   //Guardamos la signatureCustody. Los documentos con firma attached se guardan en SignatureCustody.
                     
                   signatureCustody = anexoFull.getSignatureCustody();
-                  mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, custodyID,
-                      custodyParameters, anexo, mimeFinal);
+                  mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody, 
+                      anexo, mimeFinal);
                   
                     // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                     //Borramos el documentcustody que habia por si venimos de otro modo de firma
@@ -630,7 +644,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } else { //PARCHE PARA API ANTIGUA
                     log.info("PARCHE DC " + anexoFull.getDocumentoCustody());
                     documentCustody = doc;
-                    mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, custodyParameters,
+                    mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, 
                       anexo, mimeFinal);
                     
                     signatureCustody = null;
@@ -823,9 +837,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
     */
     public String arreglarDocumentCustody(DocumentCustody doc,
-         String custodyID,
-        final Map<String, Object> custodyParameters, Anexo anexo,
-        String mimeFinal) throws Exception {
+         String custodyID, Anexo anexo,  String mimeFinal) throws Exception {
 
         if (doc != null && doc.getData() != null) {// si nos envian documento
         
@@ -908,9 +920,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
     */
     public String arreglarSignatureCustody(SignatureCustody signature,
-        DocumentCustody doc, 
-        String custodyID, final Map<String, Object> custodyParameters,
-        Anexo anexo, String mimeFinal) throws Exception {
+        DocumentCustody doc,  Anexo anexo, String mimeFinal) throws Exception {
       //Obtenemos la firma que nos envian
 
       if (signature != null && signature.getData() != null) {//Si nos envian firma
@@ -965,12 +975,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    protected Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo) throws Exception {
+    protected Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo, AnexoFull anexoFull) throws Exception {
 
         Map<String, Object> map = new HashMap<String, Object>();
 
         map.put("registro", registro);
         map.put("anexo", anexo);
+        map.put("anexoFull", anexoFull);
 
         return map;
 

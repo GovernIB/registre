@@ -209,14 +209,14 @@ create table RWE_PLUGIN (
 create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
 alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
 
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.userinformationplugin.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.users_table=SC_WL_USUARI
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.username_column=USU_CODI
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.administrationid_column=USU_NIF
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.name_column=USU_NOM
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
-es.caib.regweb3.userinformationplugin.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
+es.caib.regweb3.plugins.userinformation.database.users_table=SC_WL_USUARI
+es.caib.regweb3.plugins.userinformation.database.username_column=USU_CODI
+es.caib.regweb3.plugins.userinformation.database.administrationid_column=USU_NIF
+es.caib.regweb3.plugins.userinformation.database.name_column=USU_NOM
+es.caib.regweb3.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
+es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
+es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_
 es.caib.regweb3.annex.plugins.documentcustody.filesystem.basedir=C:/Users/earrivi/Documents/Proyectos/SICRES3/REGWEB/archivos/
 es.caib.regweb3.annex.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}');
@@ -231,7 +231,7 @@ es.caib.regweb3.justificante.mensaje.validez=El presente justificante tiene vali
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'PostProceso','Implementación base del plugin','es.caib.regweb3.plugins.postproceso.mock.PostProcesoMockPlugin',3,id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Distribución','Implementación base del plugin, marca como distribuido el registro de entrada','es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin',2,id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Firma en servidor','Firma en servidor mediante el MiniApplet','org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin',4,'# Base del Plugin de signature server
-es.caib.regweb3.signatureserver.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/',id FROM rwe_entidad;
+es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/',id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,null,'es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.prefix=JUST_
 es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.basedir=C:/Users/earrivi/Documents/Proyectos/SICRES3/REGWEB/archivos/justificantes/
 es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}');
@@ -241,17 +241,17 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTID
 
 -- Validate Signature Plugins (08/05/2017)
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin,entidad) VALUES(RWE_ALL_SEQ.nextval,1, 'Validar Firma - @Firma','Información y Validación de Firmas Mediante @firma','org.fundaciobit.plugins.validatesignature.afirmacxf.AfirmaCxfValidateSignaturePlugin',8,'# Obligatiori. Aplicació definida dins "Gestión de Aplicaciones" de @firma federat
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.applicationID=appPrueba
+es.caib.regweb3.plugins.validatesignature.afirmacxf.applicationID=appPrueba
 # Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
+es.caib.regweb3.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
 #http://afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
 #http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
 #http://localhost:9090/afirmaws/services/DSSAfirmaVerify
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.printxml=false
+es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
+es.caib.regweb3.plugins.validatesignature.afirmacxf.printxml=false
 # CERTIFICATE Token
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.password=<<KEYSTORE_PASSWORD>>
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.password=<<KEYSTORE_PASSWORD>>
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);

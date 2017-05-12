@@ -3,9 +3,11 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.utils.RegwebConstantes;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
+import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -17,6 +19,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 import java.io.File;
 import java.util.Locale;
 
@@ -229,10 +232,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         return input;
       } catch (I18NException i18ne) {
-        // XYZ ZZZ
-        log.error(" XYZ ZZZ Error Capturat: " + i18ne.getMessage(), i18ne);
-        i18ne.printStackTrace();
-        
+        log.error("Error Capturat: " + I18NCommonUtils.getMessage(i18ne, locale), i18ne);
         throw i18ne;
       } catch (Exception e) {
         throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
@@ -474,7 +474,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         if (!plugin.filter(signaturesSet)) {
           // TODO XYZ ZZZ Traduir
           throw new I18NException("error.desconegut",
-              "El pluguin no suporta aquest tipus de firma.");
+              "El pluguin no suporta aquest tipus de firma(" + signType + ", " + signMode + ")");
         }
 
         final String timestampUrlBase = null;

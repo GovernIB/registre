@@ -208,25 +208,12 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      */
     private Object cargarPlugin(Plugin plugin) throws Exception {
 
-        String BASE_PACKAGE = null;
+        String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
 
         // Si no existe el plugin, retornamos null
         if (plugin == null) {
             log.info("No existe ningun plugin de tipo: "+plugin.getTipo()+" definido en el sistema");
             return null;
-        }
-
-        switch (plugin.getTipo().intValue()){
-
-            case 0: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex."; break;
-            case 1: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "justificante."; break;
-            case 2: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "distribucion."; break;
-            case 3: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "postproceso."; break;
-            case 4: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "signatureserver."; break;
-            case 5: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "userinformationplugin."; break;
-            case 6: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "scan."; break;
-            case 7: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + "custodiajustificante."; break;
-            case 8: BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE + ""; break;
         }
 
         // Obtenemos la clase del Plugin

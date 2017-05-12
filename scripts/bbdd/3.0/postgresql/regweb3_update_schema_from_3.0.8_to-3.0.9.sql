@@ -227,7 +227,7 @@ es.caib.regweb3.justificante.mensaje.validez=El presente justificante tiene vali
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'PostProceso','Implementación base del plugin','es.caib.regweb3.plugins.postproceso.mock.PostProcesoMockPlugin',3,id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'Distribución','Implementación base del plugin, marca como distribuido el registro de entrada','es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin',2,id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'Firma en servidor','Firma en servidor mediante el MiniApplet','org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin',4,'# Base del Plugin de signature server
-es.caib.regweb3.signatureserver.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/',id FROM rwe_entidad;
+es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/',id FROM rwe_entidad;
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) SELECT nextval('RWE_ALL_SEQ'),true, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,null,'es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.prefix=JUST_
 es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.basedir=D:/dades/dades/Proyectos/REGWEB/Justificantes/
 es.caib.regweb3.custodiajustificante.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}';
@@ -239,17 +239,17 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTID
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin,entidad) VALUES(nextval('RWE_ALL_SEQ'),true, 'Validar Firma - @Firma','Información y Validación de Firmas Mediante @firma','org.fundaciobit.plugins.validatesignature.afirmacxf.AfirmaCxfValidateSignaturePlugin',8,'# Obligatiori. Aplicació definida dins "Gestión de Aplicaciones" de @firma federat
 es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.applicationID=appPrueba
 # Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
+es.caib.regweb3.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
 #http://afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
 #http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
 #http://localhost:9090/afirmaws/services/DSSAfirmaVerify
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.printxml=false
+es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
+es.caib.regweb3.plugins.validatesignature.afirmacxf.printxml=false
 # CERTIFICATE Token
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.password=<<KEYSTORE_PASSWORD>>
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
-es.caib.regweb3.validatesignature.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.password=<<KEYSTORE_PASSWORD>>
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);
 
 

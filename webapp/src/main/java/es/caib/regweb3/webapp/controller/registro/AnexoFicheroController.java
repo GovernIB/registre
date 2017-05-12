@@ -112,7 +112,6 @@ public class AnexoFicheroController extends BaseController {
                                HttpServletResponse response, Model model) throws Exception,I18NException {
 
         log.info(" Passa per ficherosPost");
-        // XYZ ZZZ String variableReturn = "";
 
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
         boolean isSIR = anexoForm.getOficioRemisionSir();
