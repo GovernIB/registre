@@ -328,7 +328,7 @@ public class UsuarioService {
 
             // Comprobamos si la Oficina está integrada en SIR
             oficinaNueva.setSirRecepcion(oficinaEjb.isSIRRecepcion(oficinaNueva.getId()));
-            oficinaNueva.setSirEnvio(oficinaEjb.isSIRRecepcion(oficinaNueva.getId()));
+            oficinaNueva.setSirEnvio(oficinaEjb.isSIREnvio(oficinaNueva.getId()));
 
             // Actualizamos la última Oficina del Usuario
             usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());
