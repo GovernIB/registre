@@ -190,7 +190,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("registro.libro.inactivo", registroSalidaWs.getLibro());
         }
 
-        // 4.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
+        // 4.- Comprobar que el usuario tiene permisos para realizar el registro de salida
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(registroSalidaWs.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
@@ -203,12 +203,12 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         // Recuperamos el username correcto
         registroSalidaWs.setCodigoUsuario(usuario.getUsuario().getIdentificador());
 
-        // 5.- Convertir RegistroEntradaWs a RegistroEntrada
+        // 5.- Convertir RegistroSalidaWs a RegistroSalida
         RegistroSalida registroSalida = RegistroSalidaConverter.getRegistroSalida(
                 registroSalidaWs, usuario, libro, oficina, origen,
                 codigoAsuntoEjb, tipoAsuntoEjb, oficinaEjb);
 
-        // 6.- Validar el RegistroEntrada
+        // 6.- Validar el RegistroSalida
         validateRegistroSalida(registroSalida);
 
         // 7.- Validar los Interesados
@@ -391,8 +391,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("registro.libro.noExiste", libro);
         }
 
-        // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), libroObj.getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA)) {
+        // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
+        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), libroObj.getId(), PERMISO_CONSULTA_REGISTRO_SALIDA)) {
             throw new I18NException("registroSalida.usuario.permisos", usuario);
         }
 
