@@ -176,14 +176,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
-        Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, entidadActiva.getId());
+        Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
 
         if(organismo != null) { // Destinatario organismo interno
             oficios.setOrganismo(organismo);
             oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
-            //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
+            //Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
             oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, oficinaActiva.getId(), idLibro));
 
         }else { // Destinatario organismo externo
@@ -221,9 +221,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                     log.info("Nuestra entidad no esta en SIR, se creara un oficio de remision tradicional");
                 }
 
-                //Buscamos los Registros de Entrada, pendientes de tramitar mediante un Oficio de Remision
-                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, organismoExterno.getCodigo(), any, oficinaActiva.getId(), idLibro));
+            }else{
+                log.info("Organismo externo extinguido");
+                oficios.setVigente(false);
+                oficios.setOrganismo(new Organismo(null,codigoOrganismo,null));
             }
+
+            //Buscamos los Registros de Entrada externos, pendientes de tramitar mediante un Oficio de Remision
+            oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro));
         }
 
         return oficios;
@@ -231,7 +236,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber,final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber,final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -382,7 +387,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {

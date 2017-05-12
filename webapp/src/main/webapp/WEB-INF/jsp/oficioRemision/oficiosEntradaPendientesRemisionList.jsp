@@ -122,9 +122,11 @@
                                         </c:if>
                                         <c:if test="${oficiosRemisionOrganismo.vigente == false}">
                                             <div class="alert alert-danger center">
-                                                <strong>${oficiosRemisionOrganismo.organismo.denominacion}
-                                                    (${oficiosRemisionOrganismo.organismo.estado.descripcionEstadoEntidad})</strong>
-                                                <br> <br>
+                                                <c:if test="${not empty oficiosRemisionOrganismo.organismo.denominacion}">
+                                                    <strong>${oficiosRemisionOrganismo.organismo.denominacion}
+                                                        (${oficiosRemisionOrganismo.organismo.estado.descripcionEstadoEntidad})</strong>
+                                                    <br> <br>
+                                                </c:if>
                                                 <strong><spring:message code="oficioRemision.organismoDestino.extinguido"/></strong>
                                             </div>
                                         </c:if>

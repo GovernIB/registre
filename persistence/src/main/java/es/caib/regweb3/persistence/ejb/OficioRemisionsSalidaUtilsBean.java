@@ -138,7 +138,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
-        Organismo organismo = organismoEjb.findByCodigoEntidad(codigoOrganismo, entidadActiva.getId());
+        Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
 
         if(organismo != null){ // Destinatario organismo interno
             oficios.setOrganismo(organismo);
@@ -181,6 +181,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
             }else{
                 log.info("Organismo externo extinguido");
+                oficios.setVigente(false);
+                oficios.setOrganismo(new Organismo(null,codigoOrganismo,null));
             }
         }
 
@@ -192,7 +194,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     }
 
     @SuppressWarnings(value = "unchecked")
-    public Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    private Paginacion oficiosSalidaByOrganismo(Integer pageNumber, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {

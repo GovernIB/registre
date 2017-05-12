@@ -83,6 +83,15 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     public Organismo findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception;
 
     /**
+     * Obtiene el organismo de codigo indicado y de la entidad indicada independientemente del estado.
+     * @param codigo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public Organismo findByCodigoEntidadSinEstadoLigero(String codigo, Long idEntidad) throws Exception;
+
+    /**
      * Obtiene un Organismo a partir de su código Dir3
      * @param codigo
      * @return
