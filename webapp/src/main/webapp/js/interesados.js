@@ -563,9 +563,9 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
             if(total == 0){ // Si no hay resultados
 
                 if(tipoPersonas == 'Todas'){
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html("<div class=\"alert alert-warning\" style=\"text-align:left;\">"+tradsinteresado['interesado.noresultados.escoge']+"<a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+representado+",'','"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.anadir']+"</a></div>");
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).html("<div class=\"alert alert-grey\" style=\"text-align:left;\">"+tradsinteresado['interesado.noresultados.escoge']+"<a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+representado+",'','"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.anadir']+"</a></div>");
                 }else{
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-warning" style="text-align:left;">'+tradsinteresado['interesado.noresultados']+'</div>');
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.noresultados']+'</div>');
                 }
 
             }else if(total != 0){

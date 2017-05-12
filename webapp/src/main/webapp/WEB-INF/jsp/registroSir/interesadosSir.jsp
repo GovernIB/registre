@@ -11,7 +11,7 @@
             <div class="col-xs-12">
                 <div class="table-responsive">
                     <c:if test="${empty registroSir.interesados}">
-                        <div class="alert alert-warning ">
+                        <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/> <strong><spring:message
                                 code="registroEntrada.interesado"/></strong>
                         </div>

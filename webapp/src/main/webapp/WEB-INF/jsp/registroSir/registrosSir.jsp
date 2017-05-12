@@ -44,7 +44,7 @@
                             <div class="col-xs-12">
 
                                 <c:if test="${empty paginacion.listado}">
-                                    <div class="alert alert-warning alert-dismissable">
+                                    <div class="alert alert-grey alert-dismissable">
                                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <spring:message code="regweb.listado.vacio"/> <strong><spring:message
                                             code="registroSir.registroSir"/></strong>

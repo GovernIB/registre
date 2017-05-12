@@ -118,7 +118,7 @@
                            <c:import url="../modulos/mensajes.jsp"/>
 
                             <c:if test="${empty tipoAsunto.codigosAsunto}">
-                                <div class="alert alert-warning alert-dismissable">
+                                <div class="alert alert-grey alert-dismissable">
                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                    <strong><spring:message code="regweb.listado.vacio"/> <fmt:message key="codigoAsunto.codigoAsunto"/></strong>
                                 </div>

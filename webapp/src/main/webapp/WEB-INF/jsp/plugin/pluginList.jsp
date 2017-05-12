@@ -64,7 +64,7 @@
                         </div>
 
                         <c:if test="${empty listado}">
-                            <div class="alert alert-warning alert-dismissable">
+                            <div class="alert alert-grey alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert"
                                         aria-hidden="true">&times;</button>
                                 <spring:message code="regweb.listado.vacio"/> <strong><spring:message

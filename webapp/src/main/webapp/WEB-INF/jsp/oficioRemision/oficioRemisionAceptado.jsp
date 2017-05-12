@@ -44,7 +44,7 @@
                         <div class="row">
                             <div class="col-xs-12">
 
-                                <div class="alert alert-warning">
+                                <div class="alert alert-grey">
                                     <spring:message code="oficioRemision.aceptado.resumen"/> <strong>${fn:length(registrosEntrada)}</strong> <spring:message code="registroEntrada.registroEntradas"/>
                                 </div>
 

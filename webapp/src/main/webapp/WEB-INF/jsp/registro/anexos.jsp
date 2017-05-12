@@ -36,14 +36,14 @@
               <div id="anexosdiv" class="">
 
                  <c:if test="${empty registro.registroDetalle.anexos}">
-                     <div class="alert alert-warning alert-dismissable">
+                     <div class="alert alert-grey alert-dismissable">
                         <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
                      </div>
                  </c:if>
 
 
                  <c:if test="${not empty registro.registroDetalle.anexos && fn:length(registro.registroDetalle.anexos) >= maxanexospermitidos}">
-                      <div class="alert alert-warning alert-dismissable">
+                      <div class="alert alert-grey alert-dismissable">
                           <strong><spring:message code="anexo.tamanosuperado"/></strong>
                       </div>
                  </c:if>

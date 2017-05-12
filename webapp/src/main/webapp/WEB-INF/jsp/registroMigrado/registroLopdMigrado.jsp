@@ -56,7 +56,7 @@
                     </div>
 
                     <c:if test="${empty registroMigrado}">
-                        <div class="alert alert-warning alert-dismissable">
+                        <div class="alert alert-grey alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <spring:message code="regweb.busqueda.vacio"/>
                         </div>
@@ -101,7 +101,7 @@
                     </div>
 
                     <c:if test="${empty modificaciones}">
-                        <div class="alert alert-warning alert-dismissable">
+                        <div class="alert alert-grey alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <spring:message code="regweb.busqueda.vacio"/>
                         </div>
@@ -148,7 +148,7 @@
                     </div>
 
                     <c:if test="${empty consultas}">
-                        <div class="alert alert-warning alert-dismissable">
+                        <div class="alert alert-grey alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <spring:message code="regweb.busqueda.vacio"/>
                         </div>
@@ -195,7 +195,7 @@
                     </div>
 
                     <c:if test="${empty listados}">
-                        <div class="alert alert-warning alert-dismissable">
+                        <div class="alert alert-grey alert-dismissable">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             <spring:message code="regweb.busqueda.vacio"/>
                         </div>
@@ -242,7 +242,7 @@
                         </div>
 
                         <c:if test="${empty visados}">
-                            <div class="alert alert-warning alert-dismissable">
+                            <div class="alert alert-grey alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 <spring:message code="regweb.busqueda.vacio"/>
                             </div>
