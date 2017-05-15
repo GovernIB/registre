@@ -6,22 +6,18 @@ package es.caib.regweb3.model.utils;
  */
 public enum EstadoRegistroSir {
 
-    PENDIENTE_ENVIO("0", "Pendiente de envío"),
-    ENVIADO("1", "Enviado"),
-    ENVIADO_Y_ACK("2", "Enviado y ACK"),
-    ENVIADO_Y_ERROR("3", "Enviado y ERROR"),
-    DEVUELTO("4", "Devuelto"),
-    ACEPTADO("5", "Aceptado"),
+    RECIBIDO("0", "Recibido"),
+    ACEPTADO("1", "Aceptado"),
+    ENVIADO("2", "Enviado"),
+    ENVIADO_Y_ACK("3", "Enviado y ACK"),
+    ENVIADO_Y_ERROR("4", "Enviado y ERROR"),
+    DEVUELTO("5", "Devuelto"),
     REENVIADO("6", "Reenviado"),
     REENVIADO_Y_ACK("7", "Reenviado y ACK"),
     REENVIADO_Y_ERROR("8", "Reenviado y ERROR"),
-    ANULADO("9", "Anulado"),
-    RECIBIDO("10", "Recibido"),
-    RECHAZADO("11", "Rechazado"),
-    RECHAZADO_Y_ACK("12", "Rechazado y ACK"),
-    RECHAZADO_Y_ERROR("13", "Rechazado y ERROR"),
-    VALIDADO("14", "Validado"),
-    REINTENTAR_VALIDACION("15", "Reintentar validación");
+    RECHAZADO("9", "Rechazado"),
+    RECHAZADO_Y_ACK("10", "Rechazado y ACK"),
+    RECHAZADO_Y_ERROR("11", "Rechazado y ERROR");
 
     private final String value;
     private final String name;
