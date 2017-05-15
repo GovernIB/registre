@@ -318,7 +318,7 @@
                         <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
-                            <div class="panel panel-success">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSir.pendientesProcesar"/></strong> </h3>
                                 </div>
@@ -353,7 +353,7 @@
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td>${registroSir.resumen}</td>
                                                     <td class="center">
-                                                        <a class="btn btn-success btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

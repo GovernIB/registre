@@ -32,7 +32,7 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-success">
+                <div class="panel panel-primary">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong><spring:message code="regweb.reenviar"/> <spring:message

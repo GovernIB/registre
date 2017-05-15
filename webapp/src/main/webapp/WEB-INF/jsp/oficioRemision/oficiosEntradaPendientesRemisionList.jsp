@@ -47,7 +47,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
 
-                                    <div class="alert alert-warning ">
+                                    <div class="alert alert-grey ">
                                         <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message
                                             code="oficioRemision.oficioRemision"/></strong>
                                     </div>
@@ -104,7 +104,7 @@
                                 <div class="col-xs-12">
 
                                     <c:if test="${paginacion.totalResults == 0}">
-                                        <div class="alert alert-warning alert-dismissable">
+                                        <div class="alert alert-grey alert-dismissable">
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                             <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message
                                                 code="registroEntrada.registroEntrada"/></strong>
@@ -115,7 +115,7 @@
 
                                         <%--Organismo destinatario vigente o extinguido--%>
                                         <c:if test="${oficiosRemisionOrganismo.vigente}">
-                                            <div class="alert alert-warning center">
+                                            <div class="alert alert-grey center">
                                                 <strong>${oficiosRemisionOrganismo.organismo.denominacion}
                                                     (${oficiosRemisionOrganismo.organismo.estado.descripcionEstadoEntidad})</strong>
                                             </div>

@@ -32,7 +32,7 @@
                 <div class="table-responsive">
 
                     <c:if test="${empty registro.registroDetalle.interesados}">
-                        <div class="alert alert-warning ">
+                        <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/> <strong><spring:message code="registroEntrada.interesado"/></strong>
                         </div>
                     </c:if>

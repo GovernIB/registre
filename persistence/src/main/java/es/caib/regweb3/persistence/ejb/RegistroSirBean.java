@@ -236,6 +236,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return (Long) q.getSingleResult() > 0;
     }
 
+    @Override
     public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
 
         Query q;
@@ -245,7 +246,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
 
-        where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir or registroSir.codigoEntidadRegistralOrigen = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
             where.add(DataBaseUtils.like("registroSir.resumen", "resumen", parametros, registroSir.getResumen()));
@@ -260,6 +261,66 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if(any!= null){where.add(" year(registroSir.fechaRegistro) = :any "); parametros.put("any",any);}
+
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
+            query.append(" order by registroSir.id desc");
+            q = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+                q.setParameter(param.getKey(), param.getValue());
+                q2.setParameter(param.getKey(), param.getValue());
+            }
+
+        } else {
+            q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
+            query.append("order by registroSir.id desc");
+            q = em.createQuery(query.toString());
+        }
+
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
+    }
+
+    @Override
+    public Paginacion getRegistrosEstado(Integer pageNumber, String oficinaSir, String estado) throws Exception{
+
+        Query q;
+        Query q2;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
+
+        where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+
+        if (!StringUtils.isEmpty(estado)) {
+            where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
+        }
 
         if (parametros.size() != 0) {
             query.append("where ");

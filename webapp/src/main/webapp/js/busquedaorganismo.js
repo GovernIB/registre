@@ -283,7 +283,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
             } else if (len == 0) {
                 //$('#resultadosbusqueda'+tipoOrganismo).attr("display:none");
-                $('#resultadosbusqueda' + tipoOrganismo).html('<br/><div class="alert alert-warning" style="text-align:left;">' + tradorganismo['regweb.noresultados'] + '</div>');
+                $('#resultadosbusqueda' + tipoOrganismo).html('<br/><div class="alert alert-grey" style="text-align:left;">' + tradorganismo['regweb.noresultados'] + '</div>');
             }
 
             // mostramos el listado paginado.

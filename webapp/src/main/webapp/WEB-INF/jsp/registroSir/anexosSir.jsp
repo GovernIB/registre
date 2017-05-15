@@ -3,7 +3,7 @@
 
 <div class="col-xs-8 pull-right">
 
-    <div class="panel panel-success">
+    <div class="panel panel-primary">
 
         <div class="panel-heading">
             <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
@@ -17,7 +17,7 @@
                 <div id="anexosdiv" class="table-responsive">
 
                     <c:if test="${empty registroSir.anexos}">
-                        <div class="alert alert-warning alert-dismissable">
+                        <div class="alert alert-grey alert-dismissable">
                             <strong><spring:message code="regweb.listado.vacio"/> <spring:message code="anexo.anexo"/></strong>
                         </div>
                     </c:if>

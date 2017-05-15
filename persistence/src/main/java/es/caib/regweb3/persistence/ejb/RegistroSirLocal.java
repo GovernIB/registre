@@ -75,6 +75,16 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception;
 
     /**
+     *
+     * @param pageNumber
+     * @param oficinaSir
+     * @param estado
+     * @return
+     * @throws Exception
+     */
+    public Paginacion getRegistrosEstado(Integer pageNumber, String oficinaSir, String estado) throws Exception;
+
+    /**
      * Obtiene los últimos ASR pendientes de procesar destinados a una OficinaSir
      * @param oficinaSir
      * @param total
