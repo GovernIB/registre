@@ -253,7 +253,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Long getLongPropertyByEntitat(Long idEntidad, String clave) throws Exception {
         String value = getPropertyByEntidad(idEntidad, clave);
-        if (value == null) {
+        if (value == null || value.trim().length() == 0) {
             return null;
         } else {
             try {
@@ -268,7 +268,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Long getLongProperty(String clave) throws Exception {
         String value = getProperty(clave);
-        if (value == null) {
+        if (value == null  || value.trim().length() == 0) {
             return null;
         } else {
             try {
@@ -283,7 +283,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws Exception {
         String value = getPropertyByEntidad(idEntidad, clave);
-        if (value == null) {
+        if (value == null  || value.trim().length() == 0) {
             return null;
         } else {
             try {
@@ -298,7 +298,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Integer getIntegerProperty(String clave) throws Exception {
         String value = getProperty(clave);
-        if (value == null) {
+        if (value == null  || value.trim().length() == 0) {
             return null;
         } else {
             try {

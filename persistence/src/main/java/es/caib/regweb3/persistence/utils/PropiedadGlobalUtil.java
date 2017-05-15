@@ -94,9 +94,6 @@ public class PropiedadGlobalUtil {
         if (valor == null) {
             valor = getLong(partialPropertyName);
         }
-        if(valor== null){// Si no existe la propiedad global se devuelve por defecto 10 Mb
-            valor = new Long(10485760);
-        }
         return valor;
     }
 
