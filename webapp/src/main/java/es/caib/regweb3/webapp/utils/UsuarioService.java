@@ -523,7 +523,7 @@ public class UsuarioService {
             // Roles
             List<Rol> roles = obtenerRolesUserPlugin(identificador);
             if(roles == null || roles.size() == 0 ){
-                log.info("El usuario " + identificador + " no dispone de ningun Rol valido paa REGWEB3");
+                log.info("El usuario " + identificador + " no dispone de ningun Rol valido para REGWEB3");
                 return null;
             }else{
                 usuario.setRoles(roles);
