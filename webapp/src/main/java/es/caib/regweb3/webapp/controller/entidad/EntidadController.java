@@ -164,9 +164,10 @@ public class EntidadController extends BaseController {
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String nuevaEntidad(Model model) throws Exception {
 
-        EntidadForm entidadForm = new EntidadForm();
+        Entidad entidad =  new Entidad();
+        entidad.setOficioRemision(true);
 
-        model.addAttribute(entidadForm);
+        model.addAttribute(new EntidadForm(entidad));
 
         return "entidad/entidadForm";
     }
