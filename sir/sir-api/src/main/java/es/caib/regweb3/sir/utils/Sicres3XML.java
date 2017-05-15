@@ -22,7 +22,6 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,14 +36,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathConstants;
-
 import java.io.*;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
@@ -426,8 +420,8 @@ public class Sicres3XML {
             // Validar el nombre del fichero anexado
             assert_hasText(anexo.getNombre_Fichero_Anexado(),
                     "El campo 'NombreFicheroAnexado' no puede estar vacio");
-            assert_isTrue(!StringUtils.containsAny(anexo.getNombre_Fichero_Anexado(), "\\/?*:|<>\";&"),
-                    "El campo 'NombreFicheroAnexado' tiene caracteres no válidos [" + anexo.getNombre_Fichero_Anexado() + "]");
+            /*assert_isTrue(!StringUtils.containsAny(anexo.getNombre_Fichero_Anexado(), "\\/?*:|<>\";&"),
+                    "El campo 'NombreFicheroAnexado' tiene caracteres no válidos [" + anexo.getNombre_Fichero_Anexado() + "]");*/
 
             // Validar el identificador de fichero
             validarIdentificadorFichero(anexo, identificadorIntercambio);
