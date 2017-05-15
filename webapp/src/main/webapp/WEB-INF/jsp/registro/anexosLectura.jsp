@@ -51,17 +51,14 @@
                             <tbody>
                             <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
 
+                                <!-- No mostra el justificant ni ho conta pel tamany màxim -->
+                                <c:if test="${!anexo.justificante}">
                                     <tr>
-                                        <c:if test="${anexo.justificante}">
-                                            <td>
-                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})"><dt>${anexo.titulo}</dt></a>
-                                            </td>
-                                        </c:if>
-                                        <c:if test="${!anexo.justificante}">
-                                            <td>
-                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
-                                            </td>
-                                        </c:if>
+
+                                        <td>
+                                            <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
+                                        </td>
+
 
                                         <td>
                                             <spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/>
@@ -102,7 +99,7 @@
                                                     class="fa fa-download"></span></a></td>
                                         </c:if>
                                     </tr>
-
+                                </c:if>
                             </c:forEach>
                             </tbody>
                         </table>

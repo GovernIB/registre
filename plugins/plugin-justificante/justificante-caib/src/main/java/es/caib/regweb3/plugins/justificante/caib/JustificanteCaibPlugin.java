@@ -207,13 +207,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Logo Entitat
         String rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
         Image logoGovern = Image.getInstance(rutaImatge);
-        logoGovern.setAlignment(Element.ALIGN_RIGHT);
-        logoGovern.scaleToFit(50, 50);
-        logoGovern.setAbsolutePosition(160f, 780f);
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_LEFT);
-        document.add(parrafo);
-        document.add(logoGovern);
+        if(logoGovern != null) {
+            logoGovern.setAlignment(Element.ALIGN_RIGHT);
+            logoGovern.scaleToFit(50, 50);
+            logoGovern.setAbsolutePosition(160f, 780f);
+            parrafo = new Paragraph("");
+            parrafo.setAlignment(Element.ALIGN_LEFT);
+            document.add(parrafo);
+            document.add(logoGovern);
+        }
         // Sir
         InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
         Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
