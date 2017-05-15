@@ -231,6 +231,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
                 // Anexos completo
             if(showannexes){ // Si se muestran los anexos
+                model.addAttribute("iframe_anexos_height", 200 );
                 anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
 
                 if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
@@ -246,6 +247,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             // Anexos lectura
             if(showannexes){ // Si se muestran los anexos
+                model.addAttribute("iframe_anexos_height", 200 );
                 model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
             }
         }

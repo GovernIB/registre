@@ -21,7 +21,7 @@
           <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
               <c:if test="${empty maxanexospermitidos || fn:length(registro.registroDetalle.anexos) < maxanexospermitidos }">
                   <c:if test="${teScan}">
-                  <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> Scan</a>
+                  <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> Scan</a>
                   </c:if>
                   <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.archivo.nuevo"/></a>
 
@@ -51,6 +51,7 @@
                  <c:if test="${not empty registro.registroDetalle.anexos}">
                      <table id="anexos" class="table table-bordered table-hover table-striped" style="margin-bottom: 5px;">
                          <colgroup>
+                             <col>
                              <col>
                              <col>
                              <col>
@@ -109,11 +110,11 @@
                                              <td></td>
                                          </c:if>
                                          <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                             <td><a class="btn btn-success btn-default btn-sm"
+                                             <td></td>
+                                             <td><a class="btn btn-info btn-default btn-sm"
                                                     href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
                                                     target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                      class="fa fa-download"></span></a></td>
-                                             <td></td>
                                          </c:if>
 
 
@@ -139,6 +140,8 @@
                          <td class="senseBorder"></td>
                          <td class="senseBorder"></td>
                          <td class="senseBorder text-right"><spring:message code="anexo.sumatotaltamany"/>: <b>${totalA} KB</b></td>
+                         <td class="senseBorder"></td>
+                         <td class="senseBorder"></td>
                          <td class="senseBorder"></td>
                      </tr>
                  </tbody>
@@ -166,7 +169,7 @@
 <div class="modal-body" style="padding-top:10px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
 
 <%-- HEIGHT 480px --%>
-    <iframe src="" frameborder="0" id="targetiframe" style="width:885px; height:${iframe_anexos_height}px; " name="targetframe" allowtransparency="true">
+    <iframe src="" frameborder="0" id="targetiframe" style="width:850px; height:350px; " name="targetframe" allowtransparency="true">
          
     </iframe> <!-- target iframe -->
       

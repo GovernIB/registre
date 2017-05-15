@@ -969,11 +969,14 @@ function normalizarTexto(texto) {
 
 
 function quitarErrorAnexo(campo){
-    //Quitamos errores
-
-    //$(campo).parents(".form-group").removeClass("has-error");
+    $(campo).parents(".form-group").removeClass("has-error");
     $(campo).remove();
+}
 
+function limpiarAnexoForm(){
+    //$('#reload').show();
+    quitarErrorAnexo('#documentoFile\\.errors');
+    quitarErrorAnexo('#firmaFile\\.errors');
 }
 
 

@@ -56,10 +56,6 @@ public class AnexoFicheroController extends BaseController {
     private SignatureServerLocal signatureServerEjb;
 
 
-    //@EJB(mappedName = "regweb3/AnexoEJB/local")
-    //public AnexoLocal anexoEjb;
-
-
 
     /**
      * Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat.
@@ -116,89 +112,52 @@ public class AnexoFicheroController extends BaseController {
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
         boolean isSIR = anexoForm.getOficioRemisionSir();
 
-
-        if(isSIR){
+        if (isSIR) {
             long docSize = -1;
             String docExtension = "";
-            if(anexoForm.getDocumentoFile()!= null){
+            if (anexoForm.getDocumentoFile() != null) {
                 docSize = anexoForm.getDocumentoFile().getSize();
                 docExtension = obtenerExtensionDocumento(anexoForm);
             }
 
             long firmaSize = -1;
-            String firmaExtension="";
-            if(anexoForm.getFirmaFile()!= null){
+            String firmaExtension = "";
+            if (anexoForm.getFirmaFile() != null) {
                 firmaSize = anexoForm.getFirmaFile().getSize();
                 firmaExtension = obtenerExtensionFirma(anexoForm);
             }
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(),anexoForm.tipoRegistro, docSize,firmaSize, docExtension, firmaExtension, request, result);
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result);
 
-         }
-         if(result.hasErrors()){
-             return "registro/formularioAnexoFichero";
-         } else {
-             try {
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("post", true);
+            return "registro/formularioAnexoFichero";
+        } else {
+            try {
 
-                 manageDocumentCustodySignatureCustody(request, anexoForm);
+                manageDocumentCustodySignatureCustody(request, anexoForm);
 
-                 Entidad entidad = getEntidadActiva(request);
-                 signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                     isSIR, I18NUtils.getLocale());
-                 
-                 
-                 log.info(" XYZ ZZZ anexoForm.getDocumentoCustody() ======> "  + anexoForm.getDocumentoCustody());
-                 log.info(" XYZ ZZZ anexoForm.getSignatureCustody() ======> "  + anexoForm.getSignatureCustody());
+                Entidad entidad = getEntidadActiva(request);
+                signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
+                        isSIR, I18NUtils.getLocale());
 
-                 //Guardamos en session el documentCustody y el sigantureCustody para después descargarlos en la siguiente página
-                 HttpSession session = request.getSession();
-                 if(anexoForm.getDocumentoCustody()!=null) {
-                     session.setAttribute("documentCustodyData", anexoForm.getDocumentoCustody().getData());
-                     session.setAttribute("documentCustodyMime", anexoForm.getDocumentoCustody().getMime());
-                     session.setAttribute("documentCustodyName", anexoForm.getDocumentoCustody().getName());
-                 }
-                 if(anexoForm.getSignatureCustody()!= null) {
-                     session.setAttribute("signatureCustodyData", anexoForm.getSignatureCustody().getData());
-                     session.setAttribute("signatureCustodyMime", anexoForm.getSignatureCustody().getMime());
-                     session.setAttribute("signatureCustodyName", anexoForm.getSignatureCustody().getName());
-                 }
+                request.getSession().setAttribute("anexoForm", anexoForm);
 
-                 loadCommonAttributes(request, model);
-                 return "registro/formularioAnexo2";
-             } catch (I18NException i18n) {
-                 String msg = I18NUtils.tradueix(i18n.getTraduccio());
-                 log.error(msg, i18n);
-                 Mensaje.saveMessageError(request, msg);
+                return "redirect:/anexo/nou2";
 
-             } catch (Exception e) {
-                 log.error(e.getMessage(), e);
-                 Mensaje.saveMessageError(request, e.getMessage());
-             }
-         }
+            } catch (I18NException i18n) {
+                String msg = I18NUtils.tradueix(i18n.getTraduccio());
+                log.error(msg, i18n);
+                Mensaje.saveMessageError(request, msg);
 
-         return "registro/formularioAnexoFichero";
-
-
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                Mensaje.saveMessageError(request, e.getMessage());
+            }
+        }
+        return "registro/formularioAnexoFichero";
 
     }
-
-    protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
-                                        Long registroID, String tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
-        HttpSession session = request.getSession();
-        session.setAttribute("LAST_registroDetalleID", registroDetalleID);
-        session.setAttribute("LAST_tipoRegistro", tipoRegistro);
-        session.setAttribute("LAST_registroID", registroID);
-        session.setAttribute("LAST_anexoID", anexoID); // nou = null o editar != null
-        session.setAttribute("LAST_isOficioRemisionSir", isOficioRemisionSir);
-    }
-
-
-    protected void loadCommonAttributes(HttpServletRequest request, Model model) throws Exception {
-        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
-        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
-        model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
-    }
-
 
 
     /**
@@ -224,83 +183,6 @@ public class AnexoFicheroController extends BaseController {
 
 
     /**
-     * Valida las limitaciones del cuestionario de verificación de SIR (Numero de archivos, tamaño máximo y total de los archivos
-     * @param anexoForm
-     * @param request
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    /*public void validarLimitacionesSIRAnexos(AnexoForm anexoForm, HttpServletRequest request, BindingResult result) throws Exception, I18NException{
-        Entidad entidadActiva = getEntidadActiva(request);
-
-        // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
-        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
-
-        //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
-        long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull, anexoForm);
-
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
-        if (anexoForm.getDocumentoFile().getSize() != 0) {
-            tamanyoTotalAnexos += anexoForm.getDocumentoFile().getSize();
-            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                log.info("XYZ ENTRO EN DOC FILE ERROR TAMANO");
-                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
-             //   Mensaje.saveMessageError(request, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-
-                ObjectError objectError = new ObjectError("documentoFile",I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos) );
-
-                result.addError(objectError);
-                //result.rejectValue("documentoFile", I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-
-                //return "registro/formularioAnexoFichero";
-            }
-        } else {
-            tamanyoTotalAnexos += anexoForm.getFirmaFile().getSize();
-            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
-                log.info("XYZ ENTRO EN DOC FILE ERROR TAMANO");
-                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
-                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
-                //   Mensaje.saveMessageError(request, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-
-                ObjectError objectError = new ObjectError("firmaFile",I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos) );
-
-                result.addError(objectError);
-
-                //return "registro/formularioAnexoFichero";
-            }
-
-        }
-
-
-        //Validamos las extensiones de los documentos introducidos
-        //DocumentoFile
-        String extensionDocumento = obtenerExtensionDocumento(anexoForm);
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
-        if (!extensionesPermitidas.contains(extensionDocumento)) {
-            log.info(" XYZ ENTRO EN DOC FILE ERROR EXTENSION");
-            //Mensaje.saveMessageError(request, I18NUtils.tradueix("formatonopermitido", extensionDocumento, extensionesPermitidas));
-
-            ObjectError objectError = new ObjectError("documentoFile", I18NUtils.tradueix("formatonopermitido", extensionDocumento, extensionesPermitidas));
-            result.addError(objectError);
-            //return "registro/formularioAnexoFichero";
-        }
-
-        String extensionFirma = obtenerExtensionFirma(anexoForm);
-        if (!extensionesPermitidas.contains(extensionFirma)) {
-            log.info("XYZ ENTRO EN DOC FILE ERROR EXTENSION");
-            //Mensaje.saveMessageError(request, I18NUtils.tradueix("formatonopermitido", extensionDocumento, extensionesPermitidas));
-
-            ObjectError objectError = new ObjectError("firmaFile", I18NUtils.tradueix("formatonopermitido", extensionFirma, extensionesPermitidas));
-            result.addError(objectError);
-            //result.rejectValue("documentoFile", I18NUtils.tradueix("formatonopermitido", extensionFirma, extensionesPermitidas));
-            //return "registro/formularioAnexoFichero";
-        }
-        //return "";
-    }*/
-
-    /**
      * Método que obtiene el signature custody del anexoForm.
      * Devuelve el actual o el indicado en el formulario del anexo con los valores de custodia ajustados
      * @param anexoForm
@@ -319,18 +201,7 @@ public class AnexoFicheroController extends BaseController {
         }
         //Cargamos el signature custody con el actual
         SignatureCustody sc = anexoForm.getSignatureCustody();
-        // SignatureCustody sc = null;
-      /*if (anexoForm.getFirmaFile().isEmpty()) {
 
-        if (*//*modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED ||*//*
-            modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-        //  String msg = "L'usuari ens indica que hi ha una firma i no ve (modoFirma = " + modoFirma + ")";
-          String msg = "Falta el document de firma";
-          log.error(msg, new Exception());
-          throw new Exception(msg);
-        }
-
-      } else {*/
         if (!anexoForm.getFirmaFile().isEmpty()) {
             if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
                     && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {

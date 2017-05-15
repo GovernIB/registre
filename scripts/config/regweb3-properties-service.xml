@@ -179,6 +179,10 @@
             <!-- Possibles valors: [0:NO, 1: CAIB, 2:DWT, 3:APPLET_IECISA] -->
             es.caib.regweb3.scan.plugins=1,2,3
 
+            <!--  Els ApACHes de la CAIB usen la IP de destí enlloc de la URL de cridada, d'aqui
+            que s'hagi de sobreescriure a mà la URL real.  -->
+            #es.caib.regweb3.scanweb.absoluteurl=
+
 
             <!-- ============== 1 - CAIB PLUGIN  ================ -->
             es.caib.regweb3.scan.plugin.1=org.fundaciobit.plugins.scanweb.caib.CAIBScanWebPlugin

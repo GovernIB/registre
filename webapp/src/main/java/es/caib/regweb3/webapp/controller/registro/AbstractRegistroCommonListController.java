@@ -109,15 +109,15 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
       //      Integer tipusScan = 2;
       boolean teScan = scanWebModuleEjb.teScan(tipusScan);
       model.addAttribute("teScan", teScan);
-      if (teScan) {
-  
-        model.addAttribute("iframe_anexos_height", AnexoController.BASE_IFRAME_HEIGHT + 350);
+      /*if (teScan) {
+
+        model.addAttribute("iframe_anexos_height", AnexoScanController.BASE_IFRAME_HEIGHT );
             // XYZ  TODO
             // AnexoController.BASE_IFRAME_HEIGHT + scanWebModuleEjb.getMinHeight(request, tipusScan, registroID));
       } else {
         model.addAttribute("iframe_anexos_height",
-                AnexoController.BASE_IFRAME_HEIGHT + AnexoController.FILE_TAB_HEIGHT);
-      }
+                AnexoScanController.BASE_IFRAME_HEIGHT + AnexoScanController.FILE_TAB_HEIGHT);
+      }*/
     }
 
     //Montamos la nota informativa de las limitaciones de los anexos cogiendo los valores de las propiedades configuradas

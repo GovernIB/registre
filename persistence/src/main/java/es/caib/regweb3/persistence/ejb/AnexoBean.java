@@ -1,14 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.TipoDocumental;
-import es.caib.regweb3.model.TraduccionTipoDocumental;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -17,7 +10,6 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -38,17 +30,11 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 
 
@@ -360,9 +346,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Crea historico y lo enlaza con el RegistroDetalle
             crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
 
-            //Guardamos los cambios en custodia
-            updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-                    registro, isNew);
 
             return anexoFull;
 
