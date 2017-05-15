@@ -63,11 +63,11 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv) throws Exception{
+    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
 
         Long idEntidadActiva = registroEntrada.getUsuario().getEntidad().getId();
 
-        Locale locale = new Locale("es");
+        Locale locale = new Locale(idioma);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -150,7 +150,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-   public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv) throws Exception{
+   public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
 
         Locale locale = new Locale("es");
 
@@ -309,7 +309,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
             // Obtenim el missatge de Declaración de les propietats del Plugin
-            String declaracion = this.getProperty(this.getPropertyBase() + "declaracion");
+            String declaracion = this.getProperty(this.getPropertyBase() + "declaracion." + locale);
             if(declaracion!=null) {
                 PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + declaracion, font8));
                 cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
@@ -326,7 +326,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
             // Obtenim el missatge de Ley de les propietats del Plugin
-            String ley = this.getProperty(this.getPropertyBase() + "ley");
+            String ley = this.getProperty(this.getPropertyBase() + "ley." + locale);
             PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
             cellLlei.setBackgroundColor(BaseColor.WHITE);
             cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);

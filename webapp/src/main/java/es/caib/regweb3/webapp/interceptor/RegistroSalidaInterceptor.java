@@ -179,7 +179,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas a la consulta de RegistroEntrada
         if(url.contains("justificante")){
 
-            String idRegistroSalida =  url.replace("/registroSalida/","").replace("/justificante", ""); //Obtenemos el id a partir de la url
+            String idRegistroSalida =  url.replace("/registroSalida/","").replace("/justificante/ca", "").replace("/justificante/es", ""); //Obtenemos el id a partir de la url
 
             RegistroSalida registroSalida = registroSalidaEjb.findById(Long.valueOf(idRegistroSalida));
             Long idJustificante = anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId());

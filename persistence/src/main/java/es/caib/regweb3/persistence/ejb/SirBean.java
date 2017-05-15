@@ -488,11 +488,9 @@ public class SirBean implements SirLocal{
                     }
                     String url = plugin.getValidationUrl(custodyID, custodyParameters);
                     String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
-//                    String urlVerificacio = url + specialValue;
 
-                    // Generamos el pdf del Justificante
-
-                    byte[] data = justificantePlugin.generarJustificante(registroEntrada, url, specialValue, csv);
+                    // Generamos el pdf del Justificante con el idioma "es" porque es SIR
+                    byte[] data = justificantePlugin.generarJustificante(registroEntrada, url, specialValue, csv, "es");
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
                     AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
@@ -559,7 +557,7 @@ public class SirBean implements SirLocal{
 
                     // Generamos el pdf del Justificante
 
-                    byte[] data = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv);
+                    byte[] data = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv, "es");
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
                     AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);

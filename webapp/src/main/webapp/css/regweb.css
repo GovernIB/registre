@@ -813,3 +813,16 @@ a.text-gris:focus {
     height: 30px;
     padding: 4px;
 }
+.text-vermell{
+    color: #f00;
+}
+.text-taronja{
+    color: #FF8610;
+}
+.text-verd{
+    color: #3CFF0B;
+}
+
+.sinOverflow{
+    overflow-x: visible;
+}ç

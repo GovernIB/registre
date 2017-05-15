@@ -502,8 +502,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(value = "/{idRegistro}/justificante", method=RequestMethod.GET)
-    public String justificante(@PathVariable Long idRegistro, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.GET)
+    public String justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
         try {
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(idRegistro);
@@ -522,7 +522,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
                 String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
                 Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
-                String csv = "";
+                String csv = null;
                 if(mcsv != null){
                     csv = mcsv.getValue();
                 }
@@ -530,7 +530,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 String specialValue = documentCustodyPlugin.getSpecialValue(custodyID,custodyParameters);
 
                 // Obtenim el ByteArray per generar el pdf
-                byte[] baos = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv);
+                byte[] baos = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv, idioma);
 
                 // Cream l'annex justificant i el firmam
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,

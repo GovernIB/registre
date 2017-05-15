@@ -142,12 +142,29 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cronExpression.inicializarContadores","0 0 0 1 1 ? *","Expresión del cron para la inicializacion de contadores", entidad.getId(), 1L));
 
         // Creamos los Plugins
-        pluginEjb.persist(new Plugin("Justificante","Implementación base del plugin, genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.caib.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,null));
+        pluginEjb.persist(new Plugin("Justificante","Implementación base del plugin, genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
+                "# Mensaje para la declaración en el justificante\n" +
+                "es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.\n" +
+                "es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.\n" +
+                "# Mensaje para la ley en el justificante\n" +
+                "es.caib.regweb3.plugins.justificante.mock.ley.es=El registro realizado está amparado en el Artículo 16 de la Ley 39/2016.\n" +
+                "es.caib.regweb3.plugins.justificante.mock.ley.ca=El registre realitzat està amparat a l'Article 16 de la Llei 39/2016."));
+        pluginEjb.persist(new Plugin("Justificante","Implementación base del plugin, genera el justificante SIR-CAIB de los registros","es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
+                "# Mensaje para estampación del CVS en el justificante\n" +
+                "# {0}=url, {1}=specialValue, {2}=csv\n" +
+                "es.caib.regweb3.plugins.justificante.caib.estampacion=Este es un mensaje de estampación url:{0} specialValue:{1} csv:{2}\n" +
+                "# Mensaje para la declaración en el justificante\n" +
+                "es.caib.regweb3.plugins.justificante.caib.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.\n" +
+                "es.caib.regweb3.plugins.justificante.caib.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.\n" +
+                "# Mensaje para la ley en el justificante\n" +
+                "es.caib.regweb3.plugins.justificante.caib.ley.es=El registro realizado está amparado en el Artículo 16 de la Ley 39/2016.\n" +
+                "es.caib.regweb3.plugins.justificante.caib.ley.ca=El registre realitzat està amparat a l'Article 16 de la Llei 39/2016.\n" +
+                "# Mensaje para la validación en el justificante\n" +
+                "es.caib.regweb3.plugins.justificante.caib.validez.es=El presente justificante tiene validez a efectos de presentación de la documentación. El inicio del cómputo de plazos para la Administración, en su caso, vendrá determinado por la fecha de la entrada de su solicitud en el registro del Organismo competente.\n" +
+                "es.caib.regweb3.plugins.justificante.caib.validez.ca=El present justificant té validesa a efectes de presentació de la documentació. L'inici del còmput de plaços per l'Administració, en el seu cas, vendrà determinat per la data de l'entrada de la seva sol·licitud en el registre de l'Organismo competent.\n" +
+                "# Path para el logo de la Entidad\n" +
+                "es.caib.regweb3.plugins.justificante.caib.logoPath=D:/dades/dades/Proyectos/REGWEB/logo/goib-05.png"));
         pluginEjb.persist(new Plugin("Distribución","Implementación base del plugin, marca como distribuido un Registro","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_DISTRIBUCION,null,null));
-
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"postproceso.plugin","es.caib.regweb3.plugins.postproceso.mock.PostProcesoMockPlugin","Clase del Plugin de post-proceso", entidad.getId(), 1L));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"justificante.plugin","es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin","Clase del Plugin de justificante", entidad.getId(), 1L));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"distribucion.plugin","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin","Clase del Plugin de distribución", entidad.getId(), 1L));
 
         return entidad;
     }

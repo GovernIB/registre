@@ -30,6 +30,8 @@ import java.util.List;
  */
 public class JustificanteCaibPlugin extends AbstractPluginProperties implements IJustificantePlugin {
 
+    public static final String PROPERTY_CAIB_BASE = IJustificantePlugin.JUSTIFICANTE_BASE_PROPERTY + "caib.";
+
     protected final Logger log = Logger.getLogger(getClass());
 
     /**
@@ -56,16 +58,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
 
-    protected String getPropertyBase() {
-        return "mensaje.";
-    }
-
 
     @Override
-    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv) throws Exception{
+    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
 
-        // Define idioma Español para el justificante
-        Locale locale = new Locale("es");
+        // Define idioma para el justificante
+        Locale locale = new Locale(idioma);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -122,10 +120,10 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv) throws Exception{
+    public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
 
-        // Define idioma Español para el justificante
-        Locale locale = new Locale("es");
+        // Define idioma para el justificante
+        Locale locale = new Locale(idioma);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -206,6 +204,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         parrafo.setAlignment(Element.ALIGN_LEFT);
         document.add(parrafo);
         document.add(logoRW);
+        // Logo Entitat
+        String rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
+        Image logoGovern = Image.getInstance(rutaImatge);
+        logoGovern.setAlignment(Element.ALIGN_RIGHT);
+        logoGovern.scaleToFit(50, 50);
+        logoGovern.setAbsolutePosition(160f, 780f);
+        parrafo = new Paragraph("");
+        parrafo.setAlignment(Element.ALIGN_LEFT);
+        document.add(parrafo);
+        document.add(logoGovern);
         // Sir
         InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
         Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
@@ -296,7 +304,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
             // Obtenim el missatge de Declaración de les propietats del Plugin
-            String declaracion = this.getProperty(this.getPropertyBase() + "declaracion");
+            String declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
             PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, font8));
             cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -312,7 +320,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
             // Obtenim el missatge de Ley de les propietats del Plugin
-            String ley = this.getProperty(this.getPropertyBase() + "ley");
+            String ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
             PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
             cellLlei.setBackgroundColor(BaseColor.WHITE);
             cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -325,7 +333,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             PdfPTable titolPlazos = new PdfPTable(1);
             titolPlazos.setWidthPercentage(100);
             // Obtenim el missatge de Validez de les propietats del Plugin
-            String validez = this.getProperty(this.getPropertyBase() + "validez");
+            String validez = this.getProperty(PROPERTY_CAIB_BASE + "validez." + locale);
             PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, font8));
             cellPlazos.setBackgroundColor(BaseColor.WHITE);
             cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -620,7 +628,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Font font7 = FontFactory.getFont(FontFactory.HELVETICA, 7);
 
         // Obtenim el missatge d'Estampació de les propietats del Plugin
-        String estampacion = this.getPropertyRequired(this.getPropertyBase() + "estampacion");
+        String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
         String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
 /*
         // Añadimos la separación
