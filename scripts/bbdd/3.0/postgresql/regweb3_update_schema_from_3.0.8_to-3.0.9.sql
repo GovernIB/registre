@@ -218,10 +218,10 @@ es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_C
 --Plugin Custodia
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) SELECT nextval('RWE_ALL_SEQ'),true, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_
 es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/Users/earrivi/Documents/Proyectos/SICRES3/REGWEB/archivos/
-es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}';
+es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=ANNEX_';
 
 --Plugin Justificante
-
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'Justificante','Genera el justificante SIR-CAIB de los registros','es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin',1,'# Mensaje para estampación del CVS en el justificante
 # {0}=url, {1}=specialValue, {2}=csv
 es.caib.regweb3.plugins.justificante.caib.estampacion=Este es un mensaje de estampación url:{0} specialValue:{1} csv:{2}
@@ -242,6 +242,8 @@ es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges
 # Mensaje para la ley en el justificante
 es.caib.regweb3.plugins.justificante.mock.ley.es=El registro realizado está amparado en el Artículo 16 de la Ley 39/2016.
 es.caib.regweb3.plugins.justificante.mock.ley.ca=El registre realitzat està amparat a l''Article 16 de la Llei 39/2016.',id FROM rwe_entidad;
+
+--Plugin PostProceso
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'PostProceso','Implementación base del plugin','es.caib.regweb3.plugins.postproceso.mock.PostProcesoMockPlugin',3,id FROM rwe_entidad;
 
 --Plugin Distribución
@@ -254,7 +256,8 @@ es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/ear
 --Plugin Custodia-Justificante
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) SELECT nextval('RWE_ALL_SEQ'),true, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_
 es.caib.regweb3.plugins.documentcustody.custodiajustificante.filesystem.basedir=D:/dades/dades/Proyectos/REGWEB/Justificantes/
-es.caib.regweb3.plugins.documentcustody.custodiajustificante.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}';
+es.caib.regweb3.plugins.documentcustody.custodiajustificante.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+es.caib.regweb3.annex.plugins.documentcustody.filesystem.prefix=JUST_';
 
 -- Plugin Scan
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'CAIB Scan','Scan mediante el sistema CAIB','org.fundaciobit.plugins.scanweb.caib.CAIBScanWebPlugin',6,'',id FROM rwe_entidad;
