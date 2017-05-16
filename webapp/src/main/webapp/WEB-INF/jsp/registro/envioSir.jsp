@@ -74,9 +74,6 @@
                                         <p><strong><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
                                         <p><strong><i class="fa fa-book"></i> <spring:message code="libro.libro"/>:</strong> ${registro.libro.nombre}</p>
                                     </div>
-                                    <div class="panel-footer">
-                                        Panel Footer
-                                    </div>
                                 </div>
                             </div>
 
@@ -115,9 +112,6 @@
                                             </div>
 
                                         </form:form>
-                                    </div>
-                                    <div class="panel-footer">
-                                        Panel Footer
                                     </div>
                                 </div>
                             </div>
