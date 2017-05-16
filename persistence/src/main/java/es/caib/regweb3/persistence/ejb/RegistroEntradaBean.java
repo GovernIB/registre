@@ -134,7 +134,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             // Procesamos los Interesados
             if(interesados != null && interesados.size() > 0){
-                interesadoEjb.guardarInteresados(interesados, registroEntrada.getRegistroDetalle());
+                interesados = interesadoEjb.guardarInteresados(interesados, registroEntrada.getRegistroDetalle());
+                registroEntrada.getRegistroDetalle().setInteresados(interesados);
             }
 
             // TODO Controlar custodyID y si hay fallo borrar todos los Custody

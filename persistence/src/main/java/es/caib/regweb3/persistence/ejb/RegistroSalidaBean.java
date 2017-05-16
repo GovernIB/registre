@@ -131,6 +131,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             // Procesamos los Interesados
             if(interesados != null && interesados.size() > 0){
                 interesadoEjb.guardarInteresados(interesados, registroSalida.getRegistroDetalle());
+                registroSalida.getRegistroDetalle().setInteresados(interesados);
             }
 
             if (anexos != null && anexos.size() != 0) {
