@@ -89,7 +89,6 @@
 
                                     <c:if test="${idJustificante == null && registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
                                         <div class="btn-group">
-                                            <%--<button type="button" class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/justificante/${idioma}"/>","<spring:message code="regweb.confirmar.justificante" htmlEscape="true"/>")'><spring:message code="justificante.boton"/></button>--%>
                                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                                 <spring:message code="justificante.boton"/> <span class="caret"></span>
                                             </button>

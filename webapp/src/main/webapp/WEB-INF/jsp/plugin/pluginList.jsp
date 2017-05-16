@@ -96,7 +96,6 @@
                                         <col>
                                         <col>
                                         <col>
-                                        <col>
                                         <col width="100">
                                     </colgroup>
                                     <thead>
