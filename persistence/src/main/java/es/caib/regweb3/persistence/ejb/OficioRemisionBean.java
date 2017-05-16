@@ -227,7 +227,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null, null);
 
                 // CREAMOS LA TRAZABILIDAD
-                Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                Trazabilidad trazabilidad = new Trazabilidad();
+                if(oficioRemision.getSir()){
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
+                }else{
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                }
                 trazabilidad.setRegistroEntradaOrigen(registroEntrada);
                 trazabilidad.setOficioRemision(oficioRemision);
                 trazabilidad.setRegistroSalida(registroSalida);
@@ -246,7 +251,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             // CREAMOS LA TRAZABILIDAD
             for (RegistroSalida registroSalida : oficioRemision.getRegistrosSalida()) {
 
-                Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                Trazabilidad trazabilidad = new Trazabilidad();
+                if(oficioRemision.getSir()){
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
+                }else{
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                }
                 trazabilidad.setRegistroEntradaOrigen(null);
                 trazabilidad.setOficioRemision(oficioRemision);
                 trazabilidad.setRegistroSalida(registroSalida);
@@ -373,7 +383,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_INTERNO
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_INTERNO_ENVIADO
                 + " order by oficioRemision.id desc");
 
         q.setParameter("organismos",organismos);
@@ -398,7 +408,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         where.add(" oficioRemision.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
 
         where.add(" oficioRemision.organismoDestinatario in (:organismos)"); parametros.put("organismos",organismos);
-        where.add(" oficioRemision.estado = :estado");parametros.put("estado",RegwebConstantes.OFICIO_INTERNO);
+        where.add(" oficioRemision.estado = :estado");parametros.put("estado",RegwebConstantes.OFICIO_INTERNO_ENVIADO);
 
         if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
 
@@ -473,7 +483,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision "
                 + "where oficioRemision.organismoDestinatario in (:organismos) "
-                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_INTERNO);
+                + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_INTERNO_ENVIADO);
 
         q.setParameter("organismos",organismos);
 

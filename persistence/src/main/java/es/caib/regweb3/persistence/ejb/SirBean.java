@@ -459,7 +459,7 @@ public class SirBean implements SirLocal{
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setSir(true);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
@@ -601,7 +601,7 @@ public class SirBean implements SirLocal{
 
         // Registramos el Oficio de Remisión SIR
         try {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         } catch (I18NValidationException e) {
             e.printStackTrace();
@@ -786,7 +786,7 @@ public class SirBean implements SirLocal{
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setSir(true);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
@@ -855,7 +855,7 @@ public class SirBean implements SirLocal{
 
         // Registramos el Oficio de Remisión SIR
         try {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         } catch (I18NValidationException e) {
             e.printStackTrace();
