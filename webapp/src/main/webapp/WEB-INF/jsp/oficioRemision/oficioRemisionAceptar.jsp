@@ -61,8 +61,8 @@
                             </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO}"><span class="label label-success"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}"><span class="label label-warning"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}"><span class="label label-success"></c:if>
@@ -104,7 +104,7 @@
                         </form:form>
                     </c:if>
 
-                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}">
+                        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}">
                         <button type="button" onclick="doForm('#oficioPendienteLlegadaForm')" class="btn btn-success btn-sm btn-block"><spring:message code="oficioRemision.aceptar"/></button>
                     </c:if>
 
@@ -128,7 +128,7 @@
                             <div class="panel-heading">
 
                                 <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                        code="oficioRemision.registrosEntrada"/>:</strong> ${fn:length(registrosEntrada)}
+                                        code="oficioRemision.registrosEntrada"/></strong>
                                 </h3>
                             </div>
 
@@ -249,7 +249,7 @@
                             <div class="panel-heading">
 
                                 <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
-                                        code="oficioRemision.registrosSalida"/>:</strong> ${fn:length(registrosSalida)}
+                                        code="oficioRemision.registrosSalida"/></strong>
                                 </h3>
                             </div>
 

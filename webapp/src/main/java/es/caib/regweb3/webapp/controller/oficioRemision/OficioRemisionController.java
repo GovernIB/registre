@@ -647,17 +647,6 @@ public class OficioRemisionController extends BaseController {
     public String procesarOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
-
-        /*if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())) {
-            List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getEntradasByOficioRemision(oficioRemision.getId());
-            model.addAttribute("registrosEntrada", registrosEntrada);
-        }
-
-        if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())) {
-            List<RegistroSalida> registrosSalida = oficioRemisionEjb.getSalidasByOficioRemision(oficioRemision.getId());
-            model.addAttribute("registrosSalida", registrosSalida);
-        }*/
-
         model.addAttribute("oficioRemision", oficioRemision);
 
         // Obtenemos los libros donde el UsuarioEntidad puede registrar

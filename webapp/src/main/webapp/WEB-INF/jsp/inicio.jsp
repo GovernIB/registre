@@ -373,6 +373,61 @@
                         <c:set var="avisos" value="0"/>
                     </c:if>
 
+                    <%--OFICIOS DEVUELTOS--%>
+                    <c:if test="${not empty oficiosRechazados}">
+                        <c:set var="avisos" value="${avisos+1}"/>
+                        <div class="col-xs-6">
+
+                            <div class="panel panel-success">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.rechazados"/></strong> </h3>
+                                </div>
+
+                                <div class="panel-body">
+
+                                    <div class="table-responsive-inici">
+
+                                        <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                            <colgroup>
+                                                <col>
+                                                <col>
+                                                <col>
+                                                <col width="51">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th><spring:message code="oficioRemision.fecha"/></th>
+                                                <th><spring:message code="oficioRemision.oficina"/></th>
+                                                <th><spring:message code="organismo.destino"/></th>
+                                                <th class="center"><spring:message code="regweb.acciones"/></th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <c:forEach var="oficioDevuelto" items="${oficiosRechazados}">
+                                                <tr>
+                                                    <td><fmt:formatDate value="${oficioDevuelto.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                    <td>${oficioDevuelto.oficina.denominacion}</td>
+                                                    <td>${(empty oficioDevuelto.organismoDestinatario)? oficioDevuelto.destinoExternoDenominacion : oficioDevuelto.organismoDestinatario.denominacion}</td>
+                                                    <td class="center">
+                                                        <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioDevuelto.id}/detalle"/>" title="<spring:message code="oficioRemision.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
+                    <c:if test="${avisos==2}">
+                        <div class="clearfix visible-xs-block"></div>
+                        <c:set var="avisos" value="0"/>
+                    </c:if>
 
                 </div><!-- /.row -->
 

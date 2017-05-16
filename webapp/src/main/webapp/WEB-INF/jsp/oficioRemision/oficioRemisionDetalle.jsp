@@ -31,11 +31,18 @@
 
         <c:import url="../modulos/mensajes.jsp"/>
 
+        <c:if test="${oficioRemision.sir == false}">
+            <c:set var="color" value="success"/>
+        </c:if>
+        <c:if test="${oficioRemision.sir == true}">
+            <c:set var="color" value="primary"/>
+        </c:if>
+
         <div class="row">
 
             <div class="col-xs-4">
 
-                <div class="panel panel-success">
+                <div class="panel panel-${color}">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
@@ -77,8 +84,8 @@
                             </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}"><span class="label label-success"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO}"><span class="label label-success"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}"><span class="label label-success"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}"><span class="label label-warning"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}"><span class="label label-success"></c:if>
@@ -140,7 +147,7 @@
                         </div>
                     </c:if>
 
-                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO && isAdministradorLibro}">
+                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO && isAdministradorLibro}">
                         <div class="panel-footer">
                             <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
                         </div>
@@ -160,7 +167,7 @@
                 <div class="row">
 
                     <div class="col-lg-6">
-                        <div class="panel panel-success">
+                        <div class="panel panel-${color}">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-home"></i>
                                     <strong><spring:message code="oficina.origen"/></strong>
@@ -175,7 +182,7 @@
                     </div>
 
                     <div class="col-lg-6">
-                        <div class="panel panel-success">
+                        <div class="panel panel-${color}">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-institution"></i>
                                     <strong><spring:message code="organismo.destino"/></strong>
@@ -205,7 +212,7 @@
 
                 <%--Registros del oficio--%>
                 <c:if test="${not empty trazabilidades}">
-                    <div class="panel panel-success">
+                    <div class="panel panel-${color}">
 
                         <div class="panel-heading">
 

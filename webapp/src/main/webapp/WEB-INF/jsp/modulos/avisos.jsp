@@ -84,7 +84,7 @@
                         <li>
                             <a href="<c:url value="/oficioRemision/list"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.devueltos"/> (${oficiosDevueltos})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.rechazados"/> (${oficiosDevueltos})
                                 </div>
                             </a>
                         </li>

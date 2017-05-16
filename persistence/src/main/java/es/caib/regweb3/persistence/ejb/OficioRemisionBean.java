@@ -503,15 +503,41 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getByEstadoOficina(int idEstado, Long idOficina) throws Exception{
+    public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception{
+
+        Query q = em.createQuery("Select oficioRemision.registrosSalida from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
+
+        q.setParameter("idOficioRemision", idOficioRemision);
+
+        return q.getResultList();
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<OficioRemision> getByEstadoOficina(int idEstado, Long idOficina, int total) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
+                "and oficioRemision.oficina.id = :idOficina order by oficioRemision.fecha desc");
+
+        q.setMaxResults(total);
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idOficina", idOficina);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long getByEstadoOficinaCount(int idEstado, Long idOficina) throws Exception{
+
+        Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
                 "and oficioRemision.oficina.id = :idOficina");
 
         q.setParameter("idEstado", idEstado);
         q.setParameter("idOficina", idOficina);
 
-        return q.getResultList();
+        return (Long) q.getSingleResult();
     }
 
     @Override
@@ -522,17 +548,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         q.setParameter("idEstado", idEstado);
         q.setParameter("idEntidad", idEntidad);
-
-        return q.getResultList();
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception{
-
-        Query q = em.createQuery("Select oficioRemision.registrosSalida from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
-
-        q.setParameter("idOficioRemision", idOficioRemision);
 
         return q.getResultList();
     }

@@ -22,7 +22,10 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -118,8 +121,7 @@ public class SirBean implements SirLocal {
                 if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
                         oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
-                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK ||
-                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK){
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK){
 
                     if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
 
@@ -248,17 +250,8 @@ public class SirBean implements SirLocal {
             oficioRemision.setNumeroReintentos(0);
             oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (RegwebConstantes.OFICIO_SIR_RECHAZADO == oficioRemision.getEstado()){
-
-            // Actualizamos el OficioRemision
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemisionEjb.merge(oficioRemision);
-
         } else if (RegwebConstantes.OFICIO_SIR_ENVIADO_ACK == oficioRemision.getEstado() ||
-                RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado()  ||
-                RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK == oficioRemision.getEstado()){
+                RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado()){
 
             log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
             //throw new ValidacionException(Errores.ERROR_0206);
@@ -319,7 +312,10 @@ public class SirBean implements SirLocal {
 
         if (RegwebConstantes.OFICIO_SIR_ENVIADO == oficioRemision.getEstado()  ||
                 RegwebConstantes.OFICIO_SIR_ENVIADO_ACK == oficioRemision.getEstado() ||
-                RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR == oficioRemision.getEstado()){
+                RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR == oficioRemision.getEstado() ||
+                RegwebConstantes.OFICIO_SIR_REENVIADO == oficioRemision.getEstado()  ||
+                RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado() ||
+                RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR == oficioRemision.getEstado()){
 
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
@@ -372,18 +368,8 @@ public class SirBean implements SirLocal {
             oficioRemision.setFechaEstado(new Date());
             oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO)){
-
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR);
-            oficioRemision.setCodigoError(mensaje.getCodigoError());
-            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
-
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR)){
+        }  else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) ||
+                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR)){
 
             log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
             throw new ValidacionException(Errores.ERROR_0037);
