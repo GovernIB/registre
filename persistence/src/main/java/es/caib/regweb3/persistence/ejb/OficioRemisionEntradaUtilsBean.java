@@ -457,7 +457,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO_ENVIADO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
         oficioRemision.setFechaEstado(new Date());
@@ -493,7 +493,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());

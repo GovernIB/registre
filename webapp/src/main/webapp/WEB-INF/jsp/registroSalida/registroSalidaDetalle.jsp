@@ -91,7 +91,15 @@
                                 <c:if test="${entidadActiva.sir}">
 
                                     <c:if test="${idJustificante == null && registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
-                                        <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/justificante"/>","<spring:message code="regweb.confirmar.justificante" htmlEscape="true"/>")'><spring:message code="justificante.boton"/></button></div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <spring:message code="justificante.boton"/> <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li class="submenu-complet"><a href="<c:url value="/registroSalida/${registro.id}/justificante/ca"/>"><spring:message code="regweb.catalan"/></a></li>
+                                                <li class="submenu-complet"><a href="<c:url value="/registroSalida/${registro.id}/justificante/es"/>"><spring:message code="regweb.castellano"/></a></li>
+                                            </ul>
+                                        </div>
                                     </c:if>
 
                                     <c:if test="${idJustificante != null}">

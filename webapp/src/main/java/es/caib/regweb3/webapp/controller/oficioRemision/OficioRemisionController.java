@@ -288,7 +288,7 @@ public class OficioRemisionController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         if (permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
-                oficioRemision.getEstado() == RegwebConstantes.OFICIO_INTERNO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_EXTERNO) {
+                oficioRemision.getEstado() == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_EXTERNO_ENVIADO) {
 
             oficioRemisionEjb.anularOficioRemision(idOficioRemision, usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("aviso.oficioRemision.anulado"));
@@ -693,7 +693,7 @@ public class OficioRemisionController extends BaseController {
 
         // Comprobamos si ya ha sido procesado
         if (!organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario()) ||
-                oficioRemision.getEstado() != RegwebConstantes.OFICIO_INTERNO) {
+                oficioRemision.getEstado() != RegwebConstantes.OFICIO_INTERNO_ENVIADO) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.aceptado"));
             return "redirect:/oficioRemision/pendientesLlegada/list";
         }

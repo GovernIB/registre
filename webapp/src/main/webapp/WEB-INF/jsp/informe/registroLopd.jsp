@@ -155,50 +155,49 @@
 
                                                     <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                                 </div>
-                                            </div>
 
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                                    <colgroup>
-                                                        <col>
-                                                        <col>
-                                                        <col>
-                                                        <col>
-                                                        <col>
-                                                        <col width="40">
-                                                    </colgroup>
-                                                    <thead>
-                                                    <tr>
-                                                        <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                                        <th><spring:message code="registroEntrada.anyRegistro"/></th>
-                                                        <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                                        <th><spring:message code="registroEntrada.fecha"/></th>
-                                                        <th><spring:message code="registroEntrada.oficina"/></th>
-                                                        <th></th>
-                                                    </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                    <c:forEach var="entrada" items="${paginacion.listado}" varStatus="status">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col width="40">
+                                                        </colgroup>
+                                                        <thead>
                                                         <tr>
-                                                            <td>${entrada.numeroRegistro}</td>
-                                                            <td><fmt:formatDate value="${entrada.fecha}" pattern="yyyy"/></td>
-                                                            <td>${entrada.libro.nombreCompleto}</td>
-                                                            <td><fmt:formatDate value="${entrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                            <td>${entrada.oficina.denominacion}</td>
-                                                            <td><a class="btn btn-info btn-sm" href="<c:url value="/informe/${entrada.id}/${idTipoRegistro}/informeRegistroLopd"/>" title="<spring:message code="regweb.ver"/>"><span class="fa fa-check"></span></a></td>
+                                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                            <th><spring:message code="registroEntrada.anyRegistro"/></th>
+                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                                            <th><spring:message code="registroEntrada.fecha"/></th>
+                                                            <th><spring:message code="registroEntrada.oficina"/></th>
+                                                            <th></th>
                                                         </tr>
-                                                    </c:forEach>
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
 
-                                                <!-- Paginacion -->
-                                                <c:import url="../modulos/paginacionBusqueda.jsp">
-                                                    <c:param name="entidad" value="registroLopd"/>
-                                                </c:import>
+                                                        <tbody>
+                                                        <c:forEach var="entrada" items="${paginacion.listado}" varStatus="status">
+                                                            <tr>
+                                                                <td>${entrada.numeroRegistro}</td>
+                                                                <td><fmt:formatDate value="${entrada.fecha}" pattern="yyyy"/></td>
+                                                                <td>${entrada.libro.nombreCompleto}</td>
+                                                                <td><fmt:formatDate value="${entrada.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                                <td>${entrada.oficina.denominacion}</td>
+                                                                <td><a class="btn btn-info btn-sm" href="<c:url value="/informe/${entrada.id}/${idTipoRegistro}/informeRegistroLopd"/>" title="<spring:message code="regweb.ver"/>"><span class="fa fa-check"></span></a></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
 
+                                                    <!-- Paginacion -->
+                                                    <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                        <c:param name="entidad" value="registroLopd"/>
+                                                    </c:import>
+
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </c:if>
@@ -226,50 +225,49 @@
 
                                                     <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                                 </div>
-                                            </div>
 
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-hover table-striped tablesorter">
-                                                    <colgroup>
-                                                        <col>
-                                                        <col>
-                                                        <col>
-                                                        <col>
-                                                        <col>
-                                                        <col width="40">
-                                                    </colgroup>
-                                                    <thead>
-                                                    <tr>
-                                                        <th><spring:message code="registroSalida.numeroRegistro"/></th>
-                                                        <th><spring:message code="registroSalida.anyRegistro"/></th>
-                                                        <th><spring:message code="registroSalida.libro.corto"/></th>
-                                                        <th><spring:message code="registroSalida.fecha"/></th>
-                                                        <th><spring:message code="registroSalida.oficina"/></th>
-                                                        <th></th>
-                                                    </tr>
-                                                    </thead>
-
-                                                    <tbody>
-                                                    <c:forEach var="salida" items="${paginacion.listado}" varStatus="status">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col width="40">
+                                                        </colgroup>
+                                                        <thead>
                                                         <tr>
-                                                            <td>${salida.numeroRegistro}</td>
-                                                            <td><fmt:formatDate value="${salida.fecha}" pattern="yyyy"/></td>
-                                                            <td>${salida.libro.nombreCompleto}</td>
-                                                            <td><fmt:formatDate value="${salida.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                            <td>${salida.oficina.denominacion}</td>
-                                                            <td><a class="btn btn-danger btn-sm" href="<c:url value="/informe/${salida.id}/${idTipoRegistro}/informeRegistroLopd"/>" title="<spring:message code="regweb.seleccionar"/>"><span class="fa fa-check"></span></a></td>
+                                                            <th><spring:message code="registroSalida.numeroRegistro"/></th>
+                                                            <th><spring:message code="registroSalida.anyRegistro"/></th>
+                                                            <th><spring:message code="registroSalida.libro.corto"/></th>
+                                                            <th><spring:message code="registroSalida.fecha"/></th>
+                                                            <th><spring:message code="registroSalida.oficina"/></th>
+                                                            <th></th>
                                                         </tr>
-                                                    </c:forEach>
-                                                    </tbody>
-                                                </table>
+                                                        </thead>
 
-                                                <!-- Paginacion -->
-                                                <c:import url="../modulos/paginacionBusqueda.jsp">
-                                                    <c:param name="entidad" value="registroLopd"/>
-                                                </c:import>
+                                                        <tbody>
+                                                        <c:forEach var="salida" items="${paginacion.listado}" varStatus="status">
+                                                            <tr>
+                                                                <td>${salida.numeroRegistro}</td>
+                                                                <td><fmt:formatDate value="${salida.fecha}" pattern="yyyy"/></td>
+                                                                <td>${salida.libro.nombreCompleto}</td>
+                                                                <td><fmt:formatDate value="${salida.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                                <td>${salida.oficina.denominacion}</td>
+                                                                <td><a class="btn btn-danger btn-sm" href="<c:url value="/informe/${salida.id}/${idTipoRegistro}/informeRegistroLopd"/>" title="<spring:message code="regweb.seleccionar"/>"><span class="fa fa-check"></span></a></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
 
+                                                    <!-- Paginacion -->
+                                                    <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                        <c:param name="entidad" value="registroLopd"/>
+                                                    </c:import>
+
+                                                </div>
                                             </div>
-
                                         </div>
                                     </div>
                                 </c:if>

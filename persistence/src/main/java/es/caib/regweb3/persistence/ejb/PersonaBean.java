@@ -372,67 +372,6 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     }
 
     @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<Persona> busquedaPersonas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, String razonSocial) throws Exception {
-
-        Query q;
-        Map<String, Object> parametros = new HashMap<String, Object>();
-        List<String> where = new ArrayList<String>();
-
-        StringBuffer query = new StringBuffer("Select persona from Persona as persona ");
-
-
-        if (nombre != null && nombre.length() > 0) {
-            where.add(DataBaseUtils.like("persona.nombre", "nombre", parametros, nombre));
-        }
-        if (apellido1 != null && apellido1.length() > 0) {
-            where.add(DataBaseUtils.like("persona.apellido1", "apellido1", parametros, apellido1));
-        }
-        if (apellido2 != null && apellido2.length() > 0) {
-            where.add(DataBaseUtils.like("persona.apellido2", "apellido2", parametros, apellido2));
-        }
-        if (documento != null && documento.length() > 0) {
-            where.add(" upper(persona.documento) like upper(:documento) ");
-            parametros.put("documento", "%" + documento.toLowerCase() + "%");
-        }
-        if (razonSocial != null && razonSocial.length() > 0) {
-            where.add(" upper(persona.razonSocial) like upper(:razonSocial) ");
-            parametros.put("razonSocial", "%" + razonSocial.toLowerCase() + "%");
-        }
-        where.add("persona.entidad.id = :idEntidad ");
-        parametros.put("idEntidad", idEntidad);
-
-        // Añadimos los parametros de búsqueda
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
-            }
-
-            query.append("order by persona.apellido1");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-                q.setParameter(param.getKey(), param.getValue());
-
-            }
-
-        } else {
-
-            query.append("order by persona.apellido1");
-            q = em.createQuery(query.toString());
-        }
-
-
-        return q.getResultList();
-    }
-
-    @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
         Query query = em.createQuery("delete from Persona where entidad.id = :idEntidad");
