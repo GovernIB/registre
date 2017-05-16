@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.utils.RegwebConstantes;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -18,6 +19,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+
 import java.io.File;
 import java.util.Locale;
 
@@ -80,9 +82,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     public AnexoFull checkDocumentAndSignature(AnexoFull input, long idEntidad,
         boolean sir, Locale locale) throws I18NException {
       
-    
-      // XYZ ZZZ ERROR ERROR !!!!
-      // sir = true;
       boolean error= false;
 
       try {
@@ -96,7 +95,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         if (sign == null && doc == null) {
           // TODO XYZ ZZZ Traduir emprant lang
-          throw new I18NException("No s'ha passat cap document ni firma.");
+          throw new I18NException("error.desconegut", "No s'ha passat cap document ni firma.");
         }
 
         if (!sir && sign == null) {
@@ -170,8 +169,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
           resp = validatePlugin.validateSignature(validationRequest);
         } catch (Exception e) {
           // XYZ ZZZ TODO Traduir
-          throw new I18NException(e, e.getMessage());
+          throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
         }
+
+        if (resp.getValidationStatus().getStatus() != ValidationStatus.SIGNATURE_VALID) {
+          // XYZ ZZZ Traduir
+          throw new I18NException("error.desconegut", 
+              "La cridada al Validator/Informador de Firmes ha retornat un error: " 
+              + resp.getValidationStatus().getErrorMsg());
+        }
+        
 
         final String perfil = resp.getSignProfile();
         final String tipo = resp.getSignType();

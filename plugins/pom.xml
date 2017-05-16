@@ -36,17 +36,12 @@
                 <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
+        <repository>
+            <id>maven-repos</id>
+            <name>GitHub GovernIB Maven Repository</name>
+            <url>http://GovernIB.github.io/maven/maven/</url>
+        </repository>
     </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-
-            <id>genapp-maven-repos</id>
-            <name>GenApp Maven Repository</name>
-            <url>http://genapp.sourceforge.net/maven/</url>
-
-        </pluginRepository>
-    </pluginRepositories>
 
     <build>
         <pluginManagement>

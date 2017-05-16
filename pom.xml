@@ -31,9 +31,6 @@
     <module>sir</module>
     <module>webapp</module>
     <module>plugins</module>
-    <!--<module>plugindistribucion</module>-->
-    <!--<module>pluginpostproceso</module>-->
-    <!--<module>pluginjustificante</module>-->
     <module>ear</module>
   </modules>
 
@@ -77,14 +74,6 @@
       <name>GitHub GovernIB Maven Repository</name>
       <url>http://GovernIB.github.io/maven/maven/</url>
     </repository>
-
-    <!-- XYZ ZZZ
-    <repository>
-      <name>Local Maven Repository 1</name>
-      <id>es.caib.regweb3.localrepo1</id>
-      <url>file://${basedir}/../local-repo</url>
-    </repository>
-    -->
 
   </repositories>
 

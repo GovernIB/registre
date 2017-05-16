@@ -5,7 +5,6 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
-import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
@@ -18,9 +17,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.utils.Metadata;
-import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -38,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Stateless(name = "SirEJB")
 @SecurityDomain("seycon")
-public class SirBean implements SirLocal{
+public class SirBean implements SirLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -452,7 +448,10 @@ public class SirBean implements SirLocal{
      * @throws I18NException
      */
     @Override
-    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario) throws Exception, I18NException {
+    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
+        String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, 
+        Oficina oficinaActiva, UsuarioEntidad usuario) 
+            throws Exception, I18NException, I18NValidationException {
 
         RegistroSir registroSir = null;
 
@@ -472,32 +471,10 @@ public class SirBean implements SirLocal{
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.tieneJustificante()) {
 
-                IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(usuario.getEntidad().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
-
-                if(justificantePlugin != null) {
-
-                    // Generam la Custòdia per tenir el CSV
-                    Map<String,Object> custodyParameters = new HashMap<String, Object>();
-                    custodyParameters.put("registre", registroEntrada);
-                    IDocumentCustodyPlugin plugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                    String custodyID = plugin.reserveCustodyID(custodyParameters);
-                    Metadata mcsv = plugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
-                    String csv = null;
-                    if(mcsv != null){
-                        csv = mcsv.getValue();
-                    }
-                    String url = plugin.getValidationUrl(custodyID, custodyParameters);
-                    String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
-
-                    // Generamos el pdf del Justificante con el idioma "es" porque es SIR
-                    byte[] data = justificantePlugin.generarJustificante(registroEntrada, url, specialValue, csv, "es");
-
-                    // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
-
-                    registroDetalle.getAnexos().add(anexoFull.getAnexo());
-                }
-
+                // Creamos el anexo del justificante y se lo añadimos al registro
+                final String idioma = "es";
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), idioma);
+                registroDetalle.getAnexos().add(anexoFull.getAnexo());
             }
 
             // Actualizamos el Registro con campos SIR
@@ -530,41 +507,19 @@ public class SirBean implements SirLocal{
             registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(oficioRemision.getRegistrosEntrada().get(0).getId());
             registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
-        }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+        } else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
 
             RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
             RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.tieneJustificante()) {
+              // Creamos el anexo del justificante y se lo añadimos al registro
+              final String idioma = "es";
+              AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroSalida,
+                   tipoRegistro.toLowerCase(), idioma);
 
-                IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(usuario.getEntidad().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
-
-                if(justificantePlugin != null) {
-
-                    // Generam la Custòdia per tenir el CSV
-                    Map<String,Object> custodyParameters = new HashMap<String, Object>();
-                    custodyParameters.put("registre", registroSalida);
-                    IDocumentCustodyPlugin plugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                    String custodyID = plugin.reserveCustodyID(custodyParameters);
-                    Metadata mcsv = plugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
-                    String csv = null;
-                    if(mcsv != null){
-                        csv = mcsv.getValue();
-                    }
-                    String url = plugin.getValidationUrl(custodyID, custodyParameters);
-                    String specialValue = plugin.getSpecialValue(custodyID,custodyParameters);
-
-                    // Generamos el pdf del Justificante
-
-                    byte[] data = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv, "es");
-
-                    // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, idRegistro, tipoRegistro.toLowerCase(), data, custodyID, csv);
-
-                    registroDetalle.getAnexos().add(anexoFull.getAnexo());
-                }
-
+              registroDetalle.getAnexos().add(anexoFull.getAnexo());
             }
 
             // Actualizamos el Registro con campos SIR
@@ -600,12 +555,10 @@ public class SirBean implements SirLocal{
         }
 
         // Registramos el Oficio de Remisión SIR
-        try {
-            oficioRemision = oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision);
+       
+        oficioRemision = oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision);
 
-        } catch (I18NValidationException e) {
-            e.printStackTrace();
-        }
+        
 
         // Enviamos el Registro al Componente CIR
         emisionEjb.enviarFicheroIntercambio(registroSir);

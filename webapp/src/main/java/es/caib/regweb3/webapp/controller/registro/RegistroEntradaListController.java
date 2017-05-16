@@ -2,11 +2,15 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
-import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -17,11 +21,10 @@ import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.utils.Metadata;
-import org.fundaciobit.plugins.utils.MetadataConstants;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -35,6 +38,7 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -342,6 +346,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         } catch (I18NException e) {
             Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
             e.printStackTrace();
+        }  catch (I18NValidationException ve) {
+            Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
+            ve.printStackTrace();
         }
 
         return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
@@ -659,52 +666,30 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-            Long idEntidad = registroEntrada.getUsuario().getEntidad().getId();
 
-            // Carregam el plugin
-            IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
+            // Cream l'annex justificant i el firmam
+            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, 
+                registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
 
-            // Comprova que existeix el plugin de justificant
-            if(justificantePlugin != null) {
+            // Descarrega el Justificant firmat
+            // Cabeceras Response
+            response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
+            response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
+            response.setHeader("Expires", "0");
+            response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
+            response.setHeader("Pragma", "public");
+            response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
+            // Descarga el pdf
+            ServletOutputStream out = response.getOutputStream();
+            out.write(anexoFull.getSignatureCustody().getData());
+            out.flush();
+            out.close();
 
-                // Generam la Custòdia per tenir el CSV
-                Map<String,Object> custodyParameters = new HashMap<String, Object>();
-                custodyParameters.put("registre", registroEntrada);
-                IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
-                Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
-                String csv = null;
-                if(mcsv != null){
-                    csv = mcsv.getValue();
-                }
-                String url = documentCustodyPlugin.getValidationUrl(custodyID, custodyParameters);
-                String specialValue = documentCustodyPlugin.getSpecialValue(custodyID,custodyParameters);
-
-                // Obtenim el ByteArray per generar el pdf
-                byte[] baos = justificantePlugin.generarJustificante(registroEntrada, url, specialValue, csv, idioma);
-
-                // Cream l'annex justificant i el firmam
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,
-                        RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), baos, custodyID, csv);
-
-                // Descarrega el Justificant firmat
-                // Cabeceras Response
-                response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
-                response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
-                response.setHeader("Expires", "0");
-                response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-                response.setHeader("Pragma", "public");
-                response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
-                // Descarga el pdf
-                ServletOutputStream out = response.getOutputStream();
-                out.write(anexoFull.getSignatureCustody().getData());
-                out.flush();
-                out.close();
-
-            }
-
+          
         } catch (I18NException e) {
-            e.printStackTrace();
+          Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
+        } catch (I18NValidationException ve) {
+          Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
         }
 
         return "redirect:/registroEntrada/"+idRegistro+"/detalle";

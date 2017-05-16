@@ -1,31 +1,42 @@
 
+(0) Revisar si totes le spropietst de regweb3-property-service.xml són correctes.
+
 (1) Sincronitzar Cataleg : Admin. -> Config. -> Cataleg Dir3 -> Sincronitzar
 
 (2) Crear Entitat: Admin. -> Config. -> Entitats  -> +Introduir Entitat
 	             Nom: CAIB
-				 Codi Dir3: A04006741
+				 Codi Dir3 Pre: A04019281
+         Codi Dir3 Pro: A04003003
 				 Desc: Comunitat Autonoma
 
 (3) Editar Entitat: 
-    (3.1) AdEn -> CAIB -> Editar Entitat
-               + Pipella Formats: Definir un segell i un format
-			   + Pipella general: Marcar SIR
+    (3.1) AdEn -> CAIB -> Configurar Entitat
+               + Pipella Formats: 
+                    - Definir un segell:
+${nomOficina}
+Núm: ${formatNumRegistre}
+Data: ${dataRegistre}
+Origen/Destinatari: ${origen}${destinatari}
+                    
+                    - Definir un format: ${numLlibre}-${tipusRegistre}-${numRegistre}/${anyRegistre}
+                    - Seleccionar Logo: [regweb-3.0]\scripts\development\exemple_logo.jpg                   
+			   + Pipella 'Dades': Marcar SIR
 	(3.2) Oficines i Organismes: AdEn -> CAIB -> Organismes -> llistat d'Organismes: Pitjar Sincronitzar
-	(3.3) Model Rebut: AdEn -> CAIB -> cataleg de dades -> Gestio model de Rebut: 
+	(3.3) Model Rebut: AdEn -> CAIB -> cataleg de dades -> Gestio models de Rebut: 
 	                 * Pitjar Introduir model de Rebut
-					 * Nom: Model basic
-					 * Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\Rebut_model.rtf
-					 * Pitjar Desar
-    (3.4) Model Ofici Remissió: AdEn -> CAIB -> cataleg de dades -> Gestio Model Ofici Remissió:
+					              - Nom: Model basic
+					              - Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\Rebut_model.rtf
+					              - Pitjar Desar
+  (3.4) Model Ofici Remissió: AdEn -> CAIB -> cataleg de dades -> Gestio Model Ofici Remissió:
 	                 * Pitjar Introduir Model Ofici Remissió
-					 * Nom: Model ofici remis
-					 * Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\ModelOficiRemissio.rtf
-					 * Pitjar Desar
+					              - Nom: Model ofici remis
+					              - Arxiu: trobareu un arxiu d'exemple dins regweb-3.0\scripts\modelos\ModelOficiRemissio.rtf
+					              - Pitjar Desar
 	(3.5) Tipus Assumpte: AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte:
-	           * Introduir codi tipus assumpte:  AJSU
+	       * Introduir codi tipus assumpte:  AJSU
 			   * Afegir traduccions: Ajudes i Subvencions / Ayudas y Subvenciones
 			   * Desar
-    (3.6) Codi d'Assumpte:  AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte -> Seleccionar AJSU
+    (3.6) Codi d'Assumpte:  AdEn -> CAIB -> cataleg de dades -> Gestio Tipus Assumpte -> Seleccionar icona [LLAPIS] AJSU
 	          * Pitjar boto "Nou codi Assumpte"
 			  * Codi = AjudaSubvencio | ca = Ajudes i Subvencions | es = Ayudas y Subvenciones
 			  * Pitjar Desar
@@ -34,11 +45,11 @@
 				 * Escriure "anadal" i pitjar "Desar"
 				 
 (4) Crear un llibre
-     (4.1) Oficines i Organismes: AdEn -> CAIB -> Oficines i Organismes: 
-	        * Pitjar sobre el boto de llibres d'un organisme (CONSELLERIA D'AFERS SOCIALS, PROMOCIÓ I IMMIGRACIÓ)
+     (4.1) Oficines i Organismes: AdEn -> CAIB -> Organismes -> Llista organismes: 
+	        * Pitjar sobre el "boto de llibre" d'un organisme (Conselleria Administracions Públiques)
 			* Pitjar sobre el boto "+Nou llibre"
 			        - Nom: Llibre de proves
-		    		- Codi: LLPR
+		    		  - Codi: LLPR
 		    * Pitjar Desar
 	(4.2) Donar permisos d'accés a un llibre a un usuari:
 	       * AdEn -> CAIB -> gestio usuaris: 
@@ -46,13 +57,17 @@
 		   * Pitjar el boto de "permisos" de la fila de l'usuari
 		   * De la fila del llibre nou, marcar totes les caselles
 		   * Pitjar boto "desar".
-			
-(5) Donar d'alta un registre
-      (5.1) Anar al tipus OPERADOR
-	  (5.2) Pitjar boto  "Entrades" \ "Registre d'Entrada"
-	  (5.3) Omplir dades obligatories i pitjar boto Desar
+
+
+(5) << FALTA CONFIGURAR TOTS ELS PLUGINS >>
+       
+(6) Donar d'alta un registre
+    (6.1) Anar al tipus OPERADOR
+	  (6.2) Pitjar boto  "Entrades" \ "Registre d'Entrada"
+	  (6.3) Omplir dades obligatories i pitjar boto Desar
     
-			
+
+
 			
 			
 			

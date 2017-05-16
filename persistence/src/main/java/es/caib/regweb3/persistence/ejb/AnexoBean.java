@@ -7,9 +7,11 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
+import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -30,6 +32,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -242,7 +245,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // ----------- CUSTODIA -----------------
             
             final Map<String, Object> custodyParameters;
-            custodyParameters = getCustodyParameters(registro, anexo, anexoFull);
+            custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
             //Reservamos el custodyID
             if(custodyID==null) {
@@ -316,7 +319,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     @Override
     public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                     Long registroID, String tipoRegistro, boolean isJustificante) throws I18NException, I18NValidationException {
+            Long registroID, String tipoRegistro, boolean isJustificante) 
+                throws I18NException, I18NValidationException {
 
         try {
 
@@ -335,7 +339,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
 
             final Map<String, Object> custodyParameters;
-            custodyParameters = getCustodyParameters(registro, anexo, anexoFull);
+            custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
             final String custodyID = anexo.getCustodiaID();
 
@@ -958,15 +962,31 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    protected Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo, AnexoFull anexoFull) throws Exception {
+    protected Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo, 
+        AnexoFull anexoFull, UsuarioEntidad usuarioEntidad)  {
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        
+        Map<String,Object> custodyParameters = new HashMap<String, Object>();
 
-        map.put("registro", registro);
-        map.put("anexo", anexo);
-        map.put("anexoFull", anexoFull);
+        custodyParameters.put("registro", registro);
+        custodyParameters.put("anexo", anexo);
+        custodyParameters.put("anexoFull", anexoFull);
+        custodyParameters.put("usuarioEntidad", usuarioEntidad);
+        
+        
 
-        return map;
+        Interesado interesado = registro.getRegistroDetalle().getInteresados().get(0);
+        custodyParameters.put("ciudadano_nombre", interesado.getNombreCompleto());
+
+        String documentAdministratiu = interesado.getDocumento();
+        if (documentAdministratiu == null) {
+          documentAdministratiu = interesado.getCodigoDir3();
+        }
+        
+        custodyParameters.put("ciudadano_idadministrativo", documentAdministratiu);
+        
+
+        return custodyParameters;
 
     }
 
@@ -1331,53 +1351,87 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      */
     @Override
-    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro,
-            String tipoRegistro, byte[] data, String custodyID, String csv) throws Exception {
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad,
+        IRegistro registro, String tipoRegistro, String idioma) 
+                throws I18NException, I18NValidationException {
+      try {
+          final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
+          // Carregam el plugin
+          IJustificantePlugin justificantePlugin;
+          justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
 
-        
-        try {
+          // Comprova que existeix el plugin de justificant
+          if(justificantePlugin == null) {
+            // XYZ ZZZ S'ha de traduir
+            throw new I18NException("error.desconegut",
+                "No s'ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.");
+          }
+          
+          Locale locale = new Locale(idioma);
+          String nombreFichero = I18NLogicUtils.tradueix(locale, "justificante.fichero") + ".pdf";
+          String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
+          String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
+          
+          // Crea el anexo del justificante firmado
+          AnexoFull anexoFull = new AnexoFull();
+          Anexo anexo = anexoFull.getAnexo();
+          anexo.setTitulo(tituloAnexo);
+          anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+          TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad);
+          anexo.setTipoDocumental(tipoDocumental);
+          anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+          anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
+          anexo.setObservaciones(observacionesAnexo);
+          anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
 
-            Long idEntidad = usuarioEntidad.getEntidad().getId();
+          anexo.setJustificante(true);
 
-            // XYZ ZZZ TODO Això està bé ????
-            Locale locale = new Locale("es");
-            String nombreFichero = I18NLogicUtils.tradueix(locale, "justificante.fichero") + ".pdf";
-            String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
-            String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
+          // Generam la Custòdia per tenir el CSV
+          Map<String,Object> custodyParameters;
+          custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
-            // Firma el justificant
-            SignatureCustody sign = signatureServerEjb.signJustificante(data, "es", idEntidad);
-            sign.setName(nombreFichero);
+          IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+          String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
 
-            // Crea el anexo del justificante firmado
-            AnexoFull anexoFull = new AnexoFull();
-            anexoFull.getAnexo().setTitulo(tituloAnexo);
-            anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-            TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad);
-            anexoFull.getAnexo().setTipoDocumental(tipoDocumental);
-            anexoFull.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-            anexoFull.getAnexo().setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
-            anexoFull.getAnexo().setObservaciones(observacionesAnexo);
-            anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-            anexoFull.getAnexo().setCsv(csv);
+          Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+          String csv = null;
+          if(mcsv != null) {
+              csv = mcsv.getValue();
+          }
+          anexo.setCsv(csv);
+          
+          String url = documentCustodyPlugin.getValidationUrl(custodyID, custodyParameters);
+          String specialValue = documentCustodyPlugin.getSpecialValue(custodyID,custodyParameters);
 
-            // Fichero Anexado
-            anexoFull.getAnexo().setJustificante(true);
+          // Obtenim el ByteArray per generar el pdf
+          byte[] pdfSignat;
+          if (registro instanceof RegistroEntrada) {
+            pdfSignat = justificantePlugin.generarJustificante((RegistroEntrada)registro, url, specialValue, csv, idioma);
+          } else {
+            pdfSignat = justificantePlugin.generarJustificante((RegistroSalida)registro, url, specialValue, csv, idioma);
+          }
 
-            anexoFull.setSignatureCustody(sign);
-            anexoFull.setSignatureFileDelete(false);
-            anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, idRegistro, tipoRegistro,custodyID);
+          // Cream l'annex justificant i el firmam
+          // Firma el justificant
+          SignatureCustody sign = signatureServerEjb.signJustificante(pdfSignat, idioma, idEntidad);
+          sign.setName(nombreFichero);
 
-            return anexoFull;
+          anexoFull.setSignatureCustody(sign);
+          anexoFull.setSignatureFileDelete(false);
+          
+          // Cream l'annex justificant
+          anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro,custodyID);
 
-        } catch (I18NValidationException e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        } catch (I18NException e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
+          return anexoFull;
+      } catch(I18NValidationException i18nve) {
+        throw i18nve;
+      } catch(I18NException i18ne) {
+        throw i18ne;
+      } catch(Exception e) {
+        throw new I18NException(e, "error.desconegut",
+            new I18NArgumentString("Error no controlat generant justificant: " + e.getMessage()));
+      }
 
     }
 

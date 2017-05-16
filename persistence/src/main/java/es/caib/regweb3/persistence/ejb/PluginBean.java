@@ -212,7 +212,8 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
         // Si no existe el plugin, retornamos null
         if (plugin == null) {
-            log.info("No existe ningun plugin de tipo: "+plugin.getTipo()+" definido en el sistema");
+            log.info("No existe ningun plugin de tipo: " + plugin
+                + " definido en el sistema", new Exception());
             return null;
         }
 

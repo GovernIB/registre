@@ -46,12 +46,12 @@
 
             # Opcional. Servei per generar la URL de Custodia. Si no es defineix retornarà null. 
             # {0} => custodyID // {1} => URLEncode(custodyID) // {2} => Hash(custodyID)
-            es.caib.portafib.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
+            es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}
 
             # Opcional. Configuració per generar Hash de la baseurl quan {2}
-            es.caib.portafib.plugins.documentcustody.filesystem.hash.password=mypass
+            es.caib.regweb3.plugins.documentcustody.filesystem.hash.password=mypass
             #  MD2, MD5, SHA,SHA-256,SHA-384,SHA-512
-            es.caib.portafib.plugins.documentcustody.filesystem.hash.algorithm=MD5
+            es.caib.regweb3.plugins.documentcustody.filesystem.hash.algorithm=MD5
             
             # Opcional. Serveix per generar els CustodyID a partir d'una EL 
             #es.caib.regweb3.annex.plugins.documentcustody.filesystem.generate_custodyid_expressionlanguage=${registre.numeroRegistro}_${anexo.id}

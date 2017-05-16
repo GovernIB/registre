@@ -2,14 +2,25 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
+import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.SirLocal;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -18,10 +29,11 @@ import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
+
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
-import org.fundaciobit.plugins.utils.Metadata;
-import org.fundaciobit.plugins.utils.MetadataConstants;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -35,6 +47,7 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -323,17 +336,23 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
         OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
 
-        try{
+        try {
 
-            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad);
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,
+                idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
+                getOficinaActiva(request), usuarioEntidad);
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
 
-        }catch (SIRException e){
-            e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+        } catch (SIRException e){
+          log.error("Error al cridar a sirEjb.enviarFicheroIntercambio();: "
+              + e.getMessage(), e);
+          Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         } catch (I18NException e) {
-            e.printStackTrace();
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+          log.error(I18NUtils.getMessage(e), e);
+          Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+        } catch(I18NValidationException ve) {
+          log.error(I18NUtils.getMessage(ve), ve);
+          Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         }
 
         return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
@@ -505,56 +524,40 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      */
     @ResponseBody
     @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.GET)
-    public String justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public String justificante(@PathVariable Long idRegistro, @PathVariable String idioma,
+        HttpServletResponse response, HttpServletRequest request) 
+            throws I18NException, I18NValidationException {
 
         try {
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-            Long idEntidad = registroSalida.getUsuario().getEntidad().getId();
 
-            // Carregam el plugin
-            IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
+            // Cream l'annex justificant i el firmam
+            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida,
+                    RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
 
-            // Comprova que existeix el plugin de justificant
-            if(justificantePlugin != null) {
-
-                // Generam la Custòdia per tenir el CSV
-                Map<String,Object> custodyParameters = new HashMap<String, Object>();
-                custodyParameters.put("registre", registroSalida);
-                IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
-                Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
-                String csv = null;
-                if(mcsv != null){
-                    csv = mcsv.getValue();
-                }
-                String url = documentCustodyPlugin.getValidationUrl(custodyID, custodyParameters);
-                String specialValue = documentCustodyPlugin.getSpecialValue(custodyID,custodyParameters);
-
-                // Obtenim el ByteArray per generar el pdf
-                byte[] baos = justificantePlugin.generarJustificante(registroSalida, url, specialValue, csv, idioma);
-
-                // Cream l'annex justificant i el firmam
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, idRegistro,
-                        RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), baos, custodyID, csv);
-
-                // Descarrega el Justificant firmat
-                // Cabeceras Response
-                response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
-                response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
-                response.setHeader("Expires", "0");
-                response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-                response.setHeader("Pragma", "public");
-                response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
-                // Descarga el pdf
-                ServletOutputStream out = response.getOutputStream();
-                out.write(anexoFull.getSignatureCustody().getData());
-                out.flush();
-                out.close();
-            }
+            // Descarrega el Justificant firmat
+            // Cabeceras Response
+            response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
+            response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
+            response.setHeader("Expires", "0");
+            response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
+            response.setHeader("Pragma", "public");
+            response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
+            // Descarga el pdf
+            ServletOutputStream out = response.getOutputStream();
+            out.write(anexoFull.getSignatureCustody().getData());
+            out.flush();
+            out.close();
+            
 
         } catch (I18NException e) {
-            e.printStackTrace();
+          throw e;
+        } catch (I18NValidationException ve) {
+          throw ve;
+        } catch (Exception e) {
+          throw new I18NException(e, "error.desconegut", 
+             new I18NArgumentString("Error desconegut generant justificant per registre de Sortida"));
         }
 
         return "redirect:/registroSalida/"+idRegistro+"/detalle";

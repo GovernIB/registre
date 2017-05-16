@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
@@ -156,8 +157,13 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws Exception
      */
+    /*
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro, String tipoRegistro,
         byte[] baos, String custodyID, String csv) throws Exception;
+        */
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro,
+        String tipoRegistro, String idioma) throws I18NException, I18NValidationException;
+    
 
 
 }

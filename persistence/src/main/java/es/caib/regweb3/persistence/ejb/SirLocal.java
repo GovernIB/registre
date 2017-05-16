@@ -5,10 +5,13 @@ import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
 import java.util.List;
 
 /**
@@ -46,7 +49,10 @@ public interface SirLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro, String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, Oficina oficinaActiva, UsuarioEntidad usuario) throws Exception, I18NException;
+    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
+        String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
+        Oficina oficinaActiva, UsuarioEntidad usuario) 
+            throws Exception, I18NException, I18NValidationException;
 
     /**
      *
