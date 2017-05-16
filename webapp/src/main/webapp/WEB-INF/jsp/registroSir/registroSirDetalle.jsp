@@ -49,6 +49,11 @@
                                 <dd><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
 
+                            <c:if test="${not empty registroSir.numeroRegistro}">
+                                <dt><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>: </dt>
+                                <dd>${registroSir.numeroRegistro}</dd>
+                            </c:if>
+
                             <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen}">
                                 <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadOrigen"/>:
                                 </dt>
@@ -93,11 +98,6 @@
                             </c:if>
                             <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
                                 <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
-                            </c:if>
-
-                            <c:if test="${not empty registroSir.numeroRegistro}">
-                                <dt><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>: </dt>
-                                <dd>${registroSir.numeroRegistro}</dd>
                             </c:if>
 
                             <c:if test="${not empty registroSir.fechaRegistro}">
