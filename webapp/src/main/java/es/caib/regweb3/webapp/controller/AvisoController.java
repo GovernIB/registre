@@ -102,7 +102,7 @@ public class AvisoController extends BaseController {
 
             // Registros de Entrada Rechazados por SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                mav.addObject("oficiosDevueltos", oficioRemisionEjb.getByEstadoOficinaCount(RegwebConstantes.OFICIO_SIR_DEVUELTO, oficinaActiva.getId()));
+                mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO).size());
             }
 
 
