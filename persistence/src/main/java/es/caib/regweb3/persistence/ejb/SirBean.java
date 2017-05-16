@@ -640,7 +640,7 @@ public class SirBean implements SirLocal {
         //registroSirEjb.merge(registroSir);
 
         // Enviamos el Registro al Componente CIR
-        emisionEjb.reenviarFicheroIntercambio(registroSirEjb.getRegistroSirConAnexos(registroSir.getId()));
+        emisionEjb.reenviarFicheroIntercambio(registroSir);
 
         // Creamos la TrazabilidadSir para el Reenvio
         TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
@@ -692,7 +692,7 @@ public class SirBean implements SirLocal {
         //registroSir = registroSirEjb.merge(registroSir);
 
         // Rechazamos el RegistroSir
-        emisionEjb.rechazarFicheroIntercambio(registroSirEjb.getRegistroSirConAnexos(registroSir.getId()));
+        emisionEjb.rechazarFicheroIntercambio(registroSir);
 
         // Creamos la TrazabilidadSir para el Rechazo
         TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO);

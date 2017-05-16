@@ -235,7 +235,7 @@ public class RegistroSirController extends BaseController {
 
         log.info("Observaciones: " + rechazarForm.getObservacionesRechazo());
 
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -279,15 +279,13 @@ public class RegistroSirController extends BaseController {
     public String reenviarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        log.info("Oficina Destino reenvio: " + reenviarForm.getCodigoOficina());
-
         //Montamos la oficina de reenvio seleccionada por el usuario
         Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
 
-        RegistroSir registroSir  = registroSirEjb.findById(idRegistroSir);
+        RegistroSir registroSir  = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
 
         // Comprobamos si ya ha sido reenviado
         if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){
