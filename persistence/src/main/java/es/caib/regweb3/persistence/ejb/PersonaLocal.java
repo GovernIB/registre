@@ -91,17 +91,6 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
     public List<Persona> busquedaJuridicas(Long idEntidad, String razonSocial, String documento, Long idTipoPersona) throws Exception;
 
     /**
-     * Realiza una busqueda de {@link es.caib.regweb3.model.Persona} según los parámetros
-     * @param nombre
-     * @param apellido1
-     * @param apellido2
-     * @param documento
-     * @return
-     * @throws Exception
-     */
-    public List<Persona> busquedaPersonas(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, String razonSocial) throws Exception;
-
-    /**
      * Elimina las Personas de una Entidad
      * @param idEntidad
      * @return
