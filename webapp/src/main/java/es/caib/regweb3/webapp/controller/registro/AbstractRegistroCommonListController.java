@@ -102,22 +102,7 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
      * @throws Exception
      */
     public void initScanAnexos(Entidad entidad, Model model, HttpServletRequest request, Long registroID) throws Exception {
-      long tipusScan = 0;
-      if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-        tipusScan = Long.parseLong(entidad.getTipoScan());
-      }
-      //      Integer tipusScan = 2;
-      boolean teScan = scanWebModuleEjb.teScan(tipusScan);
-      model.addAttribute("teScan", teScan);
-      /*if (teScan) {
-
-        model.addAttribute("iframe_anexos_height", AnexoScanController.BASE_IFRAME_HEIGHT );
-            // XYZ  TODO
-            // AnexoController.BASE_IFRAME_HEIGHT + scanWebModuleEjb.getMinHeight(request, tipusScan, registroID));
-      } else {
-        model.addAttribute("iframe_anexos_height",
-                AnexoScanController.BASE_IFRAME_HEIGHT + AnexoScanController.FILE_TAB_HEIGHT);
-      }*/
+      model.addAttribute("teScan", scanWebModuleEjb.entitatTeScan(entidad.getId()));
     }
 
     //Montamos la nota informativa de las limitaciones de los anexos cogiendo los valores de las propiedades configuradas

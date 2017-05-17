@@ -66,7 +66,12 @@ public class Entidad implements Serializable {
     private Boolean oficioRemision = false;
     @XmlTransient
     private Boolean activo = true;
-    @XmlTransient
+    
+    /**  IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
+     *  l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
+     *  des d'aquest valor poder anar canviant de tipus d'scan.
+     */
+    @XmlTransient    
     private String tipoScan;
     @XmlTransient
     private Integer posXsello;
@@ -131,17 +136,17 @@ public class Entidad implements Serializable {
         this.id = id;
     }
     
-    /**
-     * Identificadors de tipus d'escaneig suportats per aquesta entitat
-     *  (numeros definits en les propietats separats per comes).
-     *   En aquesta primera versió només es suporta un tipus d'escaneig. 
-     * @return
-     */
+    /**  IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
+     *  l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
+     *  des d'aquest valor poder anar canviant de tipus d'scan.
+     */   
+    @Deprecated
     @Column(name="TIPSCAN", length = 20)
     public String getTipoScan() {
       return tipoScan;
     }
 
+    @Deprecated
     public void setTipoScan(String tipoScan) {
       this.tipoScan = tipoScan;
     }

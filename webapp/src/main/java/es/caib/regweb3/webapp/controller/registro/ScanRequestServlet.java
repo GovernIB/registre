@@ -1,13 +1,11 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.scan.TipoScan;
+
 import org.apache.log4j.Logger;
-import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 
 import javax.ejb.EJB;
@@ -15,16 +13,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 
 
 /**
  * 
  * @author anadal migracio a ScanWebApi 2.0.0 (06/07/2016)
+ * @author anadal migracio a Plugins 2.0.0 (17/05/2015)
  *
  */
 // @Controller és només per carrergar els EJB
@@ -98,6 +95,9 @@ public class ScanRequestServlet extends HttpServlet {
       requestPlugin(request, response, scanWebID, query, isPost);
     } catch (Exception e) {
       throw new IOException(e.getMessage(), e);
+    } catch (I18NException i18ne) {
+      String msg = I18NUtils.getMessage(i18ne);
+      throw new IOException(msg, i18ne);
     }
   
   }
@@ -129,7 +129,7 @@ public class ScanRequestServlet extends HttpServlet {
 
   protected void requestPlugin(HttpServletRequest request, HttpServletResponse response,
       long scanWebID, String query, boolean isPost)
-      throws Exception {
+      throws Exception, I18NException {
 
     String absoluteRequestPluginBasePath = getAbsoluteRequestPluginBasePath(request,
         CONTEXTWEB, scanWebID);
@@ -163,50 +163,5 @@ public class ScanRequestServlet extends HttpServlet {
 
     return request.getContextPath()  + webContext +  scanWebID;
   }
-
- 
-
-  
-  public static List<TipoScan> getTipusScanejat(ScanWebModuleLocal scanWebModuleEjb, PluginLocal pluginEjb, Long idEntidad, Locale locale, String noScanName){
-
-    // Test plugins
-    try {
-      List<Object> pluginsScan =  pluginEjb.getPlugins(idEntidad, RegwebConstantes.PLUGIN_SCAN);
-      for (Object plugin : pluginsScan) {
-        IScanWebPlugin plu = (IScanWebPlugin) plugin;
-        log.info("Plugin: " + plu.getName(locale));
-      }
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    String[] values = new String[] {"0"};
-    try {
-      String plugins = Configuracio.getScanPlugins();
-      if (plugins != null && !"".equals(plugins))
-        values = plugins.split(",");
-      
-//      log.info("SCAN: Codis de plugins d'escaneig: " + plugins);
-    } catch (Exception e) {
-//      log.error("SCAN: Error al obtenir els plugins definits al sistema", e);
-    }
-
-    List<TipoScan> tiposScan = new ArrayList<TipoScan>();
-    for(String value: values) {
-      try {
-        long codigo = Long.parseLong(value.trim());
-        String nombre = (codigo == 0) ? noScanName : scanWebModuleEjb.getName(codigo, locale);
-        TipoScan tipoScan = new TipoScan(codigo, nombre);
-        tiposScan.add(tipoScan);
-//        log.info("SCAN:   " + codigo + " - " + nombre);
-      } catch (Exception e){
-        log.warn("SCAN: El codi " + value + " no és un codi de tipus d'escanejat válid.");
-      }
-    }
-    return tiposScan;
-    //    return Arrays.asList(values);
-  }
-  
 
 }

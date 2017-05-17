@@ -232,9 +232,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
-            log.info("XYZ ZZZ registro.getRegistroDetalle : "+ registro.getRegistroDetalle());
-            log.info("XYZ ZZZ registro.getRegistroDetalle.getInteresados : "+ registro.getRegistroDetalle().getInteresados());
-
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
             
             
@@ -332,17 +329,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             validateAnexo(anexo, isNew);
 
             anexo.setFechaCaptura(new Date());
-
-
-            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
-
-            //Obtenemos el registro con sus anexos, interesados y tipo Asunto
-            IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
-
-            final Map<String, Object> custodyParameters;
-            custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
-
-            final String custodyID = anexo.getCustodiaID();
 
             //Actualizamos los datos de anexo
             anexo = this.merge(anexo);
