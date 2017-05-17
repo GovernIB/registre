@@ -234,10 +234,10 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         // Propeidades obtenidas
-        for(String key : prop.stringPropertyNames()) {
+        /*for(String key : prop.stringPropertyNames()) {
             String value = prop.getProperty(key);
             log.info("Propiedad: "+key + " => " + value);
-        }
+        }*/
 
         // Carregant la classe
         return PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);

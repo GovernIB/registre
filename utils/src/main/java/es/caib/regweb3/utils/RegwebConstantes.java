@@ -256,9 +256,9 @@ public interface RegwebConstantes {
     int OFICIO_SIR_REENVIADO = 6;
     int OFICIO_SIR_REENVIADO_ACK = 7;
     int OFICIO_SIR_REENVIADO_ERROR = 8;
-    int OFICIO_SIR_RECHAZADO = 9;
+    /*int OFICIO_SIR_RECHAZADO = 9;
     int OFICIO_SIR_RECHAZADO_ACK = 10;
-    int OFICIO_SIR_RECHAZADO_ERROR = 11;
+    int OFICIO_SIR_RECHAZADO_ERROR = 11;*/
     int OFICIO_SIR_DEVUELTO = 12;
     int OFICIO_ANULADO = 13;
 
@@ -272,9 +272,9 @@ public interface RegwebConstantes {
             OFICIO_SIR_REENVIADO,
             OFICIO_SIR_REENVIADO_ACK,
             OFICIO_SIR_REENVIADO_ERROR,
-            OFICIO_SIR_RECHAZADO,
+            /*OFICIO_SIR_RECHAZADO,
             OFICIO_SIR_RECHAZADO_ACK,
-            OFICIO_SIR_RECHAZADO_ERROR,
+            OFICIO_SIR_RECHAZADO_ERROR,*/
             OFICIO_SIR_DEVUELTO,
             OFICIO_ANULADO
     };

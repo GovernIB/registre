@@ -530,10 +530,17 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Recorremos los RegistroEntrada del Oficio
         for (OficioPendienteLlegada oficio : oficios) {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(oficio.getIdRegistro());
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(oficio.getIdRegistro());
             List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());
+
+            // Detach de la sesion para poder duplicar el registro
+            Session session = (Session) em.getDelegate();
+            session.evict(registroEntrada);
+            session.evict(registroEntrada.getRegistroDetalle());
+            session.evict(registroEntrada.getRegistroDetalle().getAnexos());
+            session.evict(registroEntrada.getRegistroDetalle().getInteresados());
 
             // Creamos un Nuevo RegistroEntrada
             RegistroEntrada nuevoRE = new RegistroEntrada();
@@ -545,10 +552,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             // Creamos un nuevo RegistroDetalle, modificando las propiedades Origen
             RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
-
-            // Detach de la sesion para poder duplicar el registroDetalle
-            Session session = (Session) em.getDelegate();
-            session.evict(registroDetalle);
 
             // Set Id's a null
             registroDetalle.setId(null);

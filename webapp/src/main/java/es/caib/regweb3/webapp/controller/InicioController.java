@@ -83,6 +83,7 @@ public class InicioController extends BaseController{
             /* Obtenemos los Registros Sir pendientes de procesar */
             if(entidadActiva.getSir() && oficinaActiva.getSirRecepcion()) {
                 mav.addObject("registrosSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO));
             }
 
         }

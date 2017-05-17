@@ -3,7 +3,7 @@
 
 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI' && oficinaActiva != null}">
 
-    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + oficiosDevueltos}"/>
+    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + registrosRechazados}"/>
 
     <c:if test="${total > 0}">
 
@@ -80,11 +80,11 @@
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${oficiosDevueltos > 0}">
+                    <c:if test="${registrosRechazados > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/list"/>">
+                            <a href="<c:url value="/registroEntrada/list"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.devueltos"/> (${oficiosDevueltos})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados"/> (${registrosRechazados})
                                 </div>
                             </a>
                         </li>
