@@ -201,7 +201,7 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="<c:url value="/registroSir/list"/>"><spring:message code="registroSir.listado"/></a></li>
-                                    <li><a href="<c:url value="/registroSir/recibidos/list/1"/>"><spring:message code="registroSir.recibidos"/></a></li>
+                                    <li><a href="<c:url value="/registroSir/pendientesProcesar/list/1"/>"><spring:message code="registroSir.pendientesProcesar"/></a></li>
                                     <%--<li><a href="<c:url value="/registroSir/rechazados/list/1"/>"><spring:message code="registroSir.rechazados"/></a></li>--%>
                                 </ul>
                             </div>

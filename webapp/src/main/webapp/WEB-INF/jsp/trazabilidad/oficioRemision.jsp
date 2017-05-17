@@ -31,22 +31,15 @@
                 <c:if test="${empty oficioRemision.organismoDestinatario}">${oficioRemision.destinoExternoDenominacion}</c:if>
             </small>
         </p>
-        <p> <%--Tipo oficio--%>
-            <small><i class="fa fa-sign-in"></i> <strong><spring:message code="oficioRemision.tipo"/>:</strong>
-                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                    <span class="label label-info">
-                        <spring:message code="oficioRemision.tipo.1"/> - <c:if test="${not empty oficioRemision.organismoDestinatario}"><spring:message code="oficioRemision.interno"/></c:if>
-                    <c:if test="${empty oficioRemision.organismoDestinatario}"><spring:message code="oficioRemision.externo"/></c:if>
-                    </span>
+        <p> <%--Destino oficio--%>
+            <small><i class="fa fa-sign-in"></i> <strong><spring:message code="oficioRemision.destino"/>:</strong>
+                <c:if test="${not empty oficioRemision.organismoDestinatario}">
+                    <span class="label label-info"><spring:message code="oficioRemision.interno"/></span>
                 </c:if>
 
-                <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                    <span class="label label-danger">
-                        <spring:message code="oficioRemision.tipo.2"/> - <c:if test="${not empty oficioRemision.organismoDestinatario}"><spring:message code="oficioRemision.interno"/></c:if>
-                    <c:if test="${empty oficioRemision.organismoDestinatario}"><spring:message code="oficioRemision.externo"/></c:if>
-                    </span>
+                <c:if test="${empty oficioRemision.organismoDestinatario}">
+                    <span class="label label-danger"><spring:message code="oficioRemision.externo"/></span>
                 </c:if>
-
             </small>
         </p>
         <p> <%--Estado oficio--%>

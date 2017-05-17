@@ -31,34 +31,34 @@ public class RestController {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    public CatLocalidadLocal catLocalidadEjb;
+    private CatLocalidadLocal catLocalidadEjb;
 
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
+    private CatProvinciaLocal catProvinciaEjb;
 
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
-    public CodigoAsuntoLocal codigoAsuntoEjb;
+    private CodigoAsuntoLocal codigoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
+    private TipoAsuntoLocal tipoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/PersonaEJB/local")
-    public PersonaLocal personaEjb;
+    private PersonaLocal personaEjb;
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
-    public ReproLocal reproEjb;
+    private ReproLocal reproEjb;
 
     @EJB(mappedName = "regweb3/InteresadoSirEJB/local")
-    public InteresadoSirLocal interesadoSirEjb;
+    private InteresadoSirLocal interesadoSirEjb;
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
+    private InteresadoLocal interesadoEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private TipoDocumentalLocal tipoDocumentalEjb;
 
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
