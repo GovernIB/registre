@@ -1,12 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
-import java.util.Locale;
 import java.util.Set;
 
 import javax.ejb.Local;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
 
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
@@ -32,27 +32,21 @@ public interface ScanWebModuleLocal {
   public String scanDocument(
       HttpServletRequest request, String absoluteRequestPluginBasePath,
       String relativeRequestPluginBasePath,      
-      long scanWebID) throws Exception;
+      long scanWebID) throws Exception, I18NException;
   
   
   public void requestPlugin(HttpServletRequest request, HttpServletResponse response,
       String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath,
-      long scanWebID, String query, boolean isPost)  throws Exception;
+      long scanWebID, String query, boolean isPost)  throws  Exception, I18NException;
   
   
   public ScanWebConfigRegWeb getScanWebConfig(HttpServletRequest request,
       long scanWebID);
+
+  public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException;
   
-  //public List<Plugin> getAllPluginsFiltered(HttpServletRequest request, long scanWebID) throws Exception;
+  public boolean entitatTeScan(long entitatID) throws Exception;
   
-  
-  public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception;
-  
-  
-  public String getName(Long pluginID, Locale locale) throws Exception;
-  
-  public boolean teScan(Long pluginID);
-  
-  public IScanWebPlugin getInstanceByPluginID(long pluginID) throws Exception;
+  public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws Exception;
   
 }

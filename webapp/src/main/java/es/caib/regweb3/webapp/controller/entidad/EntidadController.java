@@ -1,12 +1,29 @@
 package es.caib.regweb3.webapp.controller.entidad;
 
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.model.Archivo;
+import es.caib.regweb3.model.Descarga;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.Pendiente;
+import es.caib.regweb3.model.PermisoLibroUsuario;
+import es.caib.regweb3.model.Rol;
+import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.ejb.ArchivoLocal;
+import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
+import es.caib.regweb3.persistence.ejb.DescargaLocal;
+import es.caib.regweb3.persistence.ejb.EntidadLocal;
+import es.caib.regweb3.persistence.ejb.LibroLocal;
+import es.caib.regweb3.persistence.ejb.PendienteLocal;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.ejb.SincronizadorDir3Local;
+import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.editor.UsuarioEntidadEditor;
 import es.caib.regweb3.webapp.form.EntidadForm;
 import es.caib.regweb3.webapp.form.LibroOrganismo;
@@ -14,6 +31,7 @@ import es.caib.regweb3.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
+
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.hibernate.Hibernate;
@@ -31,6 +49,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -250,7 +269,6 @@ public class EntidadController extends BaseController {
                 }
             }
 
-            model.addAttribute("tipoScan",  ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, pluginEjb, entidadId, request.getLocale(), getMessage("scan.noScan")));
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
             model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
 
@@ -276,8 +294,7 @@ public class EntidadController extends BaseController {
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
 
            try {
-                model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
-                model.addAttribute("tipoScan", ScanRequestServlet.getTipusScanejat(scanWebModuleEjb, pluginEjb, entidadId, request.getLocale(), getMessage("scan.noScan")));
+               model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
                model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
             } catch (Exception e) {
                 e.printStackTrace();

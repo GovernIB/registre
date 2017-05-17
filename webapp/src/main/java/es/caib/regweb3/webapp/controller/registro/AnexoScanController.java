@@ -83,8 +83,6 @@ public class AnexoScanController extends BaseController {
                                HttpServletResponse response, Model model) throws Exception,I18NException {
         //XYZ
         log.info("llego al post de scan");
-        String variableReturn = "";
-
 
 
         try {
@@ -130,18 +128,15 @@ public class AnexoScanController extends BaseController {
     }
 
     protected void loadCommonAttributesScan(HttpServletRequest request, Model model,
-                                        Long registroID) throws Exception {
+                                        Long registroID) throws Exception, I18NException {
 
         loadCommonAttributes(request,model);
 
         // Scan
         Entidad entidad = getEntidadActiva(request);
-        Long pluginID = null;
-        if (entidad.getTipoScan() != null && !"".equals(entidad.getTipoScan())) {
-            pluginID = Long.parseLong(entidad.getTipoScan());
-        }
-        // Integer tipusScan = 2;
-        boolean teScan = scanWebModuleEjb.teScan(pluginID);
+        final long entitatID = entidad.getId();
+        
+        boolean teScan = scanWebModuleEjb.entitatTeScan(entitatID);
         model.addAttribute("teScan", teScan);
 
 
@@ -158,15 +153,15 @@ public class AnexoScanController extends BaseController {
             // Utilitzam l'ID del registre per escanejar
             final long scanWebID = registroID;
 
-            String urlToPluginWebPage = initializeScan(request, pluginID, scanWebID, languageUI);
+            String urlToPluginWebPage = initializeScan(request, entitatID, scanWebID, languageUI);
 
             model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
         }
 
     }
 
-    private String initializeScan(HttpServletRequest request, long pluginID, final long scanWebID,
-                                  String languageUI) throws Exception {
+    private String initializeScan(HttpServletRequest request, long entitatID, final long scanWebID,
+                                  String languageUI) throws Exception, I18NException {
 
 
         final String scanType = IScanWebPlugin.SCANTYPE_PDF;
@@ -190,7 +185,7 @@ public class AnexoScanController extends BaseController {
 
         ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebID, scanType, flags,
                 metadades, mode, languageUI, urlFinal, expiryTransaction);
-        ss.setPluginID(pluginID);
+        ss.setEntitatID(entitatID);
 
         if (ss.getFlags() == null || ss.getFlags().size() == 0) {
             // Seleccionam el primer suportat

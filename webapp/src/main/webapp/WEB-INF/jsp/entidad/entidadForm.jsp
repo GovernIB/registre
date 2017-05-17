@@ -284,17 +284,6 @@
                                                     <form:errors path="entidad.diasVisado" cssClass="help-block" element="span"/>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.tipoScan"><span class="text-danger">*</span> <spring:message code="entidad.tipoScan"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:select id="entidad.tipoScan" path="entidad.tipoScan" class="chosen-select">
-                                                        <form:options items="${tipoScan}" itemValue="codigo" itemLabel="nombre"/>
-                                                    </form:select>
-                                                    <br/>
-                                                </div>
-                                            </div>
                                             <!--  logo menu -->
                                             <div class="col-xs-12 no-pad-left">
                                                 <div class="form-group col-xs-6">

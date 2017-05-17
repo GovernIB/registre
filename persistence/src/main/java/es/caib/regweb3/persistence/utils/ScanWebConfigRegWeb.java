@@ -14,23 +14,23 @@ import org.fundaciobit.plugins.utils.Metadata;
  */
 public class ScanWebConfigRegWeb extends ScanWebConfig {
 
-  protected Long pluginID = null;
+  protected Long entitatID = null;
 
-  protected final long expiryTransaction; 
+  protected final long expiryTransaction;
 
-
-  public ScanWebConfigRegWeb(long scanWebID, String scanType, Set<String> flags, List<Metadata> metadades,
-      ScanWebMode mode, String languageUI, String urlFinal, long expiryTransaction) {
+  public ScanWebConfigRegWeb(long scanWebID, String scanType, Set<String> flags,
+      List<Metadata> metadades, ScanWebMode mode, String languageUI, String urlFinal,
+      long expiryTransaction) {
     super(scanWebID, scanType, flags, metadades, mode, languageUI, urlFinal);
     this.expiryTransaction = expiryTransaction;
   }
 
-  public Long getPluginID() {
-    return pluginID;
+  public Long getEntitatID() {
+    return entitatID;
   }
 
-  public void setPluginID(Long pluginID) {
-    this.pluginID = pluginID;
+  public void setEntitatID(Long entitatID) {
+    this.entitatID = entitatID;
   }
 
   public long getExpiryTransaction() {

@@ -64,10 +64,6 @@ public class Configuracio implements RegwebConstantes {
   }
   
   
-  public static String getScanPlugins() {
-    return System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + "scan.plugins");
-  }
-  
   public static Long getMaxUploadSizeInBytes() {
     return Long.getLong(RegwebConstantes.REGWEB3_PROPERTY_BASE + "maxuploadsizeinbytes");
   }
