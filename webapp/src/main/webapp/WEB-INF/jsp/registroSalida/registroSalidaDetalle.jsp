@@ -152,7 +152,7 @@
                         <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSalida/new"/>')" class="btn btn-danger btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
 
                         <%--Botón Editar Registro--%>
-                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
                             <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/edit"/>')" class="btn btn-warning btn-sm"><spring:message code="registro.boton.editar"/></button></div>
                         </c:if>
 
@@ -189,14 +189,14 @@
 
             <!-- ANEXOS -->
             <c:if test="${showannexes}">
-                <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR)&& oficinaRegistral && puedeEditar}">
+                <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR)&& oficinaRegistral && puedeEditar && !tieneJustificante}">
                     <c:import url="../registro/anexos.jsp">
                         <c:param name="tipoRegistro" value="salida"/>
                     </c:import>
                 </c:if>
 
                 <%--ANEXOS SOLO LECTURA--%>
-                <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
+                <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
                     <c:import url="../registro/anexosLectura.jsp">
                         <c:param name="tipoRegistro" value="salida"/>
                     </c:import>
@@ -204,7 +204,7 @@
             </c:if>
 
             <%--INTERESADOS--%>
-            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar}">
+            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar && !tieneJustificante}">
                 <c:import url="../registro/interesados.jsp">
                     <c:param name="tipo" value="detalle"/>
                     <c:param name="tipoRegistro" value="salida"/>
@@ -213,16 +213,16 @@
                 </c:import>
             </c:if>
 
-            <%--EXPONE - SOLICITA--%>
-            <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
-                <c:import url="../registro/exponeSolicita.jsp">
+            <%--INTERESADOS SOLO LECTURA--%>
+            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_VALIDO || !oficinaRegistral || !puedeEditar || tieneJustificante}">
+                <c:import url="../registro/interesadosLectura.jsp">
                     <c:param name="tipoRegistro" value="salida"/>
                 </c:import>
             </c:if>
 
-            <%--INTERESADOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO  && registro.estado != RegwebConstantes.REGISTRO_RESERVA) || !oficinaRegistral || !puedeEditar}">
-                <c:import url="../registro/interesadosLectura.jsp">
+            <%--EXPONE - SOLICITA--%>
+            <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
+                <c:import url="../registro/exponeSolicita.jsp">
                     <c:param name="tipoRegistro" value="salida"/>
                 </c:import>
             </c:if>

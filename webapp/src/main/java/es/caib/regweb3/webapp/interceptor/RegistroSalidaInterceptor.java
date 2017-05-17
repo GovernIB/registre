@@ -158,6 +158,14 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
 
+            // Si tiene Justificante generado, no se puede editar
+            if (registroSalida.getRegistroDetalle().getTieneJustificante()) {
+                log.info("Este RegistroSalida no se puede modificar, porque ya se ha generado su Justificante");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar.justificante"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             // Comprobamos que el UsuarioActivo pueda editar ese registro de salida
             if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
