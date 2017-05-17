@@ -2,21 +2,9 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb3.persistence.ejb.HistoricoRegistroSalidaLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
-import es.caib.regweb3.persistence.ejb.SirLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -29,7 +17,6 @@ import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -47,9 +34,11 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -244,8 +233,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
                 // Anexos completo
             if(showannexes){ // Si se muestran los anexos
-                model.addAttribute("iframe_anexos_height", 200 );
-                anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
+                model.addAttribute("anexos",anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de salida.
 
                 if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);

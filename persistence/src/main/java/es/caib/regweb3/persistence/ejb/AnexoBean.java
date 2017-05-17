@@ -11,7 +11,6 @@ import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
@@ -33,7 +32,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
@@ -234,6 +232,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
+            log.info("XYZ ZZZ registro.getRegistroDetalle : "+ registro.getRegistroDetalle());
+            log.info("XYZ ZZZ registro.getRegistroDetalle.getInteresados : "+ registro.getRegistroDetalle().getInteresados());
 
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
             
@@ -1026,16 +1026,36 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
+    /**
+     * Método que devuelve todos los anexos de un registro de entrada sin el justificante
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<Anexo> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception {
         Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
-        return registroEntrada.getRegistroDetalle().getAnexos();
+        List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+        List<Anexo> anexosSinJustificante = new ArrayList<Anexo>();
+        for(Anexo anexo:anexos){
+            if(!anexo.isJustificante()){
+                anexosSinJustificante.add(anexo);
+            }
+        }
+        return anexosSinJustificante;
     }
 
     @Override
     public List<Anexo> getByRegistroSalida(RegistroSalida registroSalida) throws Exception {
         Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
-        return registroSalida.getRegistroDetalle().getAnexos();
+        List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
+        List<Anexo> anexosSinJustificante = new ArrayList<Anexo>();
+        for(Anexo anexo:anexos){
+            if(!anexo.isJustificante()){
+                anexosSinJustificante.add(anexo);
+            }
+        }
+        return anexosSinJustificante;
 
     }
 

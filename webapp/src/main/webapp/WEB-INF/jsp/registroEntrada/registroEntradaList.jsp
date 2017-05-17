@@ -351,7 +351,8 @@
                                                                     <td class="center">0</td>
                                                                 </c:if>
                                                                 <c:if test="${registro.registroDetalle.anexos != null}">
-                                                                    <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
+                                                                    <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
+                                                                    <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>
                                                                 </c:if>
                                                                 <c:if test="${registro.registroDetalle.anexos == null}">
                                                                     <td class="center">0</td>

@@ -1,6 +1,6 @@
 /**
  * Carga los datos de un Anexo para mostrarlos en un modal
- * @param idInteresado
+ * @param idAnexo
  */
 function obtenerAnexo(idAnexo){
 

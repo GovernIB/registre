@@ -126,7 +126,7 @@ public class AnexoFicheroController extends BaseController {
                 firmaSize = anexoForm.getFirmaFile().getSize();
                 firmaExtension = obtenerExtensionFirma(anexoForm);
             }
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result);
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result,false);
 
         }
         if (result.hasErrors()) {

@@ -2,12 +2,7 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
@@ -21,7 +16,6 @@ import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -38,9 +32,11 @@ import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -249,7 +245,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Anexos completo
             if(showannexes){ // Si se muestran los anexos
-                anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
+                model.addAttribute("anexos",anexoEjb.getByRegistroEntrada(registro)); //Inicializamos los anexos del registro de entrada.
 
                 if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);

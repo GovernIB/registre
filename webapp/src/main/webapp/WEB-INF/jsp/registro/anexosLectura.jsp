@@ -23,13 +23,13 @@
 
                 <div class="table-responsive">
 
-                    <c:if test="${empty registro.registroDetalle.anexos}">
+                    <c:if test="${empty anexos}">
                         <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/><strong> <spring:message code="anexo.anexo"/></strong>
                         </div>
                     </c:if>
 
-                    <c:if test="${not empty registro.registroDetalle.anexos}">
+                    <c:if test="${not empty anexos}">
                         <table id="interesados" class="table table-bordered table-hover table-striped">
                             <colgroup>
                                 <col>
@@ -49,7 +49,7 @@
                             </thead>
 
                             <tbody>
-                            <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
+                            <c:forEach var="anexo" items="${anexos}">
 
                                 <!-- No mostra el justificant ni ho conta pel tamany màxim -->
                                 <c:if test="${!anexo.justificante}">
@@ -89,14 +89,15 @@
                                                    href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                     class="fa fa-download"></span></a></td>
-                                            <td></td>
+                                            <td><span class="label label-danger">No</span></td>
                                         </c:if>
                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                            <td></td>
-                                            <td><a class="btn btn-info btn-default btn-sm"
+
+                                            <td><a class="btn btn-success btn-default btn-sm"
                                                    href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
                                                    target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                     class="fa fa-download"></span></a></td>
+                                            <td><span class="label label-success">Si</span></td>
                                         </c:if>
                                     </tr>
                                 </c:if>

@@ -1,13 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -15,7 +10,6 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.util.List;
 
 /**
@@ -65,7 +59,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
 
     /**
-     *
+     * Método que devuelve todos los anexos de un registro de entrada sin el justificante
      * @param registroEntrada
      * @return
      * @throws Exception
@@ -73,7 +67,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     public List<Anexo> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception;
 
     /**
-     *
+     * Método que devuelve todos los anexos de un registro de salida sin el justificante
      * @param registroSalida
      * @return
      * @throws Exception
@@ -149,21 +143,13 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     /**
      * Crea un Jusitificante como anexo al registro
      * @param usuarioEntidad
-     * @param idRegistro
      * @param tipoRegistro
-     * @param baos
-     * @param custodyID
-     * @param csv
      * @return
      * @throws Exception
      */
-    /*
-    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, Long idRegistro, String tipoRegistro,
-        byte[] baos, String custodyID, String csv) throws Exception;
-        */
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro,
         String tipoRegistro, String idioma) throws I18NException, I18NValidationException;
-    
+
 
 
 }

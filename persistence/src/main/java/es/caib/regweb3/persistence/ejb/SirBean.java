@@ -455,7 +455,7 @@ public class SirBean implements SirLocal {
             RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
             // Si no tiene generado el Justificante, lo hacemos
-            if (!registroDetalle.tieneJustificante()) {
+            if (!registroDetalle.getTieneJustificante()) {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
                 final String idioma = "es";
@@ -499,7 +499,7 @@ public class SirBean implements SirLocal {
             RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
             // Si no tiene generado el Justificante, lo hacemos
-            if (!registroDetalle.tieneJustificante()) {
+            if (!registroDetalle.getTieneJustificante()) {
               // Creamos el anexo del justificante y se lo añadimos al registro
               final String idioma = "es";
               AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroSalida,
