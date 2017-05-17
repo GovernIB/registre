@@ -130,7 +130,6 @@ public class AnexoFicheroController extends BaseController {
 
         }
         if (result.hasErrors()) {
-            model.addAttribute("post", true);
             return "registro/formularioAnexoFichero";
         } else {
             try {
@@ -200,8 +199,8 @@ public class AnexoFicheroController extends BaseController {
             log.debug(" anexoForm.isFirmaFileDelete() = " + anexoForm.isSignatureFileDelete());
         }
         //Cargamos el signature custody con el actual
-        SignatureCustody sc = anexoForm.getSignatureCustody();
-
+       // SignatureCustody sc = anexoForm.getSignatureCustody();
+        SignatureCustody sc = null;
         if (!anexoForm.getFirmaFile().isEmpty()) {
             if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
                     && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
@@ -259,8 +258,8 @@ public class AnexoFicheroController extends BaseController {
         }
 
 
-        DocumentCustody dc = anexoForm.getDocumentoCustody();
-        //DocumentCustody dc = null;
+        //DocumentCustody dc = anexoForm.getDocumentoCustody();
+        DocumentCustody dc = null;
         if (!anexoForm.getDocumentoFile().isEmpty()) {
             dc = new DocumentCustody();
             CommonsMultipartFile multipart = anexoForm.getDocumentoFile();
