@@ -14,6 +14,7 @@ import es.caib.regweb3.utils.StringUtils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -1363,9 +1364,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           // Comprova que existeix el plugin de justificant
           if(justificantePlugin == null) {
-            // XYZ ZZZ S'ha de traduir
-            throw new I18NException("error.desconegut",
-                "No s'ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.");
+            // No s´ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.
+            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.7"));
           }
           
           Locale locale = new Locale(idioma);

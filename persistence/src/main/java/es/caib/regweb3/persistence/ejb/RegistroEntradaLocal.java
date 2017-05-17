@@ -323,7 +323,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper, Long entidadId) throws Exception, I18NException;
+    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
+        Long entidadId, String idioma) throws Exception, I18NException;
 
     /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.

@@ -6,6 +6,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -89,13 +90,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         SignatureCustody sign = input.getSignatureCustody();
         DocumentCustody doc = input.getDocumentoCustody();
         
-        log.info(" XYZ ZZZ checkDocumentAndSignature::Document = " + doc);
-        log.info(" XYZ ZZZ checkDocumentAndSignature::Signature = " + sign);
+        log.info("checkDocumentAndSignature::Document = " + doc);
+        log.info("checkDocumentAndSignature::Signature = " + sign);
         
 
         if (sign == null && doc == null) {
-          // TODO XYZ ZZZ Traduir emprant lang
-          throw new I18NException("error.desconegut", "No s'ha passat cap document ni firma.");
+          throw new I18NException("error.checkanexosir.nifirmanidoc");
         }
 
         if (!sir && sign == null) {
@@ -114,8 +114,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             && is_pdf(doc.getData())) {
             
             // Si és un PDF firmar com a PADES
-            
-            
             firmaPAdESEPES(input, doc, locale, signaturePlugin);
             
             String fileName = addInFileName(origName,  "_signed");
@@ -139,18 +137,17 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(null,
             RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
         if (validatePlugin == null) {
-          // TODO XYZ ZZZ traduir
-          throw new I18NException("error.desconegut",
-              "El plugin de Validació de Firmes no s'ha definit. Consulti amb l'Administrador de sistemes.");
+          // El plugin de Validació de Firmes no s'ha definit. Consulti amb l'Administrador
+          throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
         }
 
         // Verificar que ofereix servei de informació de firmes
         SignatureRequestedInformation sri = validatePlugin
             .getSupportedSignatureRequestedInformation();
         if (!Boolean.TRUE.equals(sri.getReturnSignatureTypeFormatProfile())) {
-          // TODO XYZ ZZZ traduir
-          throw new I18NException("error.desconegut",
-              "El plugin de Validació de Firmes no proveeix informació de firmes.");
+          // El plugin de Validació/Informació de Firmes no proveeix informació de firmes.
+          throw new I18NException("error.plugin.validasign.noinfo");
+              
         }
 
         sri = new SignatureRequestedInformation();
@@ -168,15 +165,13 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         try {
           resp = validatePlugin.validateSignature(validationRequest);
         } catch (Exception e) {
-          // XYZ ZZZ TODO Traduir
-          throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+          throw new I18NException(e, "error.checkanexosir.validantfirma",
+              new I18NArgumentString(e.getMessage()));
         }
 
         if (resp.getValidationStatus().getStatus() != ValidationStatus.SIGNATURE_VALID) {
-          // XYZ ZZZ Traduir
-          throw new I18NException("error.desconegut", 
-              "La cridada al Validator/Informador de Firmes ha retornat un error: " 
-              + resp.getValidationStatus().getErrorMsg());
+          throw new I18NException("error.checkanexosir.validantfirma",
+              resp.getValidationStatus().getErrorMsg());
         }
         
 
@@ -189,10 +184,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         log.info("XYZ ZZZ formato = " + formato);
 
         if (perfil == null || tipo == null || formato == null) {
-          // TODO XYZ ZZZ traduir
-          throw new I18NException( "error.desconegut","L'arxiu enviat o no és una firma o el plugin de validació ("
-              + validatePlugin.getClass() + ") no ha retornat informació del tipus de firma "
-              + "(T:" + tipo + ", P:" + perfil + ", F:" + formato + ")");
+          throw new I18NException("error.checkanexosir.validantfirma.buit",
+              validatePlugin.getClass().toString(), tipo, perfil, formato);
         }
 
         if (!sir) {
@@ -369,10 +362,10 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     protected void checkDetachedSignature(AnexoFull input,
         ValidateSignatureResponse resp, Locale locale, ISignatureServerPlugin signaturePlugin)
         throws I18NException, Exception {
-      // TODO XYZ ZZZ Falta Refirmar amb EPES XAdES Detached
-      // TODO XYZ ZZZ Falta Refirmar amb EPES XAdES Detached
+      // TODO Falta Refirmar amb EPES XAdES Detached
+      // TODO Falta Refirmar amb EPES CAdES Detached
 
-      // TODO XYZ ZZZ SOLUCIO TEMPORAL: ELIMINAM LA FIRMA i FIRMAM AMB CADES-EPES
+      // TODO SOLUCIO TEMPORAL: ELIMINAM LA FIRMA i FIRMAM AMB CADES-EPES
       String orig = input.getDocumentoCustody().getName(); 
 
       // (1) Eliminam la firma
@@ -492,9 +485,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         // Check si passa filtre
         if (!plugin.filter(signaturesSet)) {
-          // TODO XYZ ZZZ Traduir
-          throw new I18NException("error.desconegut",
-              "El pluguin no suporta aquest tipus de firma(" + signType + ", " + signMode + ")");
+          // "El pluguin no suporta aquest tipus de firma/mode (" + signType + ", " + signMode + ")"
+          throw new I18NException("error.plugin.firma.nosuportat", signType, String.valueOf(signMode));
         }
 
         final String timestampUrlBase = null;
@@ -502,16 +494,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         StatusSignaturesSet sss = signaturesSet.getStatusSignaturesSet();
 
         if (sss.getStatus() != StatusSignaturesSet.STATUS_FINAL_OK) {
-          // TODO XYZ ZZZ Traduir
-          throw new I18NException(sss.getErrorException(), "error.desconegut",
-              new I18NArgumentString("Error realitzant una firma: " + sss.getErrorMsg()));
+          throw new I18NException(sss.getErrorException(), "error.realitzantfirma",
+              new I18NArgumentString(sss.getErrorMsg()));
         } else {
           FileInfoSignature fis = signaturesSet.getFileInfoSignatureArray()[0];
           StatusSignature status = fis.getStatusSignature();
           if (status.getStatus() != StatusSignaturesSet.STATUS_FINAL_OK) {
-            // TODO XYZ ZZZ Traduir
-            throw new I18NException(status.getErrorException(), "error.desconegut",
-                new I18NArgumentString("Error realitzant una firma: " + status.getErrorMsg()));
+            throw new I18NException(status.getErrorException(), "error.realitzantfirma",
+                new I18NArgumentString(status.getErrorMsg()));
           } else {
             destination = status.getSignedData();
 
@@ -540,9 +530,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
               attachedDocument = (signMode == FileInfoSignature.SIGN_MODE_EXPLICIT);
               signFileName = "signature.csig";
             } else {
-              // XYZ ZZZ TODO Traduir
-              throw new I18NException("error.desconegut", "Tipus de firma desconeguda "
-                  + signType);
+              throw new I18NException(new Exception(), "error.realitzantfirma",
+                  new I18NArgumentString("Tipus de firma desconeguda (" + signType + ")"));
             }
             sc.setName(signFileName);
             sc.setMime(mime);
@@ -593,104 +582,5 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       }
       return false;
   }
-    
-    
-    /*
 
-    protected File firmaPAdESEPES(byte[] pdfSourceData, String languageUI,
-        ISignatureServerPlugin pluginInstance, String name,
-        String reason, boolean epes) throws Exception {
-      
-      File justificanteFile = null;
-      try {
-        
-        final String signType = FileInfoSignature.SIGN_TYPE_PADES;
-        final int signMode = FileInfoSignature.SIGN_MODE_IMPLICIT;
-        boolean userRequiresTimeStamp = false;
-        
-  
-        final String filtreCertificats = "";
-  
-        final String administrationID = null; // No te sentit en API Firma En Servidor
-        PolicyInfoSignature policyInfoSignature = null;
-        CommonInfoSignature commonInfoSignature = new CommonInfoSignature(languageUI,
-                filtreCertificats, CONFIG_USERNAME, administrationID, policyInfoSignature);
-  
-        final String signID = String.valueOf(System.currentTimeMillis());;
-  
-        final String location = null;
-        final String signerEmail = null;
-        final int signNumber = 1;
-        
-  
-        String signAlgorithm = FileInfoSignature.SIGN_ALGORITHM_SHA1;
-  
-        int signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_WITHOUT;
-        PdfVisibleSignature pdfInfoSignature = null;
-  //      final IRubricGenerator rubricGenerator = null;
-  //        if (FileInfoSignature.SIGN_TYPE_PADES.equals(signType) && rubricGenerator != null) {
-  //            signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_LASTPAGE;
-  //            PdfRubricRectangle pdfRubricRectangle = new PdfRubricRectangle(106, 650, 555, 710);
-  //            pdfInfoSignature = new PdfVisibleSignature(pdfRubricRectangle, rubricGenerator);
-  //        }
-        final ITimeStampGenerator timeStampGenerator = null;
-  
-        // Valors per defcte
-        final SignaturesTableHeader signaturesTableHeader = null;
-        final SecureVerificationCodeStampInfo csvStampInfo = null;
-        
-        // Crea el justificante como fichero temporal
-        justificanteFile = File.createTempFile("regweb3_", ".justificant");
-        FileOutputStream fos = new FileOutputStream(justificanteFile);
-        fos.write(pdfSourceData);
-        fos.flush();
-        fos.close();
-        
-        
-  
-        FileInfoSignature fileInfo = new FileInfoSignature(signID, justificanteFile,
-                FileInfoSignature.PDF_MIME_TYPE, name, reason, location, signerEmail, signNumber,
-                languageUI, signType, signAlgorithm, signMode, signaturesTableLocation,
-                signaturesTableHeader, pdfInfoSignature, csvStampInfo, userRequiresTimeStamp,
-                timeStampGenerator);
-  
-        final String signaturesSetID = String.valueOf(System.currentTimeMillis());
-        SignaturesSet signaturesSet = new SignaturesSet(signaturesSetID, commonInfoSignature,
-                new FileInfoSignature[] { fileInfo });
-  
-        String timestampUrlBase = null;
-        signaturesSet = pluginInstance.signDocuments(signaturesSet, timestampUrlBase);
-        StatusSignaturesSet sss = signaturesSet.getStatusSignaturesSet();
-  
-        if (sss.getStatus() != StatusSignaturesSet.STATUS_FINAL_OK) {
-            System.err.println("Error General MSG = " + sss.getErrorMsg());
-            if (sss.getErrorException() != null) {
-                sss.getErrorException().printStackTrace();
-            }
-            throw new Exception(sss.getErrorMsg());
-        } else {
-            FileInfoSignature fis = signaturesSet.getFileInfoSignatureArray()[0];
-            StatusSignature status = fis.getStatusSignature();
-            if (status.getStatus() != StatusSignaturesSet.STATUS_FINAL_OK) {
-                if (status.getErrorException() != null) {
-                    status.getErrorException().printStackTrace();
-                }
-                System.err.println("Error Firma 1. MSG = " + status.getErrorMsg());
-                throw new Exception(status.getErrorMsg());
-            } else {
-                return status.getSignedData();
-            }
-        }
-      
-        
-      } finally {
-        
-        if (justificanteFile != null) {
-          if (!justificanteFile.delete()) {
-            justificanteFile.deleteOnExit(); 
-          }
-        }
-      }
-    }
-*/
 }

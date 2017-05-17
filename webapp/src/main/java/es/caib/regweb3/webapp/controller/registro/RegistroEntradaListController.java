@@ -607,7 +607,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/enviarDestinatarios", method = RequestMethod.POST)
     public
     @ResponseBody
-    Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request) throws Exception, I18NException {
+    Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, 
+        @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request) 
+            throws Exception, I18NException {
 
         log.info("Entramos en enviarDestinatariosRegistroEntrada");
 
@@ -618,7 +620,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         log.info(" Observaciones obtenidas:" + wrapper.getObservaciones());
 
         // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
-        Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper,usuarioEntidad.getEntidad().getId());
+        Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper,
+            usuarioEntidad.getEntidad().getId(), 
+            RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuarioEntidad.getUsuario().getIdioma()));
 
         if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
             // Marcamos el registro como tramitado, solo si se ha enviado bien

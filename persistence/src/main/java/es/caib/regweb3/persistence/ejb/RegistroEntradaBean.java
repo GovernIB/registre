@@ -1,6 +1,22 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.Trazabilidad;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
@@ -10,6 +26,7 @@ import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -22,7 +39,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+
 
 /**
  * Created by Fundació BIT.
@@ -845,15 +862,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,Long entidadId) throws Exception, I18NException {
+    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
+        Long entidadId, String idioma) throws Exception, I18NException {
 
         //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
         if (distribucionPlugin != null) {
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
-            // XYZ ZZZ
-            Locale locale = new Locale("ca");
+            Locale locale = new Locale(idioma);
             return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
         }
         return false;
