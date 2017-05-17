@@ -181,20 +181,23 @@
 <script type="text/javascript">
 
     var s ="<html><head></head><body><div class=\"hide col-xs-12 text-center centrat\"><img src=\"<c:url value="/img/712.GIF"/>\" width=\"20\" height=\"20\"/></div></body></html>";
-    $('#targetiframe').contents().find('html').html(s); 
+    $('#targetiframe').contents().find('html').html(s);
 
 
+    
+    $('#myModal').on('hidden.bs.modal', function (e) {
+        unloadiframe();
+      });
+    
     
     //load iframe
     function loadiframe(htmlHref)  {
-    document.getElementById('targetiframe').src = htmlHref;
+       document.getElementById('targetiframe').src = htmlHref;
     }
-    
+
     //just for the kicks of it
     function unloadiframe()  {
-        var frame = document.getElementById("targetiframe"),
-        frameHTML = frame.contentDocument || frame.contentWindow.document;
-        //frameHTML.removeChild(frameDoc.documentElement);    
+        $('#targetiframe').attr('src', '');
     }
 
 
@@ -208,7 +211,7 @@
 
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
     }
 
 
@@ -217,14 +220,14 @@
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // $('#sinfirma').prop("checked", "checked");
 
-        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
     }
 
     function nuevoAnexoScan() {
 
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
     }
 
 
@@ -232,7 +235,7 @@
         
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/"+${oficio.sir});
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/${isSir}");
     }
 
 

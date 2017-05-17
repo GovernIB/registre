@@ -235,6 +235,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO));
         model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
 
+        boolean isSir = false;
         // Si es VÁLIDO o PENDIENTE DE VISAR y estamos en la OficinaRegistral
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral){
 
@@ -242,6 +243,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if(entidadActiva.getOficioRemision()){
                 oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
                 model.addAttribute("oficio", oficio);
+                
+                isSir = oficio.getSir() == null? false: oficio.getSir().booleanValue();
             }
 
             // Anexos completo
@@ -257,7 +260,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 initScanAnexos(entidadActiva, model, request, registro.getId());
             }
 
-        }else{
+        } else {
 
             // Anexos lectura
             if(showannexes){ // Si se muestran los anexos
@@ -271,6 +274,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             initDatosInteresados(model, organismosOficinaActiva);
         }
 
+        model.addAttribute("isSir", isSir);
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
