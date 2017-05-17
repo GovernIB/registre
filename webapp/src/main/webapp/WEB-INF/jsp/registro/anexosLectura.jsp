@@ -23,13 +23,13 @@
 
                 <div class="table-responsive">
 
-                    <c:if test="${empty anexos}">
+                    <c:if test="${empty registro.registroDetalle.anexos}">
                         <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/><strong> <spring:message code="anexo.anexo"/></strong>
                         </div>
                     </c:if>
 
-                    <c:if test="${not empty anexos}">
+                    <c:if test="${not empty registro.registroDetalle.anexos}">
                         <table id="interesados" class="table table-bordered table-hover table-striped">
                             <colgroup>
                                 <col>
@@ -49,7 +49,7 @@
                             </thead>
 
                             <tbody>
-                            <c:forEach var="anexo" items="${anexos}">
+                            <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
 
                                 <!-- No mostra el justificant ni ho conta pel tamany màxim -->
                                 <c:if test="${!anexo.justificante}">
