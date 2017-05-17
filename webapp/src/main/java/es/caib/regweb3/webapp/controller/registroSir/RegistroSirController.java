@@ -114,10 +114,10 @@ public class RegistroSirController extends BaseController {
     /**
      * Listado de RegistroSir Recibidos
      */
-    @RequestMapping(value = "/recibidos/list/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/pendientesProcesar/list/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView recibidos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
 
-        ModelAndView mav = new ModelAndView("registroSir/registrosSir");
+        ModelAndView mav = new ModelAndView("registroSir/registrosSirEstado");
 
         Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECIBIDO.getValue());
 
@@ -134,7 +134,7 @@ public class RegistroSirController extends BaseController {
     @RequestMapping(value = "/rechazados/list/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
 
-        ModelAndView mav = new ModelAndView("registroSir/registrosSir");
+        ModelAndView mav = new ModelAndView("registroSir/registrosSirEstado");
 
         Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECHAZADO.getValue());
 

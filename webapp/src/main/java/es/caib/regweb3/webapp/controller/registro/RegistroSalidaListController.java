@@ -221,46 +221,36 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
+        Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
 
-        // Si es VÁLIDO o PENDIENTE DE VISAR y estamos en la OficinaRegistral
-        boolean isSir = false;
-        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral){
+        // Oficio Remision
+        if(entidadActiva.getOficioRemision()){
+            oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+            model.addAttribute("oficio", oficio);
 
-            // Oficio Remision
-            if(entidadActiva.getOficioRemision()){
-                oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
-                model.addAttribute("oficio", oficio);
-                isSir = oficio.getSir() == null? false: oficio.getSir().booleanValue();
-            }
-
-                // Anexos completo
-            if(showannexes){ // Si se muestran los anexos
-                model.addAttribute("anexos",anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de salida.
-
-                if(oficio != null && oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
-                    initMensajeNotaInformativaAnexos(entidadActiva, model);
-                    model.addAttribute("maxanexospermitidos", PropiedadGlobalUtil.getMaxAnexosPermitidos(entidadActiva.getId()));
-                }
-
-                // Inicializa los atributos para escanear anexos
-                initScanAnexos(entidadActiva, model, request, registro.getId());
-            }
-
-        }else{
-
-            // Anexos lectura
-            if(showannexes){ // Si se muestran los anexos
-                model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
+            if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+                initMensajeNotaInformativaAnexos(entidadActiva, model);
             }
         }
 
+        // Anexos completo
+        if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))
+                && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
+
+            model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de entrada.
+            initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
+        }
+
         // Interesados, solo si el Registro en Válio
-        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral){
+        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){
 
             initDatosInteresados(model, organismosOficinaActiva);
         }
 
-        model.addAttribute("isSir", isSir);
+        // Justificante
+        if(tieneJustificante){
+            model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
+        }
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));

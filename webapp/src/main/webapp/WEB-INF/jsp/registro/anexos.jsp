@@ -220,7 +220,7 @@
 
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
+        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
 
@@ -229,14 +229,14 @@
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // $('#sinfirma').prop("checked", "checked");
 
-        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
+        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
     function nuevoAnexoScan() {
 
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
+        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
 
@@ -244,7 +244,7 @@
         
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/${isSir}");
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/${oficio.sir}");
     }
 
 

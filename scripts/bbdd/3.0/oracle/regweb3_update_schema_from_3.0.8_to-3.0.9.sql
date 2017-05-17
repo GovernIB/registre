@@ -267,7 +267,7 @@ es.caib.regweb3.plugins.scanweb.iecisa.forcejnlp=false
 es.caib.regweb3.plugins.scanweb.iecisa.forcesign=false
 es.caib.regweb3.plugins.scanweb.iecisa.closewindowwhenfinish=true
 # Optional
-#es.caib.regweb3.plugins.scanweb.iecisa.sign.keystore=<<JLS>>
+#es.caib.regweb3.plugins.scanweb.iecisa.sign.keystore=<<JKS>>
 #es.caib.regweb3.plugins.scanweb.iecisa.sign.password=<<JKS_PASSWORD>>
 #es.caib.regweb3.plugins.scanweb.iecisa.sign.certpassword=<< CERT_PASSWORD>>
 #es.caib.regweb3.plugins.scanweb.iecisa.sign.alias=<<ALIAS>>

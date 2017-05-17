@@ -196,16 +196,6 @@
                                 <dd> ${registroSir.observacionesApunte}</dd>
                             </c:if>
 
-                            <c:if test="${not empty registroSir.expone}">
-                                <dt><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.expone"/>: </dt>
-                                <dd> ${registroSir.expone}</dd>
-                            </c:if>
-
-                            <c:if test="${not empty registroSir.solicita}">
-                                <dt><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.solicita"/>: </dt>
-                                <dd> ${registroSir.solicita}</dd>
-                            </c:if>
-
                             <c:if test="${not empty registroSir.estado}">
                                 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
                                 <dd>
@@ -377,6 +367,29 @@
             <c:import url="interesadosSir.jsp"/>
 
             </form:form>
+
+            <%--EXPONE - SOLICITA--%>
+            <c:if test="${not empty registroSir.expone || not empty registroSir.solicita}">
+                <div class="col-xs-8 pull-right">
+                    <div class="panel panel-primary">
+
+                        <div class="panel-heading">
+                            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroDetalle.expone.solicita.titulo"/></strong></h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <c:if test="${not empty registroSir.expone}">
+                                <p><strong><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.expone"/>:</strong> ${registroSir.expone}</p>
+                            </c:if>
+
+                            <c:if test="${ not empty registroSir.solicita}">
+                                <p><strong><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.solicita"/>:</strong> ${registroSir.solicita}</p>
+                            </c:if>
+                        </div>
+                    </div>
+
+                </div>
+            </c:if>
 
             <%--TRAZABILIDAD--%>
             <c:if test="${not empty trazabilidades}">
