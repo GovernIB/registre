@@ -223,12 +223,14 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
         // Si es VÁLIDO o PENDIENTE DE VISAR y estamos en la OficinaRegistral
+        boolean isSir = false;
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral){
 
             // Oficio Remision
             if(entidadActiva.getOficioRemision()){
                 oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
                 model.addAttribute("oficio", oficio);
+                isSir = oficio.getSir() == null? false: oficio.getSir().booleanValue();
             }
 
                 // Anexos completo
@@ -248,7 +250,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             // Anexos lectura
             if(showannexes){ // Si se muestran los anexos
-                model.addAttribute("iframe_anexos_height", 200 );
                 model.addAttribute("anexos", anexoEjb.getByRegistroDetalleLectura(registro.getRegistroDetalle().getId()));
             }
         }
@@ -259,6 +260,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             initDatosInteresados(model, organismosOficinaActiva);
         }
 
+        model.addAttribute("isSir", isSir);
 
         // Historicos
         model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
