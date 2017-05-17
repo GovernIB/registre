@@ -289,6 +289,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         /********* TRAZABILIDAD *********/
         log.info("Trazabilidades eliminadas: " +trazabilidadEjb.eliminarByEntidad(idEntidad));
 
+        /********* TRAZABILIDAD SIR *********/
+        log.info("TrazabilidadSir eliminados: " + trazabilidadSirEjb.eliminarByEntidad(idEntidad));
+
         /********* OFICIOS REMISIÓN *********/
         log.info("OficiosRemision eliminados: " +oficioRemisionEjb.eliminarByEntidad(idEntidad));
 
@@ -331,9 +334,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
            libroEjb.reiniciarContadores(libro.getId());
         }
         log.info("Libros reiniciados: " +libros.size());
-
-        /********* TRAZABILIDAD SIR *********/
-        log.info("TrazabilidadSir eliminados: " + trazabilidadSirEjb.eliminarByEntidad(idEntidad));
 
         /********* REGISTRO SIR *********/
         log.info("RegistroSir eliminados: " + registroSirEjb.eliminarByEntidad(idEntidad));

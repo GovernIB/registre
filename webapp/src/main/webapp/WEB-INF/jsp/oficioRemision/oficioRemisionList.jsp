@@ -162,7 +162,7 @@
                                                             <th><spring:message code="oficioRemision.estado"/></th>
                                                             <th><spring:message code="oficioRemision.tipo"/></th>
                                                             <th><spring:message code="oficioRemision.destino"/></th>
-                                                            <th><spring:message code="oficioRemision.sir"/></th>
+                                                            <%--<th><spring:message code="oficioRemision.sir"/></th>--%>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -225,10 +225,10 @@
                                                                     </c:if>
                                                                 </span>
                                                             </td>
-                                                            <td>
+                                                            <%--<td>
                                                                 <c:if test="${oficioRemision.sir}"><span class="label label-success"><spring:message code="regweb.si"/></span></c:if>
                                                                 <c:if test="${not oficioRemision.sir}"><span class="label label-danger"><spring:message code="regweb.no"/></span></c:if>
-                                                            </td>
+                                                            </td>--%>
 
                                                             <td class="center">
                                                                 <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/detalle"/>" title="Detalle"><span class="fa fa-eye"></span></a>

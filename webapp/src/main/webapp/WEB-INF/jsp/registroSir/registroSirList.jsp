@@ -36,7 +36,7 @@
                 <div class="panel panel-primary">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroSir.buscador"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroSir.buscador.recibidos"/></strong> </h3>
                     </div>
 
                     <form:form modelAttribute="registroSirBusqueda" method="post" cssClass="form-horizontal">
@@ -144,15 +144,15 @@
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td>
-                                                        <c:if test="${registroSir.estado == 'DEVUELTO' || registroSir.estado == 'RECIBIDO'}">
+                                                        <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                                             <span class="label label-warning"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
 
-                                                        <c:if test="${registroSir.estado == 'ENVIADO' || registroSir.estado == 'ENVIADO_Y_ACK' || registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ACK'}">
+                                                        <c:if test="${registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ACK'}">
                                                             <span class="label label-success"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
 
-                                                        <c:if test="${registroSir.estado == 'ENVIADO_Y_ERROR' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ACK' ||registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+                                                        <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ACK' ||registroSir.estado == 'RECHAZADO_Y_ERROR'}">
                                                             <span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
                                                     </td>

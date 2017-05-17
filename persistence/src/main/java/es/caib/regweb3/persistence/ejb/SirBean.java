@@ -269,14 +269,7 @@ public class SirBean implements SirLocal {
      */
     private void procesarMensajeACK(RegistroSir registroSir) throws Exception{
 
-        if (EstadoRegistroSir.ENVIADO.equals(registroSir.getEstado())){
-
-            // Actualizamos el registroSir
-            registroSir.setEstado(EstadoRegistroSir.ENVIADO_Y_ACK);
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
-
-        } else if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
 
             // Actualizamos el registroSir
             registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
@@ -290,8 +283,7 @@ public class SirBean implements SirLocal {
             registroSir.setFechaEstado(new Date());
             registroSirEjb.merge(registroSir);
 
-        } else if (EstadoRegistroSir.ENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
+        } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
 
             log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
@@ -385,16 +377,7 @@ public class SirBean implements SirLocal {
      */
     private void procesarMensajeERROR(RegistroSir registroSir, Mensaje mensaje) throws Exception{
 
-        if (EstadoRegistroSir.ENVIADO.equals(registroSir.getEstado())){
-
-            registroSir.setEstado(EstadoRegistroSir.ENVIADO_Y_ERROR);
-            registroSir.setCodigoError(mensaje.getCodigoError());
-            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setNumeroReintentos(0);
-            registroSir.setFechaEstado(new Date());
-            registroSirEjb.merge(registroSir);
-
-        } else if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
 
             registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
             registroSir.setCodigoError(mensaje.getCodigoError());
@@ -412,8 +395,7 @@ public class SirBean implements SirLocal {
             registroSir.setFechaEstado(new Date());
             registroSirEjb.merge(registroSir);
 
-        } else if (EstadoRegistroSir.ENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
-                EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
+        } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
 
             log.info("Se ha recibido un registroSir duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
@@ -444,7 +426,7 @@ public class SirBean implements SirLocal {
         // Creamos el OficioRemision
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setSir(true);
-        oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
+        oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
@@ -856,7 +838,6 @@ public class SirBean implements SirLocal {
      */
     public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado){
         return  estado.equals(EstadoRegistroSir.RECIBIDO) ||
-                estado.equals(EstadoRegistroSir.DEVUELTO) ||
                 estado.equals(EstadoRegistroSir.REENVIADO) ||
                 estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
 

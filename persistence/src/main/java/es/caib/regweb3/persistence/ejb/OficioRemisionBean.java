@@ -96,7 +96,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws Exception {
 
         Query q;
         Query q2;
@@ -104,6 +104,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<String> where = new ArrayList<String>();
 
         StringBuffer query = new StringBuffer("Select oficioRemision from OficioRemision as oficioRemision ");
+
+        // Oficios Remisión no SIR
+        where.add(" oficioRemision.sir = :sir "); parametros.put("sir",sir);
 
         // Tipo Oficio: Entrada o Salida
         if(tipoOficioRemision != 0){
