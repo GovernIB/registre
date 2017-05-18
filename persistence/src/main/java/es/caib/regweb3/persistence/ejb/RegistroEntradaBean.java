@@ -358,7 +358,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idEstado", idEstado);
 
         q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado order by re.fecha desc");
+                "and re.estado = :idEstado");
 
         q2.setParameter("idOficinaActiva", idOficinaActiva);
         q2.setParameter("idEstado", idEstado);
