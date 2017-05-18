@@ -74,22 +74,23 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
      *
-     * @param idOficinaActiva
+     * @param idOficina
      * @param idEstado
      * @return
      * @throws Exception
      */
-    public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception;
+    public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception;
+
 
     /**
-     * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
      *
+     * @param pageNumber
      * @param idOficinaActiva
      * @param idEstado
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception;
+    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.

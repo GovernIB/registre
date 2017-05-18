@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
@@ -75,8 +78,7 @@ public class AvisoController extends BaseController {
             mav.addObject("pendientesVisarSalida", pendientesVisarSalida);
 
             /*Reserva de número*/
-            Long reservas = registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA);
-            mav.addObject("reservas", reservas);
+            mav.addObject("reservas", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA));
 
             /* OFICIOS DE REMISIÓN */
             if(entidadActiva.getOficioRemision()){
@@ -102,7 +104,7 @@ public class AvisoController extends BaseController {
 
             // Registros de Entrada Rechazados por SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO).size());
+                mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO));
             }
 
 
@@ -111,23 +113,5 @@ public class AvisoController extends BaseController {
         log.debug("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
         return mav;
     }
-
-    @RequestMapping(value = "/pendientes")
-    public ModelAndView pendientes(HttpServletRequest request) throws Exception{
-
-        ModelAndView mav = new ModelAndView("avisos/pendientesList");
-
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        if(isOperador(request) && oficinaActiva != null) {
-
-            List<RegistroEntrada> registros = registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RESERVA);
-            mav.addObject("registros", registros);
-
-        }
-
-        return mav;
-    }
-
 
 }

@@ -122,7 +122,7 @@ public class RegistroSirController extends BaseController {
         Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECIBIDO.getValue());
 
         mav.addObject("estado", EstadoRegistroSir.RECIBIDO);
-        mav.addObject("url", "recibidos");
+        mav.addObject("url", "pendientesProcesar");
         mav.addObject("paginacion", paginacion);
 
         return mav;
