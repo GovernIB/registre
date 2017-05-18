@@ -1413,9 +1413,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           // Obtenim el ByteArray per generar el pdf
           byte[] pdfSignat;
           if (registro instanceof RegistroEntrada) {
-            pdfSignat = justificantePlugin.generarJustificante((RegistroEntrada)registro, url, specialValue, csv, idioma);
+            pdfSignat = justificantePlugin.generarJustificanteEntrada((RegistroEntrada)registro, url, specialValue, csv, idioma);
           } else {
-            pdfSignat = justificantePlugin.generarJustificante((RegistroSalida)registro, url, specialValue, csv, idioma);
+            pdfSignat = justificantePlugin.generarJustificanteSalida((RegistroSalida)registro, url, specialValue, csv, idioma);
           }
 
           // Cream l'annex justificant i el firmam

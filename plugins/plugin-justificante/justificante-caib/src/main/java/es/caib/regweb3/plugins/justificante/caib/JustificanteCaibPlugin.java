@@ -34,6 +34,81 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    private String estampat = null;
+    private String rutaImatge = null;
+    private String declaracion = null;
+    private String ley = null;
+    private String validez = null;
+
+
+    /**
+     *  Crea l'event d'Estampació del csv per a que es faci a totes les pàgines que va creant el pdf
+     */
+    class EstampaCSV extends PdfPageEventHelper {
+
+        Font font7 = FontFactory.getFont(FontFactory.HELVETICA, 7);
+
+        public void onStartPage(PdfWriter writer, Document document) {
+
+            try{
+                // LOGOS
+                PdfPTable logos = new PdfPTable(2);
+                logos.setWidthPercentage(100);
+                // Regweb3
+                ClassLoader classLoader = getClass().getClassLoader();
+                InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
+                PdfContentByte cb = writer.getDirectContent();
+                Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
+                logoRW.setAlignment(Element.ALIGN_LEFT);
+                logoRW.scaleToFit(100, 110);
+                logoRW.setAbsolutePosition(35f, 790f);
+                Paragraph parrafo;
+                parrafo = new Paragraph("");
+                parrafo.setAlignment(Element.ALIGN_LEFT);
+                document.add(parrafo);
+                document.add(logoRW);
+                // Logo Entitat
+                Image logoGovern = Image.getInstance(rutaImatge);
+                if(logoGovern != null) {
+                    logoGovern.setAlignment(Element.ALIGN_RIGHT);
+                    logoGovern.scaleToFit(50, 50);
+                    logoGovern.setAbsolutePosition(160f, 780f);
+                    parrafo = new Paragraph("");
+                    parrafo.setAlignment(Element.ALIGN_LEFT);
+                    document.add(parrafo);
+                    document.add(logoGovern);
+                }
+                // Sir
+                InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
+                Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
+                logoSIR.setAlignment(Element.ALIGN_RIGHT);
+                logoSIR.scaleToFit(100, 100);
+                logoSIR.setAbsolutePosition(460f, 790f);
+                parrafo = new Paragraph("");
+                parrafo.setAlignment(Element.ALIGN_RIGHT);
+                document.add(parrafo);
+                document.add(logoSIR);
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph(" "));
+            } catch (DocumentException ex) {
+                // Atrapamos excepciones concernientes al documento.
+            } catch (java.io.IOException ex) {
+                // Atrapamos excepciones concernientes al I/O.
+            }
+
+        }
+
+        public void onEndPage(PdfWriter writer, Document document) {
+            // Añade el CSV como texto vertical
+            PdfContentByte cb = writer.getDirectContent();
+            Phrase p = new Phrase(estampat, font7);
+            ColumnText.showTextAligned(cb, Element.ALIGN_MIDDLE, p, 20, 30, 90);
+
+        }
+
+    }
+
+
     /**
      *
      */
@@ -58,26 +133,46 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
 
+    /**
+     * Inicialitza propietats amb strings de les propietats de Plugin de Justificante
+     * @param locale
+     * @throws Exception
+     */
+    private void inicializarPropiedades(Locale locale, String url, String specialValue, String csv) throws Exception{
+        rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
+        declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
+        ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
+        validez = this.getProperty(PROPERTY_CAIB_BASE + "validez." + locale);
+        String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
+        estampat = MessageFormat.format(estampacion, url, specialValue, csv);
+    }
 
     @Override
-    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
+        //Inicializamos las propiedades comunes
+        inicializarPropiedades(locale, url, specialValue,csv);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Apply preferences and build metadata.
+        // Aplica preferencias
         Document document = new Document(PageSize.A4);
         FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
         PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // INICIALIZA DOCUMENTO
+        // Crea el evento para generar la estampación de csv en cada página
+        EstampaCSV event = new EstampaCSV();
+        writer.setPageEvent(event);
+
+        // Inicializa Documento
         document = inicialitzaDocument(document, writer);
 
-        // COMIENZA A CREAR JUSTIFICANTE
+        // Comienza a crear el Jusltificante
         String denominacionOficina = registroEntrada.getOficina().getDenominacion();
         String codigoOficina = registroEntrada.getOficina().getCodigo();
         String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
@@ -93,23 +188,19 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Date fechaRegistro = registroEntrada.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataRegistre = formatDate.format(fechaRegistro);
-        String dataActual = formatDate.format(Calendar.getInstance().getTime());
+        //String dataActual = formatDate.format(Calendar.getInstance().getTime());  (S'empra al codi de barres)
 
-        // TITULO Y REGISTRO
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
-                numeroRegistroFormateado, tipoDocumentacionFisica);
+        // Título e Información Registro
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado, tipoDocumentacionFisica);
 
-        // CSV Y TEXTO VERTICAL
-        csvRegistre(document, dataActual, numeroRegistroFormateado, writer, url, specialValue, csv);
-
-        // INTERESADOS
+        // Interesados
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
         llistarInteressats(interesados, locale, document);
 
-        // INFORMACION REGISTRO
+        // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomDesti, expedient, registroEntrada.getClass().getSimpleName());
 
-        // ADJUNTOS
+        // Anexos del Registro
         List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
         llistarAnnexes(anexos, locale, document, denominacionOficina);
 
@@ -120,24 +211,31 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
 
         // Define idioma para el justificante
         Locale locale = new Locale(idioma);
 
+        //Inicializamos las propiedades comunes
+        inicializarPropiedades(locale, url, specialValue,csv);
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Apply preferences and build metadata.
+        // Aplica preferencias
         Document document = new Document(PageSize.A4);
         FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
         PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // INICIALIZA DOCUMENTO
+        // Crea el evento para generar la estampación de csv en cada página
+        EstampaCSV event = new EstampaCSV();
+        writer.setPageEvent(event);
+
+        // Inicializa Documento
         document = inicialitzaDocument(document, writer);
 
-        // COMIENZA A CREAR JUSTIFICANTE
+        // Comienza a crear el Jusltificante
         String denominacionOficina = registroSalida.getOficina().getDenominacion();
         String codigoOficina = registroSalida.getOficina().getCodigo();
         String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
@@ -148,24 +246,19 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Date fechaRegistro = registroSalida.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataRegistre = formatDate.format(fechaRegistro);
-        String dataActual = formatDate.format(Calendar.getInstance().getTime());
+        //String dataActual = formatDate.format(Calendar.getInstance().getTime());   (S'empra al Codi de Barres)
 
+        // Título e Información Registro
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado, tipoDocumentacionFisica);
 
-        // TITULO Y REGISTRO
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
-                numeroRegistroFormateado, tipoDocumentacionFisica);
-
-        // CSV Y TEXTO VERTICAL
-        csvRegistre(document, dataActual, numeroRegistroFormateado, writer, url, specialValue, csv);
-
-        // INTERESADOS
+        // Interesados
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
         llistarInteressats(interesados, locale, document);
 
-        // INFORMACION REGISTRO
+        // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
 
-        // ADJUNTOS
+        // Anexos del Registro
         List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
         llistarAnnexes(anexos, locale, document, denominacionOficina);
 
@@ -186,48 +279,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         document.addAuthor("REGWEB3");
         document.addCreationDate();
         document.addCreator("iText library");
-        document.newPage();
-
-        // LOGOS
-        PdfPTable logos = new PdfPTable(2);
-        logos.setWidthPercentage(100);
-        // Regweb3
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
-        PdfContentByte cb = writer.getDirectContent();
-        Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
-        logoRW.setAlignment(Element.ALIGN_LEFT);
-        logoRW.scaleToFit(100, 110);
-        logoRW.setAbsolutePosition(35f, 790f);
-        Paragraph parrafo;
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_LEFT);
-        document.add(parrafo);
-        document.add(logoRW);
-        // Logo Entitat
-        String rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
-        Image logoGovern = Image.getInstance(rutaImatge);
-        if(logoGovern != null) {
-            logoGovern.setAlignment(Element.ALIGN_RIGHT);
-            logoGovern.scaleToFit(50, 50);
-            logoGovern.setAbsolutePosition(160f, 780f);
-            parrafo = new Paragraph("");
-            parrafo.setAlignment(Element.ALIGN_LEFT);
-            document.add(parrafo);
-            document.add(logoGovern);
-        }
-        // Sir
-        InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
-        Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
-        logoSIR.setAlignment(Element.ALIGN_RIGHT);
-        logoSIR.scaleToFit(100, 100);
-        logoSIR.setAbsolutePosition(460f, 790f);
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_RIGHT);
-        document.add(parrafo);
-        document.add(logoSIR);
-        document.add(new Paragraph(" "));
-        document.add(new Paragraph(" "));
 
         return document;
 
@@ -305,8 +356,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Pie de anexo
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
-            // Obtenim el missatge de Declaración de les propietats del Plugin
-            String declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
             PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, font8));
             cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -318,11 +367,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             document.add(new Paragraph(" "));
             document.add(new Paragraph(" "));
 
-            // Paràgraf Llei
+            // Parágrafo Ley
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
-            // Obtenim el missatge de Ley de les propietats del Plugin
-            String ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
             PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
             cellLlei.setBackgroundColor(BaseColor.WHITE);
             cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -331,11 +378,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             titolLlei.addCell(cellLlei);
             document.add(titolLlei);
 
-            // Paràgraf Plaços
+            // Parágrafo Plazos
             PdfPTable titolPlazos = new PdfPTable(1);
             titolPlazos.setWidthPercentage(100);
-            // Obtenim el missatge de Validez de les propietats del Plugin
-            String validez = this.getProperty(PROPERTY_CAIB_BASE + "validez." + locale);
             PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, font8));
             cellPlazos.setBackgroundColor(BaseColor.WHITE);
             cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -348,7 +393,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         }
     }
 
-    // Lista los interesados y representantes tanto para el registro de entrada como el de salida
+    // Lista los Interesados y Representantes tanto para el registro de entrada como el de salida
     protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document) throws Exception {
 
         Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
@@ -530,9 +575,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     // Añade el título y la información de registro
-    protected void informacioRegistre(Locale locale, Document document, String denominacionOficina,
-                                      String codigoOficina, String dataRegistre, String numeroRegistroFormateado,
-                                      Long tipoDocumentacionFisica) throws Exception {
+    protected void informacioRegistre(Locale locale, Document document, String denominacionOficina, String codigoOficina,
+                                      String dataRegistre, String numeroRegistroFormateado, Long tipoDocumentacionFisica) throws Exception {
 
         Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
         font8gris.setColor(BaseColor.GRAY);
@@ -553,7 +597,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         titulo.addCell(cellTitulo);
         document.add(titulo);
 
-        // REGISTRO
+        // Registro
         PdfPTable taulaRegistre = new PdfPTable(new float[] { 1, 3 });
         taulaRegistre.setWidthPercentage(100);
         taulaRegistre.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
@@ -620,19 +664,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     }
 
+    // COMENTADO POR SI AL FINAL AÑADIMOS ALGO DE CODIGO DE BARRAS, si no se usa ELIMINARLO
     // Añade la información del pie, CSV, etc
-    protected void csvRegistre(Document document, String dataActual, String numeroRegistroFormateado,
+    /*protected void csvRegistre(Document document, String dataActual, String numeroRegistroFormateado,
                                PdfWriter writer, String url, String specialValue, String csv) throws Exception {
 
-//        Font font9Underline = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.UNDERLINE);
-//        Font font9 = FontFactory.getFont(FontFactory.HELVETICA, 9);
-//        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8);
+        Font font9Underline = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.UNDERLINE);
+        Font font9 = FontFactory.getFont(FontFactory.HELVETICA, 9);
+        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8);
         Font font7 = FontFactory.getFont(FontFactory.HELVETICA, 7);
 
-        // Obtenim el missatge d'Estampació de les propietats del Plugin
-        String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
-        String estampat = MessageFormat.format(estampacion, url, specialValue, csv);
-/*
         // Añadimos la separación
         PdfPTable csv = new PdfPTable(1);
         csv.setWidthPercentage(100);
@@ -690,16 +731,22 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         code128Image.scalePercent(75);
         code128Image.setAlignment(Element.ALIGN_MIDDLE);
         document.add(code128Image);
-        */
+
 
         // Texto Vertical
         PdfContentByte cb = writer.getDirectContent();
         Phrase p = new Phrase(estampat, font7);
         ColumnText.showTextAligned(cb, Element.ALIGN_MIDDLE, p, 20, 30, 90);
 
-    }
+    }*/
 
-
+    /**
+     *  Obtiene los mensajes que aparecen traducidos en el pdf del Justificante
+     * @param locale
+     * @param missatge
+     * @return
+     * @throws Exception
+     */
     protected String tradueixMissatge(Locale locale, String missatge) throws Exception {
 
         try {
@@ -718,10 +765,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
     public static final UTF8Control UTF8CONTROL=new UTF8Control();
 
+    /**
+     *  Pone los mensajes de logicmissatges en UTF-8
+     */
     public static class UTF8Control extends ResourceBundle.Control {
-        public ResourceBundle newBundle(String baseName, Locale locale, String format,
-                                        ClassLoader loader, boolean reload) throws IllegalAccessException,
-                InstantiationException, IOException {
+        public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+                throws IllegalAccessException, InstantiationException, IOException {
             // The below is a copy of the default implementation.
             String bundleName = toBundleName(baseName, locale);
             String resourceName = toResourceName(bundleName, "properties");
@@ -751,6 +800,5 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             return bundle;
         }
     }
-
 
 }
