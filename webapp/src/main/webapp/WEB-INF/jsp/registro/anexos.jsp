@@ -20,11 +20,12 @@
 
           <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
               <c:if test="${empty maxanexospermitidos || fn:length(anexos) < maxanexospermitidos }">
-                  <c:if test="${teScan}">
-                  <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> Scan</a>
-                  </c:if>
-                  <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.archivo.nuevo"/></a>
 
+                  <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.archivo.nuevo"/></a>
+
+                  <c:if test="${teScan}">
+                  <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal" class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
+                  </c:if>
               </c:if>
 
           </c:if>
@@ -165,26 +166,22 @@
 </div>
 
 <div class="modal fade" id="myModal"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-dialog" style="width:910px;">
-<div class="modal-content">
+  <div class="modal-dialog" style="width:910px; height:300px;">
+    <div class="modal-content">
 
-<div class="modal-header" style="border:hidden; min-width: 5px;">
+      <div class="modal-header" style="border:hidden; min-width: 5px;padding: 5px;">
+        <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true" >×</button>
+        <h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>
+        <hr style="margin-top: 5px;margin-bottom: 5px;"  />
+      </div>
 
-<button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true" >×</button>
-<h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>
-<hr style="margin-top: 5px;margin-bottom: 5px;"  />
-</div>
-
-<div class="modal-body" style="padding-top:10px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
-
-<%-- HEIGHT 480px --%>
-    <iframe src="" frameborder="0" id="targetiframe" style="width:850px; height:350px; " name="targetframe" allowtransparency="true">
-         
-    </iframe> <!-- target iframe -->
-      
+      <div class="modal-body" style="padding-top:0px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
+        <%-- HEIGHT 480px --%>
+        <iframe src="" frameborder="0" id="targetiframe" style="width:850px; height:650px; " name="targetframe" allowtransparency="true">
+        </iframe> <!-- target iframe -->
+      </div>
     </div>
   </div>
-</div>
 </div>
 
 <script type="text/javascript">
@@ -193,14 +190,17 @@
     $('#targetiframe').contents().find('html').html(s);
 
 
-    
     $('#myModal').on('hidden.bs.modal', function (e) {
         unloadiframe();
       });
     
+    $('#myModal').on('show.bs.modal', function () {
+        $('.modal-content').css('height',$( window ).height()*0.8);
+        });
+    
     
     //load iframe
-    function loadiframe(htmlHref)  {
+    function loadiframe(htmlHref, height)  {
        document.getElementById('targetiframe').src = htmlHref;
     }
 
@@ -220,7 +220,7 @@
 
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
     }
 
 
@@ -229,22 +229,25 @@
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // $('#sinfirma').prop("checked", "checked");
 
-        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
     }
 
+   
     function nuevoAnexoScan() {
 
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
 
-        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${isSir}" />");
+        
+        // XYZ ZZZ setTimeout(checkIframeSize, 3000);
     }
-
+    
 
     function editarAnexoFull(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro) {
         
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/${oficio.sir}");
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo+ "/${isSir}");
     }
 
 
@@ -260,3 +263,60 @@
     }
  
 </script>
+
+<script type="text/javascript">
+
+var lastSize = 0;
+
+function checkIframeSize() {
+    
+    var log = true;
+    
+    if (log) {
+        console.log(" checkIFrameTargetSize():: ENTRA ");
+    }
+
+    setTimeout(checkIframeSize, 5000);
+
+    var iframe = document.getElementById('targetiframe');
+
+    var iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+
+    var h1 = $(iframeDocument.body).height();
+    var h2 = iframeDocument.body.scrollHeight;
+    
+
+    var h = Math.max(h1,h2);
+
+    
+
+    var d = new Date();
+    if (log) {
+        console.log(" checkIFrameTargetSize() ======= " + d + " (H = " + h +" | H1= " + h1 + " | H2= " + h2 + ") ===================");
+    }
+
+    if (h != lastSize) {
+        h = h + 300;
+        lastSize = h;
+        if (log) {
+          console.log(" checkIFrameTargetSize()::iframeDocument.body.scrollHeight = " + iframeDocument.body.scrollHeight);
+          console.log(" checkIFrameTargetSize()::$(iframeDocument.body).height() = " + $(iframeDocument.body).height());
+          console.log(" checkIFrameTargetSize():: SET " + h);
+        }
+        //document.getElementById('targetiframe').style.height=h + "px";
+        document.getElementById('targetiframe').height= h + "px";
+        if (log) {
+          console.log(" checkIFrameTargetSize():: GET HEIGHT IFRAME " + document.getElementById('targetiframe').height);
+        }
+        
+        lastSize =  Math.max($(iframeDocument.body).height(),iframeDocument.body.scrollHeight); <%--  $("#tablefull").height() --%>
+        if (log) {
+          console.log(" checkIFrameTargetSize():: GET HEIGHT CONTENT " + lastSize);
+        }
+    }
+}
+
+
+
+</script>
+

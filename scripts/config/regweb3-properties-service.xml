@@ -21,7 +21,6 @@
 
             <!-- SIR -->
             es.caib.regweb3.sir.serverbase=http://localhost:8380/services
-            es.caib.regweb3.sir.usedirectapi=false
 
             <!-- Directorio base para los archivos generales -->
             es.caib.regweb3.archivos.path=D:/dades/dades/Proyectos/REGWEB/Archivos/

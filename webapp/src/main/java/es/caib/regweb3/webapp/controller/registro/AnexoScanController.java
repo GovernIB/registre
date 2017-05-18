@@ -84,11 +84,11 @@ public class AnexoScanController extends BaseController {
         //XYZ
         log.info("llego al post de scan");
 
-
+        boolean isSIR = anexoForm.getOficioRemisionSir();
         try {
-            loadCommonAttributes(request, model);
+            //loadCommonAttributes(request, model);
             manageDocumentCustodySignatureCustody(request, anexoForm);
-            boolean isSIR = anexoForm.getOficioRemisionSir();
+            
             if (isSIR) {
                 String docExtension="";
                 String firmaExtension="";
@@ -123,7 +123,8 @@ public class AnexoScanController extends BaseController {
             Mensaje.saveMessageError(request, e.getMessage());
         }
 
-        return "registro/formularioAnexoScan";
+        //return "registro/formularioAnexoScan";
+        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
 
     }
 
@@ -260,10 +261,6 @@ public class AnexoScanController extends BaseController {
 
 
                 log.info(" XYZ ZZZ dc" + dc);
-
-
-                log.info(" XYZ ZZZ sc" + sc);
-
 
 
             final int modoFirma;

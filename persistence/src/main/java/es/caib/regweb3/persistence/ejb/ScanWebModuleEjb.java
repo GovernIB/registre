@@ -258,6 +258,11 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     
     if (p == null) {
       Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
+      
+      if (obj == null) {
+        // No te cap plugin definit
+        return null;
+      }
       pluginsByEntitat.put(entitatID, (IScanWebPlugin)obj);
       p =  pluginsByEntitat.get(entitatID);
     }      
@@ -273,6 +278,11 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
   @Override
   public boolean entitatTeScan(long entitatID) throws Exception {
     
+    IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+    
+    return plugin != null;
+    
+    /*
     Long count = pluginEjb.getTotalByEntidad(entitatID, RegwebConstantes.PLUGIN_SCAN);
     
     if (count == 0) {
@@ -280,6 +290,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     } else {
       return true;
     }
+    */
   }
   
   

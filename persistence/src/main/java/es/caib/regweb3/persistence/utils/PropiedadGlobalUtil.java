@@ -343,16 +343,6 @@ public class PropiedadGlobalUtil {
         return valor != null ? valor : null;
     }
 
-    /**
-     * Retorna el valor de la propiedad SirServerBase de la entidad indicada.
-     * @return
-     */
-    public static Boolean getSirUseDirectApi(Long idEntidad) {
-        final String partialPropertyName = "sir.usedirectapi";
-
-        return getBooleanByEntidad(idEntidad, partialPropertyName);
-    }
-
 
     /**
      * Retorna el valor de la propiedad JustificantePlugin de la entidad indicada.
