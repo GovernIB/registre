@@ -207,10 +207,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-        Oficio oficio = null;
+        Oficio oficio = new Oficio(false,false, false, false);
         Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
-        
-        boolean isSir = false;
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
@@ -238,14 +236,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Oficio Remision
             if(entidadActiva.getOficioRemision()){
                 oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
-                model.addAttribute("oficio", oficio);
-                
-                isSir = oficio.getSir();
-
                 if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);
                 }
             }
+            model.addAttribute("oficio", oficio);
+
 
             // Anexos
             if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))
@@ -278,8 +274,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("posYsello", entidadActiva.getPosYsello());
         }
 
-        
-        model.addAttribute("isSir", isSir);
         
         // Alta en tabla LOPD
         lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());

@@ -239,6 +239,7 @@
 
 
     function cambioTipoFirma() {
+        quitarMensajeError();
         limpiarAnexoForm();
         initAnexoForm();
     }
@@ -247,6 +248,10 @@
     function borrarCampo(campo) {
         $('#' + campo).val("");
         $('#' + campo + 'Text').val("");
+    }
+
+    function quitarMensajeError(){
+        $('#mensajeError').hide();
     }
 
 </script>

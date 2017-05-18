@@ -200,7 +200,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-        Oficio oficio = null;
+        Oficio oficio = new Oficio(false,false, false, false);
         Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
 
         model.addAttribute("registro",registro);
@@ -223,12 +223,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Oficio Remision
         if(entidadActiva.getOficioRemision()){
             oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
-            model.addAttribute("oficio", oficio);
-
             if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                 initMensajeNotaInformativaAnexos(entidadActiva, model);
             }
         }
+        model.addAttribute("oficio", oficio);
 
         // Anexos completo
         if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))

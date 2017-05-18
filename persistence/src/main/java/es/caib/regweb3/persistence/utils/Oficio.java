@@ -13,6 +13,13 @@ public class Oficio {
     public Oficio() {
     }
 
+    public Oficio(Boolean isOficioRemision, Boolean isInterno, Boolean isExterno, Boolean isSir) {
+        this.isOficioRemision = isOficioRemision;
+        this.isInterno = isInterno;
+        this.isExterno = isExterno;
+        this.isSir = isSir;
+    }
+
     public Boolean getOficioRemision() {
         return isOficioRemision;
     }
