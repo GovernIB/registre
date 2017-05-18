@@ -1,10 +1,7 @@
 package es.caib.regweb3.plugins.justificante.mock;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
@@ -32,7 +29,61 @@ import java.util.List;
  */
 public class JustificanteMockPlugin extends AbstractPluginProperties implements IJustificantePlugin {
 
+    public static final String PROPERTY_CAIB_BASE = IJustificantePlugin.JUSTIFICANTE_BASE_PROPERTY + "mock.";
+
     protected final Logger log = Logger.getLogger(getClass());
+
+    private String declaracion = null;
+    private String ley = null;
+
+
+    /**
+     *  Crea l'event d'Estampació dels logos per a que es faci a totes les pàgines que va creant el pdf
+     */
+    class EstampaLogos extends PdfPageEventHelper {
+
+        Font font7 = FontFactory.getFont(FontFactory.HELVETICA, 7);
+
+        public void onStartPage(PdfWriter writer, Document document) {
+
+            try{
+                // LOGOS
+                PdfPTable logos = new PdfPTable(2);
+                logos.setWidthPercentage(100);
+                // Regweb3
+                ClassLoader classLoader = getClass().getClassLoader();
+                InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
+                PdfContentByte cb = writer.getDirectContent();
+                Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
+                logoRW.setAlignment(Element.ALIGN_LEFT);
+                logoRW.scaleToFit(100, 110);
+                logoRW.setAbsolutePosition(35f, 790f);
+                Paragraph parrafo;
+                parrafo = new Paragraph("");
+                parrafo.setAlignment(Element.ALIGN_LEFT);
+                document.add(parrafo);
+                document.add(logoRW);
+                // Sir
+                InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
+                Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
+                logoSIR.setAlignment(Element.ALIGN_RIGHT);
+                logoSIR.scaleToFit(100, 100);
+                logoSIR.setAbsolutePosition(460f, 790f);
+                parrafo = new Paragraph("");
+                parrafo.setAlignment(Element.ALIGN_RIGHT);
+                document.add(parrafo);
+                document.add(logoSIR);
+                document.add(new Paragraph(" "));
+                document.add(new Paragraph(" "));
+            } catch (DocumentException ex) {
+                // Atrapamos excepciones concernientes al documento.
+            } catch (java.io.IOException ex) {
+                // Atrapamos excepciones concernientes al I/O.
+            }
+
+        }
+
+    }
 
     /**
      *
@@ -57,89 +108,70 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         super(propertyKeyBase);
     }
 
-    protected String getPropertyBase() {
-        return "mensaje.";
+    /**
+     * Inicialitza propietats amb strings de les propietats de Plugin de Justificante
+     * @param locale
+     * @throws Exception
+     */
+    private void inicializarPropiedades(Locale locale) throws Exception{
+        declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
+        ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
     }
 
 
     @Override
     public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
 
-        Long idEntidadActiva = registroEntrada.getUsuario().getEntidad().getId();
-
+        // Define idioma para el justificante
         Locale locale = new Locale(idioma);
+
+        //Inicializamos las propiedades comunes
+        inicializarPropiedades(locale);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Apply preferences and build metadata.
+        // Aplica preferencias
         Document document = new Document(PageSize.A4);
         FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
         PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Build PDF document.
-        document.open();
+        // Crea el evento para generar la estampación de csv en cada página
+        EstampaLogos event = new EstampaLogos();
+        writer.setPageEvent(event);
 
-        //CONFIGURACIONES GENERALES FORMATO PDF
-        document.setPageSize(PageSize.A4);
-        document.addAuthor("REGWEB3");
-        document.addCreationDate();
-        document.addCreator("iText library");
-        document.newPage();
+        // Inicializa Documento
+        document = inicialitzaDocument(document);
 
-        // LOGOS
-        PdfPTable logos = new PdfPTable(2);
-        logos.setWidthPercentage(100);
-        // Regweb3
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
-        PdfContentByte cb = writer.getDirectContent();
-        Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
-        logoRW.setAlignment(Element.ALIGN_LEFT);
-        logoRW.scaleToFit(100, 110);
-        logoRW.setAbsolutePosition(35f, 790f);
-        Paragraph parrafo;
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_LEFT);
-        document.add(parrafo);
-        document.add(logoRW);
-        // Sir
-        InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
-        Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
-        logoSIR.setAlignment(Element.ALIGN_RIGHT);
-        logoSIR.scaleToFit(100, 100);
-        logoSIR.setAbsolutePosition(460f, 790f);
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_RIGHT);
-        document.add(parrafo);
-        document.add(logoSIR);
-        document.add(new Paragraph(" "));
-        document.add(new Paragraph(" "));
-
+        // Comienza a crear el Justificante
         String denominacionOficina = registroEntrada.getOficina().getDenominacion();
         String codigoOficina = registroEntrada.getOficina().getCodigo();
         String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
         Long tipoDocumentacionFisica = registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica();
         String extracte = registroEntrada.getRegistroDetalle().getExtracto();
-        String nomDesti = registroEntrada.getDestino().getNombreCompleto();
+        String nomDesti;
+        if(registroEntrada.getDestino()!=null) {
+            nomDesti = registroEntrada.getDestino().getNombreCompleto();
+        }else{
+            nomDesti = registroEntrada.getDestinoExternoDenominacion();
+        }
         String expedient = registroEntrada.getRegistroDetalle().getExpediente();
         Date fechaRegistro = registroEntrada.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataRegistre = formatDate.format(fechaRegistro);
 
-        // TITULO Y REGISTRO
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
-                numeroRegistroFormateado, tipoDocumentacionFisica);
+        // Título e Información Registro
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado, tipoDocumentacionFisica);
 
-        // INTERESADOS
+        // Interesados
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
         llistarInteressats(interesados, locale, document);
 
-        // INFORMACION REGISTRO
+        // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomDesti, expedient, registroEntrada.getClass().getSimpleName());
 
-        // ADJUNTOS
+        // Anexos
         List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
         llistarAnnexes(anexos, locale, document, denominacionOficina);
 
@@ -152,56 +184,29 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     @Override
    public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
 
-        Locale locale = new Locale("es");
+        // Define idioma para el justificante
+        Locale locale = new Locale(idioma);
+
+        //Inicializamos las propiedades comunes
+        inicializarPropiedades(locale);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
-        // Apply preferences and build metadata.
+        // Aplica preferencias
         Document document = new Document(PageSize.A4);
         FileOutputStream ficheroPdf = new FileOutputStream("fichero.pdf");
         PdfWriter writer = PdfWriter.getInstance(document, baos);
         writer.setViewerPreferences(PdfWriter.ALLOW_PRINTING | PdfWriter.PageLayoutSinglePage);
         PdfWriter.getInstance(document,ficheroPdf).setInitialLeading(20);
 
-        // Build PDF document.
-        document.open();
+        // Crea el evento para generar la estampación de csv en cada página
+        EstampaLogos event = new EstampaLogos();
+        writer.setPageEvent(event);
 
-        //CONFIGURACIONES GENERALES FORMATO PDF
-        document.setPageSize(PageSize.A4);
-        document.addAuthor("REGWEB3");
-        document.addCreationDate();
-        document.addCreator("iText library");
-        document.newPage();
+        // Inicializa Documento
+        document = inicialitzaDocument(document);
 
-        // LOGOS
-        PdfPTable logos = new PdfPTable(2);
-        logos.setWidthPercentage(100);
-        // Regweb3
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream fileRW = classLoader.getResourceAsStream("img/logo-regweb3.jpg");
-        PdfContentByte cb = writer.getDirectContent();
-        Image logoRW = Image.getInstance(cb, ImageIO.read(fileRW), 1);
-        logoRW.setAlignment(Element.ALIGN_LEFT);
-        logoRW.scaleToFit(100, 110);
-        logoRW.setAbsolutePosition(35f, 790f);
-        Paragraph parrafo;
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_LEFT);
-        document.add(parrafo);
-        document.add(logoRW);
-        // Sir
-        InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
-        Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
-        logoSIR.setAlignment(Element.ALIGN_RIGHT);
-        logoSIR.scaleToFit(100, 100);
-        logoSIR.setAbsolutePosition(460f, 790f);
-        parrafo = new Paragraph("");
-        parrafo.setAlignment(Element.ALIGN_RIGHT);
-        document.add(parrafo);
-        document.add(logoSIR);
-        document.add(new Paragraph(" "));
-        document.add(new Paragraph(" "));
-
+        // Comienza a crear el Justificante
         String denominacionOficina = registroSalida.getOficina().getDenominacion();
         String codigoOficina = registroSalida.getOficina().getCodigo();
         String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
@@ -214,18 +219,17 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         String dataRegistre = formatDate.format(fechaRegistro);
 
 
-        // TITULO Y REGISTRO
-        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre,
-                numeroRegistroFormateado, tipoDocumentacionFisica);
+        // Título e Información Registro
+        informacioRegistre(locale, document, denominacionOficina, codigoOficina, dataRegistre, numeroRegistroFormateado, tipoDocumentacionFisica);
 
-        // INTERESADOS
+        // Interesados
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
         llistarInteressats(interesados, locale, document);
 
-        // INFORMACION REGISTRO
+        // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
 
-        // ADJUNTOS
+        // Anexos
         List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
         llistarAnnexes(anexos, locale, document, denominacionOficina);
 
@@ -234,6 +238,22 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         return baos.toByteArray();
     }
 
+
+    // Inicializa el Documento tanto para el registro de entrada como el de salida
+    protected Document inicialitzaDocument(Document document) throws Exception {
+
+        // Build PDF document.
+        document.open();
+
+        //CONFIGURACIONES GENERALES FORMATO PDF
+        document.setPageSize(PageSize.A4);
+        document.addAuthor("REGWEB3");
+        document.addCreationDate();
+        document.addCreator("iText library");
+
+        return document;
+
+    }
 
     // Lista los anexos tanto para el registro de entrada como el de salida
     protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document,
@@ -309,7 +329,6 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             PdfPTable peuAnnexe = new PdfPTable(1);
             peuAnnexe.setWidthPercentage(100);
             // Obtenim el missatge de Declaración de les propietats del Plugin
-            String declaracion = this.getProperty(this.getPropertyBase() + "declaracion." + locale);
             if(declaracion!=null) {
                 PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + declaracion, font8));
                 cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
@@ -326,7 +345,6 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             PdfPTable titolLlei = new PdfPTable(1);
             titolLlei.setWidthPercentage(100);
             // Obtenim el missatge de Ley de les propietats del Plugin
-            String ley = this.getProperty(this.getPropertyBase() + "ley." + locale);
             PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
             cellLlei.setBackgroundColor(BaseColor.WHITE);
             cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
@@ -603,7 +621,13 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
     }
 
-
+    /**
+     *  Obtiene los mensajes que aparecen traducidos en el pdf del Justificante
+     * @param locale
+     * @param missatge
+     * @return
+     * @throws Exception
+     */
     protected String tradueixMissatge(Locale locale, String missatge) throws Exception {
 
         try {

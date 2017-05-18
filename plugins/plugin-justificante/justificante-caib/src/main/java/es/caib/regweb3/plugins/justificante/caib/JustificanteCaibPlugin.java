@@ -42,7 +42,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     /**
-     *  Crea l'event d'Estampació del csv per a que es faci a totes les pàgines que va creant el pdf
+     *  Crea l'event d'Estampació del csv i els Logos per a que es faci a totes les pàgines que va creant el pdf
      */
     class EstampaCSV extends PdfPageEventHelper {
 
@@ -170,9 +170,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         writer.setPageEvent(event);
 
         // Inicializa Documento
-        document = inicialitzaDocument(document, writer);
+        document = inicialitzaDocument(document);
 
-        // Comienza a crear el Jusltificante
+        // Comienza a crear el Justificante
         String denominacionOficina = registroEntrada.getOficina().getDenominacion();
         String codigoOficina = registroEntrada.getOficina().getCodigo();
         String numeroRegistroFormateado = registroEntrada.getNumeroRegistroFormateado();
@@ -233,9 +233,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         writer.setPageEvent(event);
 
         // Inicializa Documento
-        document = inicialitzaDocument(document, writer);
+        document = inicialitzaDocument(document);
 
-        // Comienza a crear el Jusltificante
+        // Comienza a crear el Justificante
         String denominacionOficina = registroSalida.getOficina().getDenominacion();
         String codigoOficina = registroSalida.getOficina().getCodigo();
         String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
@@ -269,7 +269,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
 
     // Inicializa el Documento tanto para el registro de entrada como el de salida
-    protected Document inicialitzaDocument(Document document, PdfWriter writer) throws Exception {
+    protected Document inicialitzaDocument(Document document) throws Exception {
 
         // Build PDF document.
         document.open();
