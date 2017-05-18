@@ -378,9 +378,9 @@
                         <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
-                            <div class="panel panel-info">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.rechazados"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
@@ -401,6 +401,7 @@
                                                 <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                 <th><spring:message code="registroEntrada.fecha"/></th>
                                                 <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                                <th><spring:message code="registroEntrada.usuario"/></th>
                                                 <th><spring:message code="registroEntrada.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
@@ -412,7 +413,8 @@
                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                     <td>${registroEntrada.libro}</td>
-                                                    <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                    <td>${registroEntrada.usuario}</td>
+                                                    <td>${registroEntrada.extracto}</td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>

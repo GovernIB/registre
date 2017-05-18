@@ -6,10 +6,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.form.RechazarForm;
-import es.caib.regweb3.webapp.form.ReenviarForm;
-import es.caib.regweb3.webapp.form.RegistrarForm;
-import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
+import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -57,6 +54,9 @@ public class RegistroSirController extends BaseController {
 
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
+
+    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    private OficioRemisionLocal oficioRemisionEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadSirEJB/local")
     private TrazabilidadSirLocal trazabilidadSirEjb;
@@ -122,28 +122,67 @@ public class RegistroSirController extends BaseController {
         Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECIBIDO.getValue());
 
         mav.addObject("estado", EstadoRegistroSir.RECIBIDO);
-        mav.addObject("url", "recibidos");
+        mav.addObject("url", "pendientesProcesar");
         mav.addObject("paginacion", paginacion);
 
         return mav;
     }
 
     /**
-     * Listado de RegistroSir Rechazados
+     * Listado de oficios de remisión sir enviados
+     *
+     * @return
+     * @throws Exception
      */
-    @RequestMapping(value = "/rechazados/list/{pageNumber}", method = RequestMethod.GET)
-    public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/enviados", method = RequestMethod.GET)
+    public ModelAndView enviados(Model model, HttpServletRequest request) throws Exception {
 
-        ModelAndView mav = new ModelAndView("registroSir/registrosSirEstado");
+        ModelAndView mav = new ModelAndView("registroSir/enviadosList");
 
-        Paginacion paginacion = registroSirEjb.getRegistrosEstado(pageNumber,getOficinaActiva(request).getCodigo(), EstadoRegistroSir.RECHAZADO.getValue());
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
-        mav.addObject("estado", EstadoRegistroSir.RECHAZADO);
-        mav.addObject("url", "rechazados");
-        mav.addObject("paginacion", paginacion);
+        // Fijamos un libro por defecto
+        OficioRemision oficioRemision = new OficioRemision();
+        oficioRemision.setLibro(seleccionarLibroOficinaActiva(request, librosConsulta));
+        OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(oficioRemision, 1);
+
+        model.addAttribute("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
+        model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
+        model.addAttribute("librosConsulta", librosConsulta);
+        model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
+        model.addAttribute("anys", getAnys());
 
         return mav;
     }
+
+    /**
+     * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
+     */
+    @RequestMapping(value = "/enviados", method = RequestMethod.POST)
+    public ModelAndView enviados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("registroSir/enviadosList");
+
+        OficioRemision oficioRemision = busqueda.getOficioRemision();
+
+        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
+        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
+
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
+
+        busqueda.setPageNumber(1);
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
+        mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
+        mav.addObject("librosConsulta", librosConsulta);
+        mav.addObject("oficioRemisionBusqueda", busqueda);
+        mav.addObject("anys", getAnys());
+
+        return mav;
+
+    }
+
 
 
     /**
@@ -154,7 +193,7 @@ public class RegistroSirController extends BaseController {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
-        //si el estado del registro sir  es RECIBIDO,DEVUELTO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
+        //si el estado del registro sir  es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("puedeReenviar",  sirEjb.puedeReenviarRegistroSir(registroSir.getEstado()));
 
 

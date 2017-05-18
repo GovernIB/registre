@@ -1,7 +1,11 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.model.utils.RegistroBasico;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -27,9 +31,6 @@ import java.util.Set;
 public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
-
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
     private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
@@ -176,7 +177,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Comprobamos si se la oficina activa es la misma donde se creó el registro
-            if(!registroEntrada.getOficina().getId().equals(oficinaActiva.getId()) && (registroEntrada.getOficina().getOficinaResponsable() != null && !registroEntrada.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()))){
+            if(!registroEntrada.getOficina().getId().equals(oficinaActiva.getId()) || (registroEntrada.getOficina().getOficinaResponsable() != null && !registroEntrada.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()))){
                 log.info("Aviso: No puede editar un registro si no se encuentra en la oficina donde se creó");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar.oficina"));
                 response.sendRedirect("/regweb3/aviso");
@@ -203,9 +204,10 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         }
 
         // Comprobaciones previas al reenvio
-        if(url.contains("reenvio")){
+        if(url.contains("reenviar")){
             String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/reenvio", ""); //Obtenemos el id a partir de la url
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
+
+            RegistroBasico registroEntrada = registroEntradaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
 
             // Comprobamos que está Rechazado
             if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)){

@@ -231,41 +231,46 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
         model.addAttribute("tieneJustificante", tieneJustificante);
 
-        // Oficio Remision
-        if(entidadActiva.getOficioRemision()){
-            oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
-            model.addAttribute("oficio", oficio);
-            
-            isSir = oficio.getSir();
+        // Solo si no es una reserva de número
+        if(!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
-            if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
-                initMensajeNotaInformativaAnexos(entidadActiva, model);
+
+            // Oficio Remision
+            if(entidadActiva.getOficioRemision()){
+                oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
+                model.addAttribute("oficio", oficio);
+                
+                isSir = oficio.getSir();
+
+                if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+                    initMensajeNotaInformativaAnexos(entidadActiva, model);
+                }
             }
+
+            // Anexos
+            if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))
+                    && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
+                model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro)); //Inicializamos los anexos del registro de entrada.
+                initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
+            }
+
+            // Interesados
+            if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){
+
+                initDatosInteresados(model, organismosOficinaActiva);
+            }
+
+            // Justificante
+            if(tieneJustificante){
+                model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
+            }
+
+            // Historicos
+            model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
+
+            // Trazabilidad
+            model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
         }
-
-        // Anexos
-        if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))
-                && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
-            model.addAttribute("anexos", anexoEjb.getByRegistroEntrada(registro)); //Inicializamos los anexos del registro de entrada.
-            initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
-        }
-
-        // Interesados
-        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){
-
-            initDatosInteresados(model, organismosOficinaActiva);
-        }
-
-        // Justificante
-        if(tieneJustificante){
-            model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
-        }
-
-        // Historicos
-        model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
-
-        // Trazabilidad
-        model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
 
         // Posicion sello
         if (entidadActiva.getPosXsello() != null && entidadActiva.getPosYsello() != null) {
@@ -387,6 +392,46 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+    }
+
+    @RequestMapping(value = "/reservas/list/{pageNumber}")
+    public ModelAndView reservas(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = registroEntradaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_RESERVA);
+
+            mav.addObject("estado", RegwebConstantes.REGISTRO_RESERVA);
+            mav.addObject("url", "reservas");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/rechazados/list/{pageNumber}")
+    public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = registroEntradaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO);
+
+            mav.addObject("estado", RegwebConstantes.REGISTRO_RECHAZADO);
+            mav.addObject("url", "rechazados");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
     }
 
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)

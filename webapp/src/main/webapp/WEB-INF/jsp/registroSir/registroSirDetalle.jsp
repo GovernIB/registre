@@ -199,17 +199,17 @@
                             <c:if test="${not empty registroSir.estado}">
                                 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
                                 <dd>
-                                    <c:if test="${registroSir.estado == 'DEVUELTO' || registroSir.estado == 'RECIBIDO'}">
+                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                         <span class="label label-warning"><spring:message
                                                 code="registroSir.estado.${registroSir.estado}"/></span>
                                     </c:if>
 
-                                    <c:if test="${registroSir.estado == 'ENVIADO' || registroSir.estado == 'ENVIADO_Y_ACK' || registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ACK'}">
+                                    <c:if test="${registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'REENVIADO_Y_ACK'}">
                                         <span class="label label-success"><spring:message
                                                 code="registroSir.estado.${registroSir.estado}"/></span>
                                     </c:if>
 
-                                    <c:if test="${registroSir.estado == 'ENVIADO_Y_ERROR' || registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ACK' ||registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+                                    <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO' || registroSir.estado == 'RECHAZADO_Y_ACK' ||registroSir.estado == 'RECHAZADO_Y_ERROR'}">
                                         <span class="label label-danger"><spring:message
                                                 code="registroSir.estado.${registroSir.estado}"/></span>
                                     </c:if>

@@ -1,22 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.Trazabilidad;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.*;
@@ -26,7 +11,6 @@ import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -39,6 +23,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.*;
 
 
 /**
@@ -90,30 +75,34 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception {
+    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception{
 
         Query q;
 
-        q = em.createQuery("Select re.numeroRegistroFormateado from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.estado " +
+                "from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+
 
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
 
-        return (String) q.getSingleResult();
+        List<Object[]> result = q.getResultList();
 
+        if(result.size() == 1){
+            Object[] object = result.get(0);
+
+            RegistroBasico registroBasico = new RegistroBasico();
+            registroBasico.setId((Long)  object[0]);
+            registroBasico.setNumeroRegistroFormateado((String) object[1]);
+            registroBasico.setFecha((Date) object[2]);
+            registroBasico.setLibro((String) object[3]);
+            registroBasico.setUsuario((String) object[4]);
+            registroBasico.setEstado((Long) object[5]);
+
+            return registroBasico;
+        }
+
+        return null;
     }
-
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception {
-
-        Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.usuario.id = :idUsuarioEntidad ");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
@@ -336,7 +325,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroBasico> getByOficinaEstado(Long idOficinaActiva, Long idEstado, Integer total) throws Exception {
+    public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception {
 
         Query q;
 
@@ -351,7 +340,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 "and re.estado = :idEstado order by re.fecha desc");
 
         q.setMaxResults(total);
-        q.setParameter("idOficinaActiva", idOficinaActiva);
+        q.setParameter("idOficinaActiva", idOficina);
         q.setParameter("idEstado", idEstado);
 
         return getRegistroBasicoList(q.getResultList());
@@ -360,9 +349,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByOficinaEstado(Long idOficinaActiva, Long idEstado) throws Exception {
+    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception {
 
         Query q;
+        Query q2;
 
 
         q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
@@ -371,7 +361,28 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", idEstado);
 
-        return q.getResultList();
+        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado");
+
+        q2.setParameter("idOficinaActiva", idOficinaActiva);
+        q2.setParameter("idEstado", idEstado);
+
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
 
     }
 
@@ -434,24 +445,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
                 usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
-                "from RegistroEntrada as re where re.oficina.id = :idOficina " +
-                "and re.estado = :valido " +
-                "order by re.fecha desc");
-
-        q.setMaxResults(total);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-
-        return getRegistroBasicoList(q.getResultList());
     }
 
     @Override

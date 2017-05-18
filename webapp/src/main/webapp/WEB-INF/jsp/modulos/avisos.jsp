@@ -38,7 +38,7 @@
 
                     <c:if test="${reservas > 0}">
                         <li>
-                            <a href="<c:url value="/avisos/pendientes"/>">
+                            <a href="<c:url value="/registroEntrada/reservas/list/1"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.reserva"/> (${reservas})
                                 </div>
@@ -82,7 +82,7 @@
 
                     <c:if test="${registrosRechazados > 0}">
                         <li>
-                            <a href="<c:url value="/registroEntrada/list"/>">
+                            <a href="<c:url value="/registroEntrada/rechazados/list/1"/>">
                                 <div>
                                     <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados"/> (${registrosRechazados})
                                 </div>

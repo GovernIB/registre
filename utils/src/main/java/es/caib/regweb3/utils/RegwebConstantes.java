@@ -268,8 +268,13 @@ public interface RegwebConstantes {
     int OFICIO_ANULADO = 13;
 
     Integer[] ESTADOS_OFICIO_REMISION = {
+            OFICIO_ACEPTADO,
             OFICIO_INTERNO_ENVIADO,
             OFICIO_EXTERNO_ENVIADO,
+            OFICIO_ANULADO
+    };
+
+    Integer[] ESTADOS_OFICIO_REMISION_SIR = {
             OFICIO_ACEPTADO,
             OFICIO_SIR_ENVIADO,
             OFICIO_SIR_ENVIADO_ACK,
@@ -277,9 +282,6 @@ public interface RegwebConstantes {
             OFICIO_SIR_REENVIADO,
             OFICIO_SIR_REENVIADO_ACK,
             OFICIO_SIR_REENVIADO_ERROR,
-            /*OFICIO_SIR_RECHAZADO,
-            OFICIO_SIR_RECHAZADO_ACK,
-            OFICIO_SIR_RECHAZADO_ERROR,*/
             OFICIO_SIR_DEVUELTO,
             OFICIO_ANULADO
     };

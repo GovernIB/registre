@@ -121,6 +121,7 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
         if(PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId())!=null) {
             maxUploadSizeTotal = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId()) / (1024 * 1024);
         }
+        model.addAttribute("maxanexospermitidos", maxAnexosPermitidos);
         model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",maxAnexosPermitidos.toString(),maxUploadSizeInBytes.toString(),maxUploadSizeTotal.toString(),extensionesPermitidas ));
     }
 
