@@ -63,7 +63,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-    public byte[] generarJustificante(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
+    public byte[] generarJustificanteEntrada(RegistroEntrada registroEntrada, String url, String specialValue, String csv, String idioma) throws Exception{
 
         Long idEntidadActiva = registroEntrada.getUsuario().getEntidad().getId();
 
@@ -150,7 +150,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
 
     @Override
-   public byte[] generarJustificante(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
+   public byte[] generarJustificanteSalida(RegistroSalida registroSalida, String url, String specialValue, String csv, String idioma) throws Exception{
 
         Locale locale = new Locale("es");
 
