@@ -56,22 +56,7 @@ public class RegistroSir implements Serializable {
     /**
      * Sello de tiempo del registro de entrada en origen.
      */
-    private byte[] timestampRegistro;
-
-    /**
-     * Número del registro inicial.
-     */
-    private String numeroRegistroInicial; //Todo averiguar si es útil este campo
-
-    /**
-     * Fecha y hora del registro inicial.
-     */
-    private Date fechaRegistroInicial; //Todo averiguar si es útil este campo
-
-    /**
-     * Sello de tiempo del registro inicial.
-     */
-    private byte[] timestampRegistroInicial; //Todo averiguar si es útil este campo
+    private String timestampRegistro;
 
     /**
      * Código único de la unidad de tramitación de origen obtenido del
@@ -295,37 +280,14 @@ public class RegistroSir implements Serializable {
         this.fechaRegistro = fechaRegistro;
     }
 
-    @Column(name = "TIMESTAMP_REGISTRO", nullable = true, length = 2000)
-    public byte[] getTimestampRegistro() {
+    @Lob
+    @Column(name = "TIMESTAMP", length = 2147483647)
+    public String getTimestampRegistro() {
         return timestampRegistro;
     }
 
-    public void setTimestampRegistro(byte[] timestampRegistro) {
+    public void setTimestampRegistro(String timestampRegistro) {
         this.timestampRegistro = timestampRegistro;
-    }
-
-    public String getNumeroRegistroInicial() {
-        return numeroRegistroInicial;
-    }
-
-    public void setNumeroRegistroInicial(String numeroRegistroInicial) {
-        this.numeroRegistroInicial = numeroRegistroInicial;
-    }
-
-    public Date getFechaRegistroInicial() {
-        return fechaRegistroInicial;
-    }
-
-    public void setFechaRegistroInicial(Date fechaRegistroInicial) {
-        this.fechaRegistroInicial = fechaRegistroInicial;
-    }
-
-    public byte[] getTimestampRegistroInicial() {
-        return timestampRegistroInicial;
-    }
-
-    public void setTimestampRegistroInicial(byte[] timestampRegistroInicial) {
-        this.timestampRegistroInicial = timestampRegistroInicial;
     }
 
     @Column(name = "COD_UNI_TRA_ORI", length = 21, nullable = true)

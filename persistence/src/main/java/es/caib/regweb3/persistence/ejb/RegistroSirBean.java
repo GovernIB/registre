@@ -19,6 +19,7 @@ import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -454,7 +455,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
 
                 registroSir.setNumeroRegistro(de_Origen_o_Remitente.getNumero_Registro_Entrada());
-                registroSir.setTimestampRegistro(de_Origen_o_Remitente.getTimestamp_Entrada());
+                registroSir.setTimestampRegistro(Base64.encodeBase64String(de_Origen_o_Remitente.getTimestamp_Entrada()));
 
                 String fechaRegistro = de_Origen_o_Remitente.getFecha_Hora_Entrada();
                 if (StringUtils.isNotBlank(fechaRegistro)) {
@@ -639,11 +640,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         anexo.setNombreFichero(de_Anexo.getNombre_Fichero_Anexado());
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
-                        anexo.setCertificado(de_Anexo.getCertificado());
-                        anexo.setFirma(de_Anexo.getFirma_Documento());
-                        anexo.setTimestamp(de_Anexo.getTimeStamp());
-                        anexo.setValidacionOCSPCertificado(de_Anexo.getValidacion_OCSP_Certificado());
-                        anexo.setHash(de_Anexo.getHash());
+                        anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
+                        anexo.setFirma(Base64.encodeBase64String(de_Anexo.getFirma_Documento()));
+                        anexo.setTimestamp(Base64.encodeBase64String(de_Anexo.getTimeStamp()));
+                        anexo.setValidacionOCSPCertificado(Base64.encodeBase64String(de_Anexo.getValidacion_OCSP_Certificado()));
+                        anexo.setHash(Base64.encodeBase64String(de_Anexo.getHash()));
                         //Si el tipo mime es null, se obtiene del nombre del fichero
                         if (de_Anexo.getTipo_MIME() == null || de_Anexo.getTipo_MIME().isEmpty()) {
                             anexo.setTipoMIME(MimeTypeUtils.getMimeTypeFileName(de_Anexo.getNombre_Fichero_Anexado()));
@@ -1100,19 +1101,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
         anexoSir.setTipoDocumento(tipoDocumento);
         if(certificado != null){
-            anexoSir.setCertificado(certificado);
+            anexoSir.setCertificado(Base64.encodeBase64String(certificado));
         }
         if(firma != null){
-            anexoSir.setFirma(firma);
+            anexoSir.setFirma(Base64.encodeBase64String(firma));
         }
         if(timeStamp != null){
-            anexoSir.setTimestamp(timeStamp);
+            anexoSir.setTimestamp(Base64.encodeBase64String(timeStamp));
         }
         if(validacionOCSPCertificado != null){
-            anexoSir.setValidacionOCSPCertificado(validacionOCSPCertificado);
+            anexoSir.setValidacionOCSPCertificado(Base64.encodeBase64String(validacionOCSPCertificado));
         }
 
-        anexoSir.setHash(hash);
+        anexoSir.setHash(Base64.encodeBase64String(hash));
         if(tipoMime != null){
             anexoSir.setTipoMIME(tipoMime);
         }
@@ -1731,23 +1732,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if(anexoSir.getCertificado()!= null) {
-            anexo.setCertificado(anexoSir.getCertificado());
+            anexo.setCertificado(anexoSir.getCertificado().getBytes());
         }
 
         if (anexoSir.getFirma() != null) {
-            anexo.setFirma(anexoSir.getFirma());
+            anexo.setFirma(anexoSir.getFirma().getBytes());
 
         }
         if (anexoSir.getTimestamp() != null) {
-            anexo.setTimestamp(anexoSir.getTimestamp());
+            anexo.setTimestamp(anexoSir.getTimestamp().getBytes());
         }
 
         if (anexoSir.getValidacionOCSPCertificado() != null) {
-            anexo.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado());
+            anexo.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
         }
 
         if(anexoSir.getHash()!= null){
-            anexo.setHash(anexoSir.getHash());
+            anexo.setHash(anexoSir.getHash().getBytes());
         }
 
 

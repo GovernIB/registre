@@ -46,27 +46,27 @@ public class AnexoSir implements Serializable {
     /**
      * Certificado público del fichero anexo.
      */
-    private byte[] certificado;
+    private String certificado;
 
     /**
      * Firma electrónica del fichero anexo.
      */
-    private byte[] firma;
+    private String firma;
 
     /**
      * Sello de tiempo del fichero anexo.
      */
-    private byte[] timestamp;
+    private String timestamp;
 
     /**
      * Validación OCSP del certificado.
      */
-    private byte[] validacionOCSPCertificado;
+    private String validacionOCSPCertificado;
 
     /**
      * Huella binaria del fichero anexo.
      */
-    private byte[] hash;
+    private String hash;
 
     /**
      * Tipo MIME del fichero anexo.
@@ -140,7 +140,7 @@ public class AnexoSir implements Serializable {
         this.identificadorFichero = identificadorFichero;
     }
 
-    @Column(name = "VALIDEZ_DOCUMENTO", length = 2, nullable = true)
+    @Column(name = "VALIDEZ_DOCUMENTO", length = 2)
     public String getValidezDocumento() {
         return validezDocumento;
     }
@@ -158,52 +158,57 @@ public class AnexoSir implements Serializable {
         this.tipoDocumento = tipoDocumento;
     }
 
-    @Column(name = "CERTIFICADO", nullable = true)
-    public byte[] getCertificado() {
+    @Lob
+    @Column(name = "CERTIFICADO", length = 2147483647)
+    public String getCertificado() {
         return certificado;
     }
 
-    public void setCertificado(byte[] certificado) {
+    public void setCertificado(String certificado) {
         this.certificado = certificado;
     }
 
-    @Column(name = "FIRMA", nullable = true)
-    public byte[] getFirma() {
+    @Lob
+    @Column(name = "FIRMA", length = 2147483647)
+    public String getFirma() {
         return firma;
     }
 
-    public void setFirma(byte[] firma) {
+    public void setFirma(String firma) {
         this.firma = firma;
     }
 
-    @Column(name = "TIMESTAMP", nullable = true)
-    public byte[] getTimestamp() {
+    @Lob
+    @Column(name = "TIMESTAMP", length = 2147483647)
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(byte[] timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
-    @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true)
-    public byte[] getValidacionOCSPCertificado() {
+    @Lob
+    @Column(name = "VAL_OCSP_CE", length = 2147483647)
+    public String getValidacionOCSPCertificado() {
         return validacionOCSPCertificado;
     }
 
-    public void setValidacionOCSPCertificado(byte[] validacionOCSPCertificado) {
+    public void setValidacionOCSPCertificado(String validacionOCSPCertificado) {
         this.validacionOCSPCertificado = validacionOCSPCertificado;
     }
 
-    @Column(name = "HASH", nullable = false)
-    public byte[] getHash() {
+    @Lob
+    @Column(name = "HASH", nullable = false, length = 2147483647)
+    public String getHash() {
         return hash;
     }
 
-    public void setHash(byte[] hash) {
+    public void setHash(String hash) {
         this.hash = hash;
     }
 
-    @Column(name = "TIPO_MIME", length = 20, nullable = true)
+    @Column(name = "TIPO_MIME", length = 20)
     public String getTipoMIME() {
         return tipoMIME;
     }
@@ -223,7 +228,7 @@ public class AnexoSir implements Serializable {
         this.anexo = anexo;
     }
 
-    @Column(name = "ID_DOCUMENTO_FIRMADO", length = 50, nullable = true)
+    @Column(name = "ID_DOCUMENTO_FIRMADO", length = 50)
     public String getIdentificadorDocumentoFirmado() {
         return identificadorDocumentoFirmado;
     }
@@ -233,7 +238,7 @@ public class AnexoSir implements Serializable {
         this.identificadorDocumentoFirmado = identificadorDocumentoFirmado;
     }
 
-    @Column(name = "OBSERVACIONES", length = 50, nullable = true)
+    @Column(name = "OBSERVACIONES", length = 50)
     public String getObservaciones() {
         return observaciones;
     }

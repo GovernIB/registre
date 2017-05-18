@@ -47,19 +47,11 @@ public class Sicres3XML {
 
     public final Logger log = Logger.getLogger(getClass());
 
-    private static final String VALIDACIONDIRECTORIOCOMUNPARAMNAME = "validar.codigos.directorio.comun";
-    private static final String MAXTAMANOANEXOSPARAMNAME = "max.tamaño.anexos";
-    private static final String MAXNUMANEXOSPARAMNAME = "max.num.anexos";
-
     private static final String CODIGO_PAIS_ESPANA = "724";
     private static final int LONGITUD_CODIGO_ENTIDAD_REGISTRAL = 21;
     private static final int LONGITUD_CODIGO_UNIDAD_TRAMITACION = 21;
     private static final int LONGITUD_IDENTIFICADOR_INTERCAMBIO = 33;
     private static final int LONGITUD_MAX_IDENTIFICADOR_FICHERO = 50;
-
-    private static final String DEFAULT_FILE_EXTENSION = "bin";
-    private static final int DEFAULT_MAX_NUM_FILES = 0; // Máximo número de documentos
-    private static final long DEFAULT_MAX_FILE_SIZE = 0; // Máximo tamaño por documento (3MB)
 
     private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -593,136 +585,6 @@ public class Sicres3XML {
         log.info("SegmentoFormularioGenerico validado!");
     }
 
-
-    public void validarRegistroSir(RegistroSir registroSir) {
-
-        log.info("Llamada a validarRegistroSir");
-
-
-        assert_notNull(registroSir, "La variable 'registroSir' no puede ser null");
-
-        // Comprobar los datos de origen
-        assert_hasText(registroSir.getCodigoEntidadRegistralOrigen(), "El campo 'codigoEntidadRegistralOrigen' no puede estar vacio");
-        assert_hasText(registroSir.getNumeroRegistro(), "El campo 'numeroRegistroEntrada' no puede estar vacio");
-        assert_notNull(registroSir.getFechaRegistro(), "El campo 'fechaEntrada' no puede ser null");
-
-        // Comprobar los datos de destino
-        assert_hasText(registroSir.getCodigoEntidadRegistralDestino(), "El campo 'codigoEntidadRegistralDestino' no puede estar vacio");
-
-        // Comprobar los datos de los interesados
-        if (!isEmptyCollection(registroSir.getInteresados()) && StringUtils.isBlank(registroSir
-                .getCodigoUnidadTramitacionOrigen())) {
-            for (InteresadoSir interesado : registroSir.getInteresados()) {
-
-                assert_isTrue(
-                        StringUtils.isNotBlank(interesado.getRazonSocialInteresado())
-                                || (StringUtils.isNotBlank(interesado
-                                .getNombreInteresado()) && StringUtils
-                                .isNotBlank(interesado.getPrimerApellidoInteresado())),
-                        "Los campos 'razonSocialInteresado' o ('nombreInteresado' y 'primerApellidoInteresado') no pueden estar vacios");
-
-
-                if (interesado.getCanalPreferenteComunicacionInteresado() != null) {
-                    if (interesado.getCanalPreferenteComunicacionInteresado()
-                            .equals(CanalNotificacion.DIRECCION_POSTAL.getValue())) {
-                        assert_hasText(interesado.getCodigoPaisInteresado(),
-                                "'codigoPaisInteresado' no puede estar vacio");
-                        assert_hasText(interesado.getDireccionInteresado(),
-                                "'direccionInteresado' no puede estar vacio");
-
-                        if (CODIGO_PAIS_ESPANA.equals(interesado.getCodigoPaisInteresado())) {
-                            assert_isTrue(StringUtils.isNotBlank(interesado.getCodigoPostalInteresado())
-                                            || (StringUtils
-                                            .isNotBlank(interesado.getCodigoProvinciaInteresado()) && StringUtils
-                                            .isNotBlank(interesado.getCodigoMunicipioInteresado())),
-                                    "Los campos 'codigoPostalInteresado' o ('codigoProvinciaInteresado' y 'codigoMunicipioInteresado') no pueden estar vacios");
-                        }
-
-                    } else if (interesado
-                            .getCanalPreferenteComunicacionInteresado()
-                            .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA.getValue())) {
-                        assert_hasText(interesado.getDireccionElectronicaHabilitadaInteresado(),
-                                "El campo 'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
-                    }
-                }
-
-                if (interesado.getCanalPreferenteComunicacionRepresentante() != null) {
-                    if (interesado.getCanalPreferenteComunicacionRepresentante().equals(CanalNotificacion.DIRECCION_POSTAL.getValue())) {
-
-                        assert_hasText(interesado.getCodigoPaisRepresentante(), "El campo 'codigoPaisRepresentante' no puede estar vacio");
-                        assert_hasText(interesado.getDireccionRepresentante(), "El campo 'direccionRepresentante' no puede estar vacio");
-
-                        if (CODIGO_PAIS_ESPANA.equals(interesado.getCodigoPaisRepresentante())) {
-                            assert_isTrue(
-                                    StringUtils.isNotBlank(interesado.getCodigoPostalRepresentante())
-                                            || (StringUtils.isNotBlank(interesado
-                                            .getCodigoProvinciaRepresentante()) && StringUtils.isNotBlank(interesado
-                                            .getCodigoMunicipioRepresentante())),
-                                    "Los campos 'codigoPostalRepresentante' o ('codigoProvinciaRepresentante' y 'codigoMunicipioRepresentante') no pueden estar vacios");
-                        }
-
-                    } else if (interesado.getCanalPreferenteComunicacionRepresentante()
-                            .equals(CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA.getValue())) {
-                        assert_hasText(
-                                interesado
-                                        .getDireccionElectronicaHabilitadaRepresentante(),
-                                "El campo 'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
-                    }
-                }
-            }
-        }
-
-        // Comprobar los datos de asunto
-        assert_hasText(registroSir.getResumen(), "El campo 'resumen' no puede estar vacio");
-
-        // Comprobar los datos de los anexos
-        if (!isEmptyCollection(registroSir.getAnexos())) {
-
-            int numAdjuntos = 0; // Número de adjuntos: documentos de tipo
-            // "02 - Documento Adjunto" que no son
-            // firmas
-
-            for (AnexoSir anexo : registroSir.getAnexos()) {
-
-                assert_hasText(anexo.getNombreFichero(), "El campo 'nombreFichero' no puede estar vacio");
-                assert_notNull(anexo.getTipoDocumento(), "El campo 'tipoDocumento' no puede ser null");
-                assert_notNull(anexo.getHash(), "El campo 'hash' no puede ser null");
-
-                // Si en documento es de tipo "02 - Documento Adjunto"
-                if (TipoDocumento.DOCUMENTO_ADJUNTO.getValue().equals(anexo.getTipoDocumento())) {
-                    numAdjuntos++;
-                }
-
-              /*
-                // Comprobar si hay que aplicar filtro de tamaño de ficheros
-                long maxFileSize = getMaxFileSize();
-                if (maxFileSize > 0) {
-                    InfoDocumento infoAnexo = getAnexoManager()
-                            .getInfoContenidoAnexo(anexo.getId());
-                    assert_isTrue((infoAnexo == null)
-                                    || (infoAnexo.getTamano() <= getMaxFileSize()),
-                            "Attachment '" + anexo.getNombreFichero()
-                                    + "' is too big");
-                }*/
-            }
-
-            // Comprobar si hay que aplicar filtro de número de ficheros
-            int maxNumFiles = getMaxNumFiles();
-            if (maxNumFiles > 0) {
-                assert_isTrue(numAdjuntos <= getMaxNumFiles(), "There are too many attachments [" + numAdjuntos + "]");
-            }
-        }
-
-        // Comprobar los datos de internos o de control
-        assert_hasText(registroSir.getIdentificadorIntercambio(), "El campo 'identificadorIntercambio' no puede estar vacio");
-        assert_notNull(registroSir.getTipoRegistro(), "El campo 'tipoRegistro' no puede ser null");
-        assert_notNull(registroSir.getDocumentacionFisica(), "El campo 'documentacionFisica' no puede ser null");
-        assert_notNull(registroSir.getIndicadorPrueba(), "El campo 'indicadorPrueba' no puede ser null");
-        assert_hasText(registroSir.getCodigoEntidadRegistralInicio(), "El campo 'codigoEntidadRegistralInicio' no puede estar vacio");
-
-        log.info("RegistroSir validado");
-    }
-
     /**
      * @param mensaje
      */
@@ -814,7 +676,11 @@ public class Sicres3XML {
 
 
         // Timestamp_Entrada
-        //deOrigenORemitente.setTimestampEntrada(); // No es necesario
+        if (registroSir.getTimestampRegistro() != null) {
+            elem = rootElement.addElement("Timestamp_Entrada");
+            elem.addCDATA(registroSir.getTimestampRegistro());
+        }
+
 
         // Codigo_Unidad_Tramitacion_Origen
         if (StringUtils.isNotBlank(registroSir.getCodigoUnidadTramitacionOrigen())) {
@@ -1132,31 +998,31 @@ public class Sicres3XML {
             // Certificado
             if (anexoSir.getCertificado() != null) {
                 elem = rootElement.addElement("Certificado");
-                elem.addCDATA(getBase64String(anexoSir.getCertificado()));
+                elem.addCDATA(anexoSir.getCertificado());
             }
 
             //Firma documento (propiedad Firma Documento del segmento)
             if (anexoSir.getFirma() != null) {
                 elem = rootElement.addElement("Firma_Documento");
-                elem.addCDATA(getBase64String(anexoSir.getFirma()));
+                elem.addCDATA(anexoSir.getFirma());
             }
 
             // TimeStamp
             if (anexoSir.getTimestamp() != null) {
                 elem = rootElement.addElement("TimeStamp");
-                elem.addCDATA(getBase64String(anexoSir.getTimestamp()));
+                elem.addCDATA(anexoSir.getTimestamp());
             }
 
             // Validacion_OCSP_Certificado
             if (anexoSir.getValidacionOCSPCertificado() != null) {
                 elem = rootElement.addElement("Validacion_OCSP_Certificado");
-                elem.addCDATA(getBase64String(anexoSir.getValidacionOCSPCertificado()));
+                elem.addCDATA(anexoSir.getValidacionOCSPCertificado());
             }
 
             // Hash
             if (anexoSir.getHash() != null) {
                 elem = rootElement.addElement("Hash");
-                elem.addCDATA(getBase64String(anexoSir.getHash()));
+                elem.addCDATA(anexoSir.getHash());
             }else{
                 log.info("getAnexoData es null");
             }
@@ -2126,7 +1992,7 @@ public class Sicres3XML {
      * @param fileName
      * @return
      */
-    protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
+    private String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
 
         String result = new StringBuffer()
                 .append(identificadorIntercambio)
@@ -2143,7 +2009,7 @@ public class Sicres3XML {
      * @param codigoEntidadRegistral
      * @return
      */
-    protected boolean validarCodigoEntidadRegistral(String codigoEntidadRegistral) {
+    private boolean validarCodigoEntidadRegistral(String codigoEntidadRegistral) {
 
         if (StringUtils.length(codigoEntidadRegistral) > LONGITUD_CODIGO_ENTIDAD_REGISTRAL) {
             log.info("Tamaño CODIGO_ENTIDAD_REGISTRAL demasiado largo");
@@ -2160,8 +2026,8 @@ public class Sicres3XML {
             }
 
         } catch (Exception e) {
-            log.error("Error en validarCodigoEntidadRegistral: " + e.getMessage(), e);
-            return false;
+            log.info("Error en validarCodigoEntidadRegistral: " + e.getMessage(), e);
+            throw new ValidacionException(Errores.ERROR_0037, e);
         }
 
         return true;
@@ -2172,7 +2038,7 @@ public class Sicres3XML {
      * @param codigoUnidadTramitacion
      * @return
      */
-    protected boolean validarCodigoUnidadTramitacion(String codigoUnidadTramitacion) {
+    private boolean validarCodigoUnidadTramitacion(String codigoUnidadTramitacion) {
 
         if (StringUtils.length(codigoUnidadTramitacion) > LONGITUD_CODIGO_UNIDAD_TRAMITACION) {
             return false;
@@ -2185,39 +2051,18 @@ public class Sicres3XML {
             return unidadTF != null;
 
         } catch (Exception e) {
-            log.error("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
-            return false;
+            log.info("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
+            throw new ValidacionException(Errores.ERROR_0037, e);
         }
     }
 
-
-    protected int getMaxNumFiles() {
-
-        int maxNumFiles = DEFAULT_MAX_NUM_FILES;
-
-      /*  if (getConfiguracionManager() != null) {
-
-            // Número máximo de adjuntos
-            String strMaxNumFiles = getConfiguracionManager()
-                    .getValorConfiguracion(
-                            MAXNUMANEXOSPARAMNAME);
-            log.info("Valor de {} en base de datos: [{}]",
-                    MAXNUMANEXOSPARAMNAME, strMaxNumFiles);
-
-            if (StringUtils.isNotBlank(strMaxNumFiles)) {
-                maxNumFiles = Integer.valueOf(strMaxNumFiles);
-            }
-        }*/
-
-        return maxNumFiles;
-    }
 
     /**
      * Realizamos una validación de los campos del xml que deben estar en base64 en caso de estar presentes
      *
      * @param xml
      */
-    protected void validateBase64Fields(String xml) {
+    private void validateBase64Fields(String xml) {
         XPathReaderUtil reader = null;
 
         // Procesamos el xml para procesar las peticiones xpath
@@ -2261,7 +2106,7 @@ public class Sicres3XML {
      * @return
      * @throws Exception
      */
-    protected String obtenerCodigoOficinaOrigen(RegistroEntrada re) {
+    private String obtenerCodigoOficinaOrigen(RegistroEntrada re) {
         String codOficinaOrigen = null;
 
         if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
@@ -2282,7 +2127,7 @@ public class Sicres3XML {
      * @return
      * @throws Exception
      */
-    protected String obtenerDenominacionOficinaOrigen(RegistroEntrada re) {
+    private String obtenerDenominacionOficinaOrigen(RegistroEntrada re) {
         String denominacionOficinaOrigen = null;
 
         if ((re.getRegistroDetalle().getOficinaOrigenExternoCodigo() == null) && (re.getRegistroDetalle().getOficinaOrigen() == null)) {
@@ -2295,10 +2140,10 @@ public class Sicres3XML {
 
         return denominacionOficinaOrigen;
     }
-    
-    
-    
-    public static boolean isEmptyCollection(Collection collection) {
+
+
+
+    private static boolean isEmptyCollection(Collection collection) {
       return (collection == null || collection.isEmpty());
     }
     
@@ -2310,7 +2155,7 @@ public class Sicres3XML {
      * @param message the exception message to use if the assertion fails
      * @throws IllegalArgumentException if the object is {@code null}
      */
-    public static void assert_notNull(Object object, String message) {
+    private static void assert_notNull(Object object, String message) {
       if (object == null) {
         throw new IllegalArgumentException(message);
       }
@@ -2325,14 +2170,14 @@ public class Sicres3XML {
      * @param message the exception message to use if the assertion fails
      * @see StringUtils#hasText
      */
-    public static void assert_hasText(String text, String message) {
+    private static void assert_hasText(String text, String message) {
       if (!hasText(text)) {
         throw new IllegalArgumentException(message);
       }
     }
-    
-    
-    public static boolean hasText(String str) {
+
+
+    private static boolean hasText(String str) {
       if (!(str != null && str.length() > 0)) {
         return false;
       }
@@ -2344,9 +2189,9 @@ public class Sicres3XML {
       }
       return false;
     }
-    
-    
-    public static void assert_isTrue(boolean expression, String message) {
+
+
+    private static void assert_isTrue(boolean expression, String message) {
       if (!expression) {
         throw new IllegalArgumentException(message);
       }
