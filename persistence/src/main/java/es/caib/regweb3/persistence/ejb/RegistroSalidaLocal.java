@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -24,22 +23,6 @@ import java.util.List;
 @Local
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
-
-    /**
-     * Obtiene el Numero RegistroSalida Formateado
-     * @param idRegistroSalida
-     * @return
-     * @throws Exception
-     */
-    public String getNumeroRegistroSalida(Long idRegistroSalida) throws Exception;
-
-    /**
-     * Obtiene los Registros de Salida de un Usuario.
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception;
     
     /**
      * Guarda un Registro de Salida (con anexos)
@@ -71,15 +54,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
-
-    /**
-     * Busca los últimos RegistroSalida de una Oficina
-     * @param idOficina
-     * @param total
-     * @return
-     * @throws Exception
-     */
-    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception;
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado

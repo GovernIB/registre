@@ -28,25 +28,14 @@ import java.util.Set;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal {
 
+
     /**
-     * Obtiene el Numero RegistroEntrada Formateado
-     *
+     * Obtiene un RegistroEntrada con un mínimo de campos
      * @param idRegistroEntrada
      * @return
      * @throws Exception
      */
-    public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception;
-
-
-    /**
-     * Obtiene los Registros de Entrada de un Usuario.
-     *
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception;
-
+    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception;
 
     /**
      * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)
@@ -132,15 +121,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public void cambiarEstadoTrazabilidad(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
-    /**
-     * Busca los últimos RegistroEntrada de una Oficina
-     *
-     * @param idOficina
-     * @param total
-     * @return
-     * @throws Exception
-     */
-    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception;
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado

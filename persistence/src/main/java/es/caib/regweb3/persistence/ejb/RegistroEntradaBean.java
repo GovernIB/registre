@@ -75,30 +75,34 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public String getNumeroRegistroEntrada(Long idRegistroEntrada) throws Exception {
+    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception{
 
         Query q;
 
-        q = em.createQuery("Select re.numeroRegistroFormateado from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.estado " +
+                "from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+
 
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
 
-        return (String) q.getSingleResult();
+        List<Object[]> result = q.getResultList();
 
+        if(result.size() == 1){
+            Object[] object = result.get(0);
+
+            RegistroBasico registroBasico = new RegistroBasico();
+            registroBasico.setId((Long)  object[0]);
+            registroBasico.setNumeroRegistroFormateado((String) object[1]);
+            registroBasico.setFecha((Date) object[2]);
+            registroBasico.setLibro((String) object[3]);
+            registroBasico.setUsuario((String) object[4]);
+            registroBasico.setEstado((Long) object[5]);
+
+            return registroBasico;
+        }
+
+        return null;
     }
-
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByUsuario(Long idUsuarioEntidad) throws Exception {
-
-        Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.usuario.id = :idUsuarioEntidad ");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
@@ -441,24 +445,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
                 usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
-                "from RegistroEntrada as re where re.oficina.id = :idOficina " +
-                "and re.estado = :valido " +
-                "order by re.fecha desc");
-
-        q.setMaxResults(total);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-
-        return getRegistroBasicoList(q.getResultList());
     }
 
     @Override

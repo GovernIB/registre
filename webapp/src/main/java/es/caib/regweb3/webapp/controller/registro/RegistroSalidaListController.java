@@ -208,20 +208,17 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("showannexes", showannexes);
         model.addAttribute("entidadActiva", entidadActiva);
 
-        // Justificante
-        Long idJustificante = anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId());
-        model.addAttribute("idJustificante", idJustificante);
-
         // Modelo Recibo
         model.addAttribute("modeloRecibo", new ModeloForm());
         model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
 
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
+        Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
-        Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
+        model.addAttribute("tieneJustificante", tieneJustificante);
 
         // Oficio Remision
         if(entidadActiva.getOficioRemision()){

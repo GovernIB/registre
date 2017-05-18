@@ -70,29 +70,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     private PluginLocal pluginEjb;
 
 
-    @Override
-    public String getNumeroRegistroSalida(Long idRegistroSalida) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select re.numeroRegistroFormateado from RegistroSalida as re where re.id = :idRegistroSalida ");
-
-        q.setParameter("idRegistroSalida", idRegistroSalida);
-
-        return (String) q.getSingleResult();
-
-    }
-
-    @Override
-    public List<RegistroSalida> getByUsuario(Long idUsuarioEntidad) throws Exception {
-
-        Query q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.usuario.id = :idUsuarioEntidad ");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-
-        return q.getResultList();
-    }
-
 
     @Override
     public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
@@ -329,23 +306,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         } else {
             return null;
         }
-    }
-
-    @Override
-    public List<RegistroBasico> getUltimosRegistros(Long idOficina, Integer total) throws Exception {
-
-        Query q;
-
-        q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.registroDetalle.extracto " +
-                "from RegistroSalida as re where re.oficina.id = :idOficina " +
-                "and re.estado = :idEstadoRegistro " +
-                "order by re.fecha desc");
-
-        q.setMaxResults(total);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("idEstadoRegistro", RegwebConstantes.REGISTRO_VALIDO);
-
-        return getRegistroBasicoList(q.getResultList());
     }
 
     @Override

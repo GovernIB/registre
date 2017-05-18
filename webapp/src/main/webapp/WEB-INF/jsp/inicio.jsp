@@ -378,7 +378,7 @@
                         <c:set var="avisos" value="${avisos+1}"/>
                         <div class="col-xs-6">
 
-                            <div class="panel panel-info">
+                            <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
                                 </div>
