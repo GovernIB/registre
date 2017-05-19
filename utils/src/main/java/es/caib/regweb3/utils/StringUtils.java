@@ -23,6 +23,15 @@ public class StringUtils {
         return cadena == null || cadena.length() == 0;
     }
 
+    /**
+     * Comprueba si una cadena no está vacia ("") o es null.
+     * @param cadena
+     * @return
+     */
+    public static boolean isNotEmpty(final String cadena) {
+        return !isEmpty(cadena);
+    }
+
 
     /**
      * Función que recorta un string a una longitud especificada

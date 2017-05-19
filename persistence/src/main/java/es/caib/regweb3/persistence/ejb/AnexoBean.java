@@ -1386,7 +1386,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad);
           anexo.setTipoDocumental(tipoDocumental);
           anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-          anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION.intValue());
+          anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
           anexo.setObservaciones(observacionesAnexo);
           anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
 
