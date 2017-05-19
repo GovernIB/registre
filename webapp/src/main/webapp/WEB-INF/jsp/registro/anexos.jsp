@@ -64,11 +64,11 @@
                                      <col>
                                      <col>
                                      <col>
-                                     <col>
+                                     <col width="100">
                                  </colgroup>
                                  <thead>
                                      <tr>
-                                         <th><dt><spring:message code="anexo.titulo"/></dt></th>
+                                         <th><spring:message code="anexo.titulo"/></th>
                                          <th><spring:message code="anexo.tipoDocumento"/></th>
                                          <th class="center"><spring:message code="anexo.tamano"/></th>
                                          <th class="center">Doc</th>
