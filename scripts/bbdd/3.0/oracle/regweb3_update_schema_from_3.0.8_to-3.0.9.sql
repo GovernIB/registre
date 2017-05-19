@@ -262,13 +262,7 @@ es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Applet/JNLP Scan','Scan emprant Applet/JNLP','org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin',6,'es.caib.regweb3.plugins.scanweb.iecisa.debug=false
 es.caib.regweb3.plugins.scanweb.iecisa.forcejnlp=false
 es.caib.regweb3.plugins.scanweb.iecisa.forcesign=false
-es.caib.regweb3.plugins.scanweb.iecisa.closewindowwhenfinish=true
-# Optional
-#es.caib.regweb3.plugins.scanweb.iecisa.sign.keystore=<<JKS>>
-#es.caib.regweb3.plugins.scanweb.iecisa.sign.password=<<JKS_PASSWORD>>
-#es.caib.regweb3.plugins.scanweb.iecisa.sign.certpassword=<< CERT_PASSWORD>>
-#es.caib.regweb3.plugins.scanweb.iecisa.sign.alias=<<ALIAS>>
-#es.caib.regweb3.plugins.scanweb.iecisa.sign.asunto=<<ASUNTO>>',id FROM rwe_entidad;
+es.caib.regweb3.plugins.scanweb.iecisa.closewindowwhenfinish=true',id FROM rwe_entidad;
 
 
 -- Validate Signature Plugins (08/05/2017)
