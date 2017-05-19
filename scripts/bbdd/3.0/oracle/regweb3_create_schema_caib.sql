@@ -26,21 +26,21 @@ create table RWE_ANEXO (
 
 create table RWE_ANEXO_SIR (
     ID number(19,0) not null,
-    CERTIFICADO raw(255),
-    FIRMA raw(255),
-    HASH raw(255) not null,
+    CERTIFICADO clob,
+    FIRMA clob,
+    HASH clob not null,
     ID_DOCUMENTO_FIRMADO varchar2(50 char),
     IDENTIFICADOR_FICHERO varchar2(50 char) not null,
     NOMBRE_FICHERO varchar2(80 char) not null,
     OBSERVACIONES varchar2(50 char),
-    TIMESTAMP raw(255),
+    TIMESTAMP clob,
     TIPO_DOCUMENTO varchar2(2 char) not null,
     TIPO_MIME varchar2(20 char),
-    VAL_OCSP_CERTIFICADO raw(255),
+    VAL_OCSP_CE clob,
     VALIDEZ_DOCUMENTO varchar2(2 char),
     ANEXO number(19,0),
     REGISTRO_SIR number(19,0)
-);
+) TABLESPACE REGWEB_DADES;
 
 create table RWE_ARCHIVO (
     ID number(19,0) not null,
@@ -586,26 +586,23 @@ create table RWE_REGISTRO_SIR (
     FECHA_ESTADO timestamp,
     FECHA_RECEPCION timestamp,
     FECHAR_EGISTRO timestamp not null,
-    fechaRegistroInicial timestamp,
     ID_INTERCAMBIO varchar2(33 char) not null,
     INDICADOR_PRUEBA number(10,0) not null,
     NOMBRE_USUARIO varchar2(80 char),
     NUM_EXPEDIENTE varchar2(80 char),
     NUMERO_REGISTRO varchar2(20 char) not null,
-    numeroRegistroInicial varchar2(255 char),
     REINTENTOS number(10,0),
     NUM_TRANSPORTE varchar2(20 char),
     OBSERVACIONES varchar2(50 char),
     REF_EXTERNA varchar2(16 char),
     RESUMEN varchar2(240 char) not null,
     SOLICITA varchar2(4000 char),
-    TIMESTAMP_REGISTRO raw(2000),
-    timestampRegistroInicial raw(255),
+    TIMESTAMP clob,
     TIPO_ANOTACION varchar2(2 char) not null,
     TIPO_REGISTRO number(10,0) not null,
     TIPO_TRANSPORTE varchar2(2 char),
     ENTIDAD number(19,0) not null
-);
+) TABLESPACE REGWEB_DADES;
 
 create table RWE_RELORGOFI (
     IDORGANISMO number(19,0),
@@ -1550,8 +1547,14 @@ grant select on RWE_ALL_SEQ to www_regweb3;
 -- FINAL GRANTS
 
 -- INICI LOBS
+alter table RWE_ANEXO_SIR move lob (CERTIFICADO) store as RWE_ANEXO_SIR_CERTIFICADO_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_CERTIFICADO_lob_i);
+alter table RWE_ANEXO_SIR move lob (FIRMA) store as RWE_ANEXO_SIR_FIRMA_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_FIRMA_lob_i);
+alter table RWE_ANEXO_SIR move lob (HASH) store as RWE_ANEXO_SIR_HASH_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_HASH_lob_i);
+alter table RWE_ANEXO_SIR move lob (TIMESTAMP) store as RWE_ANEXO_SIR_TIMESTAMP_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_TIMESTAMP_lob_i);
+alter table RWE_ANEXO_SIR move lob (VAL_OCSP_CE) store as RWE_ANEXO_SIR_VAL_OCSP_CE_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_VAL_OCSP_CE_lob_i);
 alter table RWE_HISTORICO_REGISTRO_ENTRADA move lob (RE_ORIGINAL) store as RWE_HIST_REG_ENT_RE_ORI_LOB (tablespace regweb3_lob index RWE_HIST_REG_ENT_RE_ORI_LOB_i);
 alter table RWE_HISTORICO_REGISTRO_SALIDA move lob (RS_ORIGINAL) store as RWE_HIST_REG_SAL_LOB (tablespace regweb3_lob index RWE_HIST_REG_SAL_LOB_i);
+alter table RWE_REGISTRO_SIR move lob (TIMESTAMP) store as RWE_REGISTRO_SIR_TIMESTAMP_lob (tablespace regweb3_lob index RWE_REGISTRO_SIR_TIMESTAMP_lob_i);
 alter table RWE_REPRO move lob (REPRO) store as RWE_REPRO_REPRO_LOB (tablespace regweb3_lob index RWE_REPRO_REPRO_LOB_i);
 -- FINAL LOBS
 

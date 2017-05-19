@@ -60,52 +60,55 @@ DROP TABLE RWE_ANEXO_SIR CASCADE CONSTRAINTS;
 
 --Creamos la Tabla RWE_REGISTRO_SIR
 create table RWE_REGISTRO_SIR (
-        ID number(19,0) not null,
-        APLICACION varchar2(4 char),
-        COD_ASUNTO varchar2(16 char),
-        COD_ENT_REG_DEST varchar2(21 char) not null,
-        COD_ENT_REG_INI varchar2(21 char) not null,
-        COD_ENT_REG_ORI varchar2(21 char) not null,
-        COD_ERROR varchar2(255 char),
-        COD_UNI_TRA_DEST varchar2(21 char),
-        COD_UNI_TRA_ORI varchar2(21 char),
-        CONTACTO_USUARIO varchar2(160 char),
-        DEC_ENT_REG_DEST varchar2(80 char),
-        DEC_ENT_REG_INI varchar2(80 char),
-        DEC_ENT_REG_ORI varchar2(80 char),
-        DEC_T_ANOTACION varchar2(80 char),
-        DEC_UNI_TRA_DEST varchar2(80 char),
-        DEC_UNI_TRA_ORI varchar2(80 char),
-        DESC_ERROR varchar2(2000 char),
-        DOC_FISICA varchar2(1 char) not null,
-        ESTADO number(10,0) not null,
-        EXPONE varchar2(4000 char),
-        FECHA_ESTADO timestamp,
-        FECHA_RECEPCION timestamp,
-        FECHAR_EGISTRO timestamp not null,
-        ID_INTERCAMBIO varchar2(33 char) not null,
-        INDICADOR_PRUEBA number(10,0) not null,
-        NOMBRE_USUARIO varchar2(80 char),
-        NUM_EXPEDIENTE varchar2(80 char),
-        NUMERO_REGISTRO varchar2(20 char) not null,
-        REINTENTOS number(10,0),
-        NUM_TRANSPORTE varchar2(20 char),
-        OBSERVACIONES varchar2(50 char),
-        REF_EXTERNA varchar2(16 char),
-        RESUMEN varchar2(240 char) not null,
-        SOLICITA varchar2(4000 char),
-        TIMESTAMP clob,
-        TIPO_ANOTACION varchar2(2 char) not null,
-        TIPO_REGISTRO number(10,0) not null,
-        TIPO_TRANSPORTE varchar2(2 char),
-        ENTIDAD number(19,0) not null
-    );
+    ID number(19,0) not null,
+    APLICACION varchar2(4 char),
+    COD_ASUNTO varchar2(16 char),
+    COD_ENT_REG_DEST varchar2(21 char) not null,
+    COD_ENT_REG_INI varchar2(21 char) not null,
+    COD_ENT_REG_ORI varchar2(21 char) not null,
+    COD_ERROR varchar2(255 char),
+    COD_UNI_TRA_DEST varchar2(21 char),
+    COD_UNI_TRA_ORI varchar2(21 char),
+    CONTACTO_USUARIO varchar2(160 char),
+    DEC_ENT_REG_DEST varchar2(80 char),
+    DEC_ENT_REG_INI varchar2(80 char),
+    DEC_ENT_REG_ORI varchar2(80 char),
+    DEC_T_ANOTACION varchar2(80 char),
+    DEC_UNI_TRA_DEST varchar2(80 char),
+    DEC_UNI_TRA_ORI varchar2(80 char),
+    DESC_ERROR varchar2(2000 char),
+    DOC_FISICA varchar2(1 char) not null,
+    ESTADO number(10,0) not null,
+    EXPONE varchar2(4000 char),
+    FECHA_ESTADO timestamp,
+    FECHA_RECEPCION timestamp,
+    FECHAR_EGISTRO timestamp not null,
+    ID_INTERCAMBIO varchar2(33 char) not null,
+    INDICADOR_PRUEBA number(10,0) not null,
+    NOMBRE_USUARIO varchar2(80 char),
+    NUM_EXPEDIENTE varchar2(80 char),
+    NUMERO_REGISTRO varchar2(20 char) not null,
+    REINTENTOS number(10,0),
+    NUM_TRANSPORTE varchar2(20 char),
+    OBSERVACIONES varchar2(50 char),
+    REF_EXTERNA varchar2(16 char),
+    RESUMEN varchar2(240 char) not null,
+    SOLICITA varchar2(4000 char),
+    TIMESTAMP clob,
+    TIPO_ANOTACION varchar2(2 char) not null,
+    TIPO_REGISTRO number(10,0) not null,
+    TIPO_TRANSPORTE varchar2(2 char),
+    ENTIDAD number(19,0) not null
+) TABLESPACE REGWEB_DADES;
 ALTER TABLE RWE_REGISTRO_SIR add constraint RWE_REGISTRO_SIR_pk primary key (ID);
 
 ALTER TABLE RWE_REGISTRO_SIR
         add constraint RWE_RES_ENTIDAD_FK
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
+
+grant select,insert,delete,update on RWE_REGISTRO_SIR to www_regweb3;
+alter table RWE_REGISTRO_SIR move lob (TIMESTAMP) store as RWE_REGISTRO_SIR_TIMESTAMP_lob (tablespace regweb3_lob index RWE_REGISTRO_SIR_TIMESTAMP_lob_i);
 
 ALTER TABLE RWE_TRAZABILIDAD add REGISTRO_SIR number(19,0);
 
@@ -116,22 +119,22 @@ ALTER TABLE RWE_TRAZABILIDAD
 
 --Creamos la Tabla RWE_ANEXO_SIR
 create table RWE_ANEXO_SIR (
-        ID number(19,0) not null,
-        CERTIFICADO clob,
-        FIRMA clob,
-        HASH clob not null,
-        ID_DOCUMENTO_FIRMADO varchar2(50 char),
-        IDENTIFICADOR_FICHERO varchar2(50 char) not null,
-        NOMBRE_FICHERO varchar2(80 char) not null,
-        OBSERVACIONES varchar2(50 char),
-        TIMESTAMP clob,
-        TIPO_DOCUMENTO varchar2(2 char) not null,
-        TIPO_MIME varchar2(20 char),
-        VAL_OCSP_CE clob,
-        VALIDEZ_DOCUMENTO varchar2(2 char),
-        ANEXO number(19,0),
-        REGISTRO_SIR number(19,0)
-    );
+    ID number(19,0) not null,
+    CERTIFICADO clob,
+    FIRMA clob,
+    HASH clob not null,
+    ID_DOCUMENTO_FIRMADO varchar2(50 char),
+    IDENTIFICADOR_FICHERO varchar2(50 char) not null,
+    NOMBRE_FICHERO varchar2(80 char) not null,
+    OBSERVACIONES varchar2(50 char),
+    TIMESTAMP clob,
+    TIPO_DOCUMENTO varchar2(2 char) not null,
+    TIPO_MIME varchar2(20 char),
+    VAL_OCSP_CE clob,
+    VALIDEZ_DOCUMENTO varchar2(2 char),
+    ANEXO number(19,0),
+    REGISTRO_SIR number(19,0)
+) TABLESPACE REGWEB_DADES;
 
 ALTER TABLE RWE_ANEXO_SIR add constraint RWE_ANEXO_SIR_pk primary key (ID);
 
@@ -144,6 +147,13 @@ ALTER TABLE RWE_ANEXO_SIR
     add constraint RWE_ANEXOSIR_REGSIR_FK
     foreign key (REGISTRO_SIR)
     references RWE_REGISTRO_SIR;
+
+grant select,insert,delete,update on RWE_ANEXO_SIR to www_regweb3;
+alter table RWE_ANEXO_SIR move lob (CERTIFICADO) store as RWE_ANEXO_SIR_CERTIFICADO_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_CERTIFICADO_lob_i);
+alter table RWE_ANEXO_SIR move lob (FIRMA) store as RWE_ANEXO_SIR_FIRMA_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_FIRMA_lob_i);
+alter table RWE_ANEXO_SIR move lob (HASH) store as RWE_ANEXO_SIR_HASH_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_HASH_lob_i);
+alter table RWE_ANEXO_SIR move lob (TIMESTAMP) store as RWE_ANEXO_SIR_TIMESTAMP_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_TIMESTAMP_lob_i);
+alter table RWE_ANEXO_SIR move lob (VAL_OCSP_CE) store as RWE_ANEXO_SIR_VAL_OCSP_CE_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_VAL_OCSP_CE_lob_i);
 
 --Creamos la Tabla RWE_INTERESADO_SIR
 create table RWE_INTERESADO_SIR (
@@ -189,6 +199,7 @@ ALTER TABLE RWE_INTERESADO_SIR
         foreign key (REGISTRO_SIR)
         references RWE_REGISTRO_SIR;
 
+grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb3;
 
 --Creamos la Tabla RWE_PLUGIN 04/05/2017
 create table RWE_PLUGIN (
@@ -204,6 +215,7 @@ create table RWE_PLUGIN (
     );
 create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
 alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
+grant select,insert,delete,update on RWE_PLUGIN to www_regweb3;
 
 --Plugin UserInformation
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
@@ -318,3 +330,4 @@ alter table RWE_TRAZABILIDAD_SIR
     add constraint RWE_TRASIR_REGSIR_FK
     foreign key (REGISTRO_SIR)
     references RWE_REGISTRO_SIR;
+grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb3;
