@@ -455,6 +455,8 @@ public class SirBean implements SirLocal {
 
             // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
             registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
+            registroDetalle.setOficinaOrigenExternoCodigo(null);
+            registroDetalle.setOficinaOrigenExternoDenominacion(null);
             registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
             registroDetalle.setFechaOrigen(registroEntrada.getFecha());
 
