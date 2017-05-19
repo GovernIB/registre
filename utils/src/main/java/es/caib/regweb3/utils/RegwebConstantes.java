@@ -516,6 +516,10 @@ public interface RegwebConstantes {
     Long TIPO_DOCUMENTO_DOC_ADJUNTO = 2L;
     Long TIPO_DOCUMENTO_FICHERO_TECNICO = 3L;
 
+    String TIPO_DOCUMENTO_FORMULARIO_SICRES = "01";
+    String TIPO_DOCUMENTO_DOC_ADJUNTO_SICRES = "02";
+    String TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES = "03";
+
     Long[] TIPOS_DOCUMENTO = {
             TIPO_DOCUMENTO_FORMULARIO,
             TIPO_DOCUMENTO_DOC_ADJUNTO,
@@ -561,8 +565,8 @@ public interface RegwebConstantes {
 
 
     /* -------------- ANEXO ORIGEN -------------------------- */
-    Long ANEXO_ORIGEN_CIUDADANO = 0L;
-    Long ANEXO_ORIGEN_ADMINISTRACION = 1L;
+    Integer ANEXO_ORIGEN_CIUDADANO = 0;
+    Integer ANEXO_ORIGEN_ADMINISTRACION = 1;
 
 
     /* -------------- CAT SERVICIOS -------------------------- */

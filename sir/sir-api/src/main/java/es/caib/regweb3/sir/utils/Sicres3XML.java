@@ -42,7 +42,9 @@ import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.*;
 
-
+/**
+ *
+ */
 public class Sicres3XML {
 
     public final Logger log = Logger.getLogger(getClass());
@@ -73,11 +75,11 @@ public class Sicres3XML {
     }
 
 
-    public Map<String, String> getBase64Fields() {
+    private Map<String, String> getBase64Fields() {
         return base64Fields;
     }
 
-    public void setBase64Fields(Map<String, String> base64Fields) {
+    private void setBase64Fields(Map<String, String> base64Fields) {
         this.base64Fields = base64Fields;
     }
 
@@ -94,6 +96,10 @@ public class Sicres3XML {
     }
 
 
+    /**
+     *
+     * @param fichero
+     */
     public void validarFicheroIntercambio(FicheroIntercambio fichero) {
 
         try {
@@ -107,9 +113,7 @@ public class Sicres3XML {
 
         assert_notNull(fichero, "La variable 'ficheroIntercambio' no puede ser null");
 
-		/*
-         * Validar los segmentos del fichero de intercambio
-		 */
+		// Validamos los distintos segmentos del fichero de intercambio
 
         validarSegmentoOrigen(fichero);
         validarSegmentoDestino(fichero);

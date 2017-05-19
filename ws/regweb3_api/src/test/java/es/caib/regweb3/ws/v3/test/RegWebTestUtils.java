@@ -235,7 +235,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         anexoSinFirma.setTipoDocumental(getTestAnexoTipoDocumental());
         String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
         anexoSinFirma.setTipoDocumento(formulario);
-        anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
+        anexoSinFirma.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
         anexoSinFirma.setObservaciones("Observaciones de Marilen");
 
         anexoSinFirma.setModoFirma(MODO_FIRMA_ANEXO_SINFIRMA); // == 0
@@ -261,7 +261,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
         String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
         anexoConFirmaAttached.setTipoDocumento(formulario);
-        anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
+        anexoConFirmaAttached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
         anexoConFirmaAttached.setObservaciones("Observaciones de Marilen");
 
         anexoConFirmaAttached.setModoFirma(MODO_FIRMA_ANEXO_ATTACHED); // == 1
@@ -286,7 +286,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
         String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
         anexoConFirmaDetached.setTipoDocumento(formulario);
-        anexoConFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO.intValue());
+        anexoConFirmaDetached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
         anexoConFirmaDetached.setObservaciones("Observaciones de Marilen");
 
         anexoConFirmaDetached.setModoFirma(MODO_FIRMA_ANEXO_DETACHED); // == 2

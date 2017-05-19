@@ -1670,19 +1670,25 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     private List<AnexoFull> procesarAnexos(RegistroSir registroSir, List<CamposNTI> camposNTIs) throws Exception {
 
-        HashMap<String,AnexoFull> mapAnexosFull = new HashMap<String, AnexoFull>();
+        HashMap<String,AnexoFull> anexosProcesados = new HashMap<String, AnexoFull>();
 
-        //Aqui buscamos los camposNTI del anexoSir con el que se corresponde para pasarlo al método transformarAnexo
+        // Procesamos los Documentos con firma Attached o Detached
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
             for (CamposNTI cnti : camposNTIs) {
                 if (anexoSir.getId().equals(cnti.getId())) {
-                    AnexoFull anexoFull = transformarAnexo(anexoSir, registroSir.getEntidad().getId(), mapAnexosFull, cnti);
-                    mapAnexosFull.put(anexoSir.getIdentificadorFichero(), anexoFull);
+                    transformarAnexoDocumento(anexoSir, registroSir.getEntidad().getId(), cnti, anexosProcesados);
                 }
             }
         }
 
-        return new ArrayList<AnexoFull>(mapAnexosFull.values());
+        // Procesamos las Firma detached
+        for (AnexoSir anexoSir : registroSir.getAnexos()) {
+            transformarAnexoFirma(anexoSir, anexosProcesados);
+        }
+
+        log.info("AnexosProcesados: " + anexosProcesados.size());
+
+        return new ArrayList<AnexoFull>(anexosProcesados.values());
     }
 
     /**
@@ -1696,108 +1702,131 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Los campos en concreto son (validezDocumento, origen, tipo Documental)
      * @param anexoSir
      * @param idEntidad
+     * @return AnexoFull tipo {@link AnexoFull}
+     */
+    private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados) throws Exception {
+
+        // Solo procesamos Documentos, no Firmas
+        if(es.caib.regweb3.utils.StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
+                anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
+
+            AnexoFull anexoFull = new AnexoFull();
+            Anexo anexo = new Anexo();
+
+            anexo.setTitulo(anexoSir.getNombreFichero());
+
+            if (anexoSir.getValidezDocumento() != null) {
+                anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
+            } else {//Campo NTI Cogemos la validez de documento indicada por el usuario
+                if (camposNTI.getIdValidezDocumento() != null) {
+                    anexo.setValidezDocumento(Long.valueOf(camposNTI.getIdValidezDocumento()));
+                }
+            }
+
+            if (anexoSir.getTipoDocumento() != null) {
+                anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
+
+                // Si es un Documento técnico, ponemos el Origen a ADMINSITRACIÓN
+                if(anexoSir.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES)){
+                    anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+                }
+            }
+            anexo.setObservaciones(anexoSir.getObservaciones());
+
+            //Campo NTI no informados, asignamos lo que indica el usuario
+            if (camposNTI.getIdOrigen() != null) {
+                anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
+            }
+
+            // Si el usuario no especifica el tipo Documental, por defecto se pone TD99 - Otros
+            if (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals("")) {
+                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
+            }else{
+                anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
+            }
+
+            if(anexoSir.getCertificado()!= null) {
+                anexo.setCertificado(anexoSir.getCertificado().getBytes());
+            }
+
+            if (anexoSir.getFirma() != null) {
+                anexo.setFirma(anexoSir.getFirma().getBytes());
+
+            }
+            if (anexoSir.getTimestamp() != null) {
+                anexo.setTimestamp(anexoSir.getTimestamp().getBytes());
+            }
+
+            if (anexoSir.getValidacionOCSPCertificado() != null) {
+                anexo.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
+            }
+
+            if(anexoSir.getHash()!= null){
+                anexo.setHash(anexoSir.getHash().getBytes());
+            }
+
+            DocumentCustody dc;
+            SignatureCustody sc;
+            // Si el IdentificadorDocumentoFirmado está informado
+            if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado())) {
+
+                // Si el IdentificadorDocumentoFirmado es igual al IdentificadorFichero, es una Firma Attached
+                if(anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
+                    log.info("Documento con firma attached: " + anexoSir.getIdentificadorFichero());
+                    //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
+                    anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+                    sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
+                    anexoFull.setDocumentoCustody(null);
+                    anexoFull.setSignatureCustody(sc);
+                    anexoFull.setAnexo(anexo);
+                }
+
+            } else { // El anexo no es firma de nadie
+                log.info("Documento sin firma: " + anexoSir.getIdentificadorFichero());
+                anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+
+                if (anexoSir.getFirma() != null) { // Anexo con Firma CSV
+                    anexo.setCsv(anexoSir.getFirma());
+                    //TODO Metadada a custodia pel csv.
+                }
+                dc = getDocumentCustody(anexoSir);
+                anexoFull.setAnexo(anexo);
+                anexoFull.setDocumentoCustody(dc);
+            }
+
+            anexosProcesados.put(anexoSir.getIdentificadorFichero(), anexoFull);
+
+        }
+    }
+
+
+    /**
+     * Transforma un {@link AnexoSir} en un {@link AnexoFull}
+     * A partir de la clase AnexoSir transformamos a un AnexoFull para poder guardarlo en regweb3.
+     * La particularidad de este método, es que se necesita pasar una lista de los anexos que se han procesado anteriormente
+     * del AnexoSir que nos envian, ya que puede haber anexos que son firma de uno anteriormente procesado y lo necesitamos
+     * para acabar de montar el anexo ya que para regweb3 el anexo y su firma van en el mismo AnexoFull.
+     * Además ahora se pasa una lista de anexosSirRecibidos ya que para cada anexo el usuario debe escoger 3 campos que
+     * pueden no venir informados en SICRES y son obligatorios en NTI.
+     * Los campos en concreto son (validezDocumento, origen, tipo Documental)
+     * @param anexoSir
      * @param anexosProcesados Lista de anexos procesados anteriores.
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private AnexoFull transformarAnexo(AnexoSir anexoSir, Long idEntidad, Map<String, AnexoFull> anexosProcesados, CamposNTI camposNTI) throws Exception {
+    private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados) throws Exception {
 
-        AnexoFull anexoFull = new AnexoFull();
-        Anexo anexo = new Anexo();
+        // Si el IdentificadorDocumentoFirmado está informado y es DISTINTO al IdentificadorFichero, es una Firma Detached
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
+                !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
 
-        anexo.setTitulo(anexoSir.getNombreFichero());
-
-        if (anexoSir.getValidezDocumento() != null) {
-            anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
-        } else {//Campo NTI Cogemos la validez de documento indicada por el usuario
-            if (camposNTI.getIdValidezDocumento() != null) {
-                anexo.setValidezDocumento(Long.valueOf(camposNTI.getIdValidezDocumento()));
-            }
-        }
-
-        if (anexoSir.getTipoDocumento() != null) {
-            anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
-        }
-        anexo.setObservaciones(anexoSir.getObservaciones());
-
-        //Campo NTI no informados, asignamos lo que indica el usuario
-        if (camposNTI.getIdOrigen() != null) {
-            anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
-        }
-
-        // Si el usuario no especifica el tipo Documental, por defecto se pone TD99 - Otros
-        if (camposNTI.getIdTipoDocumental() == null || camposNTI.getIdTipoDocumental().equals("")) {
-            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
-        }else{
-            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(camposNTI.getIdTipoDocumental(), idEntidad));
-        }
-
-        if(anexoSir.getCertificado()!= null) {
-            anexo.setCertificado(anexoSir.getCertificado().getBytes());
-        }
-
-        if (anexoSir.getFirma() != null) {
-            anexo.setFirma(anexoSir.getFirma().getBytes());
+            log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
+            //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
+            AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
+            anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+            SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
+            anexoFull.setSignatureCustody(sc);
 
         }
-        if (anexoSir.getTimestamp() != null) {
-            anexo.setTimestamp(anexoSir.getTimestamp().getBytes());
-        }
-
-        if (anexoSir.getValidacionOCSPCertificado() != null) {
-            anexo.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
-        }
-
-        if(anexoSir.getHash()!= null){
-            anexo.setHash(anexoSir.getHash().getBytes());
-        }
-
-
-
-        DocumentCustody dc;
-        SignatureCustody sc;
-        // Si el anexo tiene identificador_documento_firmado, es que es la firma de un anexo anterior.
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) && anexoSir.getIdentificadorDocumentoFirmado() != null) {
-            String identificadorDocumentoFirmado = anexoSir.getIdentificadorDocumentoFirmado();
-            if(identificadorDocumentoFirmado.equals(anexoSir.getIdentificadorFichero())){
-                //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
-                anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-                sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
-                anexoFull.setDocumentoCustody(null);
-                anexoFull.setSignatureCustody(sc);
-                anexoFull.setAnexo(anexo);
-
-            }else{
-                //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                anexoFull = anexosProcesados.get(identificadorDocumentoFirmado);//obtenemos el documento original previamente procesado
-                anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
-                sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma());
-                anexoFull.setSignatureCustody(sc);
-                //eliminamos de los procesados el documento cuya firma es este anexo que estamos tratando ahora.
-                //si no guardariamos 2 anexos, el documento original y el documento original con la firma.
-                anexosProcesados.remove(identificadorDocumentoFirmado);
-
-            }
-            // Al ser un anexo con firma, si sicres no la informa, la informará el usuario. Si el usuario indica "COPIA"
-            // regweb la cambia a COPIA_COMPULSADA porque aqui ya sabe que hay firma y si hay firma la validezDocumento no puede ser "COPIA".
-            if (anexoFull.getAnexo().getValidezDocumento().equals( RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA)) {
-                anexoFull.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA);
-            }
-        } else { // El anexo no es firma de nadie
-            if (anexoSir.getFirma() == null) { //Anexo normal
-                anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-            } else { //La firma es un CSV.
-                anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-                //anexo.setCsv(anexoSir.getFirma_Documento());
-                //TODO Metadada a custodia pel csv.
-
-            }
-            dc = getDocumentCustody(anexoSir);
-            anexoFull.setAnexo(anexo);
-            anexoFull.setDocumentoCustody(dc);
-        }
-
-
-        return anexoFull;
 
     }
 
