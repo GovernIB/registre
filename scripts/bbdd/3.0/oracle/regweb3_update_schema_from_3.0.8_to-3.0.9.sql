@@ -275,6 +275,9 @@ es.caib.regweb3.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:
 #http://localhost:9090/afirmaws/services/DSSAfirmaVerify
 es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
 es.caib.regweb3.plugins.validatesignature.afirmacxf.printxml=false
+# USERNAME-PASSWORD Token
+#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.username=<<USERNAME>>
+#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.password=<<PASSWORD>>
 # CERTIFICATE Token
 es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
 es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
