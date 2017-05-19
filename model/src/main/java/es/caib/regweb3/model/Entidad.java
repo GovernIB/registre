@@ -1,5 +1,6 @@
 package es.caib.regweb3.model;
 
+
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.LazyCollection;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;

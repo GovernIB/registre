@@ -1245,8 +1245,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IDocumentCustodyPlugin custody;
             if(isJustificante) {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-
-            }else {
+            } else {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
             }
 

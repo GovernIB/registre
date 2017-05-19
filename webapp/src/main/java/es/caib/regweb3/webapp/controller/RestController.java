@@ -98,8 +98,10 @@ public class RestController {
     public
     @ResponseBody
     List<CodigoAsunto> obtenerCodigosAsuntoActivos(@RequestParam Long id) throws Exception {
+      
 
-        return codigoAsuntoEjb.getActivosByTipoAsunto(id);
+      List<CodigoAsunto> list = codigoAsuntoEjb.getActivosByTipoAsunto(id);
+      return list;
     }
 
     /**

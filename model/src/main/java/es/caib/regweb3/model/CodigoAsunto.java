@@ -1,6 +1,6 @@
 package es.caib.regweb3.model;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
