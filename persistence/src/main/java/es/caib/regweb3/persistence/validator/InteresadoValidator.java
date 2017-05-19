@@ -162,7 +162,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
         }
 
-        if(tipoDocumento != null && !StringUtils.isEmpty(interesado.getDocumento())) {
+        if(tipoDocumento != null && StringUtils.isNotEmpty(interesado.getDocumento())) {
 
             String documento = interesado.getDocumento().toUpperCase();
 
@@ -200,7 +200,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 log.info("El formato del documento NO es correcto");
             }
 
-        }else if(!StringUtils.isEmpty(interesado.getDocumento())){
+        }else if(StringUtils.isNotEmpty(interesado.getDocumento())){
             rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
         }
 

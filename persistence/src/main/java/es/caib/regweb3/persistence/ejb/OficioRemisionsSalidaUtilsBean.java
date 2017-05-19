@@ -443,7 +443,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
-        if(!StringUtils.isEmpty(codigoDir3)){
+        if(StringUtils.isNotEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
             return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) != null;
         }
@@ -456,7 +456,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
-        if(!StringUtils.isEmpty(codigoDir3)){
+        if(StringUtils.isNotEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
             return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) == null;
         }
@@ -472,7 +472,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
 
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
-        if(!StringUtils.isEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
+        if(StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
 
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);

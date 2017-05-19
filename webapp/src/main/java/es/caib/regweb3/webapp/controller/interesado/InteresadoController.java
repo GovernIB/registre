@@ -235,7 +235,7 @@ public class InteresadoController extends BaseController{
 
                     case (int)RegwebConstantes.CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA: // Se pregunta antes de Guardar
 
-                        if(persona.isGuardarInteresado() && !StringUtils.isEmpty(persona.getDocumento())){
+                        if(persona.isGuardarInteresado() && StringUtils.isNotEmpty(persona.getDocumento())){
                             persona = personaEjb.persist(persona);
                         }else{
                             persona.setId((long)(Math.random()*10000));
@@ -718,7 +718,7 @@ public class InteresadoController extends BaseController{
         if(interesados != null){
 
             for(Interesado interesado:interesados){
-                if(!StringUtils.isEmpty(interesado.getCodigoDir3()) && interesado.getCodigoDir3().equals(codigoDir3)){
+                if(StringUtils.isNotEmpty(interesado.getCodigoDir3()) && interesado.getCodigoDir3().equals(codigoDir3)){
                     interesados.remove(interesado);
                     session.setAttribute(variable, interesados);
 

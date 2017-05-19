@@ -193,51 +193,51 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         StringBuffer query = new StringBuffer(queryBase);
 
         // Numero registro
-        if (!StringUtils.isEmpty(registroEntrada.getNumeroRegistroFormateado())) {
+        if (StringUtils.isNotEmpty(registroEntrada.getNumeroRegistroFormateado())) {
             where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
             parametros.put("numeroRegistroFormateado", "%" + registroEntrada.getNumeroRegistroFormateado() + "%");
         }
 
         // Extracto
-        if (!StringUtils.isEmpty(registroEntrada.getRegistroDetalle().getExtracto())) {
+        if (StringUtils.isNotEmpty(registroEntrada.getRegistroDetalle().getExtracto())) {
             where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, new String(registroEntrada.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
         }
 
         // Observaciones
-        if (!StringUtils.isEmpty(observaciones)) {
+        if (StringUtils.isNotEmpty(observaciones)) {
             where.add(DataBaseUtils.like("registroEntrada.registroDetalle.observaciones", "observaciones", parametros, observaciones));
         }
 
         // Usuario
-        if (!StringUtils.isEmpty(usuario)) {
+        if (StringUtils.isNotEmpty(usuario)) {
             where.add(DataBaseUtils.like("registroEntrada.usuario.usuario.identificador", "usuario", parametros, usuario));
         }
 
         // Nombre interesado
-        if (!StringUtils.isEmpty(interesadoNom)) {
+        if (StringUtils.isNotEmpty(interesadoNom)) {
             where.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros, interesadoNom) +
                     ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros, interesadoNom) +
                     "))");
         }
 
         // Primer apellido interesado
-        if (!StringUtils.isEmpty(interesadoLli1)) {
+        if (StringUtils.isNotEmpty(interesadoLli1)) {
             where.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros, interesadoLli1));
         }
 
         // Segundo apellido interesado
-        if (!StringUtils.isEmpty(interesadoLli2)) {
+        if (StringUtils.isNotEmpty(interesadoLli2)) {
             where.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros, interesadoLli2));
         }
 
         // Documento interesado
-        if (!StringUtils.isEmpty(interesadoDoc)) {
+        if (StringUtils.isNotEmpty(interesadoDoc)) {
             where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
             parametros.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
         }
 
         // Organismo destinatario
-        if (!StringUtils.isEmpty((organoDest))) {
+        if (StringUtils.isNotEmpty((organoDest))) {
             Organismo organismo = organismoEjb.findByCodigoEntidad(organoDest, idEntidad);
             if (organismo == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");

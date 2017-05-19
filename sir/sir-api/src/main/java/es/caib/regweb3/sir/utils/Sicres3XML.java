@@ -388,7 +388,7 @@ public class Sicres3XML {
                 validarAnexo(anexo, fichero.getIdentificadorIntercambio());
 
                 //Si el anexo tiene identificador de documento firmado significa que es firma de otro anexo, se debe comprobar que es así.
-                if (!StringUtils.isEmpty(anexo.getIdentificador_Documento_Firmado())) {
+                if (StringUtils.isNotEmpty(anexo.getIdentificador_Documento_Firmado())) {
                     Boolean firmaDeOtroAnexo = false;
                     for (De_Anexo anexo2 : anexos) {
                         if (anexo2.getIdentificador_Fichero().equals(anexo.getIdentificador_Documento_Firmado())) {
@@ -767,27 +767,27 @@ public class Sicres3XML {
                     elem.addCDATA(interesadoSir.getTipoDocumentoIdentificacionInteresado());
                 }
                 // Documento_Identificacion_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getDocumentoIdentificacionInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getDocumentoIdentificacionInteresado())) {
                     elem = rootElement.addElement("Documento_Identificacion_Interesado");
                     elem.addCDATA(interesadoSir.getDocumentoIdentificacionInteresado());
                 }
                 // Razon_Social_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getRazonSocialInteresado())) {
                     elem = rootElement.addElement("Razon_Social_Interesado");
                     elem.addCDATA(interesadoSir.getRazonSocialInteresado());
                 }
                 // Nombre_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getNombreInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getNombreInteresado())) {
                     elem = rootElement.addElement("Nombre_Interesado");
                     elem.addCDATA(interesadoSir.getNombreInteresado());
                 }
                 // Primer_Apellido_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getPrimerApellidoInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getPrimerApellidoInteresado())) {
                     elem = rootElement.addElement("Primer_Apellido_Interesado");
                     elem.addCDATA(interesadoSir.getPrimerApellidoInteresado());
                 }
                 // Segundo_Apellido_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getSegundoApellidoInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getSegundoApellidoInteresado())) {
                     elem = rootElement.addElement("Segundo_Apellido_Interesado");
                     elem.addCDATA(interesadoSir.getSegundoApellidoInteresado());
                 }
@@ -839,27 +839,27 @@ public class Sicres3XML {
                     elem.addCDATA(interesadoSir.getCodigoMunicipioInteresado());
                 }
                 // Direccion_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getDireccionInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getDireccionInteresado())) {
                     elem = rootElement.addElement("Direccion_Interesado");
                     elem.addCDATA(interesadoSir.getDireccionInteresado());
                 }
                 // Codigo_Postal_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getCodigoPostalInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getCodigoPostalInteresado())) {
                     elem = rootElement.addElement("Codigo_Postal_Interesado");
                     elem.addCDATA(interesadoSir.getCodigoPostalInteresado());
                 }
                 // Correo_Electronico_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getCorreoElectronicoInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getCorreoElectronicoInteresado())) {
                     elem = rootElement.addElement("Correo_Electronico_Interesado");
                     elem.addCDATA(interesadoSir.getCorreoElectronicoInteresado());
                 }
                 // Telefono_Contacto_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getTelefonoInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getTelefonoInteresado())) {
                     elem = rootElement.addElement("Telefono_Contacto_Interesado");
                     elem.addCDATA(interesadoSir.getTelefonoInteresado());
                 }
                 // Direccion_Electronica_Habilitada_Interesado
-                if (!StringUtils.isEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
                     elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
                     elem.addCDATA(interesadoSir.getDireccionElectronicaHabilitadaInteresado());
                 }
@@ -885,27 +885,27 @@ public class Sicres3XML {
                     elem.addCDATA(interesadoSir.getCodigoMunicipioRepresentante());
                 }
                 // Direccion_Representante
-                if (!StringUtils.isEmpty(interesadoSir.getDireccionRepresentante())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getDireccionRepresentante())) {
                     elem = rootElement.addElement("Direccion_Representante");
                     elem.addCDATA(interesadoSir.getDireccionRepresentante());
                 }
                 // Codigo_Postal_Representante
-                if (!StringUtils.isEmpty(interesadoSir.getCodigoPostalRepresentante())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getCodigoPostalRepresentante())) {
                     elem = rootElement.addElement("Codigo_Postal_Representante");
                     elem.addCDATA(interesadoSir.getCodigoPostalRepresentante());
                 }
                 // Correo_Electronico_Representante
-                if (!StringUtils.isEmpty(interesadoSir.getCorreoElectronicoRepresentante())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getCorreoElectronicoRepresentante())) {
                     elem = rootElement.addElement("Correo_Electronico_Representante");
                     elem.addCDATA(interesadoSir.getCorreoElectronicoRepresentante());
                 }
                 // Telefono_Contacto_Representante
-                if (!StringUtils.isEmpty(interesadoSir.getTelefonoRepresentante())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getTelefonoRepresentante())) {
                     elem = rootElement.addElement("Telefono_Contacto_Representante");
                     elem.addCDATA(interesadoSir.getTelefonoRepresentante());
                 }
                 // Direccion_Electronica_Habilitada_Representante
-                if (!StringUtils.isEmpty(interesadoSir.getDireccionElectronicaHabilitadaRepresentante())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getDireccionElectronicaHabilitadaRepresentante())) {
                     elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
                     elem.addCDATA(interesadoSir.getDireccionElectronicaHabilitadaRepresentante());
                 }
@@ -916,7 +916,7 @@ public class Sicres3XML {
                 }
 
                 // Observaciones
-                if (!StringUtils.isEmpty(interesadoSir.getObservaciones())) {
+                if (StringUtils.isNotEmpty(interesadoSir.getObservaciones())) {
                     elem = rootElement.addElement("Observaciones");
                     elem.addCDATA(interesadoSir.getObservaciones());
                 }
@@ -1336,27 +1336,27 @@ public class Sicres3XML {
                         elem.addCDATA(String.valueOf(RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
                     }
                     // Documento_Identificacion_Interesado
-                    if (!StringUtils.isEmpty(interesado.getDocumento())) {
+                    if (StringUtils.isNotEmpty(interesado.getDocumento())) {
                         elem = rootElement.addElement("Documento_Identificacion_Interesado");
                         elem.addCDATA(interesado.getDocumento());
                     }
                     // Razon_Social_Interesado
-                    if (!StringUtils.isEmpty(interesado.getRazonSocial())) {
+                    if (StringUtils.isNotEmpty(interesado.getRazonSocial())) {
                         elem = rootElement.addElement("Razon_Social_Interesado");
                         elem.addCDATA(interesado.getRazonSocial());
                     }
                     // Nombre_Interesado
-                    if (!StringUtils.isEmpty(interesado.getNombre())) {
+                    if (StringUtils.isNotEmpty(interesado.getNombre())) {
                         elem = rootElement.addElement("Nombre_Interesado");
                         elem.addCDATA(interesado.getNombre());
                     }
                     // Primer_Apellido_Interesado
-                    if (!StringUtils.isEmpty(interesado.getApellido1())) {
+                    if (StringUtils.isNotEmpty(interesado.getApellido1())) {
                         elem = rootElement.addElement("Primer_Apellido_Interesado");
                         elem.addCDATA(interesado.getApellido1());
                     }
                     // Segundo_Apellido_Interesado
-                    if (!StringUtils.isEmpty(interesado.getApellido2())) {
+                    if (StringUtils.isNotEmpty(interesado.getApellido2())) {
                         elem = rootElement.addElement("Segundo_Apellido_Interesado");
                         elem.addCDATA(interesado.getApellido2());
                     }
@@ -1377,27 +1377,27 @@ public class Sicres3XML {
                         elem.addCDATA(interesado.getLocalidad().getCodigoLocalidad().toString());
                     }
                     // Direccion_Interesado
-                    if (!StringUtils.isEmpty(interesado.getDireccion())) {
+                    if (StringUtils.isNotEmpty(interesado.getDireccion())) {
                         elem = rootElement.addElement("Direccion_Interesado");
                         elem.addCDATA(interesado.getDireccion());
                     }
                     // Codigo_Postal_Interesado
-                    if (!StringUtils.isEmpty(interesado.getCp())) {
+                    if (StringUtils.isNotEmpty(interesado.getCp())) {
                         elem = rootElement.addElement("Codigo_Postal_Interesado");
                         elem.addCDATA(interesado.getCp());
                     }
                     // Correo_Electronico_Interesado
-                    if (!StringUtils.isEmpty(interesado.getEmail())) {
+                    if (StringUtils.isNotEmpty(interesado.getEmail())) {
                         elem = rootElement.addElement("Correo_Electronico_Interesado");
                         elem.addCDATA(interesado.getEmail());
                     }
                     // Telefono_Contacto_Interesado
-                    if (!StringUtils.isEmpty(interesado.getTelefono())) {
+                    if (StringUtils.isNotEmpty(interesado.getTelefono())) {
                         elem = rootElement.addElement("Telefono_Contacto_Interesado");
                         elem.addCDATA(interesado.getTelefono());
                     }
                     // Direccion_Electronica_Habilitada_Interesado
-                    if (!StringUtils.isEmpty(interesado.getDireccionElectronica())) {
+                    if (StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
                         elem = rootElement.addElement("Direccion_Electronica_Habilitada_Interesado");
                         elem.addCDATA(interesado.getDireccionElectronica());
                     }
@@ -1460,27 +1460,27 @@ public class Sicres3XML {
                         elem.addCDATA(representante.getLocalidad().getCodigoLocalidad().toString());
                     }
                     // Direccion_Representante
-                    if (!StringUtils.isEmpty(representante.getDireccion())) {
+                    if (StringUtils.isNotEmpty(representante.getDireccion())) {
                         elem = rootElement.addElement("Direccion_Representante");
                         elem.addCDATA(representante.getDireccion());
                     }
                     // Codigo_Postal_Representante
-                    if (!StringUtils.isEmpty(representante.getCp())) {
+                    if (StringUtils.isNotEmpty(representante.getCp())) {
                         elem = rootElement.addElement("Codigo_Postal_Representante");
                         elem.addCDATA(representante.getCp());
                     }
                     // Correo_Electronico_Representante
-                    if (!StringUtils.isEmpty(representante.getEmail())) {
+                    if (StringUtils.isNotEmpty(representante.getEmail())) {
                         elem = rootElement.addElement("Correo_Electronico_Representante");
                         elem.addCDATA(representante.getEmail());
                     }
                     // Telefono_Contacto_Representante
-                    if (!StringUtils.isEmpty(representante.getTelefono())) {
+                    if (StringUtils.isNotEmpty(representante.getTelefono())) {
                         elem = rootElement.addElement("Telefono_Contacto_Representante");
                         elem.addCDATA(representante.getTelefono());
                     }
                     // Direccion_Electronica_Habilitada_Representante
-                    if (!StringUtils.isEmpty(representante.getDireccionElectronica())) {
+                    if (StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
                         elem = rootElement.addElement("Direccion_Electronica_Habilitada_Representante");
                         elem.addCDATA(representante.getDireccionElectronica());
                     }
@@ -1494,7 +1494,7 @@ public class Sicres3XML {
 
 
                 // Observaciones
-                if (!StringUtils.isEmpty(interesado.getObservaciones())) {
+                if (StringUtils.isNotEmpty(interesado.getObservaciones())) {
                     elem = rootElement.addElement("Observaciones");
                     elem.addCDATA(interesado.getObservaciones());
                 }

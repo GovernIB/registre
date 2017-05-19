@@ -64,19 +64,19 @@ public class RegistroEntradaConverter extends CommonConverter {
         registroDetalle.setTipoAsunto(getTipoAsunto(registroEntradaWs.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
         registroDetalle.setIdioma(getIdiomaRegistro(registroEntradaWs.getIdioma()));
 
-        if(!StringUtils.isEmpty(registroEntradaWs.getCodigoAsunto())){registroDetalle.setCodigoAsunto(getCodigoAsunto(registroEntradaWs.getCodigoAsunto(), codigoAsuntoEjb));}
-        if(!StringUtils.isEmpty(registroEntradaWs.getRefExterna())){registroDetalle.setReferenciaExterna(registroEntradaWs.getRefExterna());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getNumExpediente())){registroDetalle.setExpediente(registroEntradaWs.getNumExpediente());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getTipoTransporte())){registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroEntradaWs.getTipoTransporte()));}
-        if(!StringUtils.isEmpty(registroEntradaWs.getNumTransporte())){registroDetalle.setNumeroTransporte(registroEntradaWs.getNumTransporte());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getObservaciones())){registroDetalle.setObservaciones(registroEntradaWs.getObservaciones());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getCodigoAsunto())){registroDetalle.setCodigoAsunto(getCodigoAsunto(registroEntradaWs.getCodigoAsunto(), codigoAsuntoEjb));}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getRefExterna())){registroDetalle.setReferenciaExterna(registroEntradaWs.getRefExterna());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getNumExpediente())){registroDetalle.setExpediente(registroEntradaWs.getNumExpediente());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getTipoTransporte())){registroDetalle.setTransporte(RegwebConstantes.TRANSPORTE_BY_CODIGO_SICRES.get(registroEntradaWs.getTipoTransporte()));}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getNumTransporte())){registroDetalle.setNumeroTransporte(registroEntradaWs.getNumTransporte());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getObservaciones())){registroDetalle.setObservaciones(registroEntradaWs.getObservaciones());}
         //registroDetalle = getOficinaOrigen(registroEntradaWs.getOficina(),oficinaEjb, registroDetalle); todo Crear propiedad OficinaOrigen en es.caib.regweb3.ws.model.RegistroWs
         if(registroEntradaWs.getNumero() != null){registroDetalle.setNumeroRegistroOrigen(String.valueOf(registroEntradaWs.getNumero()));}
         if(registroEntradaWs.getFecha() != null){registroDetalle.setFechaOrigen(registroEntradaWs.getFecha());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getExpone())){registroDetalle.setExpone(registroEntradaWs.getExpone());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getSolicita())){registroDetalle.setSolicita(registroEntradaWs.getSolicita());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getAplicacion())){registroDetalle.setAplicacion(registroEntradaWs.getAplicacion());}
-        if(!StringUtils.isEmpty(registroEntradaWs.getVersion())){registroDetalle.setVersion(registroEntradaWs.getVersion());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getExpone())){registroDetalle.setExpone(registroEntradaWs.getExpone());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getSolicita())){registroDetalle.setSolicita(registroEntradaWs.getSolicita());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getAplicacion())){registroDetalle.setAplicacion(registroEntradaWs.getAplicacion());}
+        if(StringUtils.isNotEmpty(registroEntradaWs.getVersion())){registroDetalle.setVersion(registroEntradaWs.getVersion());}
 
         registroEntrada.setRegistroDetalle(registroDetalle);
 

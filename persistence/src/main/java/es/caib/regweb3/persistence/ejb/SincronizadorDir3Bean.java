@@ -257,7 +257,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             organismo.setOrganismoSuperior(organismoSuperior);
 
             // Asignamos su EDP Principal
-            if (!StringUtils.isEmpty(unidadTF.getCodEdpPrincipal())) {
+            if (StringUtils.isNotEmpty(unidadTF.getCodEdpPrincipal())) {
                 Organismo edpPrincipal = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodEdpPrincipal(), idEntidad);
                 organismo.setEdpPrincipal(edpPrincipal);
             }
@@ -521,19 +521,19 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         if (unidadTF.getCodigoAmbPais() != null) {
             organismo.setCodPais(cachePais.get(unidadTF.getCodigoAmbPais()));
         }
-        if (!StringUtils.isEmpty(unidadTF.getDescripcionLocalidad())) {
+        if (StringUtils.isNotEmpty(unidadTF.getDescripcionLocalidad())) {
             organismo.setLocalidad(catLocalidadEjb.findByNombre(unidadTF.getDescripcionLocalidad()));
         }
         if (unidadTF.getCodigoTipoVia() != null) {
             organismo.setTipoVia(cacheTipoVia.get(unidadTF.getCodigoTipoVia()));
         }
-        if (!StringUtils.isEmpty(unidadTF.getNombreVia())) {
+        if (StringUtils.isNotEmpty(unidadTF.getNombreVia())) {
             organismo.setNombreVia(unidadTF.getNombreVia());
         }
-        if (!StringUtils.isEmpty(unidadTF.getNumVia())) {
+        if (StringUtils.isNotEmpty(unidadTF.getNumVia())) {
             organismo.setNumVia(unidadTF.getNumVia());
         }
-        if (!StringUtils.isEmpty(unidadTF.getCodPostal())) {
+        if (StringUtils.isNotEmpty(unidadTF.getCodPostal())) {
             organismo.setCodPostal(unidadTF.getCodPostal());
         }
 
@@ -562,20 +562,20 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             oficina.setCodComunidad(cacheComunidadAutonoma.get(oficinaTF.getCodigoComunidad()));
         }
 
-        if (!StringUtils.isEmpty(oficinaTF.getDescripcionLocalidad())) {
+        if (StringUtils.isNotEmpty(oficinaTF.getDescripcionLocalidad())) {
             oficina.setLocalidad(catLocalidadEjb.findByNombre(oficinaTF.getDescripcionLocalidad()));
         }
 
         if (oficinaTF.getCodigoTipoVia() != null) {
             oficina.setTipoVia(cacheTipoVia.get(oficinaTF.getCodigoTipoVia()));
         }
-        if (!StringUtils.isEmpty(oficinaTF.getNombreVia())) {
+        if (StringUtils.isNotEmpty(oficinaTF.getNombreVia())) {
             oficina.setNombreVia(oficinaTF.getNombreVia());
         }
-        if (!StringUtils.isEmpty(oficinaTF.getNumVia())) {
+        if (StringUtils.isNotEmpty(oficinaTF.getNumVia())) {
             oficina.setNumVia(oficinaTF.getNumVia());
         }
-        if (!StringUtils.isEmpty(oficinaTF.getCodPostal())) {
+        if (StringUtils.isNotEmpty(oficinaTF.getCodPostal())) {
             oficina.setCodPostal(oficinaTF.getCodPostal());
         }
 

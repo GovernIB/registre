@@ -1,8 +1,8 @@
 package es.caib.regweb3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
@@ -455,28 +455,28 @@ public class Interesado implements Serializable {
 
             info = (getRazonSocial() != null) ? getRazonSocial() : getNombre();
             info = info + " <br/>";
-            if(!StringUtils.isEmpty(getCodigoDir3())){info = info + "DIR3: " +getCodigoDir3()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getCodigoDir3())){info = info + "DIR3: " +getCodigoDir3()+ " <br/>";}
 
         }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
 
             info = getNombrePersonaFisica() + " <br/>";
-            if(!StringUtils.isEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
             if(getProvincia() != null){info = info + getProvincia().getDescripcionProvincia()+ " <br/>";}
             if(getLocalidad() != null){info = info + getLocalidad().getNombre()+ " <br/>";}
-            if(!StringUtils.isEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
-            if(!StringUtils.isEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
-            if(!StringUtils.isEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
-            if(!StringUtils.isEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
 
         }else if(tipo.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
             info = getNombrePersonaJuridica() + " <br/>";
-            if(!StringUtils.isEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getDireccion())){info = info + getDireccion()+ " <br/>";}
             if(getProvincia() != null){info = info + getProvincia().getDescripcionProvincia()+ " <br/>";}
             if(getLocalidad() != null){info = info + getLocalidad().getNombre()+ " <br/>";}
-            if(!StringUtils.isEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
-            if(!StringUtils.isEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
-            if(!StringUtils.isEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
-            if(!StringUtils.isEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getCp())){info = info + "Cp: " +getCp()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getTelefono())){info = info + "Tlf: " +getTelefono()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getEmail())){info = info + "Email: " +getEmail()+ " <br/>";}
+            if(StringUtils.isNotEmpty(getDireccionElectronica())){info = info + "Dir. elect: " +getEmail()+ " <br/>";}
         }
 
         return info;
@@ -517,7 +517,7 @@ public class Interesado implements Serializable {
 
         String personaFisica = "" ;
 
-        if(!StringUtils.isEmpty(getNombre())){
+        if(StringUtils.isNotEmpty(getNombre())){
 
             personaFisica = getNombre()+ " " + getApellido1();
 
@@ -538,7 +538,7 @@ public class Interesado implements Serializable {
 
         String personaFisica = "" ;
 
-        if(!StringUtils.isEmpty(getNombre())){
+        if(StringUtils.isNotEmpty(getNombre())){
 
             personaFisica = getNombre()+ " " + getApellido1();
 
@@ -556,7 +556,7 @@ public class Interesado implements Serializable {
 
         String personaJuridica = "";
 
-        if(!StringUtils.isEmpty(getRazonSocial())){
+        if(StringUtils.isNotEmpty(getRazonSocial())){
 
             personaJuridica = getRazonSocial();
 

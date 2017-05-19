@@ -161,7 +161,7 @@ public class AnexoConverter extends CommonConverter {
 
        Anexo anexo = new Anexo();
 
-       if(!StringUtils.isEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
+       if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
 
        if(anexoWs.getTipoDocumental()!= null) {
          
@@ -179,7 +179,7 @@ public class AnexoConverter extends CommonConverter {
        if(anexoWs.getTipoDocumento()!= null) {
          anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_BY_CODIGO_NTI.get(anexoWs.getTipoDocumento()));
        }
-       if(!StringUtils.isEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
+       if(StringUtils.isNotEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
        if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
        
        if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
@@ -207,7 +207,7 @@ public class AnexoConverter extends CommonConverter {
 
        Anexo anexo = anexoFull.getAnexo();
 
-       if(!StringUtils.isEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
+       if(StringUtils.isNotEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
 
        if(anexo.getTipoDocumental()!= null){anexoWs.setTipoDocumental(anexo.getTipoDocumental().getCodigoNTI());}
        if(anexo.getValidezDocumento()!= null) {
@@ -216,7 +216,7 @@ public class AnexoConverter extends CommonConverter {
        if(anexo.getTipoDocumento()!= null) {
          anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
        }
-       if(!StringUtils.isEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
+       if(StringUtils.isNotEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
        if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
        
        if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}

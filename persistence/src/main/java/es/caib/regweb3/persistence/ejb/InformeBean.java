@@ -83,18 +83,18 @@ public class InformeBean implements InformeLocal {
         where.add(" registroDetalle.id=registroEntrada.registroDetalle.id ");
 
         // Numero registro
-        if (!StringUtils.isEmpty(numRegistro)) {
+        if (StringUtils.isNotEmpty(numRegistro)) {
             where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
             parametros.put("numeroRegistroFormateado", "%" + numRegistro + "%");
         }
 
         // Extracto
-        if (!StringUtils.isEmpty(extracto)) {
+        if (StringUtils.isNotEmpty(extracto)) {
             where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, extracto));
         }
 
         // Organismo destinatario
-        if (!StringUtils.isEmpty((organoDest))) {
+        if (StringUtils.isNotEmpty((organoDest))) {
             if (/*organismoEjb.findByCodigoLigero(organoDest) == null*/organismoEjb.findByCodigoEntidad(organoDest, idEntidad) == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
             } else {
@@ -104,12 +104,12 @@ public class InformeBean implements InformeLocal {
         }
 
         // Observaciones
-        if (!StringUtils.isEmpty(observaciones)) {
+        if (StringUtils.isNotEmpty(observaciones)) {
             where.add(DataBaseUtils.like("registroEntrada.registroDetalle.observaciones", "observaciones", parametros, observaciones));
         }
 
         // Usuario
-        if (!StringUtils.isEmpty(usuario)) {
+        if (StringUtils.isNotEmpty(usuario)) {
             where.add(DataBaseUtils.like("registroEntrada.usuario.usuario.identificador", "usuario", parametros, usuario));
         }
 
@@ -206,24 +206,24 @@ public class InformeBean implements InformeLocal {
                 parametros2.put("idDetalle", idDetalle);
 
                 // Nombre interesado
-                if (!StringUtils.isEmpty(interesadoNom)) {
+                if (StringUtils.isNotEmpty(interesadoNom)) {
                     where2.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros2, interesadoNom) +
                             ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros2, interesadoNom) +
                             "))");
                 }
 
                 // Primer apellido interesado
-                if (!StringUtils.isEmpty(interesadoLli1)) {
+                if (StringUtils.isNotEmpty(interesadoLli1)) {
                     where2.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros2, interesadoLli1));
                 }
 
                 // Segundo apellido interesado
-                if (!StringUtils.isEmpty(interesadoLli2)) {
+                if (StringUtils.isNotEmpty(interesadoLli2)) {
                     where2.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros2, interesadoLli2));
                 }
 
                 // Documento interesado
-                if (!StringUtils.isEmpty(interesadoDoc)) {
+                if (StringUtils.isNotEmpty(interesadoDoc)) {
                     where2.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
                     parametros2.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
                 }
@@ -318,18 +318,18 @@ public class InformeBean implements InformeLocal {
         where.add(" registroDetalle.id=registroSalida.registroDetalle.id ");
 
         // Numero registro
-        if (!StringUtils.isEmpty(numRegistro)) {
+        if (StringUtils.isNotEmpty(numRegistro)) {
             where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
             parametros.put("numeroRegistroFormateado", "%" + numRegistro + "%");
         }
 
         // Extracto
-        if (!StringUtils.isEmpty(extracto)) {
+        if (StringUtils.isNotEmpty(extracto)) {
             where.add(DataBaseUtils.like("registroSalida.registroDetalle.extracto", "extracto", parametros, extracto));
         }
 
         // Organismo origen
-        if (!StringUtils.isEmpty((organoOrig))) {
+        if (StringUtils.isNotEmpty((organoOrig))) {
             Organismo organismo = organismoEjb.findByCodigoEntidad(organoOrig, idEntidad);
             if (organismo == null) {
                 where.add(" registroSalida.origenExternoCodigo = :organoOrig ");
@@ -341,12 +341,12 @@ public class InformeBean implements InformeLocal {
         }
 
         // Observaciones
-        if (!StringUtils.isEmpty(observaciones)) {
+        if (StringUtils.isNotEmpty(observaciones)) {
             where.add(DataBaseUtils.like("registroSalida.registroDetalle.observaciones", "observaciones", parametros, observaciones));
         }
 
         // Usuario
-        if (!StringUtils.isEmpty(usuario)) {
+        if (StringUtils.isNotEmpty(usuario)) {
             where.add(DataBaseUtils.like("registroSalida.usuario.usuario.identificador", "usuario", parametros, usuario));
         }
 
@@ -443,24 +443,24 @@ public class InformeBean implements InformeLocal {
                 parametros2.put("idDetalle", idDetalle);
 
                 // Nombre interesado
-                if (!StringUtils.isEmpty(interesadoNom)) {
+                if (StringUtils.isNotEmpty(interesadoNom)) {
                     where2.add("((" + DataBaseUtils.like("interessat.nombre", "interesadoNom", parametros2, interesadoNom) +
                             ") or (" + DataBaseUtils.like("interessat.razonSocial", "interesadoNom", parametros2, interesadoNom) +
                             "))");
                 }
 
                 // Primer apellido interesado
-                if (!StringUtils.isEmpty(interesadoLli1)) {
+                if (StringUtils.isNotEmpty(interesadoLli1)) {
                     where2.add(DataBaseUtils.like("interessat.apellido1", "interesadoLli1", parametros2, interesadoLli1));
                 }
 
                 // Segundo apellido interesado
-                if (!StringUtils.isEmpty(interesadoLli2)) {
+                if (StringUtils.isNotEmpty(interesadoLli2)) {
                     where2.add(DataBaseUtils.like("interessat.apellido2", "interesadoLli2", parametros2, interesadoLli2));
                 }
 
                 // Documento interesado
-                if (!StringUtils.isEmpty(interesadoDoc)) {
+                if (StringUtils.isNotEmpty(interesadoDoc)) {
                     where2.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
                     parametros2.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
                 }

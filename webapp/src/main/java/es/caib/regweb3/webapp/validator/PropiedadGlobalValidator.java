@@ -45,7 +45,7 @@ public class PropiedadGlobalValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "clave", "error.valor.requerido", "El camp és obligatori");
 
         // Comprobamos la duplicidad de la Clave
-        if (!StringUtils.isEmpty(propiedadGlobal.getClave())) {
+        if (StringUtils.isNotEmpty(propiedadGlobal.getClave())) {
 
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             HttpSession session = request.getSession();

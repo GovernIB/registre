@@ -257,7 +257,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             where.add(DataBaseUtils.like("registroSir.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
         }
 
-        if (!StringUtils.isEmpty(estado)) {
+        if (StringUtils.isNotEmpty(estado)) {
             where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
@@ -319,7 +319,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
-        if (!StringUtils.isEmpty(estado)) {
+        if (StringUtils.isNotEmpty(estado)) {
             where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
@@ -439,7 +439,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 registroSir.setCodigoEntidadRegistralOrigen(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen());
 
-                if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
+                if (StringUtils.isNotEmpty(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen())) {
                     registroSir.setDecodificacionEntidadRegistralOrigen(de_Origen_o_Remitente.getDecodificacion_Entidad_Registral_Origen());
                 } else {
                     registroSir.setDecodificacionEntidadRegistralOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Entidad_Registral_Origen(), RegwebConstantes.OFICINA));
@@ -447,7 +447,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 registroSir.setCodigoUnidadTramitacionOrigen(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen());
 
-                if (!StringUtils.isEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
+                if (StringUtils.isNotEmpty(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen())) {
                     registroSir.setDecodificacionUnidadTramitacionOrigen(de_Origen_o_Remitente.getDecodificacion_Unidad_Tramitacion_Origen());
                 } else {
                     registroSir.setDecodificacionUnidadTramitacionOrigen(Dir3CaibUtils.denominacion(de_Origen_o_Remitente.getCodigo_Unidad_Tramitacion_Origen(), RegwebConstantes.UNIDAD));
@@ -473,15 +473,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             if (de_Destino != null) {
 
                 registroSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
-                if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
+                if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
                     registroSir.setDecodificacionEntidadRegistralDestino(de_Destino.getDecodificacion_Entidad_Registral_Destino());
                 } else {
                     registroSir.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Entidad_Registral_Destino(), RegwebConstantes.OFICINA));
                 }
 
-                if (!StringUtils.isEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
+                if (StringUtils.isNotEmpty(de_Destino.getCodigo_Unidad_Tramitacion_Destino())) {
                     registroSir.setCodigoUnidadTramitacionDestino(de_Destino.getCodigo_Unidad_Tramitacion_Destino());
-                    if (!StringUtils.isEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
+                    if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino())) {
                         registroSir.setDecodificacionUnidadTramitacionDestino(de_Destino.getDecodificacion_Unidad_Tramitacion_Destino());
                     } else {
                         registroSir.setDecodificacionUnidadTramitacionDestino(Dir3CaibUtils.denominacion(de_Destino.getCodigo_Unidad_Tramitacion_Destino(), RegwebConstantes.UNIDAD));
@@ -513,7 +513,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 registroSir.setObservacionesApunte(de_Internos_Control.getObservaciones_Apunte());
 
                 registroSir.setCodigoEntidadRegistralInicio(de_Internos_Control.getCodigo_Entidad_Registral_Inicio());
-                if (!StringUtils.isEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
+                if (StringUtils.isNotEmpty(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio())) {
                     registroSir.setDecodificacionEntidadRegistralInicio(de_Internos_Control.getDecodificacion_Entidad_Registral_Inicio());
                 } else {
                     registroSir.setDecodificacionEntidadRegistralInicio(Dir3CaibUtils.denominacion(de_Internos_Control.getCodigo_Entidad_Registral_Inicio(), RegwebConstantes.OFICINA));
@@ -861,23 +861,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             interesadoSir.setTipoDocumentoIdentificacionInteresado(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion())));
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getDocumento())) {
+        if (StringUtils.isNotEmpty(interesado.getDocumento())) {
             interesadoSir.setDocumentoIdentificacionInteresado(interesado.getDocumento());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getRazonSocial())) {
+        if (StringUtils.isNotEmpty(interesado.getRazonSocial())) {
             interesadoSir.setRazonSocialInteresado(interesado.getRazonSocial());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getNombre())) {
+        if (StringUtils.isNotEmpty(interesado.getNombre())) {
             interesadoSir.setNombreInteresado(interesado.getNombre());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getApellido1())) {
+        if (StringUtils.isNotEmpty(interesado.getApellido1())) {
             interesadoSir.setPrimerApellidoInteresado(interesado.getApellido1());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getApellido2())) {
+        if (StringUtils.isNotEmpty(interesado.getApellido2())) {
             interesadoSir.setSegundoApellidoInteresado(interesado.getApellido2());
         }
 
@@ -893,23 +893,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             interesadoSir.setCodigoMunicipioInteresado(interesado.getLocalidad().getCodigoLocalidad().toString());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getDireccion())) {
+        if (StringUtils.isNotEmpty(interesado.getDireccion())) {
             interesadoSir.setDireccionInteresado(interesado.getDireccion());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getCp())) {
+        if (StringUtils.isNotEmpty(interesado.getCp())) {
             interesadoSir.setCodigoPostalInteresado(interesado.getCp());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getEmail())) {
+        if (StringUtils.isNotEmpty(interesado.getEmail())) {
             interesadoSir.setCorreoElectronicoInteresado(interesado.getEmail());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getTelefono())) {
+        if (StringUtils.isNotEmpty(interesado.getTelefono())) {
             interesadoSir.setTelefonoInteresado(interesado.getTelefono());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getDireccionElectronica())) {
+        if (StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
             interesadoSir.setDireccionElectronicaHabilitadaInteresado(interesado.getDireccionElectronica());
         }
 
@@ -917,7 +917,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             interesadoSir.setCanalPreferenteComunicacionInteresado(CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesado.getObservaciones())) {
+        if (StringUtils.isNotEmpty(interesado.getObservaciones())) {
             interesadoSir.setObservaciones(interesado.getObservaciones());
         }
 
@@ -928,23 +928,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 interesadoSir.setTipoDocumentoIdentificacionRepresentante(String.valueOf(CODIGO_NTI_BY_TIPODOCUMENTOID.get(representante.getTipoDocumentoIdentificacion())));
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getDocumento())) {
+            if (StringUtils.isNotEmpty(representante.getDocumento())) {
                 interesadoSir.setDocumentoIdentificacionRepresentante(representante.getDocumento());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getRazonSocial())) {
+            if (StringUtils.isNotEmpty(representante.getRazonSocial())) {
                 interesadoSir.setRazonSocialRepresentante(representante.getRazonSocial());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getNombre())) {
+            if (StringUtils.isNotEmpty(representante.getNombre())) {
                 interesadoSir.setNombreRepresentante(representante.getNombre());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getApellido1())) {
+            if (StringUtils.isNotEmpty(representante.getApellido1())) {
                 interesadoSir.setPrimerApellidoRepresentante(representante.getApellido1());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getApellido2())) {
+            if (StringUtils.isNotEmpty(representante.getApellido2())) {
                 interesadoSir.setSegundoApellidoRepresentante(representante.getApellido2());
             }
 
@@ -960,23 +960,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 interesadoSir.setCodigoMunicipioRepresentante(representante.getLocalidad().getCodigoLocalidad().toString());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getDireccion())) {
+            if (StringUtils.isNotEmpty(representante.getDireccion())) {
                 interesadoSir.setDireccionRepresentante(representante.getDireccion());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getCp())) {
+            if (StringUtils.isNotEmpty(representante.getCp())) {
                 interesadoSir.setCodigoPostalRepresentante(representante.getCp());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getEmail())) {
+            if (StringUtils.isNotEmpty(representante.getEmail())) {
                 interesadoSir.setCorreoElectronicoRepresentante(representante.getEmail());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getTelefono())) {
+            if (StringUtils.isNotEmpty(representante.getTelefono())) {
                 interesadoSir.setTelefonoRepresentante(representante.getTelefono());
             }
 
-            if (!es.caib.regweb3.utils.StringUtils.isEmpty(representante.getDireccionElectronica())) {
+            if (StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
                 interesadoSir.setDireccionElectronicaHabilitadaRepresentante(representante.getDireccionElectronica());
             }
 
@@ -1420,22 +1420,22 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if(registroSir.getTipoTransporte() != null){
             registroDetalle.setTransporte(Long.valueOf(registroSir.getTipoTransporte()));
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getNumeroTransporte())){
+        if(StringUtils.isNotEmpty(registroSir.getNumeroTransporte())){
             registroDetalle.setNumeroTransporte(registroSir.getNumeroTransporte());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getObservacionesApunte())){
+        if(StringUtils.isNotEmpty(registroSir.getObservacionesApunte())){
             registroDetalle.setObservaciones(registroSir.getObservacionesApunte());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getReferenciaExterna())){
+        if(StringUtils.isNotEmpty(registroSir.getReferenciaExterna())){
             registroDetalle.setReferenciaExterna(registroSir.getReferenciaExterna());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getNumeroExpediente())){
+        if(StringUtils.isNotEmpty(registroSir.getNumeroExpediente())){
             registroDetalle.setExpediente(registroSir.getNumeroExpediente());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getExpone())){
+        if(StringUtils.isNotEmpty(registroSir.getExpone())){
             registroDetalle.setExpone(registroSir.getExpone());
         }
-        if(!es.caib.regweb3.utils.StringUtils.isEmpty(registroSir.getSolicita())){
+        if(StringUtils.isNotEmpty(registroSir.getSolicita())){
             registroDetalle.setSolicita(registroSir.getSolicita());
         }
 
@@ -1500,72 +1500,72 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         interesado.setIsRepresentante(false);
 
         // Averiguamos que tipo es el Interesado
-        if (es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+        if (StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
             interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
 
         } else {
             interesado.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getRazonSocialInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getRazonSocialInteresado())) {
             interesado.setRazonSocial(interesadoSir.getRazonSocialInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getNombreInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getNombreInteresado())) {
             interesado.setNombre(interesadoSir.getNombreInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getPrimerApellidoInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getPrimerApellidoInteresado())) {
             interesado.setApellido1(interesadoSir.getPrimerApellidoInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getSegundoApellidoInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getSegundoApellidoInteresado())) {
             interesado.setApellido2(interesadoSir.getSegundoApellidoInteresado());
         }
         if (interesadoSir.getTipoDocumentoIdentificacionInteresado() != null) {
             interesado.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(interesadoSir.getTipoDocumentoIdentificacionInteresado().charAt(0)));
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getDocumentoIdentificacionInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getDocumentoIdentificacionInteresado())) {
             interesado.setDocumento(interesadoSir.getDocumentoIdentificacionInteresado());
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getCodigoPaisInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getCodigoPaisInteresado())) {
             try {
                 interesado.setPais(catPaisEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoPaisInteresado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getCodigoProvinciaInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getCodigoProvinciaInteresado())) {
             try {
                 interesado.setProvincia(catProvinciaEjb.findByCodigo(Long.valueOf(interesadoSir.getCodigoProvinciaInteresado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getCodigoMunicipioInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getCodigoMunicipioInteresado())) {
             try {
                 interesado.setLocalidad(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(interesadoSir.getCodigoMunicipioInteresado()), Long.valueOf(interesadoSir.getCodigoProvinciaInteresado())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getDireccionInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getDireccionInteresado())) {
             interesado.setDireccion(interesadoSir.getDireccionInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getCodigoPostalInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getCodigoPostalInteresado())) {
             interesado.setCp(interesadoSir.getCodigoPostalInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getCorreoElectronicoInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getCorreoElectronicoInteresado())) {
             interesado.setEmail(interesadoSir.getCorreoElectronicoInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getTelefonoInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getTelefonoInteresado())) {
             interesado.setTelefono(interesadoSir.getTelefonoInteresado());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getDireccionElectronicaHabilitadaInteresado())) {
             interesado.setDireccionElectronica(interesadoSir.getDireccionElectronicaHabilitadaInteresado());
         }
         if (interesadoSir.getCanalPreferenteComunicacionInteresado() != null) {
             interesado.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(interesadoSir.getCanalPreferenteComunicacionInteresado()));
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(interesadoSir.getObservaciones())) {
+        if (StringUtils.isNotEmpty(interesadoSir.getObservaciones())) {
             interesado.setObservaciones(interesadoSir.getObservaciones());
         }
 
@@ -1586,71 +1586,71 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         representante.setIsRepresentante(true);
 
         // Averiguamos que tipo es el Representante
-        if (es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
+        if (StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
             representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
 
         } else {
             representante.setTipo(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
         }
 
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getRazonSocialRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getRazonSocialRepresentante())) {
             representante.setRazonSocial(representanteSir.getRazonSocialRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getNombreRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getNombreRepresentante())) {
             representante.setNombre(representanteSir.getNombreRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getPrimerApellidoRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getPrimerApellidoRepresentante())) {
             representante.setApellido1(representanteSir.getPrimerApellidoRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getSegundoApellidoRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getSegundoApellidoRepresentante())) {
             representante.setApellido2(representanteSir.getSegundoApellidoRepresentante());
         }
         if (representanteSir.getTipoDocumentoIdentificacionRepresentante() != null) {
             representante.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_BY_CODIGO_NTI.get(representanteSir.getTipoDocumentoIdentificacionRepresentante().charAt(0)));
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getDocumentoIdentificacionRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getDocumentoIdentificacionRepresentante())) {
             representante.setDocumento(representanteSir.getDocumentoIdentificacionRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getCodigoPaisRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getCodigoPaisRepresentante())) {
             try {
                 representante.setPais(catPaisEjb.findByCodigo(Long.valueOf(representanteSir.getCodigoPaisRepresentante())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getCodigoProvinciaRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getCodigoProvinciaRepresentante())) {
             try {
                 representante.setProvincia(catProvinciaEjb.findByCodigo(Long.valueOf(representanteSir.getCodigoProvinciaRepresentante())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getCodigoMunicipioRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getCodigoMunicipioRepresentante())) {
             try {
                 representante.setLocalidad(catLocalidadEjb.findByLocalidadProvincia(Long.valueOf(representanteSir.getCodigoMunicipioRepresentante()), Long.valueOf(representanteSir.getCodigoProvinciaRepresentante())));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getDireccionRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getDireccionRepresentante())) {
             representante.setDireccion(representanteSir.getDireccionRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getCodigoPostalRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getCodigoPostalRepresentante())) {
             representante.setCp(representanteSir.getCodigoPostalRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getCorreoElectronicoRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getCorreoElectronicoRepresentante())) {
             representante.setEmail(representanteSir.getCorreoElectronicoRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getTelefonoRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getTelefonoRepresentante())) {
             representante.setTelefono(representanteSir.getTelefonoRepresentante());
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getDireccionElectronicaHabilitadaRepresentante())) {
+        if (StringUtils.isNotEmpty(representanteSir.getDireccionElectronicaHabilitadaRepresentante())) {
             representante.setDireccionElectronica(representanteSir.getDireccionElectronicaHabilitadaRepresentante());
         }
         if (representanteSir.getCanalPreferenteComunicacionRepresentante() != null) {
             representante.setCanal(RegwebConstantes.CANALNOTIFICACION_BY_CODIGO.get(representanteSir.getCanalPreferenteComunicacionRepresentante()));
         }
-        if (!es.caib.regweb3.utils.StringUtils.isEmpty(representanteSir.getObservaciones())) {
+        if (StringUtils.isNotEmpty(representanteSir.getObservaciones())) {
             representante.setObservaciones(representanteSir.getObservaciones());
         }
 
@@ -1707,7 +1707,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados) throws Exception {
 
         // Solo procesamos Documentos, no Firmas
-        if(es.caib.regweb3.utils.StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
+        if(StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
                 anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
 
             AnexoFull anexoFull = new AnexoFull();

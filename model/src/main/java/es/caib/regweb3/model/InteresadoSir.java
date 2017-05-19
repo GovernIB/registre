@@ -1,8 +1,8 @@
 package es.caib.regweb3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 
 import javax.persistence.*;
@@ -360,10 +360,10 @@ public class InteresadoSir implements Serializable {
     @Transient
     public Long getTipoInteresado(){
 
-        if(!StringUtils.isEmpty(getNombreInteresado()) && !StringUtils.isEmpty(getPrimerApellidoInteresado())){
+        if(StringUtils.isNotEmpty(getNombreInteresado()) && StringUtils.isNotEmpty(getPrimerApellidoInteresado())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
 
-        }else if(!StringUtils.isEmpty(getRazonSocialInteresado())){
+        }else if(StringUtils.isNotEmpty(getRazonSocialInteresado())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
         }
 
@@ -373,10 +373,10 @@ public class InteresadoSir implements Serializable {
     @Transient
     public Long getTipoRepresentante(){
 
-        if(!StringUtils.isEmpty(getNombreRepresentante()) && !StringUtils.isEmpty(getPrimerApellidoRepresentante())){
+        if(StringUtils.isNotEmpty(getNombreRepresentante()) && StringUtils.isNotEmpty(getPrimerApellidoRepresentante())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
 
-        }else if(!StringUtils.isEmpty(getRazonSocialRepresentante())){
+        }else if(StringUtils.isNotEmpty(getRazonSocialRepresentante())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
         }
 
@@ -387,7 +387,7 @@ public class InteresadoSir implements Serializable {
     @Transient
     public Boolean getRepresentante(){
 
-        return !StringUtils.isEmpty(getNombreRepresentante()) || !StringUtils.isEmpty(getRazonSocialRepresentante());
+        return StringUtils.isNotEmpty(getNombreRepresentante()) || StringUtils.isNotEmpty(getRazonSocialRepresentante());
     }
 
     @Transient
@@ -421,15 +421,15 @@ public class InteresadoSir implements Serializable {
 
         String personaFisica = "" ;
 
-        if(!StringUtils.isEmpty(getNombreInteresado())){
+        if(StringUtils.isNotEmpty(getNombreInteresado())){
 
             personaFisica = getNombreInteresado()+ " " + getPrimerApellidoInteresado();
 
-            if(!StringUtils.isEmpty(getSegundoApellidoInteresado())){
+            if(StringUtils.isNotEmpty(getSegundoApellidoInteresado())){
                 personaFisica = personaFisica.concat(" " + getSegundoApellidoInteresado());
             }
 
-            if(!StringUtils.isEmpty(getDocumentoIdentificacionInteresado())){
+            if(StringUtils.isNotEmpty(getDocumentoIdentificacionInteresado())){
                 personaFisica = personaFisica.concat(" - " + getDocumentoIdentificacionInteresado());
             }
         }
@@ -442,11 +442,11 @@ public class InteresadoSir implements Serializable {
 
         String personaJuridica = "";
 
-        if(!StringUtils.isEmpty(getRazonSocialInteresado())){
+        if(StringUtils.isNotEmpty(getRazonSocialInteresado())){
 
             personaJuridica = getRazonSocialInteresado();
 
-            if(!StringUtils.isEmpty(getDocumentoIdentificacionInteresado())){
+            if(StringUtils.isNotEmpty(getDocumentoIdentificacionInteresado())){
                 personaJuridica = personaJuridica.concat(" - " + getDocumentoIdentificacionInteresado());
             }
         }
@@ -459,15 +459,15 @@ public class InteresadoSir implements Serializable {
 
         String personaFisica = "" ;
 
-        if(!StringUtils.isEmpty(getNombreRepresentante())){
+        if(StringUtils.isNotEmpty(getNombreRepresentante())){
 
             personaFisica = getNombreRepresentante()+ " " + getPrimerApellidoRepresentante();
 
-            if(!StringUtils.isEmpty(getSegundoApellidoRepresentante())){
+            if(StringUtils.isNotEmpty(getSegundoApellidoRepresentante())){
                 personaFisica = personaFisica.concat(" " + getSegundoApellidoRepresentante());
             }
 
-            if(!StringUtils.isEmpty(getDocumentoIdentificacionRepresentante())){
+            if(StringUtils.isNotEmpty(getDocumentoIdentificacionRepresentante())){
                 personaFisica = personaFisica.concat(" - " + getDocumentoIdentificacionRepresentante());
             }
         }
@@ -480,11 +480,11 @@ public class InteresadoSir implements Serializable {
 
         String personaJuridica = "";
 
-        if(!StringUtils.isEmpty(getRazonSocialRepresentante())){
+        if(StringUtils.isNotEmpty(getRazonSocialRepresentante())){
 
             personaJuridica = getRazonSocialRepresentante();
 
-            if(!StringUtils.isEmpty(getDocumentoIdentificacionRepresentante())){
+            if(StringUtils.isNotEmpty(getDocumentoIdentificacionRepresentante())){
                 personaJuridica = personaJuridica.concat(" - " + getDocumentoIdentificacionRepresentante());
             }
         }

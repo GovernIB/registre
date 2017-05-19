@@ -122,7 +122,7 @@ public class PersonaController extends BaseController {
 
             try {
 
-                if (!StringUtils.isEmpty(persona.getDocumento())) {
+                if (StringUtils.isNotEmpty(persona.getDocumento())) {
                     persona.setDocumento(persona.getDocumento().toUpperCase());
                 }
 

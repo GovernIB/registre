@@ -183,7 +183,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                 rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
                 log.info("El formato del documento NO es correcto");
             }
-        }else if(!StringUtils.isEmpty(persona.getDocumento())){
+        }else if(StringUtils.isNotEmpty(persona.getDocumento())){
             rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
         }
 

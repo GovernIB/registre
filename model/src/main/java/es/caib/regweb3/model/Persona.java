@@ -1,8 +1,8 @@
 package es.caib.regweb3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
@@ -323,7 +323,7 @@ public class Persona implements Serializable {
 
         String personaFisica = "" ;
 
-        if(!StringUtils.isEmpty(getNombre())){
+        if(StringUtils.isNotEmpty(getNombre())){
 
             personaFisica = getNombre()+ " " + getApellido1();
 
@@ -344,7 +344,7 @@ public class Persona implements Serializable {
 
         String personaFisica = "";
 
-        if(!StringUtils.isEmpty(getNombre())){
+        if(StringUtils.isNotEmpty(getNombre())){
             personaFisica = getNombre()+ " " + getApellido1();
 
             if(getApellido2() != null && getApellido2().length() > 0){
@@ -360,7 +360,7 @@ public class Persona implements Serializable {
 
         String personaJuridica = "";
 
-        if(!StringUtils.isEmpty(getRazonSocial())){
+        if(StringUtils.isNotEmpty(getRazonSocial())){
 
             personaJuridica = getRazonSocial();
 

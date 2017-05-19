@@ -455,10 +455,10 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
 
 
-        if (!StringUtils.isEmpty(codigo)) {
+        if (StringUtils.isNotEmpty(codigo)) {
             where.add(DataBaseUtils.like("oficina.codigo", "codigo", parametros, codigo));
         }
-        if (!StringUtils.isEmpty(denominacion)) {
+        if (StringUtils.isNotEmpty(denominacion)) {
             where.add(DataBaseUtils.like("oficina.denominacion", "denominacion", parametros, denominacion));
         }
 
