@@ -8,11 +8,6 @@
             es.caib.regweb3.iscaib=false
             es.caib.regweb3.showtimestamp=false
             es.caib.regweb3.preregistre=http://www.caib.es
-            <!-- Tamany màxim de pujada de fitxer(10Mb). Si no es defineix no hi ha límit. -->
-            #es.caib.regweb3.maxuploadsizeinbytes=10485760
-            <!-- 15 Mb en total -->
-            #es.caib.regweb3.maxuploadsizetotal=15728640
-            #es.caib.regweb3.maxanexospermitidos=5
 
             <!-- SIR -->
             es.caib.regweb3.sir.serverbase=http://localhost:8380/services
