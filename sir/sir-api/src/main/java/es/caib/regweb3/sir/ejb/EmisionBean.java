@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import javax.ejb.Stateless;
 import java.net.URL;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Ejb para la gestión de la Emisión de Ficheros de Intercambios SICRES3 hacia un nodo distribuido
@@ -136,30 +135,4 @@ public class EmisionBean implements EmisionLocal{
         return  locator.getWS_SIR6_B(url);
     }
 
-
-    /**
-     * Calcula una cadena de ocho dígitos a partir del instante de tiempo actual.
-     *
-     * @return la cadena (String) de ocho digitos
-     */
-    private static final AtomicLong TIME_STAMP = new AtomicLong();
-
-    private String getIdToken() {
-        long now = System.currentTimeMillis();
-        while (true) {
-            long last = TIME_STAMP.get();
-            if (now <= last)
-                now = last + 1;
-            if (TIME_STAMP.compareAndSet(last, now))
-                break;
-        }
-        long unsignedValue = Long.toString(now).hashCode() & 0xffffffffl;
-        String result = Long.toString(unsignedValue);
-        if (result.length() > 8) {
-            result = result.substring(result.length() - 8, result.length());
-        } else {
-            result = String.format("%08d", unsignedValue);
-        }
-        return result;
-    }
 }

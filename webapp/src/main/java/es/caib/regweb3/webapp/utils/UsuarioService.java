@@ -319,6 +319,7 @@ public class UsuarioService {
         if(oficinaNueva != null){
 
             UsuarioEntidad usuarioEntidad = (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
             // Guardamos en la sesión la nueva OficinaActiva
             session.setAttribute(RegwebConstantes.SESSION_OFICINA, oficinaNueva);
@@ -326,9 +327,11 @@ public class UsuarioService {
             // Guardamos en la sesión los Organismos OficiaActiva
             session.setAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA, organismoEjb.getByOficinaActiva(oficinaNueva));
 
-            // Comprobamos si la Oficina está integrada en SIR
-            oficinaNueva.setSirRecepcion(oficinaEjb.isSIRRecepcion(oficinaNueva.getId()));
-            oficinaNueva.setSirEnvio(oficinaEjb.isSIREnvio(oficinaNueva.getId()));
+            if(entidadActiva.getSir()){
+                // Comprobamos si la Oficina está integrada en SIR
+                oficinaNueva.setSirRecepcion(oficinaEjb.isSIRRecepcion(oficinaNueva.getId()));
+                oficinaNueva.setSirEnvio(oficinaEjb.isSIREnvio(oficinaNueva.getId()));
+            }
 
             // Actualizamos la última Oficina del Usuario
             usuarioEntidadEjb.actualizarOficinaUsuario(usuarioEntidad.getId(), oficinaNueva.getId());

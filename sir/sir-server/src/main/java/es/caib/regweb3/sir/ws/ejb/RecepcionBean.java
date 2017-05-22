@@ -4,12 +4,12 @@ import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
@@ -53,7 +53,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         try {
 
-            assert_hasText(xmlFicheroIntercambio, "'xmlFicheroIntercambio' no puede estar vacio");
+            Assert.hasText(xmlFicheroIntercambio, "El xml del FicheroIntercambio no puede estar vacio");
 
             // Convertimos y validamos el xml recibido en un FicheroIntercambio mediate xsd FicheroIntercambio.xsd
             ficheroIntercambio = sicres3XML.parseXMLFicheroIntercambio(xmlFicheroIntercambio);
@@ -81,7 +81,7 @@ public class RecepcionBean implements RecepcionLocal{
                 if (errorValidacion != null) {
                     errorGenerico = errorValidacion.getValue();
                 }
-                log.info("Error de Valicacion: " + ((ValidacionException) e).getErrorException().getMessage());
+                log.info("Error de validacion: " + ((ValidacionException) e).getErrorException().getMessage());
             }else{
                 log.info("Error al recibir el fichero de intercambio", e);
                 descripcionError = e.getMessage();
@@ -94,11 +94,13 @@ public class RecepcionBean implements RecepcionLocal{
 
                 if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
                     mensajeEjb.enviarMensajeError(mensaje, errorGenerico, descripcionError);
+                }else{
+                    log.info("El error de validacion afecta a campos del segmento De_Destino y no permite componer el mensaje de error");
                 }
 
             } catch (RuntimeException ex) {
                 // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
-                log.info("No se ha podido enviar el mensaje de error debido a una excepción producida, podría ser debido a la falta de campos requeridos para el envío del mismo:", ex);
+                log.info("No es posible enviar el mensaje de Error, posiblemente por falta de campos minimos requeridos", ex);
             }
 
             throw e;
@@ -129,10 +131,6 @@ public class RecepcionBean implements RecepcionLocal{
         Node codigoEntidadRegistralDestino = (Node)reader.read(Codigo_Entidad_Registral_Destino_Xpath, XPathConstants.NODE);
         Node codigoEntidadRegistralOrigen = (Node)reader.read(Codigo_Entidad_Registral_Origen_Xpath, XPathConstants.NODE);
         Node identificadorIntercambio = (Node)reader.read(Identificador_Intercambio_Xpath, XPathConstants.NODE);
-
-        //log.info("CodigoEntidadRegistralDestino: " + codigoEntidadRegistralDestino.getNodeValue());
-        //log.info("CodigoEntidadRegistralOrigen: " + codigoEntidadRegistralOrigen.getNodeValue());
-        //log.info("IdentificadorIntercambio: " + identificadorIntercambio.getNodeValue());
 
         mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino.getNodeValue());
         mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralOrigen.getNodeValue());
@@ -168,36 +166,5 @@ public class RecepcionBean implements RecepcionLocal{
         log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());
 
     }
-    
-    
-    
-    /**
-     * Assert that the given String has valid text content; that is, it must not
-     * be {@code null} and must contain at least one non-whitespace character.
-     * <pre class="code">assert_hasText(name, "'name' must not be empty");</pre>
-     * @param text the String to check
-     * @param message the exception message to use if the assertion fails
-     * @see StringUtils#hasText
-     */
-    public static void assert_hasText(String text, String message) {
-      if (!hasText(text)) {
-        throw new IllegalArgumentException(message);
-      }
-    }
-    
-    
-    public static boolean hasText(String str) {
-      if (!(str != null && str.length() > 0)) {
-        return false;
-      }
-      int strLen = str.length();
-      for (int i = 0; i < strLen; i++) {
-        if (!Character.isWhitespace(str.charAt(i))) {
-          return true;
-        }
-      }
-      return false;
-    }
-    
-    
+
 }
