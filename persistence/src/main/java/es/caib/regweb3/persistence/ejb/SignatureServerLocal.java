@@ -12,13 +12,15 @@ import java.util.Locale;
 
 /**
  * Created by jpernia on 04/04/2017.
+ * @author anadal
  */
 @Local
 @RolesAllowed({"RWE_USUARI"})
 public interface SignatureServerLocal {
   
-     
-    public static final String CONFIG_USERNAME = "regweb3"; // configuracio
+      
+    // La configuracio del plugin indicarà quin certificat usar
+    public static final String CONFIG_USERNAME = null; 
   
 
     /**Método que genera la Firma de un File para una Entidad en concreto

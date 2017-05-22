@@ -68,7 +68,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         
 
         SignatureCustody sc = signFile(doc, signType, signMode, epes, signaturePlugin,
-            SignatureServerLocal.CONFIG_USERNAME, new Locale(languageUI), reason);
+            new Locale(languageUI), reason);
         
 
         return sc;
@@ -389,7 +389,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
       SignatureCustody sc = signFile(docToSign, signType, signMode, epes,
-          signaturePlugin, SignatureServerLocal.CONFIG_USERNAME, locale, reason);
+          signaturePlugin, locale, reason);
 
       // Ficar dins Anexo tipo, formato i perfil
       Anexo anexo = input.getAnexo();
@@ -412,7 +412,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
       SignatureCustody sc = signFile(documentToSign, signType, signMode, epes,
-          signaturePlugin, SignatureServerLocal.CONFIG_USERNAME, locale, reason);
+          signaturePlugin, locale, reason);
 
       // Ficar dins Anexo tipo, formato i perfil
       Anexo anexo = input.getAnexo();
@@ -431,11 +431,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     
 
     protected SignatureCustody signFile(AnnexCustody doc, String signType,
-        int signMode, boolean epes, ISignatureServerPlugin plugin, String username, Locale locale, String reason)
+        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason)
         throws I18NException, Exception {
 
       File source = null;
       File destination = null;
+      final String username = CONFIG_USERNAME;
       try {
         // String pdfsource, String mime, String pdfdest,
         String filtreCertificats = "";
