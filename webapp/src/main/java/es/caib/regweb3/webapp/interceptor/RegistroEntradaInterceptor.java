@@ -205,7 +205,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
         // Comprobaciones previas al reenvio
         if(url.contains("reenviar")){
-            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/reenvio", ""); //Obtenemos el id a partir de la url
+            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/reenviar", ""); //Obtenemos el id a partir de la url
 
             RegistroBasico registroEntrada = registroEntradaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
 
