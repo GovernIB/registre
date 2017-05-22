@@ -101,7 +101,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no

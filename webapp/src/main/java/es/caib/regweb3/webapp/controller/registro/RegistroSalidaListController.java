@@ -222,7 +222,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Oficio Remision
         if(entidadActiva.getOficioRemision()){
-            oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+            oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva);
             if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                 initMensajeNotaInformativaAnexos(entidadActiva, model);
             }

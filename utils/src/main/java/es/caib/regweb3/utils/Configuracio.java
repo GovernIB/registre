@@ -44,18 +44,6 @@ public class Configuracio implements RegwebConstantes {
   public static String getSirServerBase() {
     return  System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + "sir.serverbase");
   }
-  
-  
-  
-  public static boolean useDirectApiSir() {
-    return "true".equals(
-        System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + "sir.usedirectapi"));
-  }
-  
-  
-  public static Long getMaxUploadSizeInBytes() {
-    return Long.getLong(RegwebConstantes.REGWEB3_PROPERTY_BASE + "maxuploadsizeinbytes");
-  }
 
 
 }

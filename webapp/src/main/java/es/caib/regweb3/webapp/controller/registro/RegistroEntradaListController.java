@@ -232,10 +232,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Solo si no es una reserva de número
         if(!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
-
             // Oficio Remision
             if(entidadActiva.getOficioRemision()){
-                oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva));
+                oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva);
                 if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);
                 }

@@ -67,9 +67,9 @@ public class Oficina implements Serializable{
     private Set<CatServicio> servicios;
 
     @Transient
-    private Boolean isSirRecepcion;
+    private Boolean isSirRecepcion = false;
     @Transient
-    private Boolean isSirEnvio;
+    private Boolean isSirEnvio = false;
 
     public Oficina() {
       super();

@@ -288,7 +288,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     }
 
     @Override
-    public Oficio isOficio(Long idRegistro, Set<Long> organismos) throws Exception{
+    public Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception{
 
         Oficio oficio = new Oficio();
 
@@ -299,7 +299,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
 
-            if(!oficinasSIR.isEmpty()){
+            if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
                 oficio.setSir(true);
                 oficio.setExterno(false);
             }else{
