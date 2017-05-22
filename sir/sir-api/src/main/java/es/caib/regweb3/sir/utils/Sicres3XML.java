@@ -18,7 +18,6 @@ import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
@@ -100,11 +99,11 @@ public class Sicres3XML {
      *
      * @param fichero
      */
-    public void validarFicheroIntercambio(FicheroIntercambio fichero) {
+    public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService) {
 
         try {
-            oficinasService = Dir3CaibUtils.getObtenerOficinasService();
-            unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            this.oficinasService = oficinasService;
+            this.unidadesService = unidadesService;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2021,7 +2020,6 @@ public class Sicres3XML {
         }
 
         try {
-            //Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
             OficinaTF oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
 
             if(oficinaTF == null){
@@ -2049,7 +2047,6 @@ public class Sicres3XML {
         }
 
         try {
-            //Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
             UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
 
             return unidadTF != null;

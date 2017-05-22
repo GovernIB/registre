@@ -309,7 +309,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         // OficinaSir destino
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
         OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
 
         try {

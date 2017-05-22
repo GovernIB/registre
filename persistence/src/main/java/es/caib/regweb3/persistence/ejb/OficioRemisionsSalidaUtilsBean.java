@@ -11,6 +11,7 @@ import es.caib.regweb3.model.utils.OficioPendienteLlegada;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -150,7 +151,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             oficios.setExterno(true);
 
             // Obtenemos el Organismo externo de Dir3Caib
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
             UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoOrganismo,null,null);
 
             if(unidadTF != null){
@@ -162,7 +163,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                 // Comprueba si la Entidad Actual está en SIR
                 if (entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
                     // Averiguamos si el Organismo Externo está en Sir o no
-                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
                     List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
                     if (oficinasSIR.size() > 0) {
                         oficios.setSir(true);
@@ -474,7 +475,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if(StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
 
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
 
             return oficinasSIR;

@@ -455,7 +455,7 @@ public class OficioRemisionController extends BaseController {
         }
 
         // OficinaSir destino
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
         OficinaTF oficinaSir = oficinasService.obtenerOficina(oficioRemisionForm.getOficinaSIRCodigo(), null, null);
 
         // OFICIO DE REMISION ENTRADA

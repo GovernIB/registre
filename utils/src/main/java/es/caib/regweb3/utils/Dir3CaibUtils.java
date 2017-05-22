@@ -38,16 +38,16 @@ public class Dir3CaibUtils {
 
   private static final String OFICINA_DENOMINACION = "/rest/oficina/denominacion";
 
+  private static final Long TIMEOUT = 500000L;
+
   /**
    *
    * @return
    */
-  public static Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception {
+  public static Dir3CaibObtenerUnidadesWs getObtenerUnidadesService(String server, String username, String password) throws Exception {
 
-    final String endpoint = Configuracio.getDir3CaibServer() + OBTENER_UNIDADES;
+    final String endpoint = server + OBTENER_UNIDADES;
 
-    //URL wsdlLocation = Dir3CaibObtenerUnidadesWsService.class
-    //    .getResource("/wsdl/Dir3CaibObtenerUnidades.wsdl");
     URL wsdlLocation = new URL(endpoint + "?wsdl");
 
     Dir3CaibObtenerUnidadesWsService service = new Dir3CaibObtenerUnidadesWsService(
@@ -55,8 +55,7 @@ public class Dir3CaibUtils {
 
     Dir3CaibObtenerUnidadesWs api = service.getDir3CaibObtenerUnidadesWs();
 
-    configAddressUserPasswordTimeout(Configuracio.getDir3CaibUsername(),
-        Configuracio.getDir3CaibPassword(), endpoint, 500000L, api);
+    configAddressUserPasswordTimeout(username, password, endpoint, 500000L, api);
 
     return api;
   }
@@ -66,12 +65,10 @@ public class Dir3CaibUtils {
    *
    * @return
    */
-  public static Dir3CaibObtenerCatalogosWs getObtenerCatalogosService() throws Exception {
+  public static Dir3CaibObtenerCatalogosWs getObtenerCatalogosService(String server, String username, String password) throws Exception {
 
-    final String endpoint = Configuracio.getDir3CaibServer() + OBTENER_CATALOGOS;
+    final String endpoint = server + OBTENER_CATALOGOS;
 
-    //URL wsdlLocation = Dir3CaibObtenerCatalogosWsService.class
-    //    .getResource("/wsdl/Dir3CaibObtenerCatalogos.wsdl");
     URL wsdlLocation = new URL(endpoint + "?wsdl");
 
     Dir3CaibObtenerCatalogosWsService service = new Dir3CaibObtenerCatalogosWsService(
@@ -79,8 +76,7 @@ public class Dir3CaibUtils {
 
     Dir3CaibObtenerCatalogosWs api = service.getDir3CaibObtenerCatalogosWs();
 
-    configAddressUserPasswordTimeout(Configuracio.getDir3CaibUsername(),
-        Configuracio.getDir3CaibPassword(), endpoint, 500000L, api);
+    configAddressUserPasswordTimeout(username,password, endpoint, TIMEOUT, api);
 
     return api;
   }
@@ -90,12 +86,10 @@ public class Dir3CaibUtils {
    *
    * @return
    */
-  public static Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception {
+  public static Dir3CaibObtenerOficinasWs getObtenerOficinasService(String server, String username, String password) throws Exception {
 
-    final String endpoint = Configuracio.getDir3CaibServer() + OBTENER_OFICINAS;
+    final String endpoint = server + OBTENER_OFICINAS;
 
-    //URL wsdlLocation = Dir3CaibObtenerOficinasWsService.class
-    //    .getResource("/wsdl/Dir3CaibObtenerOficinas.wsdl");
     URL wsdlLocation = new URL(endpoint + "?wsdl");
 
     Dir3CaibObtenerOficinasWsService service = new Dir3CaibObtenerOficinasWsService(
@@ -103,8 +97,7 @@ public class Dir3CaibUtils {
 
     Dir3CaibObtenerOficinasWs api = service.getDir3CaibObtenerOficinasWs();
 
-    configAddressUserPasswordTimeout(Configuracio.getDir3CaibUsername(),
-        Configuracio.getDir3CaibPassword(), endpoint, 500000L, api);
+    configAddressUserPasswordTimeout(username,password, endpoint, TIMEOUT, api);
 
     return api;
   }
@@ -116,7 +109,7 @@ public class Dir3CaibUtils {
    * @return
    * @throws Exception
    */
-  public static String denominacion(String codigoDir3, String tipo) {
+  public static String denominacion(String server, String codigoDir3, String tipo) {
     log.debug("tipo: " + tipo);
     log.debug("codigoDir3: " + codigoDir3);
 
@@ -125,9 +118,9 @@ public class Dir3CaibUtils {
     String denominacion;
 
     if(tipo.toLowerCase().equals("oficina")){
-      url = Configuracio.getDir3CaibServer() + OFICINA_DENOMINACION;
+      url = server + OFICINA_DENOMINACION;
     }else if(tipo.toLowerCase().equals("unidad")){
-      url = Configuracio.getDir3CaibServer() + UNIDAD_DENOMINACION;
+      url = server + UNIDAD_DENOMINACION;
     }
 
     url = url + "?codigo=" + codigoDir3;

@@ -1,4 +1,4 @@
-<%@ page import="es.caib.regweb3.utils.Configuracio" %>
+<%@ page import="es.caib.regweb3.persistence.utils.PropiedadGlobalUtil" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <!-- Formulario de busqueda compartido. Se usa tanto para buscar organismos como oficinas, en función del parámetro
@@ -147,7 +147,7 @@ que se le indica -->
                         </div>
 
                         <input type="button" id="buscarorganimos${param.tipo}"
-                               onclick="organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}')"
+                               onclick="organismoBusqueda('${param.tipo}','<%=PropiedadGlobalUtil.getDir3CaibServer()%>','${param.idRegistroDetalle}')"
                                class="btn btn-warning btn-sm" title="<spring:message code="regweb.buscar"/>"
                                value="<spring:message code="regweb.buscar"/>"/>
                         <button class="btn btn-sm" data-dismiss="modal" aria-hidden="true"
@@ -236,7 +236,7 @@ que se le indica -->
     $("#modalBuscador${param.tipo}").keypress(function(e) {
         if ((e.keyCode == 13)) {
             e.preventDefault();
-            organismoBusqueda('${param.tipo}','<%=Configuracio.getDir3CaibServer()%>','${param.idRegistroDetalle}');
+            organismoBusqueda('${param.tipo}','<%=PropiedadGlobalUtil.getDir3CaibServer()%>','${param.idRegistroDetalle}');
         }
     });
 

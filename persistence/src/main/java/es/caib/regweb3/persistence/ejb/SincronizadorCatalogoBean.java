@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.catalogo.CatEstadoEntidad;
 import es.caib.dir3caib.ws.api.catalogo.CatTipoVia;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.CatPais;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -67,7 +68,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
 
         log.info("Inicio sincronizacion catalogo DIR3");
 
-        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService();
+        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
        /* CACHE */
         Map<Long, CatPais> cachePais = new TreeMap<Long, CatPais>();
@@ -216,7 +217,7 @@ public class SincronizadorCatalogoBean implements SincronizadorCatalogoLocal {
         Map<String, CatEntidadGeografica> cacheEntidadGeografica = cacheEntidadGeografica();
 
         // Obtenemos el Service de los WS de Catalogos
-        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService();
+        Dir3CaibObtenerCatalogosWs catalogosService = Dir3CaibUtils.getObtenerCatalogosService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
         // Obtenemos todos los CatEstadoEntidad
         List<CatEstadoEntidad> estadosEntidad = catalogosService.obtenerCatEstadoEntidad();

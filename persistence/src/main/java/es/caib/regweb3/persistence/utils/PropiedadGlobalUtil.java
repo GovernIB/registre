@@ -298,36 +298,33 @@ public class PropiedadGlobalUtil {
 
     /**
      * Retorna el valor de la propiedad Dir3CaibServer de la entidad indicada.
-     * @param idEntidad
      * @return
      */
-    public static String getDir3CaibServer(Long idEntidad) {
+    public static String getDir3CaibServer() {
         final String partialPropertyName = "dir3caib.server";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+        String valor = getString( partialPropertyName);
 
         return valor != null ? valor : null;
     }
 
     /**
      * Retorna el valor de la propiedad Dir3CaibUsername de la entidad indicada.
-     * @param idEntidad
      * @return
      */
-    public static String getDir3CaibUsername(Long idEntidad) {
+    public static String getDir3CaibUsername() {
         final String partialPropertyName = "dir3caib.username";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+        String valor = getString( partialPropertyName);
 
         return valor != null ? valor : null;
     }
 
     /**
      * Retorna el valor de la propiedad Dir3CaibPassword de la entidad indicada.
-     * @param idEntidad
      * @return
      */
-    public static String getDir3CaibPassword(Long idEntidad) {
+    public static String getDir3CaibPassword() {
         final String partialPropertyName = "dir3caib.password";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+        String valor = getString(partialPropertyName);
 
         return valor != null ? valor : null;
     }

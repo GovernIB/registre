@@ -14,11 +14,6 @@
             #es.caib.regweb3.maxuploadsizetotal=15728640
             #es.caib.regweb3.maxanexospermitidos=5
 
-            <!-- Directorio de oficinas, unidades y catálogos -->
-            es.caib.regweb3.dir3caib.server=http://195.57.128.134:8080/dir3caib
-            es.caib.regweb3.dir3caib.username=caibapp
-            es.caib.regweb3.dir3caib.password=caibapp
-
             <!-- SIR -->
             es.caib.regweb3.sir.serverbase=http://localhost:8380/services
 

@@ -1,5 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 
@@ -26,4 +28,18 @@ public interface WebServicesMethodsLocal {
      * @throws Exception
      */
     public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    public Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception;
+
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    public Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception;
 }

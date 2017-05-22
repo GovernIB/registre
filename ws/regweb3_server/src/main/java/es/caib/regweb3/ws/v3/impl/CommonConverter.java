@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.converter.AnexoConverter;
@@ -143,7 +144,7 @@ public class CommonConverter {
         OficinaTF oficinaExterna = null;
 
         if (oficinaInterna == null) { // Comprobamos si se trata de una Oficina externa
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService();
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
             oficinaExterna = oficinasService.obtenerOficina(oficinaCodigoDir3, null, null);
 
             if (oficinaExterna != null && oficinaExterna.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {

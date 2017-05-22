@@ -30,17 +30,6 @@ public class Configuracio implements RegwebConstantes {
     return Boolean.getBoolean(REGWEB3_PROPERTY_BASE + "development");
   }
 
-  public static String getDir3CaibUsername() {
-    return System.getProperty(REGWEB3_PROPERTY_BASE + "dir3caib.username");
-  }
-
-  public static String getDir3CaibPassword() {
-    return System.getProperty(REGWEB3_PROPERTY_BASE + "dir3caib.password");
-  }
-
-  public static String getDir3CaibServer() {
-    return System.getProperty(REGWEB3_PROPERTY_BASE + "dir3caib.server");
-  }
 
   public static String getHibernateDialect() {
     return  System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + "hibernate.dialect");

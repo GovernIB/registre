@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -176,7 +177,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         if (destinoInterno == null) { // Se trata de un destino externo
 
             // Lo buscamos en DIR3CAIB
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService();
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
             destinoExterno = unidadesService.obtenerUnidad(registroEntradaWs.getDestino(), null, null);
 
             if (destinoExterno == null) {

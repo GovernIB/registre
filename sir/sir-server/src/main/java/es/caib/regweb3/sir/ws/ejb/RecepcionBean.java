@@ -60,7 +60,7 @@ public class RecepcionBean implements RecepcionLocal{
 
             // Validamos el Fichero de Intercambio creado a partir del xml recibido
             try {
-                sicres3XML.validarFicheroIntercambio(ficheroIntercambio);
+                sicres3XML.validarFicheroIntercambio(ficheroIntercambio, webServicesMethodsEjb.getObtenerOficinasService(), webServicesMethodsEjb.getObtenerUnidadesService());
             } catch (IllegalArgumentException e) {
                 log.error("Se produjo un error de validacion del xml recibido: " + e.getMessage());
                 throw new ValidacionException(Errores.ERROR_0037, e);
