@@ -274,7 +274,8 @@ es.caib.regweb3.plugins.signatureserver.afirmaserver.applicationID_TimeStamp=
 # s´utilitza aquest valor com a sistema de selecció del certificat amb el que firmar
 es.caib.regweb3.plugins.signatureserver.afirmaserver.defaultAliasCertificate=dgdt-pre
 
-es.caib.regweb3.plugins.signatureserver.afirmaserver.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
+# Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates
+es.caib.regweb3.plugins.signatureserver.afirmaserver.TransformersTemplatesPath=/app/caib/regweb/transformersTemplates
 
 #Propiedades de comunicacion con el repositorio de servicios
 
