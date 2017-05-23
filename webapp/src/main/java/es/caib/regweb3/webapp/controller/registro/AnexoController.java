@@ -1,6 +1,5 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -10,7 +9,6 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import org.apache.axis.utils.StringUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -23,8 +21,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
@@ -75,32 +71,7 @@ public class AnexoController extends BaseController {
     public ScanWebModuleLocal scanWebModuleEjb;
 
 
-    /**
-     * Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat
-     */
-    @RequestMapping(value = "/nou", method = RequestMethod.GET)
-    public ModelAndView crearAnexoGet(HttpServletRequest request,
-                                      HttpServletResponse response, Model model) throws I18NException, Exception {
 
-        HttpSession session = request.getSession();
-        Long registroDetalleID = (Long) session.getAttribute("LAST_registroDetalleID");
-        String tipoRegistro = (String) session.getAttribute("LAST_tipoRegistro");
-        Long registroID = (Long) session.getAttribute("LAST_registroID");
-        Long anexoID = (Long) session.getAttribute("LAST_anexoID");
-
-        boolean isOficioRemisionSir = false;
-        return new ModelAndView(new RedirectView("/anexo/" + (anexoID == null ? "nou/" : "editar/")
-                + registroDetalleID + "/" + tipoRegistro + "/" + registroID + (anexoID == null ? "" : ("/" + anexoID)) + "/" + isOficioRemisionSir, true));
-    }
-
-    /**
-     * Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat
-     */
-    @RequestMapping(value = "/editar", method = RequestMethod.GET)
-    public ModelAndView editarAnexoGet(HttpServletRequest request,
-                                       HttpServletResponse response, Model model) throws I18NException, Exception {
-        return crearAnexoGet(request, response, model);
-    }
 
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
     public String crearAnexoGet2(HttpServletRequest request,
@@ -110,33 +81,10 @@ public class AnexoController extends BaseController {
         model.addAttribute("anexoForm", anexoForm);
 
         loadCommonAttributes(request, model);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
         return "registro/formularioAnexo";
     }
 
-    @RequestMapping(value = "/nou/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
-    public String crearAnexoGet(HttpServletRequest request,
-                                HttpServletResponse response, @PathVariable Long registroDetalleID,
-                                @PathVariable String tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
-                                Model model) throws I18NException, Exception {
-
-        log.info(" Passa per AnexoController::crearAnexoGet(" + registroDetalleID
-                + "," + tipoRegistro + ", " + registroID + ")");
-
-
-        saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-
-        RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
-
-        AnexoForm anexoForm = new AnexoForm();
-        anexoForm.setRegistroID(registroID);
-        anexoForm.setTipoRegistro(tipoRegistro);
-        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
-        anexoForm.setOficioRemisionSir(isOficioRemisionSir);
-        model.addAttribute("anexoForm", anexoForm);
-
-
-        return "registro/formularioAnexo";
-    }
 
 
     protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
@@ -187,6 +135,7 @@ public class AnexoController extends BaseController {
 
         // Errors
         loadCommonAttributes(request, model);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
 
         return "registro/formularioAnexo";
 
@@ -242,6 +191,7 @@ public class AnexoController extends BaseController {
         model.addAttribute("anexoForm", anexoForm);
 
         loadCommonAttributes(request, model);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
 
         return "registro/formularioAnexo";
 
@@ -254,8 +204,6 @@ public class AnexoController extends BaseController {
                                   HttpServletResponse response, Model model) throws Exception, I18NValidationException, I18NException {
 
         log.info(" Passa per editarAnexoPost");
-        String variableReturn = "";
-
 
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
@@ -556,7 +504,7 @@ public class AnexoController extends BaseController {
      * @param anexoForm
      * @return
      */
-    public long obtenerTamanoTotalAnexos(List<AnexoFull> anexosFull, AnexoForm anexoForm) throws Exception {
+   /* public long obtenerTamanoTotalAnexos(List<AnexoFull> anexosFull, AnexoForm anexoForm) throws Exception {
         long tamanyoTotalAnexos = 0;
         long tamanyoanexo = 0;
         for (AnexoFull anexoFull : anexosFull) {
@@ -583,20 +531,20 @@ public class AnexoController extends BaseController {
         return tamanyoTotalAnexos;
 
     }
-
+*/
     /**
      * Obtiene la extensión del anexo introducido en el formulario
      *
      * @param anexoForm
      * @return
      */
-    public String obtenerExtensionAnexo(AnexoForm anexoForm) {
+   /* public String obtenerExtensionAnexo(AnexoForm anexoForm) {
         if (!anexoForm.getDocumentoFile().getOriginalFilename().isEmpty()) {
             return FilenameUtils.getExtension(anexoForm.getDocumentoFile().getOriginalFilename());
         } else {
             return FilenameUtils.getExtension(anexoForm.getFirmaFile().getOriginalFilename());
         }
-    }
+    }*/
 
 
     @InitBinder

@@ -87,29 +87,29 @@
                                             </td>
 
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED}">
-                                                <td><a class="btn btn-success btn-default btn-sm"
+                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
                                                        href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                         class="fa fa-download"></span></a></td>
-                                                <td><a class="btn btn-info btn-default btn-sm"
+                                                <td class="center"><a class="btn btn-info btn-default btn-sm"
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                         class="fa fa-download"></span></a></td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
-                                                <td><a class="btn btn-success btn-default btn-sm"
+                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
                                                        href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                         class="fa fa-download"></span></a></td>
-                                                <td><span class="label label-danger">No</span></td>
+                                                <td class="center"><span class="label label-danger">No</span></td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
 
-                                                <td><a class="btn btn-success btn-default btn-sm"
+                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                         class="fa fa-download"></span></a></td>
-                                                <td><span class="label label-success">Si</span></td>
+                                                <td class="center"><span class="label label-success">Si</span></td>
                                             </c:if>
                                         </tr>
                                     </c:if>

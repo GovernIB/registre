@@ -73,6 +73,7 @@ public class AnexoScanController extends BaseController {
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
         model.addAttribute("anexoForm" ,anexoForm);
         loadCommonAttributesScan(request, model,anexoForm.getRegistroID());
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
 
         return "registro/formularioAnexoScan";
     }
@@ -224,7 +225,6 @@ public class AnexoScanController extends BaseController {
     protected void manageDocumentCustodySignatureCustody(
             HttpServletRequest request,  AnexoForm anexoForm) throws Exception, I18NException {
 
-        log.info("XYZ ZZZ entro en manageDocumentCustody");
 
         final Long registroID = anexoForm.getRegistroID();
 
@@ -237,13 +237,10 @@ public class AnexoScanController extends BaseController {
 
         ScanWebConfigRegWeb config = scanWebModuleEjb.getScanWebConfig(request, scanWebID);
 
-        if(config != null){
-            log.info("XYZ ZZZ SCANNED FILES: "+ config.getScannedFiles().size());
-        }
 
         //Tratamiento de los documentos obtenidos del scanner
         if (config != null &&  config.getScannedFiles().size() != 0) {
-            log.info("XYZ ZZZ entro en config");
+
 
             if (config.getScannedFiles().size() != 1) {
                 throw new I18NException("anexo.error.scanmultiplefiles",
@@ -258,9 +255,6 @@ public class AnexoScanController extends BaseController {
             // Hem de modificar el Modo de Firma segons el que ens hagin enviat des de SCAN
             dc = sd.getScannedPlainFile();
             sc = sd.getScannedSignedFile();
-
-
-                log.info(" XYZ ZZZ dc" + dc);
 
 
             final int modoFirma;

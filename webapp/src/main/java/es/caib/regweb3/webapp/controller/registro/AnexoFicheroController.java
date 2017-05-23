@@ -64,6 +64,7 @@ public class AnexoFicheroController extends BaseController {
     public ModelAndView ficherosGet(HttpServletRequest request,
                                       HttpServletResponse response, Model model) throws I18NException, Exception {
 
+        //En caso de error, actualiza las variables de sesión necesarias
         HttpSession session = request.getSession();
         Long registroDetalleID = (Long) session.getAttribute("LAST_registroDetalleID");
         String tipoRegistro = (String) session.getAttribute("LAST_tipoRegistro");
@@ -87,6 +88,7 @@ public class AnexoFicheroController extends BaseController {
 
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
+        //Inicializamos el formulario de anexo
         AnexoForm anexoForm = new AnexoForm();
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
@@ -95,7 +97,7 @@ public class AnexoFicheroController extends BaseController {
         anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
         model.addAttribute("anexoForm" ,anexoForm);
 
-        loadCommonAttributes(request, model);
+       // loadCommonAttributes(request, model);
         return "registro/formularioAnexoFichero";
     }
 
@@ -126,17 +128,20 @@ public class AnexoFicheroController extends BaseController {
                 firmaSize = anexoForm.getFirmaFile().getSize();
                 firmaExtension = obtenerExtensionFirma(anexoForm);
             }
+            log.info("MODO FIRMA "+ anexoForm.getAnexo().getModoFirma());
             validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result,false);
 
         }
+
         if (result.hasErrors()) {
             return "registro/formularioAnexoFichero";
         } else {
             try {
-
+                //Preparamos los documentcustody, signaturecustody
                 manageDocumentCustodySignatureCustody(request, anexoForm);
 
                 Entidad entidad = getEntidadActiva(request);
+                //Comprobamos y validamos las firmas de los documentos.
                 signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
                         isSIR, I18NUtils.getLocale());
 

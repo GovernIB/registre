@@ -4,11 +4,14 @@ import es.caib.regweb3.model.AnexoSir;
 
 /**
  * Created by earrivi on 19/05/2017.
+ *
+ * Clase que representa un Anexo Sir completo con su documento y su firma
  */
 public class AnexoSirFull {
 
     public AnexoSir documento;
     public AnexoSir firma;
+    public boolean tieneFirma;
 
     public AnexoSirFull() {
 
@@ -33,5 +36,13 @@ public class AnexoSirFull {
 
     public void setFirma(AnexoSir firma) {
         this.firma = firma;
+    }
+
+    public boolean getTieneFirma() {
+        return tieneFirma;
+    }
+
+    public void setTieneFirma(boolean tieneFirma) {
+        this.tieneFirma = tieneFirma;
     }
 }

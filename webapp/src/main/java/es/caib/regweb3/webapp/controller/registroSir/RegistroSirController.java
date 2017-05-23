@@ -227,62 +227,11 @@ public class RegistroSirController extends BaseController {
 
         model.addAttribute("trazabilidades", trazabilidadSirEjb.getByRegistroSir(registroSir.getId()));
         model.addAttribute("registroSir",registroSir);
-        //model.addAttribute("anexosSirFull",componerAnexoSirFull(registroSir.getAnexos()));
+        model.addAttribute("anexosSirFull",componerAnexoSirFull(registroSir.getAnexos()));
 
         return "registroSir/registroSirDetalle";
     }
 
-    private List<AnexoSirFull> componerAnexoSirFull(List<AnexoSir> anexos) throws Exception{
-
-        List<AnexoSirFull> anexosSirFull = new ArrayList<AnexoSirFull>();
-
-        for (AnexoSir anexo : anexos) {
-
-            // Detached
-            if(StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
-                    !anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())){
-
-                AnexoSirFull anexoSirFull = new AnexoSirFull();
-                anexoSirFull.setDocumento(buscarAnexoSir(anexo.getIdentificadorDocumentoFirmado(), anexos));
-                anexoSirFull.setFirma(anexo);
-            }
-
-            // Attached
-            if(StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
-                    anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())){
-
-                AnexoSirFull anexoSirFull = new AnexoSirFull();
-                anexoSirFull.setDocumento(anexo);
-                anexoSirFull.setFirma(null);
-            }
-
-            // Documento sin Firma
-            if(StringUtils.isEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
-                    buscarAnexoSirConFirma(anexo.getIdentificadorFichero(), anexos) == null){
-                AnexoSirFull anexoSirFull = new AnexoSirFull();
-                anexoSirFull.setDocumento(anexo);
-                anexoSirFull.setFirma(null);
-            }
-        }
-
-        return anexosSirFull;
-    }
-
-    private AnexoSir buscarAnexoSir(String identificadorFichero, List<AnexoSir> anexos){
-
-        for (AnexoSir anexo : anexos) {
-           if(identificadorFichero.equals(anexo.getIdentificadorFichero())) return anexo;
-        }
-        return null;
-    }
-
-    private AnexoSir buscarAnexoSirConFirma(String identificadorFichero, List<AnexoSir> anexos){
-
-        for (AnexoSir anexo : anexos) {
-            if(identificadorFichero.equals(anexo.getIdentificadorDocumentoFirmado())) return anexo;
-        }
-        return null;
-    }
 
 
     /**
@@ -428,6 +377,84 @@ public class RegistroSirController extends BaseController {
         Entidad entidadActiva = getEntidadActiva(request);
         return tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId());
     }
+
+
+    /**
+     * compone los anexos sir recibidos en una lista de anexosSirFull
+     * @param anexos
+     * @return
+     * @throws Exception
+     */
+    private List<AnexoSirFull> componerAnexoSirFull(List<AnexoSir> anexos) throws Exception{
+
+        List<AnexoSirFull> anexosSirFull = new ArrayList<AnexoSirFull>();
+
+
+        for (AnexoSir anexo : anexos) {
+
+                AnexoSirFull anexoSirFull = new AnexoSirFull();
+                // Detached
+                if (StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
+                        !anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())) {
+                    AnexoSir documento = buscarAnexoSir(anexo.getIdentificadorDocumentoFirmado(), anexos);
+                    anexoSirFull.setDocumento(documento);
+                    anexoSirFull.setFirma(anexo);
+                    anexosSirFull.add(anexoSirFull);
+
+                }
+
+                // Attached
+                if (StringUtils.isNotEmpty(anexo.getIdentificadorFichero()) && StringUtils.isNotEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
+                        anexo.getIdentificadorFichero().equals(anexo.getIdentificadorDocumentoFirmado())) {
+                    anexoSirFull.setDocumento(anexo);
+                    anexoSirFull.setFirma(null);
+                    anexosSirFull.add(anexoSirFull);
+                    anexoSirFull.setTieneFirma(true);
+                }
+
+                // Documento sin Firma
+                if (StringUtils.isEmpty(anexo.getIdentificadorDocumentoFirmado()) &&
+                        buscarAnexoSirConFirma(anexo.getIdentificadorFichero(), anexos) == null) {
+                    anexoSirFull.setDocumento(anexo);
+                    anexoSirFull.setFirma(null);
+                    anexosSirFull.add(anexoSirFull);
+                    anexoSirFull.setTieneFirma(false);
+                }
+
+        }
+
+        return anexosSirFull;
+    }
+
+    /**
+     * Busca un anexo sir por su identificador de fichero
+     * @param identificadorFichero
+     * @param anexos
+     * @return
+     */
+    private AnexoSir buscarAnexoSir(String identificadorFichero, List<AnexoSir> anexos){
+
+        for (AnexoSir anexo : anexos) {
+            if(identificadorFichero.equals(anexo.getIdentificadorFichero())) return anexo;
+        }
+        return null;
+    }
+
+
+    /**
+     *  Busca un anexoSir con Firma.
+     * @param identificadorFichero
+     * @param anexos
+     * @return
+     */
+    private AnexoSir buscarAnexoSirConFirma(String identificadorFichero, List<AnexoSir> anexos){
+
+        for (AnexoSir anexo : anexos) {
+            if(identificadorFichero.equals(anexo.getIdentificadorDocumentoFirmado())) return anexo;
+        }
+        return null;
+    }
+
 
 }
 

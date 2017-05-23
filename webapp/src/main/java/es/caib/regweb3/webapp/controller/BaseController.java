@@ -592,7 +592,7 @@ public class BaseController {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
         model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+
     }
 
 
@@ -671,6 +671,22 @@ public class BaseController {
     }
 
 
+    /**
+     * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
+     * y tiene una extensión de documento dentro de las permitidas
+     *
+     * @param registroID  identificador del registro al que se quiere asociar el anexo
+     * @param tipoRegistro si es "entrada" o "salida
+     * @param docSize tamaño del documento a anexar
+     * @param firmaSize tamaño de la firma a anexar
+     * @param docExtension extensión del documento a anexar
+     * @param firmaExtension extensión de la firma a anexar
+     * @param request
+     * @param result
+     * @param scan true si viene de scan, false si no viene de scan
+     * @throws Exception
+     * @throws I18NException
+     */
     public void validarLimitacionesSIRAnexos(Long registroID, String tipoRegistro,  long docSize,
         long firmaSize, String docExtension, String firmaExtension,
         HttpServletRequest request, BindingResult result, boolean scan) throws Exception, I18NException{
@@ -682,6 +698,7 @@ public class BaseController {
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
         long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull);
 
+        // Comprobamos que el nuevo anexo no supere el tamaño máximo.
         Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
         if (docSize != 0) {
             tamanyoTotalAnexos += docSize;
@@ -694,7 +711,7 @@ public class BaseController {
                     throw new I18NException(I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
                 }
             }
-        } else {
+        } else {// Solo comprobamos el tamaño en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
             tamanyoTotalAnexos += firmaSize;
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
                 String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
@@ -708,23 +725,25 @@ public class BaseController {
         }
 
 
-        //Validamos las extensiones del documento y la firma
+        //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
         String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
-        if (!extensionesPermitidas.contains(docExtension)) {
-            if(!scan) {
-                result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
-            }else{
-                throw new I18NException( I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
+        if(!docExtension.isEmpty()) {
+            if (!extensionesPermitidas.contains(docExtension)) {
+                if (!scan) {
+                    result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
+                } else {
+                    throw new I18NException(I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
+                }
             }
-        }
+        }else {// Solo comprobamos la extensión en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
+            if (!extensionesPermitidas.contains(firmaExtension)) {
+                if (!scan) {
+                    result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
+                } else {
+                    throw new I18NException(I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
+                }
 
-        if (!extensionesPermitidas.contains(firmaExtension)) {
-            if(!scan) {
-                result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
-            }else{
-                throw new I18NException( I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
             }
-
         }
 
     }
