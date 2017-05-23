@@ -306,6 +306,13 @@
 
 <script type="text/javascript">
 
+    // Descarga el justificante si se ha generado manualmente
+    window.onload = function descargaJustificante(){
+        <c:if test="${justificante}">
+            goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>');
+        </c:if>
+    }
+
 
     // Muestra los datos del hitórico seleccionado y oculta el resto
     function comparaRegistros(idHistorico){

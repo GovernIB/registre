@@ -17,7 +17,6 @@ import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -31,9 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
@@ -500,43 +497,32 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      */
     @ResponseBody
     @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.GET)
-    public String justificante(@PathVariable Long idRegistro, @PathVariable String idioma,
-        HttpServletResponse response, HttpServletRequest request) 
-            throws I18NException, I18NValidationException {
+    public ModelAndView justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+            throws Exception {
 
         try {
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Cream l'annex justificant i el firmam
-            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida,
-                    RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+            // Creamos el anexo justificante y lo firmamos
+            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
 
-            // Descarrega el Justificant firmat
-            // Cabeceras Response
-            response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
-            response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
-            response.setHeader("Expires", "0");
-            response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-            response.setHeader("Pragma", "public");
-            response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
-            // Descarga el pdf
-            ServletOutputStream out = response.getOutputStream();
-            out.write(anexoFull.getSignatureCustody().getData());
-            out.flush();
-            out.close();
-            
+            // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
+            if(anexoFull.getSignatureCustody()!=null){
+                request.getSession().setAttribute("justificante", true);
+            }else {
+                request.getSession().setAttribute("justificante", false);
+            }
+
 
         } catch (I18NException e) {
-          throw e;
+            Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
         } catch (I18NValidationException ve) {
-          throw ve;
-        } catch (Exception e) {
-          throw new I18NException(e, "error.desconegut", 
-             new I18NArgumentString("Error desconegut generant justificant per registre de Sortida"));
+            Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
         }
 
-        return "redirect:/registroSalida/"+idRegistro+"/detalle";
+
+        return new ModelAndView("redirect:/registroSalida/"+idRegistro+"/detalle");
 
     }
 
