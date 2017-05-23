@@ -1348,11 +1348,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * Crea un Jusitificante, lo firma y lo crea como anexo al registro
      *
      * @param usuarioEntidad
-     * @param idRegistro
+     * @param registro
      * @param tipoRegistro
-     * @param custodyID
-     * @param baos
-     * @param csv
+     * @param idioma
      * @return
      * @throws Exception
      */

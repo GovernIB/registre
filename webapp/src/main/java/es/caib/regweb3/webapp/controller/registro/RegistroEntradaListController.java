@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -200,7 +199,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
-    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
+    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
         Entidad entidadActiva = getEntidadActiva(request);
@@ -257,7 +256,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Justificante
             if(tieneJustificante){
-                model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
+                Long idJustificante = anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId());
+                model.addAttribute("idJustificante", idJustificante);
+
+                // Descarga el Justificante creado anteriormente en /justificante
+                Object justificante = request.getSession().getAttribute("justificante");
+                model.addAttribute("justificante", justificante);
             }
 
             // Historicos
@@ -695,29 +699,22 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      */
     @ResponseBody
     @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.GET)
-    public String justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletResponse response, HttpServletRequest request) throws Exception {
+    public ModelAndView justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+            throws Exception {
 
         try {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Cream l'annex justificant i el firmam
-            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, 
-                registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+            // Creamos el anexo justificante y lo firmamos
+            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
 
-            // Descarrega el Justificant firmat
-            // Cabeceras Response
-            response.setHeader("Content-Disposition", "attachment; filename=" + anexoFull.getSignatureCustody().getName());
-            response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
-            response.setHeader("Expires", "0");
-            response.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-            response.setHeader("Pragma", "public");
-            response.setContentLength((int) anexoFull.getSignatureCustody().getLength());
-            // Descarga el pdf
-            ServletOutputStream out = response.getOutputStream();
-            out.write(anexoFull.getSignatureCustody().getData());
-            out.flush();
-            out.close();
+            // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
+            if(anexoFull.getSignatureCustody()!=null){
+                request.getSession().setAttribute("justificante", true);
+            }else {
+                request.getSession().setAttribute("justificante", false);
+            }
 
           
         } catch (I18NException e) {
@@ -726,7 +723,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
           Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
         }
 
-        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+        return new ModelAndView("redirect:/registroEntrada/"+idRegistro+"/detalle");
 
     }
 
