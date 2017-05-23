@@ -323,7 +323,6 @@
       <version>2.0.2</version>
     </dependency>
     
-    <!--
     <dependency>
       <groupId>org.fundaciobit.plugins</groupId>
       <artifactId>plugin-signatureserver-afirmaserver</artifactId>
@@ -366,7 +365,7 @@
         </exclusion>
       </exclusions> 
     </dependency>
-    -->
+
 
     <!-- ===================================================== -->
     <!-- ===== PLUGINS DE VALIDACIO/INFORMACIO DE FIRMES ===== -->

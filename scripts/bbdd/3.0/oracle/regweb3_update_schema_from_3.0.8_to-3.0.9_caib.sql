@@ -258,11 +258,40 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT R
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Distribución','Implementación base del plugin, marca como distribuido el registro de entrada','es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin',2,id FROM rwe_entidad;
 
 --Plugin Signature in Server
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Firma en servidor','Firma en servidor mediante el MiniApplet','org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin',4,'# Base del Plugin de signature server
-es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Firma en servidor','Firma en servidor emprant @Firma federat','org.fundaciobit.plugins.signatureserver.afirmaserver.AfirmaServerSignatureServerPlugin',4,'# Classe org.fundaciobit.plugins.signatureserver.afirmaserver.AfirmaServerSignatureServerPlugin
+
+# Obligatiori. Aplicació definida dins [Gestión de Aplicaciones] de @firma federat, on
+# en l´apartat ´Parametros de la aplicación´ en el camp [Política de TimeStamp] té
+# definit el valor [Sin TimeStamp]
+es.caib.regweb3.plugins.signatureserver.afirmaserver.applicationID=CAIB.REGWEB
+# Opcional. Aplicació definida dins "Gestión de Aplicaciones" de @firma federat, on
+# en l´apartat ´Parametros de la aplicación´ en el camp "Política de TimeStamp" té definit
+# el valor "Con TimeStamp". Si aquest valor no està definit llavors no es poden
+# fer firmes amb segell de temps (No suporta  PAdES-T).
+es.caib.regweb3.plugins.signatureserver.afirmaserver.applicationID_TimeStamp=
+
 # Si signaturesSet.getCommonInfoSignature().getUsername() es null, llavors
 # s´utilitza aquest valor com a sistema de selecció del certificat amb el que firmar
-es.caib.regweb3.plugins.signatureserver.miniappletinserver.defaultAliasCertificate=regweb3',id FROM rwe_entidad;
+es.caib.regweb3.plugins.signatureserver.afirmaserver.defaultAliasCertificate=dgdt-pre
+
+es.caib.regweb3.plugins.signatureserver.afirmaserver.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
+
+#Propiedades de comunicacion con el repositorio de servicios
+
+es.caib.regweb3.plugins.signatureserver.afirmaserver.endpoint=https://afirmapre.caib.es/afirmaws/services/DSSAfirmaSign
+
+# USERNAME-PASSWORD Token
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.username=REGWEB
+
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.password=REGWEB
+
+# CERTIFICATE Token
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
+#D:/dades/dades/CarpetesPersonals/Programacio/PortaFIB/plugins/plugins-certificate/afirma/proves-dgidt.jks
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.type=JKS
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.password=<<PASSWORD>>
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.cert.alias=1
+es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.cert.password=<<PASSWORD>>',id FROM rwe_entidad;
 
 --Plugin Custodia-Justificante-Archivo
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin',7,null,'');
@@ -273,7 +302,7 @@ es.caib.regweb3.plugins.scanweb.iecisa.forcejnlp=false
 es.caib.regweb3.plugins.scanweb.iecisa.forcesign=false
 es.caib.regweb3.plugins.scanweb.iecisa.closewindowwhenfinish=true',id FROM rwe_entidad;
 
--- Validate Signature Plugins (08/05/2017)
+-- Validate Signature Plugin (08/05/2017)
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin,entidad) VALUES(RWE_ALL_SEQ.nextval,1, 'Validar Firma - @Firma','Información y Validación de Firmas Mediante @firma','org.fundaciobit.plugins.validatesignature.afirmacxf.AfirmaCxfValidateSignaturePlugin',8,'# Obligatiori. Aplicació definida dins "Gestión de Aplicaciones" de @firma federat
 es.caib.regweb3.plugins.validatesignature.afirmacxf.applicationID=CAIB.REGWEB
 # Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates
