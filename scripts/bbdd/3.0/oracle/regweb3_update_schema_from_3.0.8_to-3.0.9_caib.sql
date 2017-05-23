@@ -278,20 +278,11 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin
 es.caib.regweb3.plugins.validatesignature.afirmacxf.applicationID=CAIB.REGWEB
 # Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates
 es.caib.regweb3.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=D:/dades/dades/transformersTemplates
-#http://afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
-#http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
-#http://localhost:9090/afirmaws/services/DSSAfirmaVerify
-es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint=http://des-afirma.redsara.es/afirmaws/services/DSSAfirmaVerify
+es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint= https://afirmapre.caib.es/afirmaws/services/DSSAfirmaVerify
 es.caib.regweb3.plugins.validatesignature.afirmacxf.printxml=false
 # USERNAME-PASSWORD Token
 es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.username=REGWEB
-es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.password=REGWEB
-# CERTIFICATE Token
-#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.path=D:/dades/dades/proves-dgidt.jks
-#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS
-#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.password=<<KEYSTORE_PASSWORD>>
-#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>
-#es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<CERTIFICATE_PASSWORD>>',null);
+es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.password=REGWEB',null);
 
 -- Nueva Tabla RWE_TRAZABILIDAD_SIR (11/05/2017)
 create table RWE_TRAZABILIDAD_SIR (
