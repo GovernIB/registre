@@ -823,5 +823,5 @@ a.text-gris:focus {
     color: #3CFF0B;
 }
 .sin-scroll{
-    overflow-x: hidden;
+    overflow-x: inherit;
 }
