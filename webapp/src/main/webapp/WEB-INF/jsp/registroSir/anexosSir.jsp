@@ -124,14 +124,14 @@
 
                                     <td class="center">
                                         <c:if test="${not empty anexo.firma}">
-                                        <a class="btn btn-info btn-default btn-sm"
-                                                          href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
-                                                          target="_blank"
-                                                          title="<spring:message code="anexo.descargar"/>"><span
-                                            class="fa fa-download"></span></a>
+                                            <a class="btn btn-info btn-default btn-sm"
+                                                              href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
+                                                              target="_blank"
+                                                              title="<spring:message code="anexo.tipofirma.detached"/>"><span
+                                                class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && anexo.tieneFirma}">
-                                            <span class="label label-success">Si</span>
+                                            <p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover">Si</p>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && !anexo.tieneFirma}">
                                             <span class="label label-danger">No</span>
