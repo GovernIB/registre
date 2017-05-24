@@ -27,8 +27,8 @@
                             <colgroup>
                                 <col>
                                 <col>
+                                <col>
                                 <c:if test="${registroSir.estado != 'ACEPTADO'}">
-                                    <col>
                                     <col>
                                     <col>
                                 </c:if>
@@ -39,9 +39,9 @@
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
-                                <th><spring:message code="anexo.tamano"/></th>
+                                <%--<th><spring:message code="anexo.tamano"/></th>--%>
+                                <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                 <c:if test="${registroSir.estado != 'ACEPTADO'}">
-                                    <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
@@ -63,14 +63,14 @@
                                         </c:if>
                                     </td>
                                     <td><spring:message code="tipoDocumento.${anexo.documento.tipoDocumento}"/></td>
-                                    <td>${anexo.documento.tamano} KB</td>
+                                    <%--<td>${anexo.documento.tamano} KB</td>--%>
 
                                         <%-- Gestionamos los campos NTI que no vienen informados por SICRES.
                                              Si el anexo es "FICHERO INTERNO" se deshabilitan los selects de los campos NTI
                                              Es el caso 4: DOCUMENTO CON FIRMA DETACHED y los documentos que son firmas
                                              se marcan como FICHERO INTERNO y los campos NTI solo se aplican al documento que no es la firma
                                         --%>
-                                    <c:if test="${registroSir.estado != 'ACEPTADO'}">
+
                                         <c:if test="${empty anexo.documento.validezDocumento}">
                                             <td>
                                                     <%--Si s'ha de posar valor per validez Documento--%>
@@ -88,34 +88,34 @@
 
                                         <c:if test="${not empty anexo.documento.validezDocumento}">
                                             <c:set var="validez" value="${anexo.documento.validezDocumento}" scope="request"/>
-                                            <td><spring:message
-                                                    code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
+                                            <td><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
-                                    </c:if>
-                                    <td>
-                                        <select id="camposNTIs[${status.index}].idOrigen"
-                                                name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
-                                                <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                            <option value="0"><spring:message
-                                                    code="anexo.origen.ciudadano"/></option>
-                                            <option value="1" selected="selected"><spring:message
-                                                    code="anexo.origen.administracion"/></option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <select id="camposNTIs[${status.index}].idTipoDocumental"
-                                                name="camposNTIs[${status.index}].idTipoDocumental"
-                                                class="chosen-select"
-                                                <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
-                                            <option value="">...</option>
-                                            <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
-                                                <option value="${tipoDocumental.codigoNTI}"><i:trad
-                                                        value="${tipoDocumental}" property="nombre"/></option>
-                                            </c:forEach>
-                                        </select>
+                                    <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                        <td>
+                                            <select id="camposNTIs[${status.index}].idOrigen"
+                                                    name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
+                                                    <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
+                                                <option value="0"><spring:message
+                                                        code="anexo.origen.ciudadano"/></option>
+                                                <option value="1" selected="selected"><spring:message
+                                                        code="anexo.origen.administracion"/></option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select id="camposNTIs[${status.index}].idTipoDocumental"
+                                                    name="camposNTIs[${status.index}].idTipoDocumental"
+                                                    class="chosen-select"
+                                                    <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
+                                                <option value="">...</option>
+                                                <c:forEach items="${tiposDocumentales}" var="tipoDocumental">
+                                                    <option value="${tipoDocumental.codigoNTI}"><i:trad
+                                                            value="${tipoDocumental}" property="nombre"/></option>
+                                                </c:forEach>
+                                            </select>
 
-                                    </td>
+                                        </td>
+                                    </c:if>
                                     <td class="center"><a class="btn btn-success btn-default btn-sm"
                                                           href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
                                                           target="_blank"
