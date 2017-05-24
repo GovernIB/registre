@@ -131,7 +131,7 @@
                                                 class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && anexo.tieneFirma}">
-                                            <p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover">Si</p>
+                                            <p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && !anexo.tieneFirma}">
                                             <span class="label label-danger">No</span>
