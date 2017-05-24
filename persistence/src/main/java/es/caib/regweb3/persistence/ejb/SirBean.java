@@ -83,7 +83,7 @@ public class SirBean implements SirLocal {
                         EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())){
 
                     // Eliminamos el RegistroSir para volverlo a crear
-                    registroSirEjb.remove(registroSir);
+                    registroSirEjb.eliminarRegistroSir(registroSir.getId());
 
                     // Creamos un nuevo RegistroSir
                     registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);

@@ -55,6 +55,13 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     public RegistroSir crearRegistroSir(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
+     * Eliminar un RegistroSir y sus trazabilidades
+     * @param idRegistroSir
+     * @throws Exception
+     */
+    public void eliminarRegistroSir(Long idRegistroSir) throws Exception;
+
+    /**
      * Comrueba si una Oficina tiene RegistroSir
      * @param codigoOficinaActiva código de la Oficina Activa
      * @return

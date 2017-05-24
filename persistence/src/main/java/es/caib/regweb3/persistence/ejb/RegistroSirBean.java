@@ -224,6 +224,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
+    public void eliminarRegistroSir(Long idRegistroSir) throws Exception{
+
+        List<TrazabilidadSir> trazabilidades = trazabilidadSirEjb.getByRegistroSir(idRegistroSir);
+
+        // Eliminamos sus trazabilidades
+        for (TrazabilidadSir trazabilidadSir :trazabilidades) {
+            trazabilidadSirEjb.remove(trazabilidadSir);
+        }
+
+        remove(findById(idRegistroSir));
+
+    }
+
+    @Override
     public Boolean tieneRegistroSir(String codigoOficinaActiva) throws Exception {
 
         Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " +
