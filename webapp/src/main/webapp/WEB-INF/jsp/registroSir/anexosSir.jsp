@@ -14,7 +14,7 @@
 
         <div class="panel-body">
             <div class="col-xs-12">
-                <div id="anexosdiv" class="table-responsive">
+                <div id="anexosdiv" class="table-responsive sin-scroll">
 
                     <c:if test="${empty anexosSirFull}">
                         <div class="alert alert-grey alert-dismissable">
@@ -28,7 +28,7 @@
                                 <col>
                                 <col>
                                 <col>
-                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                <c:if test="${registroSir.estado != 'RECIBIDO'}">
                                     <col>
                                     <col>
                                 </c:if>
@@ -41,7 +41,7 @@
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
                                 <th><spring:message code="anexo.sir.validezDocumento"/></th>
-                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                <c:if test="${registroSir.estado != 'RECIBIDO'}">
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
@@ -91,7 +91,7 @@
                                             <td><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
-                                    <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                    <c:if test="${registroSir.estado != 'RECIBIDO'}">
                                         <td>
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
@@ -131,7 +131,7 @@
                                                 class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && anexo.tieneFirma}">
-                                            <p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover">Si</p>
+                                            <p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && !anexo.tieneFirma}">
                                             <span class="label label-danger">No</span>

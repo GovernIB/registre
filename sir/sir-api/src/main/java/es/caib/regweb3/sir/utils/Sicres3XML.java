@@ -470,24 +470,25 @@ public class Sicres3XML {
 
         // Validar el tamaño
         Assert.isTrue(StringUtils.length(anexo.getIdentificador_Fichero()) <= LONGITUD_MAX_IDENTIFICADOR_FICHERO,
-                "El campo 'IdentificadorFichero' no es válido");
+                "El campo 'IdentificadorFichero': "+anexo.getIdentificador_Fichero()+" es demasiado largo");
 
         // Validar formato: <Identificador del Intercambio><Código de tipo de archivo><Número Secuencial>.<Extensión del fichero>
         String identificadorFichero = anexo.getIdentificador_Fichero();
         Assert.isTrue(StringUtils.startsWith(identificadorFichero, identificadorIntercambio),
-                "El campo 'IdentificadorFichero' no concuerda con 'IdentificadorIntercambio'");
+                "El campo 'IdentificadorFichero': "+anexo.getIdentificador_Fichero()+", no concuerda con 'IdentificadorIntercambio'");
 
         identificadorFichero = StringUtils.substringAfter(identificadorFichero, identificadorIntercambio + "_");
         String[] tokens = StringUtils.split(identificadorFichero, "_.");
-        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorFichero' no es válido");
+        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido");
 
-        Assert.isTrue(StringUtils.equals(tokens[0], "01"),
-                "El campo 'IdentificadorFichero' no es válido, hay un error en el tipo de archivo"); // Código de tipo de archivo de 2 dígitos
-        Assert.isTrue(StringUtils.length(tokens[1]) <= 4,
-                "El campo 'IdentificadorFichero' no es válido, hay un error en número secuencial de 4 digitos"); // Número secuencial de hasta 4 dígitos
-        Assert.isTrue(StringUtils.isNumeric(tokens[1]),
-                "El campo 'IdentificadorFichero' no es válido, hay un error en el número secuencial numérico"); // Número secuencial compuesto por solo dígitos
-        Assert.hasText(tokens[2], "El campo 'IdentificadorFichero' no es válido, hay un error en la Extensión del fichero"); // Extensión del fichero
+        // Código de tipo de archivo de 2 dígitos
+        Assert.isTrue(StringUtils.equals(tokens[0], "01"), "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en el tipo de archivo");
+        // Número secuencial de hasta 4 dígitos
+        Assert.isTrue(StringUtils.length(tokens[1]) <= 4, "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en número secuencial de 4 digitos");
+        // Número secuencial compuesto por solo dígitos
+        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en el número secuencial numérico");
+        // Extensión del fichero
+        Assert.hasText(tokens[2], "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en la Extensión del fichero");
 
         // Validar el tipo MIME
         if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
@@ -496,7 +497,7 @@ public class Sicres3XML {
             if (!anexo.getTipo_Documento().equals(TipoDocumento.FICHERO_TECNICO_INTERNO.getValue())) {
                 Assert.isTrue(StringUtils.equalsIgnoreCase(
                         anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
-                        "El campo 'TipoMIME' no coincide con el indicado en 'IdentificadorFichero'");
+                        "El Tipo mime: "+anexo.getTipo_MIME()+", no coincide con el indicado en el campo 'IdentificadorFichero': " + identificadorFichero);
 
                 //TODO revisar si lo activamos en producción o no
                 //String mimePermitidos = PropiedadGlobalUtil.getMIMEPermitidos();
