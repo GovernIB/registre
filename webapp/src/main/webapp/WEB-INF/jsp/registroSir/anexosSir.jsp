@@ -14,7 +14,7 @@
 
         <div class="panel-body">
             <div class="col-xs-12">
-                <div id="anexosdiv" class="table-responsive">
+                <div id="anexosdiv" class="table-responsive sin-scroll">
 
                     <c:if test="${empty anexosSirFull}">
                         <div class="alert alert-grey alert-dismissable">
