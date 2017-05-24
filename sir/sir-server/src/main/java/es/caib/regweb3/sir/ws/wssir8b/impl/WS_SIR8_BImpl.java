@@ -93,7 +93,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             log.error("CAIB Login ERROR" + le.getMessage());
         }
 
-        log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR9Impl --------------------");
+        log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
         log.info("Fichero de intercambio: " + registro);
         log.info("------------------------------------------------------------------------------------------");
 
@@ -108,10 +108,10 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             respuestaWS = crearRespuestaWS(Errores.OK);
 
         } catch (ServiceException e) {
-            log.info("Error en el envío del fichero de intercambio a la aplicación", e);
+            log.info("Error en el envio del fichero de intercambio a la aplicacion", e);
             respuestaWS = crearRespuestaWS(e.getError());
         }catch (Throwable e) {
-            log.info("Error en el envío del fichero de intercambio a la aplicación", e);
+            log.info("Error en el envio del fichero de intercambio a la aplicacion", e);
             respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
         }
 
