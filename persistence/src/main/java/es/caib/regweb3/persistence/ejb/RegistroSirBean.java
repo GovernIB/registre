@@ -1112,7 +1112,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         anexoSir.setHash(Base64.encodeBase64String(hash));
         if(tipoMime != null){
-            anexoSir.setTipoMIME(tipoMime);
+            if(tipoMime.equals("text/xml")){ //SICRES3 obliga a que el mime de un xml sea application/xml
+                anexoSir.setTipoMIME("application/xml");
+            }else{
+                anexoSir.setTipoMIME(tipoMime);
+            }
         }
         if(anexoData != null){
             anexoSir.setAnexoData(anexoData);
