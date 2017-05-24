@@ -71,7 +71,7 @@ public class Anexo implements Serializable {
 
     //SIR
     private Boolean firmaValida; // Indicará si la firma es vàlida o no
-    private boolean justificante; // Indica si el anexo es justificante.
+    private boolean justificante = false; // Indica si el anexo es justificante.
 
 
     //SCAN
@@ -89,18 +89,7 @@ public class Anexo implements Serializable {
     
 
     /**
-     * @param id
-     * @param titulo
-     * @param tipoDocumental
-     * @param validezDocumento
-     * @param tipoDocumento
-     * @param registroDetalle
-     * @param observaciones
-     * @param origenCiudadanoAdmin
-     * @param fechaCaptura
-     * @param modoFirma
-     * @param custodiaID
-     * @param csv
+     *
      */
     public Anexo(Anexo a) {
       super();
