@@ -75,10 +75,10 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
             respuestaWS = crearRespuestaWS(Errores.OK);
 
         } catch (ServiceException e) {
-            log.info("Error en el envío del mensaje de datos de control a la aplicación", e);
+            log.info("Error en la recepcion del mensaje de datos de control", e);
             respuestaWS = crearRespuestaWS(e.getError());
         } catch (Throwable e) {
-            log.info("Error en el envío del mensaje de datos de control a la aplicación", e);
+            log.info("Error en la recepcion del mensaje de datos de control", e);
             respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
         }
 
