@@ -15,7 +15,7 @@
         <span class="label label-default"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
-        <span class="label label-primary"><spring:message code="registro.estado.${param.estado}" /></span>
+        <span class="label label-success"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
         <span class="label label-primary"><spring:message code="registro.estado.${param.estado}" /></span>
