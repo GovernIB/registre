@@ -93,7 +93,7 @@
                                                         class="fa fa-download"></span></a></td>
                                                 <td class="center"><a class="btn btn-info btn-default btn-sm"
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
-                                                       target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                       target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span
                                                         class="fa fa-download"></span></a></td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
@@ -109,7 +109,7 @@
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                         class="fa fa-download"></span></a></td>
-                                                <td class="center"><span class="label label-success">Si</span></td>
+                                                <td class="center"><p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover">Si</p></td>
                                             </c:if>
                                         </tr>
                                     </c:if>
