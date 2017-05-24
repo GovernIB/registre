@@ -11,11 +11,11 @@ INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT 
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.formatospermitidos','.jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt, .xml, .xsig',7,'Formatos permitidos para los anexos',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.mimespermitidos','image/jpeg,image/pjpeg,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.spreadsheet,application/vnd.oasis.opendocument.graphics,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/mspowerpoint,application/powerpoint,application/vndms-powerpoint,application/x-mspowerpoint,application/pdf,image/png,text/rtf,application/rtf,application/x-rtf,text/richtext,image/svg+xml,image/tiff,image/x-tiff,text/plain,application/xml',7,'Tipos Mime permitidos para los anexos',id FROM rwe_entidad;
 INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) VALUES( RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.cronExpression.inicializarContadores','0 0 0 1 1 ? *',1,'Expresión del cron para la inicializacion de contadores',null);
-INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT nextval('RWE_ALL_SEQ'), 'es.caib.regweb3.scanweb.absoluteurl',null,5,'URL Base absoluta para atacar los plugins de ScanWeb',id FROM rwe_entidad;
+INSERT INTO rwe_propiedadglobal(id,clave,valor,tipo,descripcion,entidad) SELECT RWE_ALL_SEQ.nextVal, 'es.caib.regweb3.scanweb.absoluteurl',null,5,'URL Base absoluta para atacar los plugins de ScanWeb',id FROM rwe_entidad;
 
 --Nuevos campos RWE_ANEXO
 alter table RWE_ANEXO add (FIRMAVALIDA NUMBER(1,0) DEFAULT 0);
-alter table RWE_ANEXO add (JUSTIFICANTE NUMBER(1,0) NOT NULL DEFAULT 0);
+alter table RWE_ANEXO add (JUSTIFICANTE NUMBER(1,0) DEFAULT 0 NOT NULL);
 ALTER TABLE RWE_ANEXO add SIGNTYPE varchar2(128 char);
 ALTER TABLE RWE_ANEXO add SIGNFORMAT varchar2(128 char);
 ALTER TABLE RWE_ANEXO add SIGNPROFILE varchar2(128 char);
@@ -32,16 +32,16 @@ ALTER TABLE RWE_OFICIO_REMISION add FECHA_DESTINO timestamp;
 ALTER TABLE RWE_OFICIO_REMISION add COD_ERROR varchar2(255 char);
 ALTER TABLE RWE_OFICIO_REMISION add DESC_ERROR varchar2(2000 char);
 ALTER TABLE RWE_OFICIO_REMISION add REINTENTOS number(10,0) DEFAULT 0;
-update RWE_OFICIO_REMISION set ESTADO=13 where ESTADO=5; -- Actualización código de estado de oficio remision
+update RWE_OFICIO_REMISION set ESTADO=13 where ESTADO=5;
 
 --Nuevos campos en la tabla RWE_TRAZABILIDAD
 ALTER TABLE RWE_TRAZABILIDAD add (TIPO number(10,0) DEFAULT 1 not null);
 
-ALTER TABLE RWE_TRAZABILIDAD add REGISTRO_SALIDA_RECT number(19,0);--04/05/2017
+ALTER TABLE RWE_TRAZABILIDAD add REGISTRO_SALIDA_RECT number(19,0);
 ALTER TABLE RWE_TRAZABILIDAD
         add constraint RWE_TRAZAB_RGSRCT_FK
         foreign key (REGISTRO_SALIDA_RECT)
-        references RWE_REGISTRO_SALIDA;--04/05/2017
+        references RWE_REGISTRO_SALIDA;
 
 -- Campo REGISTRO_SALIDA nulleable en la tabla RWE_TRAZABILIDAD
 ALTER TABLE RWE_TRAZABILIDAD MODIFY REGISTRO_SALIDA NULL;
@@ -54,7 +54,7 @@ ALTER TABLE RWE_REGISTRO_DETALLE add DEC_T_ANOTACION varchar2(80 char);
 ALTER TABLE RWE_REGISTRO_DETALLE add COD_ENT_REG_DEST varchar2(21 char);
 ALTER TABLE RWE_REGISTRO_DETALLE add DEC_ENT_REG_DEST varchar2(80 char);
 ALTER TABLE RWE_REGISTRO_DETALLE add ID_INTERCAMBIO varchar2(33 char);
-update RWE_REGISTRO_DETALLE set APLICACION='RWE3'; --Actualizar el nombre de la aplicación para adaptarlo a SICRES3
+update RWE_REGISTRO_DETALLE set APLICACION='RWE3';
 
 --Eliminamos las tabla RWE_ASIENTO_REGISTRAL_SIR, RWE_INTERESADO_SIR y RWE_ANEXO_SIR
 DROP TABLE RWE_ASIENTO_REGISTRAL_SIR CASCADE CONSTRAINTS;
@@ -110,8 +110,8 @@ ALTER TABLE RWE_REGISTRO_SIR
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 
-grant select,insert,delete,update on RWE_REGISTRO_SIR to www_regweb3;
-alter table RWE_REGISTRO_SIR move lob (TIMESTAMP) store as RWE_REGISTRO_SIR_TIMESTAMP_lob (tablespace regweb3_lob index RWE_REGISTRO_SIR_TIMESTAMP_lob_i);
+grant select,insert,delete,update on RWE_REGISTRO_SIR to www_regweb;
+alter table RWE_REGISTRO_SIR move lob (TIMESTAMP) store as RWE_REG_SIR_TMST_lob (tablespace regweb_lob index RWE_REG_SIR_TMST_lob_i);
 
 ALTER TABLE RWE_TRAZABILIDAD add REGISTRO_SIR number(19,0);
 
@@ -151,12 +151,12 @@ ALTER TABLE RWE_ANEXO_SIR
     foreign key (REGISTRO_SIR)
     references RWE_REGISTRO_SIR;
 
-grant select,insert,delete,update on RWE_ANEXO_SIR to www_regweb3;
-alter table RWE_ANEXO_SIR move lob (CERTIFICADO) store as RWE_ANEXO_SIR_CERTIFICADO_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_CERTIFICADO_lob_i);
-alter table RWE_ANEXO_SIR move lob (FIRMA) store as RWE_ANEXO_SIR_FIRMA_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_FIRMA_lob_i);
-alter table RWE_ANEXO_SIR move lob (HASH) store as RWE_ANEXO_SIR_HASH_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_HASH_lob_i);
-alter table RWE_ANEXO_SIR move lob (TIMESTAMP) store as RWE_ANEXO_SIR_TIMESTAMP_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_TIMESTAMP_lob_i);
-alter table RWE_ANEXO_SIR move lob (VAL_OCSP_CE) store as RWE_ANEXO_SIR_VAL_OCSP_CE_lob (tablespace regweb3_lob index RWE_ANEXO_SIR_VAL_OCSP_CE_lob_i);
+grant select,insert,delete,update on RWE_ANEXO_SIR to www_regweb;
+alter table RWE_ANEXO_SIR move lob (CERTIFICADO) store as RWE_ANX_SIR_CERT_lob (tablespace regweb_lob index RWE_ANX_SIR_CERT_lob_i);
+alter table RWE_ANEXO_SIR move lob (FIRMA) store as RWE_ANEXO_SIR_FIRMA_lob (tablespace regweb_lob index RWE_ANEXO_SIR_FIRMA_lob_i);
+alter table RWE_ANEXO_SIR move lob (HASH) store as RWE_ANEXO_SIR_HASH_lob (tablespace regweb_lob index RWE_ANEXO_SIR_HASH_lob_i);
+alter table RWE_ANEXO_SIR move lob (TIMESTAMP) store as RWE_ANX_SIR_TMST_lob (tablespace regweb_lob index RWE_ANX_SIR_TMST_lob_i);
+alter table RWE_ANEXO_SIR move lob (VAL_OCSP_CE) store as RWE_ANX_SIR_VALOCSP_lob (tablespace regweb_lob index RWE_ANX_SIR_VALOCSP_lob_i);
 
 --Creamos la Tabla RWE_INTERESADO_SIR
 create table RWE_INTERESADO_SIR (
@@ -202,7 +202,7 @@ ALTER TABLE RWE_INTERESADO_SIR
         foreign key (REGISTRO_SIR)
         references RWE_REGISTRO_SIR;
 
-grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb3;
+grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb;
 
 --Creamos la Tabla RWE_PLUGIN 04/05/2017
 create table RWE_PLUGIN (
@@ -218,7 +218,7 @@ create table RWE_PLUGIN (
     );
 create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
 alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
-grant select,insert,delete,update on RWE_PLUGIN to www_regweb3;
+grant select,insert,delete,update on RWE_PLUGIN to www_regweb;
 
 --Plugin UserInformation
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
@@ -344,4 +344,4 @@ alter table RWE_TRAZABILIDAD_SIR
     add constraint RWE_TRASIR_REGSIR_FK
     foreign key (REGISTRO_SIR)
     references RWE_REGISTRO_SIR;
-grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb3;
+grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb;
