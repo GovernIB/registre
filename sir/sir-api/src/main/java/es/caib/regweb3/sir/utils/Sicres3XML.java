@@ -417,8 +417,8 @@ public class Sicres3XML {
             // Validar el nombre del fichero anexado
             Assert.hasText(anexo.getNombre_Fichero_Anexado(),
                     "El campo 'NombreFicheroAnexado' no puede estar vacio");
-            /*Assert.isTrue(!StringUtils.containsAny(anexo.getNombre_Fichero_Anexado(), "\\/?*:|<>\";&"),
-                    "El campo 'NombreFicheroAnexado' tiene caracteres no válidos [" + anexo.getNombre_Fichero_Anexado() + "]");*/
+            Assert.isTrue(!StringUtils.containsAny(anexo.getNombre_Fichero_Anexado(), "\\/?*:|<>\";&"),
+                    "El campo 'NombreFicheroAnexado' tiene caracteres no validos [" + anexo.getNombre_Fichero_Anexado() + "]");
 
             // Validar el identificador de fichero
             validarIdentificadorFichero(anexo, identificadorIntercambio);
