@@ -114,7 +114,9 @@
                             </div>
                         </c:if>
 
-                        <%--Botón Oficio Remision--%>
+                    <%--Botón Oficio Remision--%>
+                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+
                         <c:if test="${oficio.oficioRemision}">
                             <div class="panel-footer center">
 
@@ -143,6 +145,7 @@
 
                             </div>
                         </c:if>
+                    </c:if>
 
                     </c:if>
 
