@@ -28,7 +28,7 @@
                                 <col>
                                 <col>
                                 <col>
-                                <c:if test="${registroSir.estado != 'RECIBIDO'}">
+                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                     <col>
                                     <col>
                                 </c:if>
@@ -41,7 +41,7 @@
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
                                 <th><spring:message code="anexo.sir.validezDocumento"/></th>
-                                <c:if test="${registroSir.estado != 'RECIBIDO'}">
+                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
@@ -91,7 +91,7 @@
                                             <td><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
-                                    <c:if test="${registroSir.estado != 'RECIBIDO'}">
+                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                         <td>
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
