@@ -124,11 +124,13 @@
                                                 </c:if>
                                             </td>
                                             <td>
-                                                <c:if test="${propiedadGlobal.valor != propiedadGlobal.valorCorto}">
-                                                    <p rel="valorPropiedad" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p>
-                                                </c:if>
-                                                <c:if test="${propiedadGlobal.valor == propiedadGlobal.valorCorto}">
-                                                    ${propiedadGlobal.valor}
+                                                <c:if test="${not empty propiedadGlobal.valor}">
+                                                    <c:if test="${propiedadGlobal.valor != propiedadGlobal.valorCorto}">
+                                                        <p rel="valorPropiedad" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p>
+                                                    </c:if>
+                                                    <c:if test="${propiedadGlobal.valor == propiedadGlobal.valorCorto}">
+                                                        ${propiedadGlobal.valor}
+                                                    </c:if>
                                                 </c:if>
                                             </td>
                                             <td class="center">
