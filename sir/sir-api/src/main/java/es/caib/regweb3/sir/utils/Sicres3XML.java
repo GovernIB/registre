@@ -102,16 +102,17 @@ public class Sicres3XML {
      */
     public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService) {
 
+        log.info("Validando FicheroIntercambio...");
+
+        Assert.notNull(fichero, "El resultado de parsear el xml del 'ficheroIntercambio' no puede ser null");
+
+        // Obtenemos los Service para Dir3
         try {
             this.oficinasService = oficinasService;
             this.unidadesService = unidadesService;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        log.info("Validando FicheroIntercambio...");
-
-        Assert.notNull(fichero, "La variable 'ficheroIntercambio' no puede ser null");
 
 		// Validamos los distintos segmentos del fichero de intercambio
 
