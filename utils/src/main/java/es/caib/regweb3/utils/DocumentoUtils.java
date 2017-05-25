@@ -17,7 +17,7 @@ public class DocumentoUtils {
 
     private static final String LETRAS_NIF = "TRWAGMYFPDXBNJZSQVHLCKE";
 
-    private static final String TIPO_ORGANIZACION_CIF = "ABCDEFGHJKLMNPQRSUVW";
+    //private static final String TIPO_ORGANIZACION_CIF = "ABCDEFGHJKLMNPQRSUVW";
     private static final String CODIGO_CONTROL_CIF = "ABCDEFGHIJ";
     private static final String TIPO_ORGANIZACION_LETRA_CIF = "PQSWK";
     private static final String TIPO_ORGANIZACION_NUMERO_CIF = "ABEH";
