@@ -408,7 +408,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<RegistroSir> registros = em.createQuery("Select distinct(a) from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        List<RegistroSir> registros = em.createQuery("Select a from RegistroSir as a where a.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
         for (RegistroSir registroSir : registros) {
             List<AnexoSir> anexos = registroSir.getAnexos();
