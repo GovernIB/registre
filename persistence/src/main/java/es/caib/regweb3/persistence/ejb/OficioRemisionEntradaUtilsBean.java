@@ -141,6 +141,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             organismosWhere = "and re.destino.id not in (:organismos)";
         }
 
+        // Total oficios internos
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
@@ -157,6 +158,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         total = (Long) q.getSingleResult();
 
+        // Total oficios externos
         Query q1;
         q1 = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
@@ -295,21 +297,21 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         if(isOficioRemisionExterno(idRegistro)){ // Externo
 
             oficio.setOficioRemision(true);
-            oficio.setInterno(false);
+            //oficio.setInterno(false);
 
             List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
 
             if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
                 oficio.setSir(true);
-                oficio.setExterno(false);
+                //oficio.setExterno(false);
             }else{
                 oficio.setSir(false);
-                oficio.setExterno(true);
+                //oficio.setExterno(true);
             }
 
         }else{
             oficio.setExterno(false);
-            oficio.setSir(false);
+            //oficio.setSir(false);
 
             Boolean interno = isOficioRemisionInterno(idRegistro, organismos);
 

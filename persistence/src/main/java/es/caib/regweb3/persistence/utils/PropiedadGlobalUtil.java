@@ -208,39 +208,6 @@ public class PropiedadGlobalUtil {
 
 
     /**
-     * Retorna la clase del plugin de distribución de la entidad
-     * @return
-     */
-
-    public static String getPluginDistribucion(Long idEntidad, String basePlugin) {
-
-        String valor = getStringByEntidad(idEntidad, basePlugin);
-
-        if(valor == null){
-            return RegwebConstantes.PLUGIN_DISTRIBUCION_CLASS_MOCK;
-        }
-
-        return valor;
-    }
-
-
-    /**
-     * Retorna la clase del plugin de distribución de la entidad
-     * @return
-     */
-    public static String getPluginPostProceso(Long idEntidad) {
-        final String partialPropertyName = "postproceso.plugin";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
-
-        // Valor global si no existeix el de per entitat
-        if (valor == null) {
-            valor = getString(partialPropertyName);
-        }
-        return valor;
-    }
-
-
-    /**
      * Retorna el valor de la propiedad MaxUploadSizeInBytes.
      * Tamaño máximo de subida de ficheros en bytes. No definido significa sin límites.
      *
@@ -269,28 +236,6 @@ public class PropiedadGlobalUtil {
      */
     public static String getArchivosPath(Long idEntidad) {
         final String partialPropertyName = "archivos.path";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
-
-        return valor != null ? valor : null;
-    }
-
-    /**
-     * Retorna el valor de la propiedad UserInformationPlugin de la entidad indicada.
-     * @return
-     */
-    public static String getUserInformationPlugin(Long idEntidad) {
-        final String partialPropertyName = "userinformationplugin";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
-
-        return valor != null ? valor : null;
-    }
-
-    /**
-     * Retorna el valor de la propiedad DocumentCustodyPlugin de la entidad indicada.
-     * @return
-     */
-    public static String getDocumentCustodyPlugin(Long idEntidad) {
-        final String partialPropertyName = "annex.documentcustodyplugin";
         String valor = getStringByEntidad(idEntidad, partialPropertyName);
 
         return valor != null ? valor : null;
@@ -340,29 +285,13 @@ public class PropiedadGlobalUtil {
         return valor != null ? valor : null;
     }
 
-
     /**
-     * Retorna el valor de la propiedad JustificantePlugin de la entidad indicada.
+     * Retorna el valor de la propiedad Fecha Oficio Salida de la entidad indicada.
      * @return
      */
-    public static String getJustificantePlugin(Long idEntidad, String basePlugin) {
-
-        String valor = getStringByEntidad(idEntidad, basePlugin);
-
-        if(valor == null){
-            return RegwebConstantes.PLUGIN_JUSTIFICANTE_CLASS_MOCK;
-        }
-
-        return valor;
-    }
-
-    /**
-     //     * Retorna el valor de la propiedad Mensaje Estampacion Justificante de la entidad indicada.
-     //     * @return
-     //     */
-    public static String getMensajeEstampacionJustificante(Long idEntidad) {
-        final String partialPropertyName = "justificante.mensaje.estampacion";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
+    public static String getFechaOficiosSalida() {
+        final String partialPropertyName = "oficioSalida.fecha";
+        String valor = getString(partialPropertyName);
 
         return valor != null ? valor : null;
     }

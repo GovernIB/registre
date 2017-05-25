@@ -608,10 +608,6 @@ public interface RegwebConstantes {
     String CRON_INICIALIZAR_CONTADORES = "0 0 0 1 1 ? *";
     String CRON_ENVIOS_SIR_PENDIENTES = "0 0/2 * 1/1 * ? *"; //0 0 0/2 1/1 * ? *
 
-    /* -------------- PLUGINS POR DEFECTO --------------*/
-    String PLUGIN_DISTRIBUCION_CLASS_MOCK="es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin";
-    String PLUGIN_JUSTIFICANTE_CLASS_MOCK="es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin";
-
     /* -------------- TIPO PLUGIN --------------*/
     Long PLUGIN_CUSTODIA = 0L;
     Long PLUGIN_JUSTIFICANTE = 1L;

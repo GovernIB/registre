@@ -26,6 +26,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,10 +76,17 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @Override
     public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception {
 
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " rs.fecha >= :fecha and ";
+        }
+
         Query q;
         q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
+                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " + queryFecha +
+                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
@@ -86,6 +94,10 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("libros", libros);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("organismos", organismos);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q.setParameter("fecha", sdf.parse(fecha));
+        }
 
 
         return (Long) q.getSingleResult();
@@ -96,11 +108,18 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception {
 
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " rs.fecha >= :fecha and ";
+        }
+
         // Obtenemos los Registros de Salida que son Oficio de remisión
         Query q1;
         q1 = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
+                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " + queryFecha +
+                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
         // Parámetros
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
@@ -108,6 +127,10 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q1.setParameter("libros", libros);
         q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q1.setParameter("organismos", organismos);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q1.setParameter("fecha", sdf.parse(fecha));
+        }
 
         List<Object> registros = q1.getResultList();
 
@@ -202,12 +225,19 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             anyWhere = "year(rs.fecha) = :any and ";
         }
 
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " rs.fecha >= :fecha and ";
+        }
+
         Query q;
         Query q2;
 
         StringBuilder query = new StringBuilder("Select rs from RegistroSalida as rs where " + anyWhere +
-                "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and " +
-                "rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) ");
+                "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and " + queryFecha +
+                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) ");
 
         q2 = em.createQuery(query.toString().replaceAll("Select rs", "Select count(rs.id)"));
         query.append(" order by rs.fecha desc ");
@@ -224,12 +254,20 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q.setParameter("codigoOrganismo", codigoOrganismo);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q.setParameter("fecha", sdf.parse(fecha));
+        }
 
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q2.setParameter("fecha", sdf.parse(fecha));
+        }
 
         Paginacion paginacion = null;
 
@@ -411,28 +449,33 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         Oficio oficio = new Oficio();
 
-        if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
-            oficio.setOficioRemision(true);
-            oficio.setInterno(false);
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
 
-            List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismos);
+        if(StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))){
 
-            if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
-                oficio.setSir(true);
-                oficio.setExterno(false);
+            if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
+                oficio.setOficioRemision(true);
+                //oficio.setInterno(false);
+
+                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismos);
+
+                if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
+                    oficio.setSir(true);
+                    //oficio.setExterno(false);
+                }else{
+                    oficio.setSir(false);
+                    //oficio.setExterno(true);
+                }
+
             }else{
-                oficio.setSir(false);
-                oficio.setExterno(true);
+                oficio.setExterno(false);
+                //oficio.setSir(false);
+
+                Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
+
+                oficio.setOficioRemision(interno);
+                oficio.setInterno(interno);
             }
-
-        }else{
-            oficio.setExterno(false);
-            oficio.setSir(false);
-
-            Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
-
-            oficio.setOficioRemision(interno);
-            oficio.setInterno(interno);
         }
 
         return oficio;
