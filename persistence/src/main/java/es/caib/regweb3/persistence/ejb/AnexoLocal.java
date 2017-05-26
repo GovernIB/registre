@@ -54,7 +54,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
   
   
   public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-      Long registroID, String tipoRegistro, boolean isJustificante) throws I18NException, I18NValidationException;
+      Long registroID, String tipoRegistro, boolean isJustificante,boolean noWeb) throws I18NException, I18NValidationException;
     
 
 

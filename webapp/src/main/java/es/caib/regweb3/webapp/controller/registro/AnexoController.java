@@ -211,8 +211,9 @@ public class AnexoController extends BaseController {
 
             try {
 
+
                 anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
-                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante());
+                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(),false);
 
                 model.addAttribute("closeAndReload", "true");
                 return "registro/formularioAnexo";
@@ -226,7 +227,8 @@ public class AnexoController extends BaseController {
             }
 
         }
-
+        loadCommonAttributes(request, model);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         return "registro/formularioAnexo";
 
 

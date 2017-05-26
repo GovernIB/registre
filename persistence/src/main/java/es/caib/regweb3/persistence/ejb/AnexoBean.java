@@ -317,10 +317,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     @Override
     public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-            Long registroID, String tipoRegistro, boolean isJustificante) 
+            Long registroID, String tipoRegistro, boolean isJustificante,boolean noWeb)
                 throws I18NException, I18NValidationException {
 
         try {
+
 
             Anexo anexo = anexoFull.getAnexo();
 
@@ -330,12 +331,30 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             anexo.setFechaCaptura(new Date());
 
+
+            IDocumentCustodyPlugin custody = getInstance();
+
+            //Obtenemos el registro con sus anexos, interesados y tipo Asunto
+            IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
+
+            //Actualizamos custodia solo cuando no venimos via web
+            if(noWeb) {
+                final Map<String, Object> custodyParameters;
+                custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
+
+                final String custodyID = anexo.getCustodiaID();
+                //Guardamos los cambios en custodia
+                updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
+                        registro, isNew);
+            }
+
             //Actualizamos los datos de anexo
             anexo = this.merge(anexo);
             anexoFull.setAnexo(anexo);
 
             // Crea historico y lo enlaza con el RegistroDetalle
             crearHistorico(anexoFull, usuarioEntidad, registroID, tipoRegistro, isNew);
+
 
 
             return anexoFull;

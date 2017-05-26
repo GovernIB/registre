@@ -37,8 +37,8 @@
                             <colgroup>
                                 <col>
                                 <col>
-                                <col>
                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                    <col>
                                     <col>
                                     <col>
                                 </c:if>
@@ -50,8 +50,8 @@
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.sir.tipoDocumento"/></th>
                                 <%--<th><spring:message code="anexo.tamano"/></th>--%>
-                                <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                 <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                    <th><spring:message code="anexo.sir.validezDocumento"/></th>
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
@@ -81,13 +81,14 @@
                                              se marcan como FICHERO INTERNO y los campos NTI solo se aplican al documento que no es la firma
                                         --%>
 
+                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                         <c:if test="${empty anexo.documento.validezDocumento}">
                                             <td>
                                                     <%--Si s'ha de posar valor per validez Documento--%>
                                                 <select id="camposNTIs[${status.index}].idValidezDocumento"
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
                                                         class="chosen-select"
-                                                        <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] || registroSir.estado == 'ACEPTADO'}">disabled</c:if> >
+                                                        <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO]}">disabled</c:if> >
                                                         <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
                                                             <option value="${validezDocumento}"><spring:message
                                                                     code="tipoValidezDocumento.${validezDocumento}"/></option>
@@ -101,7 +102,7 @@
                                             <td><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
-                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
+
                                         <td>
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
@@ -112,6 +113,7 @@
                                                         code="anexo.origen.administracion"/></option>
                                             </select>
                                         </td>
+
                                         <td>
                                             <select id="camposNTIs[${status.index}].idTipoDocumental"
                                                     name="camposNTIs[${status.index}].idTipoDocumental"
@@ -123,7 +125,6 @@
                                                             value="${tipoDocumental}" property="nombre"/></option>
                                                 </c:forEach>
                                             </select>
-
                                         </td>
                                     </c:if>
                                     <td class="center"><a class="btn btn-success btn-default btn-sm"
