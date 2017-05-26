@@ -15,7 +15,7 @@ INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES
 INSERT INTO RWE_PROPIEDADGLOBAL (id,clave,valor,tipo,descripcion,entidad) VALUES (nextval('RWE_ALL_SEQ'),'es.caib.regweb3.iscaib','false',1,'Indica si es una instalación en la CAIB',null);
 
 --PLUGINS
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) SELECT nextval('RWE_ALL_SEQ'),true, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.userinformationplugin.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ADMIN) SELECT nextval('RWE_ALL_SEQ'),true, 'User Information','Información de usuarios','org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin',5,null,'es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
 es.caib.regweb3.plugins.userinformation.database.users_table=SC_WL_USUARI
 es.caib.regweb3.plugins.userinformation.database.username_column=USU_CODI
 es.caib.regweb3.plugins.userinformation.database.administrationid_column=USU_NIF
