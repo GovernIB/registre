@@ -49,7 +49,18 @@
                                        </div>
                                        <div class="col-xs-8">
                                            <c:if test="${not empty registro.registroDetalle.tipoDocumentacionFisica}">
+                                               <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+                                               <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                    <p class="text-vermell">
+                                               </c:if>
+                                               <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                    <p class="text-taronja">
+                                               </c:if>
+                                               <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                    <p class="text-verd">
+                                                </c:if>
                                                <spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}" />
+                                               </p>
                                            </c:if>
 
                                        </div>
@@ -287,7 +298,17 @@
                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                        <label path="tipoDocumentacionFisica"><spring:message code="registroSalida.documentacionFisica"/></label>
                                                    </div>
-                                                   <div class="col-xs-8" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                   <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+                                                   <c:if test="${reOriginal.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                        <div class="col-xs-8 text-vermell" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                   </c:if>
+                                                   <c:if test="${reOriginal.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                        <div class="col-xs-8 text-taronja" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                   </c:if>
+                                                   <c:if test="${reOriginal.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                        <div class="col-xs-8 text-verd" id="tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}">
+                                                   </c:if>
+
                                                        <script type="text/javascript">
                                                            $(document).ready(function(){
                                                                obtenerElementoTraducido('<c:url value="/rest/obtenerTipoDocumentacionFisica"/>', '${reOriginal.registroDetalle.tipoDocumentacionFisica}', 'tipoDocumentacionFisica_${status.count}_${reOriginal.registroDetalle.tipoDocumentacionFisica}');

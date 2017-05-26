@@ -814,13 +814,13 @@ a.text-gris:focus {
     padding: 4px;
 }
 .text-vermell{
-    color: #f00;
+    color: #D9534F;
 }
 .text-taronja{
-    color: #FF8610;
+    color: #F0AD4E;
 }
 .text-verd{
-    color: #3CFF0B;
+    color: #5CB85C;
 }
 .sin-scroll{
     overflow-x: inherit;

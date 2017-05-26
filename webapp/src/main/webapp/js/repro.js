@@ -181,6 +181,7 @@ function rellenarFormulario(idRepro,tipoRegistro){
             $('#libro\\.id').val(repro.idLibro);
             $('#registroDetalle\\.extracto').val(repro.extracto);
             $('#registroDetalle\\.tipoDocumentacionFisica').val(repro.idTipoDocumentacionFisica);
+            actualizarColorTipoDocumentacion();
 
             $('#registroDetalle\\.tipoAsunto\\.id').val(repro.idTipoAsunto);
             $('#registroDetalle\\.tipoAsunto\\.id').trigger("chosen:updated");

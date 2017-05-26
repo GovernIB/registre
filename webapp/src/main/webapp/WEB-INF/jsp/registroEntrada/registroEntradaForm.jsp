@@ -114,9 +114,18 @@
                                </div>
                                <div class="col-xs-10">
                                   
-                                    <form:select path="registroDetalle.tipoDocumentacionFisica" cssClass="chosen-select"> 
+                                    <form:select path="registroDetalle.tipoDocumentacionFisica" cssClass="chosen-select" onchange="actualizarColorTipoDocumentacion()">
                                       <c:forEach items="${tiposDocumentacionFisica}" var="tipoDocFisica">
-                                         <form:option value="${tipoDocFisica}"><spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></form:option>
+                                          <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+                                          <c:if test="${tipoDocFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                            <form:option value="${tipoDocFisica}" cssClass="text-vermell"><spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></form:option>
+                                          </c:if>
+                                          <c:if test="${tipoDocFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                              <form:option value="${tipoDocFisica}" cssClass="text-taronja"><spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></form:option>
+                                          </c:if>
+                                          <c:if test="${tipoDocFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                              <form:option value="${tipoDocFisica}" cssClass="text-verd"><spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></form:option>
+                                          </c:if>
                                       </c:forEach>
                                    </form:select>
                                    <form:errors path="registroDetalle.tipoDocumentacionFisica" cssClass="help-block" element="span"/>
@@ -389,7 +398,7 @@
             </c:import>
         </c:if>
 
-
+        actualizarColorTipoDocumentacion();
     });
 
     function actualizarCodigosAsunto(){
@@ -400,6 +409,26 @@
     function actualizarLocalidad(){
         <c:url var="urlObtenerLocalidades" value="/rest/obtenerLocalidades" />
         actualizarSelect('${urlObtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
+    }
+
+    <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+    function actualizarColorTipoDocumentacion(){
+        var valorDocSelected = $('#registroDetalle\\.tipoDocumentacionFisica option:selected').val();
+        if (valorDocSelected == ${RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}) {
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find("span").removeClass("text-verd");
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find("span").removeClass("text-taronja");
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find("span").addClass("text-vermell");
+        }
+        if (valorDocSelected == ${RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}) {
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find('span').removeClass("text-vermell");
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find('span').removeClass("text-verd");
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find('span').addClass("text-taronja");
+        }
+        if (valorDocSelected == ${RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}) {
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find('span').removeClass("text-vermell");
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find('span').removeClass("text-taronja");
+            $("#registroDetalle_tipoDocumentacionFisica_chosen").find('span').addClass("text-verd");
+        }
     }
 
 
