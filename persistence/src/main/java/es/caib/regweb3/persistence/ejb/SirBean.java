@@ -436,23 +436,19 @@ public class SirBean implements SirLocal {
             RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
             // Validamos y firmamos los documentos antes de enviar a SIR
-            List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
             for(AnexoFull anexoFull: registroEntrada.getRegistroDetalle().getAnexosFull()) {
                 Anexo anexo = anexoFull.getAnexo();
                 if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
-                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(),
-                            true, new Locale("es"));
-                    anexosFull.add(anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true));
+                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(), true, new Locale("es"));
+                    anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
                 }
             }
-            registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                final String idioma = "es";
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), idioma);
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
                 registroDetalle.getAnexos().add(anexoFull.getAnexo());
             }
 
@@ -493,23 +489,18 @@ public class SirBean implements SirLocal {
             RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
             //Validamos y firmamos los anexos antes de enviar a SIR
-            List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
             for(AnexoFull anexoFull: registroSalida.getRegistroDetalle().getAnexosFull()) {
                 Anexo anexo = anexoFull.getAnexo();
                 if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
-                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(),
-                            true, new Locale("es"));
-                    anexosFull.add(anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true));
+                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(), true, new Locale("es"));
+                    anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
                 }
             }
-            registroSalida.getRegistroDetalle().setAnexosFull(anexosFull);
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                final String idioma = "es";
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroSalida,
-                        tipoRegistro.toLowerCase(), idioma);
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
 
                 registroDetalle.getAnexos().add(anexoFull.getAnexo());
             }
