@@ -2,12 +2,8 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -29,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by mgonzalez on 02/05/2017.
@@ -37,7 +32,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/anexoFichero")
 @SessionAttributes(types = {AnexoForm.class })
-public class AnexoFicheroController extends BaseController {
+public class AnexoFicheroController extends AnexoController {
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
@@ -164,14 +159,14 @@ public class AnexoFicheroController extends BaseController {
     }
 
 
-    /**
+ /*   *//**
      * Obtiene los anexos completos del registro indicado
      * @param idRegistro
      * @param tipoRegistro
      * @return
      * @throws Exception
      * @throws I18NException
-     */
+     *//*
     public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
@@ -182,7 +177,7 @@ public class AnexoFicheroController extends BaseController {
             return registroSalida.getRegistroDetalle().getAnexosFull();
 
         }
-    }
+    }*/
 
 
 

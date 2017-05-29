@@ -1,14 +1,17 @@
 package es.caib.regweb3.webapp.controller.registro;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import org.apache.axis.utils.StringUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -86,16 +89,6 @@ public class AnexoController extends BaseController {
     }
 
 
-
-    protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
-                                        Long registroID, String tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
-        HttpSession session = request.getSession();
-        session.setAttribute("LAST_registroDetalleID", registroDetalleID);
-        session.setAttribute("LAST_tipoRegistro", tipoRegistro);
-        session.setAttribute("LAST_registroID", registroID);
-        session.setAttribute("LAST_anexoID", anexoID); // nou = null o editar != null
-        session.setAttribute("LAST_isOficioRemisionSir", isOficioRemisionSir);
-    }
 
 
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
@@ -481,16 +474,36 @@ public class AnexoController extends BaseController {
     }
 
 
+
+    protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
+                                        Long registroID, String tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
+        HttpSession session = request.getSession();
+        session.setAttribute("LAST_registroDetalleID", registroDetalleID);
+        session.setAttribute("LAST_tipoRegistro", tipoRegistro);
+        session.setAttribute("LAST_registroID", registroID);
+        session.setAttribute("LAST_anexoID", anexoID); // nou = null o editar != null
+        session.setAttribute("LAST_isOficioRemisionSir", isOficioRemisionSir);
+    }
+
+
+
+    protected void loadCommonAttributes(HttpServletRequest request, Model model) throws Exception {
+        model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);
+        model.addAttribute("tiposFirma", RegwebConstantes.TIPOS_FIRMA);
+
+    }
+
+
     /**
      * Obtiene los anexos completos del registro indicado
-     *
      * @param idRegistro
      * @param tipoRegistro
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro) throws Exception, I18NException {
+    public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
@@ -503,13 +516,11 @@ public class AnexoController extends BaseController {
     }
 
     /**
-     * Calcula el tamaño total de los anexos
-     *
+     * Calcula el tamaño total de los anexos que nos pasan en la lista
      * @param anexosFull
-     * @param anexoForm
      * @return
      */
-   /* public long obtenerTamanoTotalAnexos(List<AnexoFull> anexosFull, AnexoForm anexoForm) throws Exception {
+    public long obtenerTamanoTotalAnexos(List<AnexoFull> anexosFull) throws Exception{
         long tamanyoTotalAnexos = 0;
         long tamanyoanexo = 0;
         for (AnexoFull anexoFull : anexosFull) {
@@ -526,30 +537,116 @@ public class AnexoController extends BaseController {
             }
             tamanyoTotalAnexos += tamanyoanexo;
         }
-        //Añadimos el tamaño del nuevo anexo, puede estar en DocumentoFile o en FirmaFile
-        if (anexoForm.getDocumentoFile().getSize() != 0) {
-            tamanyoTotalAnexos += anexoForm.getDocumentoFile().getSize();
-        } else {
-            tamanyoTotalAnexos += anexoForm.getFirmaFile().getSize();
-        }
 
         return tamanyoTotalAnexos;
 
     }
-*/
+
+
     /**
      * Obtiene la extensión del anexo introducido en el formulario
-     *
      * @param anexoForm
      * @return
      */
-   /* public String obtenerExtensionAnexo(AnexoForm anexoForm) {
+    public String obtenerExtensionDocumento(AnexoForm anexoForm){
+        log.info("DocumentFile " + anexoForm.getDocumentoFile().getOriginalFilename());
         if (!anexoForm.getDocumentoFile().getOriginalFilename().isEmpty()) {
             return FilenameUtils.getExtension(anexoForm.getDocumentoFile().getOriginalFilename());
-        } else {
+        };
+        return "";
+    }
+
+    /**
+     * Obtiene la extensión del anexo introducido en el formulario
+     * @param anexoForm
+     * @return
+     */
+    public String obtenerExtensionFirma(AnexoForm anexoForm){
+        log.info("FirmaFile " + anexoForm.getFirmaFile().getOriginalFilename());
+        if (!anexoForm.getFirmaFile().getOriginalFilename().isEmpty()) {
             return FilenameUtils.getExtension(anexoForm.getFirmaFile().getOriginalFilename());
+        };
+        return "";
+    }
+
+
+    /**
+     * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
+     * y tiene una extensión de documento dentro de las permitidas
+     *
+     * @param registroID  identificador del registro al que se quiere asociar el anexo
+     * @param tipoRegistro si es "entrada" o "salida
+     * @param docSize tamaño del documento a anexar
+     * @param firmaSize tamaño de la firma a anexar
+     * @param docExtension extensión del documento a anexar
+     * @param firmaExtension extensión de la firma a anexar
+     * @param request
+     * @param result
+     * @param scan true si viene de scan, false si no viene de scan
+     * @throws Exception
+     * @throws I18NException
+     */
+    public void validarLimitacionesSIRAnexos(Long registroID, String tipoRegistro, long docSize,
+                                             long firmaSize, String docExtension, String firmaExtension,
+                                             HttpServletRequest request, BindingResult result, boolean scan) throws Exception, I18NException{
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
+        List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
+
+        //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
+        long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull);
+
+        // Comprobamos que el nuevo anexo no supere el tamaño máximo.
+        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
+        if (docSize != 0) {
+            tamanyoTotalAnexos += docSize;
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
+                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
+                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+                if(!scan) {
+                    result.rejectValue("documentoFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
+                }else{
+                    throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
+                }
+            }
+        } else {// Solo comprobamos el tamaño en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
+            tamanyoTotalAnexos += firmaSize;
+            if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
+                String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
+                String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
+                if(!scan) {
+                    result.rejectValue("firmaFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
+                }else{
+                    throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
+                }
+            }
         }
-    }*/
+
+
+        //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
+        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
+        if(!docExtension.isEmpty()) {
+            if (!extensionesPermitidas.contains(docExtension)) {
+                if (!scan) {
+                    result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
+                } else {
+                    throw new I18NException("formatonopermitido", docExtension, extensionesPermitidas);
+                }
+            }
+        }else {// Solo comprobamos la extensión en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
+            if (!extensionesPermitidas.contains(firmaExtension)) {
+                if (!scan) {
+                    result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
+                } else {
+                    throw new I18NException("formatonopermitido", firmaExtension, extensionesPermitidas);
+                }
+
+            }
+        }
+
+    }
+
 
 
     @InitBinder

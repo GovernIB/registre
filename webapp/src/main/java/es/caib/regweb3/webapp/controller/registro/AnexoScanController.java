@@ -7,7 +7,6 @@ import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -39,7 +38,7 @@ import java.util.Set;
  */
 @Controller
 @RequestMapping(value = "/anexoScan")
-public class AnexoScanController extends BaseController {
+public class AnexoScanController extends AnexoController {
 
 
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")

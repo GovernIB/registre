@@ -449,7 +449,7 @@ public class SirBean implements SirLocal {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
-                registroDetalle.getAnexos().add(anexoFull.getAnexo());
+                registroDetalle.getAnexosFull().add(anexoFull);
             }
 
             // Actualizamos el Registro con campos SIR
@@ -502,8 +502,10 @@ public class SirBean implements SirLocal {
                 // Creamos el anexo del justificante y se lo añadimos al registro
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
 
-                registroDetalle.getAnexos().add(anexoFull.getAnexo());
+                registroDetalle.getAnexosFull().add(anexoFull);
             }
+
+
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
