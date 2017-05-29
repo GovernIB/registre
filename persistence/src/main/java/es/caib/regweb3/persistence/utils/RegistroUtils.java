@@ -6,6 +6,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.ReproJson;
 import org.apache.log4j.Logger;
+import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -23,7 +24,7 @@ import java.util.Date;
  * Date: 14/07/14
  */
 
-public class RegistroUtils {
+public class RegistroUtils  implements  ValidateSignatureConstants {
 
     public static final Logger log = Logger.getLogger(RegistroUtils.class);
 
@@ -206,6 +207,13 @@ public class RegistroUtils {
         fecha = calendarDate.getTime();
 
         return fecha;
+    }
+
+    public static boolean validaTipoPerfilFirmaSir(String perfil, String tipo) {
+        return !SIGNPROFILE_BES.equals(perfil)
+                && !SIGNPROFILE_PADES_BASIC.equals(perfil)
+                && (SIGNTYPE_CAdES.equals(tipo) || SIGNTYPE_XAdES.equals(tipo)
+                || SIGNTYPE_PAdES.equals(tipo) || SIGNTYPE_ODF.equals(tipo));
     }
 
 

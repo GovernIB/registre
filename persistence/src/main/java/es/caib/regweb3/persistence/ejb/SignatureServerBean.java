@@ -2,8 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
@@ -20,7 +20,6 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-
 import java.io.File;
 import java.util.Locale;
 
@@ -201,10 +200,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         }
 
         // Acceptam qualsevol tipus excepte BES i PADES-BASIC
-        if (!SIGNPROFILE_BES.equals(perfil)
-            && !SIGNPROFILE_PADES_BASIC.equals(perfil)
-            && (SIGNTYPE_CAdES.equals(tipo) || SIGNTYPE_XAdES.equals(tipo)
-                || SIGNTYPE_PAdES.equals(tipo) || SIGNTYPE_ODF.equals(tipo))) {
+        if (RegistroUtils.validaTipoPerfilFirmaSir(perfil, tipo)) {
 
           log.info(" XYZ ZZZ SI es SIR i és una firma EPES o SUPERIOR");
           
@@ -253,7 +249,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
     }
 
-    protected void checkAttachedSignature(AnexoFull input,
+
+  protected void checkAttachedSignature(AnexoFull input,
         ValidateSignatureResponse resp, Locale locale, ISignatureServerPlugin signaturePlugin)
         throws I18NException, Exception {
       final String tipo = resp.getSignType();

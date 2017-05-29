@@ -5,6 +5,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
@@ -466,9 +467,12 @@ public class SirBean implements SirLocal {
             registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
             List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
             for(AnexoFull anexoFull: registroEntrada.getRegistroDetalle().getAnexosFull()) {
-                anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(),
-                        true, new Locale("es"));
-                anexosFull.add(anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro,tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(),true));
+                Anexo anexo = anexoFull.getAnexo();
+                if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
+                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(),
+                            true, new Locale("es"));
+                    anexosFull.add(anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true));
+                }
             }
             registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
 
@@ -519,9 +523,12 @@ public class SirBean implements SirLocal {
             registroSalida = registroSalidaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
             List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
             for(AnexoFull anexoFull: registroSalida.getRegistroDetalle().getAnexosFull()) {
-                anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(),
-                        true, new Locale("es"));
-                anexosFull.add(anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro,tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(),true));
+                Anexo anexo = anexoFull.getAnexo();
+                if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
+                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(),
+                            true, new Locale("es"));
+                    anexosFull.add(anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true));
+                }
             }
             registroSalida.getRegistroDetalle().setAnexosFull(anexosFull);
 
