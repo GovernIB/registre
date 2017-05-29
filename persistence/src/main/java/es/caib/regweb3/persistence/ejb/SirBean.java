@@ -432,11 +432,10 @@ public class SirBean implements SirLocal {
 
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
             // Validamos y firmamos los documentos antes de enviar a SIR
-            registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
             List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
             for(AnexoFull anexoFull: registroEntrada.getRegistroDetalle().getAnexosFull()) {
                 Anexo anexo = anexoFull.getAnexo();
@@ -490,11 +489,10 @@ public class SirBean implements SirLocal {
 
         } else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
 
-            RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
             RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
             //Validamos y firmamos los anexos antes de enviar a SIR
-            registroSalida = registroSalidaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
             List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
             for(AnexoFull anexoFull: registroSalida.getRegistroDetalle().getAnexosFull()) {
                 Anexo anexo = anexoFull.getAnexo();
