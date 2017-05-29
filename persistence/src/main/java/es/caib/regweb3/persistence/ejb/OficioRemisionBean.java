@@ -559,9 +559,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception{
 
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio ");
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
+                " oficioRemision.estado != :devuelto");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
+        q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
 
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() == 1){

@@ -742,8 +742,8 @@ public class SirBean implements SirLocal {
             oficioRemision.setLibro(new Libro(registroEntrada.getLibro().getId()));
             oficioRemision.setIdentificadorIntercambio(registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
             oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-            oficioRemision.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
-            oficioRemision.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+            oficioRemision.setDestinoExternoCodigo(oficinaReenvio.getOrganismoResponsable().getCodigo());
+            oficioRemision.setDestinoExternoDenominacion(oficinaReenvio.getOrganismoResponsable().getDenominacion());
             oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosSalida(null);
