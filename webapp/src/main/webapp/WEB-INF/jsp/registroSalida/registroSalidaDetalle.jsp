@@ -177,6 +177,11 @@
                                 <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></button></div>
                             </c:if>
 
+                            <%--Botón reenviar--%>
+                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RECHAZADO}">
+                                <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroSalida/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
+                            </c:if>
+
                             <%--Botón rectificar--%>
                             <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_TRAMITADO}">
                                 <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/rectificar"/>","<spring:message code="regweb.confirmar.rectificar" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="registro.boton.rectificar"/></button></div>

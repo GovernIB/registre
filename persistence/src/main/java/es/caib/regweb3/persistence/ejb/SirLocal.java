@@ -89,7 +89,7 @@ public interface SirLocal {
      * @param registroSir
      * @throws Exception
      */
-    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, String codigoUnidadTramitacionDestino, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
+    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
 
     /**
      * Método que indica si el RegistroSir puede ser reenviado en función de su estado.

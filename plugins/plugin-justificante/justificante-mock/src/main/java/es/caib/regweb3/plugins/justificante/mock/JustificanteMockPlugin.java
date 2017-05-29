@@ -324,37 +324,38 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8)));
             }
             document.add(taulaAnnexe);
-
-            // Pie de anexo
-            PdfPTable peuAnnexe = new PdfPTable(1);
-            peuAnnexe.setWidthPercentage(100);
-            // Obtenim el missatge de Declaración de les propietats del Plugin
-            if(declaracion!=null) {
-                PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + declaracion, font8));
-                cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
-                cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
-                cellPeuAnnexe.setBorder(Rectangle.TOP);
-                cellPeuAnnexe.setBorderColor(BaseColor.BLACK);
-                cellPeuAnnexe.setBorderWidth(1f);
-                peuAnnexe.addCell(cellPeuAnnexe);
-                document.add(peuAnnexe);
-            }
-            document.add(new Paragraph(" "));
-            document.add(new Paragraph(" "));
-
-            PdfPTable titolLlei = new PdfPTable(1);
-            titolLlei.setWidthPercentage(100);
-            // Obtenim el missatge de Ley de les propietats del Plugin
-            PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
-            cellLlei.setBackgroundColor(BaseColor.WHITE);
-            cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cellLlei.setBorderColor(BaseColor.WHITE);
-            cellLlei.setBorderWidth(0f);
-            titolLlei.addCell(cellLlei);
-            document.add(titolLlei);
-            document.add(new Paragraph(" "));
-            document.add(new Paragraph(" "));
         }
+
+        // Pie de anexo
+        PdfPTable peuAnnexe = new PdfPTable(1);
+        peuAnnexe.setWidthPercentage(100);
+        // Obtenim el missatge de Declaración de les propietats del Plugin
+        if(declaracion!=null) {
+            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(denominacio + " " + declaracion, font8));
+            cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
+            cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
+            cellPeuAnnexe.setBorder(Rectangle.TOP);
+            cellPeuAnnexe.setBorderColor(BaseColor.BLACK);
+            cellPeuAnnexe.setBorderWidth(1f);
+            peuAnnexe.addCell(cellPeuAnnexe);
+            document.add(peuAnnexe);
+        }
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
+        PdfPTable titolLlei = new PdfPTable(1);
+        titolLlei.setWidthPercentage(100);
+        // Obtenim el missatge de Ley de les propietats del Plugin
+        PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
+        cellLlei.setBackgroundColor(BaseColor.WHITE);
+        cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cellLlei.setBorderColor(BaseColor.WHITE);
+        cellLlei.setBorderWidth(0f);
+        titolLlei.addCell(cellLlei);
+        document.add(titolLlei);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
     }
 
     // Lista los interesados y representantes tanto para el registro de entrada como el de salida

@@ -353,45 +353,46 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8)));
             }
             document.add(taulaAnnexe);
-
-            // Pie de anexo
-            PdfPTable peuAnnexe = new PdfPTable(1);
-            peuAnnexe.setWidthPercentage(100);
-            PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, font8));
-            cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
-            cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cellPeuAnnexe.setBorder(Rectangle.TOP);
-            cellPeuAnnexe.setBorderColor(BaseColor.BLACK);
-            cellPeuAnnexe.setBorderWidth(1f);
-            peuAnnexe.addCell(cellPeuAnnexe);
-            document.add(peuAnnexe);
-            document.add(new Paragraph(" "));
-            document.add(new Paragraph(" "));
-
-            // Parágrafo Ley
-            PdfPTable titolLlei = new PdfPTable(1);
-            titolLlei.setWidthPercentage(100);
-            PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
-            cellLlei.setBackgroundColor(BaseColor.WHITE);
-            cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cellLlei.setBorderColor(BaseColor.WHITE);
-            cellLlei.setBorderWidth(0f);
-            titolLlei.addCell(cellLlei);
-            document.add(titolLlei);
-
-            // Parágrafo Plazos
-            PdfPTable titolPlazos = new PdfPTable(1);
-            titolPlazos.setWidthPercentage(100);
-            PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, font8));
-            cellPlazos.setBackgroundColor(BaseColor.WHITE);
-            cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cellPlazos.setBorderColor(BaseColor.WHITE);
-            cellPlazos.setBorderWidth(0f);
-            titolPlazos.addCell(cellPlazos);
-            document.add(titolPlazos);
-            document.add(new Paragraph(" "));
-            document.add(new Paragraph(" "));
         }
+
+        // Pie de anexo
+        PdfPTable peuAnnexe = new PdfPTable(1);
+        peuAnnexe.setWidthPercentage(100);
+        PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, font8));
+        cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
+        cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cellPeuAnnexe.setBorder(Rectangle.TOP);
+        cellPeuAnnexe.setBorderColor(BaseColor.BLACK);
+        cellPeuAnnexe.setBorderWidth(1f);
+        peuAnnexe.addCell(cellPeuAnnexe);
+        document.add(peuAnnexe);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
+        // Parágrafo Ley
+        PdfPTable titolLlei = new PdfPTable(1);
+        titolLlei.setWidthPercentage(100);
+        PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
+        cellLlei.setBackgroundColor(BaseColor.WHITE);
+        cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cellLlei.setBorderColor(BaseColor.WHITE);
+        cellLlei.setBorderWidth(0f);
+        titolLlei.addCell(cellLlei);
+        document.add(titolLlei);
+
+        // Parágrafo Plazos
+        PdfPTable titolPlazos = new PdfPTable(1);
+        titolPlazos.setWidthPercentage(100);
+        PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, font8));
+        cellPlazos.setBackgroundColor(BaseColor.WHITE);
+        cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
+        cellPlazos.setBorderColor(BaseColor.WHITE);
+        cellPlazos.setBorderWidth(0f);
+        titolPlazos.addCell(cellPlazos);
+        document.add(titolPlazos);
+        document.add(new Paragraph(" "));
+        document.add(new Paragraph(" "));
+
     }
 
     // Lista los Interesados y Representantes tanto para el registro de entrada como el de salida

@@ -339,7 +339,7 @@
                                             <tr>
                                                 <th><spring:message code="registroSir.numeroRegistro"/></th>
                                                 <th><spring:message code="registroSir.fechaRegistro"/></th>
-                                                <th><spring:message code="registroSir.oficinaDestino"/></th>
+                                                <th><spring:message code="registroSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="registroSir.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
@@ -350,7 +350,7 @@
                                                 <tr>
                                                     <td>${registroSir.numeroRegistro}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
+                                                    <td>${registroSir.codigoEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.resumen}</td>
                                                     <td class="center">
                                                         <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>

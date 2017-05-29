@@ -622,21 +622,17 @@ public class SirBean implements SirLocal {
     }
 
     @Override
-    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, String codigoUnidadTramitacionDestino, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
+    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
         // Actualizamos la oficina destino con la escogida por el usuario
         registroSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
         registroSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
-        registroSir.setCodigoUnidadTramitacionDestino(codigoUnidadTramitacionDestino);
-        registroSir.setDecodificacionUnidadTramitacionDestino("");
+        registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
+        registroSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
 
         // Actualizamos la oficina de origen con la oficina activa
         registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
         registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
-
-        // Actualizamos la unidad de tramitación destino con el organismo responsable de la oficina de reenvio
-        registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
-        registroSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
 
         // Modificamos usuario, contacto, aplicacion
         registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
