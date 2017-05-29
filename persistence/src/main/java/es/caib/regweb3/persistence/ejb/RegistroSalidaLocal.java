@@ -165,7 +165,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+    public RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException;
     /**
      * Método que devuelve un registro de salida completo, con los anexos completos
      *
@@ -174,7 +174,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida getConAnexosFullCompleto(Long id) throws Exception, I18NException;
+    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
 
     /**
      * Rectificar Registro de Salida
