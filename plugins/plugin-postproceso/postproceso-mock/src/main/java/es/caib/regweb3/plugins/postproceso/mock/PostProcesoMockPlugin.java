@@ -50,8 +50,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void nuevoRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
-        log.info("Nuevo registro entrada");
-        log.info("NUMERO: " +registroEntrada.getNumeroRegistroFormateado());
+        log.debug("Nuevo registro entrada: " +registroEntrada.getNumeroRegistroFormateado());
 
     }
 
@@ -63,8 +62,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void nuevoRegistroSalida(RegistroSalida registroSalida) throws Exception{
-        log.info("Nuevo registro salida");
-        log.info("NUMERO: " +registroSalida.getNumeroRegistroFormateado());
+        log.debug("Nuevo registro salida: " +registroSalida.getNumeroRegistroFormateado());
 
 
     }
@@ -78,8 +76,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void actualizarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception{
-        log.info("actualizar registro entrada");
-        log.info("NUMERO: " +registroEntrada.getNumeroRegistroFormateado());
+        log.debug("actualizar registro entrada:" +registroEntrada.getNumeroRegistroFormateado());
 
 
     }
@@ -92,8 +89,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void actualizarRegistroSalida(RegistroSalida registroSalida) throws Exception{
-        log.info("Actualizar registro salida");
-        log.info("NUMERO: " +registroSalida.getNumeroRegistroFormateado());
+        log.debug("Actualizar registro salida: " +registroSalida.getNumeroRegistroFormateado());
 
 
     }
@@ -109,8 +105,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void nuevoInteresadoEntrada(Interesado interesado, String numeroEntrada) throws Exception{
-        log.info("nuevo interesado entrada");
-        log.info("Nombre Interesado :" + interesado.getNombreCompleto());
+        log.info("Nuevo interesado entrada: " + interesado.getNombreCompleto());
 
     }
 
@@ -124,8 +119,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void nuevoInteresadoSalida(Interesado interesado, String numeroSalida) throws Exception{
-        log.info("nuevo interesado salida");
-        log.info("Nombre Interesado :" + interesado.getNombreCompleto());
+        log.info("Nuevo interesado salida: " + interesado.getNombreCompleto());
 
     }
 
@@ -138,8 +132,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void actualizarInteresadoEntrada(Interesado interesado, String numeroEntrada) throws Exception{
-        log.info("actualizar interesado entrada");
-        log.info("Nombre Interesado :" + interesado.getNombreCompleto());
+        log.info("Actualizar interesado entrada:" + interesado.getNombreCompleto());
 
     }
 
@@ -152,8 +145,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void actualizarInteresadoSalida(Interesado interesado, String numeroSalida) throws Exception{
-        log.info("actualizar interesado salida");
-        log.info("Nombre Interesado :" + interesado.getNombreCompleto());
+        log.info("actualizar interesado salida: " + interesado.getNombreCompleto());
 
     }
 
@@ -166,7 +158,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void eliminarInteresadoEntrada(Long idInteresado, String numeroEntrada) throws Exception{
-        log.info("Eliminar interesado entrada " + idInteresado);
+        log.info("Eliminar interesado entrada: " + idInteresado);
 
 
     }
@@ -180,7 +172,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void eliminarInteresadoSalida(Long idInteresado, String numeroSalida) throws Exception{
-        log.info("Eliminar interesado salida " + idInteresado);
+        log.info("Eliminar interesado salida: " + idInteresado);
 
     }
 
