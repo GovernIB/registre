@@ -137,7 +137,7 @@
                                                     </colgroup>
                                                     <thead>
                                                         <tr>
-                                                            <th><spring:message code="oficioRemision.numeroOficio"/></th>
+                                                            <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                             <th><spring:message code="oficioRemision.fecha"/></th>
                                                             <th><spring:message code="oficioRemision.oficina"/></th>
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
@@ -150,7 +150,7 @@
                                                     <tbody>
                                                         <c:forEach var="oficioRemision" items="${paginacion.listado}" varStatus="status">
                                                             <tr>
-                                                                <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
+                                                                <td>${oficioRemision.identificadorIntercambio}</td>
                                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
                                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>

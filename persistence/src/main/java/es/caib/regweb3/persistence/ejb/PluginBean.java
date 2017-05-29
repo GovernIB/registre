@@ -246,7 +246,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-        List<?> plugins = em.createQuery("Select distinct(id) from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+        List<?> plugins = em.createQuery("Select id from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : plugins) {
             remove(findById((Long) id));

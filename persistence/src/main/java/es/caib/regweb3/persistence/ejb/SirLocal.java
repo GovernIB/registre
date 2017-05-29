@@ -5,13 +5,11 @@ import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.util.List;
 
 /**
@@ -91,7 +89,7 @@ public interface SirLocal {
      * @param registroSir
      * @throws Exception
      */
-    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
+    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, String codigoUnidadTramitacionDestino, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
 
     /**
      * Método que indica si el RegistroSir puede ser reenviado en función de su estado.

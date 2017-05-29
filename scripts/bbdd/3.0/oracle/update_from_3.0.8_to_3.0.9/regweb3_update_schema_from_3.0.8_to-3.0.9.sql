@@ -202,8 +202,8 @@ create table RWE_PLUGIN (
         DESCRIPCION varchar2(2000 char) not null,
         ENTIDAD number(19,0),
         NOMBRE varchar2(255 char) not null,
-        PROPIEDADES_ADMIN varchar2(2000 char),
-        PROPIEDADES_ENTIDAD varchar2(2000 char),
+        PROPIEDADES_ADMIN clob,
+        PROPIEDADES_ENTIDAD clob,
         TIPO number(19,0)
     );
 create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);

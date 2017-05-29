@@ -277,8 +277,6 @@ public class RegistroSirController extends BaseController {
     public String rechazarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RechazarForm rechazarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        log.info("Observaciones: " + rechazarForm.getObservacionesRechazo());
-
         RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -341,7 +339,7 @@ public class RegistroSirController extends BaseController {
         try{
             if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                sirEjb.reenviarRegistroSir(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
+                sirEjb.reenviarRegistroSir(registroSir, oficinaReenvio, reenviarForm.getCodigoOrganismoResponsable(), oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));

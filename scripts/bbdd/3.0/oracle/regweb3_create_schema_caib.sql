@@ -428,10 +428,10 @@ create table RWE_PLUGIN (
     DESCRIPCION varchar2(2000 char) not null,
     ENTIDAD number(19,0),
     NOMBRE varchar2(255 char) not null,
-    PROPIEDADES_ADMIN varchar2(2000 char),
-    PROPIEDADES_ENTIDAD varchar2(2000 char),
+    PROPIEDADES_ADMIN clob,
+    PROPIEDADES_ENTIDAD clob,
     TIPO number(19,0)
-);
+) TABLESPACE REGWEB_DADES;
 
 create table RWE_PROPIEDADGLOBAL (
     ID number(19,0) not null,
@@ -1554,6 +1554,8 @@ alter table RWE_ANEXO_SIR move lob (TIMESTAMP) store as RWE_ANX_SIR_TMST_lob (ta
 alter table RWE_ANEXO_SIR move lob (VAL_OCSP_CE) store as RWE_ANX_SIR_VALOCSP_lob (tablespace regweb_lob index RWE_ANX_SIR_VALOCSP_lob_i);
 alter table RWE_HISTORICO_REGISTRO_ENTRADA move lob (RE_ORIGINAL) store as RWE_HIST_REG_ENT_RE_ORI_LOB (tablespace regweb_lob index RWE_HIST_REG_ENT_RE_ORI_LOB_i);
 alter table RWE_HISTORICO_REGISTRO_SALIDA move lob (RS_ORIGINAL) store as RWE_HIST_REG_SAL_LOB (tablespace regweb_lob index RWE_HIST_REG_SAL_LOB_i);
+alter table RWE_PLUGIN move lob (PROPIEDADES_ADMIN) store as RWE_PLUGIN_PROP_ADM_lob (tablespace regweb_lob index RWE_PLUGIN_PROP_ADM_lob_i);
+alter table RWE_PLUGIN move lob (PROPIEDADES_ENTIDAD) store as RWE_PLUGIN_PROP_ENT_lob (tablespace regweb_lob index RWE_PLUGIN_PROP_ENT_lob_i);
 alter table RWE_REGISTRO_SIR move lob (TIMESTAMP) store as RWE_REG_SIR_TMST_lob (tablespace regweb_lob index RWE_REG_SIR_TMST_lob_i);
 alter table RWE_REPRO move lob (REPRO) store as RWE_REPRO_REPRO_LOB (tablespace regweb_lob index RWE_REPRO_REPRO_LOB_i);
 -- FINAL LOBS

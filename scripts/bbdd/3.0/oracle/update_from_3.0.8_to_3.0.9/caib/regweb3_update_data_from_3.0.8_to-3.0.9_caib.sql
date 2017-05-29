@@ -100,7 +100,7 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.applicationID=CAIB.REGWEB' ||
 '# Podeu descarregar-ho des de https://github.com/GovernIB/pluginsib/tree/pluginsib-1.0/plugins-validatesignature/afirmacxf/config/transformersTemplates' ||
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.TransformersTemplatesPath=/app/caib/regweb/transformersTemplates' ||
-'es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint= https://afirmapre.caib.es/afirmaws/services/DSSAfirmaVerify' ||
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.endpoint=https://afirmapre.caib.es/afirmaws/services/DSSAfirmaVerify' ||
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.printxml=false' ||
 '# USERNAME-PASSWORD Token' ||
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.username=REGWEB' ||
