@@ -220,7 +220,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         // Obtenemos la clase del Plugin
         String className = plugin.getClase();
 
-        log.info("Obtenido el plugin: " + className);
+        //log.info("Obtenido el plugin: " + className);
 
         // Obtenemos sus propiedades
         Properties prop = new Properties();
@@ -232,12 +232,6 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         if (plugin.getPropiedadesAdmin() != null && plugin.getPropiedadesAdmin().trim().length() != 0) {
             prop.load(new StringReader(plugin.getPropiedadesAdmin()));
         }
-
-        // Propeidades obtenidas
-        /*for(String key : prop.stringPropertyNames()) {
-            String value = prop.getProperty(key);
-            log.info("Propiedad: "+key + " => " + value);
-        }*/
 
         // Carregant la classe
         return PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
