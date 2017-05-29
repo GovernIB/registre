@@ -152,9 +152,9 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         String extracte = registroEntrada.getRegistroDetalle().getExtracto();
         String nomDesti;
         if(registroEntrada.getDestino()!=null) {
-            nomDesti = registroEntrada.getDestino().getNombreCompleto();
+            nomDesti = registroEntrada.getDestino().getNombreCompleto() + " - " + registroEntrada.getDestino().getCodigo();
         }else{
-            nomDesti = registroEntrada.getDestinoExternoDenominacion();
+            nomDesti = registroEntrada.getDestinoExternoDenominacion() + " - " + registroEntrada.getDestinoExternoCodigo();
         }
         String expedient = registroEntrada.getRegistroDetalle().getExpediente();
         Date fechaRegistro = registroEntrada.getFecha();
