@@ -615,11 +615,13 @@ public class SirBean implements SirLocal {
     }
 
     @Override
-    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
+    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, String codigoUnidadTramitacionDestino, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
         // Actualizamos la oficina destino con la escogida por el usuario
         registroSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
         registroSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+        registroSir.setCodigoUnidadTramitacionDestino(codigoUnidadTramitacionDestino);
+        registroSir.setDecodificacionUnidadTramitacionDestino("");
 
         // Actualizamos la oficina de origen con la oficina activa
         registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
@@ -676,6 +678,8 @@ public class SirBean implements SirLocal {
         // Modificamos la oficina destino con la de inicio
         registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
         registroSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
+        registroSir.setCodigoUnidadTramitacionDestino(""); //TODO Añadir codigo unidad tramitación
+        registroSir.setDecodificacionUnidadTramitacionDestino("");
 
         // Modificamos la oficina de origen con la oficina activa
         registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
@@ -734,7 +738,6 @@ public class SirBean implements SirLocal {
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo()));
             registroDetalle.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
             registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
             registroDetalle.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
@@ -764,7 +767,6 @@ public class SirBean implements SirLocal {
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroSalida.getOficina().getCodigo()));
             registroDetalle.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
             registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
             registroDetalle.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
