@@ -109,7 +109,7 @@
                                         <form:label path="propiedadesEntidad"><spring:message code="plugin.propiedadesEntidad"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:textarea path="propiedadesEntidad" rows="3" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
+                                        <form:textarea path="propiedadesEntidad" rows="7" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
                             </c:if>

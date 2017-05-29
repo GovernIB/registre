@@ -84,7 +84,8 @@ public class Plugin implements Serializable {
         this.clase = clase;
     }
 
-    @Column(name = "PROPIEDADES_ADMIN", length = 2000)
+    @Lob
+    @Column(name = "PROPIEDADES_ADMIN", length = 2147483647)
     public String getPropiedadesAdmin() {
         return propiedadesAdmin;
     }
@@ -93,7 +94,8 @@ public class Plugin implements Serializable {
         this.propiedadesAdmin = propiedadesAdmin;
     }
 
-    @Column(name = "PROPIEDADES_ENTIDAD", length = 2000)
+    @Lob
+    @Column(name = "PROPIEDADES_ENTIDAD", length = 2147483647)
     public String getPropiedadesEntidad() {
         return propiedadesEntidad;
     }

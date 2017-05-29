@@ -189,19 +189,21 @@ grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb;
 
 --Creamos la Tabla RWE_PLUGIN 04/05/2017
 create table RWE_PLUGIN (
-        ID number(19,0) not null,
-        ACTIVO number(1,0) not null,
-        CLASE varchar2(1000 char) not null,
-        DESCRIPCION varchar2(2000 char) not null,
-        ENTIDAD number(19,0),
-        NOMBRE varchar2(255 char) not null,
-        PROPIEDADES_ADMIN varchar2(2000 char),
-        PROPIEDADES_ENTIDAD varchar2(2000 char),
-        TIPO number(19,0)
-    );
+    ID number(19,0) not null,
+    ACTIVO number(1,0) not null,
+    CLASE varchar2(1000 char) not null,
+    DESCRIPCION varchar2(2000 char) not null,
+    ENTIDAD number(19,0),
+    NOMBRE varchar2(255 char) not null,
+    PROPIEDADES_ADMIN clob,
+    PROPIEDADES_ENTIDAD clob,
+    TIPO number(19,0)
+) TABLESPACE REGWEB_DADES;
 create index RWE_PLUGI_ENTIDA_FK_I on RWE_PLUGIN (ENTIDAD);
 alter table RWE_PLUGIN add constraint RWE_PLUGIN_pk primary key (ID);
 grant select,insert,delete,update on RWE_PLUGIN to www_regweb;
+alter table RWE_PLUGIN move lob (PROPIEDADES_ADMIN) store as RWE_PLUGIN_PROP_ADM_lob (tablespace regweb_lob index RWE_PLUGIN_PROP_ADM_lob_i);
+alter table RWE_PLUGIN move lob (PROPIEDADES_ENTIDAD) store as RWE_PLUGIN_PROP_ENT_lob (tablespace regweb_lob index RWE_PLUGIN_PROP_ENT_lob_i);
 
 -- Nueva Tabla RWE_TRAZABILIDAD_SIR (11/05/2017)
 create table RWE_TRAZABILIDAD_SIR (
