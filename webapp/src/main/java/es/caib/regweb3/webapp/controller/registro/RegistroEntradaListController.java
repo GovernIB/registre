@@ -703,7 +703,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             throws Exception {
 
         try {
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullCompleto(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Creamos el anexo justificante y lo firmamos

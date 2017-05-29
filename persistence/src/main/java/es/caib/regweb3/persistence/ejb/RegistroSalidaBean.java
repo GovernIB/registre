@@ -489,7 +489,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
 
     @Override
-    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
+    public RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException {
 
         RegistroSalida re = findById(id);
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
@@ -504,7 +504,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida getConAnexosFullCompleto(Long id) throws Exception, I18NException {
+    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
 
         RegistroSalida re = findById(id);
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
@@ -525,7 +525,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         RegistroSalida rectificado = null;
 
         try {
-            RegistroSalida registroSalida = getConAnexosFullCompleto(idRegistro);
+            RegistroSalida registroSalida = getConAnexosFull(idRegistro);
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
 

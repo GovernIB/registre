@@ -606,11 +606,11 @@ public class BaseController {
      */
     public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
 
         } else {
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullLigero(idRegistro);
             return registroSalida.getRegistroDetalle().getAnexosFull();
 
         }

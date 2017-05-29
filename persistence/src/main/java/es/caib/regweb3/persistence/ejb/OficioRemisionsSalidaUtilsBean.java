@@ -378,7 +378,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         for (OficioPendienteLlegada oficio : oficios) {
 
             // Creamos un Nuevo RegistroEntrada
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullCompleto(oficio.getIdRegistro());
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getIdRegistro());
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());
