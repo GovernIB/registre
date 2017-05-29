@@ -290,7 +290,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
         Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
 
-        log.info("anexes: " + anexos.size());
         if(anexos.size()>0) {
             // Creamos estilo para el título Adjuntos
             PdfPTable titolAnnexe = new PdfPTable(1);
