@@ -349,7 +349,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     }
 
     @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.GET)
-    public String reenviarRegistroSir(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+    public String reenviarRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
 
         model.addAttribute("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
         model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
@@ -364,7 +364,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Reenvia un {@link RegistroSir}
      */
     @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.POST)
-    public String reenviarRegistroSir(@PathVariable Long idRegistro, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
+    public String reenviarRegistroEntrada(@PathVariable Long idRegistro, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
         log.info("Oficina Destino reenvio: " + reenviarForm.getCodigoOficina());

@@ -339,7 +339,7 @@ public class RegistroSirController extends BaseController {
         try{
             if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                sirEjb.reenviarRegistroSir(registroSir, oficinaReenvio, reenviarForm.getCodigoOrganismoResponsable(), oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
+                sirEjb.reenviarRegistroSir(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));

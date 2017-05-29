@@ -14,6 +14,7 @@ import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
+import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
@@ -66,9 +67,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
-
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
 
 
     /**
@@ -230,7 +228,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))
                 && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
 
-            model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de entrada.
+            model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de salida.
             initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
         }
 
@@ -329,6 +327,49 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }
 
         return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
+    }
+
+    @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.GET)
+    public String reenviarRegistroSalida(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
+
+        model.addAttribute("tipoRegistro", RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO);
+        model.addAttribute("comunidadesAutonomas", catComunidadAutonomaEjb.getAll());
+        model.addAttribute("nivelesAdministracion", catNivelAdministracionEjb.getAll());
+        model.addAttribute("registro", registroSalidaEjb.findById(idRegistro));
+        model.addAttribute("reenviarForm", new ReenviarForm());
+
+        return "registro/reenvioSir";
+    }
+
+    /**
+     * Reenvia un {@link RegistroSir}
+     */
+    @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.POST)
+    public String reenviarRegistroSalida(@PathVariable Long idRegistro, @ModelAttribute ReenviarForm reenviarForm , HttpServletRequest request)
+            throws Exception, I18NException, I18NValidationException {
+
+        log.info("Oficina Destino reenvio: " + reenviarForm.getCodigoOficina());
+
+        //Montamos la oficina de reenvio seleccionada por el usuario
+        Oficina oficinaReenvio = reenviarForm.oficinaReenvio();
+        Oficina oficinaActiva = getOficinaActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        // Reenvia el RegistroSir
+        try{
+            if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
+                //Reenviamos
+                sirEjb.reenviarRegistro(RegwebConstantes.REGISTRO_SALIDA_ESCRITO, idRegistro, oficinaReenvio, oficinaActiva,usuarioEntidad,reenviarForm.getObservaciones());
+            }
+
+            Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));
+
+        }catch (Exception e){
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.reenvio"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/registroSalida/"+idRegistro+"/detalle";
     }
 
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
