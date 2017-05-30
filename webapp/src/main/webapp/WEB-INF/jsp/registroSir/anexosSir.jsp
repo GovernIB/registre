@@ -6,18 +6,17 @@
     <div class="panel panel-primary">
 
         <div class="panel-heading">
-            <h3 class="panel-title">
                 <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
                 <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                    <i class="fa fa-pencil-square-o text-vermell">
+                    <h3 class="panel-title text-vermell">
                 </c:if>
                 <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                    <i class="fa fa-pencil-square-o text-taronja">
+                    <h3 class="panel-title text-taronja">
                 </c:if>
                 <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                    <i class="fa fa-pencil-square-o text-verd">
+                    <h3 class="panel-title text-verd">
                 </c:if>
-                </i> <strong><spring:message code="anexo.anexos"/></strong>:
+                <i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong>:
                 <spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>
             </h3>
         </div>
