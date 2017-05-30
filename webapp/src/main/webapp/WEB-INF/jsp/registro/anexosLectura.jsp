@@ -118,7 +118,7 @@
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
                                                        target="_blank" title="<spring:message code="anexo.descargar"/>"><span
                                                         class="fa fa-download"></span></a></td>
-                                                <td class="center"><p rel="valorPropiedad" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p></td>
+                                                <td class="center"><p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p></td>
                                             </c:if>
                                         </tr>
                                     </c:if>
