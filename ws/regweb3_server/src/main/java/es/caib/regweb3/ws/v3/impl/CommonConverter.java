@@ -269,7 +269,7 @@ public class CommonConverter {
 
         for (Anexo anexo : anexos) {
 
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId());
 
             AnexoWs anexoWs = AnexoConverter.getAnexoWs(anexoFull, anexoEjb);
 

@@ -39,7 +39,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws I18NException
      */
-  public AnexoFull getAnexoFull(Long anexoID) throws I18NException;
+  public AnexoFull getAnexoFullLigero(Long anexoID) throws I18NException;
 
   /**
    * Método que levanta los archivos
@@ -48,7 +48,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
    * @return
    * @throws I18NException
    */
-  public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException;
+  public AnexoFull getAnexoFull(Long anexoID) throws I18NException;
 
   
   
@@ -64,7 +64,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws Exception
      */
-    public List<Anexo> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception;
+    public List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException;
 
     /**
      * Método que devuelve todos los anexos de un registro de salida sin el justificante
@@ -72,7 +72,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws Exception
      */
-    public List<Anexo> getByRegistroSalida(RegistroSalida registroSalida) throws Exception;
+    public List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException;
 
     /**
      *  Obtiene los anexos de un registroDetalle

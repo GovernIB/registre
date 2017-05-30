@@ -718,7 +718,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId());
             anexosFull.add(anexoFull);
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
@@ -733,7 +733,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
+            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
             anexosFull.add(anexoFull);
         }
         //Asignamos los documentos recuperados de custodia al registro de entrada.
@@ -891,7 +891,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
                 List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
                 for (Anexo anexo : anexos) {
-                    AnexoFull anexoFull = anexoEjb.getAnexoFullCompleto(anexo.getId());
+                    AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
                     anexosFull.add(anexoFull);
                 }
                 //Asignamos los documentos recuperados de custodia al registro de entrada.

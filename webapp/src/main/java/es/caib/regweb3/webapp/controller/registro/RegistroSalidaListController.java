@@ -16,6 +16,7 @@ import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -196,11 +197,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         Oficio oficio = new Oficio(false,false, false, false);
-        Boolean showannexes = PropiedadGlobalUtil.getShowAnnexes();
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
-        model.addAttribute("showannexes", showannexes);
         model.addAttribute("entidadActiva", entidadActiva);
 
         // Modelo Recibo
@@ -225,11 +224,19 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("oficio", oficio);
 
         // Anexos completo
-        if(showannexes && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))
+        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)
                 && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
 
-            model.addAttribute("anexos", anexoEjb.getByRegistroSalida(registro)); //Inicializamos los anexos del registro de salida.
+            List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de entrada.
             initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
+
+            // Si es SIR, se validan los tamaños y tipos de anexos
+            if(oficio.getSir()){
+
+                model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos, entidadActiva.getId()));
+            }
+
+            model.addAttribute("anexos", anexos);
         }
 
         // Interesados, solo si el Registro en Válio

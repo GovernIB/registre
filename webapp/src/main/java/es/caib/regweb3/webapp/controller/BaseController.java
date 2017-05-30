@@ -57,8 +57,8 @@ public class BaseController {
      * @param key
      * @return
      */
-    protected String getMessage(String key){
-      return I18NUtils.tradueix(key);
+    protected String getMessage(String key, String... args){
+      return I18NUtils.tradueix(key, args);
     }
 
     /**

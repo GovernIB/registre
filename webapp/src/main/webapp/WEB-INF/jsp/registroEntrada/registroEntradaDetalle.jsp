@@ -136,9 +136,17 @@
                                             </button>
                                         </c:if>
                                         <c:if test="${oficio.sir && oficinaActiva.sirEnvio}">
-                                            <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
-                                                <spring:message code="registroEntrada.enviar.sir"/>
-                                            </button>
+                                            <c:if test="${empty erroresAnexosSir}">
+                                                <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
+                                                    <spring:message code="registroEntrada.enviar.sir"/>
+                                                </button>
+                                            </c:if>
+
+                                            <c:if test="${not empty erroresAnexosSir}">
+                                                <button type="button" class="btn btn-success btn-sm btn-block disabled">
+                                                    <spring:message code="registroEntrada.enviar.sir"/>
+                                                </button>
+                                            </c:if>
                                         </c:if>
                                         <c:if test="${oficio.sir && !oficinaActiva.sirEnvio}">
                                             <p class="text-danger">El <strong>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</strong> dispone de una Oficina integrada en SIR, pero la ${oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
@@ -212,23 +220,18 @@
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 
-            <!-- ANEXOS -->
-            <!-- Si no existe la variable showannexes se muestran por defecto los anexos-->
-            <c:if test="${showannexes}">
-                <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar && !tieneJustificante}">
-                        <c:import url="../registro/anexos.jsp">
-                            <c:param name="tipoRegistro" value="entrada"/>
-                        </c:import>
-                </c:if>
+            <!-- ANEXOS COMPLETO-->
+            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar && !tieneJustificante}">
+                <c:import url="../registro/anexos.jsp">
+                    <c:param name="tipoRegistro" value="entrada"/>
+                </c:import>
+            </c:if>
 
-                <%--ANEXOS SOLO LECTURA--%>
-                <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
-                    <c:import url="../registro/anexosLectura.jsp">
-                        <c:param name="tipoRegistro" value="entrada"/>
-                    </c:import>
-                </c:if>
-
-
+            <%--ANEXOS SOLO LECTURA--%>
+            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
+                <c:import url="../registro/anexosLectura.jsp">
+                    <c:param name="tipoRegistro" value="entrada"/>
+                </c:import>
             </c:if>
 
             <%--INTERESADOS--%>

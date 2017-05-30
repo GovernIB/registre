@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -114,14 +115,14 @@ public class AnexoFicheroController extends AnexoController {
             String docExtension = "";
             if (anexoForm.getDocumentoFile() != null) {
                 docSize = anexoForm.getDocumentoFile().getSize();
-                docExtension = obtenerExtensionDocumento(anexoForm);
+                docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoFile().getOriginalFilename());
             }
 
             long firmaSize = -1;
             String firmaExtension = "";
             if (anexoForm.getFirmaFile() != null) {
                 firmaSize = anexoForm.getFirmaFile().getSize();
-                firmaExtension = obtenerExtensionFirma(anexoForm);
+                firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getFirmaFile().getOriginalFilename());
             }
             log.info("MODO FIRMA "+ anexoForm.getAnexo().getModoFirma());
             validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result,false);

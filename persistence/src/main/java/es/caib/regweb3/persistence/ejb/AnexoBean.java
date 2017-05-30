@@ -90,7 +90,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public AnexoFull getAnexoFull(Long anexoID) throws I18NException {
+    public AnexoFull getAnexoFullLigero(Long anexoID) throws I18NException {
 
         try {
             Anexo anexo = em.find(Anexo.class, anexoID);
@@ -131,8 +131,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    //TODO CAMBIAR NOMBRE A ESTE METODO POR OTRO MAS ADECUADO, ES REDUNDANTE
-    public AnexoFull getAnexoFullCompleto(Long anexoID) throws I18NException {
+    public AnexoFull getAnexoFull(Long anexoID) throws I18NException {
 
         try {
             Anexo anexo = em.find(Anexo.class, anexoID);
@@ -296,7 +295,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-
+    /**
+     *
+     * @param anexo
+     * @param isNou
+     * @throws I18NValidationException
+     * @throws I18NException
+     */
     protected void validateAnexo(Anexo anexo, final boolean isNou)
             throws I18NValidationException, I18NException {
         AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
@@ -370,7 +375,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-
+    /**
+     *
+     * @param registroID
+     * @param tipoRegistro
+     * @param anexo
+     * @param isNou
+     * @return
+     * @throws Exception
+     */
     protected IRegistro getIRegistro(Long registroID, String tipoRegistro, Anexo anexo, boolean isNou) throws Exception {
         IRegistro registro;
         IRegistro cloneRegistro;
@@ -473,7 +486,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * Método que crea/actualiza un anexo en función de lo que recibe en anexoFull
      *
      * @param anexoFull
-     * @param custody
      * @param custodyParameters
      * @param custodyID
      * @param registro
@@ -788,47 +800,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /**
-     * Método que guarda el DocumentCustody de un anexo en custodia.
      *
-     * @param dc                DocumentCustody que nos pasan
-     * @param custody           custodia donde guardarlo
-     * @param custodyID         identificador de custodia
-     * @param custodyParameters parametros de custodia
-     * @param anexo             anexo a actualizar
-     * @param updateDate
+     * @param doc
+     * @param custodyID
+     * @param anexo
      * @param mimeFinal
      * @return
      * @throws Exception
      */
-    /*
-    public DocumentCustody guardarDocumentCustody(DocumentCustody doc,
-                                                  IDocumentCustodyPlugin custody, String custodyID,
-                                                  final Map<String, Object> custodyParameters, Anexo anexo,
-                                                  String mimeFinal) throws Exception {
-
-        if (doc != null && doc.getData() != null) {// si nos envian documento
-
-            //Borramos el anterior (pruebas marilen, quitado checkbox de esborrar)
-            custody.deleteDocument(custodyID);
-
-            //Asignamos los datos nuevos recibidos
-            if (doc.getMime() == null) {
-                doc.setMime("application/octet-stream");
-            }
-            mimeFinal = doc.getMime();
-
-            doc.setName(checkFileName(doc.getName(), "file.bin"));
-
-            anexo.setFechaCaptura(new Date());
-            anexo.setHash(obtenerHash(doc.getData()));
-
-            //guardamos documento en custodia
-            custody.saveDocument(custodyID, custodyParameters, doc);
-
-        }
-        return doc;
-    }
-    */
     public String arreglarDocumentCustody(DocumentCustody doc,
          String custodyID, Anexo anexo,  String mimeFinal) throws Exception {
 
@@ -851,67 +830,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      }
 
     /**
-     * Método que guarda la SignatureCustody de un anexo en custodia
      *
-     * @param sc                SignatureCustody que nos pasan
-     * @param doc               DocumentCustody relacionado con la SignatureCustody
-     * @param custody           custodia donde guardarlo
-     * @param custodyID         identificador de custodia
-     * @param custodyParameters parametros de custodia
-     * @param anexo             anexo a actualizar
-     * @param updateDate
+     * @param signature
+     * @param doc
+     * @param anexo
      * @param mimeFinal
      * @return
      * @throws Exception
      */
-    /*
-    public SignatureCustody guardarSignatureCustody(SignatureCustody sc,
-                                                    DocumentCustody doc, IDocumentCustodyPlugin custody,
-                                                    String custodyID, final Map<String, Object> custodyParameters,
-                                                    Anexo anexo, boolean updateDate, String mimeFinal) throws Exception {
-        //Obtenemos la firma que nos envian
-        SignatureCustody signature = sc;
-        if (signature != null && signature.getData() != null) {//Si nos envian firma
-
-            //Borramos la anterior (pruebas marilen, quitado checkbox de esborrar)
-            custody.deleteSignature(custodyID);
-            updateDate = true;
-
-            //Preparamos todos los datos para guardar la firma en custodia.
-            String signType = (doc == null) ? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT;
-
-            signature.setName(checkFileName(signature.getName(), "signature.bin"));
-
-            final String mime = signature.getMime();
-            if (mime == null) {
-                signature.setMime("application/octet-stream");
-            } else {
-
-                if ("application/pdf".equals(mime)) {
-                    signType = SignatureCustody.PADES_SIGNATURE;
-                } else if ("application/xml".equals(mime) ||
-                        "text/xml".equals(mime)) {
-                    signType = SignatureCustody.XADES_SIGNATURE;
-                }
-            }
-
-            mimeFinal = signature.getMime(); // Sobreescriu Mime de doc
-
-            signature.setSignatureType(signType);
-            // TODO Fallarà en update
-            signature.setAttachedDocument(doc == null ? true : false);
-
-            if (doc == null) {
-                anexo.setHash(obtenerHash(signature.getData()));
-            }
-            custody.saveSignature(custodyID, custodyParameters, signature);
-
-            updateDate = true;
-        }
-        return sc;
-
-    }
-    */
     public String arreglarSignatureCustody(SignatureCustody signature,
         DocumentCustody doc,  Anexo anexo, String mimeFinal) throws Exception {
       //Obtenemos la firma que nos envian
@@ -1038,26 +964,28 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      */
     @Override
-    public List<Anexo> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception {
-        Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
+    public List<AnexoFull> getByRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException {
+
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
-        List<Anexo> anexosSinJustificante = new ArrayList<Anexo>();
+        List<AnexoFull> anexosSinJustificante = new ArrayList<AnexoFull>();
+
         for(Anexo anexo:anexos){
             if(!anexo.isJustificante()){
-                anexosSinJustificante.add(anexo);
+                anexosSinJustificante.add(getAnexoFullLigero(anexo.getId()));
             }
         }
         return anexosSinJustificante;
     }
 
     @Override
-    public List<Anexo> getByRegistroSalida(RegistroSalida registroSalida) throws Exception {
-        Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
+    public List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException {
+
         List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
-        List<Anexo> anexosSinJustificante = new ArrayList<Anexo>();
+        List<AnexoFull> anexosSinJustificante = new ArrayList<AnexoFull>();
+
         for(Anexo anexo:anexos){
             if(!anexo.isJustificante()){
-                anexosSinJustificante.add(anexo);
+                anexosSinJustificante.add(getAnexoFullLigero(anexo.getId()));
             }
         }
         return anexosSinJustificante;

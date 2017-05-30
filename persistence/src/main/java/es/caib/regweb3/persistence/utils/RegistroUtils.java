@@ -209,12 +209,18 @@ public class RegistroUtils  implements  ValidateSignatureConstants {
         return fecha;
     }
 
+
+    /**
+     * Comprueba la firma de un Anexo es válida
+     * @param perfil
+     * @param tipo
+     * @return
+     */
     public static boolean validaTipoPerfilFirmaSir(String perfil, String tipo) {
         return !SIGNPROFILE_BES.equals(perfil)
                 && !SIGNPROFILE_PADES_BASIC.equals(perfil)
                 && (SIGNTYPE_CAdES.equals(tipo) || SIGNTYPE_XAdES.equals(tipo)
                 || SIGNTYPE_PAdES.equals(tipo) || SIGNTYPE_ODF.equals(tipo));
     }
-
 
 }

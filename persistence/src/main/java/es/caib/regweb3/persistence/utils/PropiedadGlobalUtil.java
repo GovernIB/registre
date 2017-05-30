@@ -196,18 +196,6 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Retorna el valor de la propiedad ShowAnnexes de la entidad indicada.
-     * @return
-     */
-    public static Boolean getShowAnnexes() {
-        final String partialPropertyName = "showannexes";
-
-        return getBoolean(partialPropertyName);
-
-    }
-
-
-    /**
      * Retorna el valor de la propiedad MaxUploadSizeInBytes.
      * Tamaño máximo de subida de ficheros en bytes. No definido significa sin límites.
      *

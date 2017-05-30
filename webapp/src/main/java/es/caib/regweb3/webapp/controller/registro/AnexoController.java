@@ -8,10 +8,10 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import org.apache.axis.utils.StringUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -154,7 +154,7 @@ public class AnexoController extends BaseController {
                     + " | anexoID = " + anexoID + ")");
         }
 
-        AnexoFull anexoFull2 = anexoEjb.getAnexoFull(anexoID);
+        AnexoFull anexoFull2 = anexoEjb.getAnexoFullLigero(anexoID);
 
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, anexoID, isOficioRemisionSir);
 
@@ -300,7 +300,7 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/descargarDocumento/{anexoId}", method = RequestMethod.GET)
     public void anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
                       HttpServletResponse response) throws Exception, I18NException {
-        AnexoFull anexoFull = anexoEjb.getAnexoFull(anexoId);
+        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId);
         fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getName(),
                 anexoFull.getDocumentoCustody().getMime(), anexoFull.getAnexo().isJustificante(), false, response);
     }
@@ -313,7 +313,7 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/descargarFirma/{anexoId}", method = RequestMethod.GET)
     public void firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
                       HttpServletResponse response) throws Exception, I18NException {
-        AnexoFull anexo = anexoEjb.getAnexoFull(anexoId);
+        AnexoFull anexo = anexoEjb.getAnexoFullLigero(anexoId);
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getName(),
@@ -515,60 +515,6 @@ public class AnexoController extends BaseController {
         }
     }
 
-    /**
-     * Calcula el tamaño total de los anexos que nos pasan en la lista
-     * @param anexosFull
-     * @return
-     */
-    public long obtenerTamanoTotalAnexos(List<AnexoFull> anexosFull) throws Exception{
-        long tamanyoTotalAnexos = 0;
-        long tamanyoanexo = 0;
-        for (AnexoFull anexoFull : anexosFull) {
-            //Obtenemos los bytes del documento que representa el anexo, en el caso 4 Firma Attached,
-            // el documento está en SignatureCustody
-            DocumentCustody dc = anexoFull.getDocumentoCustody();
-            if (dc != null) {//Si documentCustody es null tenemos que coger SignatureCustody.
-                tamanyoanexo = anexoFull.getDocumentoCustody().getLength();
-            } else {
-                SignatureCustody sc = anexoFull.getSignatureCustody();
-                if (sc != null) {
-                    tamanyoanexo = anexoFull.getSignatureCustody().getLength();
-                }
-            }
-            tamanyoTotalAnexos += tamanyoanexo;
-        }
-
-        return tamanyoTotalAnexos;
-
-    }
-
-
-    /**
-     * Obtiene la extensión del anexo introducido en el formulario
-     * @param anexoForm
-     * @return
-     */
-    public String obtenerExtensionDocumento(AnexoForm anexoForm){
-        log.info("DocumentFile " + anexoForm.getDocumentoFile().getOriginalFilename());
-        if (!anexoForm.getDocumentoFile().getOriginalFilename().isEmpty()) {
-            return FilenameUtils.getExtension(anexoForm.getDocumentoFile().getOriginalFilename());
-        };
-        return "";
-    }
-
-    /**
-     * Obtiene la extensión del anexo introducido en el formulario
-     * @param anexoForm
-     * @return
-     */
-    public String obtenerExtensionFirma(AnexoForm anexoForm){
-        log.info("FirmaFile " + anexoForm.getFirmaFile().getOriginalFilename());
-        if (!anexoForm.getFirmaFile().getOriginalFilename().isEmpty()) {
-            return FilenameUtils.getExtension(anexoForm.getFirmaFile().getOriginalFilename());
-        };
-        return "";
-    }
-
 
     /**
      * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
@@ -595,7 +541,7 @@ public class AnexoController extends BaseController {
         List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
 
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
-        long  tamanyoTotalAnexos= obtenerTamanoTotalAnexos(anexosFull);
+        long  tamanyoTotalAnexos= AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
 
         // Comprobamos que el nuevo anexo no supere el tamaño máximo.
         Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
