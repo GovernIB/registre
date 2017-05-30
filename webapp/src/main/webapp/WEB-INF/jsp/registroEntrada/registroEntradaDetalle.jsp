@@ -137,9 +137,16 @@
                                         </c:if>
                                         <c:if test="${oficio.sir && oficinaActiva.sirEnvio}">
                                             <c:if test="${empty erroresAnexosSir}">
-                                                <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
-                                                    <spring:message code="registroEntrada.enviar.sir"/>
-                                                </button>
+                                                <c:if test="${empty anexos}">
+                                                    <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.envioSIR" htmlEscape="true"/>", "<spring:message code="regweb.anexos.vacio" htmlEscape="true"/>","<spring:message code="regweb.enviar" htmlEscape="true"/>","<spring:message code="regweb.anexos.añadir" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-success btn-sm btn-block">
+                                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                                    </button>
+                                                </c:if>
+                                                <c:if test="${not empty anexos}">
+                                                    <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
+                                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                                    </button>
+                                                </c:if>
                                             </c:if>
 
                                             <c:if test="${not empty erroresAnexosSir}">

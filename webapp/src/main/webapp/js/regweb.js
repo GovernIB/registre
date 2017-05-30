@@ -147,6 +147,38 @@ function confirm(url, mensaje) {
     confirmModal.modal("show");
 }
 
+// Muestra el cuadro de confirmación para enviar un registro SIR sin anexos
+function confirmEnvioSinAnexos(url, mensaje, mensajeTitulo, mensajeEnviar, mensajeAñadir) {
+
+    var confirmModal =
+        $("<div class=\"modal fade\">" +
+            "<div class=\"modal-dialog\">" +
+            "<div class=\"modal-content\">"+
+            "<div class=\"modal-header\">" +
+            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+            "<h4 class=\"modal-title\">"+mensajeTitulo+"</h4>" +
+            "</div>" +
+
+            "<div class=\"modal-body\">" +
+            "<p>"+mensaje+"</p>" +
+            "</div>" +
+
+            "<div class=\"modal-footer\">" +
+            "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">"+mensajeAñadir+"</button>"+
+            "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">"+mensajeEnviar+"</button>"+
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>");
+
+    confirmModal.find("#okButton").click(function(event) {
+        document.location.href=url;
+        confirmModal.modal("hide");
+    });
+
+    confirmModal.modal("show");
+}
+
 // Muestra el cuadro de confirmación para realizar una acción sobre un registro
 function cerrar(mensaje) {
 

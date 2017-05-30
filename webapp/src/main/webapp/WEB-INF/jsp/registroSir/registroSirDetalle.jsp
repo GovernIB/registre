@@ -317,9 +317,16 @@
 
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
-                                        <button type="button" class="btn btn-primary btn-sm btn-block"
-                                                onclick="aceptarRegistroSir()"><spring:message
-                                                code="registroSir.aceptar"/></button>
+                                        <c:if test="${registroSir.documentacionFisica!=RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir()","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
+                                                <spring:message code="registroSir.aceptar"/>
+                                            </button>
+                                        </c:if>
+                                        <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="aceptarRegistroSir()">
+                                                <spring:message code="registroSir.aceptar"/>
+                                            </button>
+                                        </c:if>
                                     </div>
                                 </div>
                                 <c:set var="errorObligatori"><spring:message code="error.valor.requerido"/></c:set>
