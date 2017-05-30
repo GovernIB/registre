@@ -18,21 +18,29 @@
 
         <div class="panel-heading">
 
-            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
-                <c:if test="${empty maxanexospermitidos || fn:length(anexos) < maxanexospermitidos }">
+            <c:if test="${empty maxanexospermitidos || fn:length(anexos) < maxanexospermitidos }">
 
-                    <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal"
-                       class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
-                        <spring:message code="anexo.archivo.nuevo"/></a>
+                <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal"
+                   class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
+                    <spring:message code="anexo.archivo.nuevo"/></a>
 
-                    <c:if test="${teScan}">
-                        <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal"
-                           class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
-                    </c:if>
+                <c:if test="${teScan}">
+                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal"
+                       class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
                 </c:if>
-
             </c:if>
-            <h3 class="panel-title"><i class="fa fa-file"></i><strong> <spring:message code="anexo.anexos"/></strong>
+
+            <h3 class="panel-title">
+                <i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong>:
+                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                    <span class="text-vermell"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
+                </c:if>
+                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                    <span class="text-taronja"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
+                </c:if>
+                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                    <span class="text-verd"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
+                </c:if>
             </h3>
         </div>
 
