@@ -213,7 +213,7 @@
     <dependency>
       <groupId>org.fundaciobit.plugins</groupId>
       <artifactId>plugin-documentcustody-arxiudigitalcaib</artifactId>
-      <version>3.0.1</version>
+      <version>3.0.2</version>
     </dependency>
 
 

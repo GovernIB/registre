@@ -233,7 +233,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       } catch (Exception e) {
         error= true;
         throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
-      }finally {
+      } finally {
          if(!error){
            if(input.getSignatureCustody() == null){
              input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);

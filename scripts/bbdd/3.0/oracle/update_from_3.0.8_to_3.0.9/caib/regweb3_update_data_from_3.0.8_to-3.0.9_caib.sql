@@ -30,10 +30,10 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDAD
 'es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU' ||
 'es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
 
---Plugin Custodia
+--Plugin Custodia Annexos
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_' ||
 'es.caib.regweb3.plugins.documentcustody.filesystem.basedir=/app/caib/regweb/archivos' ||
-'es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}');
+'#es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}');
 
 --Plugin Justificante CAIB
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo, PROPIEDADES_ENTIDAD, entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Justificante','Genera el justificante SIR-CAIB de los registros','es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin',1,'# Mensaje para estampación del CVS en el justificante' ||
@@ -79,15 +79,126 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTID
 'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.username=REGWEB' ||
 'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.password=REGWEB' ||
 '# CERTIFICATE Token' ||
-'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.path=D:/dades/dades/proves-dgidt.jks' ||
-'#D:/dades/dades/CarpetesPersonals/Programacio/PortaFIB/plugins/plugins-certificate/afirma/proves-dgidt.jks' ||
+'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.path=/app/caib/regweb/afirma_connect_cert.jks' ||
 'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.type=JKS' ||
 'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.password=<<PASSWORD>>' ||
-'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.cert.alias=1' ||
+'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.cert.alias=<<ALIAS>>' ||
 'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.cert.password=<<PASSWORD>>',id FROM rwe_entidad;
 
---Plugin Custodia-Justificante-Archivo
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin',7,null,'');
+--Plugin Custodia-Justificants
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de Justificants emprant Arxiu Digital CAIB','org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin',7,null,'# Específiques' ||
+'' ||
+'# Requerit. Nom de l´expedient. Important: Ha de ser únic' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.nom_expedient_EL=Registre_JUST_<#if (registro.origen)?? >S<#else>E</#if>_${(registro.libro.codigo)}_${.now?string[\"yyyy\"]}_${registro.numeroRegistro?string[\"0000000\"]}' ||
+'' ||
+'# Opcional. Nom de la carpeta dins de l´expedient.' ||
+'# Si carpeta no està definida llavors custodyID = {uuid_expedient}' ||
+'# Si carpeta està definida llavors custodyID =  {uuid_expedient}#{uuid_carpeta}.' ||
+'# es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.nom_carpeta_EL=' ||
+'' ||
+'# Opcional. Per defecte sempre es crea Draft' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.createDraft=false' ||
+'' ||
+'# Opcional. Tanca l´expedient despres del primer guardat. Requereix "createDraft=false" ' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.tancarExpedient=true' ||
+'' ||
+'# Opcional' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.debug=false' ||
+'' ||
+'# =================  DADES CONNEXIO ========================' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.url=https://esbpre.caib.es/' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.login.username=<<USERNAME>>' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.login.password=<<PASSWORD>>' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.ignore_server_certificates=false' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.codi_aplicacio=<<APP_CODE>>' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.organitzacio=CAIB' ||
+'' ||
+'# Ciutada (opcional)' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.solicitant.nom_EL=${ciudadano_nombre}' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.solicitant.identificador_administratiu_EL=${ciudadano_idadministrativo}' ||
+'' ||
+'# Treballador (opcional)' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.usuari.username_EL=${usuarioEntidad.usuario.identificador}' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.usuari.identificador_administratiu_EL=${usuarioEntidad.usuario.documento}' ||
+'' ||
+'# Nom procediment (opcional)' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.connexio.nom_procediment_EL=<<PROCEDIMENT>>' ||
+'' ||
+'# =================  METADADES OBLIGATORIES COMUNS ========================' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.serie_documental_EL=<<FALTA SERIE>>' ||
+'#  Separats per comma' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.organs_EL=A04013511' ||
+'' ||
+'# ADMINISTRACION=1 //  CIUDADANO=0' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.origen_document_EL=${anexo.origenCiudadanoAdmin}' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.data_creacio_EL =<#setting time_zone=´UTC´>${.now?string[\"yyyy-MM-dd´T´HH:mm:ss.sss´Z´\"]}' ||
+'' ||
+'# =================  METADADES OBLIGATORIES EXPEDIENT ========================' ||
+'' ||
+'# També inclou "Codigo Aplicacion" definit a la propietat "connexio.codi_aplicacio"' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.codi_procediment_EL=<<CODI_PROCEDIMENT>>' ||
+'' ||
+'# =================  METADADES OBLIGATORIES DOCUMENT ========================' ||
+'' ||
+'# També inclou "Codigo Aplicacion" definit a la propietat "connexio.codi_aplicacio"' ||
+'' ||
+'# EE01,EE02, EE03, EE04, EE99' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.estat_elaboracio_EL=<#switch anexo.validezDocumento><#case 1>EE01<#break><#case 2>EE02<#break><#case 3>EE03<#break><#case 4>EE03<#break><#default>EE99</#switch>' ||
+'' ||
+'# TIPO_DOC_ENI: TD01, TD02, TD03, ...' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.tipus_documental_EL=${anexo.tipoDocumental.codigoNTI}' ||
+'' ||
+'# Només es processa quan s´envia una firma' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.perfil_firma_EL=<#switch anexo.signProfile><#case "AdES-BES">BES<#break><#case "AdES-EPES">EPES<#break><#case "AdES-T">T<#break><#case "AdES-C">C<#break><#case "AdES-X">X<#break><#case "AdES-X1">X<#break><#case "AdES-X2">X<#break><#case "AdES-XL">XL<#break><#case "AdES-XL1">XL<#break><#case "AdES-XL2">XL<#break><#case "AdES-A">A<#break><#case "PAdES-LTV">LTV<#break><#case "PAdES-Basic">BES<#break></#switch>' ||
+'' ||
+'# --------------------------------------------------' ||
+'# Genèriques' ||
+'' ||
+'# Opcional. Configuració per generar Hash de la baseurl quan {2}' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.hash.password=mypass' ||
+'#  MD2, MD5, SHA,SHA-256,SHA-384,SHA-512' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.hash.algorithm=MD5' ||
+'' ||
+'# Opcional. Servei Millorat per generar la URL de Custodia emprant EL.' ||
+'# Variables addicionals: csv, validationUrl_custodyID, validationUrl_custodyID_URLEncode i validationUrl_custodyID_Hash  ' ||
+'# es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.baseurl_EL=http://regweb3.fundaciobit.org/custody/${csv}' ||
+'' ||
+'# Opcional. Si no definit retorna el custodyID' ||
+'# Variables addicionals: csv' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.specialValue_EL=${registro.id}' ||
+'' ||
+'# ----------------------------------------------' ||
+'# Opcional. Metadades Automàtiques per Expedient' ||
+'# Nota: Només es permeten les definides en la classe es.caib.arxiudigital.apirest.constantes.MetadatosExpediente' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automaticmetadata_items=1,2' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.1.name=eni:descripcion' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.1.valueEL=${registro.numeroRegistro?c} / ${registro.numeroRegistroFormateado}' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.2.name=eni:termino_punto_acceso' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.2.valueEL=Justificant' ||
+'' ||
+'# ----------------------------------------------' ||
+'# Opcional. Metadades Automàtiques per Document Electrònic' ||
+'# Nota: Només es permeten les definides en la classe es.caib.arxiudigital.apirest.constantes.MetadatosDocumento' ||
+'' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automaticmetadata_items=1,2,3' ||
+'' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.1.name=eni:tipo_asiento_registral' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.1.valueEL=${registro.???????????}' ||
+'' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.2.name=eni:origen' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.2.valueEL=${registro.origen}' ||
+'' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.3.name=eni:codigo_oficina_registro' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.3.valueEL=${registro.???????????????}');
 
 --Plugin Scan
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Applet/JNLP Scan','Scan emprant Applet/JNLP','org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin',6,'es.caib.regweb3.plugins.scanweb.iecisa.debug=false' ||
@@ -104,4 +215,11 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.printxml=false' ||
 '# USERNAME-PASSWORD Token' ||
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.username=REGWEB' ||
-'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.password=REGWEB',null);
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.password=REGWEB' ||
+'# CERTIFICATE Token' ||
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.path=/app/caib/regweb/afirma_connect_cert.jks' ||
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.type=JKS' ||
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.password=<<PASSWORD>>' ||
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>' ||
+'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<PASSWORD>>',null);
+
