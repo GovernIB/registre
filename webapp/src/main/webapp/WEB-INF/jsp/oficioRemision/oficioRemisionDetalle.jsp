@@ -130,6 +130,7 @@
 
                     </div>
 
+                    <%--Descarga modelo oficio--%>
                     <c:if test="${fn:length(modelosOficioRemision) > 0}">
                         <div class="panel-footer">
                             <form:form modelAttribute="modeloOficioRemision" method="post" cssClass="form-horizontal row pad-lateral-10">
@@ -147,6 +148,7 @@
                         </div>
                     </c:if>
 
+                    <%--Botón anular oficio--%>
                     <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO && isAdministradorLibro}">
                         <div class="panel-footer">
                             <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
@@ -262,7 +264,7 @@
                                                 <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td>${trazabilidad.registroEntradaOrigen.oficina.denominacion}</td>
                                                 <td>${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}</td>
-                                                <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroSalida.numeroRegistro}</td>
+                                                <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/${trazabilidad.registroSalida.numeroRegistro}</td>
                                                 <td class="center">
                                                     <a class="btn btn-info btn-sm"
                                                        href="<c:url value="/registroEntrada/${trazabilidad.registroEntradaOrigen.id}/detalle"/>"
