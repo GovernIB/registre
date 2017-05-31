@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -23,7 +24,15 @@ import java.util.List;
 @Local
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
-    
+
+    /**
+     * Obtiene un RegistroSalida con un mínimo de campos
+     * @param idRegistroSalida
+     * @return
+     * @throws Exception
+     */
+    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception;
+
     /**
      * Guarda un Registro de Salida (con anexos)
      * @param registroSalida

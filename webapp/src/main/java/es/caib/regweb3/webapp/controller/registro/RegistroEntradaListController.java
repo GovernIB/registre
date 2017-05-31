@@ -438,6 +438,26 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return mav;
     }
 
+    @RequestMapping(value = "/reenviados/list/{pageNumber}")
+    public ModelAndView reenviados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = registroEntradaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_REENVIADO);
+
+            mav.addObject("estado", RegwebConstantes.REGISTRO_REENVIADO);
+            mav.addObject("url", "reenviados");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
+    }
+
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView pendientesVisar(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
 

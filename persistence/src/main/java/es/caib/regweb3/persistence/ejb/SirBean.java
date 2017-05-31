@@ -59,52 +59,119 @@ public class SirBean implements SirLocal {
     @Override
     public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
 
-        // ENVIO Y REENVIO
-        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion()) ||
-                TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+        RegistroSir registroSir;
 
-            log.info("El ficheroIntercambio recibido es un: " + ficheroIntercambio.getTipoAnotacion() + " - "+ ficheroIntercambio.getDescripcionTipoAnotacion());
+        // ENVIO
+        if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+
+            log.info("El ficheroIntercambio recibido es un ENVIO: " + ficheroIntercambio.getIdentificadorIntercambio());
 
             // Buscamos si el Registro recibido ya existe en el sistema
-            RegistroSir registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
+            registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
-            if(registroSir != null) { // Ya existe en el sistema
+            if (registroSir != null) { // Ya existe en el sistema
 
-                if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
+                if (EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())) {
 
-                    log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() +" ya se ha recibido, enviamos otro ACK");
-                    //throw new ValidacionException(Errores.ERROR_0205);
+                    log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() + " ya se ha recibido, enviamos otro ACK");
 
-                }else if(EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
-                        EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado()) ||
-                        EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado()) ||
-                        EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())){
+                } else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
 
-                    // Eliminamos el RegistroSir para volverlo a crear
-                    registroSirEjb.eliminarRegistroSir(registroSir.getId());
+                    log.info("Se ha intentado enviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
-                    // Creamos un nuevo RegistroSir
-                    registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
-
-                    log.info("El registroSir existia en el sistema, pero se ha eliminado y vuelto a crear: " + registroSir.getIdentificadorIntercambio());
-
-                }else if(EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())){
-                    log.info("Se ha intentado enviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio()+", volvemos a enviar un ACK");
-                    //throw new ValidacionException(Errores.ERROR_0205);
-
-                } else{
+                } else {
                     log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
-            }else{
+            } else {
 
                 // Creamos un nuevo RegistroSir
                 registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
-
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
+        // REENVIO
+        }else if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
+
+            log.info("El ficheroIntercambio recibido es un REENVIO: " + ficheroIntercambio.getDescripcionTipoAnotacion() +" - " + ficheroIntercambio.getIdentificadorIntercambio());
+
+            // Buscamos si el Registro recibido ya existe en el sistema
+            registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
+
+            if (registroSir != null) { // Ya existe en el sistema
+
+                if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
+                        EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado()) ||
+                        EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado()) ||
+                        EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())) {
+
+                    // Modificar el estado del Registro a RECIBIDO
+                    registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+                    registroSir.setFechaRecepcion(new Date());
+                    registroSir.setFechaEstado(new Date());
+                    registroSirEjb.merge(registroSir);
+
+                    //Creamos la TrazabilidadSir
+                    TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
+                    trazabilidadSir.setRegistroSir(registroSir);
+                    trazabilidadSir.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                    trazabilidadSir.setDecodificacionEntidadRegistralOrigen(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
+                    trazabilidadSir.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralDestino());
+                    trazabilidadSir.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDescripcionEntidadRegistralDestino());
+                    trazabilidadSir.setAplicacion(ficheroIntercambio.getAplicacionEmisora());
+                    trazabilidadSir.setNombreUsuario(ficheroIntercambio.getNombreUsuario());
+                    trazabilidadSir.setContactoUsuario(ficheroIntercambio.getContactoUsuario());
+                    trazabilidadSir.setObservaciones(ficheroIntercambio.getDescripcionTipoAnotacion());
+                    trazabilidadSir.setFecha(new Date());
+                    trazabilidadSirEjb.persist(trazabilidadSir);
+
+
+                    log.info("El registroSir existia en el sistema, se ha vuelto a recibir: " + registroSir.getIdentificadorIntercambio());
+
+                }
+
+            }else if(oficioRemision != null){ // Ya existe en el sistema
+
+                if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO ||
+                        oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK){
+
+                    if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+
+                        RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
+                        // Actualizamos el registro de entrada
+                        registroEntrada.setEstado(RegwebConstantes.REGISTRO_REENVIADO);
+                        registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
+                        registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        registroEntrada.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
+                        registroEntradaEjb.merge(registroEntrada);
+
+                    }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+
+                        RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
+                        // Actualizamos el registro de salida
+                        registroSalida.setEstado(RegwebConstantes.REGISTRO_REENVIADO);
+                        registroSalida.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
+                        registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
+                        registroSalida.getRegistroDetalle().setTipoAnotacion(ficheroIntercambio.getTipoAnotacion());
+                        registroSalida.getRegistroDetalle().setDecodificacionTipoAnotacion(ficheroIntercambio.getDescripcionTipoAnotacion());
+                        registroSalidaEjb.merge(registroSalida);
+                    }
+
+                    // Actualizamos el oficio
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
+                    oficioRemision.setFechaEstado(new Date());
+                    oficioRemisionEjb.merge(oficioRemision);
+
+                    log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
+
+                }
+
+            }
 
         // RECHAZO
         }else if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
@@ -124,7 +191,7 @@ public class SirBean implements SirLocal {
                     if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
 
                         RegistroEntrada registroEntrada = oficioRemision.getRegistrosEntrada().get(0);
-                        // Actualizamos el registroSir
+                        // Actualizamos el registro de entrada
                         registroEntrada.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
                         registroEntrada.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
                         registroEntrada.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
@@ -135,7 +202,7 @@ public class SirBean implements SirLocal {
                     }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
 
                         RegistroSalida registroSalida = oficioRemision.getRegistrosSalida().get(0);
-                        // Actualizamos el registroSir
+                        // Actualizamos el registro de salida
                         registroSalida.setEstado(RegwebConstantes.REGISTRO_RECHAZADO);
                         registroSalida.getRegistroDetalle().setAplicacion(ficheroIntercambio.getAplicacionEmisora());
                         registroSalida.getRegistroDetalle().setObservaciones(ficheroIntercambio.getObservacionesApunte());
@@ -161,7 +228,7 @@ public class SirBean implements SirLocal {
 
             }else{
                 // Caso extinguido de RECHAZO A ORIGEN
-                RegistroSir registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
+                registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
                 if(registroSir != null){
 

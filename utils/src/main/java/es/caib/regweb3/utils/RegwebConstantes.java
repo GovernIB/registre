@@ -229,6 +229,7 @@ public interface RegwebConstantes {
     Long REGISTRO_ANULADO = 8L;
     Long REGISTRO_RECTIFICADO = 9L;
     Long REGISTRO_RECHAZADO = 10L;
+    Long REGISTRO_REENVIADO = 11L;
 
     Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
@@ -240,7 +241,8 @@ public interface RegwebConstantes {
             REGISTRO_TRAMITADO,
             REGISTRO_ANULADO,
             REGISTRO_RECTIFICADO,
-            REGISTRO_RECHAZADO};
+            REGISTRO_RECHAZADO,
+            REGISTRO_REENVIADO};
 
     /* -------- TIPOS DE OFICIO DE REMISION ---------- */
     Long TIPO_OFICIO_REMISION_ENTRADA = 1L;

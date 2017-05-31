@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
@@ -196,6 +197,20 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             if(idJustificante != null){
                 log.info("Aviso: El registro ya tiene un justificante asociado");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.existe"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+        }
+
+        // Comprobaciones previas al reenvio
+        if(url.contains("reenviar")){
+            String idRegistroEntrada =  url.replace("/registroSalida/","").replace("/reenviar", ""); //Obtenemos el id a partir de la url
+
+            RegistroBasico registroSalida = registroSalidaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
+
+            // Comprobamos que está Rechazado
+            if(!(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) || registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO))){
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.reenvioSir"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

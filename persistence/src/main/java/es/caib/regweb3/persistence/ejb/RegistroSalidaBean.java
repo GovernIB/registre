@@ -69,7 +69,34 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
 
+    @Override
+    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception{
+        Query q;
 
+        q = em.createQuery("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.libro.nombre, rs.usuario.usuario.identificador, rs.estado " +
+                "from RegistroSalida as rs where rs.id = :idRegistroSalida ");
+
+
+        q.setParameter("idRegistroSalida", idRegistroSalida);
+
+        List<Object[]> result = q.getResultList();
+
+        if(result.size() == 1){
+            Object[] object = result.get(0);
+
+            RegistroBasico registroBasico = new RegistroBasico();
+            registroBasico.setId((Long)  object[0]);
+            registroBasico.setNumeroRegistroFormateado((String) object[1]);
+            registroBasico.setFecha((Date) object[2]);
+            registroBasico.setLibro((String) object[3]);
+            registroBasico.setUsuario((String) object[4]);
+            registroBasico.setEstado((Long) object[5]);
+
+            return registroBasico;
+        }
+
+        return null;
+    }
 
     @Override
     public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,

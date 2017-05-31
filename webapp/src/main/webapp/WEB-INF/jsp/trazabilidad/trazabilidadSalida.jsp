@@ -22,18 +22,18 @@
                             <c:import url="../trazabilidad/registroEntradaOrigen.jsp"/>
                         </li>
 
-                        <%--OFICIO REMISION--%>
-                        <li>
-                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                        </li>
-
                         <%--REGISTRO SALIDA--%>
                         <li>
                             <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
                             <c:import url="../trazabilidad/registroSalida.jsp">
                                 <c:param name="activo" value="true"/>
                             </c:import>
+                        </li>
+
+                        <%--OFICIO REMISION--%>
+                        <li>
+                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
                         </li>
 
                     </c:if>
