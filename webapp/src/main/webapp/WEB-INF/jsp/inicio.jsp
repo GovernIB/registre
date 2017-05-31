@@ -320,7 +320,7 @@
 
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSir.pendientesProcesar"/></strong> </h3>
+                                    <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong> </h3>
                                 </div>
 
                                 <div class="panel-body">
