@@ -86,7 +86,7 @@
                             <div class="timeline-badge danger"><i class="fa fa-warning"></i></div>
                             <div class="timeline-panel">
                                 <div class="timeline-heading">
-                                    <h4 class="timeline-title"><spring:message code="registroSir.rechazado"/>:</h4>
+                                    <h4 class="timeline-title"><spring:message code="registroSir.rechazado.origen"/>:</h4>
                                 </div>
                                 <div class="timeline-body">
                                     <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralOrigen} - ${trazabilidad.codigoEntidadRegistralOrigen}</small></p>
