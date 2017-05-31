@@ -64,6 +64,7 @@
 
                         <div class="row">
 
+                          <form:form modelAttribute="envioSirForm" method="post" cssClass="form-horizontal">
                             <div class="col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -85,7 +86,7 @@
                                     <div class="panel-body">
                                         <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino}</p>
 
-                                        <form:form modelAttribute="envioSirForm" method="post" cssClass="form-horizontal">
+
 
                                             <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
                                             <%--<input type="hidden" id="idLibro" name="idLibro" value="${registro.libro.id}"/>--%>
@@ -107,15 +108,24 @@
                                                     </div>
                                                 </div>
                                             </c:if>
-                                            <div class="form-actions">
-                                                <input type="submit" value="Enviar" class="btn btn-${color} btn-sm">
-                                            </div>
 
-                                        </form:form>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="form-actions col-xs-12">
+                                <input type="submit" value="<spring:message code="regweb.enviar"/>" class="btn btn-${color} btn-sm"/>
+
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                    <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
+                                </c:if>
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                    <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroSalida/${registro.id}/detalle"/>')" class="btn btn-sm"/>
+                                </c:if>
+
+                            </div>
+
+                          </form:form>
                         </div>
 
                     </div>
