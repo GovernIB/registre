@@ -173,9 +173,15 @@
                                            code="anexo.archivo"/></form:label>&nbsp;
                                 </div>
                                 <div class="col-xs-8">
-                                    <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
-                                            ${anexoForm.documentoCustody.name}
-                                    </a>
+                                    <c:if test="${empty anexoForm.anexo.id}">
+                                        <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
+                                                ${anexoForm.documentoCustody.name}
+                                        </a>
+                                    </c:if>
+                                    <c:if test="${not empty anexoForm.anexo.id}">
+                                        <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
+                                                ${anexoForm.documentoCustody.name}</a>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>
@@ -191,9 +197,14 @@
                                            code="anexo.firma"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
+                                <c:if test="${empty anexoForm.anexo.id}">
                                     <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
-                                            ${anexoForm.signatureCustody.name}
-                                    </a>
+                                            ${anexoForm.signatureCustody.name}</a>
+                                </c:if>
+                                <c:if test="${not empty anexoForm.anexo.id}">
+                                    <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
+                                            ${anexoForm.signatureCustody.name}</a>
+                                </c:if>
                                 </div>
                             </div>
                         </div>
