@@ -464,7 +464,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                     //oficio.setExterno(false);
                 }else{
                     oficio.setSir(false);
-                    //oficio.setExterno(true);
+                    oficio.setExterno(true);
                 }
 
             }else{

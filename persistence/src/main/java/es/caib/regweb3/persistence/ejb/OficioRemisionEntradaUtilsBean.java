@@ -306,7 +306,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 //oficio.setExterno(false);
             }else{
                 oficio.setSir(false);
-                //oficio.setExterno(true);
+                oficio.setExterno(true);
             }
 
         }else{
