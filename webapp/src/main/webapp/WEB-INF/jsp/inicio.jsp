@@ -332,14 +332,12 @@
                                                 <col>
                                                 <col>
                                                 <col>
-                                                <col>
                                                 <col width="51">
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="registroSir.numeroRegistro"/></th>
-                                                <th><spring:message code="registroSir.fechaRegistro"/></th>
                                                 <th><spring:message code="registroSir.oficinaOrigen"/></th>
+                                                <th><spring:message code="registroSir.fechaRegistro"/></th>
                                                 <th><spring:message code="registroSir.extracto"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
@@ -348,9 +346,8 @@
                                             <tbody>
                                             <c:forEach var="registroSir" items="${registrosSir}">
                                                 <tr>
-                                                    <td>${registroSir.numeroRegistro}</td>
+                                                    <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                                    <td>${registroSir.codigoEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.resumen}</td>
                                                     <td class="center">
                                                         <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
