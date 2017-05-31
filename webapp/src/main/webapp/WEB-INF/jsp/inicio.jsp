@@ -465,7 +465,7 @@
                                             </thead>
 
                                             <tbody>
-                                            <c:forEach var="registroEntrada" items="${registrosRechazados}" varStatus="status">
+                                            <c:forEach var="registroEntrada" items="${registrosReenviados}" varStatus="status">
                                                 <tr>
                                                     <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
