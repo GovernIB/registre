@@ -86,10 +86,9 @@
 
                             <div class="row">
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-1 boto-panel">
-                                        <button type="button" class="btn btn-warning btn-sm" style="margin-left: 15px;" onclick="validarFormReenvio();">
-                                            <spring:message code="regweb.reenviar"/>
-                                        </button>
+                                    <div class="col-xs-12">
+                                        <input type="button" value="<spring:message code="regweb.reenviar"/>" class="btn btn-warning btn-sm" onclick="validarFormReenvio();"/>
+                                        <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-sm"/>
                                     </div>
                                 </div>
                             </div>

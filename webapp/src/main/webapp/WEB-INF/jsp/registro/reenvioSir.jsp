@@ -102,10 +102,16 @@
 
                             <div class="row">
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-1 boto-panel">
-                                        <button type="button" class="btn btn-warning btn-sm" style="margin-left: 15px;" onclick="validarFormReenvio();">
-                                            <spring:message code="regweb.reenviar"/>
-                                        </button>
+                                    <div class="col-xs-12">
+                                        <input type="button" value="<spring:message code="regweb.reenviar"/>" class="btn btn-warning btn-sm" onclick="validarFormReenvio();"/>
+
+                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                            <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
+                                        </c:if>
+                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                            <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroSalida/${registro.id}/detalle"/>')" class="btn btn-sm"/>
+                                        </c:if>
+
                                     </div>
                                 </div>
                             </div>

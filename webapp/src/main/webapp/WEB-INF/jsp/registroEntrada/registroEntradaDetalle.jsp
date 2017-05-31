@@ -205,7 +205,7 @@
                             </c:if>
 
                             <%--Botón reenviar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RECHAZADO}">
+                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO}">
                                 <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroEntrada/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
                             </c:if>
 

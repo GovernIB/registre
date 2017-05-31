@@ -255,8 +255,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                     var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }else if (tipoOrganismo == 'OficinaSir') {
                     // Obtenemos el organismo responsable de la oficina viene como string combinado en el elemento raiz de la siguiente forma " Denominacion - Codigo".
-                    var codigoOrganismoResponsable = result[i].raiz.split(" - ")[1];
-                    var denominacionOrganismoResponsable = normalizarTexto(result[i].raiz.split(" - ")[0]);
+                    var codigoOrganismoResponsable = result[i].superior.split(" - ")[1];
+                    var denominacionOrganismoResponsable = normalizarTexto(result[i].superior.split(" - ")[0]);
                     var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOficinaSir('" + codigo + "','" + denominacion + "','"+codigoOrganismoResponsable+"','"+denominacionOrganismoResponsable+"','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                 }
 
@@ -437,7 +437,7 @@ function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denom
         $('#denominacionOficina').val(denominacion);
         $('#codigoOrganismoResponsable').val(codigoOrganismoResponsable);
         $('#denominacionOrganismoResponsable').val(denominacionOrganismoResponsable);
-        $('#datosOficinaReenvio').val(codigoOrganismoResponsable+": "+denominacionOrganismoResponsable+ ", "+codigo+": " + denominacion);
+        $('#datosOficinaReenvio').val(denominacion+" ("+codigo+")\n"+denominacionOrganismoResponsable+" ("+ codigoOrganismoResponsable+")");
 
         $(idModal).modal('hide');
     }

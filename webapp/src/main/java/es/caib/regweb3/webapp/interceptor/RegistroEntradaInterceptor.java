@@ -210,7 +210,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
             RegistroBasico registroEntrada = registroEntradaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
 
             // Comprobamos que está Rechazado
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)){
+            if(!(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) || registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO))){
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.reenvioSir"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;

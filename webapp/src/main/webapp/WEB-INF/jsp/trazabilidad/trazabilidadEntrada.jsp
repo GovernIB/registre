@@ -26,16 +26,16 @@
                             </li>
                         </c:if>
 
-                        <%--OFICIO REMISION--%>
-                        <li>
-                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                        </li>
-
                         <%--REGISTRO SALIDA--%>
                         <li>
                             <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
                             <c:import url="../trazabilidad/registroSalida.jsp"/>
+                        </li>
+
+                        <%--OFICIO REMISION--%>
+                        <li>
+                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
                         </li>
 
                         <%--REGISTRO DESTINO--%>
@@ -90,16 +90,16 @@
                                     </li>
                                 </c:if>
 
-                                <%--OFICIO REMISION--%>
-                                <li>
-                                    <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                                    <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                                </li>
-
                                 <%--REGISTRO SALIDA--%>
                                 <li>
                                     <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
                                     <c:import url="../trazabilidad/registroSalida.jsp"/>
+                                </li>
+
+                                <%--OFICIO REMISION--%>
+                                <li>
+                                    <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                    <c:import url="../trazabilidad/oficioRemision.jsp"/>
                                 </li>
 
                                 <%--REGISTRO ENTRADA DESTINO--%>
@@ -123,16 +123,16 @@
                                     </li>
                                 </c:if>
 
-                                <%--OFICIO REMISION--%>
-                                <li class="timeline-inverted">
-                                    <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                                    <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                                </li>
-
                                 <%--REGISTRO SALIDA--%>
                                 <li class="timeline-inverted">
                                     <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
                                     <c:import url="../trazabilidad/registroSalida.jsp"/>
+                                </li>
+
+                                <%--OFICIO REMISION--%>
+                                <li class="timeline-inverted">
+                                    <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                    <c:import url="../trazabilidad/oficioRemision.jsp"/>
                                 </li>
 
                                 <%--REGISTRO ENTRADA--%>
