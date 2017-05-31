@@ -437,7 +437,7 @@ function asignarOficinaSir(codigo,denominacion,codigoOrganismoResponsable, denom
         $('#denominacionOficina').val(denominacion);
         $('#codigoOrganismoResponsable').val(codigoOrganismoResponsable);
         $('#denominacionOrganismoResponsable').val(denominacionOrganismoResponsable);
-        $('#datosOficinaReenvio').val(codigoOrganismoResponsable+": "+denominacionOrganismoResponsable+ ", "+codigo+": " + denominacion);
+        $('#datosOficinaReenvio').val(denominacion+" ("+codigo+")\n"+denominacionOrganismoResponsable+" ("+ codigoOrganismoResponsable+")");
 
         $(idModal).modal('hide');
     }

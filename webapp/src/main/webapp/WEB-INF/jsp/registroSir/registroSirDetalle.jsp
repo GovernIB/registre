@@ -438,7 +438,7 @@
                     <div class="modal-body">
                         <c:url value="/registroSir/rechazar/${registroSir.id}" var="urlRechazar" scope="request"/>
                         <form:form modelAttribute="rechazarForm" method="post" action="${urlRechazar}" cssClass="form-horizontal">
-                            <div class="panel panel-success">
+                            <div class="panel panel-primary">
 
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>

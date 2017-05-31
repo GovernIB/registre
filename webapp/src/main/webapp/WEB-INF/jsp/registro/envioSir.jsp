@@ -73,7 +73,6 @@
                                     <div class="panel-body">
                                         <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.numeroRegistro"/>:</strong> ${registro.numeroRegistroFormateado}</p>
                                         <p><strong><i class="fa fa-clock-o"></i> <spring:message code="regweb.fecha"/>:</strong> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
-                                        <p><strong><i class="fa fa-book"></i> <spring:message code="libro.libro"/>:</strong> ${registro.libro.nombre}</p>
                                     </div>
                                 </div>
                             </div>
@@ -86,10 +85,7 @@
                                     <div class="panel-body">
                                         <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino}</p>
 
-
-
                                             <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
-                                            <%--<input type="hidden" id="idLibro" name="idLibro" value="${registro.libro.id}"/>--%>
 
                                             <!-- Oficina Sir destinataria -->
                                             <c:if test="${fn:length(oficinasSIR) == 1}">

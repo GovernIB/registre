@@ -159,10 +159,41 @@ public class SirBean implements SirLocal {
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
-
             }else{
-                log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
-                throw new ValidacionException(Errores.ERROR_0037);
+                // Caso extinguido de RECHAZO A ORIGEN
+                RegistroSir registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(),ficheroIntercambio.getCodigoEntidadRegistralDestino());
+
+                if(registroSir != null){
+
+                    log.info("Se trata de un Rechazo a Origen: " + ficheroIntercambio.getIdentificadorIntercambio());
+
+                    if(EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
+                            EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())){
+
+                        // Modificar el estado del Registro a RECIBIDO
+                        registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
+                        registroSir.setFechaEstado(new Date());
+                        registroSirEjb.merge(registroSir);
+
+                        //Creamos la TrazabilidadSir
+                        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO_ORIGEN);
+                        trazabilidadSir.setRegistroSir(registroSir);
+                        trazabilidadSir.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
+                        trazabilidadSir.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralDestino());
+                        trazabilidadSir.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDescripcionEntidadRegistralDestino());
+                        trazabilidadSir.setAplicacion(ficheroIntercambio.getAplicacionEmisora());
+                        trazabilidadSir.setNombreUsuario(ficheroIntercambio.getNombreUsuario());
+                        trazabilidadSir.setContactoUsuario(ficheroIntercambio.getContactoUsuario());
+                        trazabilidadSir.setObservaciones(ficheroIntercambio.getDescripcionTipoAnotacion());
+                        trazabilidadSir.setFecha(new Date());
+                        trazabilidadSirEjb.persist(trazabilidadSir);
+                    }
+                }else{
+                    log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    throw new ValidacionException(Errores.ERROR_0037);
+                }
+
             }
         }
     }
