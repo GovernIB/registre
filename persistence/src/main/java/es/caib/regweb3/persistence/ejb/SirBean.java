@@ -47,7 +47,6 @@ public class SirBean implements SirLocal {
     @EJB private AnexoLocal anexoEjb;
     @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
-    @EJB private PluginLocal pluginEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
 
@@ -253,7 +252,6 @@ public class SirBean implements SirLocal {
                 RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado()){
 
             log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-            //throw new ValidacionException(Errores.ERROR_0206);
 
         }else{
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
@@ -286,7 +284,6 @@ public class SirBean implements SirLocal {
                 EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
 
             log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
-            //throw new ValidacionException(Errores.ERROR_0206);
 
         }else{
             log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
@@ -672,8 +669,8 @@ public class SirBean implements SirLocal {
         // Modificamos la oficina destino con la de inicio
         registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
         registroSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
-        registroSir.setCodigoUnidadTramitacionDestino(""); //TODO Añadir codigo unidad tramitación
-        registroSir.setDecodificacionUnidadTramitacionDestino("");
+        //registroSir.setCodigoUnidadTramitacionDestino("");
+        //registroSir.setDecodificacionUnidadTramitacionDestino("");
 
         // Modificamos la oficina de origen con la oficina activa
         registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());

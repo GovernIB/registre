@@ -44,6 +44,21 @@
 
                         <dl class="detalle_registro">
 
+                            <%--Oficina Inicio--%>
+                            <c:if test="${not empty registroSir.codigoEntidadRegistralInicio}">
+                                <%--Si es diferente a la de Origen--%>
+                                <c:if test="${registroSir.codigoEntidadRegistralInicio != registroSir.codigoEntidadRegistralOrigen}">
+                                    <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaInicio"/>:
+                                    </dt>
+                                    <dd> ${registroSir.codigoEntidadRegistralInicio}
+                                        <c:if test="${not empty registroSir.decodificacionEntidadRegistralInicio}">
+                                            - ${registroSir.decodificacionEntidadRegistralInicio}
+                                        </c:if>
+                                    </dd>
+                                </c:if>
+
+                            </c:if>
+
                             <c:if test="${not empty registroSir.fechaRecepcion}">
                                 <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRecepcion"/>: </dt>
                                 <dd><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
@@ -54,6 +69,12 @@
                                 <dd>${registroSir.numeroRegistro}</dd>
                             </c:if>
 
+                            <c:if test="${not empty registroSir.fechaRegistro}">
+                                <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistro"/>: </dt>
+                                <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
+                            </c:if>
+
+                            <%--Unidad Tramitación Origen--%>
                             <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen}">
                                 <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadOrigen"/>:
                                 </dt>
@@ -64,6 +85,7 @@
                                 </dd>
                             </c:if>
 
+                            <%--Oficina Origen--%>
                             <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaOrigen"/>:
                             </dt>
                             <dd> ${registroSir.codigoEntidadRegistralOrigen}
@@ -72,6 +94,7 @@
                                 </c:if>
                             </dd>
 
+                            <%--Unidad Tramitación Destino--%>
                             <c:if test="${not empty registroSir.codigoUnidadTramitacionDestino}">
                                 <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadDestino"/>:
                                 </dt>
@@ -82,7 +105,8 @@
                                 </dd>
                             </c:if>
 
-                            <c:if test="${not empty registroSir.codigoUnidadTramitacionDestino}">
+                            <%--Oficina Destino--%>
+                            <c:if test="${not empty registroSir.codigoEntidadRegistralDestino}">
                                 <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaDestino"/>:
                                 </dt>
                                 <dd> ${registroSir.codigoEntidadRegistralDestino}
@@ -98,11 +122,6 @@
                             </c:if>
                             <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
                                 <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
-                            </c:if>
-
-                            <c:if test="${not empty registroSir.fechaRegistro}">
-                                <dt><i class="fa fa-clock-o"></i> <spring:message code="registroSir.fechaRegistro"/>: </dt>
-                                <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
 
                             <c:if test="${not empty registroSir.nombreUsuario}">
