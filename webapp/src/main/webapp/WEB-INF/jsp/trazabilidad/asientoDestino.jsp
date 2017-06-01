@@ -11,8 +11,8 @@
     <div class="timeline-body">
         <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
         <p><small><i class="fa fa-barcode"></i> <strong><spring:message code="registroSir.numeroRegistro"/>:</strong> ${oficioRemision.numeroRegistroEntradaDestino}</small></p>
-        <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${registroEntradaEnviado.oficina.denominacion}</small></p>
+        <%--<p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${registroEntradaEnviado.oficina.denominacion}</small></p>
         <p><small><i class="fa fa-institution"></i> <strong><spring:message code="organismo.destino"/>:</strong> ${registroEntradaEnviado.destinoExternoDenominacion}</small></p>
-        <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${registroEntradaEnviado.registroDetalle.decodificacionEntidadRegistralDestino}</small></p>
+        <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${registroEntradaEnviado.registroDetalle.decodificacionEntidadRegistralDestino}</small></p>--%>
     </div>
 </div>
