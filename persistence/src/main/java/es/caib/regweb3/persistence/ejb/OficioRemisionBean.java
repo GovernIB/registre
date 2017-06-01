@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -142,8 +143,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         // Identificador Intercambio
         if(StringUtils.isNotEmpty(oficioRemision.getIdentificadorIntercambio())){
-            where.add(" oficioRemision.identificadorIntercambio = :identificadorIntercambio");
-            parametros.put("identificadorIntercambio",oficioRemision.getIdentificadorIntercambio());
+            where.add(DataBaseUtils.like("oficioRemision.identificadorIntercambio", "identificadorIntercambio", parametros, oficioRemision.getIdentificadorIntercambio()));
         }
 
         // Parametros
