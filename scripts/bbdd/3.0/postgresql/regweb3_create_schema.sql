@@ -354,7 +354,9 @@
 
     create table RWE_OFICIO_REMISION (
         ID int8 not null,
+        COD_ENT_REG_DEST varchar(21),
         COD_ERROR varchar(255),
+        DEC_ENT_REG_DEST varchar(80),
         DESC_ERROR varchar(2000),
         DESTINOEXTERNOCODIGO varchar(9),
         DESTINOEXTERNODENOMINA varchar(300),
