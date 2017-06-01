@@ -38,12 +38,11 @@
                             <c:import url="../trazabilidad/oficioRemision.jsp"/>
                         </li>
 
-                        <%--REGISTRO DESTINO--%>
-                        <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
+                        <%--OFICIO ACEPTADO O DEVUELTO--%>
+                        <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
 
                             <li class="timeline-inverted">
                                 <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                                <c:set var="registroEntradaEnviado" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
                                 <c:import url="../trazabilidad/asientoDestino.jsp"/>
                             </li>
 

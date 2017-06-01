@@ -41,6 +41,8 @@ public class OficioRemision implements Serializable {
 
   private Boolean sir = false;
   private String identificadorIntercambio;
+  private String codigoEntidadRegistralDestino; // Oficina que acepta o rechaza
+  private String decodificacionEntidadRegistralDestino; // Oficina que acepta o rechaza
   private String numeroRegistroEntradaDestino;
   private Date fechaEntradaDestino;
   private String codigoError;
@@ -206,6 +208,24 @@ public class OficioRemision implements Serializable {
 
   public void setIdentificadorIntercambio(String identificadorIntercambio) {
     this.identificadorIntercambio = identificadorIntercambio;
+  }
+
+  @Column(name = "COD_ENT_REG_DEST", length = 21, nullable = true)
+  public String getCodigoEntidadRegistralDestino() {
+    return codigoEntidadRegistralDestino;
+  }
+
+  public void setCodigoEntidadRegistralDestino(String codigoEntidadRegistralDestino) {
+    this.codigoEntidadRegistralDestino = codigoEntidadRegistralDestino;
+  }
+
+  @Column(name = "DEC_ENT_REG_DEST", length = 80, nullable = true)
+  public String getDecodificacionEntidadRegistralDestino() {
+    return decodificacionEntidadRegistralDestino;
+  }
+
+  public void setDecodificacionEntidadRegistralDestino(String decodificacionEntidadRegistralDestino) {
+    this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
   }
 
   @Column(name = "NUM_REG_DESTINO", nullable = true)

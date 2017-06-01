@@ -5,6 +5,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
@@ -14,6 +15,7 @@ import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -166,6 +168,8 @@ public class SirBean implements SirLocal {
                     }
 
                     // Actualizamos el oficio
+                    oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                    oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
@@ -222,6 +226,8 @@ public class SirBean implements SirLocal {
                     }
 
                     // Actualizamos el oficio
+                    oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                    oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
@@ -413,6 +419,8 @@ public class SirBean implements SirLocal {
                 RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado() ||
                 RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR == oficioRemision.getEstado()){
 
+            oficioRemision.setCodigoEntidadRegistralDestino(mensaje.getCodigoEntidadRegistralOrigen());
+            oficioRemision.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
             oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
@@ -429,7 +437,6 @@ public class SirBean implements SirLocal {
         }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
 
             log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
-            //throw new ValidacionException(Errores.ERROR_0206);
 
         }else{
             log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
