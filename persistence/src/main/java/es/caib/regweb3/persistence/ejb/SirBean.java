@@ -171,6 +171,10 @@ public class SirBean implements SirLocal {
 
                 }
 
+            }else{
+                // Creamos un nuevo RegistroSir
+                registroSir = registroSirEjb.crearRegistroSir(ficheroIntercambio);
+                log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
         // RECHAZO
