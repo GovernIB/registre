@@ -78,7 +78,7 @@
                                     <form:label path="descripcion"><spring:message code="plugin.descripcion"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:textarea path="descripcion" rows="2" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
+                                    <form:textarea path="descripcion" rows="3" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
 
@@ -98,7 +98,7 @@
                                         <form:label path="propiedadesAdmin"><spring:message code="plugin.propiedadesAdmin"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:textarea path="propiedadesAdmin" rows="3" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
+                                        <form:textarea path="propiedadesAdmin" rows="10" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
                             </c:if>
@@ -109,7 +109,7 @@
                                         <form:label path="propiedadesEntidad"><spring:message code="plugin.propiedadesEntidad"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:textarea path="propiedadesEntidad" rows="7" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
+                                        <form:textarea path="propiedadesEntidad" rows="10" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
                             </c:if>
