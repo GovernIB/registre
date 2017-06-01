@@ -136,7 +136,7 @@ public class AnexoFicheroController extends AnexoController {
         }
 
         if (result.hasErrors()) {
-            return "registro/formularioAnexoFichero";
+            return "redirect:/anexoFichero/ficheros/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
         } else {
             try {
                 //Preparamos los documentcustody, signaturecustody
@@ -161,7 +161,7 @@ public class AnexoFicheroController extends AnexoController {
                 Mensaje.saveMessageError(request, e.getMessage());
             }
         }
-        return "registro/formularioAnexoFichero";
+        return "redirect:/anexoFichero/ficheros/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
 
     }
 
