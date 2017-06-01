@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -137,6 +138,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         if(estadoOficioRemision != null){
             where.add(" oficioRemision.estado = :estadoOficioRemision");
             parametros.put("estadoOficioRemision",estadoOficioRemision);
+        }
+
+        // Identificador Intercambio
+        if(StringUtils.isNotEmpty(oficioRemision.getIdentificadorIntercambio())){
+            where.add(" oficioRemision.identificadorIntercambio = :identificadorIntercambio");
+            parametros.put("identificadorIntercambio",oficioRemision.getIdentificadorIntercambio());
         }
 
         // Parametros

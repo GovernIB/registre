@@ -48,6 +48,13 @@
 
                         <div class="panel-body">
                             <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.identificadorIntercambio"/></div>
+                                <div class="col-xs-8">
+                                    <form:input path="oficioRemision.identificadorIntercambio" cssClass="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
                                 <div class="col-xs-4 pull-left align-right"> <spring:message code="oficioRemision.libro"/></div>
                                 <div class="col-xs-8">
                                     <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
