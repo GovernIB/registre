@@ -130,6 +130,9 @@ public class SirBean implements SirLocal {
 
                     log.info("El registroSir existia en el sistema, se ha vuelto a recibir: " + registroSir.getIdentificadorIntercambio());
 
+                }else{
+                    log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    throw new ValidacionException(Errores.ERROR_0037);
                 }
 
             }else if(oficioRemision != null){ // Ya existe en el sistema
@@ -169,6 +172,9 @@ public class SirBean implements SirLocal {
 
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
 
+                }else{
+                    log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    throw new ValidacionException(Errores.ERROR_0037);
                 }
 
             }else{

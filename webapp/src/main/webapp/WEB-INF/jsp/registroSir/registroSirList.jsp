@@ -47,9 +47,9 @@
                         <div class="panel-body">
 
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.numeroRegistro"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.identificadorIntercambio"/></div>
                                 <div class="col-xs-8">
-                                    <form:input path="registroSir.numeroRegistro" cssClass="form-control"/>
+                                    <form:input path="registroSir.identificadorIntercambio" cssClass="form-control"/>
                                 </div>
                             </div>
 
