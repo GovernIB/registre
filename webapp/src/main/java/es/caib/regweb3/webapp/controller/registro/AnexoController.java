@@ -1,6 +1,5 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -534,8 +533,7 @@ public class AnexoController extends BaseController {
      */
     public void validarLimitacionesSIRAnexos(Long registroID, String tipoRegistro, long docSize,
                                              long firmaSize, String docExtension, String firmaExtension,
-                                             HttpServletRequest request, BindingResult result, boolean scan) throws Exception, I18NException{
-        Entidad entidadActiva = getEntidadActiva(request);
+                                              BindingResult result, boolean scan) throws Exception, I18NException{
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
         List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
@@ -544,7 +542,7 @@ public class AnexoController extends BaseController {
         long  tamanyoTotalAnexos= AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
 
         // Comprobamos que el nuevo anexo no supere el tamaño máximo.
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidadActiva.getId());
+        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
         if (docSize != 0) {
             tamanyoTotalAnexos += docSize;
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
@@ -571,7 +569,7 @@ public class AnexoController extends BaseController {
 
 
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidadActiva.getId());
+        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
         if(!docExtension.isEmpty()) {
             if (!extensionesPermitidas.contains(docExtension)) {
                 if (!scan) {

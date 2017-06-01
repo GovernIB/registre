@@ -18,7 +18,7 @@
 
         <div class="panel-heading">
 
-            <c:if test="${empty maxanexospermitidos || fn:length(anexos) < maxanexospermitidos }">
+            <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
 
                 <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal"
                    class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
@@ -60,6 +60,12 @@
                         <c:forEach var="errorAnexoSir" items="${erroresAnexosSir}">
                             <p><strong>${errorAnexoSir}</strong></p>
                         </c:forEach>
+                    </div>
+                </c:if>
+
+                <c:if test="${empty erroresAnexosSir && fn:length(anexos) >= numeromaxanexossir }">
+                    <div class="alert alert-grey ">
+                        <p><strong><spring:message code="anexo.numeroMaximo.superado"/></strong></p>
                     </div>
                 </c:if>
 

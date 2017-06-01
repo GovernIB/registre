@@ -103,7 +103,7 @@ public class AnexoScanController extends AnexoController {
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
 
-                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result, true);
+                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, true);
             }
 
             Entidad entidad = getEntidadActiva(request);
@@ -123,7 +123,7 @@ public class AnexoScanController extends AnexoController {
             Mensaje.saveMessageError(request, e.getMessage());
         }
 
-        //return "registro/formularioAnexoScan";
+
         return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
 
     }

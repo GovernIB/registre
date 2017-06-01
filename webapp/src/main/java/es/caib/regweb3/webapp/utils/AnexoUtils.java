@@ -28,11 +28,11 @@ public class AnexoUtils {
 
         List<String> mensajesError =  new ArrayList<String>();
 
-        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getMaxUploadSizeTotal(idEntidad);
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(idEntidad);
+        Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
+        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
 
         // Número máximo de Anexos permitidos
-        if(anexos.size() > PropiedadGlobalUtil.getMaxAnexosPermitidos(idEntidad)){
+        if(anexos.size() > PropiedadGlobalUtil.getNumeroMaxAnexosSir()){
             mensajesError.add(I18NUtils.tradueix("anexo.numeroMaximo.superado"));
             return mensajesError;
         }

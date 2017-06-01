@@ -102,18 +102,18 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
 
     //Montamos la nota informativa de las limitaciones de los anexos cogiendo los valores de las propiedades configuradas
     public void initMensajeNotaInformativaAnexos(Entidad entidad, Model model) throws Exception{
-        Integer maxAnexosPermitidos = PropiedadGlobalUtil.getMaxAnexosPermitidos(entidad.getId());
-        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosPermitidos(entidad.getId());
-        Long maxUploadSizeInBytes= new Long(0);
+        Integer numeroMaxAnexosSir = PropiedadGlobalUtil.getNumeroMaxAnexosSir();
+        String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
+        Long tamanoMaximoAnexoSir= new Long(0);
         Long maxUploadSizeTotal= new Long(0);
-        if(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidad.getId())!= null){
-            maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidad.getId())/(1024*1024);
+        if(PropiedadGlobalUtil.getTamanoMaximoPorAnexoSir()!= null){
+            tamanoMaximoAnexoSir = PropiedadGlobalUtil.getTamanoMaximoPorAnexoSir()/(1024*1024);
         }
-        if(PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId())!=null) {
-            maxUploadSizeTotal = PropiedadGlobalUtil.getMaxUploadSizeTotal(entidad.getId()) / (1024 * 1024);
+        if(PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir()!=null) {
+            maxUploadSizeTotal = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir() / (1024 * 1024);
         }
-        model.addAttribute("maxanexospermitidos", maxAnexosPermitidos);
-        model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",maxAnexosPermitidos.toString(),maxUploadSizeInBytes.toString(),maxUploadSizeTotal.toString(),extensionesPermitidas ));
+        model.addAttribute("numeromaxanexossir", numeroMaxAnexosSir);
+        model.addAttribute("notainformativa", I18NUtils.tradueix("anexo.notainformativa",numeroMaxAnexosSir.toString(),tamanoMaximoAnexoSir.toString(),maxUploadSizeTotal.toString(),extensionesPermitidas ));
     }
 
     /**

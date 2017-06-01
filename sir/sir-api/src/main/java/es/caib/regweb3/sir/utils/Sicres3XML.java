@@ -500,9 +500,6 @@ public class Sicres3XML {
                         anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
                         "El Tipo mime: "+anexo.getTipo_MIME()+", no coincide con el indicado en el campo 'IdentificadorFichero': " + identificadorFichero);
 
-                //TODO revisar si lo activamos en producción o no
-                //String mimePermitidos = PropiedadGlobalUtil.getMIMEPermitidos();
-                //Assert.isTrue(mimePermitidos.contains(anexo.getTipo_MIME()),"El tipo MIME recibido no está permitido");
             }
         }
     }

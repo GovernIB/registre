@@ -66,8 +66,9 @@ public class AnexoFicheroController extends AnexoController {
         String tipoRegistro = (String) session.getAttribute("LAST_tipoRegistro");
         Long registroID = (Long) session.getAttribute("LAST_registroID");
         Long anexoID = (Long) session.getAttribute("LAST_anexoID");
+        Boolean isOficioRemisionSir = (Boolean) session.getAttribute("LAST_isOficioRemisionSir");
 
-        boolean isOficioRemisionSir = false;
+
         return new ModelAndView(new RedirectView("/anexoFichero/ficheros/" + registroDetalleID + "/" + tipoRegistro + "/" + registroID + (anexoID == null ? "" : ("/" + anexoID)) + "/" + isOficioRemisionSir, true));
     }
 
@@ -93,7 +94,6 @@ public class AnexoFicheroController extends AnexoController {
         anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
         model.addAttribute("anexoForm" ,anexoForm);
 
-       // loadCommonAttributes(request, model);
         return "registro/formularioAnexoFichero";
     }
 
@@ -125,7 +125,13 @@ public class AnexoFicheroController extends AnexoController {
                 firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getFirmaFile().getOriginalFilename());
             }
             log.info("MODO FIRMA "+ anexoForm.getAnexo().getModoFirma());
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, request, result,false);
+            if(anexoForm.getDocumentoFile()!=null) {
+                log.info("DocumentoFile " + anexoForm.getDocumentoFile().getOriginalFilename());
+            }
+            if(anexoForm.getFirmaFile()!=null) {
+                log.info("FirmaFile " + anexoForm.getFirmaFile().getOriginalFilename());
+            }
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result,false);
 
         }
 
@@ -160,26 +166,6 @@ public class AnexoFicheroController extends AnexoController {
     }
 
 
- /*   *//**
-     * Obtiene los anexos completos del registro indicado
-     * @param idRegistro
-     * @param tipoRegistro
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     *//*
-    public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
-        if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
-            return registroEntrada.getRegistroDetalle().getAnexosFull();
-
-        } else {
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullLigero(idRegistro);
-            return registroSalida.getRegistroDetalle().getAnexosFull();
-
-        }
-    }*/
-
 
 
     /**
@@ -199,6 +185,7 @@ public class AnexoFicheroController extends AnexoController {
             log.debug(" anexoForm.getFirmaFile().isEmpty() = " + anexoForm.getFirmaFile().isEmpty());
             log.debug(" anexoForm.isFirmaFileDelete() = " + anexoForm.isSignatureFileDelete());
         }
+        log.debug(" anexoForm.getFirmaFile() = " + anexoForm.getFirmaFile());
         //Cargamos el signature custody con el actual
        // SignatureCustody sc = anexoForm.getSignatureCustody();
         SignatureCustody sc = null;
@@ -258,7 +245,7 @@ public class AnexoFicheroController extends AnexoController {
             log.debug(" anexoForm.isDocumentoFileDelete() = " + anexoForm.isDocumentoFileDelete());
         }
 
-
+        log.debug(" anexoForm.getDocumentoFile() = " + anexoForm.getDocumentoFile());
         //DocumentCustody dc = anexoForm.getDocumentoCustody();
         DocumentCustody dc = null;
         if (!anexoForm.getDocumentoFile().isEmpty()) {
