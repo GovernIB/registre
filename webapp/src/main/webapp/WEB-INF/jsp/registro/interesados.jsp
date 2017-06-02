@@ -163,6 +163,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
 
 <script type="text/javascript">
+    var tipoRegistro = '${param.tipoRegistro}';
     var urlAddOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addOrganismo"/>';
     var urlEliminarOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarOrganismo"/>';
     var urlAddPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addPersona"/>';
@@ -280,7 +281,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             loadingClass: "loading-circle"
         },
         onSelect: function(item) {
-            addInteresado(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${param.idRegistroDetalle}')
+            addPersonaInteresado(item.value,item.text,'<spring:message code="persona.fisica"/>','No',null,'${param.idRegistroDetalle}')
         }
     });
 
@@ -300,7 +301,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
             loadingClass: "loading-circle"
         },
         onSelect: function(item) {
-            addInteresado(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${param.idRegistroDetalle}')
+            addPersonaInteresado(item.value,item.text,'<spring:message code="persona.juridica"/>','No',null,'${param.idRegistroDetalle}')
         }
     });
     // Posicionamos el ratón en el campo indicado al cargar el modal

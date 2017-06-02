@@ -13,14 +13,8 @@
 
                 <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status" >
 
-                    <%--OFICIO REMISION ENTRADA--%>
-                    <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-
-                        <%--REGISTRO ENTRADA ORIGEN--%>
-                        <li>
-                            <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
-                            <c:import url="../trazabilidad/registroEntradaOrigen.jsp"/>
-                        </li>
+                    <%-- Registro que ha salido via SIR --%>
+                    <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_OFICIO_SIR}">
 
                         <%--REGISTRO SALIDA--%>
                         <li>
@@ -36,13 +30,32 @@
                             <c:import url="../trazabilidad/oficioRemision.jsp"/>
                         </li>
 
+                        <%--OFICIO ACEPTADO O DEVUELTO--%>
+                        <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+
+                            <li class="timeline-inverted">
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                <c:import url="../trazabilidad/asientoDestino.jsp"/>
+                            </li>
+
+                        </c:if>
+
                     </c:if>
 
-                    <%--OFICIO REMISION SALIDA--%>
-                    <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                    <%-- Oficio Remision --%>
+                    <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_OFICIO}">
 
-                        <%--REGISTRO SALIDA--%>
-                        <c:if test="${status.first}">
+                        <%--Tipo Oficio Remision Entrada--%>
+                        <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+
+                            <%--REGISTRO ENTRADA ORIGEN--%>
+                            <li>
+                                <c:set var="registroEntradaOrigen" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
+                                <c:import url="../trazabilidad/registroEntradaOrigen.jsp"/>
+                            </li>
+
+                            <%--REGISTRO SALIDA--%>
                             <li>
                                 <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
                                 <c:import url="../trazabilidad/registroSalida.jsp">
@@ -50,21 +63,43 @@
                                 </c:import>
                             </li>
 
-                        </c:if>
-
-                        <%--OFICIO REMISION--%>
-                        <li>
-                            <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                            <c:import url="../trazabilidad/oficioRemision.jsp"/>
-                        </li>
-
-                        <%--REGISTRO ENTRADA DESTINO--%>
-                        <c:if test="${trazabilidad.registroEntradaDestino != null}">
-                            <li class="timeline-inverted">
-                                <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
-                                <c:import url="../trazabilidad/registroEntradaDestino.jsp"/>
+                            <%--OFICIO REMISION--%>
+                            <li>
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
                             </li>
+
                         </c:if>
+
+                        <%--Tipo Oficio Remision Salida--%>
+                        <c:if test="${trazabilidad.oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+
+                            <%--REGISTRO SALIDA--%>
+                            <c:if test="${status.first}">
+                                <li>
+                                    <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroSalida.jsp">
+                                        <c:param name="activo" value="true"/>
+                                    </c:import>
+                                </li>
+
+                            </c:if>
+
+                            <%--OFICIO REMISION--%>
+                            <li>
+                                <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
+                                <c:import url="../trazabilidad/oficioRemision.jsp"/>
+                            </li>
+
+                            <%--REGISTRO ENTRADA DESTINO--%>
+                            <c:if test="${trazabilidad.registroEntradaDestino != null}">
+                                <li class="timeline-inverted">
+                                    <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
+                                    <c:import url="../trazabilidad/registroEntradaDestino.jsp"/>
+                                </li>
+                            </c:if>
+                        </c:if>
+
                     </c:if>
 
                     <%-- RECTIFICACIÓN --%>
