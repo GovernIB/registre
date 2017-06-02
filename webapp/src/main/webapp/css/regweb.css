@@ -825,3 +825,25 @@ a.text-gris:focus {
 .sin-scroll{
     overflow-x: inherit;
 }
+
+/*Divisors a dins el Panel-body*/
+.divider-primary {
+    border-top: 1px solid #337ab7;
+    margin: 5px -15px 5px -15px;
+}
+.divider-success {
+    border-top: 1px solid #3c763d;
+    margin: 5px -15px 5px -15px;
+}
+.divider-danger {
+    border-top: 1px solid #a94442;
+    margin: 5px -15px 5px -15px;
+}
+.divider-info {
+    border-top: 1px solid #31708f;
+    margin: 5px -15px 5px -15px;
+}
+.divider-warning {
+    border-top: 1px solid #8a6d3b;
+    margin: 5px -15px 5px -15px;
+}

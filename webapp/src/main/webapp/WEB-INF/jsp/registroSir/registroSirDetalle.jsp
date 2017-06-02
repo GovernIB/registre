@@ -74,6 +74,8 @@
                                 <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
 
+                            <hr class="divider-primary">
+
                             <%--Unidad Tramitación Origen--%>
                             <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen}">
                                 <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadOrigen"/>:
@@ -179,7 +181,18 @@
 
                             <c:if test="${not empty registroSir.documentacionFisica}">
                                 <dt><i class="fa fa-file"></i> <spring:message code="registroSir.tipoDocumentacionFisica"/>: </dt>
-                                <dd><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></dd>
+                                <dd>
+                                    <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+                                    <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                        <span class="text-vermell"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                                    </c:if>
+                                    <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                        <span class="text-taronja"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                                    </c:if>
+                                    <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                        <span class="text-verd"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                                    </c:if>
+                                </dd>
                             </c:if>
 
                             <c:if test="${not empty registroSir.resumen}">
