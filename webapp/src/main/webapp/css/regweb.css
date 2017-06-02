@@ -847,3 +847,18 @@ a.text-gris:focus {
     border-top: 1px solid #8a6d3b;
     margin: 5px -15px 5px -15px;
 }
+
+/* Panels d'Inici en 2 columnes */
+.columnesInici {
+    -moz-column-count: 2;
+    -moz-column-gap: 10px;
+    -webkit-column-count: 2;
+    -webkit-column-gap: 10px;
+    column-count: 2;
+    column-gap: 10px;
+}
+
+.columnesInici div {
+    display: inline-block;
+    width: 100%;
+}
