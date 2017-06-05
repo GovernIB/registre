@@ -1369,7 +1369,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           anexoFull.setSignatureCustody(sign);
           anexoFull.setSignatureFileDelete(false);
-          
+          anexoFull.getAnexo().setSignType("PAdES");
+          anexoFull.getAnexo().setSignFormat("implicit_enveloped/attached");
+          anexoFull.getAnexo().setSignProfile("AdES-EPES");
+
           // Cream l'annex justificant
           anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro,custodyID);
 
