@@ -760,7 +760,8 @@ public class InteresadoController extends BaseController{
      * @param tipoRegistro
      * @throws Exception
      */
-    private Boolean eliminarOrganismoBbdd(String codigoDir3, Long idRegistroDetalle, String tipoRegistro, Long idEntidad) throws Exception{
+    private Boolean eliminarOrganismoBbdd(String codigoDir3, Long idRegistroDetalle,
+        String tipoRegistro, Long idEntidad) throws Exception, I18NException{
 
         Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, idRegistroDetalle);
         if(interesado != null){
