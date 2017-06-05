@@ -113,7 +113,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      *     (2.3) No podem obtenir informació: Llavors es refirma CADES Detached o PADES
      *         (2.3.1) ReFirma OK => OK
      *         (2.3.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
-     *     (2.4) Error Comunicació/greu:
+     *     (2.4) Error Comunicació/greu amb Validacio:
      *         (2.4.1) Si force=true => Llançar Excepció
      *         (2.4.2) Si force=false => Retornar msg d'avís i continuar 
      *
