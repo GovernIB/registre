@@ -398,8 +398,11 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-
-            }catch (Exception e) {
+            } catch(I18NException i18ne) {
+              log.error(I18NUtils.getMessage(i18ne), i18ne);
+              Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+              return "redirect:/inici";
+            } catch (Exception e) {
                 e.printStackTrace();
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 return "redirect:/inici";

@@ -138,7 +138,8 @@ public class AnexoConverter extends CommonConverter {
    * @throws Exception
    * @throws I18NException
    */
-   public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb) throws Exception {
+   public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb) 
+       throws Exception, I18NException {
 
         if (anexoFull == null || anexoFull.getAnexo() == null){
             return  null;
@@ -201,7 +202,8 @@ public class AnexoConverter extends CommonConverter {
    * @return
    * @throws Exception
    */
-  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb) throws Exception {
+  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb)
+      throws Exception, I18NException {
 
        AnexoWs anexoWs = new AnexoWs();
 

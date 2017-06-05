@@ -143,7 +143,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
       IScanWebPlugin scanWebPlugin = null;
       try {
         scanWebPlugin = getInstanceByEntitatID(entitatID);
-      } catch (Exception e) {
+      } catch (I18NException e) {
         log.error(I18NCommonUtils.tradueix(new Locale("ca"), 
             "error.plugin.scanweb.noexist", String.valueOf(entitatID)), e);
       }
@@ -252,7 +252,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
   protected static Map<Long, IScanWebPlugin> pluginsByEntitat = new HashMap<Long, IScanWebPlugin>();
   
   @Override
-  public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws Exception {
+  public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws I18NException {
     
     IScanWebPlugin p = pluginsByEntitat.get(entitatID);
     
@@ -276,7 +276,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
    * @return
    */
   @Override
-  public boolean entitatTeScan(long entitatID) throws Exception {
+  public boolean entitatTeScan(long entitatID) throws I18NException {
     
     IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
     

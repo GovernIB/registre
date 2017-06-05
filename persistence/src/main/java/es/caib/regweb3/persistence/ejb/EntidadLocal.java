@@ -5,6 +5,9 @@ import es.caib.regweb3.model.UsuarioEntidad;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.List;
 
 /**
@@ -115,7 +118,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    public void eliminarRegistros(Long idEntidad) throws Exception;
+    public void eliminarRegistros(Long idEntidad) throws Exception, I18NException;
 
 
     /**
@@ -124,5 +127,5 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    public void eliminarEntidad(Long idEntidad) throws Exception;
+    public void eliminarEntidad(Long idEntidad) throws Exception, I18NException;
 }

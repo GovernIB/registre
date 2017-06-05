@@ -314,13 +314,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception;
+    public void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
 
     /**
      * @param re
      * @return
      * @throws Exception
      */
-    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception;
+    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
 
 }

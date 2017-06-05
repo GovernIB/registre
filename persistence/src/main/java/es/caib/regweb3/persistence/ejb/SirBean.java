@@ -541,6 +541,9 @@ public class SirBean implements SirLocal {
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
+        
+        // force=true provoca que el mètode checkDocumentAndSignature llanci excepcions si no pot verificar
+        final boolean force = true;
 
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
@@ -548,11 +551,16 @@ public class SirBean implements SirLocal {
             RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
             // Validamos y firmamos los documentos antes de enviar a SIR
+
             for(AnexoFull anexoFull: registroEntrada.getRegistroDetalle().getAnexosFull()) {
                 Anexo anexo = anexoFull.getAnexo();
                 if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
-                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(), true, new Locale("es"));
-                    anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
+                    signatureServerEjb.checkDocumentAndSignature(anexoFull, 
+                        usuario.getEntidad().getId(), true,
+                        new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma())),
+                        force);
+                    anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro,
+                        tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
                 }
             }
 
@@ -604,7 +612,10 @@ public class SirBean implements SirLocal {
             for(AnexoFull anexoFull: registroSalida.getRegistroDetalle().getAnexosFull()) {
                 Anexo anexo = anexoFull.getAnexo();
                 if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
-                    anexoFull = signatureServerEjb.checkDocumentAndSignature(anexoFull, usuario.getEntidad().getId(), true, new Locale("es"));
+                    signatureServerEjb.checkDocumentAndSignature(anexoFull,
+                        usuario.getEntidad().getId(), true, 
+                        new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma())),
+                        force);
                     anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
                 }
             }

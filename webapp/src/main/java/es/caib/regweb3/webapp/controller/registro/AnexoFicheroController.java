@@ -6,7 +6,9 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
+
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -24,6 +26,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -144,8 +147,14 @@ public class AnexoFicheroController extends AnexoController {
 
                 Entidad entidad = getEntidadActiva(request);
                 //Comprobamos y validamos las firmas de los documentos.
-                signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                        isSIR, I18NUtils.getLocale());
+                final boolean force = false;
+                I18NTranslation i18n;
+                i18n = signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
+                        isSIR, I18NUtils.getLocale(), force);
+                if (i18n != null) {
+                  Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
+                  Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
+                }
 
                 request.getSession().setAttribute("anexoForm", anexoForm);
 

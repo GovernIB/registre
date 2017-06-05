@@ -2,7 +2,9 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.RegistroDetalle;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -10,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -82,7 +85,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     }
 
     @Override
-    public Integer eliminar(Set<Long> ids) throws Exception{
+    public Integer eliminar(Set<Long> ids) throws Exception, I18NException{
 
         for (Object id : ids) {
 
@@ -111,7 +114,8 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     }
 
 
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception {
+    @Override
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception, I18NException {
 
         Anexo anexo = anexoEjb.findById(idAnexo);
         RegistroDetalle registroDetalle = findById(idRegistroDetalle);

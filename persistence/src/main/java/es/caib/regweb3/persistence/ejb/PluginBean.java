@@ -2,7 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Plugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.utils.PluginsManager;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -10,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -171,13 +175,20 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
-    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws Exception{
+    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
-        List<Plugin> plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+      try {
+        List<Plugin> plugins;
+        
+        plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+        
 
         if (plugins.size() > 0) {
             return cargarPlugin(plugins.get(0));
         }
+      } catch (Exception e) {
+        throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+      }
 
         return null;
     }

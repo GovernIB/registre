@@ -32,6 +32,8 @@ import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
 
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.hibernate.Hibernate;
@@ -272,6 +274,8 @@ public class EntidadController extends BaseController {
             model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
             model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
 
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
         }catch (Exception e) {
             e.printStackTrace();
         }
@@ -296,7 +300,9 @@ public class EntidadController extends BaseController {
            try {
                model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
                model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
-            } catch (Exception e) {
+           } catch(I18NException i18ne) {
+             log.error(I18NUtils.getMessage(i18ne), i18ne);
+           } catch (Exception e) {
                 e.printStackTrace();
             }
            return "entidad/entidadForm";
@@ -589,7 +595,8 @@ public class EntidadController extends BaseController {
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
      */
     @RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.GET)
-    public String asignarUsuario(@PathVariable Long idUsuarioEntidad, Model model,HttpServletRequest request) throws Exception {
+    public String asignarUsuario(@PathVariable Long idUsuarioEntidad, Model model,
+        HttpServletRequest request) throws Exception, I18NException {
 
         Entidad entidad = getEntidadActiva(request);
 
@@ -730,11 +737,17 @@ public class EntidadController extends BaseController {
             entidadEjb.eliminarEntidad(idEntidad);
             entidadEjb.remove(entidadEjb.findById(idEntidad));
 
+            // TODO traduir
             Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");
 
+        } catch ( I18NException i18ne) {
+          // TODO traduir
+          Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (Exception e) {
-            Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
-            e.printStackTrace();
+          // TODO traduir
+          Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+          e.printStackTrace();
         }
 
         return "redirect:/entidad/list";
@@ -751,7 +764,9 @@ public class EntidadController extends BaseController {
             entidadEjb.eliminarRegistros(idEntidad);
 
             Mensaje.saveMessageInfo(request, "S'han eliminat els registres de  l'entitat");
-
+        } catch(I18NException i18ne) {
+          Mensaje.saveMessageError(request, "Error: No s'ha eliminat els registres");
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (Exception e) {
             Mensaje.saveMessageError(request, "Error: No s'ha eliminat els registres");
             e.printStackTrace();
@@ -984,7 +999,7 @@ public class EntidadController extends BaseController {
     }
 
     @ModelAttribute("propietarios")
-    public List<Usuario> propietarios() throws Exception {
+    public List<Usuario> propietarios() throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         String[] usuarios = loginPlugin.getUsernamesByRol(RegwebConstantes.ROL_ADMIN);
@@ -1008,7 +1023,8 @@ public class EntidadController extends BaseController {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> administradoresEntidadModificar(Usuario propietario, Entidad entidad) throws Exception {
+    public List<UsuarioEntidad> administradoresEntidadModificar(Usuario propietario, 
+        Entidad entidad) throws Exception, I18NException {
 
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
         List<UsuarioEntidad> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());

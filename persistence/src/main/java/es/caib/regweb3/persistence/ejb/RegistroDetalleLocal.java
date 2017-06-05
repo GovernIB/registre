@@ -4,6 +4,9 @@ import es.caib.regweb3.model.RegistroDetalle;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.Set;
 
 /**
@@ -30,7 +33,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminar(Set<Long> ids) throws Exception;
+    public Integer eliminar(Set<Long> ids) throws Exception, I18NException;
 
     /**
      * Obtiene todos los RegistroDetalle de una Entidad
@@ -48,5 +51,6 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception;
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, 
+        Long idRegistroDetalle) throws Exception, I18NException;
 }

@@ -8,8 +8,10 @@ import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
+
 import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -107,8 +110,15 @@ public class AnexoScanController extends AnexoController {
             }
 
             Entidad entidad = getEntidadActiva(request);
-            signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                    isSIR, I18NUtils.getLocale());
+            
+            final boolean force = false;
+            I18NTranslation i18n;
+            i18n = signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
+                    isSIR, I18NUtils.getLocale(), force);
+            if (i18n != null) {
+              Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
+              Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
+            }
 
             request.getSession().setAttribute("anexoForm", anexoForm);
             return "redirect:/anexo/nou2";

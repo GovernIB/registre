@@ -2,7 +2,9 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -10,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -279,7 +282,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
     @Override
-    public void eliminarRegistros(Long idEntidad) throws Exception{
+    public void eliminarRegistros(Long idEntidad) throws Exception, I18NException {
 
         log.info("Dentro eliminar Registros Entidad");
 
@@ -340,7 +343,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public void eliminarEntidad(Long idEntidad)throws Exception{
+    public void eliminarEntidad(Long idEntidad)throws Exception , I18NException{
         //todo: Añadir pre-registros cuando se active SIR
 
         log.info("Dentro eliminar Entidad");

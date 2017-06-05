@@ -201,7 +201,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception;
+    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
     /**
      * Metodo que llama al plugin de postproceso cuando actualizamos un registro de salida
@@ -209,6 +209,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception;
+    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
 }

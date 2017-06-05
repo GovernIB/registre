@@ -6,7 +6,10 @@ import es.caib.regweb3.persistence.ejb.PendienteLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.UsuarioService;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -145,6 +148,9 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
         }
 
         return true;
+      } catch(I18NException i18ne) {
+        throw new Exception(I18NUtils.getMessage(i18ne), i18ne);
+        
       } finally {
         // log.info("Interceptor Inicio: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
       }

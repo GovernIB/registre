@@ -4,6 +4,9 @@ import es.caib.regweb3.model.Plugin;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.List;
 
 /**
@@ -69,7 +72,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws Exception
      */
-    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws Exception;
+    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
     /**
      * Obtiene todos los plgins del tipo espeficicado

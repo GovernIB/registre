@@ -4,7 +4,9 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.fundaciobit.plugins.userinformation.UserInfo;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.util.*;
 
 /**
@@ -432,7 +435,7 @@ public class UsuarioService {
      * @return
      * @throws Exception
      */
-    private List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception{
+    private List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
@@ -459,7 +462,7 @@ public class UsuarioService {
      * @param usuario
      * @throws Exception
      */
-    public void actualizarRoles(Usuario usuario) throws Exception{
+    public void actualizarRoles(Usuario usuario) throws Exception, I18NException {
 
         List<Rol> rolesUsuario = obtenerRolesUserPlugin(usuario.getIdentificador());
 
@@ -480,7 +483,7 @@ public class UsuarioService {
      * @return
      * @throws Exception
      */
-    public Usuario crearUsuario(String identificador) throws Exception{
+    public Usuario crearUsuario(String identificador) throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
@@ -575,7 +578,7 @@ public class UsuarioService {
      * @return
      * @throws Exception
      */
-    public Boolean existeIdentificador(String identificador) throws  Exception{
+    public Boolean existeIdentificador(String identificador) throws  Exception, I18NException {
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 

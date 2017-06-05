@@ -4,7 +4,10 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.UsuarioService;
+
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -116,6 +119,8 @@ public class UsuarioValidator implements Validator {
                     }
 
                 }
+            } catch(I18NException i18ne) {
+              log.error(I18NUtils.getMessage(i18ne), i18ne);
             } catch (Exception e) {
                 e.printStackTrace();
             }

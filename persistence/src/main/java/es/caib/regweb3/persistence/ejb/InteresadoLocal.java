@@ -5,6 +5,9 @@ import es.caib.regweb3.model.RegistroDetalle;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+
 import java.util.List;
 
 /**
@@ -77,7 +80,8 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @return
      * @throws Exception
      */
-    public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception;
+    public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro,
+        String tipo, Long entidadId) throws Exception, I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se actualiza un interesado. Se indica el tipo de registro y el numero de registro
@@ -87,7 +91,8 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @return
      * @throws Exception
      */
-    public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro, String tipo, Long entidadId) throws Exception;
+    public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro,
+        String tipo, Long entidadId) throws Exception, I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se elimina un interesado. Se indica el tipo de registro y el numero de registro
@@ -97,5 +102,6 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @return
      * @throws Exception
      */
-    public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro, String tipo, Long entidadId) throws Exception;
+    public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro,
+        String tipo, Long entidadId) throws Exception, I18NException;
 }

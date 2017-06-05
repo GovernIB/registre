@@ -243,7 +243,10 @@ public class AnexoController extends BaseController {
 
         try {
             registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID);
-
+        } catch(I18NException i18ne) {
+          String msg = I18NUtils.getMessage(i18ne);
+          log.error(msg, i18ne);
+          Mensaje.saveMessageError(request, msg);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             Mensaje.saveMessageError(request, e.getMessage());
@@ -388,7 +391,8 @@ public class AnexoController extends BaseController {
 
                 output.flush();
             }
-
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (NumberFormatException e) {
             // TODO QUE FER
             log.info(e);
@@ -608,7 +612,7 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static long getDocSize(String custodiaID) throws Exception {
+    public static long getDocSize(String custodiaID) throws Exception, I18NException {
 
         DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID);
         if (dc == null) {
@@ -625,7 +629,7 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static long getSignSize(String custodiaID) throws Exception {
+    public static long getSignSize(String custodiaID) throws Exception, I18NException {
 
         SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID);
         if (sc == null) {
@@ -649,7 +653,7 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static String getDocName(String custodiaID) throws Exception {
+    public static String getDocName(String custodiaID) throws Exception, I18NException {
 
         DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID);
         if (dc == null) {
@@ -664,7 +668,7 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static String getSignName(String custodiaID) throws Exception {
+    public static String getSignName(String custodiaID) throws Exception, I18NException {
 
         SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID);
         if (sc == null) {

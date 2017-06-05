@@ -8,6 +8,9 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
 import es.caib.regweb3.webapp.validator.UsuarioDocumentoValidator;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -120,6 +123,9 @@ public class UsuarioExisteController extends BaseController {
                     }
                 }
 
+            } catch(I18NException i18ne) {
+              log.error(I18NUtils.getMessage(i18ne), i18ne);
+              Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
             }catch (Exception e) {
                 Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
                 e.printStackTrace();

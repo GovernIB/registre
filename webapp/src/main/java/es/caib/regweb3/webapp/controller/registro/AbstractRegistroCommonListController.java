@@ -8,6 +8,8 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -95,7 +98,8 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
      * @param registroID
      * @throws Exception
      */
-    public void initScanAnexos(Entidad entidad, Model model, HttpServletRequest request, Long registroID) throws Exception {
+    public void initScanAnexos(Entidad entidad, Model model, HttpServletRequest request,
+        Long registroID) throws I18NException {
       boolean teScan = scanWebModuleEjb.entitatTeScan(entidad.getId());
       model.addAttribute("teScan", teScan);
     }

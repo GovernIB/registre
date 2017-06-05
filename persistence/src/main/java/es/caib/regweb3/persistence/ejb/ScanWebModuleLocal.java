@@ -45,8 +45,8 @@ public interface ScanWebModuleLocal {
 
   public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException;
   
-  public boolean entitatTeScan(long entitatID) throws Exception;
+  public boolean entitatTeScan(long entitatID) throws I18NException;
   
-  public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws Exception;
+  public IScanWebPlugin getInstanceByEntitatID(long entitatID) throws I18NException;
   
 }

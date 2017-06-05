@@ -11,6 +11,9 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.PersonaJson;
 import es.caib.regweb3.webapp.validator.InteresadoWebValidator;
+
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -102,11 +106,13 @@ public class InteresadoController extends BaseController{
                 interesadoEjb.postProcesoNuevoInteresado(organismo,numRegistroFormateado,tipoRegistro, entidadActiva.getId());
             }
 
-
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
+          return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
+        } 
 
         return true;
     }
@@ -150,6 +156,9 @@ public class InteresadoController extends BaseController{
                 }
             }
 
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
+          return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -308,7 +317,8 @@ public class InteresadoController extends BaseController{
 
                 jsonResponse.setResult(personaJson);
 
-
+            } catch(I18NException i18ne) {
+              log.error(I18NUtils.getMessage(i18ne), i18ne);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -396,7 +406,8 @@ public class InteresadoController extends BaseController{
 
                 jsonResponse.setResult(personaJson);
 
-
+            } catch(I18NException i18ne) {
+              log.error(I18NUtils.getMessage(i18ne), i18ne);
             } catch (Exception e) {
               // TODO NO!!!!!!!!!!!!!!!!!!!!
                 e.printStackTrace();
@@ -500,6 +511,9 @@ public class InteresadoController extends BaseController{
 
             }
 
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
+          return null;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -552,7 +566,8 @@ public class InteresadoController extends BaseController{
                 interesadoEjb.postProcesoEliminarInteresado(idRepresentante,numRegistroFormateado,tipoRegistro,getEntidadActiva(request).getId());
                 return true;
             }
-
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -605,7 +620,9 @@ public class InteresadoController extends BaseController{
                 }
 
             }
-
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
+          return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -651,7 +668,9 @@ public class InteresadoController extends BaseController{
                     }
                 }
             }
-
+        } catch(I18NException i18ne) {
+          log.error(I18NUtils.getMessage(i18ne), i18ne);
+          return false;
         } catch (Exception e) {
             e.printStackTrace();
         }

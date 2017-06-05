@@ -262,7 +262,6 @@
 
         loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
 
-        // XYZ ZZZ setTimeout(checkIframeSize, 3000);
     }
 
 

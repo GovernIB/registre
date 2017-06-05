@@ -4,6 +4,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -43,8 +44,8 @@ public interface SignatureServerLocal {
      * @return
      * @throws I18NException
      */
-     public AnexoFull checkDocumentAndSignature(AnexoFull input, long idEntidad,
-         boolean sir, Locale locale) throws I18NException;
+    public I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
+        boolean sir, Locale locale, boolean force) throws I18NException;
 
 
 }

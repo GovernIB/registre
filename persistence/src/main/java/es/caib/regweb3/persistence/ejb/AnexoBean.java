@@ -1071,7 +1071,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param custodiaID
      * @return
      */
-    public DocumentCustody getArchivo(String custodiaID, boolean isJustificante) throws Exception {
+    @Override
+    public DocumentCustody getArchivo(String custodiaID, boolean isJustificante) throws I18NException, Exception {
 
         IDocumentCustodyPlugin custody;
 
@@ -1081,7 +1082,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
         if(isJustificante){
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-        }else{
+        } else{
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
         }
 
@@ -1098,7 +1099,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      */
     @Override
-    public byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws Exception {
+    public byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws I18NException, Exception {
 
         IDocumentCustodyPlugin custody = null;
 
@@ -1108,8 +1109,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
         if(isJustificante) {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-
-        }else {
+        } else {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
         }
 
@@ -1119,13 +1119,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception {
+    public DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception, I18NException {
         IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
         return custody.getDocumentInfoOnly(custodiaID);
     }
 
     @Override
-    public SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception {
+    public SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception, I18NException {
         IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
         return custody.getSignatureInfoOnly(custodiaID);
     }
@@ -1137,7 +1137,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param custodiaID
      * @return
      */
-    public SignatureCustody getFirma(String custodiaID, boolean isJustificante) throws Exception {
+    public SignatureCustody getFirma(String custodiaID, boolean isJustificante) throws I18NException, Exception {
 
         IDocumentCustodyPlugin custody = null;
 
@@ -1148,7 +1148,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         if(isJustificante) {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
 
-        }else {
+        } else {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
         }
 
@@ -1157,7 +1157,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception {
+    public byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception, I18NException {
 
         IDocumentCustodyPlugin custody = null;
 
@@ -1183,7 +1183,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
      * casos.
      */
-    public boolean eliminarCustodia(String custodiaID, boolean isJustificante) throws Exception {
+    public boolean eliminarCustodia(String custodiaID, boolean isJustificante) throws Exception, I18NException {
 
         if (custodiaID == null) {
             log.warn("eliminarCustodia :: CustodiaID vale null !!!!!", new Exception());
