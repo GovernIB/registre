@@ -4,7 +4,10 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.PersonaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -43,20 +46,17 @@ public class InteresadoController extends BaseController{
     @Autowired
     InteresadoWebValidator interesadoValidator;
 
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
-
     @EJB(mappedName = "regweb3/PersonaEJB/local")
-    public PersonaLocal personaEjb;
+    private PersonaLocal personaEjb;
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
+    private RegistroDetalleLocal registroDetalleEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
 
     /**
@@ -70,9 +70,10 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Boolean addOrganismoInteresado(@PathVariable String tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
+        Entidad entidadActiva = getEntidadActiva(request);
 
         try {
             denominacion = URLDecoder.decode(denominacion, "UTF-8");
@@ -82,25 +83,34 @@ public class InteresadoController extends BaseController{
             if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
 
                 // Si es una Salida solo puede haber un Interesado Administración
-                if(tipoRegistro.equals("salida") && hayOrganismoInteresado(session)){
-                    log.info("Ya hay un Destinatario Organismo asociado en la sesion");
-                    return false;
+                if(tipoRegistro.equals("salida")){
+
+                    String organismoCodigo = hayOrganismoInteresado(session);
+                    if(StringUtils.isNotEmpty(organismoCodigo)){
+                        log.info("Ya hay un Destinatario Organismo asociado en la sesion, lo sustituimos por el nuevo");
+                        eliminarOrganismoSesion(organismoCodigo, session, variableSesion);
+                    }
+
                 }
 
-                añadirInteresadoSesion(organismo, session, variable);
+                añadirInteresadoSesion(organismo, session, variableSesion);
 
             }else{ // Edición de un registro, lo añadimos a la bbdd
 
                 // Si es una Salida solo puede haber un Interesado Administración
-                if(tipoRegistro.equals("salida") && interesadoEjb.existeInteresadoAdministracion(Long.valueOf(idRegistroDetalle))){
-                    log.info("Ya hay un Destinatario Organismo asociado en la bbdd");
-                    return false;
+                if(tipoRegistro.equals("salida")){
+
+                    String organismoCodigo = interesadoEjb.existeInteresadoAdministracion(Long.valueOf(idRegistroDetalle));
+                    if(StringUtils.isNotEmpty(organismoCodigo)){
+                        log.info("Ya hay un Destinatario Organismo asociado en la bbdd, lo eliminamos");
+                        eliminarOrganismoBbdd(organismoCodigo, Long.valueOf(idRegistroDetalle),tipoRegistro, entidadActiva.getId());
+                    }
+
                 }
 
                 organismo.setRegistroDetalle(registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle)));
                 interesadoEjb.persist(organismo);
 
-                Entidad entidadActiva = getEntidadActiva(request);
                 //Obtenemos el numero de registro Formateado para pasarlo al plug-in postproceso
                 String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
                 interesadoEjb.postProcesoNuevoInteresado(organismo,numRegistroFormateado,tipoRegistro, entidadActiva.getId());
@@ -128,7 +138,7 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Integer addPersonaInteresado(@PathVariable String tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
         Interesado interesado = null;
@@ -141,7 +151,7 @@ public class InteresadoController extends BaseController{
 
                 if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
 
-                    añadirInteresadoSesion(interesado,session, variable);
+                    añadirInteresadoSesion(interesado,session, variableSesion);
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
                     interesado.setId(null);
@@ -180,7 +190,7 @@ public class InteresadoController extends BaseController{
 
         JsonResponse jsonResponse = new JsonResponse();
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         Boolean isRepresentante = interesado.getIsRepresentante();
         String idRepresentado = null;
@@ -267,14 +277,14 @@ public class InteresadoController extends BaseController{
                         personaJson.setRepresentado(new PersonaJson(idRepresentado));
 
                         // Asociamos el representante a la Persona representada
-                        Interesado representado = obtenerInteresadoSesion(Long.valueOf(idRepresentado), session, variable);
+                        Interesado representado = obtenerInteresadoSesion(Long.valueOf(idRepresentado), session, variableSesion);
                         interesado.setRepresentado(representado);
                         representado.setRepresentante(interesado);
 
-                        añadirRepresentanteSesion(representado, interesado, session, variable);
+                        añadirRepresentanteSesion(representado, interesado, session, variableSesion);
 
                     } else {
-                        añadirInteresadoSesion(interesado,session, variable);
+                        añadirInteresadoSesion(interesado,session, variableSesion);
                     }
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
@@ -341,7 +351,7 @@ public class InteresadoController extends BaseController{
     public JsonResponse editarInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle,
         @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         // TODO
         Boolean isRepresentante = interesado.getIsRepresentante();
@@ -384,10 +394,10 @@ public class InteresadoController extends BaseController{
                     // Comprobamos si es se trata de un representante
                     if (isRepresentante) {
                         log.info("Es representate, volvemos asignarle el representado");
-                        interesado.setRepresentado(obtenerInteresadoSesion(interesado.getRepresentado().getId(), session, variable));
+                        interesado.setRepresentado(obtenerInteresadoSesion(interesado.getRepresentado().getId(), session, variableSesion));
                     }
 
-                    actualizarInteresadoSesion(interesado, session, variable);
+                    actualizarInteresadoSesion(interesado, session, variableSesion);
                 }else{ // Edición de un registro, lo añadimos a la bbdd
                     log.info("idRegistroDetalle: " + idRegistroDetalle);
                     interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
@@ -460,7 +470,7 @@ public class InteresadoController extends BaseController{
     public JsonResponse addRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
 
         log.info("");
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
         JsonResponse jsonResponse = new JsonResponse();
@@ -480,15 +490,15 @@ public class InteresadoController extends BaseController{
 
             if(idRegistroDetalle == null){ // Sesion
 
-                Interesado representado = obtenerInteresadoSesion(idRepresentado,session, variable);
+                Interesado representado = obtenerInteresadoSesion(idRepresentado,session, variableSesion);
 
                 // Añadimos el representante a la sesion
                 representante.setRepresentado(representado);
-                añadirInteresadoSesion(representante, session, variable);
+                añadirInteresadoSesion(representante, session, variableSesion);
 
                 //Actualizamos el representado
                 representado.setRepresentante(representante);
-                actualizarInteresadoSesion(representado, session, variable);
+                actualizarInteresadoSesion(representado, session, variableSesion);
 
 
             }else{ // bbdd
@@ -534,7 +544,7 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Boolean eliminarRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         log.info("Dentro de eliminar representante: " + idRepresentante);
 
@@ -545,12 +555,12 @@ public class InteresadoController extends BaseController{
             if(idRegistroDetalle.equals("null")){ // Trabajamos en la sesión
 
                 Interesado representante = new Interesado(idRepresentante);
-                Interesado representado = obtenerInteresadoSesion(idRepresentado,session, variable);
+                Interesado representado = obtenerInteresadoSesion(idRepresentado,session, variableSesion);
 
                 representado.setRepresentante(null);
 
-                eliminarInteresadoSesion(representante, session, variable);
-                actualizarInteresadoSesion(representado,session, variable);
+                eliminarInteresadoSesion(representante, session, variableSesion);
+                actualizarInteresadoSesion(representado,session, variableSesion);
                 return true;
 
             }else{ //Trabajamos en la bbdd
@@ -585,7 +595,7 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Boolean eliminarPersonaInteresado(@PathVariable String tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
 
@@ -594,17 +604,17 @@ public class InteresadoController extends BaseController{
             // Se trata de un nuevo Registro, utilizamos la sesion.
             if(idRegistroDetalle.equals("null") || StringUtils.isEmpty(idRegistroDetalle)) {
 
-                Interesado persona = obtenerInteresadoSesion(id, session, variable);
+                Interesado persona = obtenerInteresadoSesion(id, session, variableSesion);
 
                 // Si tiene Representate, también lo eliminamos.
                 if(persona.getRepresentante() != null){
                     log.info("Tiene representante y lo eliminamos");
-                    Interesado representante = obtenerInteresadoSesion(persona.getRepresentante().getId(), session, variable);
-                    eliminarInteresadoSesion(representante,session, variable);
+                    Interesado representante = obtenerInteresadoSesion(persona.getRepresentante().getId(), session, variableSesion);
+                    eliminarInteresadoSesion(representante,session, variableSesion);
                 }
 
                 // Eliminamos la Persona
-                return eliminarInteresadoSesion(persona,session, variable);
+                return eliminarInteresadoSesion(persona,session, variableSesion);
 
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
@@ -641,7 +651,7 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Boolean eliminarOrganismoInteresado(@PathVariable String tipoRegistro, @RequestParam String codigoDir3,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         log.info("Dentro de eliminarOrganismo: " + codigoDir3);
 
@@ -651,21 +661,16 @@ public class InteresadoController extends BaseController{
 
             if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, lo eliminamos de la sesion
 
-               return eliminarOrganimoSesion(codigoDir3, session, variable);
+               return eliminarOrganismoSesion(codigoDir3, session, variableSesion);
 
             }else{// Edición de un registro, lo eliminanos de la bbdd
-                log.info("RegistroDetalle: " + idRegistroDetalle);
+
                 RegistroDetalle registroDetalle = registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle));
 
                 if(registroDetalle != null && registroDetalle.getInteresados().size()>1 ){ // Si solo hay un Interesado, no permitimos eliminarlo.
-                    Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, Long.valueOf(idRegistroDetalle));
-                    if(interesado != null){
-                        interesadoEjb.eliminarInteresadoRegistroDetalle(interesado.getId(),Long.valueOf(idRegistroDetalle));
-                        //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
-                        String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
-                        interesadoEjb.postProcesoEliminarInteresado(interesado.getId(),numRegistroFormateado, tipoRegistro,getEntidadActiva(request).getId());
-                        return true;
-                    }
+
+                    return eliminarOrganismoBbdd(codigoDir3,Long.valueOf(idRegistroDetalle),tipoRegistro, getEntidadActiva(request).getId());
+
                 }
             }
         } catch(I18NException i18ne) {
@@ -686,9 +691,9 @@ public class InteresadoController extends BaseController{
      * @param session donde buscar
      * @return
      */
-    public Interesado obtenerInteresadoSesion(Long idInteresado, HttpSession session, String variable){
+    private Interesado obtenerInteresadoSesion(Long idInteresado, HttpSession session, String variableSesion){
 
-        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         Interesado interesado = new Interesado(idInteresado);
 
@@ -711,13 +716,13 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
-    public Boolean eliminarInteresadoSesion(Interesado interesado, HttpSession session, String variable)throws Exception{
+    private Boolean eliminarInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion)throws Exception{
 
-        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         if(interesados.contains(interesado)){
             interesados.remove(interesado);
-            session.setAttribute(variable, interesados);
+            session.setAttribute(variableSesion, interesados);
             return true;
         }
         return false;
@@ -730,20 +735,41 @@ public class InteresadoController extends BaseController{
      * @param session
      * @throws Exception
      */
-    public Boolean eliminarOrganimoSesion(String codigoDir3, HttpSession session, String variable) throws Exception{
+    private Boolean eliminarOrganismoSesion(String codigoDir3, HttpSession session, String variableSesion) throws Exception{
 
-        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         if(interesados != null){
-
             for(Interesado interesado:interesados){
                 if(StringUtils.isNotEmpty(interesado.getCodigoDir3()) && interesado.getCodigoDir3().equals(codigoDir3)){
                     interesados.remove(interesado);
-                    session.setAttribute(variable, interesados);
+                    session.setAttribute(variableSesion, interesados);
 
                     return true;
                 }
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * Elimina un Organismo del listado de Interesados de la bbdd
+     * @param codigoDir3
+     * @param idRegistroDetalle
+     * @param tipoRegistro
+     * @throws Exception
+     */
+    private Boolean eliminarOrganismoBbdd(String codigoDir3, Long idRegistroDetalle, String tipoRegistro, Long idEntidad) throws Exception{
+
+        Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, idRegistroDetalle);
+        if(interesado != null){
+            interesadoEjb.eliminarInteresadoRegistroDetalle(interesado.getId(),idRegistroDetalle);
+
+            //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
+            String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(idRegistroDetalle,tipoRegistro);
+            interesadoEjb.postProcesoEliminarInteresado(interesado.getId(),numRegistroFormateado, tipoRegistro, idEntidad);
+            return true;
         }
 
         return false;
@@ -755,21 +781,21 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
-    public void actualizarInteresadoSesion(Interesado interesado, HttpSession session, String variable){
+    private void actualizarInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion){
         log.info("");
         log.info("actualizarInteresadoSesion");
         log.info("");
         if (interesado.getIsRepresentante()) {
             log.info("Es representante, su representado es: " + interesado.getRepresentado().getId());
         }
-        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         if(interesados.contains(interesado)){
             log.info("Actualizamos el interesado en la sesion");
             interesados.remove(interesado);
 
             interesados.add(interesado);
-            session.setAttribute(variable, interesados);
+            session.setAttribute(variableSesion, interesados);
         }
 
     }
@@ -779,9 +805,9 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
-    public void añadirInteresadoSesion(Interesado interesado, HttpSession session, String variable){
+    private void añadirInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion){
 
-        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         if(interesados != null){
             interesados.add(interesado);
@@ -790,7 +816,7 @@ public class InteresadoController extends BaseController{
             interesados.add(interesado);
         }
 
-        session.setAttribute(variable, interesados);
+        session.setAttribute(variableSesion, interesados);
     }
 
     /**
@@ -799,10 +825,10 @@ public class InteresadoController extends BaseController{
      * @param representado
      * @param interesado
      * @param session
-     * @param variable
+     * @param variableSesion
      */
-    public void añadirRepresentanteSesion(Interesado representado, Interesado interesado, HttpSession session, String variable) {
-        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variable);
+    private void añadirRepresentanteSesion(Interesado representado, Interesado interesado, HttpSession session, String variableSesion) {
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         // Añadimos el onuevo representante a la sesión
         interesados.add(interesado);
@@ -814,7 +840,7 @@ public class InteresadoController extends BaseController{
             interesados.add(representado);
 
         }
-        session.setAttribute(variable, interesados);
+        session.setAttribute(variableSesion, interesados);
     }
 
 
@@ -827,16 +853,15 @@ public class InteresadoController extends BaseController{
     @ResponseBody
     public Interesado obtenerInteresado(@PathVariable String tipoRegistro,@RequestParam Long id, HttpServletRequest request) throws Exception {
 
-        String variable = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         log.info("Obtener datos Interesado: " + id);
 
         Interesado interesado = interesadoEjb.findById(id);
 
         if(interesado == null) {
-            log.info("Esta en la sesion");
             HttpSession session = request.getSession();
-            interesado = obtenerInteresadoSesion(id, session, variable);
+            interesado = obtenerInteresadoSesion(id, session, variableSesion);
 
         }
 
@@ -878,7 +903,7 @@ public class InteresadoController extends BaseController{
      * Comprueba si hay algún OrganismoInteresado ya añadido
      * @param session
      */
-    public Boolean hayOrganismoInteresado(HttpSession session){
+    private String hayOrganismoInteresado(HttpSession session){
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -886,12 +911,12 @@ public class InteresadoController extends BaseController{
 
             for(Interesado interesado:interesados){
                 if(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())){
-                    return true;
+                    return interesado.getCodigoDir3();
                 }
             }
         }
 
-        return false;
+        return null;
     }
 
 

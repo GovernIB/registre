@@ -61,7 +61,7 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception;
+    public String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception;
 
     /**
      * Guardamos todos los Interesados de un Registro de Entrada o Salida

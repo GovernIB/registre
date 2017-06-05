@@ -145,15 +145,19 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
-    public Boolean existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception{
-        Query q = em.createQuery("Select interesado.id from Interesado as interesado where " +
+    public String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception{
+        Query q = em.createQuery("Select interesado.codigoDir3 from Interesado as interesado where " +
                 "interesado.registroDetalle.id = :idRegistroDetalle and interesado.tipo = :administracion");
 
         q.setParameter("idRegistroDetalle",idRegistroDetalle);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
 
+        List<String> result = q.getResultList();
+        if(result.size() > 0){
+            return result.get(0);
+        }
 
-        return q.getResultList().size() > 0;
+        return null;
     }
 
     @Override

@@ -21,7 +21,11 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
 
             success: function(result) {
                 if(result==true){
+                    if(tipoRegistro=="salida"){ //Si es una salida eliminamos los anteriores
+                        eliminarTodosOrganismos();
+                    }
                     addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
+
                 }else{
                     mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
                 }
@@ -29,7 +33,17 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
             }
         });
     }
+}
 
+/**
+ * Elimina todos los Organismos de la tabla Interesados
+ */
+function eliminarTodosOrganismos(){
+    $('#interesados > tbody  > tr').each(function() {
+        if($(this).attr('id').startsWith("organismo")){
+            $(this).remove();
+        }
+    });
 }
 
 /**
@@ -98,7 +112,7 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
  * @param modal
  * @param idRegistroDetalle
  */
-function addInteresado(id, nombre,tipo,representante, modal,idRegistroDetalle){
+function addPersonaInteresado(id, nombre,tipo,representante, modal,idRegistroDetalle){
 
     if(id != '-1'){
         $.ajax({
@@ -579,12 +593,12 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
                     if(tipoPersonas == 'Fisicas'){
                         var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
-                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Juridicas'){
                         var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
-                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
                         tabla.append(linea);
 
                     }else if(tipoPersonas == 'Todas'){

@@ -50,11 +50,13 @@
                                 <c:if test="${registroSir.codigoEntidadRegistralInicio != registroSir.codigoEntidadRegistralOrigen}">
                                     <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaInicio"/>:
                                     </dt>
-                                    <dd> ${registroSir.codigoEntidadRegistralInicio}
+                                    <dd>
                                         <c:if test="${not empty registroSir.decodificacionEntidadRegistralInicio}">
-                                            - ${registroSir.decodificacionEntidadRegistralInicio}
+                                            ${registroSir.decodificacionEntidadRegistralInicio} -
                                         </c:if>
+                                            ${registroSir.codigoEntidadRegistralInicio}
                                     </dd>
+                                    <hr class="divider-primary">
                                 </c:if>
 
                             </c:if>
@@ -74,34 +76,41 @@
                                 <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
 
+                            <hr class="divider-primary">
+
                             <%--Unidad Tramitación Origen--%>
                             <c:if test="${not empty registroSir.codigoUnidadTramitacionOrigen}">
                                 <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadOrigen"/>:
                                 </dt>
-                                <dd> ${registroSir.codigoUnidadTramitacionOrigen}
+                                <dd>
                                     <c:if test="${not empty registroSir.decodificacionUnidadTramitacionOrigen}">
-                                        - ${registroSir.decodificacionUnidadTramitacionOrigen}
+                                        ${registroSir.decodificacionUnidadTramitacionOrigen} -
                                     </c:if>
+                                        ${registroSir.codigoUnidadTramitacionOrigen}
                                 </dd>
                             </c:if>
 
                             <%--Oficina Origen--%>
                             <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaOrigen"/>:
                             </dt>
-                            <dd> ${registroSir.codigoEntidadRegistralOrigen}
+                            <dd>
                                 <c:if test="${not empty registroSir.decodificacionEntidadRegistralOrigen}">
-                                    - ${registroSir.decodificacionEntidadRegistralOrigen}
+                                    ${registroSir.decodificacionEntidadRegistralOrigen} -
                                 </c:if>
+                                ${registroSir.codigoEntidadRegistralOrigen}
                             </dd>
+
+                            <hr class="divider-primary">
 
                             <%--Unidad Tramitación Destino--%>
                             <c:if test="${not empty registroSir.codigoUnidadTramitacionDestino}">
                                 <dt><i class="fa fa-institution"></i> <spring:message code="registroSir.unidadDestino"/>:
                                 </dt>
-                                <dd> ${registroSir.codigoUnidadTramitacionDestino}
+                                <dd>
                                     <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}">
-                                        - ${registroSir.decodificacionUnidadTramitacionDestino}
+                                        ${registroSir.decodificacionUnidadTramitacionDestino} -
                                     </c:if>
+                                        ${registroSir.codigoUnidadTramitacionDestino}
                                 </dd>
                             </c:if>
 
@@ -109,12 +118,14 @@
                             <c:if test="${not empty registroSir.codigoEntidadRegistralDestino}">
                                 <dt><i class="fa fa-home"></i> <spring:message code="registroSir.oficinaDestino"/>:
                                 </dt>
-                                <dd> ${registroSir.codigoEntidadRegistralDestino}
+                                <dd>
                                     <c:if test="${not empty registroSir.decodificacionEntidadRegistralDestino}">
-                                        - ${registroSir.decodificacionEntidadRegistralDestino}
+                                        ${registroSir.decodificacionEntidadRegistralDestino} -
                                     </c:if>
+                                        ${registroSir.codigoEntidadRegistralDestino}
                                 </dd>
                             </c:if>
+                            <hr class="divider-primary">
 
                             <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>:</dt>
                             <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
@@ -179,7 +190,18 @@
 
                             <c:if test="${not empty registroSir.documentacionFisica}">
                                 <dt><i class="fa fa-file"></i> <spring:message code="registroSir.tipoDocumentacionFisica"/>: </dt>
-                                <dd><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></dd>
+                                <dd>
+                                    <!-- Pone el color que corresponde con el el Tipo de documentacion elegido -->
+                                    <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                        <span class="text-vermell"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                                    </c:if>
+                                    <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                        <span class="text-taronja"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                                    </c:if>
+                                    <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                        <span class="text-verd"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                                    </c:if>
+                                </dd>
                             </c:if>
 
                             <c:if test="${not empty registroSir.resumen}">
