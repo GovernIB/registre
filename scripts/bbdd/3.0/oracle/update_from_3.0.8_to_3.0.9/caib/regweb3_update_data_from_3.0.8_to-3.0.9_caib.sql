@@ -97,10 +97,10 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDA
 '# es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.nom_carpeta_EL=' ||
 '' ||
 '# Opcional. Per defecte sempre es crea Draft' ||
-'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.createDraft=false' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.createDraft_EL=false' ||
 '' ||
-'# Opcional. Tanca l´expedient despres del primer guardat. Requereix "createDraft=false" ' ||
-'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.tancarExpedient=true' ||
+'# Opcional. Perdefecte false. Tanca l´expedient despres del primer guardat. Requereix "createDraft=false" ' ||
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.tancarExpedient_EL=true' ||
 '' ||
 '# Opcional' ||
 'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.debug=false' ||
