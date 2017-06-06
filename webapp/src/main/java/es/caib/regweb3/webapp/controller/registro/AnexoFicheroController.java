@@ -6,7 +6,6 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -26,7 +25,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -139,7 +137,8 @@ public class AnexoFicheroController extends AnexoController {
         }
 
         if (result.hasErrors()) {
-            return "redirect:/anexoFichero/ficheros/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
+
+            return "registro/formularioAnexoFichero";
         } else {
             try {
                 //Preparamos los documentcustody, signaturecustody
@@ -170,7 +169,7 @@ public class AnexoFicheroController extends AnexoController {
                 Mensaje.saveMessageError(request, e.getMessage());
             }
         }
-        return "redirect:/anexoFichero/ficheros/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
+        return "registro/formularioAnexoFichero";
 
     }
 
