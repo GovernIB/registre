@@ -360,21 +360,22 @@
                                                     <%--Acciones según el estado--%>
                                                     <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                                                 <c:if test="${registro.oficina.id == oficinaActiva.id || registro.oficina.oficinaResponsable.id == oficinaActiva.id}">
-                                                    <c:choose>
-                                                        <c:when test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">  <%--Válido--%>
-                                                            <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                            <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
-                                                        </c:when>
 
-                                                        <c:when test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">  <%--Pendiente de Visar--%>
-                                                            <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
-                                                        </c:when>
+                                                    <%--Botón editar--%>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !registro.registroDetalle.tieneJustificante}">
+                                                        <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                    </c:if>
 
-                                                        <c:when test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">  <%--Anulado--%>
-                                                            <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
-                                                        </c:when>
+                                                    <%--Botón anular--%>
+                                                    <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
+                                                        <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                    </c:if>
 
-                                                    </c:choose>
+                                                    <%--Botón activar--%>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                                                        <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.activar"/>"><span class="fa fa-thumbs-o-up"></span></a>
+                                                    </c:if>
+
                                                 </c:if>
 
 
