@@ -97,7 +97,7 @@ public class Sicres3XML {
 
 
     /**
-     *
+     * Valida un Fichero de Intercambio recibido
      * @param fichero
      */
     public void validarFicheroIntercambio(FicheroIntercambio fichero, Dir3CaibObtenerOficinasWs oficinasService, Dir3CaibObtenerUnidadesWs unidadesService) {
@@ -128,7 +128,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de origen o remitente
+     * Validar el segmento de origen o remitente del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -167,7 +167,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de destino
+     * Validar el segmento de destino del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -192,7 +192,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de interesados
+     * Validar el segmento de interesados del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -362,7 +362,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de asunto
+     * Validar el segmento de asunto del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -375,7 +375,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de anexos
+     * Validar el segmento de anexos del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -405,7 +405,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Valida un anexo del segmento de anexos
+     * Valida un anexo del segmento de anexos del Fichero de Intercambio
      *
      * @param anexo                    Información del anexo
      * @param identificadorIntercambio Identificador de intercambio
@@ -459,7 +459,7 @@ public class Sicres3XML {
 
 
     /**
-     * Valida el identificador de fichero de un anexo del segmento de anexos
+     * Valida el identificador de fichero de un anexo del segmento de anexos del Fichero de Intercambio
      *
      * @param anexo                    Información del anexo
      * @param identificadorIntercambio Identificador de intercambio
@@ -505,7 +505,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de internos y control
+     * Validar el segmento de internos y control del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -534,7 +534,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el identificador de intercambio.
+     * Validar el identificador de intercambio. del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -570,7 +570,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Validar el segmento de formulario genérico
+     * Validar el segmento de formulario genérico del Fichero de Intercambio
      *
      * @param fichero Información del fichero de intercambio.
      */
@@ -589,6 +589,7 @@ public class Sicres3XML {
     }
 
     /**
+     * Valida un Mensaje de Control recibido o que va a ser enviado
      * @param mensaje
      */
     public void validarMensaje(Mensaje mensaje) {
@@ -602,6 +603,7 @@ public class Sicres3XML {
     }
 
     /**
+     * Crea el xml del Fichero de Intercambio a partir de un RegistroSir
      * @param registroSir
      * @return
      */
@@ -1807,9 +1809,7 @@ public class Sicres3XML {
 
 
     /**
-     * Devuelve un XML con el mensaje de propósito general con el objetivo de
-     * realizar tareas de avisos y gestión de flujo del intercambio, conforme a
-     * la normativa SICRES 3.0.
+     * Crea el xml de un Mensaje de Control para ser enviado
      *
      * @param mensaje Información del mensaje.
      * @return XML de mensaje en formato SICRES 3.0
@@ -1868,6 +1868,7 @@ public class Sicres3XML {
     }
 
     /**
+     * Convierte el xml recibido en un {@link es.caib.regweb3.sir.core.utils.FicheroIntercambio}
      * {@inheritDoc}
      */
     public FicheroIntercambio parseXMLFicheroIntercambio(String xml) throws ValidacionException {
@@ -1913,7 +1914,7 @@ public class Sicres3XML {
     }
 
     /**
-     *
+     * Convierte el xml recibido en un {@link es.caib.regweb3.sir.core.utils.Mensaje}
      * @param xml
      * @return
      */
