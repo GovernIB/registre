@@ -57,7 +57,7 @@ public interface SirLocal {
      * @param idEntidad
      * @throws Exception
      */
-    public void reintentarEnvios(Long idEntidad) ;
+    public void reintentarEnvios(Long idEntidad) throws Exception;
 
     /**
      * @param registroSir

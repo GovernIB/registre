@@ -262,7 +262,7 @@
                                 <dd><fmt:formatDate value="${registroSir.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
 
-                            <c:if test="${not empty registroSir.numeroReintentos}">
+                            <c:if test="${registroSir.numeroReintentos > 0}">
                                 <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>: </dt>
                                 <dd> ${registroSir.numeroReintentos}</dd>
                             </c:if>

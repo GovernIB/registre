@@ -102,6 +102,7 @@ public class SirBean implements SirLocal {
             registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
+            // Registro Sir: Lo hemos recibido de SIR
             if (registroSir != null) { // Ya existe en el sistema
 
                 if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
@@ -132,11 +133,20 @@ public class SirBean implements SirLocal {
 
                     log.info("El registroSir existia en el sistema, se ha vuelto a recibir: " + registroSir.getIdentificadorIntercambio());
 
-                }else{
+                }else if (EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())) {
+
+                    log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+
+                }else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
+
+                    log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+
+                } else{
                     log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
+            // Oficio Remision: Ha sido enviado por nosotros a SIR
             }else if(oficioRemision != null){ // Ya existe en el sistema
 
                 if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
@@ -176,7 +186,10 @@ public class SirBean implements SirLocal {
 
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
 
-                }else{
+                }else if(oficioRemision.getEstado() == RegwebConstantes.REGISTRO_REENVIADO){
+                    log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+
+                } else{
                     log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
@@ -195,6 +208,7 @@ public class SirBean implements SirLocal {
             // Buscamos si el FicheroIntercambio ya existe en el sistema
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
 
+            // Oficio Remision: Ha sido enviado por nosotros a SIR
             if(oficioRemision != null) { // Existe en el sistema
 
                 if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
@@ -756,7 +770,7 @@ public class SirBean implements SirLocal {
         registroSir.setDecodificacionTipoAnotacion(observaciones);
 
         // Actualizamos el RegistroSir
-        //registroSirEjb.merge(registroSir);
+        registroSirEjb.merge(registroSir);
 
         // Enviamos el Registro al Componente CIR
         emisionEjb.reenviarFicheroIntercambio(registroSir);
@@ -810,7 +824,7 @@ public class SirBean implements SirLocal {
         registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
         registroSir.setDecodificacionTipoAnotacion(observaciones);
 
-        //registroSir = registroSirEjb.merge(registroSir);
+        registroSir = registroSirEjb.merge(registroSir);
 
         // Rechazamos el RegistroSir
         emisionEjb.rechazarFicheroIntercambio(registroSir);
@@ -928,13 +942,26 @@ public class SirBean implements SirLocal {
     }
 
     @Override
-    public void reintentarEnvios(Long idEntidad) {
+    public void reintentarEnvios(Long idEntidad) throws Exception{
 
         try {
 
-            List<OficioRemision> oficios = oficioRemisionEjb.getByEstadoEntidad(RegwebConstantes.OFICIO_SIR_ENVIADO, idEntidad);
+            List<RegistroSir> registrosSir = registroSirEjb.getReintentos(idEntidad);
 
-            log.info("Hay " + oficios.size() + " pendientes de volver a enviar al nodo CIR");
+            List<OficioRemision> oficios = oficioRemisionEjb.getReintentos(idEntidad);
+
+            log.info("Hay " + registrosSir.size() +  " RegistrosSir pendientes de volver a enviar al nodo CIR");
+            log.info("Hay " + oficios.size() +  " Oficios de Remision pendientes de volver a enviar al nodo CIR");
+
+            for (RegistroSir registroSir : registrosSir) {
+
+                log.info("Reintentando envio registroSir a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+                emisionEjb.enviarFicheroIntercambio(registroSir);
+                registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
+                registroSir.setFechaEstado(new Date());
+
+                registroSirEjb.merge(registroSir);
+            }
 
             for (OficioRemision oficio : oficios) {
 
@@ -945,7 +972,7 @@ public class SirBean implements SirLocal {
                     RegistroSir registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
                     // Enviamos el Registro al Componente CIR
-                    log.info("Reintentando envio a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+                    log.info("Reintentando envio oficioRemision a: " + registroSir.getDecodificacionEntidadRegistralDestino());
                     emisionEjb.enviarFicheroIntercambio(registroSir);
 
                     // Contabilizamos los reintentos
@@ -957,6 +984,19 @@ public class SirBean implements SirLocal {
 
                 }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
 
+                    // Transformamos el RegistroSalida en un RegistroSir
+                    RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
+                    RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+
+                    // Enviamos el Registro al Componente CIR
+                    log.info("Reintentando envio a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+                    emisionEjb.enviarFicheroIntercambio(registroSir);
+
+                    // Contabilizamos los reintentos
+                    oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
+                    oficio.setFechaEstado(new Date());
+
+                    oficioRemisionEjb.merge(oficio);
                 }
             }
 

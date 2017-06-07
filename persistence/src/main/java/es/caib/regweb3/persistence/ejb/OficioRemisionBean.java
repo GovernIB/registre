@@ -552,11 +552,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getByEstadoEntidad(int idEstado, Long idEntidad) throws Exception{
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+    public List<OficioRemision> getReintentos(Long idEntidad) throws Exception{
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos <=10");
 
-        q.setParameter("idEstado", idEstado);
+        q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
+        q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();

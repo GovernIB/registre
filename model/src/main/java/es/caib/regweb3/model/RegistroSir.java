@@ -33,6 +33,11 @@ public class RegistroSir implements Serializable {
     private Entidad entidad;
 
     /**
+     * Código único de la entidad registral a la que pertenece el registro
+     */
+    private String codigoEntidadRegistral;
+
+    /**
      * Código único de la entidad registral origen obtenido del directorio
      * común.
      */
@@ -211,7 +216,7 @@ public class RegistroSir implements Serializable {
 
     private Date fechaRecepcion;
     private Date fechaEstado;
-    private Integer numeroReintentos;
+    private Integer numeroReintentos = 0;
     private String codigoError;
     private String descripcionError;
 
@@ -242,6 +247,15 @@ public class RegistroSir implements Serializable {
 
     public void setEntidad(Entidad entidad) {
         this.entidad = entidad;
+    }
+
+    @Column(name = "COD_ENT_REG", length = 21, nullable = false)
+    public String getCodigoEntidadRegistral() {
+        return codigoEntidadRegistral;
+    }
+
+    public void setCodigoEntidadRegistral(String codigoEntidadRegistral) {
+        this.codigoEntidadRegistral = codigoEntidadRegistral;
     }
 
     @Column(name = "COD_ENT_REG_ORI", length = 21, nullable = false)

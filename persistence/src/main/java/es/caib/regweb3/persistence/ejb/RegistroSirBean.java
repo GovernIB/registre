@@ -113,7 +113,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
-                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistralDestino = :codigoEntidadRegistralDestino");
+                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistral = :codigoEntidadRegistralDestino");
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
@@ -238,17 +238,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Boolean tieneRegistroSir(String codigoOficinaActiva) throws Exception {
-
-        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir where " +
-                "registroSir.codigoEntidadRegistralDestino = :codigoOficinaActiva");
-
-        q.setParameter("codigoOficinaActiva",codigoOficinaActiva);
-
-        return (Long) q.getSingleResult() > 0;
-    }
-
-    @Override
     public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
 
         Query q;
@@ -258,7 +247,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
 
-        where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
             where.add(DataBaseUtils.like("registroSir.resumen", "resumen", parametros, registroSir.getResumen()));
@@ -328,7 +317,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
 
-        where.add(" (registroSir.codigoEntidadRegistralDestino = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
         if (StringUtils.isNotEmpty(estado)) {
             where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
@@ -383,7 +372,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception{
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
-                "where registroSir.codigoEntidadRegistralDestino = :oficinaSir and registroSir.estado = :idEstado " +
+                "where registroSir.codigoEntidadRegistral = :oficinaSir and registroSir.estado = :idEstado " +
                 "order by registroSir.id desc");
 
         q.setMaxResults(total);
@@ -482,6 +471,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             // Segmento De_Destino
             De_Destino de_Destino = fichero_intercambio_sicres_3.getDe_Destino();
             if (de_Destino != null) {
+
+                registroSir.setCodigoEntidadRegistral(de_Destino.getCodigo_Entidad_Registral_Destino());
 
                 registroSir.setCodigoEntidadRegistralDestino(de_Destino.getCodigo_Entidad_Registral_Destino());
                 if (StringUtils.isNotEmpty(de_Destino.getDecodificacion_Entidad_Registral_Destino())) {
@@ -833,6 +824,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), registroSir.getIdentificadorIntercambio()));
 
         return registroSir;
+    }
+
+    @Override
+    public List<RegistroSir> getReintentos(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
+                "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado and registroSir.numeroReintentos <=10");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
+        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO);
+
+        return  q.getResultList();
+
     }
 
     /**
@@ -1337,7 +1342,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             organismoDestino = organismoEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionDestino(),usuario.getEntidad().getId());
             registroEntrada.setDestino(organismoDestino);
         }else{
-            Oficina oficina = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoEntidadRegistralDestino(),usuario.getEntidad().getId());
+            Oficina oficina = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoEntidadRegistral(),usuario.getEntidad().getId());
             organismoDestino = organismoEjb.findByCodigoEntidad(oficina.getOrganismoResponsable().getCodigo(),usuario.getEntidad().getId());
         }
 

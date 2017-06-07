@@ -112,13 +112,12 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     public Long getByEstadoOficinaCount(int idEstado, Long idOficina) throws Exception;
 
     /**
-     * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
-     * @param idEstado
+     * Obtiene los Oficios de Remisión que han de reintentar su envío al componente CIR
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> getByEstadoEntidad(int idEstado, Long idEntidad) throws Exception;
+    public List<OficioRemision> getReintentos(Long idEntidad) throws Exception;
 
     /**
      * Busca Registros de Salida que pertenecen a un OficioRemision

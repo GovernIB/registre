@@ -49,7 +49,6 @@ public class RecepcionBean implements RecepcionLocal{
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception {
 
         FicheroIntercambio ficheroIntercambio = null;
-        String descripcionError = null;
 
         try {
 
@@ -72,40 +71,77 @@ public class RecepcionBean implements RecepcionLocal{
             // Si ha ido bien, enviamos el ACK
             mensajeEjb.enviarACK(ficheroIntercambio);
 
-        } catch (RuntimeException e) {
+        }catch (ValidacionException e) {
+            log.info("Error de validacion: " + e.getErrorException().getMessage());
+            Errores errorValidacion = e.getErrorValidacion();
+            String descripcionError = e.getErrorException().getMessage();
 
-            // Si el error es de Validación, obtenemos su código de error
-            if (e instanceof ValidacionException) {
-                Errores errorValidacion = ((ValidacionException) e).getErrorValidacion();
-                descripcionError = ((ValidacionException) e).getErrorException().getMessage();
-                if (errorValidacion != null) {
-                    errorGenerico = errorValidacion.getValue();
-                }
-                log.info("Error de validacion: " + ((ValidacionException) e).getErrorException().getMessage());
+            // Si el error de validación no afecta a los campos requeridos para enviar el mensaje de error
+            if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())) {
+
+                enviarMensajeError(xmlFicheroIntercambio, errorValidacion.getValue(), descripcionError);
+
             }else{
-                log.info("Error al recibir el fichero de intercambio", e);
-                descripcionError = e.getMessage();
-            }
-
-            // Enviamos el mensaje de error
-            try {
-                // Intentamos parsear el xml los 3 campos necesarios para mensaje de error
-                Mensaje mensaje = parserForError(xmlFicheroIntercambio);
-
-                if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorGenerico)) {
-                    mensajeEjb.enviarMensajeError(mensaje, errorGenerico, descripcionError);
-                }else{
-                    log.info("El error de validacion afecta a campos del segmento De_Destino y no permite componer el mensaje de error");
-                }
-
-            } catch (RuntimeException ex) {
-                // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
-                log.info("No es posible enviar el mensaje de Error, posiblemente por falta de campos minimos requeridos", ex);
+                log.info("El error de validacion afecta a campos del segmento De_Destino y no permite componer el mensaje de error");
             }
 
             throw e;
 
+        } catch (RuntimeException e) {
+            log.info("Error inesperado recibiendo el Fichero de Intercambio", e);
+            //Error inesperado, intentamos enviar el mensaje de error
+            enviarMensajeError(xmlFicheroIntercambio, errorGenerico, e.getMessage());
+
+            throw e;
         }
+    }
+
+    /**
+     * Recibe un fichero de datos de control del nodo distribuido asociado.
+     *
+     * @param xmlMensaje XML con la información del mensaje en formato SICRES 3.0.
+     */
+    public void recibirMensajeDatosControl(String xmlMensaje, WebServicesMethodsLocal webServicesMethodsEjb){
+
+        // Parseamos el mensaje xml
+        Mensaje mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
+
+        // Validamos el mensaje recibido
+        sicres3XML.validarMensaje(mensaje);
+
+        log.info("Recibiendo mensade de control: " + mensaje.getTipoMensaje() + " - " + mensaje.getIdentificadorIntercambio());
+
+        try {
+
+            webServicesMethodsEjb.recibirMensajeDatosControl(mensaje);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ServiceException(Errores.ERROR_INESPERADO,e);
+        }
+
+        log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());
+    }
+
+
+    /**
+     *
+     * @param xmlFicheroIntercambio
+     * @param codigoError
+     * @param descripcionError
+     */
+    private void enviarMensajeError(String xmlFicheroIntercambio, String codigoError, String descripcionError){
+
+        try {
+            // Intentamos parsear el xml los 3 campos necesarios para mensaje de error
+            Mensaje mensaje = parserForError(xmlFicheroIntercambio);
+            mensajeEjb.enviarMensajeError(mensaje, codigoError, descripcionError);
+
+        }catch (RuntimeException ex) {
+            // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
+            log.info("No es posible enviar el mensaje de Error, posiblemente por falta de campos minimos requeridos", ex);
+        }
+
     }
 
     /**
@@ -137,34 +173,6 @@ public class RecepcionBean implements RecepcionLocal{
         mensaje.setIdentificadorIntercambio(identificadorIntercambio.getNodeValue());
 
         return mensaje;
-    }
-
-    /**
-     * Recibe un fichero de datos de control del nodo distribuido asociado.
-     *
-     * @param xmlMensaje XML con la información del mensaje en formato SICRES 3.0.
-     */
-    public void recibirMensajeDatosControl(String xmlMensaje, WebServicesMethodsLocal webServicesMethodsEjb){
-
-        // Parseamos el mensaje xml
-        Mensaje mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
-
-        // Validamos el mensaje recibido
-        sicres3XML.validarMensaje(mensaje);
-
-        log.info("Recibiendo mensade de control: " + mensaje.getTipoMensaje() + " - " + mensaje.getIdentificadorIntercambio());
-
-        try {
-
-            webServicesMethodsEjb.recibirMensajeDatosControl(mensaje);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ServiceException(Errores.ERROR_INESPERADO,e);
-        }
-
-        log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());
-
     }
 
 }

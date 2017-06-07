@@ -61,13 +61,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      */
     public void eliminarRegistroSir(Long idRegistroSir) throws Exception;
 
-    /**
-     * Comrueba si una Oficina tiene RegistroSir
-     * @param codigoOficinaActiva código de la Oficina Activa
-     * @return
-     * @throws Exception
-     */
-    public Boolean tieneRegistroSir(String codigoOficinaActiva) throws Exception;
 
     /**
      * Busca los RegistroSir en función de los parámetros, donde sólo mostrará los RegistroSir con codEntidadRegistralDestino = codOficinaActiva
@@ -135,6 +128,14 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      */
     public RegistroSir transformarRegistroSalida(RegistroSalida registroSalida)
             throws Exception, I18NException;
+
+    /**
+     * Obtiene los RegistroSir que han de reintentar su envío al componente CIR
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<RegistroSir> getReintentos(Long idEntidad) throws Exception;
 
     /**
      * Elimina los RegistroSir de una Entidad

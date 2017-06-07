@@ -1,22 +1,18 @@
 package es.caib.regweb3.webapp.utils;
 
-import java.util.Properties;
-import java.util.Set;
-
-import es.caib.regweb3.persistence.ejb.InicializadorContadoresLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Versio;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
-import javax.naming.InitialContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import java.util.Properties;
+import java.util.Set;
 
 
 /**
@@ -49,7 +45,7 @@ public class InitServlet extends HttpServlet {
     }
 
     // Inicializar Contadores Libros de la entidad especificada
-    try {
+    /*try {
 
       InicializadorContadoresLocal inicializadorContadores;
       inicializadorContadores = (InicializadorContadoresLocal) new InitialContext()
@@ -60,7 +56,7 @@ public class InitServlet extends HttpServlet {
       inicializadorContadores.createTimer();
     } catch (Throwable th) {
       log.error("Error desconegut inicialitzant Inicializador Contadores: " + th.getMessage(), th);
-    }
+    }*/
 
     // Sistema de Traduccions LOGIC
     // TODO Moure a persistence
@@ -69,27 +65,7 @@ public class InitServlet extends HttpServlet {
     } catch (Throwable th) {
       log.error("Error inicialitzant el sistema de traduccions logic: " + th.getMessage(), th);
     }
-    
-    // Inicialitzar Like de BBDD
-    //TODO pendiente de refactorizar al mes si nadie se queja de comportamiento raro entre dialectos.
-    /*try {
-      String dialect = Configuracio.getHibernateDialect();
-      if (dialect.indexOf("Oracle") != -1) {
-        log.info("Setting Oracle Like Manager.");
-        DataBaseUtils.setLikeManager(new DataBaseUtils.OracleLike());
-      } else {
 
-        if (dialect.indexOf("PostgreSQL") != -1) {
-          log.info("Setting PostgreSQL Like Manager.");
-          DataBaseUtils.setLikeManager(new DataBaseUtils.PostgreSQLLike());
-        } else {
-          log.info("Setting Default Like Manager.");
-          DataBaseUtils.setLikeManager(new DataBaseUtils.DefaultLike());
-        }
-      }
-    } catch(Throwable th) {
-      log.error("Error desconegut establint LikeManager " + th.getMessage(), th);
-    }*/
 
     // Mostrar Versió
     String ver = Versio.VERSIO + (Configuracio.isCAIB()?"-caib" : "");

@@ -589,6 +589,7 @@
         ID int8 not null,
         APLICACION varchar(4),
         COD_ASUNTO varchar(16),
+        COD_ENT_REG varchar(21) not null,
         COD_ENT_REG_DEST varchar(21) not null,
         COD_ENT_REG_INI varchar(21) not null,
         COD_ENT_REG_ORI varchar(21) not null,
