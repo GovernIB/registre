@@ -5,9 +5,9 @@ import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
-import es.caib.regweb3.sir.ws.utils.PassiveCallbackHandler;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
+import es.caib.regweb3.utils.PassiveCallbackHandler;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
@@ -112,7 +112,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             respuestaWS = crearRespuestaWS(e.getError());
         }catch (Exception e){
 
-            if(e.getMessage().equals(Errores.ERROR_0037.getName())){ //Error de validación
+            if(e.getMessage().equals(Errores.ERROR_0037.getName()) || e.getMessage().equals(Errores.ERROR_COD_ENTIDAD_INVALIDO.getName())){ //Error de validación
                 log.info("Error de validacion en el Fichero de Intercambio", e);
                 respuestaWS = crearRespuestaWS(Errores.ERROR_0037);
             }else{

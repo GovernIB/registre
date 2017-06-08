@@ -35,8 +35,6 @@ public interface MensajeLocal {
     /**
      *
      * @param mensaje
-     * @param codigoError
-     * @param descError
      */
-    public void enviarMensajeError(Mensaje mensaje, String codigoError, String descError);
+    public void enviarMensajeError(Mensaje mensaje);
 }

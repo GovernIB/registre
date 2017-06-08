@@ -4,6 +4,7 @@ import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
@@ -49,6 +50,7 @@ public class RecepcionBean implements RecepcionLocal{
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception {
 
         FicheroIntercambio ficheroIntercambio = null;
+        Mensaje mensajeError = null;
 
         try {
 
@@ -76,11 +78,13 @@ public class RecepcionBean implements RecepcionLocal{
             Errores errorValidacion = e.getErrorValidacion();
             String descripcionError = e.getErrorException().getMessage();
 
-            // Si el error de validación no afecta a los campos requeridos para enviar el mensaje de error
-            if (!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())) {
+            if(ficheroIntercambio != null){
+                mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError);
+                enviarMensajeError(mensajeError);
 
-                enviarMensajeError(xmlFicheroIntercambio, errorValidacion.getValue(), descripcionError);
-
+            }else if(!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())){
+                mensajeError = parserForError(xmlFicheroIntercambio, errorValidacion.getValue(), descripcionError);
+                enviarMensajeError(mensajeError);
             }else{
                 log.info("El error de validacion afecta a campos del segmento De_Destino y no permite componer el mensaje de error");
             }
@@ -128,16 +132,13 @@ public class RecepcionBean implements RecepcionLocal{
 
     /**
      *
-     * @param xmlFicheroIntercambio
-     * @param codigoError
-     * @param descripcionError
+     * @param mensaje
      */
-    private void enviarMensajeError(String xmlFicheroIntercambio, String codigoError, String descripcionError){
+    private void enviarMensajeError(Mensaje mensaje){
 
         try {
-            // Intentamos parsear el xml los 3 campos necesarios para mensaje de error
-            Mensaje mensaje = parserForError(xmlFicheroIntercambio);
-            mensajeEjb.enviarMensajeError(mensaje, codigoError, descripcionError);
+
+            mensajeEjb.enviarMensajeError(mensaje);
 
         }catch (RuntimeException ex) {
             // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
@@ -148,10 +149,30 @@ public class RecepcionBean implements RecepcionLocal{
 
     /**
      * Obtiene del xml de intercambio los campos necesarios para crear un mensaje de error
+     * @param ficheroIntercambio
+     * @return
+     */
+    private Mensaje crearMensajeError(FicheroIntercambio ficheroIntercambio, String codigoError, String descripcionError) {
+
+        Mensaje mensaje = new Mensaje();
+
+        mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
+        mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+        mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
+        mensaje.setTipoMensaje(TipoMensaje.ERROR);
+        mensaje.setCodigoError(codigoError);
+        mensaje.setDescripcionMensaje(descripcionError);
+
+        return mensaje;
+
+    }
+
+    /**
+     * Obtiene del xml de intercambio los campos necesarios para crear un mensaje de error
      * @param xml
      * @return
      */
-    private Mensaje parserForError(String xml) {
+    private Mensaje parserForError(String xml, String codigoError, String descripcionError) {
 
         log.debug("Intentamos parsear el xml recibido para enviar el mensaje de Error");
 
@@ -170,9 +191,12 @@ public class RecepcionBean implements RecepcionLocal{
         Node codigoEntidadRegistralOrigen = (Node)reader.read(Codigo_Entidad_Registral_Origen_Xpath, XPathConstants.NODE);
         Node identificadorIntercambio = (Node)reader.read(Identificador_Intercambio_Xpath, XPathConstants.NODE);
 
-        mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino.getNodeValue());
-        mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralOrigen.getNodeValue());
+        mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralDestino.getNodeValue());
+        mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralOrigen.getNodeValue());
         mensaje.setIdentificadorIntercambio(identificadorIntercambio.getNodeValue());
+        mensaje.setTipoMensaje(TipoMensaje.ERROR);
+        mensaje.setCodigoError(codigoError);
+        mensaje.setDescripcionMensaje(descripcionError);
 
         return mensaje;
     }

@@ -1893,11 +1893,12 @@ public class Sicres3XML {
 
                 CharSequence cs1 = "_codigo_Entidad_Registral_Origen";
                 CharSequence cs2 = "_codigo_Entidad_Registral_Destino";
-                CharSequence cs3 = "De_Destino";
+                CharSequence cs3 = "De_Origen_o_Remitente";
+                CharSequence cs4 = "De_Destino";
 
-                if (e.getLocalizedMessage().contains(cs1) || e.getLocalizedMessage().contains(cs2) || e.getLocalizedMessage().contains(cs3)){
+                if (e.getLocalizedMessage().contains(cs1) || e.getLocalizedMessage().contains(cs2) || e.getLocalizedMessage().contains(cs3) || e.getLocalizedMessage().contains(cs4)){
 
-                    log.info("Error al parsear el xml en algun campo del segmento De_Destino, no se podra enviar el mensaje de error.", e);
+                    log.info("Error al parsear el xml en algun campo del segmento De_Destino o De_Origen_o_Remitente, no se podra enviar el mensaje de error.", e);
                     throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO, e);
                 }
             }

@@ -90,13 +90,9 @@ public class MensajeBean implements MensajeLocal {
      * Envía un mensaje de control de tipo ERROR.
      *
      * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
-     * @param codigoError
-     * @param descError
+
      */
-    public void enviarMensajeError(Mensaje mensaje, String codigoError, String descError) {
-        mensaje.setTipoMensaje(TipoMensaje.ERROR);
-        mensaje.setCodigoError(codigoError);
-        mensaje.setDescripcionMensaje(descError);
+    public void enviarMensajeError(Mensaje mensaje) {
 
         enviarMensaje(mensaje);
 
