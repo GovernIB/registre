@@ -88,9 +88,11 @@ public class RecepcionBean implements RecepcionLocal{
             throw e;
 
         } catch (RuntimeException e) {
-            log.info("Error inesperado recibiendo el Fichero de Intercambio", e);
             //Error inesperado, intentamos enviar el mensaje de error
-            enviarMensajeError(xmlFicheroIntercambio, errorGenerico, e.getMessage());
+            //NO ENVIAMOS UN MENSAJE DE ERROR DE CONTROL, PORQUÉ NO SE DEBE A LAS VALIDACIONES
+            log.info("Error inesperado recibiendo el Fichero de Intercambio, no enviamos un mensaje de control de error", e);
+
+            //enviarMensajeError(xmlFicheroIntercambio, errorGenerico, e.getMessage());
 
             throw e;
         }
@@ -117,7 +119,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new ServiceException(Errores.ERROR_INESPERADO,e);
+            throw new ServiceException(Errores.ERROR_NO_CONTROLADO,e);
         }
 
         log.info("Mensaje recibido y procesado correctamente: " + mensaje.getIdentificadorIntercambio());

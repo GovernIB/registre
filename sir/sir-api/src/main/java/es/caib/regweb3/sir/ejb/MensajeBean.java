@@ -48,7 +48,7 @@ public class MensajeBean implements MensajeLocal {
 
         enviarMensaje(confirmacion);
 
-        log.info("Mensaje de confirmación  enviado");
+        log.info("Mensaje de confirmación enviado");
     }
 
     /**

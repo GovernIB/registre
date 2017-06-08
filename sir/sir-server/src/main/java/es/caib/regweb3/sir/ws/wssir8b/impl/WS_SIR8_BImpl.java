@@ -108,11 +108,17 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             respuestaWS = crearRespuestaWS(Errores.OK);
 
         } catch (ServiceException e) {
-            log.info("Error en el envio del fichero de intercambio a la aplicacion", e);
+            log.info("Error recibiendo el Fichero de Intercambio", e);
             respuestaWS = crearRespuestaWS(e.getError());
-        }catch (Throwable e) {
-            log.info("Error en el envio del fichero de intercambio a la aplicacion", e);
-            respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
+        }catch (Exception e){
+
+            if(e.getMessage().equals(Errores.ERROR_0037.getName())){ //Error de validación
+                log.info("Error de validacion en el Fichero de Intercambio", e);
+                respuestaWS = crearRespuestaWS(Errores.ERROR_0037);
+            }else{
+                log.info("Error inesperado recibiendo en el Fichero de Intercambio", e);
+                respuestaWS = crearRespuestaWS(Errores.ERROR_NO_CONTROLADO);
+            }
         }
 
         log.info("Respuesta envioFichero: " + respuestaWS.getCodigo() +" - "+ respuestaWS.getDescripcion());

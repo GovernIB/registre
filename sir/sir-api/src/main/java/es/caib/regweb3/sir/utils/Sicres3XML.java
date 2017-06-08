@@ -136,7 +136,7 @@ public class Sicres3XML {
 
         // Validar que el código de entidad registral de origen esté informado
         Assert.hasText(fichero.getCodigoEntidadRegistralOrigen(),
-                "El campo 'CodigoEntidadRegistralOrigen' no puede estar vacio");
+                "El campo 'CodigoEntidadRegistralOrigen' del SegmentoOrigen, no puede estar vacio.");
 
         // Validar el código de entidad registral de origen en DIR3
         if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralOrigen())) {
@@ -146,22 +146,22 @@ public class Sicres3XML {
         // Validar el código de unidad de tramitación de origen en DIR3
         if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionOrigen())) {
             Assert.isTrue(validarCodigoUnidadTramitacion(fichero.getCodigoUnidadTramitacionOrigen()),
-                    "El campo 'CodigoUnidadTramitacionOrigen' no es válido");
+                    "El campo 'CodigoUnidadTramitacionOrigen' del SegmentoOrigen no es valido.");
         }
 
         // Validar que el número de registro de entrada en origen esté informado
-        Assert.hasText(fichero.getNumeroRegistro(), "El campo 'NumeroRegistroEntrada' no puede estar vacio");
+        Assert.hasText(fichero.getNumeroRegistro(), "El campo 'NumeroRegistroEntrada' del SegmentoOrigen, no puede estar vacio.");
 
         // Validar que la fecha y hora de entrada esté informada
-        Assert.hasText(fichero.getFechaRegistroXML(), "El campo 'FechaHoraEntrada' no puede estar vacio");
+        Assert.hasText(fichero.getFechaRegistroXML(), "El campo 'FechaHoraEntrada' del SegmentoOrigen, no puede estar vacio.");
 
         // Validar el formato de la fecha de entrada
         Assert.isTrue(StringUtils.equals(fichero.getFechaRegistroXML(),
                 SDF.format(fichero.getFechaRegistro())),
-                "El campo 'FechaHoraEntrada' no es válido [" + fichero.getFechaRegistroXML() + "]");
+                "El campo 'FechaHoraEntrada' SegmentoOrigen no es valido [" + fichero.getFechaRegistroXML() + "]");
 
         // Validar que la Fecha de entrada no sea superior a la actual
-        Assert.isTrue(fichero.getFechaRegistro().before(new Date()), "El campo 'FechaHoraEntrada' es mayor que now()");
+        Assert.isTrue(fichero.getFechaRegistro().before(new Date()), "El campo 'FechaHoraEntrada' del SegmentoOrigen, es mayor que la fecha actual.");
 
         log.info("SegmentoOrigen validado!");
     }
@@ -175,7 +175,7 @@ public class Sicres3XML {
 
         // Validar que el código de entidad registral de destino esté informado
         Assert.hasText(fichero.getCodigoEntidadRegistralDestino(),
-                "El campo 'CodigoEntidadRegistralDestino' no puede estar vacio");
+                "El campo 'CodigoEntidadRegistralDestino' del SegmentoDestino, no puede estar vacio.");
 
         // Validar el código de entidad registral de destino en DIR3
         if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino())) {
@@ -185,7 +185,7 @@ public class Sicres3XML {
         // Validar el código de unidad de tramitación de destino en DIR3
         if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionDestino())) {
             Assert.isTrue(validarCodigoUnidadTramitacion(fichero.getCodigoUnidadTramitacionDestino()),
-                    "El campo 'CodigoUnidadTramitacionDestino' no es válido o no existe en DIR3");
+                    "El campo 'CodigoUnidadTramitacionDestino' del SegmentoDestino, no es valido o no existe en DIR3.");
         }
 
         log.info("SegmentoDestino validado!");
@@ -209,7 +209,7 @@ public class Sicres3XML {
                     Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Interesado())
                                     || (StringUtils.isNotBlank(interesado
                                     .getNombre_Interesado()) && StringUtils.isNotBlank(interesado.getPrimer_Apellido_Interesado())),
-                            "No existe ningun Interesado, es necesario que haya al menos uno");
+                            "No existe ningun Interesado en el SegmentoInteresados, es necesario que haya al menos uno.");
 
                 }else if(fichero.getTipoRegistro().equals(TipoRegistro.SALIDA)){
 
@@ -217,12 +217,12 @@ public class Sicres3XML {
                     if(StringUtils.isBlank(interesado.getRazon_Social_Interesado()) && (StringUtils.isBlank(interesado
                             .getNombre_Interesado()) && StringUtils.isBlank(interesado.getPrimer_Apellido_Interesado()))){
 
-                        // Comprobar que el campo CodigoUnidadTramitacionOrigen está informado y es válido
-                        Assert.hasText(fichero.getCodigoUnidadTramitacionOrigen(), "El campo 'CodigoUnidadTramitacionOrigen' no puede estar vacio");
+                        // Comprobar que el campo CodigoUnidadTramitacionOrigen está informado y es valido
+                        Assert.hasText(fichero.getCodigoUnidadTramitacionOrigen(), "No existe ningun Interesado en el SegmentoInteresados, y además el campo 'CodigoUnidadTramitacionOrigen' no esta vacio.");
 
                         // Validar el código de unidad de tramitación de origen en DIR3
                         Assert.isTrue(validarCodigoUnidadTramitacion(fichero.getCodigoUnidadTramitacionOrigen()),
-                                "El campo 'CodigoUnidadTramitacionOrigen' no es válido ");
+                                "No existe ningun Interesado en el SegmentoInteresados, y además el campo 'CodigoUnidadTramitacionOrigen' no es valido.");
 
                     }
                 }
@@ -231,7 +231,7 @@ public class Sicres3XML {
 
                 // Tipo Documento Identificación Interesado
                 if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Interesado())) {
-                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'El campo tipoDocumentoIdentificacionInteresado' no puede ser null");
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Interesado()), "'El campo 'tipoDocumentoIdentificacionInteresado' del SegmentoInteresados, no puede ser null");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
                     // Eliminat segons requeriment de Certificació SIR
@@ -243,17 +243,17 @@ public class Sicres3XML {
                         validacionDocumento = new Validacion(Boolean.FALSE, "", "");
                     }
 
-                    Assert.isTrue(validacionDocumento.getValido(), "El campo 'documento' no es correcto"); */
+                    Assert.isTrue(validacionDocumento.getValido(), "El campo 'documento' del SegmentoInteresados, no es correcto."); */
 
                     // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                     if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
                             interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
                         Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Interesado()),
-                                "El campo  'razonSocialInteresado' no puede estar vacio");
+                                "El campo 'razonSocialInteresado' del SegmentoInteresados, no puede estar vacio.");
                     } else {
                         Assert.isTrue(StringUtils.isNotBlank(interesado.getNombre_Interesado()) &&
                                         StringUtils.isNotBlank(interesado.getPrimer_Apellido_Interesado()),
-                                "Los campos 'nombreInteresado' y 'primerApellidoInteresado' no pueden estar vacios");
+                                "Los campos 'nombreInteresado' y 'primerApellidoInteresado' del SegmentoInteresados, no pueden estar vacios.");
                     }
                 }
 
@@ -262,27 +262,26 @@ public class Sicres3XML {
                 if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
                     Assert.notNull(
                             CanalNotificacion.getCanalNotificacion(interesado.getCanal_Preferente_Comunicacion_Interesado()),
-                            "El campo 'CanalPreferenteComunicacionInteresado' no puede ser null ["
-                                    + interesado.getCanal_Preferente_Comunicacion_Interesado() + "]");
+                            "El campo 'CanalPreferenteComunicacionInteresado' del SegmentoInteresados, no puede ser null.");
 
                     if (CanalNotificacion.DIRECCION_POSTAL.getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
 
-                        Assert.hasText(interesado.getPais_Interesado(), "El campo  'paisInteresado' no puede estar vacio");
-                        Assert.hasText(interesado.getDireccion_Interesado(), "El campo  'direccionInteresado' no puede estar vacio");
+                        Assert.hasText(interesado.getPais_Interesado(), "El campo 'paisInteresado' del SegmentoInteresados, no puede estar vacio.");
+                        Assert.hasText(interesado.getDireccion_Interesado(), "El campo 'direccionInteresado' del SegmentoInteresados, no puede estar vacio.");
 
                         if (CODIGO_PAIS_ESPANA.equals(interesado.getPais_Interesado())) {
                             Assert.isTrue(StringUtils.isNotBlank(interesado
                                             .getCodigo_Postal_Interesado()) || (StringUtils
                                             .isNotBlank(interesado.getProvincia_Interesado()) && StringUtils
                                             .isNotBlank(interesado.getMunicipio_Interesado())),
-                                    "Los campos 'codigoPostalInteresado' o  la combinación de ('provinciaInteresado' y 'municipioInteresado') no pueden estar vacios");
+                                    "Los campos 'codigoPostalInteresado' o  la combinación de ('provinciaInteresado' y 'municipioInteresado') del SegmentoInteresados, no pueden estar vacios.");
                         }
 
                     } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
                             .getValue().equals(interesado.getCanal_Preferente_Comunicacion_Interesado())) {
                         Assert.hasText(
                                 interesado.getDireccion_Electronica_Habilitada_Interesado(),
-                                "El campo 'direccionElectronicaHabilitadaInteresado' no puede estar vacio");
+                                "El campo 'direccionElectronicaHabilitadaInteresado' del SegmentoInteresados, no puede estar vacio.");
                     }
 
                 }
@@ -291,7 +290,7 @@ public class Sicres3XML {
 
                 // Tipo Documento Identificación Interesado
                 if (StringUtils.isNotEmpty(interesado.getTipo_Documento_Identificacion_Representante())) {
-                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "El campo 'tipoDocumentoIdentificacionRepresentante' no puede ser null");
+                    Assert.notNull(TipoDocumentoIdentificacion.getTipoDocumentoIdentificacion(interesado.getTipo_Documento_Identificacion_Representante()), "El campo 'tipoDocumentoIdentificacionRepresentante' del SegmentoInteresados, no puede ser null");
 
                     // Validar que el Documento concuerda con su tipo documento identificación
                     // Eliminat segons requeriment de Certificació SIR
@@ -302,36 +301,33 @@ public class Sicres3XML {
                         e.printStackTrace();
                         validacionDocumento = new Validacion(Boolean.FALSE, "", "");
                     }
-                    Assert.isTrue(validacionDocumento.getValido(), "El campo  'documento' no es válido"); */
+                    Assert.isTrue(validacionDocumento.getValido(), "El campo 'documento' del SegmentoInteresados, no es valido."); */
 
                     // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                     if (interesado.getTipo_Documento_Identificacion_Representante().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
                             interesado.getTipo_Documento_Identificacion_Representante().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
                         Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Representante()),
-                                "El campo 'razonSocialRepresentante' no puede estar vacio");
+                                "El campo 'razonSocialRepresentante' del SegmentoInteresados, no puede estar vacio.");
                     } else {
                         Assert.isTrue(StringUtils.isNotBlank(interesado.getNombre_Representante()) &&
                                         StringUtils.isNotBlank(interesado.getPrimer_Apellido_Representante()),
-                                "El campo 'nombreRepresentante' and 'primerApellidoRepresentante' no puede etar vacio");
+                                "Los campos 'nombreRepresentante' y 'primerApellidoRepresentante' del SegmentoInteresados, no puede etar vacio.");
                     }
                 }
 
                 // Validar el canal preferente de comunicación del representante
                 if (StringUtils.isNotBlank(interesado.getCanal_Preferente_Comunicacion_Representante())) {
-                    Assert.notNull(
-                            CanalNotificacion.getCanalNotificacion(interesado
-                                    .getCanal_Preferente_Comunicacion_Representante()),
-                            "El campo 'CanalPreferenteComunicacionRepresentante' no puede ser null ["
-                                    + interesado.getCanal_Preferente_Comunicacion_Representante() + "]");
+                    Assert.notNull(CanalNotificacion.getCanalNotificacion(interesado.getCanal_Preferente_Comunicacion_Representante()),
+                            "El campo 'CanalPreferenteComunicacionRepresentante' del SegmentoInteresados, no puede ser null.");
 
                     if (CanalNotificacion.DIRECCION_POSTAL.getValue().equals(interesado
                             .getCanal_Preferente_Comunicacion_Representante())) {
 
                         Assert.hasText(interesado.getPais_Representante(),
-                                "El campo 'paisRepresentante' no puede estar vacio");
+                                "El campo 'paisRepresentante' del SegmentoInteresados, no puede estar vacio.");
                         Assert.hasText(
                                 interesado.getDireccion_Representante(),
-                                "El campo 'direccionRepresentante' no puede estar vacio");
+                                "El campo 'direccionRepresentante' del SegmentoInteresados, no puede estar vacio.");
 
                         if (CODIGO_PAIS_ESPANA.equals(interesado
                                 .getPais_Representante())) {
@@ -341,7 +337,7 @@ public class Sicres3XML {
                                             || (StringUtils
                                             .isNotBlank(interesado.getProvincia_Representante()) && StringUtils
                                             .isNotBlank(interesado.getMunicipio_Representante())),
-                                    "Los campos 'codigoPostalRepresentante' o la combinación de ('provinciaRepresentante' y 'municipioRepresentante') no pueden estar vacios");
+                                    "Los campos 'codigoPostalRepresentante' o la combinación de ('provinciaRepresentante' y 'municipioRepresentante') del SegmentoInteresados, no pueden estar vacios.");
                         }
 
                     } else if (CanalNotificacion.DIRECCION_ELECTRONICA_HABILITADA
@@ -349,7 +345,7 @@ public class Sicres3XML {
                                     .getCanal_Preferente_Comunicacion_Representante())) {
                         Assert.hasText(
                                 interesado.getDireccion_Electronica_Habilitada_Representante(),
-                                "El campo 'direccionElectronicaHabilitadaRepresentante' no puede estar vacio");
+                                "El campo 'direccionElectronicaHabilitadaRepresentante' del SegmentoInteresados, no puede estar vacio.");
                     }
                 }
 
@@ -369,7 +365,7 @@ public class Sicres3XML {
     private void validarSegmentoAsunto(FicheroIntercambio fichero) {
 
         // Validar que el resumen esté informado
-        Assert.hasText(fichero.getResumen(), "El campo  'Resumen' no puede estar vacio");
+        Assert.hasText(fichero.getResumen(), "El campo 'Resumen' del SegmentoAsunto, no puede estar vacio.");
 
         log.info("SegmentoAsunto validado!");
     }
@@ -396,7 +392,7 @@ public class Sicres3XML {
                             firmaDeOtroAnexo = true;
                         }
                     }
-                    Assert.isTrue(firmaDeOtroAnexo, "El anexo no es firma de ningun otro anexo");
+                    Assert.isTrue(firmaDeOtroAnexo, "El anexo del SegmentoAnexos, no es firma de ningun otro anexo.");
                 }
 
             }
@@ -416,9 +412,9 @@ public class Sicres3XML {
 
             // Validar el nombre del fichero anexado
             Assert.hasText(anexo.getNombre_Fichero_Anexado(),
-                    "El campo 'NombreFicheroAnexado' no puede estar vacio");
+                    "El campo 'NombreFicheroAnexado' del SegmentoAnexos, no puede estar vacio.");
             Assert.isTrue(!StringUtils.containsAny(anexo.getNombre_Fichero_Anexado(), "\\/?*:|<>\";"),
-                    "El campo 'NombreFicheroAnexado' tiene caracteres no validos [" + anexo.getNombre_Fichero_Anexado() + "]");
+                    "El campo 'NombreFicheroAnexado' del SegmentoAnexos, tiene caracteres no validos [" + anexo.getNombre_Fichero_Anexado() + "]");
 
             // Validar el identificador de fichero
             validarIdentificadorFichero(anexo, identificadorIntercambio);
@@ -427,18 +423,18 @@ public class Sicres3XML {
             if (StringUtils.isNotBlank(anexo.getValidez_Documento())) {
                 Assert.notNull(
                         ValidezDocumento.getValidezDocumento(anexo.getValidez_Documento()),
-                        "El campo 'ValidezDocumento' no es válido [" + anexo.getValidez_Documento() + "]");
+                        "El campo 'ValidezDocumento' del SegmentoAnexos, no es valido [" + anexo.getValidez_Documento() + "]");
             }
 
             // Validar el campo tipo de documento
-            Assert.hasText(anexo.getTipo_Documento(), "El campo  'TipoDocumento' no puede estar vacio");
+            Assert.hasText(anexo.getTipo_Documento(), "El campo 'TipoDocumento' del SegmentoAnexos, no puede estar vacio.");
             Assert.notNull(TipoDocumento.getTipoDocumento(anexo.getTipo_Documento()),
                     "El campo  'TipoDocumento' no puede ser null [" + anexo.getTipo_Documento() + "]");
 
             // Validar el hash del documento
             // Nota: no se comprueba el código hash de los documentos porque no
             // se especifica con qué algoritmo está generado.
-            Assert.isTrue(!ArrayUtils.isEmpty(anexo.getHash()), "El campo 'Hash' no puede estar vacio");
+            Assert.isTrue(!ArrayUtils.isEmpty(anexo.getHash()), "El campo 'Hash' del SegmentoAnexos, no puede estar vacio.");
 
             // Validar el tipo MIME
             // TODO: estaba comentado.
@@ -450,7 +446,7 @@ public class Sicres3XML {
 			}*/
 
             // Validar el contenido del anexo
-            Assert.isTrue(anexo.getAnexo().length > 0, "El campo  'Anexo' no puede estar vacio");
+            Assert.isTrue(anexo.getAnexo().length > 0, "El campo 'Anexo' del SegmentoAnexos, no puede estar vacio.");
 
 
             log.info("Anexo '"+anexo.getNombre_Fichero_Anexado()+"' validado!");
@@ -467,29 +463,29 @@ public class Sicres3XML {
     private void validarIdentificadorFichero(De_Anexo anexo, String identificadorIntercambio) {
 
         // No vacío
-        Assert.hasText(anexo.getIdentificador_Fichero(), "El campo 'IdentificadorFichero' no puede estar vacio");
+        Assert.hasText(anexo.getIdentificador_Fichero(), "El campo 'IdentificadorFichero' del SegmentoAnexos, no puede estar vacio.");
 
         // Validar el tamaño
         Assert.isTrue(StringUtils.length(anexo.getIdentificador_Fichero()) <= LONGITUD_MAX_IDENTIFICADOR_FICHERO,
-                "El campo 'IdentificadorFichero': "+anexo.getIdentificador_Fichero()+" es demasiado largo");
+                "El campo 'IdentificadorFichero': "+anexo.getIdentificador_Fichero()+" del SegmentoAnexos, es demasiado largo.");
 
         // Validar formato: <Identificador del Intercambio><Código de tipo de archivo><Número Secuencial>.<Extensión del fichero>
         String identificadorFichero = anexo.getIdentificador_Fichero();
         Assert.isTrue(StringUtils.startsWith(identificadorFichero, identificadorIntercambio),
-                "El campo 'IdentificadorFichero': "+anexo.getIdentificador_Fichero()+", no concuerda con 'IdentificadorIntercambio'");
+                "El campo 'IdentificadorFichero': "+anexo.getIdentificador_Fichero()+" del SegmentoAnexos, no concuerda con 'IdentificadorIntercambio'.");
 
         identificadorFichero = StringUtils.substringAfter(identificadorFichero, identificadorIntercambio + "_");
         String[] tokens = StringUtils.split(identificadorFichero, "_.");
-        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido");
+        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorFichero': "+identificadorFichero+" del SegmentoAnexos, no es valido");
 
         // Código de tipo de archivo de 2 dígitos
-        Assert.isTrue(StringUtils.equals(tokens[0], "01"), "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en el tipo de archivo");
+        Assert.isTrue(StringUtils.equals(tokens[0], "01"), "El campo 'IdentificadorFichero': "+identificadorFichero+" del SegmentoAnexos, no es valido, hay un error en el tipo de archivo");
         // Número secuencial de hasta 4 dígitos
-        Assert.isTrue(StringUtils.length(tokens[1]) <= 4, "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en número secuencial de 4 digitos");
+        Assert.isTrue(StringUtils.length(tokens[1]) <= 4, "El campo 'IdentificadorFichero': "+identificadorFichero+" del SegmentoAnexos, no es valido, hay un error en número secuencial de 4 digitos");
         // Número secuencial compuesto por solo dígitos
-        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en el número secuencial numérico");
+        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorFichero': "+identificadorFichero+" del SegmentoAnexos, no es valido, hay un error en el número secuencial numérico");
         // Extensión del fichero
-        Assert.hasText(tokens[2], "El campo 'IdentificadorFichero': "+identificadorFichero+", no es válido, hay un error en la Extensión del fichero");
+        Assert.hasText(tokens[2], "El campo 'IdentificadorFichero': "+identificadorFichero+" del SegmentoAnexos, no es valido, hay un error en la Extensión del fichero");
 
         // Validar el tipo MIME
         if (StringUtils.isNotBlank(anexo.getTipo_MIME())) {
@@ -498,7 +494,7 @@ public class Sicres3XML {
             if (!anexo.getTipo_Documento().equals(TipoDocumento.FICHERO_TECNICO_INTERNO.getValue())) {
                 Assert.isTrue(StringUtils.equalsIgnoreCase(
                         anexo.getTipo_MIME(), MimeTypeUtils.getMimeTypeExtension(tokens[2])),
-                        "El Tipo mime: "+anexo.getTipo_MIME()+", no coincide con el indicado en el campo 'IdentificadorFichero': " + identificadorFichero);
+                        "El Tipo mime: "+anexo.getTipo_MIME()+" del SegmentoAnexos, no coincide con el indicado en el campo 'IdentificadorFichero': " + identificadorFichero);
 
             }
         }
@@ -514,18 +510,18 @@ public class Sicres3XML {
         // Validar el tipo de transporte
         if (StringUtils.isNotBlank(fichero.getTipoTransporteXML())) {
             Assert.notNull(fichero.getTipoTransporte(),
-                    "El campo 'TipoTransporteEntrada' no puede ser null [" + fichero.getTipoTransporteXML() + "]");
+                    "El campo 'TipoTransporteEntrada' del SegmentoAnexos, no puede ser null [" + fichero.getTipoTransporteXML() + "]");
         }
 
         // Validar el tipo de anotación
-        Assert.hasText(fichero.getTipoAnotacionXML(), "El campo 'TipoAnotacion' no puede estar vacio");
-        Assert.notNull(fichero.getTipoAnotacion(), "El campo 'TipoAnotacion' no puede ser null [" + fichero.getTipoAnotacionXML() + "]");
+        Assert.hasText(fichero.getTipoAnotacionXML(), "El campo 'TipoAnotacion' del SegmentoControl, no puede estar vacio");
+        Assert.notNull(fichero.getTipoAnotacion(), "El campo 'TipoAnotacion' del SegmentoControl, no puede ser null [" + fichero.getTipoAnotacionXML() + "]");
 
         // Validar que el código de entidad registral de inicio esté informado
-        Assert.hasText(fichero.getCodigoEntidadRegistralInicio(), "El campo 'CodigoEntidadRegistralInicio' no puede estar vacio");
+        Assert.hasText(fichero.getCodigoEntidadRegistralInicio(), "El campo 'CodigoEntidadRegistralInicio'del SegmentoControl, no puede estar vacio");
 
         // Validar el código de entidad registral de inicio en DIR3
-        Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralInicio()), "El campo 'CodigoEntidadRegistralInicio' no es válido");
+        Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralInicio()), "El campo 'CodigoEntidadRegistralInicio'del SegmentoControl, no es valido");
 
         // Validar el identificador de intercambio, tiene que realizarse despues de la validacion del código de entidad registral de inicio
         validarIdentificadorIntercambio(fichero);
@@ -542,29 +538,29 @@ public class Sicres3XML {
 
         // Comprobar que no esté vacío
         Assert.hasText(fichero.getIdentificadorIntercambio(),
-                "El campo 'IdentificadorIntercambio' no puede estar vacio");
+                "El campo 'IdentificadorIntercambio' del SegmentoControl, no puede estar vacio");
 
         Assert.isTrue(fichero.getIdentificadorIntercambio().length() <= LONGITUD_IDENTIFICADOR_INTERCAMBIO,
-                "El campo 'IdentificadorIntercambio' no es válido");
+                "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido");
 
         // Comprobar el formato del identificiador de intercambio: <Código_Entidad_Registral_Origen><AA><Número Secuencial>
         String[] tokens = StringUtils.split(fichero.getIdentificadorIntercambio(), "_");
 
-        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorIntercambio' no es válido");
+        Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido");
         Assert.isTrue(StringUtils.length(tokens[0]) <= LONGITUD_CODIGO_ENTIDAD_REGISTRAL,
-                "El campo 'IdentificadorIntercambio' no es válido, hay un error en la longitud esperada"); // Código de la entidad registral
+                "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, hay un error en la longitud esperada"); // Código de la entidad registral
         Assert.isTrue(StringUtils.equals(tokens[0], fichero.getCodigoEntidadRegistralInicio()),
-                "El campo 'IdentificadorIntercambio' no concuerda con 'CodigoEntidadRegistralInicio'");
-        Assert.isTrue(StringUtils.length(tokens[1]) == 2, "El campo 'IdentificadorIntercambio' no es válido"); // Año con 2 dígitos
-        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorIntercambio' no es válido, no es un campo numérico"); //numerico
+                "El campo 'IdentificadorIntercambio' del SegmentoControl, no concuerda con 'CodigoEntidadRegistralInicio'");
+        Assert.isTrue(StringUtils.length(tokens[1]) == 2, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido"); // Año con 2 dígitos
+        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, no es un campo numérico"); //numerico
 
 
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
         Integer year = Integer.parseInt(sdf.format(new Date()));
 
-        Assert.isTrue(Integer.parseInt(tokens[1])<= year,  "El campo 'IdentificadorIntercambio' no es válido, el año indicado es mayor que el actual"); // Año menor o igual al actual
+        Assert.isTrue(Integer.parseInt(tokens[1])<= year,  "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, el año indicado es mayor que el actual"); // Año menor o igual al actual
 
-        Assert.isTrue(StringUtils.length(tokens[2]) == 8, "El campo 'IdentificadorIntercambio' no es válido"); // Número secuencia de 8 dígitos
+        Assert.isTrue(StringUtils.length(tokens[2]) == 8, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido"); // Número secuencia de 8 dígitos
 
         log.info("IdentificadorIntercambio validado!");
     }
@@ -576,12 +572,12 @@ public class Sicres3XML {
      */
     private void validarSegmentoFormularioGenerico(FicheroIntercambio fichero) {
 
-        Assert.notNull(fichero.getExpone(), "El campo 'expone' no puede ser null");
+        Assert.notNull(fichero.getExpone(), "El campo 'expone' del SegmentoFormularioGenerico, no puede ser null");
 
-        Assert.notNull(fichero.getSolicita(), "El campo 'solicita' no puede ser null");
+        Assert.notNull(fichero.getSolicita(), "El campo 'solicita' del SegmentoFormularioGenerico, no puede ser null");
 
         if(StringUtils.isNotEmpty(fichero.getExpone())){
-            Assert.hasText(fichero.getSolicita(), "El campo 'solicita' no puedo estar vacio");
+            Assert.hasText(fichero.getSolicita(), "El campo 'solicita' del SegmentoFormularioGenerico, no puedo estar vacio");
         }
 
 
