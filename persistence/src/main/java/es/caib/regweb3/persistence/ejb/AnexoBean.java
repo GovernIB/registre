@@ -22,7 +22,6 @@ import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.utils.Metadata;
 import org.fundaciobit.plugins.utils.MetadataConstants;
-import org.fundaciobit.plugins.utils.PluginsManager;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -337,7 +336,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexo.setFechaCaptura(new Date());
 
 
-            IDocumentCustodyPlugin custody = getInstance();
+            IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
@@ -1032,36 +1031,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
-
-    private static IDocumentCustodyPlugin cacheDocumentCustodyPlugin = null;
-
-
-    /**
-     * Obtiene una instancia del plugin de custodia
-     *
-     * @return
-     * @throws Exception
-     */
-    public IDocumentCustodyPlugin getInstance() throws Exception {
-
-        if (cacheDocumentCustodyPlugin == null) {
-            // Valor de la Clau
-            final String propertyName = RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.documentcustodyplugin";
-            String className = System.getProperty(propertyName);
-            if (className == null || className.trim().length() <= 0) {
-                throw new Exception("No hi ha cap propietat " + propertyName
-                        + " definint la classe que gestiona el plugin de login");
-            }
-            // Carregant la classe
-            Object obj;
-            obj = PluginsManager.instancePluginByClassName(className, RegwebConstantes.REGWEB3_PROPERTY_BASE + "annex.");
-            // TODO Falta mirar si retorna un null !!!!!
-
-            cacheDocumentCustodyPlugin = (IDocumentCustodyPlugin) obj;
-        }
-
-        return cacheDocumentCustodyPlugin;
-    }
 
 
     /**
