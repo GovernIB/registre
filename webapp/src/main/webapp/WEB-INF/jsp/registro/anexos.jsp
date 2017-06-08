@@ -86,7 +86,7 @@
                             <th><spring:message code="anexo.titulo"/></th>
                             <th><spring:message code="anexo.tipoDocumento"/></th>
                             <th class="center"><spring:message code="anexo.tamano"/></th>
-                            <th class="center">Doc</th>
+                            <th class="center"><spring:message code="anexo.anexo"/></th>
                             <th class="center">Firma</th>
                             <th class="center"><spring:message code="regweb.acciones"/></th>
                         </tr>
@@ -121,7 +121,7 @@
                                                           href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}"/>"
                                                           target="_blank"
                                                           title="<spring:message code="anexo.tipofirma.detached"/>"><span
-                                            class="fa fa-download"></span></a></td>
+                                            class="fa fa-key"></span></a></td>
                                 </c:if>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
