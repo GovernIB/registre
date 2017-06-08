@@ -79,7 +79,7 @@ public class WS_SIR9Impl implements WS_SIR9_PortType {
             respuestaWS = crearRespuestaWS(e.getError());
         } catch (Throwable e) {
             log.info("Error en la recepcion del mensaje de datos de control", e);
-            respuestaWS = crearRespuestaWS(Errores.ERROR_INESPERADO);
+            respuestaWS = crearRespuestaWS(Errores.ERROR_NO_CONTROLADO);
         }
 
         return respuestaWS;
