@@ -78,15 +78,15 @@ public class RecepcionBean implements RecepcionLocal{
             Errores errorValidacion = e.getErrorValidacion();
             String descripcionError = e.getErrorException().getMessage();
 
-            if(ficheroIntercambio != null){
+            if(ficheroIntercambio != null && (!descripcionError.contains("CodigoEntidadRegistralOrigen") && !descripcionError.contains("CodigoEntidadRegistralDestino") && !descripcionError.contains("CodigoEntidadRegistralInicio") && !descripcionError.contains("IdentificadorIntercambio"))){
                 mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError);
                 enviarMensajeError(mensajeError);
 
-            }else if(!Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())){
+            }else if(ficheroIntercambio == null && !Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())){
                 mensajeError = parserForError(xmlFicheroIntercambio, errorValidacion.getValue(), descripcionError);
                 enviarMensajeError(mensajeError);
             }else{
-                log.info("El error de validacion afecta a campos del segmento De_Destino y no permite componer el mensaje de error");
+                log.info("El error de validacion afecta a campos necesarios para componer el mensaje de error, no se podra enviar");
             }
 
             throw e;
@@ -174,7 +174,7 @@ public class RecepcionBean implements RecepcionLocal{
      */
     private Mensaje parserForError(String xml, String codigoError, String descripcionError) {
 
-        log.debug("Intentamos parsear el xml recibido para enviar el mensaje de Error");
+        log.info("Intentamos parsear el xml recibido para enviar el mensaje de Error");
 
         Mensaje mensaje = new Mensaje();
 
@@ -183,20 +183,27 @@ public class RecepcionBean implements RecepcionLocal{
         try {
             reader = new XPathReaderUtil(new ByteArrayInputStream(xml.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
-            log.error("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());
+            log.info("Imposible parsear el xml recibido:"+xml+" excepción "+e.getLocalizedMessage());
             throw new RuntimeException(e);
         }
 
-        Node codigoEntidadRegistralDestino = (Node)reader.read(Codigo_Entidad_Registral_Destino_Xpath, XPathConstants.NODE);
-        Node codigoEntidadRegistralOrigen = (Node)reader.read(Codigo_Entidad_Registral_Origen_Xpath, XPathConstants.NODE);
-        Node identificadorIntercambio = (Node)reader.read(Identificador_Intercambio_Xpath, XPathConstants.NODE);
+        try{
 
-        mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralDestino.getNodeValue());
-        mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralOrigen.getNodeValue());
-        mensaje.setIdentificadorIntercambio(identificadorIntercambio.getNodeValue());
-        mensaje.setTipoMensaje(TipoMensaje.ERROR);
-        mensaje.setCodigoError(codigoError);
-        mensaje.setDescripcionMensaje(descripcionError);
+            Node codigoEntidadRegistralDestino = (Node)reader.read(Codigo_Entidad_Registral_Destino_Xpath, XPathConstants.NODE);
+            Node codigoEntidadRegistralOrigen = (Node)reader.read(Codigo_Entidad_Registral_Origen_Xpath, XPathConstants.NODE);
+            Node identificadorIntercambio = (Node)reader.read(Identificador_Intercambio_Xpath, XPathConstants.NODE);
+
+            mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralDestino.getNodeValue());
+            mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralOrigen.getNodeValue());
+            mensaje.setIdentificadorIntercambio(identificadorIntercambio.getNodeValue());
+            mensaje.setTipoMensaje(TipoMensaje.ERROR);
+            mensaje.setCodigoError(codigoError);
+            mensaje.setDescripcionMensaje(descripcionError);
+
+        }catch (RuntimeException e){
+            log.info("Imposible parsear el fichero de intercambio para obtener los campos minimos para componer el mensaje de error");
+            throw new ValidacionException(Errores.ERROR_0037, e);
+        }
 
         return mensaje;
     }

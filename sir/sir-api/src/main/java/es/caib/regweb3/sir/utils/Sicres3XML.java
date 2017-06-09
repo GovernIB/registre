@@ -139,9 +139,10 @@ public class Sicres3XML {
                 "El campo 'CodigoEntidadRegistralOrigen' del SegmentoOrigen, no puede estar vacio.");
 
         // Validar el código de entidad registral de origen en DIR3
-        if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralOrigen())) {
+        Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralOrigen()), "El campo 'CodigoEntidadRegistralOrigen'del SegmentoOrigen, no es valido");
+        /*if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralOrigen())) {
             throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
-        }
+        }*/
 
         // Validar el código de unidad de tramitación de origen en DIR3
         if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionOrigen())) {
@@ -178,9 +179,10 @@ public class Sicres3XML {
                 "El campo 'CodigoEntidadRegistralDestino' del SegmentoDestino, no puede estar vacio.");
 
         // Validar el código de entidad registral de destino en DIR3
-        if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino())) {
+        Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino()), "El campo 'CodigoEntidadRegistralDestino'del SegmentoDestino, no es valido");
+        /*if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino())) {
             throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
-        }
+        }*/
 
         // Validar el código de unidad de tramitación de destino en DIR3
         if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionDestino())) {
@@ -1891,19 +1893,19 @@ public class Sicres3XML {
             // Comprobamos si el error es en alguno de los campos de Código Entidad, si es así no podemos componer el mensaje de error
             if(e instanceof MarshalException){
 
+                log.info("Error al parsear el Fichero de Intercambio a partir del xml.");
+
                 CharSequence cs1 = "_codigo_Entidad_Registral_Origen";
                 CharSequence cs2 = "_codigo_Entidad_Registral_Destino";
-                CharSequence cs3 = "De_Origen_o_Remitente";
-                CharSequence cs4 = "De_Destino";
+                CharSequence cs3 = "_identificador_Intercambio";
 
-                if (e.getLocalizedMessage().contains(cs1) || e.getLocalizedMessage().contains(cs2) || e.getLocalizedMessage().contains(cs3) || e.getLocalizedMessage().contains(cs4)){
+                if (e.getLocalizedMessage().contains(cs1) || e.getLocalizedMessage().contains(cs2) || e.getLocalizedMessage().contains(cs3)){
 
                     log.info("Error al parsear el xml en algun campo del segmento De_Destino o De_Origen_o_Remitente, no se podra enviar el mensaje de error.", e);
                     throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO, e);
                 }
             }
 
-            log.info("Error al parsear el XML del fichero de intercambio: [" + xml + "]", e);
             throw new ValidacionException(Errores.ERROR_0037, e);
         }
 
@@ -2013,22 +2015,26 @@ public class Sicres3XML {
      */
     private boolean validarCodigoEntidadRegistral(String codigoEntidadRegistral) {
 
+        OficinaTF oficinaTF = null;
+
         if (StringUtils.length(codigoEntidadRegistral) > LONGITUD_CODIGO_ENTIDAD_REGISTRAL) {
-            log.info("Tamaño CODIGO_ENTIDAD_REGISTRAL demasiado largo");
-            throw new IllegalArgumentException("Tamaño CODIGO_ENTIDAD_REGISTRAL demasiado largo");
+            log.info("Tamaño CodigoEntidadRegistral demasiado largo");
+            return false;
+            //throw new IllegalArgumentException("CodigoEntidadRegistral demasiado largo");
         }
 
         try {
-            OficinaTF oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
-
-            if(oficinaTF == null){
-                log.info("Oficina "+codigoEntidadRegistral+" no encontrada en Dir3");
-                throw new IllegalArgumentException("Oficina "+codigoEntidadRegistral+" no encontrada en Dir3");
-            }
+            oficinaTF = oficinasService.obtenerOficina(codigoEntidadRegistral,null,null);
 
         } catch (Exception e) {
             log.info("Error en validarCodigoEntidadRegistral: " + e.getMessage(), e);
-            throw new ValidacionException(Errores.ERROR_0037, e);
+            throw new RuntimeException(e);
+        }
+
+        if(oficinaTF == null){
+            log.info("Oficina "+codigoEntidadRegistral+" no encontrada en Dir3");
+            return false;
+            //throw new IllegalArgumentException("CodigoEntidadRegistral "+codigoEntidadRegistral+" no encontrada en Dir3");
         }
 
         return true;
@@ -2041,21 +2047,22 @@ public class Sicres3XML {
      */
     private boolean validarCodigoUnidadTramitacion(String codigoUnidadTramitacion) {
 
+        UnidadTF unidadTF = null;
+
         if (StringUtils.length(codigoUnidadTramitacion) > LONGITUD_CODIGO_UNIDAD_TRAMITACION) {
             throw new IllegalArgumentException("Tamaño CODIGO_UNIDAD_TRAMITACION demasiado largo");
         }
 
         try {
-            UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
-
-            if(unidadTF == null){
-                throw new IllegalArgumentException("Unidad "+codigoUnidadTramitacion+" no encontrada en Dir3");
-            }
-
+            unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
 
         } catch (Exception e) {
             log.info("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
-            throw new ValidacionException(Errores.ERROR_0037, e);
+            throw new RuntimeException(e);
+        }
+
+        if(unidadTF == null){
+            throw new IllegalArgumentException("Unidad "+codigoUnidadTramitacion+" no encontrada en Dir3");
         }
 
         return true;
