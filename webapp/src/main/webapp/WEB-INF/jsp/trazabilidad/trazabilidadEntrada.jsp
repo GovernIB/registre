@@ -43,7 +43,7 @@
 
                             <li class="timeline-inverted">
                                 <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
-                                <c:set var="registroEntradaEnviado" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
+                                <c:set var="registroEnviado" value="${trazabilidad.registroEntradaOrigen}" scope="request"/>
                                 <c:import url="../trazabilidad/asientoDestino.jsp"/>
                             </li>
 

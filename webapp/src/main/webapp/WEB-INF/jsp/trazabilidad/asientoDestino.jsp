@@ -9,7 +9,7 @@
                 <spring:message code="registroSir.registroSir"/> <spring:message code="registroSir.aceptado"/>
             </c:if>
             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
-                <spring:message code="registroSir.registroSir"/> <spring:message code="registro.estado.${registroEntradaEnviado.estado}" />
+                <spring:message code="registroSir.registroSir"/> <spring:message code="registro.estado.${registroEnviado.estado}" />
             </c:if>
         </h4>
     </div>
@@ -21,7 +21,7 @@
         </c:if>
         <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="oficioRemision.fecha"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-            <p><small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${registroEntradaEnviado.registroDetalle.decodificacionTipoAnotacion}</small></p>
+            <p><small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${registroEnviado.registroDetalle.decodificacionTipoAnotacion}</small></p>
         </c:if>
 
     </div>
