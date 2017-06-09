@@ -561,9 +561,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             registroDetalle.setAnexos(null);
             registroDetalle.setInteresados(null);
 
-            for (Interesado interesado : interesados) {
-                interesado.setId(null);
-            }
             for (AnexoFull anexo : anexos) {
                 anexo.getAnexo().setId(null);
                 anexo.getAnexo().setJustificante(false);

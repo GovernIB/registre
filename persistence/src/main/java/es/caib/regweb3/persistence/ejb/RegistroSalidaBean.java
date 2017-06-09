@@ -560,6 +560,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             Session session = (Session) em.getDelegate();
             session.evict(registroSalida);
             session.evict(registroSalida.getRegistroDetalle());
+            session.evict(registroSalida.getRegistroDetalle().getInteresados());
 
             // Nuevas propiedades
             registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
@@ -568,10 +569,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             // Set Id's a null
             registroSalida.setId(null);
             registroSalida.getRegistroDetalle().setId(null);
-
-            for (Interesado interesado : interesados) {
-                interesado.setId(null);
-            }
             registroSalida.getRegistroDetalle().setInteresados(null);
 
             for (AnexoFull anexo : anexos) {

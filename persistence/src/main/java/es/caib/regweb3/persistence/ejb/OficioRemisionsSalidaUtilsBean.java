@@ -405,9 +405,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             registroDetalle.setAnexos(null);
             registroDetalle.setInteresados(null);
 
-            for (Interesado interesado : interesados) {
-                interesado.setId(null);
-            }
             for (AnexoFull anexo : anexos) {
                 anexo.getAnexo().setId(null);
                 anexo.getAnexo().setJustificante(false);

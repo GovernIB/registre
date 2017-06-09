@@ -767,6 +767,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             Session session = (Session) em.getDelegate();
             session.evict(registroEntrada);
             session.evict(registroEntrada.getRegistroDetalle());
+            session.evict(registroEntrada.getRegistroDetalle().getInteresados());
 
             // Nuevas propiedades
             registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
@@ -775,10 +776,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             // Set Id's a null
             registroEntrada.setId(null);
             registroEntrada.getRegistroDetalle().setId(null);
-
-            for (Interesado interesado : interesados) {
-                interesado.setId(null);
-            }
             registroEntrada.getRegistroDetalle().setInteresados(null);
 
             for (AnexoFull anexo : anexos) {
