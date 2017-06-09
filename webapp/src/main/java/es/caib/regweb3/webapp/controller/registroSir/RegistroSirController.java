@@ -327,7 +327,7 @@ public class RegistroSirController extends BaseController {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         String variableReturn = "redirect:/registroSir/"+idRegistroSir+"/detalle";
 
-        RegistroSir registroSir  = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
+        RegistroSir registroSir  = registroSirEjb.findById(idRegistroSir);
 
         // Comprobamos si ya ha sido reenviado
         if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO)){
