@@ -204,7 +204,7 @@ public class RegistroSirController extends BaseController {
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
 
             // Tengo permisos para gestionarlo?
-            if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistralDestino())){
+            if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistral())){
 
                 // Obtenemos los libros del Organismo destinatário del RegistroSir
                 //List<Libro> libros = libroEjb.getLibrosActivosOrganismo(registroSir.getCodigoUnidadTramitacionDestino());
@@ -277,7 +277,7 @@ public class RegistroSirController extends BaseController {
     public String rechazarRegistroSir(@PathVariable Long idRegistroSir, @ModelAttribute RechazarForm rechazarForm , HttpServletRequest request)
             throws Exception, I18NException, I18NValidationException {
 
-        RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 

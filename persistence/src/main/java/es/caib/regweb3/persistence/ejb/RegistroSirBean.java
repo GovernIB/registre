@@ -144,9 +144,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public RegistroSir getRegistroSirConAnexos(Long idRegistroSirsir) throws Exception{
+    public RegistroSir getRegistroSirConAnexos(Long idRegistroSir) throws Exception{
 
-        RegistroSir registroSir = findById(idRegistroSirsir);
+        RegistroSir registroSir = findById(idRegistroSir);
 
         List<AnexoSir> anexosFull = new ArrayList<AnexoSir>();
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
@@ -171,7 +171,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             // En caso de recepción, le asignamos la entidad a la que va dirigida
             if(registroSir.getEntidad() == null){
-                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(registroSir.getCodigoEntidadRegistralDestino()));
+                Entidad entidad = new Entidad(oficinaEjb.obtenerEntidad(registroSir.getCodigoEntidadRegistral()));
                 registroSir.setEntidad(entidad);
             }
 

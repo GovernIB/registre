@@ -1025,7 +1025,7 @@ public class Sicres3XML {
                 elem = rootElement.addElement("Hash");
                 elem.addCDATA(anexoSir.getHash());
             }else{
-                log.info("getAnexoData es null");
+                log.info("getHash es null");
             }
 
             // Tipo_MIME

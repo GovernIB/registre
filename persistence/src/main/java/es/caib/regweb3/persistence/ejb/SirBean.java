@@ -770,7 +770,8 @@ public class SirBean implements SirLocal {
         registroSir.setDecodificacionTipoAnotacion(observaciones);
 
         // Actualizamos el RegistroSir
-        registroSirEjb.merge(registroSir);
+        registroSir = registroSirEjb.merge(registroSir);
+        registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
 
         // Enviamos el Registro al Componente CIR
         emisionEjb.reenviarFicheroIntercambio(registroSir);
@@ -825,6 +826,8 @@ public class SirBean implements SirLocal {
         registroSir.setDecodificacionTipoAnotacion(observaciones);
 
         registroSir = registroSirEjb.merge(registroSir);
+
+        registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
 
         // Rechazamos el RegistroSir
         emisionEjb.rechazarFicheroIntercambio(registroSir);
