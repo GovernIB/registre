@@ -34,6 +34,10 @@ public class FicheroIntercambio {
     public FicheroIntercambio() {
     }
 
+    public FicheroIntercambio(Fichero_Intercambio_SICRES_3 ficheroIntercambio) {
+        this.ficheroIntercambio = ficheroIntercambio;
+    }
+
     public Fichero_Intercambio_SICRES_3 getFicheroIntercambio() {
         return ficheroIntercambio;
     }
