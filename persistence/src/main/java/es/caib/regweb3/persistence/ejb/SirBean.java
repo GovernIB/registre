@@ -988,7 +988,7 @@ public class SirBean implements SirLocal {
                 }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
 
                     // Transformamos el RegistroSalida en un RegistroSir
-                    RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
+                    RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
                     RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
 
                     // Enviamos el Registro al Componente CIR
