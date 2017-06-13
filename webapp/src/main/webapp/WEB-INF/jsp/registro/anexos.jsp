@@ -20,12 +20,12 @@
 
             <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
 
-                <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#myModal"
+                <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"
                    class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
                     <spring:message code="anexo.archivo.nuevo"/></a>
 
                 <c:if test="${teScan}">
-                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#myModal"
+                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"
                        class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
                 </c:if>
             </c:if>
@@ -145,7 +145,7 @@
                                 <td class="center">
                                     <c:if test="${!anexoFull.anexo.justificante}">
                                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
-                                            <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#myModal"
+                                            <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalAnexos"
                                                onclick="editarAnexoFull('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')"
                                                title="Editar"><span class="fa fa-pencil"></span></a>
                                             <a class="btn btn-danger btn-default btn-sm"
@@ -187,22 +187,17 @@
 
 </div>
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width:910px; height:300px;">
+<!-- MODAL AFEGIR ANNEXES -->
+<div class="modal fade" id="modalAnexos" role="dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-
-            <div class="modal-header" style="border:hidden; min-width: 5px;padding: 5px;">
-                <button type="button" class="close" onClick="unloadiframe()" data-dismiss="modal" aria-hidden="true">×
-                </button>
-                <h3 id="anexoTitulo" style="margin-top: 0px; margin-bottom: 0px;"></h3>
-                <hr style="margin-top: 5px;margin-bottom: 5px;"/>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="unloadiframe()">x</button>
+                <h3 class="modal-title" id="anexoTitulo"></h3>
+                <input type="hidden" id="tamanyModal" name="tamany" value=""/>
             </div>
-
-            <div class="modal-body" style="padding-top:0px; padding-left:5px; padding-right:0px; padding-bottom:15px;">
-                <%-- HEIGHT 480px --%>
-                <iframe src="" frameborder="0" id="targetiframe" style="width:850px; height:650px; " name="targetframe"
-                        allowtransparency="true">
-                </iframe> <!-- target iframe -->
+            <div class="modal-body">
+                <iframe src="" frameborder="0" id="targetiframe" name="targetframe" allowtransparency="true" class=""></iframe>
             </div>
         </div>
     </div>
@@ -210,67 +205,136 @@
 
 <script type="text/javascript">
 
+    // Variables de tamany definit al Modal
+    var tamModalAnexo = 240;
+    var tamModalFitxer = 440;
+    var tamModalScan = 710;
+
+
+    // Afegeix el contingut HTML amb imatge de "pensar"
     var s = "<html><head></head><body><div class=\"hide col-xs-12 text-center centrat\"><img src=\"<c:url value="/img/712.GIF"/>\" width=\"20\" height=\"20\"/></div></body></html>";
     $('#targetiframe').contents().find('html').html(s);
 
-
-    $('#myModal').on('hidden.bs.modal', function (e) {
+    // Si el modal està desactivat, esborra el seu contingut
+    $('#modalAnexos').on('hidden.bs.modal', function (e) {
         unloadiframe();
     });
 
-    $('#myModal').on('show.bs.modal', function () {
-        $('.modal-content').css('height', $(window).height() * 0.8);
+    // Si el modal està activat, Afegeix la llargària del modal d'annexe
+    $('#modalAnexos').on('show.bs.modal', function () {
+         $('.modal-content').css('height', $('#tamanyModal').val());
     });
 
-
-    //load iframe
-    function loadiframe(htmlHref, height) {
+    // Carregam el iframe amb el Contingut que passam per paràmetre
+    function loadiframe(htmlHref) {
         document.getElementById('targetiframe').src = htmlHref;
     }
 
-    //just for the kicks of it
-    function unloadiframe() {
-        $('#targetiframe').attr('src', '');
+    <%-- Esborra tamany de l'iframe --%>
+    function eliminaHeightIframe() {
+        $('#targetiframe').height('');
     }
 
+    // Esborra el contingut del iframe, el height i els css
+    function unloadiframe() {
+        $('#targetiframe').attr('src', '');
+        eliminaCssIframe();
+        $('#targetiframe').height('');
+    }
 
+    // Quan es tanca el modal, esborra el seu contingut
     function closeAndReload() {
         unloadiframe();
         window.location.href = window.location.href;
     }
 
+    // Esborra els class de l'iframe
+    function eliminaCssIframe() {
+        $('#targetiframe').removeClass('iframeAnexo');
+        $('#targetiframe').removeClass('iframeAnexoFile');
+        $('#targetiframe').removeClass('iframeScan');
+    }
+
 
     function nouAnnexFull() {
-
+        // Fixa el tamany del modal
+        $('#tamanyModal').val(tamModalFitxer);
+        // Esborra les classes de iframe
+        eliminaCssIframe();
+        // Afegeix la classe a iframe
+        $('#targetiframe').addClass('iframeAnexo');
+        // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
-
+        // Afegeix el contingut de formularioAnexoFichero.jsp al modal
         loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
 
+    // Quan s'espitja botó de nou Fitxer
     function nuevoAnexoFichero() {
-
+        // Fixa el tamany del modal
+        $('#tamanyModal').val(tamModalAnexo);
+        // Esborra les classes de iframe
+        eliminaCssIframe();
+        // Afegeix la classe a iframe
+        $('#targetiframe').addClass('iframeAnexoFile');
+        // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
-
+        // Afegeix el contingut de formularioAnexoFichero.jsp al modal
         loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
     }
 
 
+    // Quan s'espitja botó de nou Scan
     function nuevoAnexoScan() {
-
+        // Fixa el tamany del modal
+        $('#tamanyModal').val(tamModalScan);
+        // Esborra les classes de iframe
+        eliminaCssIframe();
+        // Afegeix la classe a iframe
+        $('#targetiframe').addClass('iframeScan');
+        // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
-
+        // Afegeix el contingut de formularioAnexoFichero.jsp al modal
         loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
-
     }
 
 
+    // Quan s'espitja botó d'Editar Annexe
     function editarAnexoFull(idAnexo, idRegistro, idRegistroDetalle, tipoRegistro) {
-
+        // Fixa el tamany del modal
+        $('#tamanyModal').val(tamModalFitxer);
+        // Esborra les classes de iframe
+        eliminaCssIframe();
+        // Afegeix la classe a iframe
+        $('#targetiframe').addClass('iframeAnexo');
+        // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
-
+        // Afegeix el contingut de formularioAnexoFichero.jsp al modal
         loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo + "/${oficio.sir}");
     }
+
+
+    <!-- Redimensiona el Modal des del Scan cap a Annexe -->
+    function redimensionaModalAnnexe() {
+        // Fixa el tamany del modal
+        document.getElementById('tamanyModal').setAttribute("value", tamModalFitxer);
+        $('.modal-content').css('height', $('#tamanyModal').val());
+        // Afegeix la classe a iframe
+        document.getElementById('targetiframe').setAttribute("class", 'iframeAnexo');
+    }
+
+    <!-- Redimensiona el Modal amb Errors cap a AnnexeFile-->
+    function redimensionaModalAnnexeErrors() {
+        // Fixa el tamany del modal
+        document.getElementById('tamanyModal').setAttribute("value", tamModalAnexo);
+        $('.modal-content').css('height', $('#tamanyModal').val());
+        // Canvia tamany al height iframe
+        $('#targetiframe').height('');
+        // Afegeix la classe a iframe
+        document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoFile');
+    }
+
 
 
     /**

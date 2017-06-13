@@ -857,8 +857,23 @@ a.text-gris:focus {
     column-count: 2;
     column-gap: 10px;
 }
-
 .columnesInici div {
     display: inline-block;
     width: 100%;
 }
+/* FI Panels d'Inici en 2 columnes */
+
+/* Estils pels diferents iframes d'Annexe */
+.iframeAnexoFile{
+    width: 100%;
+    height: 140px;
+}
+.iframeAnexo{
+    width: 100%;
+    height: 340px;
+}
+.iframeScan{
+    width: 100%;
+    height: 620px;
+}
+/* FI Estils pels diferents iframes d'Annexe */
