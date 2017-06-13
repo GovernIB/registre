@@ -45,5 +45,8 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
         return Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
     }
 
-
+    @Override
+    public String getFormatosAnexosSir() throws Exception {
+        return PropiedadGlobalUtil.getFormatosAnexosSir();
+    }
 }

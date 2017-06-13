@@ -42,4 +42,11 @@ public interface WebServicesMethodsLocal {
      * @throws Exception
      */
     public Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception;
+
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    public String getFormatosAnexosSir() throws Exception;
 }
