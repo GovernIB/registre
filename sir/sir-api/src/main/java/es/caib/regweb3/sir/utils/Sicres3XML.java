@@ -132,11 +132,14 @@ public class Sicres3XML {
                 if (e.getLocalizedMessage().contains(cs1) || e.getLocalizedMessage().contains(cs2) || e.getLocalizedMessage().contains(cs3)){
 
                     log.info("Error al parsear el xml en algun campo del segmento De_Destino o De_Origen_o_Remitente, no se podra enviar el mensaje de error.", e);
-                    throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO, e);
+                    throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO, "Error al parsear el xml en algun campo del segmento De_Destino o De_Origen_o_Remitente, no se podra enviar el mensaje de error.", e);
                 }
+
+            }else if(e instanceof ValidacionException){
+                throw new ValidacionException(Errores.ERROR_0037,((ValidacionException) e).getMensajeError(), e);
             }
 
-            throw new ValidacionException(Errores.ERROR_0037, e);
+            throw new ValidacionException(Errores.ERROR_0037,e.getMessage(), e);
         }
 
         return ficheroIntercambio;
@@ -186,9 +189,6 @@ public class Sicres3XML {
 
         // Validar el código de entidad registral de origen en DIR3
         Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralOrigen()), "El campo 'CodigoEntidadRegistralOrigen'del SegmentoOrigen, no es valido");
-        /*if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralOrigen())) {
-            throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
-        }*/
 
         // Validar el código de unidad de tramitación de origen en DIR3
         if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionOrigen())) {
@@ -226,9 +226,6 @@ public class Sicres3XML {
 
         // Validar el código de entidad registral de destino en DIR3
         Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino()), "El campo 'CodigoEntidadRegistralDestino'del SegmentoDestino, no es valido");
-        /*if (!validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralDestino())) {
-            throw new ValidacionException(Errores.ERROR_COD_ENTIDAD_INVALIDO);
-        }*/
 
         // Validar el código de unidad de tramitación de destino en DIR3
         if (StringUtils.isNotBlank(fichero.getCodigoUnidadTramitacionDestino())) {
@@ -574,7 +571,7 @@ public class Sicres3XML {
         Assert.hasText(fichero.getCodigoEntidadRegistralInicio(), "El campo 'CodigoEntidadRegistralInicio' del SegmentoControl, no puede estar vacio");
 
         // Validar el código de entidad registral de inicio en DIR3
-        Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralInicio()), "El campo 'CodigoEntidadRegistralInicio'del SegmentoControl, no es valido");
+        Assert.isTrue(validarCodigoEntidadRegistral(fichero.getCodigoEntidadRegistralInicio()), "El campo 'CodigoEntidadRegistralInicio' del SegmentoControl, no es valido");
 
         // Validar el identificador de intercambio, tiene que realizarse despues de la validacion del código de entidad registral de inicio
         validarIdentificadorIntercambio(fichero);
@@ -584,7 +581,7 @@ public class Sicres3XML {
 
     /**
      * Validar el identificador de intercambio. del Fichero de Intercambio
-     *
+     * Patrón:  <Código_Entidad_Registral_Origen><AA><Número Secuencial>
      * @param fichero Información del fichero de intercambio.
      */
     private void validarIdentificadorIntercambio(FicheroIntercambio fichero) {
@@ -594,26 +591,30 @@ public class Sicres3XML {
                 "El campo 'IdentificadorIntercambio' del SegmentoControl, no puede estar vacio");
 
         Assert.isTrue(fichero.getIdentificadorIntercambio().length() <= LONGITUD_IDENTIFICADOR_INTERCAMBIO,
-                "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido");
+                "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, su longitud es superior a 33 caracteres.");
 
         // Comprobar el formato del identificiador de intercambio: <Código_Entidad_Registral_Origen><AA><Número Secuencial>
         String[] tokens = StringUtils.split(fichero.getIdentificadorIntercambio(), "_");
 
         Assert.isTrue(ArrayUtils.getLength(tokens) == 3, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido");
+
+        // CodigoEntidadRegistral
         Assert.isTrue(StringUtils.length(tokens[0]) <= LONGITUD_CODIGO_ENTIDAD_REGISTRAL,
-                "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, hay un error en la longitud esperada"); // Código de la entidad registral
+                "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, la longitud del 'CodigoEntidadRegistral' es superior a 21"); // Código de la entidad registral
+        //Assert.isTrue(validarCodigoEntidadRegistral(tokens[0]), "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, el 'CodigoEntidadRegistral' no existe en el Directorio Comun"); // Código de la entidad registral
+
         Assert.isTrue(StringUtils.equals(tokens[0], fichero.getCodigoEntidadRegistralInicio()),
-                "El campo 'IdentificadorIntercambio' del SegmentoControl, no concuerda con 'CodigoEntidadRegistralInicio'");
-        Assert.isTrue(StringUtils.length(tokens[1]) == 2, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido"); // Año con 2 dígitos
-        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, no es un campo numérico"); //numerico
+                "El campo 'Identificador_Intercambio' del SegmentoControl, no es valido, el 'Codigo_Entidad_Registral_Origen' no concuerda con 'CodigoEntidadRegistralInicio'");
 
+        // Año
+        Integer year = Integer.parseInt(new SimpleDateFormat("yy").format(new Date()));
+        Assert.isTrue(StringUtils.length(tokens[1]) == 2, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, el año no esta formado por dos caracteres"); // Año con 2 dígitos
+        Assert.isTrue(StringUtils.isNumeric(tokens[1]), "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, el año no es un campo numérico"); //numerico
+        Assert.isTrue(Integer.parseInt(tokens[1])<= year,  "El campo 'Identificador_Intercambio' del SegmentoControl, no es valido, el año indicado es mayor que el actual"); // Año menor o igual al actual
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yy");
-        Integer year = Integer.parseInt(sdf.format(new Date()));
-
-        Assert.isTrue(Integer.parseInt(tokens[1])<= year,  "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, el año indicado es mayor que el actual"); // Año menor o igual al actual
-
-        Assert.isTrue(StringUtils.length(tokens[2]) == 8, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido"); // Número secuencia de 8 dígitos
+        // Número secuencia de 8 dígitos
+        Assert.isTrue(StringUtils.length(tokens[2]) == 8, "El campo 'IdentificadorIntercambio' del SegmentoControl, no es valido, la longitud del numero secuencial es mayor de 8 caracteres.");
+        Assert.isTrue(StringUtils.isNumeric(tokens[2]), "El valor del campo 'IdentificadorFichero' del SegmentoControl, no es valido, hay un error en el numero secuencial, no es de tipo numerico.");
 
         log.info("IdentificadorIntercambio validado!");
     }
@@ -1966,7 +1967,7 @@ public class Sicres3XML {
 
         } catch (Throwable e) {
             log.error("Error al parsear el XML del mensaje: [" + xml + "]", e);
-            throw new ValidacionException(Errores.ERROR_0037, e);
+            throw new ValidacionException(Errores.ERROR_0037, "Error al parsear el mensaje de control", e);
         }
 
         return mensaje;
@@ -2086,7 +2087,7 @@ public class Sicres3XML {
             reader = new XPathReaderUtil(new ByteArrayInputStream(xml.getBytes("UTF-8")));
         } catch (UnsupportedEncodingException e) {
             log.error("Error al parsear el XML del fichero de intercambio en la validación campos en Base64");
-            throw new ValidacionException(Errores.ERROR_0037);
+            throw new ValidacionException(Errores.ERROR_0037,e.getMessage(),e);
         }
 
         // Obtenemos el nombre de los campos en base64 junto con su expresion xpath
@@ -2108,7 +2109,7 @@ public class Sicres3XML {
                     if (StringUtils.isNotBlank(value) && !Base64.isBase64(value)) {
                         log.error("Error al parsear el XML del fichero de intercambio: Campo no codificado en Base64 "
                                 + fieldName);
-                        throw new ValidacionException(Errores.ERROR_0037);
+                        throw new ValidacionException(Errores.ERROR_0037,"El campo '"+fieldName+"', no esta codificado en Base64.", null);
                     }
                 }
             }

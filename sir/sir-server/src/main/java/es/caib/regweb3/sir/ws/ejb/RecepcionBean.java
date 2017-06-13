@@ -64,7 +64,7 @@ public class RecepcionBean implements RecepcionLocal{
                 sicres3XML.validarFicheroIntercambio(ficheroIntercambio, webServicesMethodsEjb.getObtenerOficinasService(), webServicesMethodsEjb.getObtenerUnidadesService(), webServicesMethodsEjb.getFormatosAnexosSir());
             } catch (IllegalArgumentException e) {
                 log.info("Se produjo un error de validacion del xml recibido: " + e.getMessage());
-                throw new ValidacionException(Errores.ERROR_0037, e);
+                throw new ValidacionException(Errores.ERROR_0037, e.getMessage(), e);
             }
 
             // Creamos el RegistroSir a partir del xml recibido y validado
@@ -74,9 +74,9 @@ public class RecepcionBean implements RecepcionLocal{
             mensajeEjb.enviarACK(ficheroIntercambio);
 
         }catch (ValidacionException e) {
-            log.info("Error de validacion: " + e.getErrorException().getMessage());
+            log.info("Error de validacion: " + e.getMensajeError());
             Errores errorValidacion = e.getErrorValidacion();
-            String descripcionError = e.getErrorException().getMessage();
+            String descripcionError = e.getMensajeError();
 
             if(ficheroIntercambio != null && (!descripcionError.contains("CodigoEntidadRegistralOrigen") && !descripcionError.contains("CodigoEntidadRegistralDestino") && !descripcionError.contains("IdentificadorIntercambio"))){
                 mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError);
@@ -202,7 +202,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         }catch (RuntimeException e){
             log.info("Imposible parsear el fichero de intercambio para obtener los campos minimos para componer el mensaje de error");
-            throw new ValidacionException(Errores.ERROR_0037, e);
+            throw new ValidacionException(Errores.ERROR_0037, "Imposible parsear el fichero de intercambio para obtener los campos minimos para componer el mensaje de error", e);
         }
 
         return mensaje;
