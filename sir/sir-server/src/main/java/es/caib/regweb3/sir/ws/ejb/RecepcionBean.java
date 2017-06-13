@@ -78,7 +78,7 @@ public class RecepcionBean implements RecepcionLocal{
             Errores errorValidacion = e.getErrorValidacion();
             String descripcionError = e.getErrorException().getMessage();
 
-            if(ficheroIntercambio != null && (!descripcionError.contains("CodigoEntidadRegistralOrigen") && !descripcionError.contains("CodigoEntidadRegistralDestino") && !descripcionError.contains("CodigoEntidadRegistralInicio") && !descripcionError.contains("IdentificadorIntercambio"))){
+            if(ficheroIntercambio != null && (!descripcionError.contains("CodigoEntidadRegistralOrigen") && !descripcionError.contains("CodigoEntidadRegistralDestino") && !descripcionError.contains("IdentificadorIntercambio"))){
                 mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError);
                 enviarMensajeError(mensajeError);
 
