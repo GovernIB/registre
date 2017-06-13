@@ -7,20 +7,20 @@ import es.caib.regweb3.sir.core.model.Errores;
  */
 public class ValidacionException extends SIRException {
 
-    /**
-     * Código de error de validación.
-     */
+    // Código de error de validación.
     private Errores errorValidacion = null;
 
-    /**
-     * Excepción que ha causado el error.
-     */
+    // Descripción del error
+    private String mensajeError = null;
+
+    //Excepción que ha causado el error.
     private Throwable errorException = null;
 
 
-    public ValidacionException(Errores errorValidacion, Throwable errorException) {
+    public ValidacionException(Errores errorValidacion, String mensajeError, Throwable errorException) {
         super(errorValidacion.getName());
         setErrorValidacion(errorValidacion);
+        setMensajeError(mensajeError);
         setErrorException(errorException);
     }
 
@@ -44,5 +44,13 @@ public class ValidacionException extends SIRException {
 
     public void setErrorException(Throwable errorException) {
         this.errorException = errorException;
+    }
+
+    public String getMensajeError() {
+        return mensajeError;
+    }
+
+    public void setMensajeError(String mensajeError) {
+        this.mensajeError = mensajeError;
     }
 }
