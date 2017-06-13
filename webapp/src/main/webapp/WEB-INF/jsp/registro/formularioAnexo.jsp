@@ -143,7 +143,7 @@
 
 
 
-                    <div class="form-group col-xs-12" id="divmodofirma" style="margin-bottom: 0px;">
+                    <div class="form-group col-xs-12" id="divmodofirma">
                         <div class="col-xs-8 pull-left etiqueta_regweb control-label">
                               <label><spring:message code="anexo.tipofirma"/></label> :
                               <c:choose>
@@ -166,7 +166,7 @@
 
                     <!--ANEXO-->
                     <c:if test="${not empty anexoForm.documentoCustody}">
-                        <div class="form-group col-xs-12" style="margin-bottom: 0px;">
+                        <div class="form-group col-xs-12">
                             <div class="form-group col-xs-4" id="divInputArchivo">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                    <form:label path="documentoFile" id="labelDocumento"><spring:message
@@ -190,7 +190,7 @@
 
                     <!--FIRMA -->
                     <c:if test="${not empty anexoForm.signatureCustody}">
-                        <div class="form-group col-xs-12" style="margin-bottom: 0px;">
+                        <div class="form-group col-xs-12">
                             <div class="form-group col-xs-4" id="divInputFirma">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                    <form:label path="firmaFile" id="labelFirma"><spring:message
@@ -216,7 +216,7 @@
                         <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
                    </div>
 
-                   <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
+                   <div class="pull-right"> <%--  class="modal-footer" --%>
                         <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
                    </div>
 
@@ -241,6 +241,54 @@
 <script type="text/javascript" src="<c:url value="/js/regweb.js"/>"></script>
 <!-- Upload file jquery -->
 <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
+
+
+<!-- Redimensiona el Modal des del Scan cap a Annexe -->
+<script>
+    $(document).ready(function () {
+        $(function () {
+            parent.redimensionaModalAnnexe();
+        });
+    });
+</script>
+
+
+<%-- Redimensiona el modal si hi ha errors --%>
+<script>
+
+    $(document).ready(function () {
+        $(function () {
+
+            <%-- Elimina el Height del iframe --%>
+            parent.eliminaHeightIframe();
+
+            var incrementError = 85;
+            var iframe = parent.$('#targetiframe').height();
+            var modal = parent.$('.modal-content').height();
+
+            if($('#mensajeError').length != 0){
+                iframe = iframe + incrementError;
+                parent.$('#targetiframe').height(iframe);
+                modal = modal + incrementError;
+                parent.$('.modal-content').height(modal);
+            }
+
+            if($('.alert-warning').length != 0){
+                iframe = iframe + incrementError;
+                parent.$('#targetiframe').height(iframe);
+                modal = modal + incrementError;
+                parent.$('.modal-content').height(modal);
+            }
+
+            if($('.alert-success').length != 0){
+                iframe = iframe + incrementError;
+                parent.$('#targetiframe').height(iframe);
+                modal = modal + incrementError;
+                parent.$('.modal-content').height(modal);
+            }
+        });
+    });
+</script>
 
 
 <!-- FI JAVASCRIPT INCLOS DEL PEU -->

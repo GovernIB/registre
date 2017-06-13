@@ -66,7 +66,7 @@
 
 
         <!--ANEXO-->
-        <div class="form-group col-xs-10" style="margin-bottom: 0px;">
+        <div class="form-group col-xs-10">
             <div class="col-xs-10" id="divInputArchivo">
                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                     <form:label path="documentoFile" id="labelDocumento"><spring:message
@@ -93,7 +93,7 @@
         <!--FIN ANEXO-->
 
         <!--FIRMA -->
-        <div class="form-group col-xs-10" style="margin-bottom: 0px;">
+        <div class="form-group col-xs-10">
             <div class="col-xs-10" id="divInputFirma">
                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                     <form:label path="firmaFile" id="labelFirma"><spring:message
@@ -124,7 +124,7 @@
             <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
         </div>
 
-        <div class="pull-right" style="margin-top: 15px; "> <%--  class="modal-footer" --%>
+        <div class="pull-right"> <%--  class="modal-footer" --%>
 
             <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message
                     code="regweb.guardar"/></button>
@@ -190,7 +190,41 @@
 
 <script type="text/javascript">
 
+
+    <%-- Redimensiona el modal si hi ha errors --%>
+    $(document).ready(function () {
+        $(function () {
+
+            var incrementError = 85;
+            var iframe = parent.$('#targetiframe').height();
+            var modal = parent.$('.modal-content').height();
+
+            if($('#mensajeError').length != 0){
+                iframe = iframe + incrementError;
+                parent.$('#targetiframe').height(iframe);
+                modal = modal + incrementError;
+                parent.$('.modal-content').height(modal);
+            }
+
+            if($('.alert-warning').length != 0){
+                iframe = iframe + incrementError;
+                parent.$('#targetiframe').height(iframe);
+                modal = modal + incrementError;
+                parent.$('.modal-content').height(modal);
+            }
+
+            if($('.alert-success').length != 0){
+                iframe = iframe + incrementError;
+                parent.$('#targetiframe').height(iframe);
+                modal = modal + incrementError;
+                parent.$('.modal-content').height(modal);
+            }
+        });
+    });
+
+
     function initAnexoForm(){
+
         console.log("-----  Entra dins initAnexoForm   -----");
         var autofirma = $('input[name=anexo\\.modoFirma]:radio:checked').val();
 
@@ -242,6 +276,7 @@
         quitarMensajeError();
         limpiarAnexoForm();
         initAnexoForm();
+        parent.redimensionaModalAnnexeErrors();
     }
 
 
