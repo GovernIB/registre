@@ -500,6 +500,30 @@ public class RegistroDetalle implements Serializable {
         return false;
     }
 
+    @Transient
+    public String getExtractoCorto(){
+
+        String extractoCorto = getExtracto();
+
+        if (extractoCorto.length() > 40) {
+            extractoCorto = extractoCorto.substring(0, 40) + "...";
+        }
+
+        return extractoCorto;
+    }
+
+    @Transient
+    public String getReservaCorto(){
+
+        String reservaCorto = getReserva();
+
+        if (reservaCorto.length() > 40) {
+            reservaCorto = reservaCorto.substring(0, 40) + "...";
+        }
+
+        return reservaCorto;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

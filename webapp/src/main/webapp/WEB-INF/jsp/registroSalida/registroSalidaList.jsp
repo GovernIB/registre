@@ -305,12 +305,7 @@
                                         <th class="center"><spring:message code="registroSalida.usuario"/></th>
                                         <th class="center"><spring:message code="registroSalida.oficina"/></th>
                                         <th class="center"><spring:message code="registroSalida.origen"/></th>
-                                        <c:if test="${registroSalidaBusqueda.registroSalida.estado == 2}">
-                                            <th class="center"><spring:message code="registroEntrada.reserva"/></th>
-                                        </c:if>
-                                        <c:if test="${registroSalidaBusqueda.registroSalida.estado != 2}">
-                                            <th class="center"><spring:message code="registroSalida.extracto"/></th>
-                                        </c:if>
+                                        <th class="center"><spring:message code="registroSalida.extracto"/></th>
                                         <th class="center"><spring:message code="registroSalida.estado"/></th>
                                         <th class="center"><spring:message code="registroSalida.destinatarios"/></th>
                                         <th class="center"><spring:message code="registroEntrada.anexos"/></th>
@@ -331,7 +326,14 @@
                                             <c:if test="${registro.origen == null}">
                                                 <td>${registro.origenExternoDenominacion}</td>
                                             </c:if>
-                                            <td>${registro.registroDetalle.extracto}</td>
+                                            <td>
+                                                <c:if test="${registro.registroDetalle.extracto != registro.registroDetalle.extractoCorto}">
+                                                    <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
+                                                </c:if>
+                                                <c:if test="${registro.registroDetalle.extracto == registro.registroDetalle.extractoCorto}">
+                                                    ${registro.registroDetalle.extracto}
+                                                </c:if>
+                                            </td>
                                             <td class="center">
                                                 <c:import url="../registro/estadosRegistro.jsp">
                                                     <c:param name="estado" value="${registro.estado}"/>
@@ -419,6 +421,9 @@
 
     <!-- Cambia la imagen de la búsqueda avanzada-->
     <script>
+
+        $("[rel='extracto']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+
         var traduccion = new Array();
         traduccion['regweb.busquedaAvanzada'] = "<spring:message code='regweb.busquedaAvanzada' javaScriptEscape='true' />";
 

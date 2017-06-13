@@ -329,10 +329,24 @@
                                                                 <td class="center"><label class="no-bold" rel="ayuda" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                                 <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                                                                    <td>${registro.registroDetalle.reserva}</td>
+                                                                <td>
+                                                                    <c:if test="${registro.registroDetalle.reserva != registro.registroDetalle.reservaCorto}">
+                                                                        <p rel="reserva" data-content="${registro.registroDetalle.reserva}" data-toggle="popover">${registro.registroDetalle.reservaCorto}</p>
+                                                                    </c:if>
+                                                                    <c:if test="${registro.registroDetalle.reserva == registro.registroDetalle.reservaCorto}">
+                                                                        ${registro.registroDetalle.reserva}
+                                                                    </c:if>
+                                                                </td>
                                                                 </c:if>
                                                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                                                                    <td>${registro.registroDetalle.extracto}</td>
+                                                                    <td>
+                                                                        <c:if test="${registro.registroDetalle.extracto != registro.registroDetalle.extractoCorto}">
+                                                                            <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
+                                                                        </c:if>
+                                                                        <c:if test="${registro.registroDetalle.extracto == registro.registroDetalle.extractoCorto}">
+                                                                            ${registro.registroDetalle.extracto}
+                                                                        </c:if>
+                                                                    </td>
                                                                 </c:if>
                                                                 <td class="center">
                                                                     <c:import url="../registro/estadosRegistro.jsp">
@@ -425,6 +439,9 @@
 
 <!-- Cambia la imagen de la búsqueda avanzada-->
 <script type="text/javascript">
+
+    $("[rel='extracto']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='reserva']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
 
     // Posicionamos el ratón en el campo indicado al cargar el modal
     $('#modalBuscadorlistaRegEntrada').on('shown.bs.modal', function () {
