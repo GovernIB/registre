@@ -463,7 +463,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         registroSir.setFechaRegistro(SDF.parse(fechaRegistro));
                     } catch (ParseException e) {
                         log.error("Error al parsear la fecha de registro: [" + fechaRegistro + "]", e);
-                        throw new ValidacionException(Errores.ERROR_0037, e);
+                        throw new ValidacionException(Errores.ERROR_0037,"Error al parsear la fecha de registro: [" + fechaRegistro + "]", e);
                     }
                 }
             }
