@@ -233,7 +233,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         }
 
         //OBSERVACIONES
-        if (!isNullOrEmpty(interesado.getObservaciones()) && interesado.getObservaciones().length() > 80) {
+        if (!isNullOrEmpty(interesado.getObservaciones()) && interesado.getObservaciones().length() > 160) {
             rejectValue(errors, "observaciones", "error.valor.maxlenght", "Tamaño demasiado largo");
         }
 
