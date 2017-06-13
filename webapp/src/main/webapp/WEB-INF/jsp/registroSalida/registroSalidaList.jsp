@@ -363,7 +363,7 @@
 
                                                     <%--Botón editar--%>
                                                     <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !registro.registroDetalle.tieneJustificante}">
-                                                        <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                        <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                     </c:if>
 
                                                     <%--Botón anular--%>
