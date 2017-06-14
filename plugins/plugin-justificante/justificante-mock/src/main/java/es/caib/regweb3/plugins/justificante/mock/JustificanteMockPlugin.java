@@ -152,7 +152,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         String extracte = registroEntrada.getRegistroDetalle().getExtracto();
         String nomDesti;
         if(registroEntrada.getDestino()!=null) {
-            nomDesti = registroEntrada.getDestino().getNombreCompleto() + " - " + registroEntrada.getDestino().getCodigo();
+            nomDesti = registroEntrada.getDestino().getDenominacion() + " - " + registroEntrada.getDestino().getCodigo();
         }else{
             nomDesti = registroEntrada.getDestinoExternoDenominacion() + " - " + registroEntrada.getDestinoExternoCodigo();
         }
@@ -212,7 +212,21 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         String numeroRegistroFormateado = registroSalida.getNumeroRegistroFormateado();
         Long tipoDocumentacionFisica = registroSalida.getRegistroDetalle().getTipoDocumentacionFisica();
         String extracte = registroSalida.getRegistroDetalle().getExtracto();
-        String nomOrigen = registroSalida.getOrigen().getNombreCompleto();
+        String nomOrigen = "";
+        if(registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino()!=null){
+            nomOrigen = registroSalida.getRegistroDetalle().getDecodificacionEntidadRegistralDestino() + " - " + registroSalida.getRegistroDetalle().getCodigoEntidadRegistralDestino();
+        }else{
+            List<Interesado> interesadosDestino = registroSalida.getRegistroDetalle().getInteresados();
+            for(Interesado interesado : interesadosDestino) {
+                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+                    if(nomOrigen.length()==0) {
+                        nomOrigen = interesado.getNombreCompleto();
+                    }else{
+                        nomOrigen = nomOrigen + ", " + interesado.getNombreCompleto();
+                    }
+                }
+            }
+        }
         String expedient = registroSalida.getRegistroDetalle().getExpediente();
         Date fechaRegistro = registroSalida.getFecha();
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
