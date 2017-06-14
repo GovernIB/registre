@@ -327,11 +327,11 @@
                                                 <td>${registro.origenExternoDenominacion}</td>
                                             </c:if>
                                             <td>
-                                                <c:if test="${registro.registroDetalle.extracto != registro.registroDetalle.extractoCorto}">
-                                                    <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
-                                                </c:if>
-                                                <c:if test="${registro.registroDetalle.extracto == registro.registroDetalle.extractoCorto}">
+                                                <c:if test="${fn:length(registro.registroDetalle.extracto) <= 40}">
                                                     ${registro.registroDetalle.extracto}
+                                                </c:if>
+                                                <c:if test="${fn:length(registro.registroDetalle.extracto) > 40}">
+                                                    <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
                                                 </c:if>
                                             </td>
                                             <td class="center">

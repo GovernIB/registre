@@ -635,6 +635,18 @@ public class RegistroSir implements Serializable {
         return true;
     }
 
+    @Transient
+    public String getResumenCorto(){
+
+        String resumenCorto = getResumen();
+
+        if (resumenCorto.length() > 40) {
+            resumenCorto = resumenCorto.substring(0, 40) + "...";
+        }
+
+        return resumenCorto;
+    }
+
     @Override
     public int hashCode() {
         return id.hashCode();

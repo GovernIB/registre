@@ -327,7 +327,16 @@
                                                         <tr>
                                                             <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                             <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
-                                                            <td>${registroSir.resumen}</td>
+                                                            <td>
+                                                                <c:if test="${fn:length(registroSir.resumen) <= 40}">
+                                                                    ${registroSir.resumen}
+                                                                </c:if>
+
+                                                                <c:if test="${fn:length(registroSir.resumen) > 40}">
+                                                                    <p rel="resumen" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
+                                                                </c:if>
+
+                                                            </td>
                                                             <td class="center">
                                                                 <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                             </td>
@@ -466,23 +475,9 @@
 
         <c:import url="modulos/pie.jsp"/>
 
-
-        <!-- Redimensionar tamanys de panells -->
-        <%--<script>--%>
-            <%--window.onload = function resizePanels(){--%>
-                <%--var h1 = $("#reenviados").height();--%>
-<%--//                alert("reenviados: " + h1);--%>
-                <%--var h2 = $("#pendientesRemEnt").height();--%>
-<%--//                alert("pendientesRemEnt: " + h2);--%>
-                <%--var h3 = $("#pendientesRemSal").height();--%>
-<%--//                alert("pendientesRemSal: " + h3);--%>
-                <%--var h4 = $("#pendientesLleg").height();--%>
-<%--//                alert("pendientesLleg: " + h4);--%>
-                <%--var h5 = $("#remision").height();--%>
-<%--//                alert("remision: " + h5);--%>
-                <%--$("#pendientesRemEnt").height(h3);--%>
-            <%--}--%>
-        <%--</script>--%>
+        <script type="text/javascript">
+            $("[rel='resumen']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+        </script>
 
 
     </body>

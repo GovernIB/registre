@@ -330,21 +330,21 @@
                                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                                 <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
                                                                 <td>
-                                                                    <c:if test="${registro.registroDetalle.reserva != registro.registroDetalle.reservaCorto}">
-                                                                        <p rel="reserva" data-content="${registro.registroDetalle.reserva}" data-toggle="popover">${registro.registroDetalle.reservaCorto}</p>
-                                                                    </c:if>
-                                                                    <c:if test="${registro.registroDetalle.reserva == registro.registroDetalle.reservaCorto}">
+                                                                    <c:if test="${fn:length(registro.registroDetalle.reserva) <= 40}">
                                                                         ${registro.registroDetalle.reserva}
+                                                                    </c:if>
+                                                                    <c:if test="${fn:length(registro.registroDetalle.reserva) > 40}">
+                                                                        <p rel="reserva" data-content="${registro.registroDetalle.reserva}" data-toggle="popover">${registro.registroDetalle.reservaCorto}</p>
                                                                     </c:if>
                                                                 </td>
                                                                 </c:if>
                                                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                                                                     <td>
-                                                                        <c:if test="${registro.registroDetalle.extracto != registro.registroDetalle.extractoCorto}">
-                                                                            <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
-                                                                        </c:if>
-                                                                        <c:if test="${registro.registroDetalle.extracto == registro.registroDetalle.extractoCorto}">
+                                                                        <c:if test="${fn:length(registro.registroDetalle.extracto) <= 40}">
                                                                             ${registro.registroDetalle.extracto}
+                                                                        </c:if>
+                                                                        <c:if test="${fn:length(registro.registroDetalle.extracto) > 40}">
+                                                                            <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
                                                                         </c:if>
                                                                     </td>
                                                                 </c:if>
