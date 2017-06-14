@@ -168,8 +168,7 @@
                             <%-- Fila pel tamany Total dels annexes --%>
                         <tr>
                             <td class="senseBorder"></td>
-                            <td class="senseBorder"></td>
-                            <td class="senseBorder text-right"><spring:message code="anexo.sumatotaltamany"/>:
+                            <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
                                 <b>${totalA} KB</b></td>
                             <td class="senseBorder"></td>
                             <td class="senseBorder"></td>
