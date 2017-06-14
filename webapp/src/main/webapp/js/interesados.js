@@ -1,5 +1,5 @@
 /**
- * Añade el Organismo seleccionada a la Sesion, y lo pinta en la tabla de interesados.
+ * Añade el Organismo , y lo pinta en la tabla de interesados.
  * @param tipo
  * @param representante
  * @param idRegistroDetalle
@@ -8,31 +8,44 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
 
     var denominacion = $('#organismoInteresado option:selected').text();
     var codigoDir3 = $('#organismoInteresado option:selected').val();
-    var denominacionCodificada = encodeURI($('#organismoInteresado option:selected').text());
+
 
     if(codigoDir3 != '-1'){
 
-        $.ajax({
-            url: urlAddOrganismoInteresado,
-            type: 'GET',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: { codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle },
-
-            success: function(result) {
-                if(result==true){
-                    if(tipoRegistro=="salida"){ //Si es una salida eliminamos los anteriores
-                        eliminarTodosOrganismos();
-                    }
-                    addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
-
-                }else{
-                    mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
-                }
-
-            }
-        });
+        restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo);
     }
+}
+
+/**
+ * Realiza una petición REST para procesar el Organimo seleccionado
+ * @param codigoDir3
+ * @param denominacion
+ * @param idRegistroDetalle
+ */
+function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo){
+
+    var denominacionCodificada = encodeURI(denominacion);
+
+    $.ajax({
+        url: urlAddOrganismoInteresado,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: { codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle },
+
+        success: function(result) {
+            if(result==true){
+                if(tipoRegistro=="salida"){ //Si es una salida eliminamos los anteriores
+                    eliminarTodosOrganismos();
+                }
+                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
+
+            }else{
+                mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
+            }
+
+        }
+    });
 }
 
 /**
@@ -68,6 +81,12 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
     }
 
     mostrarOcultarTabla();
+
+    // Recargamos la página cuando editemos una salida, lo hacemos por si se añade un Organismos SIR
+    // de esa manera, se detectará y aparecerá el botón de Envío
+    if(idRegistroDetalle && mensaje && tipoRegistro === "salida"){
+        location.reload();
+    }
 }
 
 /**

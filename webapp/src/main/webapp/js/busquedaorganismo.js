@@ -248,7 +248,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                 }
 
                 if (tipoOrganismo == 'OrganismoInteresado') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addAdministracionInteresadosModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addOrganismoInteresadoModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                 } else if (tipoOrganismo == 'OrganismoDestino' || tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida') {
                     var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                 } else if (tipoOrganismo == 'OficinaOrigen') {
@@ -495,34 +495,18 @@ function asignarOrganismo(codigo, denominacion, tipoOrganismo) {
 }
 
 /**
- * Añade una nueva fila con la Persona Juridica a la tabla de interesados
+ * Añade el Organismo , y lo pinta en la tabla de interesados.
  * @param codigoDir3
  * @param denominacion
  * @param tipo
  * @param representante
  * @param tipoOrganismo
  */
-function addAdministracionInteresadosModal(codigoDir3, denominacion, tipo, tipoOrganismo, idRegistroDetalle) {
+function addOrganismoInteresadoModal(codigoDir3, denominacion, tipo, tipoOrganismo, idRegistroDetalle) {
 
     var idModal = "#modalBuscador" + tipoOrganismo;
-    var denominacionCodificada = encodeURI(denominacion);
 
-    $.ajax({
-        url: urlAddOrganismoInteresado,
-        type: 'GET',
-        dataType: 'json',
-        data: {codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle},
-        contentType: 'application/json',
-
-        success: function (result) {
-            if(result==true){
-                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, false);
-            }else{
-                mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
-            }
-
-        }
-    });
+    restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo);
 
     $(idModal).modal('hide');
 
@@ -554,7 +538,7 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
             html += '<ul>';
             html += '<li>';
             if (tipoOrganismo == 'OrganismoInteresado') {
-                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addAdministracionInteresadosModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
+                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
             } else {
                 html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
             }
@@ -589,7 +573,7 @@ function pintarHijos(hijos, tipoOrganismo, idRegistroDetalle) {
     for (var i = 0; i < hijos.length; i++) {
         var denominacion = normalizarTexto(hijos[i].denominacion);
         if (tipoOrganismo == 'OrganismoInteresado') {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addAdministracionInteresadosModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addOrganismoInteresadoModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
         } else {
             htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
         }
