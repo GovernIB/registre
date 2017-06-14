@@ -341,10 +341,10 @@
                                                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                                                                     <td>
                                                                         <c:if test="${fn:length(registro.registroDetalle.extracto) <= 40}">
-                                                                            ${registro.registroDetalle.extracto}
+                                                                            <c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>
                                                                         </c:if>
                                                                         <c:if test="${fn:length(registro.registroDetalle.extracto) > 40}">
-                                                                            <p rel="extracto" data-content="${registro.registroDetalle.extracto}" data-toggle="popover">${registro.registroDetalle.extractoCorto}</p>
+                                                                            <p rel="extracto" data-content="<c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registro.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                                         </c:if>
                                                                     </td>
                                                                 </c:if>
@@ -357,8 +357,8 @@
                                                                 <c:if test="${registro.registroDetalle.interesados != null}">
                                                                     <td class="center"><label
                                                                             class="no-bold representante" rel="ayuda"
-                                                                            data-content="${registro.registroDetalle.nombreInteresadosHtml}"
-                                                                            data-toggle="popover">${registro.registroDetalle.totalInteresados}</label>
+                                                                            data-content="<c:out value="${registro.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
+                                                                            data-toggle="popover"><c:out value="${registro.registroDetalle.totalInteresados}" escapeXml="true"/></label>
                                                                     </td>
                                                                 </c:if>
                                                                 <c:if test="${registro.registroDetalle.interesados == null}">
