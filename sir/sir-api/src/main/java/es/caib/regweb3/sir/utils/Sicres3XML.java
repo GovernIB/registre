@@ -468,8 +468,9 @@ public class Sicres3XML {
             //Validamos que la extensión del fichero esté dentro de los formatos de anexos Sir permitidos
             String identificadorFichero = StringUtils.substringAfter(anexo.getIdentificador_Fichero(), identificadorIntercambio + "_");
             String[] tokens = StringUtils.split(identificadorFichero, "_.");
-            String extensionFichero = tokens[2];
-            Assert.isTrue(formatosAnexosSir.contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida" );
+            String extensionFichero = tokens[2].toLowerCase();
+            Assert.isTrue(formatosAnexosSir.contains(extensionFichero), "La extensión del fichero [" + extensionFichero + "] no está permitida");
+
 
 
             // Validar el campo validez de documento
