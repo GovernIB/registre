@@ -38,7 +38,7 @@
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
                         <label><spring:message code="persona.tipoDocumentoIdentificacion"/></label>
                     </div>
-                    <div class="col-xs-7" id="tipoDocumento"></div>
+                    <div class="col-xs-7" id="tipoDocIdentificacion"></div>
                 </div>
 
                 <div class="form-group col-xs-6">

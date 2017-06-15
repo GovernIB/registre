@@ -75,7 +75,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT trazabilidad from Trazabilidad as trazabilidad " +
-                "where trazabilidad.registroSalida.id = :idRegistroSalida or trazabilidad.registroSalidaRectificado.id = :idRegistroSalida order by trazabilidad.fecha desc");
+                "where trazabilidad.registroSalida.id = :idRegistroSalida or trazabilidad.registroSalidaRectificado.id = :idRegistroSalida order by trazabilidad.fecha ");
 
         q.setParameter("idRegistroSalida", idRegistroSalida);
 

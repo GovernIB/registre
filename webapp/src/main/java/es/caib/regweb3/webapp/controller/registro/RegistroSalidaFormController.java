@@ -333,10 +333,10 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             return "redirect:/registroSalida/"+idRegistro+"/detalle";
         }
 
-        List<Long> isRectificar = new ArrayList<Long>();
-        Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_TRAMITADO, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
-
         try{
+
+            List<Long> isRectificar = new ArrayList<Long>();
+            Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
 
             // Si el Registro se puede rectificar y el usuario tiene permisos sobre el libro
             if(isRectificar.contains(registroSalida.getEstado())){

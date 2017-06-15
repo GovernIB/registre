@@ -1047,7 +1047,7 @@ function obtenerInteresado(idInteresado){
             $('#apellido1').html(result.apellido1);
             $('#apellido2').html(result.apellido2);
             if(result.tipoDocumentoIdentificacion != null && result.tipoDocumentoIdentificacion != '-1'){
-                $('#tipoDocumento').html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacion]);
+                $('#tipoDocIdentificacion').html(tradsinteresado['tipoDocumentoIdentificacion.'+result.tipoDocumentoIdentificacion]);
                 $('#documento').html(result.documento);
             }
 
@@ -1084,7 +1084,7 @@ function limpiarInteresadoDetalle(){
     $('#nombre').html('');
     $('#apellido1').html('');
     $('#apellido2').html('');
-    $('#tipoDocumento').html('');
+    $('#tipoDocIdentificacion').html('');
     $('#documento').html('');
     $('#email').html('');
     $('#telefono').html('');
