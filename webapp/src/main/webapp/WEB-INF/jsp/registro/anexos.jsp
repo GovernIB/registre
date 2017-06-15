@@ -97,8 +97,14 @@
                         <c:forEach var="anexoFull" items="${anexos}">
 
                             <tr id="anexo${anexoFull.anexo.id}">
-
-                                <td>${anexoFull.anexo.titulo}</td>
+                                <td>
+                                    <c:if test="${anexoFull.anexo.titulo != anexoFull.anexo.tituloCorto}">
+                                        <p rel="ayuda" data-content="<c:out value="${anexoFull.anexo.titulo}" escapeXml="true"/>" data-toggle="popover"><c:out value="${anexoFull.anexo.tituloCorto}" escapeXml="true"/></p>
+                                    </c:if>
+                                    <c:if test="${anexoFull.anexo.titulo == anexoFull.anexo.tituloCorto}">
+                                        <c:out value="${anexoFull.anexo.titulo}" escapeXml="true"/>
+                                    </c:if>
+                                </td>
                                 <td><spring:message code="tipoDocumento.0${anexoFull.anexo.tipoDocumento}"/></td>
                                 <td class="text-right">
                                     <c:if test="${anexoFull.anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
@@ -205,7 +211,7 @@
 <script type="text/javascript">
 
     // Variables de tamany definit al Modal
-    var tamModalAnexo = 240;
+    var tamModalAnexo = 280;
     var tamModalFitxer = 440;
     var tamModalScan = 710;
 

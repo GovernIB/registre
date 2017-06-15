@@ -337,6 +337,18 @@ public class Anexo implements Serializable {
         this.signProfile = signProfile;
     }
 
+    @Transient
+    public String getTituloCorto(){
+
+        String tituloCorto = getTitulo();
+
+        if (tituloCorto.length() > 20) {
+            tituloCorto = getTitulo().substring(0, 20) + "...";
+        }
+
+        return tituloCorto;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (this == o) return true;

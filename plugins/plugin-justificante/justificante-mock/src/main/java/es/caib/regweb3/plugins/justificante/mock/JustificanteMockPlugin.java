@@ -626,8 +626,10 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         }
         taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.resumen"), font8));
         taulaInformacio.addCell(new Paragraph(extracte, font8));
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.unidad"), font8));
-        taulaInformacio.addCell(new Paragraph(nomDesti, font8));
+        if(!nomDesti.equals("")) {
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), font8));
+            taulaInformacio.addCell(new Paragraph(nomDesti, font8));
+        }
         taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.expediente"), font8));
         taulaInformacio.addCell(new Paragraph(expedient, font8));
         document.add(taulaInformacio);

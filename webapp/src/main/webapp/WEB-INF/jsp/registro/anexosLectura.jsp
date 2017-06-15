@@ -77,7 +77,14 @@
                                         <tr>
 
                                             <td>
-                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">${anexo.titulo}</a>
+                                                <a data-toggle="modal" href="#detalleAnexo" onclick="obtenerAnexo(${anexo.id})">
+                                                    <c:if test="${anexo.titulo != anexo.tituloCorto}">
+                                                        <p rel="ayuda" data-content="<c:out value="${anexo.titulo}" escapeXml="true"/>" data-toggle="popover"><c:out value="${anexo.tituloCorto}" escapeXml="true"/></p>
+                                                    </c:if>
+                                                    <c:if test="${anexo.titulo == anexo.tituloCorto}">
+                                                        <c:out value="${anexo.titulo}" escapeXml="true"/>
+                                                    </c:if>
+                                                </a>
                                             </td>
 
 
