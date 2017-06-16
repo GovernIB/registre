@@ -13,7 +13,7 @@
                 code="interesado.administracion"/>','${registro.registroDetalle.id}',false);
         </c:when>
         <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">
-          var interesado = "${interesado.nombrePersonaFisica}";
+          var interesado = '<c:out value="${interesado.nombrePersonaFisica}" escapeXml="true"/>';
           interesado = interesado.replace(/\"/g,'&quot;');
           var representante = "${interesado.representante.nombreCompleto}";
           representante = representante.replace(/\"/g,'&quot;');
@@ -21,7 +21,7 @@
                 code="persona.fisica"/>' ,'${interesado.representante.id}',representante,'${registro.registroDetalle.id}');
         </c:when>
         <c:when test="${interesado.tipo == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}">
-          var interesado = "${interesado.nombrePersonaJuridica}";
+          var interesado = '<c:out value="${interesado.nombrePersonaJuridica}" escapeXml="true"/>';
           interesado = interesado.replace(/\"/g,'&quot;');
           var representante = "${interesado.representante.nombreCompleto}";
           representante = representante.replace(/\"/g,'&quot;');
