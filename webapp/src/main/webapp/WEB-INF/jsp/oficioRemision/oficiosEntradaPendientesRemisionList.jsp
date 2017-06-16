@@ -230,11 +230,11 @@
                                                                         ${registroEntrada.destinoExternoDenominacion}
                                                                     </c:if>
                                                                 </td>
-                                                                <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                                <td><c:out value="${registroEntrada.registroDetalle.extracto}" escapeXml="true"/></td>
                                                                 <td class="center">
                                                                     <label class="no-bold representante"
                                                                            rel="ayuda"
-                                                                           data-content="${registroEntrada.registroDetalle.nombreInteresadosHtml}"
+                                                                           data-content="<c:out value="${registroEntrada.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                            data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
                                                                 </td>
                                                                 <td class="center">

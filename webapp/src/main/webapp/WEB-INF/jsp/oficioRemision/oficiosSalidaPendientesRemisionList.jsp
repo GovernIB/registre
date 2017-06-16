@@ -212,11 +212,11 @@
                                                                        data-toggle="popover">${registroSalida.oficina.denominacion}</label>
                                                             </td>
                                                             <td>${registroSalida.origen.denominacion}</td>
-                                                            <td>${registroSalida.registroDetalle.extracto}</td>
+                                                            <td><c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/></td>
                                                             <td class="center">
                                                                 <label class="no-bold representante"
                                                                         rel="ayuda"
-                                                                        data-content="${registroSalida.registroDetalle.nombreInteresadosHtml}"
+                                                                        data-content="<c:out value="${registroSalida.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                         data-toggle="popover">${registroSalida.registroDetalle.totalInteresados}</label>
                                                             </td>
                                                             <td class="center">
