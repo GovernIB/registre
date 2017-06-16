@@ -274,9 +274,9 @@
             }
 
             if($('.alert-warning').length != 0){
-                iframe = iframe + incrementError;
+                iframe = iframe + incrementError + 40;
                 parent.$('#targetiframe').height(iframe);
-                modal = modal + incrementError;
+                modal = modal + incrementError + 40;
                 parent.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
