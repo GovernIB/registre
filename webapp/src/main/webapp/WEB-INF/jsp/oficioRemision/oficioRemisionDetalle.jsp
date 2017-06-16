@@ -263,7 +263,14 @@
                                                 <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroEntradaOrigen.numeroRegistro}</td>
                                                 <td><fmt:formatDate value="${trazabilidad.registroEntradaOrigen.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td>${trazabilidad.registroEntradaOrigen.oficina.denominacion}</td>
-                                                <td>${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}</td>
+                                                <td>
+                                                    <c:if test="${fn:length(trazabilidad.registroEntradaOrigen.registroDetalle.extracto) <= 40}">
+                                                        <c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}" escapeXml="true"/>
+                                                    </c:if>
+                                                    <c:if test="${fn:length(trazabilidad.registroEntradaOrigen.registroDetalle.extracto) > 40}">
+                                                        <p rel="extracto" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                    </c:if>
+                                                </td>
                                                 <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/${trazabilidad.registroSalida.numeroRegistro}</td>
                                                 <td class="center">
                                                     <a class="btn btn-info btn-sm"
@@ -307,7 +314,14 @@
                                                 <td><fmt:formatDate value="${registroSalida.fecha}" pattern="yyyy"/>/ ${registroSalida.numeroRegistro}</td>
                                                 <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td>${registroSalida.oficina.denominacion}</td>
-                                                <td>${registroSalida.registroDetalle.extracto}</td>
+                                                <td>
+                                                    <c:if test="${fn:length(registroSalida.registroDetalle.extracto) <= 40}">
+                                                        <c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>
+                                                    </c:if>
+                                                    <c:if test="${fn:length(registroSalida.registroDetalle.extracto) > 40}">
+                                                        <p rel="extracto" data-content="<c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroSalida.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                    </c:if>
+                                                </td>
                                                 <%--<td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroSalida.numeroRegistro}</td>--%>
                                                 <td class="center">
                                                     <a class="btn btn-danger btn-sm"
@@ -335,6 +349,13 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<!-- Activa el popover -->
+<script type="text/javascript">
+
+    $("[rel='extracto']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+
+</script>
 
 <script type="text/javascript">
     function imprimirOficio(url) {
