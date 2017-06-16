@@ -74,12 +74,14 @@
                                                 <col>
                                                 <col>
                                                 <col>
+                                                <col>
                                                 <col width="51">
                                             </colgroup>
                                             <thead>
                                             <tr>
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                 <th><spring:message code="registroSir.fechaRegistro"/></th>
+                                                <th><spring:message code="regweb.tipo"/></th>
                                                 <th><spring:message code="registroSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="registroSir.oficinaDestino"/></th>
                                                 <th><spring:message code="registroSir.estado"/></th>
@@ -93,6 +95,15 @@
                                                 <tr>
                                                     <td> ${registroSir.identificadorIntercambio}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                    <td>
+                                                        <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
+                                                            <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
+                                                        </c:if>
+
+                                                        <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
+                                                            <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
+                                                        </c:if>
+                                                    </td>
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td>
