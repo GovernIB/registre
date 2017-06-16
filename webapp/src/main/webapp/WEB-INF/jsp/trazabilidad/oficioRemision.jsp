@@ -13,36 +13,47 @@
                 <c:if test="${oficioRemision.sir == true}">
                     <spring:message code="oficioRemision.oficioRemision.sir"/>
                 </c:if>
-                <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}
             </a>
         </h4>
-        <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+        <p>
+            <small class="text-muted"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroEntrada.fechaRegistro"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small><br>
+            <small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroEntrada.numeroRegistro"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</small>
+        </p>
     </div>
     <div class="timeline-body">
 
-        <p> <%--Oficina origen--%>
+        <%--Oficina origen--%>
+        <p>
             <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficina"/>:</strong>
                 ${oficioRemision.oficina.denominacion}
             </small>
         </p>
-        <p> <%--Organismo destino--%>
+
+        <%--Organismo destino--%>
+        <p>
             <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.organismoDestino"/>:</strong>
                 <c:if test="${not empty oficioRemision.organismoDestinatario}">${oficioRemision.organismoDestinatario.denominacion}</c:if>
                 <c:if test="${empty oficioRemision.organismoDestinatario}">${oficioRemision.destinoExternoDenominacion}</c:if>
             </small>
         </p>
-        <p> <%--Destino oficio--%>
-            <small><i class="fa fa-sign-in"></i> <strong><spring:message code="oficioRemision.destino"/>:</strong>
-                <c:if test="${not empty oficioRemision.organismoDestinatario}">
-                    <span class="label label-info"><spring:message code="oficioRemision.interno"/></span>
-                </c:if>
 
-                <c:if test="${empty oficioRemision.organismoDestinatario}">
-                    <span class="label label-danger"><spring:message code="oficioRemision.externo"/></span>
-                </c:if>
-            </small>
-        </p>
-        <p> <%--Estado oficio--%>
+        <%--Destino oficio--%>
+        <c:if test="${oficioRemision.sir == false}">
+            <p>
+                <small><i class="fa fa-sign-in"></i> <strong><spring:message code="oficioRemision.destino"/>:</strong>
+                    <c:if test="${not empty oficioRemision.organismoDestinatario}">
+                        <span class="label label-info"><spring:message code="oficioRemision.interno"/></span>
+                    </c:if>
+
+                    <c:if test="${empty oficioRemision.organismoDestinatario}">
+                        <span class="label label-danger"><spring:message code="oficioRemision.externo"/></span>
+                    </c:if>
+                </small>
+            </p>
+        </c:if>
+
+        <%--Estado oficio--%>
+        <p>
             <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong>
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}"><span class="label label-success"></c:if>
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO}"><span class="label label-success"></c:if>
@@ -64,6 +75,17 @@
                 </span>
             </small>
         </p>
+
+        <%--Registro Salida--%>
+        <c:if test="${not empty registroSalida}">
+            <p>
+                <small><i class="fa fa-share"></i> <strong><spring:message code="registroSalida.registroSalida"/>:</strong>
+                    <a target="_blank" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>">${registroSalida.numeroRegistroFormateado}</a>
+                </small>
+            </p>
+        </c:if>
+
+
         <%--OficioRemision SIR--%>
         <c:if test="${oficioRemision.sir == true}">
             <%--Código y descripción error--%>
@@ -75,12 +97,14 @@
                 </p>
 
             </c:if>
+
             <%--Reintentos--%>
             <p>
                 <c:if test="${oficioRemision.numeroReintentos > 0}">
                     <small><i class="fa fa-retweet"></i> <strong><spring:message code="oficioRemision.reintentos"/>:</strong> ${oficioRemision.numeroReintentos}</small>
                 </c:if>
             </p>
+
             <%--Identificador intercambio--%>
             <p>
                 <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>

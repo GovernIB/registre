@@ -308,6 +308,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         oficioRemision.setEstado(RegwebConstantes.OFICIO_INTERNO_ENVIADO);
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
+        oficioRemision.setFechaEstado(new Date());
         oficioRemision.setRegistrosSalida(registrosSalida);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
         oficioRemision.setLibro(new Libro(idLibro));
@@ -342,9 +343,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
         oficioRemision.setEstado(RegwebConstantes.OFICIO_EXTERNO_ENVIADO);
-        oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setFecha(new Date());
+        oficioRemision.setFechaEstado(new Date());
         oficioRemision.setRegistrosSalida(registrosSalida);
         oficioRemision.setUsuarioResponsable(usuarioEntidad);
         oficioRemision.setLibro(new Libro(idLibro));

@@ -146,11 +146,11 @@
                                                     <td> ${registroSir.identificadorIntercambio}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
                                                     <td>
-                                                        <c:if test="${registroSir.tipo == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                        <c:if test="${registroSir.tipoRegistro == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
                                                             <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
                                                         </c:if>
 
-                                                        <c:if test="${registroSir.tipo == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                        <c:if test="${registroSir.tipoRegistro == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>

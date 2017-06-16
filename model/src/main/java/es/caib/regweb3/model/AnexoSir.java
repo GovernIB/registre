@@ -261,8 +261,8 @@ public class AnexoSir implements Serializable {
 
         String nombreFicheroCorto = getNombreFichero();
 
-        if (nombreFicheroCorto.length() > 15) {
-            nombreFicheroCorto = getNombreFichero().substring(0, 15) + "...";
+        if (nombreFicheroCorto.length() > 20) {
+            nombreFicheroCorto = getNombreFichero().substring(0, 20) + "...";
         }
 
         return nombreFicheroCorto;

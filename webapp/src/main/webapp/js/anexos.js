@@ -23,7 +23,7 @@ function obtenerAnexo(idAnexo){
             $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.validezDocumento]);
 
             $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.tipoDocumento]);
-            $('#observaciones').html(result.observaciones);
+            $('#observacionesAnexo').html(result.observaciones);
             $('#origen').html(tradsanexo['anexo.origen.'+result.origenCiudadanoAdmin]);
             obtenerElementoTraducido(urlTipoDocumental, result.tipoDocumental.id, 'tipoDocumental');
 
@@ -43,7 +43,7 @@ function limpiarAnexoDetalle(){
     $('#titulo').html('');
     $('#validezDocumento').html('');
     $('#tipoDocumento').html('');
-    $('#observaciones').html('');
+    $('#observacionesAnexo').html('');
     $('#origen').html('');
     $('#tipoDocumental').html('');
 

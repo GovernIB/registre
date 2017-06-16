@@ -36,9 +36,9 @@
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.observaciones"/></label>
+                        <label><spring:message code="anexo.tipoDocumental"/></label>
                     </div>
-                    <div class="col-xs-7" id="observaciones"></div>
+                    <div class="col-xs-7" id="tipoDocumental"></div>
                 </div>
 
                 <div class="form-group col-xs-6">
@@ -50,9 +50,9 @@
 
                 <div class="form-group col-xs-6">
                     <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                        <label><spring:message code="anexo.tipoDocumental"/></label>
+                        <label><spring:message code="anexo.observaciones"/></label>
                     </div>
-                    <div class="col-xs-7" id="tipoDocumental"></div>
+                    <div class="col-xs-7" id="observacionesAnexo"></div>
                 </div>
 
                 <div class="clearfix"></div>

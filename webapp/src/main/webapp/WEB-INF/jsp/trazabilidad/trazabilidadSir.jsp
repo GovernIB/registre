@@ -72,8 +72,9 @@
                     <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO}">
 
                         <li>
-                            <c:set var="registroEntradaDestino" value="${trazabilidad.registroEntrada}" scope="request"/>
-                            <c:import url="../trazabilidad/registroEntradaDestino.jsp">
+                            <c:set var="registroEntrada" value="${trazabilidad.registroEntrada}" scope="request"/>
+                            <fmt:message key="registroEntrada.aceptado" var="titulo" scope="request"/>
+                            <c:import url="../trazabilidad/registroEntrada.jsp">
                                 <c:param name="activo" value="true"/>
                             </c:import>
                         </li>
