@@ -227,7 +227,7 @@
 
     // Si el modal està activat, Afegeix la llargària del modal d'annexe
     $('#modalAnexos').on('show.bs.modal', function () {
-         $('.modal-content').css('height', $('#tamanyModal').val());
+        $('#modalAnexos').find('.modal-content').css('height', $('#tamanyModal').val());
     });
 
     // Carregam el iframe amb el Contingut que passam per paràmetre
@@ -324,7 +324,7 @@
     function redimensionaModalAnnexe() {
         // Fixa el tamany del modal
         document.getElementById('tamanyModal').setAttribute("value", tamModalFitxer);
-        $('.modal-content').css('height', $('#tamanyModal').val());
+        $('#modalAnexos').find('.modal-content').css('height', $('#tamanyModal').val());
         // Afegeix la classe a iframe
         document.getElementById('targetiframe').setAttribute("class", 'iframeAnexo');
     }
@@ -333,7 +333,7 @@
     function redimensionaModalAnnexeErrors() {
         // Fixa el tamany del modal
         document.getElementById('tamanyModal').setAttribute("value", tamModalAnexo);
-        $('.modal-content').css('height', $('#tamanyModal').val());
+        $('#modalAnexos').find('.modal-content').css('height', $('#tamanyModal').val());
         // Canvia tamany al height iframe
         $('#targetiframe').height('');
         // Afegeix la classe a iframe

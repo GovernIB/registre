@@ -197,28 +197,48 @@
 
             var incrementError = 85;
             var iframe = parent.$('#targetiframe').height();
-            var modal = parent.$('.modal-content').height();
+            var modal = parent.$('#modalAnexos').find('.modal-content').height();
 
             if($('#mensajeError').length != 0){
                 iframe = iframe + incrementError;
                 parent.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
-                parent.$('.modal-content').height(modal);
+                parent.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
             if($('.alert-warning').length != 0){
                 iframe = iframe + incrementError;
                 parent.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
-                parent.$('.modal-content').height(modal);
+                parent.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
             if($('.alert-success').length != 0){
                 iframe = iframe + incrementError;
                 parent.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
-                parent.$('.modal-content').height(modal);
+                parent.$('#modalAnexos').find('.modal-content').height(modal);
             }
+
+//            var firmaFile = $('span#firmaFile.errors').hasClass("help-block");
+//            alert("firmaFile.errors: " + firmaFile);
+//            if(firmaFile != 'false'){
+//                alert("Entramos");
+//                iframe = iframe + incrementError;
+//                parent.$('#targetiframe').height(iframe);
+//                modal = modal + incrementError;
+//                parent.$('.modal-content').height(modal);
+//            }
+//
+//            var documentFile = $('span#documentFile.errors').text();
+//            alert("documentoFile.errors: " + documentFile);
+//            if(documentFile != false){
+//                alert("Entramos");
+//                iframe = iframe + incrementError;
+//                parent.$('#targetiframe').height(iframe);
+//                modal = modal + incrementError;
+//                parent.$('.modal-content').height(modal);
+//            }
         });
     });
 
