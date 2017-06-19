@@ -1,25 +1,7 @@
 package es.caib.regweb3.webapp.controller.entidad;
 
-import es.caib.regweb3.model.Archivo;
-import es.caib.regweb3.model.Descarga;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.Pendiente;
-import es.caib.regweb3.model.PermisoLibroUsuario;
-import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.model.Usuario;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.ejb.ArchivoLocal;
-import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb3.persistence.ejb.DescargaLocal;
-import es.caib.regweb3.persistence.ejb.EntidadLocal;
-import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.PendienteLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
-import es.caib.regweb3.persistence.ejb.SincronizadorDir3Local;
-import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -31,7 +13,6 @@ import es.caib.regweb3.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
@@ -51,7 +32,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -716,10 +696,10 @@ public class EntidadController extends BaseController {
 
             libroEjb.reiniciarContadoresEntidad(idEntidad);
 
-            Mensaje.saveMessageInfo(request, "Se han reiniciado todos los contadores de la Entidad");
+            Mensaje.saveMessageInfo(request, getMessage("aviso.contadores.reiniciar"));
 
         } catch (Exception e) {
-            Mensaje.saveMessageError(request, "Error: No se han podido reiniciar los contadores de los Libros de la entidad");
+            Mensaje.saveMessageError(request, getMessage("error.contadores.reiniciar"));
             e.printStackTrace();
         }
 
@@ -737,16 +717,13 @@ public class EntidadController extends BaseController {
             entidadEjb.eliminarEntidad(idEntidad);
             entidadEjb.remove(entidadEjb.findById(idEntidad));
 
-            // TODO traduir
-            Mensaje.saveMessageInfo(request, "S'ha eliminat l'entitat");
+            Mensaje.saveMessageInfo(request, getMessage("aviso.entidad.baja"));
 
         } catch ( I18NException i18ne) {
-          // TODO traduir
-          Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+          Mensaje.saveMessageError(request, getMessage("error.entidad.relacion"));
           log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (Exception e) {
-          // TODO traduir
-          Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+          Mensaje.saveMessageError(request, getMessage("error.entidad.relacion"));
           e.printStackTrace();
         }
 
@@ -763,12 +740,12 @@ public class EntidadController extends BaseController {
 
             entidadEjb.eliminarRegistros(idEntidad);
 
-            Mensaje.saveMessageInfo(request, "S'han eliminat els registres de  l'entitat");
+            Mensaje.saveMessageInfo(request, getMessage("aviso.registros.eliminados"));
         } catch(I18NException i18ne) {
-          Mensaje.saveMessageError(request, "Error: No s'ha eliminat els registres");
+          Mensaje.saveMessageError(request, getMessage("error.registros.eliminar"));
           log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (Exception e) {
-            Mensaje.saveMessageError(request, "Error: No s'ha eliminat els registres");
+            Mensaje.saveMessageError(request, getMessage("error.registros.eliminar"));
             e.printStackTrace();
         }
 
