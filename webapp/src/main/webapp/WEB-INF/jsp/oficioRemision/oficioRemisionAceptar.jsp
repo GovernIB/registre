@@ -134,7 +134,7 @@
 
                             <div class="panel-body">
 
-                                <div class="table-responsive">
+                                <div class="table-responsive sin-scroll">
 
                                     <table class="table table-bordered table-hover table-striped tablesorter">
                                         <colgroup>

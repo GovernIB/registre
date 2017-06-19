@@ -8,7 +8,7 @@ que se le indica -->
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+            <button type="button" class="close margeDret5" data-dismiss="modal" aria-hidden="true"
                     onclick="limpiarFormularioBusqueda('${param.tipo}')">x
             </button>
 
