@@ -169,7 +169,15 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
                                                     </td>
-                                                    <td>${registroSir.resumen}</td>
+                                                    <td>
+                                                        <c:if test="${fn:length(registroSir.resumen) <= 40}">
+                                                            ${registroSir.resumen}
+                                                        </c:if>
+
+                                                        <c:if test="${fn:length(registroSir.resumen) > 40}">
+                                                            <p rel="resumen" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
+                                                        </c:if>
+                                                    </td>
 
                                                     <td class="center">
                                                         <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>

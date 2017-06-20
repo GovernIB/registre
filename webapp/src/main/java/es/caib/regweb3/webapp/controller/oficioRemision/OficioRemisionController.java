@@ -613,6 +613,46 @@ public class OficioRemisionController extends BaseController {
 
     }
 
+    @RequestMapping(value = "/rechazados/list/{pageNumber}")
+    public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("oficioRemision/oficiosRemisionEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_RECHAZADO);
+
+            mav.addObject("estado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
+            mav.addObject("url", "rechazados");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/devueltos/list/{pageNumber}")
+    public ModelAndView devueltos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("oficioRemision/oficiosRemisionEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_DEVUELTO);
+
+            mav.addObject("estado", RegwebConstantes.OFICIO_SIR_DEVUELTO);
+            mav.addObject("url", "devueltos");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
+    }
+
 
     /**
      * Seleccionar un {@link es.caib.regweb3.model.ModeloOficioRemision}

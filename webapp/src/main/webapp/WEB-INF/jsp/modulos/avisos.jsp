@@ -3,7 +3,7 @@
 
 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI' && oficinaActiva != null}">
 
-    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + registrosRechazados + registrosReenviados}"/>
+    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + oficiosRechazados + oficiosReenviados}"/>
 
     <c:if test="${total > 0}">
 
@@ -80,22 +80,22 @@
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${registrosRechazados > 0}">
+                    <c:if test="${oficiosRechazados > 0}">
                         <li>
-                            <a href="<c:url value="/registroEntrada/rechazados/list/1"/>">
+                            <a href="<c:url value="/oficioRemision/rechazados/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados"/> (${registrosRechazados})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados"/> (${oficiosRechazados})
                                 </div>
                             </a>
                         </li>
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${registrosReenviados > 0}">
+                    <c:if test="${oficiosReenviados > 0}">
                         <li>
-                            <a href="<c:url value="/registroEntrada/reenviados/list/1"/>">
+                            <a href="<c:url value="/oficioRemision/devueltos/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.reenviados"/> (${registrosReenviados})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.reenviados"/> (${oficiosReenviados})
                                 </div>
                             </a>
                         </li>

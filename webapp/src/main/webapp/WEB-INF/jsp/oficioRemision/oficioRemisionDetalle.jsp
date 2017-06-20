@@ -65,13 +65,6 @@
                             <dt><i class="fa fa-book"></i> <spring:message code="registroEntrada.libro.corto"/>: </dt> <dd> ${oficioRemision.libro.nombre}</dd>
                             <%--<dt><i class="fa fa-institution"></i> <spring:message code="oficioRemision.organismoDestino"/>: </dt>
                             <dd> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</dd>--%>
-                            <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.destino"/>:</dt>
-                            <dd>
-                                <span class="label label-default">
-                                    <c:if test="${not empty oficioRemision.organismoDestinatario}"> <spring:message code="oficioRemision.interno"/> </c:if>
-                                    <c:if test="${empty oficioRemision.organismoDestinatario}"> <spring:message code="oficioRemision.externo"/> </c:if>
-                                </span>
-                            </dd>
                             <dt><i class="fa fa-file-text-o"></i> <spring:message code="oficioRemision.tipo"/>:</dt>
                             <dd>
                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
@@ -81,6 +74,13 @@
                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
                                     <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
                                 </c:if>
+                            </dd>
+                            <dt><i class="fa fa-exchange"></i> <spring:message code="oficioRemision.destino"/>:</dt>
+                            <dd>
+                                <span class="label label-default">
+                                    <c:if test="${not empty oficioRemision.organismoDestinatario}"> <spring:message code="oficioRemision.interno"/> </c:if>
+                                    <c:if test="${empty oficioRemision.organismoDestinatario}"> <spring:message code="oficioRemision.externo"/> </c:if>
+                                </span>
                             </dd>
                             <dt><i class="fa fa-bookmark"></i> <spring:message code="oficioRemision.estado"/>: </dt>
                             <dd>
@@ -93,9 +93,7 @@
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-warning"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-warning"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK}"><span class="label label-success"></c:if>
-                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}"><span class="label label-danger"></c:if>
+                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-danger"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"></c:if>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
 

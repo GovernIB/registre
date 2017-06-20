@@ -204,8 +204,8 @@
                                     <li><a href="<c:url value="/registroSir/enviados"/>"><spring:message code="registroSir.enviados"/></a></li>
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/registroSir/pendientesProcesar/list/1"/>"><spring:message code="registroSir.pendientesProcesar"/></a></li>
-                                    <li><a href="<c:url value="/registroEntrada/rechazados/list/1"/>"><spring:message code="registroSir.rechazados"/></a></li>
-                                    <li><a href="<c:url value="/registroEntrada/reenviados/list/1"/>"><spring:message code="registroSir.reenviados"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/rechazados/list/1"/>"><spring:message code="registroSir.rechazados"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/devueltos/list/1"/>"><spring:message code="registroSir.reenviados"/></a></li>
                                 </ul>
                             </div>
                         </c:if>

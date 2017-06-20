@@ -104,8 +104,10 @@ public class AvisoController extends BaseController {
 
             // Registros de Entrada Rechazados o Reenviados por SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO));
-                mav.addObject("registrosReenviados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_REENVIADO));
+                //mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO));
+                //mav.addObject("registrosReenviados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_REENVIADO));
+                mav.addObject("oficiosRechazados", oficioRemisionEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_RECHAZADO));
+                mav.addObject("oficiosReenviados", oficioRemisionEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_DEVUELTO));
             }
 
 

@@ -186,7 +186,7 @@ public class SirBean implements SirLocal {
 
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
 
-                }else if(oficioRemision.getEstado() == RegwebConstantes.REGISTRO_REENVIADO){
+                }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
                     log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
                 } else{
@@ -242,11 +242,11 @@ public class SirBean implements SirLocal {
                     // Actualizamos el oficio
                     oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
                     oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
-                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
 
-                }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
+                }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO){
 
                     log.info("Se ha intentado rechazar un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);

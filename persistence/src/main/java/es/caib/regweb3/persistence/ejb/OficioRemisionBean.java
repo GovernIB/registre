@@ -525,7 +525,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<OficioRemision> getByEstadoOficina(int idEstado, Long idOficina, int total) throws Exception{
+    public List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
                 "and oficioRemision.oficina.id = :idOficina order by oficioRemision.fecha desc");
@@ -534,12 +534,20 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("idEstado", idEstado);
         q.setParameter("idOficina", idOficina);
 
-        return q.getResultList();
+        List<OficioRemision> oficios = q.getResultList();
+
+        // Inicializamos los Registros según su tipo de registro
+        for(OficioRemision oficio:oficios){
+            oficio.getRegistrosEntrada().size();
+            oficio.getRegistrosSalida().size();
+        }
+
+        return oficios;
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getByEstadoOficinaCount(int idEstado, Long idOficina) throws Exception{
+    public Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws Exception{
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision where oficioRemision.estado = :idEstado " +
                 "and oficioRemision.oficina.id = :idOficina");
@@ -548,6 +556,53 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("idOficina", idOficina);
 
         return (Long) q.getSingleResult();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws Exception {
+
+        Query q;
+        Query q2;
+
+
+        q = em.createQuery("Select oficio from OficioRemision as oficio where oficio.oficina.id = :idOficinaActiva " +
+                "and oficio.estado = :idEstado order by oficio.fecha desc");
+
+        q.setParameter("idOficinaActiva", idOficinaActiva);
+        q.setParameter("idEstado", idEstado);
+
+        q2 = em.createQuery("Select count(oficio.id) from OficioRemision as oficio where oficio.oficina.id = :idOficinaActiva " +
+                "and oficio.estado = :idEstado");
+
+        q2.setParameter("idOficinaActiva", idOficinaActiva);
+        q2.setParameter("idEstado", idEstado);
+
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        List<OficioRemision> oficios = q.getResultList();
+
+        // Inicializamos los Registros según su tipo de registro
+        for(OficioRemision oficio:oficios){
+            oficio.getRegistrosEntrada().size();
+            oficio.getRegistrosSalida().size();
+        }
+
+        paginacion.setListado(oficios);
+
+        return paginacion;
+
     }
 
     @Override
@@ -568,10 +623,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
-                " oficioRemision.estado != :devuelto");
+                " oficioRemision.estado != :rechazado");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
-        q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
+        q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
 
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() == 1){

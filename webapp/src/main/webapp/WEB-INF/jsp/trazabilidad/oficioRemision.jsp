@@ -52,6 +52,15 @@
             </p>
         </c:if>
 
+        <%--Registro Salida--%>
+        <c:if test="${not empty registroSalida}">
+            <p>
+                <small><i class="fa fa-share"></i> <strong><spring:message code="registroSalida.registroSalida"/>:</strong>
+                    <a target="_blank" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>">${registroSalida.numeroRegistroFormateado}</a>
+                </small>
+            </p>
+        </c:if>
+
         <%--Estado oficio--%>
         <p>
             <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong>
@@ -64,9 +73,7 @@
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}"><span class="label label-warning"></c:if>
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}"><span class="label label-warning"></c:if>
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}"><span class="label label-danger"></c:if>
-                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-warning"></c:if>
-                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ACK}"><span class="label label-success"></c:if>
-                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}"><span class="label label-danger"></c:if>
+                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}"><span class="label label-danger"></c:if>
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"></c:if>
                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"></c:if>
 
@@ -75,16 +82,6 @@
                 </span>
             </small>
         </p>
-
-        <%--Registro Salida--%>
-        <c:if test="${not empty registroSalida}">
-            <p>
-                <small><i class="fa fa-share"></i> <strong><spring:message code="registroSalida.registroSalida"/>:</strong>
-                    <a target="_blank" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>">${registroSalida.numeroRegistroFormateado}</a>
-                </small>
-            </p>
-        </c:if>
-
 
         <%--OficioRemision SIR--%>
         <c:if test="${oficioRemision.sir == true}">
