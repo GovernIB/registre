@@ -46,7 +46,7 @@
                             <%--REGISTROS DE ENTRADA PENDIENTES (RESERVA)--%>
                             <c:if test="${not empty reservas}">
                                 <div class="col-xs-6">
-                                    <div id="reserves" class="panel panel-warning">
+                                    <div id="reserves" class="panel panel-info">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.reservas"/></strong> </h3>
                                         </div>
