@@ -45,7 +45,7 @@
 
                             <%--REGISTROS DE ENTRADA PENDIENTES (RESERVA)--%>
                             <c:if test="${not empty reservas}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
                                     <div id="reserves" class="panel panel-info">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.reservas"/></strong> </h3>
@@ -98,7 +98,7 @@
 
                             <%--REGISTROS DE ENTRADA PENDIENTES DE VISAR--%>
                             <%--<c:set var="avisos" value="${avisos+1}"/>
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.pendientesVisar"/></strong> </h3>
@@ -152,7 +152,7 @@
 
                             <%--OFICIOS PENDIENTES DE LLEGADA--%>
                             <c:if test="${not empty oficiosPendientesLlegada}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
 
                                     <div id="pendientesLleg" class="panel panel-success">
                                         <div class="panel-heading">
@@ -203,7 +203,7 @@
 
                             <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN--%>
                             <c:if test="${not empty organismosOficioRemisionEntrada}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
 
                                     <div id="pendientesRemEnt" class="panel panel-success">
                                         <div class="panel-heading">
@@ -249,7 +249,7 @@
 
                             <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN--%>
                             <c:if test="${not empty organismosOficioRemisionSalida}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
 
                                     <div id="pendientesRemSal" class="panel panel-success">
                                         <div class="panel-heading">
@@ -295,7 +295,7 @@
 
                             <%--REGISTROS SIR PENDIENTES DE PROCESAR--%>
                             <c:if test="${not empty registrosSir}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
 
                                     <div id="pendientesProc" class="panel panel-primary">
                                         <div class="panel-heading">
@@ -356,7 +356,7 @@
 
                             <%--REGISTROS RECHAZADOS--%>
                             <c:if test="${not empty oficiosRechazados}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
 
                                     <div id="rechazados" class="panel panel-primary">
                                         <div class="panel-heading">
@@ -423,7 +423,7 @@
 
                             <%--REGISTROS REENVIADOS--%>
                             <c:if test="${not empty oficiosReenviados}">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 centrat">
 
                                     <div id="reenviados" class="panel panel-primary">
                                         <div class="panel-heading">
@@ -499,8 +499,14 @@
 
         <c:import url="modulos/pie.jsp"/>
 
+        <!-- Activa el popover resumen -->
         <script type="text/javascript">
             $("[rel='resumen']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+        </script>
+
+        <!-- Lleva la classe centrat al darrer panell dibuixat. Així funciona si només hi ha 2 panells -->
+        <script type="text/javascript">
+            $( ".centrat" ).last().removeClass("centrat");
         </script>
 
 
