@@ -24,7 +24,7 @@
                         </li>
 
                         <%--OFICIO ACEPTADO O DEVUELTO--%>
-                        <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+                        <c:if test="${trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO || trazabilidad.oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
 
                             <li class="timeline-inverted">
                                 <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
