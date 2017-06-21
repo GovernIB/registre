@@ -106,8 +106,7 @@
                             <c:if test="${oficioRemision.sir == true}">
                                 <%--Código y descripción error--%>
                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR ||
-                                          oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR ||
-                                          oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO_ERROR}">
+                                          oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}">
                                     <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>:</dt>
                                     <dd> ${oficioRemision.codigoError}</dd>
                                     <dt><i class="fa fa-comment"></i> <spring:message code="registroSir.descripcionError"/>:</dt>
