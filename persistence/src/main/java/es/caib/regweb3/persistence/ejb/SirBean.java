@@ -246,6 +246,8 @@ public class SirBean implements SirLocal {
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
 
+                    log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficioRemision.getIdentificadorIntercambio());
+
                 }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO){
 
                     log.info("Se ha intentado rechazar un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());

@@ -22,7 +22,7 @@
             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
             <p><small><i class="fa fa-barcode"></i> <strong><spring:message code="registroSir.numeroRegistro"/>:</strong> ${oficioRemision.numeroRegistroEntradaDestino}</small></p>
         </c:if>
-        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+        <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="oficioRemision.fecha"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
             <p><small><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${registroEnviado.registroDetalle.decodificacionTipoAnotacion}</small></p>
         </c:if>

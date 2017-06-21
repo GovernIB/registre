@@ -71,6 +71,7 @@
                                             <col>
                                             <col>
                                             <col>
+                                            <col>
                                             <col width="51">
                                         </colgroup>
                                         <thead>
@@ -79,6 +80,7 @@
                                                 <th><spring:message code="oficioRemision.fecha"/></th>
                                                 <th><spring:message code="oficioRemision.oficina"/></th>
                                                 <th><spring:message code="oficioRemision.organismoDestino"/></th>
+                                                <th><spring:message code="registroSir.motivo"/></th>
                                                 <th><spring:message code="oficioRemision.tipo"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
@@ -91,6 +93,18 @@
                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
+
+                                                <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+                                                    <td>
+                                                        <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                            ${oficioRemision.registrosEntrada[0].registroDetalle.decodificacionTipoAnotacion}
+                                                        </c:if>
+
+                                                        <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                            ${oficioRemision.registrosSalida[0].registroDetalle.decodificacionTipoAnotacion}
+                                                        </c:if>
+                                                    </td>
+                                                </c:if>
 
                                                 <td>
                                                     <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
