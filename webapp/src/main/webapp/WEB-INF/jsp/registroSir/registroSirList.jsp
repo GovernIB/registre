@@ -166,7 +166,7 @@
                                                         </c:if>
 
                                                         <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                                            <span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
+                                                            <p rel="errorSir" data-content="<c:out value="${registroSir.codigoError} - ${registroSir.descripcionError}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span></p>
                                                         </c:if>
                                                     </td>
                                                     <td>
@@ -216,7 +216,9 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
-
+<script type="text/javascript">
+    $("[rel='errorSir']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+</script>
 
 </body>
 </html>
