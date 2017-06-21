@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 
 import org.apache.commons.io.FileUtils;
@@ -81,230 +80,133 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     
     
     
-    /**
-     * @author anadal
-     * 
-     * force = true  => Es crida des d'enviar a SIR
-     * force = false => Es crida des d'edició d'annexes 
-     * 
-     * A continuació es mostra el flux d'accions quan es produeixen errors en les cridades
-     * a Firmar i Validar
-     *
-     *  =========== NO SIR =======
-     *  (1) No Es firma: OK  
-     *  (2) Es Firma: OK <<PENDENT. EN EL FUTUR s'HAURÀ DE VALIDAR>>
-     *
-     *  =========== SIR(boolean force) =======
-     *
-     *  (1) No és una Firma: Llavors es firma
-     *     (1.1) Firma OK => OK
-     *     (1.2) Firma Falla
-     *         (1.2.1) Si force=true => Llançar Excepció
-     *         (1.2.2) Si force=false => Retornar msg d'avís i continuar  
-     *  (2) És una Firma
-     *     (2.1) Validació OK
-     *         (2.1.1) Es firma EPES o SUPERIOR => OK
-     *         (2.1.2) Es firma BES o PAdes-BASIC => Llavors es refirma CADES Detached o PADES
-     *            (2.1.2.1) ReFirma OK => OK
-     *            (2.1.2.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
-     *     (2.2) No Valida certificat o firma: Llavors es refirma CADES Detached o PADES
-     *         (2.2.1) ReFirma OK => OK
-     *         (2.2.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
-     *     (2.3) No podem obtenir informació: Llavors es refirma CADES Detached o PADES
-     *         (2.3.1) ReFirma OK => OK
-     *         (2.3.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
-     *     (2.4) Error Comunicació/greu amb Validacio:
-     *         (2.4.1) Si force=true => Llançar Excepció
-     *         (2.4.2) Si force=false => Retornar msg d'avís i continuar 
-     *
-     */
-    @Override
-    public I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
-        boolean sir, Locale locale, boolean force) throws I18NException {
-      
-      boolean error= false;
+  /**
+   * @author anadal
+   * 
+   * force = true  => Es crida des d'enviar a SIR
+   * force = false => Es crida des d'edició d'annexes 
+   * 
+   * A continuació es mostra el flux d'accions quan es produeixen errors en les cridades
+   * a Firmar i Validar
+   *
+   *  =========== NO SIR =======
+   *  (1) No Es firma: OK  
+   *  (2) Es Firma: OK <<PENDENT. EN EL FUTUR s'HAURÀ DE VALIDAR>>
+   *
+   *  =========== SIR(boolean force) =======
+   *
+   *  (1) Document PLA
+   *     (1.1) Firma CADES-EPES-Detached OK => OK
+   *     (1.2) Firma CADES-EPES-Detached Falla
+   *         (1.2.1) Si force=true => Llançar Excepció
+   *         (1.2.2) Si force=false => Retornar msg d'avís i continuar  
+   *  (2) És una Firma ATTACHED
+   *     (2.1) Firma CADES-EPES-Detached OK => OK
+   *     (2.2) Firma CADES-EPES-Detached Falla
+   *         (2.2.1) Si force=true => Llançar Excepció
+   *         (2.2.2) Si force=false => Retornar msg d'avís i continuar  
+   *   (3) És una Firma DETACHED: Eliminam la firma detached i tornam a firmar
+   *     (3.1) Firma CADES-EPES-Detached OK => OK
+   *     (3.2) Firma CADES-EPES-Detached Falla
+   *         (3.2.1) Si force=true => Llançar Excepció
+   *         (3.2.2) Si force=false => Retornar msg d'avís i continuar  
+   */
+  @Override
+  public I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
+      boolean sir, Locale locale, boolean force) throws I18NException {
 
-      try {
+    boolean error = false;
 
-        SignatureCustody sign = input.getSignatureCustody();
-        DocumentCustody doc = input.getDocumentoCustody();
-        
-        log.info("checkDocumentAndSignature::Document = " + doc);
-        log.info("checkDocumentAndSignature::Signature = " + sign);
-        
+    try {
 
-        if (sign == null && doc == null) {
-          throw new I18NException("error.checkanexosir.nifirmanidoc");
-        }
+      SignatureCustody sign = input.getSignatureCustody();
+      DocumentCustody doc = input.getDocumentoCustody();
 
-        if (!sir) {
-          // TODO NOTA: <<PENDENT. EN EL FUTUR s'HAURÀ DE VALIDAR QUAN SIGUI UNA FIRMA >>
-          return null; // OK
-        }
+      log.info("checkDocumentAndSignature::Document = " + doc);
+      log.info("checkDocumentAndSignature::Signature = " + sign);
 
-        
-        // A PARTIR D'AQUI TOT ES SIR
-        
-        if (sign == null) {
+      if (sign == null && doc == null) {
+        throw new I18NException("error.checkanexosir.nifirmanidoc");
+      }
 
-          // És un document Pla, llavors el firmam
+      if (!sir) {
+        // TODO NOTA: <<PENDENT. EN EL FUTUR s'HAURÀ DE VALIDAR QUAN SIGUI UNA
+        // FIRMA >>
+        return null; // OK
+      }
+
+      // A PARTIR D'AQUI TOT ES SIR
+
+      if ((doc != null && sign == null)) {
+
+        try {
+
           ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
-          
-          try {
-            String origName = doc.getName();
-            if (FileInfoSignature.PDF_MIME_TYPE.equals(doc.getMime())
-              && is_pdf(doc.getData())) {
-              
-              // Si és un PDF firmar com a PADES
-              firmaPAdESEPES(input, doc, locale, signaturePlugin);
-              
-              String fileName = addInFileName(origName,  "_signed");
-              
-              input.getSignatureCustody().setName(fileName);
-              
-            } else {
-              //  És un document PLA: Firmar emprant CAdES-EPES
-              
-              firmaCAdESEPESDetached(input, doc, locale, signaturePlugin);
-              
-              input.getSignatureCustody().setName(origName + ".csig");
-              
-            }
-            
-            return null; // Cas 1.1 OK
-          } catch(I18NException e) {
-            // Cas 1.2 Error
-            error = true;
-            
-            String msg = I18NLogicUtils.getMessage(e, locale);
+          // És un document PLA: Firmar emprant CAdES-EPES
 
-            I18NException i18ne = new I18NException(
-                "error.checkanexosir.refirmant", msg);
-            error = true;
-            return processError(i18ne, force);
-          }
-        }
-        
+          firmaCAdESEPESDetached(input, doc, locale, signaturePlugin);
 
+          input.getSignatureCustody().setName("signature_CAdES_EPES.csig");
 
-        // VALIDAR FIRMA
-        ValidateSignatureResponse resp;
-        try {
-          resp = callToValidaFirma(locale, sign, doc);
-        } catch(I18NException i18ne) {
-          // Cas (2.4) Error Comunicació/greu: casos (2.4.1) i (2.4.2)
+          return null; // Cas 1.1 OK
+        } catch (I18NException e) {
+          // Cas 1.2 Error
           error = true;
-          return processError(i18ne, force); 
-        }
-        
-        final String perfil = resp.getSignProfile();
-        final String tipo = resp.getSignType();
-        final String formato = resp.getSignFormat();
-
-        log.info("XYZ ZZZ tipo = " + tipo);
-        log.info("XYZ ZZZ perfil = " + perfil);
-        log.info("XYZ ZZZ formato = " + formato);
-        
-        if (resp.getValidationStatus().getStatus() != ValidationStatus.SIGNATURE_VALID
-            || (perfil == null || tipo == null || formato == null)) {
-          
-          log.info("XYZ ZZZ error validacio = ]" + resp.getValidationStatus().getErrorMsg() + "[");
-
-          // CAS (2.2) No Valida certificat o firma: Llavors es refirma CADES Detached o PADES
-          // CAS (2.3) No podem obtenir informació: Llavors es refirma CADES Detached o PADES
-          try {
-            
-            ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
-
-            if (input.getDocumentoCustody() == null) {
-              // CheckFirma amb document attached
-              checkAttachedSignature(input, resp, locale, signaturePlugin);
-            } else {
-              // CheckFirma amb document detached
-              checkDetachedSignature(input, locale, signaturePlugin);
-            }
-            
-            // CAS (2.2.1) ReFirma OK => OK
-            // CAS (2.3.1) ReFirma OK => OK
-            return null;
-          } catch(I18NException e) {
-            // CAS (2.2.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
-            // CAS (2.3.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
-
-            String msg = I18NLogicUtils.getMessage(e, locale);
-
-            I18NException i18ne = new I18NException(
-                "error.checkanexosir.refirmant", msg);
-            error = true;
-            return processError(i18ne, force);
-            
-          }
-
-        }
-
-
-
-        // Acceptam qualsevol tipus excepte BES i PADES-BASIC
-        if (RegistroUtils.validaTipoPerfilFirmaSir(perfil, tipo)) {
-          // CAS (2.1.1) Es firma EPES o SUPERIOR => OK
-          log.info("XYZ ZZZ Es SIR i és una firma EPES o SUPERIOR");
-          
-          // Ficar dins Anexo tipo, formato i perfil
-          Anexo anexo = input.getAnexo();
-          anexo.setSignFormat(tipo);
-          anexo.setSignFormat(formato);
-          anexo.setSignProfile(perfil);
-
-          return null; // OK
-        }
-
-        // CAS (2.1.2) Es firma BES o PAdes-BASIC => Llavors es refirma CADES Detached o PADES
-        try {
-            ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
-    
-            if (input.getDocumentoCustody() == null) {
-              // CheckFirma amb document attached
-              checkAttachedSignature(input, resp, locale, signaturePlugin);
-            } else {
-              // CheckFirma amb document detached
-              checkDetachedSignature(input, locale, signaturePlugin);
-            }
-            
-            // CAS (2.1.2.1) ReFirma OK => OK
-            return null;
-        } catch(I18NException e) {
- 
-          // CAS (2.1.2.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
 
           String msg = I18NLogicUtils.getMessage(e, locale);
 
-          I18NException i18ne = new I18NException(
-              "error.checkanexosir.refirmant", msg);
+          I18NException i18ne = new I18NException("error.checkanexosir.refirmant", msg);
           error = true;
           return processError(i18ne, force);
-          
         }
-        
-
-      } catch (I18NException i18ne) {
-        error= true;
-        log.error("Error Capturat: " + I18NCommonUtils.getMessage(i18ne, locale), i18ne);
-        throw i18ne;
-      } finally {
-         if(!error){
-           if (input.getSignatureCustody() == null) {
-             input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-           } else {
-             if (input.getDocumentoCustody() == null) {
-               input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-             } else {
-               input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED);
-             }
-           }
-         }
       }
 
+      // Es Atached ==> Llavors es refirma CADES Detached
+      // Es Detached => Llavors s'elimina la firma i es firma CADES Detached
+      try {
+        ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
+
+        if (input.getDocumentoCustody() == null) {
+          // CheckFirma amb document attached
+          signAttachedSignature(input, locale, signaturePlugin);
+        } else {
+          // CheckFirma amb document detached
+          signDetachedSignature(input, locale, signaturePlugin);
+        }
+
+        // CAS (2.1.2.1) ReFirma OK => OK
+        return null;
+      } catch (I18NException e) {
+
+        // CAS (2.1.2.2) ReFirma Error => Anar a punts (1.2.1) o (1.2.2)
+
+        String msg = I18NLogicUtils.getMessage(e, locale);
+
+        I18NException i18ne = new I18NException("error.checkanexosir.refirmant", msg);
+        error = true;
+        return processError(i18ne, force);
+
+      }
+
+    } catch (I18NException i18ne) {
+      error = true;
+      log.error("Error Capturat: " + I18NCommonUtils.getMessage(i18ne, locale), i18ne);
+      throw i18ne;
+    } finally {
+      if (!error) {
+        if (input.getSignatureCustody() == null) {
+          input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+        } else {
+          if (input.getDocumentoCustody() == null) {
+            input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+          } else {
+            input.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED);
+          }
+        }
+      }
     }
+
+  }
 
 
 
@@ -336,7 +238,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     };
     
 
-
+    //No s'utilitza 
+    /*
     protected ValidateSignatureResponse callToValidaFirma(Locale locale, SignatureCustody sign,
         DocumentCustody doc) throws I18NException {
       ValidateSignatureResponse resp;
@@ -380,79 +283,30 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
       return resp;
     }
+    */
 
+    // No s'utilitza
+    /*
+    protected String addInFileName(String fileName, final String add) {
+      int index = fileName.lastIndexOf('.');
+      if (index == -1) {
+        fileName = fileName + add;
+      } else {
+        fileName = fileName.substring(0,index) + add + fileName.substring(index);
+      }
+      return fileName;
+    }
+    */
 
-  protected void checkAttachedSignature(AnexoFull input,
-        ValidateSignatureResponse resp, Locale locale, ISignatureServerPlugin signaturePlugin)
-        throws I18NException {
-      final String tipo = resp.getSignType();
+  protected void signAttachedSignature(AnexoFull input, Locale locale,
+      ISignatureServerPlugin signaturePlugin)  throws I18NException {
+      
 
       if(log.isDebugEnabled()) {
         log.debug("ENTRA A checkAttachedSignature( ); ");
       }
       
-      if (SIGNTYPE_PAdES.equals(tipo)
-          || (input.getDocumentoCustody() != null 
-               &&  FileInfoSignature.PDF_MIME_TYPE.equals(input.getDocumentoCustody().getMime())
-               && is_pdf(input.getDocumentoCustody().getData())) ) {
-        
-        // Convertir a PADES EPES 
-        
-        if(log.isDebugEnabled()) {
-          log.debug("checkAttachedSignature() => REFIRMANT AMB PADES-EPES; ");
-        }
-         
-        String origName = input.getSignatureCustody().getName();
-        
-        firmaPAdESEPES(input, input.getSignatureCustody(), locale, signaturePlugin);
-        
-        
-        String fileName = addInFileName(origName,  "_EPES");
-      
-        input.getSignatureCustody().setName(fileName);;
 
-      } else if (SIGNTYPE_CAdES.equals(tipo) || tipo == null) {
-        /** API NO PERMET REFIRMAR CADES: COFIRMA. El que farem serà convertir la 
-         * firma a  document pla i firmar-ho amb CADES EPES */
-        // (1) Movem la firma CADES al document i buidam la firma
-        DocumentCustody doc = new DocumentCustody();
-
-        SignatureCustody sign = input.getSignatureCustody();
-        doc.setData(sign.getData());
-        doc.setLength(sign.getLength());
-        doc.setMime(sign.getMime());
-        doc.setName(sign.getName());
-
-        // (2) Enviam a firmar
-        firmaCAdESEPESDetached(input, doc, locale, signaturePlugin);
-
-        input.setDocumentoCustody(doc);
-
-        input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
-        
-        
-      } else if (SIGNTYPE_XAdES.equals(tipo)) { 
-        /** API NO PERMET REFIRMAR XADES: COFIRMA. El que farem serà convertir la 
-         * firma a  document pla i firmar-ho amb CADES EPES */
-        // (1) Movem la firma XADES al document i buidam la firma
-        DocumentCustody doc = new DocumentCustody();
-
-        SignatureCustody sign = input.getSignatureCustody();
-        doc.setData(sign.getData());
-        doc.setLength(sign.getLength());
-        doc.setMime(sign.getMime());
-        doc.setName(sign.getName());
-
-        input.setSignatureCustody(null);
-        input.setDocumentoCustody(doc);
-
-        // (2) Enviam a firmar
-        firmaCAdESEPESDetached(input, doc, locale, signaturePlugin);
-
-        input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
-        
-        
-       } else {
 
         // Altre tipus de Firma: ODT o OOXML
 
@@ -473,39 +327,17 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
 
-
-      }
-
     }
 
-
-
-
-
-    protected String addInFileName(String fileName, final String add) {
-      int index = fileName.lastIndexOf('.');
-      if (index == -1) {
-        fileName = fileName + add;
-      } else {
-        fileName = fileName.substring(0,index) + add + fileName.substring(index);
-      }
-      return fileName;
-    }
-
-    protected void checkDetachedSignature(AnexoFull input,
+    protected void signDetachedSignature(AnexoFull input,
         Locale locale, ISignatureServerPlugin signaturePlugin)
         throws I18NException {
-      // TODO Falta Refirmar amb EPES XAdES Detached
-      // TODO Falta Refirmar amb EPES CAdES Detached
 
-      // TODO SOLUCIO TEMPORAL: ELIMINAM LA FIRMA i FIRMAM AMB CADES-EPES
-
-      String orig = input.getDocumentoCustody().getName(); 
-
+      // ELIMINAM LA FIRMA i FIRMAM AMB CADES-EPES
       // (1) Enviam a firmar
       firmaCAdESEPESDetached(input, input.getDocumentoCustody(), locale, signaturePlugin);
       
-      input.getSignatureCustody().setName(orig.replace('.', '_') + "_EPES.csig");
+      input.getSignatureCustody().setName("signature_CAdES_EPES.csig");
 
     }
 
@@ -531,7 +363,21 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     }
     
     
+    @Override
+    public void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException {
+      
+      DocumentCustody doc = input.getDocumentoCustody();
+      ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
+
+      AnnexCustody documentToSign = input.getDocumentoCustody();
+
+      firmaPAdESEPES(input, documentToSign, locale, signaturePlugin);
+
+    }
     
+    
+    
+
     protected void firmaPAdESEPES(AnexoFull input, AnnexCustody documentToSign, Locale locale,
         ISignatureServerPlugin signaturePlugin) throws I18NException {
 
@@ -556,6 +402,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       System.gc();
 
     }
+    
     
     
 
@@ -692,7 +539,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     
     
     
-    public boolean is_pdf(byte[] data) {
+    public static boolean is_pdf(byte[] data) {
       
       if (data != null && data.length > 4 &&
               data[0] == 0x25 && // %

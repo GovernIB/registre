@@ -48,4 +48,14 @@ public interface SignatureServerLocal {
         boolean sir, Locale locale, boolean force) throws I18NException;
 
 
+    /**
+     * 
+     * @param input Parametre d'entrada sortida. Si tot al final aquest
+     *  objecte contindrà la signatura. 
+     * @param idEntidad
+     * @param locale
+     * @throws I18NException
+     */
+    public void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException;
+    
 }
