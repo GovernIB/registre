@@ -9,10 +9,10 @@
                 <spring:message code="registroSir.registroSir"/> <spring:message code="registroSir.aceptado"/>
             </c:if>
             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">
-                <spring:message code="registroSir.registroSir"/> <spring:message code="registro.estado.${registroEnviado.estado}" />
+                <spring:message code="registroSir.reenviado.origen"/>:
             </c:if>
             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
-                <spring:message code="registroSir.registroSir"/> <spring:message code="registro.estado.${registroEnviado.estado}" />
+                <spring:message code="registroSir.rechazado.origen"/>:
             </c:if>
         </h4>
     </div>
