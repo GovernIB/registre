@@ -212,7 +212,7 @@
 
     // Variables de tamany definit al Modal
     var tamModalAnexo = 280;
-    var tamModalFitxer = 440;
+    var tamModalFitxer = 480;
     var tamModalScan = 710;
 
 

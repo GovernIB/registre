@@ -217,7 +217,7 @@
                    </div>
 
                    <div class="pull-right"> <%--  class="modal-footer" --%>
-                        <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
+                        <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="eliminarErrors()"><spring:message code="regweb.guardar"/></button>
                    </div>
 
 
@@ -288,6 +288,24 @@
             }
         });
     });
+</script>
+
+<!-- Redimensiona el Modal per si ha d'acursar errors antics -->
+<script>
+    function eliminarErrors() {
+        var incrementError = 85;
+        var iframe = parent.$('#targetiframe').height();
+        var modal = parent.$('#modalAnexos').find('.modal-content').height();
+
+        if($('#mensajeError').length != 0){
+            $('#mensajeError').remove();
+            iframe = iframe - incrementError;
+            parent.$('#targetiframe').height(iframe);
+            modal = modal - incrementError;
+            parent.$('#modalAnexos').find('.modal-content').height(modal);
+        }
+        $('#reload').show();
+    }
 </script>
 
 
