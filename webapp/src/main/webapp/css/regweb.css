@@ -858,7 +858,7 @@ a.text-gris:focus {
     column-gap: 10px;
 }
 .columnesInici div {
-    display: inline-block;
+    display: inline-table;
     width: 100%;
 }
 /* FI Panels d'Inici en 2 columnes */
@@ -880,5 +880,4 @@ a.text-gris:focus {
 
 .margeDret5{
 	margin-right: 5px;
-}
 }
