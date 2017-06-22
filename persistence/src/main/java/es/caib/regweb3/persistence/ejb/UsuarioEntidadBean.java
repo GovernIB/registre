@@ -333,7 +333,6 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             query.append("order by usuarioEntidad.usuario.nombre, usuarioEntidad.usuario.apellido1");
             q = em.createQuery(query.toString());
         }
-        log.info("Query: " + query);
 
         Paginacion paginacion = null;
 

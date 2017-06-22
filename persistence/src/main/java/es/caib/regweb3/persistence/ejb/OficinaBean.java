@@ -489,7 +489,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             query.append("order by oficina.codigo");
             q = em.createQuery(query.toString());
         }
-        log.info("Query: " + query);
+
 
         Paginacion paginacion = null;
 

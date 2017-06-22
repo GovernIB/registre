@@ -169,7 +169,6 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
             query.append("order by usuario.nombre, usuario.apellido1");
             q = em.createQuery(query.toString());
         }
-        log.info("Query: " + query);
 
         Paginacion paginacion = null;
 
