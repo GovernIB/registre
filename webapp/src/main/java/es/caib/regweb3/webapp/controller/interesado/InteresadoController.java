@@ -14,7 +14,6 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.PersonaJson;
 import es.caib.regweb3.webapp.validator.InteresadoWebValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -885,7 +883,7 @@ public class InteresadoController extends BaseController{
 
         // Si no se ha escogido ningún Canal de Notificación, lo ponemos a null
         if (interesado.getCanal() != null && interesado.getCanal() != 1) {
-            interesado.setCanal(null);
+            //interesado.setCanal(null);
             interesado.setPais(null);
             interesado.setProvincia(null);
             interesado.setLocalidad(null);

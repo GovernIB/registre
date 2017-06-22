@@ -290,10 +290,10 @@ public class PersonaController extends BaseController {
      *
      * @param persona
      */
-    public void cleanEmptyValues(Persona persona) {
+    private void cleanEmptyValues(Persona persona) {
         // Si no se ha escogido ningúna Canal, lo ponemos a null
         if (persona.getCanal() == null || persona.getCanal() != 1) {
-            persona.setCanal(null);
+            //persona.setCanal(null);
             persona.setPais(null);
             persona.setProvincia(null);
             persona.setLocalidad(null);
