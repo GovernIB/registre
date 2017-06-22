@@ -53,11 +53,18 @@ public interface SirLocal {
             throws Exception, I18NException, I18NValidationException;
 
     /**
-     *
+     * Renintenta los envíos a SIR que pendientes de llegar a destino.
      * @param idEntidad
      * @throws Exception
      */
-    public void reintentarEnvios(Long idEntidad) throws Exception;
+    public void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception;
+
+    /**
+     * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
+     * @param idEntidad
+     * @throws Exception
+     */
+    public void reintentarEnviosConError(Long idEntidad) throws Exception;
 
     /**
      * @param registroSir

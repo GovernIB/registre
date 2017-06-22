@@ -30,13 +30,24 @@ public class SchedulerBean implements SchedulerLocal{
 
 
     @Override
-    public void reintentarEnvioSir() throws Exception {
+    public void reintentarEnviosSinConfirmacion() throws Exception {
 
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
         for(Entidad entidad: entidades) {
             log.info("------------- Reintentado envios de " + entidad.getNombre() + " -------------");
-            sirEjb.reintentarEnvios(entidad.getId());
+            sirEjb.reintentarEnviosSinConfirmacion(entidad.getId());
+        }
+    }
+
+    @Override
+    public void reintentarEnviosConError() throws Exception {
+
+        List<Entidad> entidades = entidadEjb.getEntidadesSir();
+
+        for(Entidad entidad: entidades) {
+            log.info("------------- Reintentado envios con errores de " + entidad.getNombre() + " -------------");
+            sirEjb.reintentarEnviosConError(entidad.getId());
         }
     }
 }

@@ -16,7 +16,13 @@ public interface SchedulerLocal {
      *
      * @throws Exception
      */
-    public void reintentarEnvioSir() throws Exception;
+    public void reintentarEnviosSinConfirmacion() throws Exception;
+
+    /**
+     *
+     * @throws Exception
+     */
+    public void reintentarEnviosConError() throws Exception;
 
 }
 

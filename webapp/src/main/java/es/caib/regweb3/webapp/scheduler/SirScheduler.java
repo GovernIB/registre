@@ -26,7 +26,8 @@ public class SirScheduler {
         log.info("Dentro de SirScheduler: reenviar");
 
         try {
-            schedulerEjb.reintentarEnvioSir();
+            schedulerEjb.reintentarEnviosSinConfirmacion();
+            schedulerEjb.reintentarEnviosConError();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -947,62 +947,30 @@ public class SirBean implements SirLocal {
     }
 
     @Override
-    public void reintentarEnvios(Long idEntidad) throws Exception{
+    public void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception{
 
         try {
 
-            List<RegistroSir> registrosSir = registroSirEjb.getReintentos(idEntidad);
-
-            List<OficioRemision> oficios = oficioRemisionEjb.getReintentos(idEntidad);
+            // RegistrosSir pendientes de volver a intentar su envío
+            List<RegistroSir> registrosSir = registroSirEjb.getEnviadosSinAck(idEntidad);
 
             log.info("Hay " + registrosSir.size() +  " RegistrosSir pendientes de volver a enviar al nodo CIR");
-            log.info("Hay " + oficios.size() +  " Oficios de Remision pendientes de volver a enviar al nodo CIR");
 
+            // Volvemos a enviar los RegistrosSir
             for (RegistroSir registroSir : registrosSir) {
 
-                log.info("Reintentando envio registroSir a: " + registroSir.getDecodificacionEntidadRegistralDestino());
-                emisionEjb.enviarFicheroIntercambio(registroSir);
-                registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
-                registroSir.setFechaEstado(new Date());
-
-                registroSirEjb.merge(registroSir);
+                reintentarEnvio(registroSir);
             }
 
+            // OficiosRemision pendientes de volver a intentar su envío
+            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosSinAck(idEntidad);
+
+            log.info("Hay " + oficios.size() +  " Oficios de Remision pendientes de volver a enviar al nodo CIR");
+
+            // Volvemos a enviar los OficiosRemision
             for (OficioRemision oficio : oficios) {
 
-                if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-
-                    // Transformamos el RegistroEntrada en un RegistroSir
-                    RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
-                    RegistroSir registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
-
-                    // Enviamos el Registro al Componente CIR
-                    log.info("Reintentando envio oficioRemision a: " + registroSir.getDecodificacionEntidadRegistralDestino());
-                    emisionEjb.enviarFicheroIntercambio(registroSir);
-
-                    // Contabilizamos los reintentos
-                    oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
-                    oficio.setFechaEstado(new Date());
-
-                    oficioRemisionEjb.merge(oficio);
-
-
-                }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-
-                    // Transformamos el RegistroSalida en un RegistroSir
-                    RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
-                    RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
-
-                    // Enviamos el Registro al Componente CIR
-                    log.info("Reintentando envio a: " + registroSir.getDecodificacionEntidadRegistralDestino());
-                    emisionEjb.enviarFicheroIntercambio(registroSir);
-
-                    // Contabilizamos los reintentos
-                    oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
-                    oficio.setFechaEstado(new Date());
-
-                    oficioRemisionEjb.merge(oficio);
-                }
+                reintentarEnvioOficioRemision(oficio);
             }
 
         } catch (I18NException e) {
@@ -1011,6 +979,109 @@ public class SirBean implements SirLocal {
             log.info("Error al reintenar el envio");
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void reintentarEnviosConError(Long idEntidad) throws Exception{
+
+        try {
+
+            // RegistrosSir enviados con errores
+            List<RegistroSir> registrosSir = registroSirEjb.getEnviadosConError(idEntidad);
+
+            log.info("Hay " + registrosSir.size() +  " RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
+
+            // Volvemos a enviar los RegistrosSir
+            for (RegistroSir registroSir : registrosSir) {
+
+                reintentarEnvio(registroSir);
+            }
+
+            // OficiosRemision enviados con errores
+            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(idEntidad);
+
+            log.info("Hay " + oficios.size() +  " Oficios de Remision enviados con errores, pendientes d volver a enviar al nodo CIR");
+
+            // Volvemos a enviar los OficiosRemision
+            for (OficioRemision oficio : oficios) {
+
+                reintentarEnvioOficioRemision(oficio);
+            }
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        }catch (Exception e){
+            log.info("Error al reintenar el envio");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     *
+     * @param registroSir
+     * @throws Exception
+     */
+    private void reintentarEnvio(RegistroSir registroSir) throws Exception{
+
+        log.info("Reintentando envio registroSir a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+        emisionEjb.enviarFicheroIntercambio(registroSir);
+        registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
+        registroSir.setFechaEstado(new Date());
+
+        // Modificamos su estado si estaba marcado con ERROR
+        if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO_Y_ERROR)){
+            registroSir.setEstado(EstadoRegistroSir.REENVIADO);
+        }else if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO_Y_ERROR)){
+            registroSir.setEstado(EstadoRegistroSir.RECHAZADO);
+        }
+
+        registroSirEjb.merge(registroSir);
+
+    }
+
+    /**
+     *
+     * @param oficio
+     * @throws Exception
+     * @throws I18NException
+     */
+    private void reintentarEnvioOficioRemision(OficioRemision oficio) throws Exception, I18NException{
+
+        if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+
+            // Transformamos el RegistroEntrada en un RegistroSir
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
+            RegistroSir registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
+
+            // Enviamos el Registro al Componente CIR
+            log.info("Reintentando envio oficioRemision a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+            emisionEjb.enviarFicheroIntercambio(registroSir);
+
+        }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+
+            // Transformamos el RegistroSalida en un RegistroSir
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
+            RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+
+            // Enviamos el Registro al Componente CIR
+            log.info("Reintentando envio a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+            emisionEjb.enviarFicheroIntercambio(registroSir);
+        }
+
+        // Contabilizamos los reintentos
+        oficio.setNumeroReintentos(oficio.getNumeroReintentos() + 1);
+        oficio.setFechaEstado(new Date());
+
+        // Modificamos su estado si estaba marcado con ERROR
+        if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) {
+            oficio.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
+        }else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR) {
+            oficio.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO);
+        }
+
+        // Actualizamos el Oficio
+        oficioRemisionEjb.merge(oficio);
+
     }
 
     /**

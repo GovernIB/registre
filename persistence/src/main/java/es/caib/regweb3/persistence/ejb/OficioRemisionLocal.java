@@ -127,7 +127,15 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> getReintentos(Long idEntidad) throws Exception;
+    public List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception;
 
     /**
      * Busca Registros de Salida que pertenecen a un OficioRemision
