@@ -223,7 +223,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
             query.append("order by persona.id");
             q = em.createQuery(query.toString());
         }
-        log.info("Query: " + query);
+
 
         Paginacion paginacion = null;
 
@@ -527,7 +527,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
             query.append("order by persona.id");
             q = em.createQuery(query.toString());
         }
-        log.info("Query: " + query);
+
 
         List<Object[]> result = q.getResultList();
         List<Persona> personas = new ArrayList<Persona>();
