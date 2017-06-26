@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEntidadEditor;
 import es.caib.regweb3.webapp.form.EntidadForm;
@@ -821,7 +822,7 @@ public class EntidadController extends BaseController {
                         }
                         //actualizar pendiente
                         pendiente.setProcesado(true);
-                        pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                        pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                         pendienteEjb.merge(pendiente);
                         log.info("MAP de extinguidos automaticos " + extinguidosAutomaticos.get(organismoExtinguido.getDenominacion()));
                     } else { // tiene más de un historico
@@ -831,7 +832,7 @@ public class EntidadController extends BaseController {
                             organismosExtinguidos.add(organismoExtinguido);
                         } else {// no tiene libros, no se hace nada pero se actualiza el estado a procesado
                             pendiente.setProcesado(true);
-                            pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                            pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                             pendienteEjb.merge(pendiente);
                         }
 
@@ -914,7 +915,7 @@ public class EntidadController extends BaseController {
             if(esPendiente) {
                 Pendiente pendiente = pendienteEjb.findByIdOrganismo(organismoId);
                 pendiente.setProcesado(true);
-                pendiente.setFecha(RegwebUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                 pendienteEjb.merge(pendiente);
             }
 

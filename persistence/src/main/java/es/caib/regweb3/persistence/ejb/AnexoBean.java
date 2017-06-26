@@ -10,8 +10,8 @@ import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -34,7 +34,6 @@ import javax.persistence.Query;
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
-import java.security.MessageDigest;
 import java.util.*;
 
 
@@ -822,7 +821,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         doc.setName(checkFileName(doc.getName(), "file.bin"));
         
         anexo.setFechaCaptura(new Date());
-        anexo.setHash(obtenerHash(doc.getData()));
+        anexo.setHash(RegwebUtils.obtenerHash(doc.getData()));
         
         }
         return mimeFinal;
@@ -867,7 +866,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         signature.setAttachedDocument(doc == null ? true : false);
         
         if (doc == null) {
-          anexo.setHash(obtenerHash(signature.getData()));
+          anexo.setHash(RegwebUtils.obtenerHash(signature.getData()));
         }
 
       }
@@ -876,7 +875,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    protected static String checkFileName(String name, String defaultName) throws Exception {
+    protected String checkFileName(String name, String defaultName) throws Exception {
         if (name == null || name.trim().length() == 0) {
             return defaultName;
         } else {
@@ -1362,20 +1361,4 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     
 
     /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
-
-    /**
-     * Genera el Hash mediante SHA-256 del contenido del documento y lo codifica en base64
-     *
-     * @param documentoData
-     * @return
-     * @throws Exception
-     */
-    protected byte[] obtenerHash(byte[] documentoData) throws Exception {
-
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        byte[] digest = md.digest(documentoData);
-
-        return Base64.encodeBase64(digest);
-
-    }
 }
