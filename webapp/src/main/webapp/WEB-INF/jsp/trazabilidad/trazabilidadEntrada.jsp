@@ -168,25 +168,13 @@
                                 <c:import url="../trazabilidad/registroEntrada.jsp">
                                     <c:param name="activo" value="true"/>
                                 </c:import>
-
-                                <%--<div class="timeline-badge info"><i class="fa fa-file-o"></i></div>
-                                <div class="timeline-panel timeline-panel-activo-re">
-                                    <div class="timeline-heading">
-                                        <h4 class="timeline-title"><spring:message code="registroEntrada.registroEntrada"/> </h4>
-                                        <p><small class="text-muted"><i class="fa fa-clock-o"></i> <fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
-                                        <p><small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroEntrada.numeroRegistro"/>:</strong> ${registro.numeroRegistroFormateado}</small></p>
-                                    </div>
-                                    <div class="timeline-body">
-                                        <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${registro.oficina.denominacion}</small></p>
-                                    </div>
-                                </div>--%>
                             </li>
 
                         </c:if>
 
                         <%--RECTIFICADO--%>
                         <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
-                            <li class="timeline-inverted">
+                            <li>
                                 <c:set var="registroEntrada" value="${trazabilidad.registroEntradaDestino}" scope="request"/>
                                 <fmt:message key="registroEntrada.rectificado" var="titulo" scope="request"/>
                                 <c:import url="../trazabilidad/registroEntrada.jsp"/>
