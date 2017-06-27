@@ -125,7 +125,7 @@
 
                         <%--RECTIFICADO--%>
                         <c:if test="${registro.id == trazabilidad.registroSalidaRectificado.id}">
-                            <li class="timeline-inverted">
+                            <li>
                                 <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
                                 <fmt:message key="registroSalida.rectificado" var="titulo" scope="request"/>
                                 <c:import url="../trazabilidad/registroSalida.jsp"/>
