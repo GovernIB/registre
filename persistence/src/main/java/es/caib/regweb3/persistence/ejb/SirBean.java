@@ -6,7 +6,6 @@ import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.core.model.TipoAnotacion;
@@ -20,6 +19,8 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
+import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -180,6 +181,8 @@ public class SirBean implements SirLocal {
                     // Actualizamos el oficio
                     oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
                     oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
+                   // oficioRemision.setCodigoEntidadRegistralProcesado(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                   // oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
@@ -242,6 +245,8 @@ public class SirBean implements SirLocal {
                     // Actualizamos el oficio
                     oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
                     oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
+                   // oficioRemision.setCodigoEntidadRegistralProcesado(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                   // oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
@@ -437,6 +442,8 @@ public class SirBean implements SirLocal {
 
             oficioRemision.setCodigoEntidadRegistralDestino(mensaje.getCodigoEntidadRegistralOrigen());
             oficioRemision.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+           // oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+            //oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
             oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
@@ -545,7 +552,7 @@ public class SirBean implements SirLocal {
     @Override
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
         String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, 
-        Oficina oficinaActiva, UsuarioEntidad usuario) 
+        Oficina oficinaActiva, UsuarioEntidad usuario/*, String contactosEntidadRegistralDestino*/)
             throws Exception, I18NException, I18NValidationException {
 
         RegistroSir registroSir = null;
@@ -561,24 +568,14 @@ public class SirBean implements SirLocal {
         // force=true provoca que el mètode checkDocumentAndSignature llanci excepcions si no pot verificar
         final boolean force = true;
 
+        List<AnexoFull> anexosEnviarASir; //Variable que contiene los anexos preparados con sus firmas detached para enviar a SIR.
+        Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma()));
+
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
-            // Validamos y firmamos los documentos antes de enviar a SIR
-
-            for(AnexoFull anexoFull: registroEntrada.getRegistroDetalle().getAnexosFull()) {
-                Anexo anexo = anexoFull.getAnexo();
-                if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
-                    signatureServerEjb.checkDocumentAndSignature(anexoFull, 
-                        usuario.getEntidad().getId(), true,
-                        new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma())),
-                        force);
-                    anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro,
-                        tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
-                }
-            }
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {
@@ -587,6 +584,9 @@ public class SirBean implements SirLocal {
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
                 registroDetalle.getAnexosFull().add(anexoFull);
             }
+
+            //Obtenemos los anexos que hay que preparar(añadir firma detached) para enviar a sir
+            anexosEnviarASir = registroEntrada.getRegistroDetalle().getAnexosFull();
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
@@ -615,6 +615,15 @@ public class SirBean implements SirLocal {
             oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosSalida(null);
+            oficioRemision.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
+            oficioRemision.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
+         //   oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
+
+            // Creamos firmas temporales de los anexos para enviar a SIR
+            transformarAnexosEnvioSir(anexosEnviarASir, usuario.getEntidad().getId(),locale, force);
+
+            //Asignamos los anexos y sus firmas detached para que se genere bien el fichero de intercambio
+            registroEntrada.getRegistroDetalle().setAnexosFull(anexosEnviarASir);
 
             //Transformamos el registro de Entrada a RegistroSir
             registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
@@ -624,17 +633,6 @@ public class SirBean implements SirLocal {
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
             RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
-            //Validamos y firmamos los anexos antes de enviar a SIR
-            for(AnexoFull anexoFull: registroSalida.getRegistroDetalle().getAnexosFull()) {
-                Anexo anexo = anexoFull.getAnexo();
-                if (!RegistroUtils.validaTipoPerfilFirmaSir(anexo.getSignProfile(), anexo.getSignType())) {
-                    signatureServerEjb.checkDocumentAndSignature(anexoFull,
-                        usuario.getEntidad().getId(), true, 
-                        new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma())),
-                        force);
-                    anexoEjb.actualizarAnexo(anexoFull, usuario, idRegistro, tipoRegistro.toLowerCase(), anexoFull.getAnexo().isJustificante(), true);
-                }
-            }
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {
@@ -644,7 +642,8 @@ public class SirBean implements SirLocal {
                 registroDetalle.getAnexosFull().add(anexoFull);
             }
 
-
+            //Obtenemos los anexos que hay que preparar(añadir firma detached) para enviar a sir
+            anexosEnviarASir = registroSalida.getRegistroDetalle().getAnexosFull();
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
@@ -671,6 +670,12 @@ public class SirBean implements SirLocal {
             oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosEntrada(null);
+
+            // Creamos firmas temporales de los anexos para enviar a SIR
+            transformarAnexosEnvioSir(anexosEnviarASir, usuario.getEntidad().getId(),locale, force);
+
+            //Asignamos los anexos y sus firmas detached para que se genere bien el fichero de intercambio
+            registroSalida.getRegistroDetalle().setAnexosFull(anexosEnviarASir);
 
             // Transformamos el RegistroSalida en un RegistroSir
             registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
@@ -1136,6 +1141,50 @@ public class SirBean implements SirLocal {
             result = String.format("%08d", unsignedValue);
         }
         return result;
+    }
+
+
+    /**
+     * Método que añade una firma detached a todos los anexos que se le pasan en la variable anexosEnviarASir
+     * Es obligatorio
+     * @param anexosEnviarASir
+     * @param idEntidad
+     * @param locale
+     * @param force
+     * @throws I18NException
+     */
+    private void transformarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException{
+
+         // Creamos firmas temporales de los anexos para enviar a SIR
+        for(AnexoFull anexoFull: new ArrayList<AnexoFull>(anexosEnviarASir)) {
+            DocumentCustody dc = anexoFull.getDocumentoCustody();
+            SignatureCustody sc = anexoFull.getSignatureCustody();
+
+            if ((dc!=null && sc == null) || (dc==null && sc != null)) {// Document pla o attached
+                signatureServerEjb.checkDocumentAndSignature(anexoFull,
+                        idEntidad, true,
+                        locale,
+                        force);
+            }else{
+                //Arreglam la firma
+                AnexoFull anexoFullFirma = new AnexoFull(anexoFull);
+                anexoFullFirma.setDocumentoCustody(null);
+                signatureServerEjb.checkDocumentAndSignature(anexoFullFirma,
+                        idEntidad, true,
+                        locale,
+                        force);
+                anexosEnviarASir.add(anexoFullFirma);
+
+                //arreglam el document pla
+                anexoFull.setSignatureCustody(null);
+                signatureServerEjb.checkDocumentAndSignature(anexoFull,
+                        idEntidad, true,
+                        locale,
+                        force);
+
+            }
+        }
+
     }
 
 }

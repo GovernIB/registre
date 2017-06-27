@@ -49,7 +49,7 @@ public interface SirLocal {
      */
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
         String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
-        Oficina oficinaActiva, UsuarioEntidad usuario) 
+        Oficina oficinaActiva, UsuarioEntidad usuario/*, String contactosEntidadRegistralDestino*/)
             throws Exception, I18NException, I18NValidationException;
 
     /**
