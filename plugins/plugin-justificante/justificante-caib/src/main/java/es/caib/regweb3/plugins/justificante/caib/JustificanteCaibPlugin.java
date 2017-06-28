@@ -532,7 +532,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 } else{ taulaInteresado.addCell(""); }
                 // Canal Notificacio
                 taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
-                if(interesado.getCanal() != null) {
+                if((interesado.getCanal() != null) && (interesado.getCanal() != -1) ) {
                     String canalNotif = tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal());
                     taulaInteresado.addCell(new Paragraph(canalNotif, font8negre));
                 } else{ taulaInteresado.addCell(""); }
