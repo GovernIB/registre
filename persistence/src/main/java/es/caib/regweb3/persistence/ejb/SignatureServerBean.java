@@ -4,26 +4,22 @@ import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
-import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
-import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NTranslation;
+import org.fundaciobit.genapp.common.i18n.*;
 import org.fundaciobit.plugins.documentcustody.api.AnnexCustody;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signature.api.*;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
-import org.fundaciobit.plugins.validatesignature.api.*;
+import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -374,6 +370,71 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       firmaPAdESEPES(input, documentToSign, locale, signaturePlugin);
 
     }
+
+  /**
+   * Método que añade una firma detached a todos los anexos que se le pasan en la variable anexosEnviarASir
+   * Es obligatorio
+   * @param anexosEnviarASir
+   * @param idEntidad
+   * @param locale
+   * @param force
+   * @throws I18NException
+   */
+  public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException{
+
+    // Creamos firmas temporales de los anexos para enviar a SIR
+
+
+    List<AnexoFull> anexosADevolver = new ArrayList<AnexoFull>();
+    for(AnexoFull anexoFull: anexosEnviarASir) {
+      AnexoFull anexoModif = new AnexoFull(anexoFull);
+
+      DocumentCustody dc = anexoModif.getDocumentoCustody();
+      SignatureCustody sc = anexoModif.getSignatureCustody();
+
+      log.info("MODO FIRMA ANEXO MODIF antes " + anexoModif.getAnexo().getModoFirma());
+
+      //anexoModif.setDocumentoCustody(dc);
+      //anexoModif.setSignatureCustody(sc);
+      //anexoModif.setAnexo(new Anexo(anexoFull.getAnexo()));
+      //anexoModif.getAnexo().setHash(anexoFull.getAnexo().getHash());
+
+
+      log.info("MODO FIRMA ANEXO MODIF despues " + anexoModif.getAnexo().getModoFirma());
+
+
+      if ((dc!=null && sc == null) || (dc==null && sc != null)) {// Document pla o attached
+        checkDocumentAndSignature(anexoModif,
+                idEntidad, true,
+                locale,
+                force);
+        anexosADevolver.add(anexoModif);
+      }else{ //Detached
+        //Arreglam la firma
+        AnexoFull anexoFullFirma = anexoModif;
+
+        anexoFullFirma.setDocumentoCustody(null);
+        checkDocumentAndSignature(anexoFullFirma,
+                idEntidad, true,
+                locale,
+                force);
+
+        anexosADevolver.add(anexoFullFirma);
+
+        //arreglam el document pla
+        anexoModif.setSignatureCustody(null);
+        checkDocumentAndSignature(anexoModif,
+                idEntidad, true,
+                locale,
+                force);
+        anexosADevolver.add(anexoModif);
+
+      }
+    }
+
+    return anexosADevolver;
+
+  }
     
     
     

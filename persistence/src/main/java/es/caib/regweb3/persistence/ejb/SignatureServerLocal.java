@@ -1,14 +1,13 @@
 package es.caib.regweb3.persistence.ejb;
 
-import javax.annotation.security.RolesAllowed;
-import javax.ejb.Local;
-
+import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 
-import es.caib.regweb3.model.utils.AnexoFull;
-
+import javax.annotation.security.RolesAllowed;
+import javax.ejb.Local;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -57,5 +56,15 @@ public interface SignatureServerLocal {
      * @throws I18NException
      */
     public void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException;
+
+    /**
+     *
+     * @param anexosEnviarASir
+     * @param idEntidad
+     * @param locale
+     * @param force
+     * @throws I18NException
+     */
+    public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException;
     
 }

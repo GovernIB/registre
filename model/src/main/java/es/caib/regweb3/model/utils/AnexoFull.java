@@ -33,11 +33,12 @@ public class AnexoFull {
      */
     public AnexoFull(AnexoFull anexoFull) {
         super();
-        this.anexo = anexoFull.anexo;
+        this.anexo = new Anexo(anexoFull.getAnexo());
         this.documentoFileDelete = anexoFull.documentoFileDelete;
         this.signatureFileDelete = anexoFull.signatureFileDelete;
         this.documentoCustody = anexoFull.documentoCustody;
         this.signatureCustody = anexoFull.signatureCustody;
+        this.metadatas = anexoFull.metadatas;
     }
 
 

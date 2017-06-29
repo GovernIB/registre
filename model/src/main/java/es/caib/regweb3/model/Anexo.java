@@ -104,7 +104,16 @@ public class Anexo implements Serializable {
       this.fechaCaptura = a.fechaCaptura;
       this.modoFirma = a.modoFirma;
       this.custodiaID = a.custodiaID;
-      this.csv = a.csv;
+      this.certificado = a.certificado;
+      this.firma = a.firma;
+      this.validacionOCSPCertificado = a.validacionOCSPCertificado;
+      this.hash = a.hash;
+      this.timestamp = a.timestamp;
+      this.firmaValida = a.firmaValida;
+      this.justificante = a.justificante;
+      this.signFormat = a.signFormat;
+      this.signProfile = a.signProfile;
+      this.signType = a.signType;
     }
 
     public static List<Anexo> clone(List<Anexo> list) {

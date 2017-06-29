@@ -19,14 +19,15 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
-import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -51,7 +52,6 @@ public class SirBean implements SirLocal {
     @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
-    @EJB private SignatureServerLocal signatureServerEjb;
 
 
     /**
@@ -564,12 +564,7 @@ public class SirBean implements SirLocal {
         oficioRemision.setFechaEstado(new Date());
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
-        
-        // force=true provoca que el mètode checkDocumentAndSignature llanci excepcions si no pot verificar
-        final boolean force = true;
 
-        List<AnexoFull> anexosEnviarASir; //Variable que contiene los anexos preparados con sus firmas detached para enviar a SIR.
-        Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma()));
 
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
@@ -584,9 +579,6 @@ public class SirBean implements SirLocal {
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
                 registroDetalle.getAnexosFull().add(anexoFull);
             }
-
-            //Obtenemos los anexos que hay que preparar(añadir firma detached) para enviar a sir
-            anexosEnviarASir = registroEntrada.getRegistroDetalle().getAnexosFull();
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
@@ -619,12 +611,6 @@ public class SirBean implements SirLocal {
             oficioRemision.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
          //   oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
 
-            // Creamos firmas temporales de los anexos para enviar a SIR
-            transformarAnexosEnvioSir(anexosEnviarASir, usuario.getEntidad().getId(),locale, force);
-
-            //Asignamos los anexos y sus firmas detached para que se genere bien el fichero de intercambio
-            registroEntrada.getRegistroDetalle().setAnexosFull(anexosEnviarASir);
-
             //Transformamos el registro de Entrada a RegistroSir
             registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
@@ -641,9 +627,6 @@ public class SirBean implements SirLocal {
 
                 registroDetalle.getAnexosFull().add(anexoFull);
             }
-
-            //Obtenemos los anexos que hay que preparar(añadir firma detached) para enviar a sir
-            anexosEnviarASir = registroSalida.getRegistroDetalle().getAnexosFull();
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
@@ -670,12 +653,6 @@ public class SirBean implements SirLocal {
             oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosEntrada(null);
-
-            // Creamos firmas temporales de los anexos para enviar a SIR
-            transformarAnexosEnvioSir(anexosEnviarASir, usuario.getEntidad().getId(),locale, force);
-
-            //Asignamos los anexos y sus firmas detached para que se genere bien el fichero de intercambio
-            registroSalida.getRegistroDetalle().setAnexosFull(anexosEnviarASir);
 
             // Transformamos el RegistroSalida en un RegistroSir
             registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
@@ -1143,48 +1120,5 @@ public class SirBean implements SirLocal {
         return result;
     }
 
-
-    /**
-     * Método que añade una firma detached a todos los anexos que se le pasan en la variable anexosEnviarASir
-     * Es obligatorio
-     * @param anexosEnviarASir
-     * @param idEntidad
-     * @param locale
-     * @param force
-     * @throws I18NException
-     */
-    private void transformarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException{
-
-         // Creamos firmas temporales de los anexos para enviar a SIR
-        for(AnexoFull anexoFull: new ArrayList<AnexoFull>(anexosEnviarASir)) {
-            DocumentCustody dc = anexoFull.getDocumentoCustody();
-            SignatureCustody sc = anexoFull.getSignatureCustody();
-
-            if ((dc!=null && sc == null) || (dc==null && sc != null)) {// Document pla o attached
-                signatureServerEjb.checkDocumentAndSignature(anexoFull,
-                        idEntidad, true,
-                        locale,
-                        force);
-            }else{
-                //Arreglam la firma
-                AnexoFull anexoFullFirma = new AnexoFull(anexoFull);
-                anexoFullFirma.setDocumentoCustody(null);
-                signatureServerEjb.checkDocumentAndSignature(anexoFullFirma,
-                        idEntidad, true,
-                        locale,
-                        force);
-                anexosEnviarASir.add(anexoFullFirma);
-
-                //arreglam el document pla
-                anexoFull.setSignatureCustody(null);
-                signatureServerEjb.checkDocumentAndSignature(anexoFull,
-                        idEntidad, true,
-                        locale,
-                        force);
-
-            }
-        }
-
-    }
 
 }

@@ -66,6 +66,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private CatPaisLocal catPaisEjb;
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB private SignatureServerLocal signatureServerEjb;
 
 
     @Override
@@ -751,7 +752,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
 
         // Segmento De_Anexos
-        registroSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), registroSir.getIdentificadorIntercambio()));
+
+        // Firmar anexos
+        Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroEntrada.getUsuario().getUsuario().getIdioma()));
+
+        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroEntrada.getUsuario().getEntidad().getId(),locale,true);
+
+        registroSir.setAnexos(transformarAnexosSir(anexosfirmados, registroSir.getIdentificadorIntercambio()));
 
         return registroSir;
     }
@@ -821,7 +828,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         //registroSir.setInteresados(procesarInteresadosSir(registroDetalle.getInteresados()));
 
         // Segmento De_Anexos
-        registroSir.setAnexos(procesarAnexosSir(registroDetalle.getAnexosFull(), registroSir.getIdentificadorIntercambio()));
+
+        // Firmar anexos
+        Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroSalida.getUsuario().getUsuario().getIdioma()));
+
+        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroSalida.getUsuario().getEntidad().getId(),locale,true);
+
+        registroSir.setAnexos(transformarAnexosSir(anexosfirmados, registroSir.getIdentificadorIntercambio()));
 
         return registroSir;
     }
@@ -1028,7 +1041,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param identificadorIntercambio
      * @return
      */
-    private List<AnexoSir> procesarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws Exception{
+    private List<AnexoSir> transformarAnexosSir(List<AnexoFull> anexosFull, String identificadorIntercambio) throws Exception{
 
         List<AnexoSir> anexosSir = new ArrayList<AnexoSir>();
         int secuencia = 0;
