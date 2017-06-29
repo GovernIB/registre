@@ -63,11 +63,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         doc.setLength(pdfsource.length);
         doc.setMime(FileInfoSignature.PDF_MIME_TYPE);
         doc.setName("justificante.pdf");
-        
 
-        SignatureCustody sc = signFile(doc, signType, signMode, epes, signaturePlugin,
-            new Locale(languageUI), reason);
-        
+        SignatureCustody sc = signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI), reason);
 
         return sc;
 
@@ -380,54 +377,37 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
    * @param force
    * @throws I18NException
    */
-  public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException{
-
-    // Creamos firmas temporales de los anexos para enviar a SIR
-
+  public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException {
 
     List<AnexoFull> anexosADevolver = new ArrayList<AnexoFull>();
-    for(AnexoFull anexoFull: anexosEnviarASir) {
-      AnexoFull anexoModif = new AnexoFull(anexoFull);
 
-      DocumentCustody dc = anexoModif.getDocumentoCustody();
-      SignatureCustody sc = anexoModif.getSignatureCustody();
+    for (AnexoFull anexoFull : anexosEnviarASir) {
 
-      log.info("MODO FIRMA ANEXO MODIF antes " + anexoModif.getAnexo().getModoFirma());
+      AnexoFull anexo = new AnexoFull(anexoFull);
 
-      //anexoModif.setDocumentoCustody(dc);
-      //anexoModif.setSignatureCustody(sc);
-      //anexoModif.setAnexo(new Anexo(anexoFull.getAnexo()));
-      //anexoModif.getAnexo().setHash(anexoFull.getAnexo().getHash());
+      DocumentCustody dc = anexo.getDocumentoCustody();
+      SignatureCustody sc = anexo.getSignatureCustody();
 
+      if ((dc != null && sc == null) || (dc == null && sc != null)) {// Document pla o attached
 
-      log.info("MODO FIRMA ANEXO MODIF despues " + anexoModif.getAnexo().getModoFirma());
+        checkDocumentAndSignature(anexo, idEntidad, true, locale, force);
+        anexosADevolver.add(anexo);
 
-
-      if ((dc!=null && sc == null) || (dc==null && sc != null)) {// Document pla o attached
-        checkDocumentAndSignature(anexoModif,
-                idEntidad, true,
-                locale,
-                force);
-        anexosADevolver.add(anexoModif);
       }else{ //Detached
-        //Arreglam la firma
-        AnexoFull anexoFullFirma = anexoModif;
 
-        anexoFullFirma.setDocumentoCustody(null);
-        checkDocumentAndSignature(anexoFullFirma,
-                idEntidad, true,
-                locale,
-                force);
+        // Firmamos la Firma
+        AnexoFull firma = new AnexoFull(anexo);
 
-        anexosADevolver.add(anexoFullFirma);
+        firma.setDocumentoCustody(null);
+        checkDocumentAndSignature(firma, idEntidad, true, locale, force);
 
-        //arreglam el document pla
-        anexoModif.setSignatureCustody(null);
-        checkDocumentAndSignature(anexoModif,
-                idEntidad, true,
-                locale,
-                force);
-        anexosADevolver.add(anexoModif);
+        anexosADevolver.add(firma);
+
+        // Firmamos el documento
+        anexo.setSignatureCustody(null);
+        checkDocumentAndSignature(anexo, idEntidad, true, locale, force);
+
+        anexosADevolver.add(anexo);
 
       }
     }
@@ -600,7 +580,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     
     
     
-    public static boolean is_pdf(byte[] data) {
+    public boolean is_pdf(byte[] data) {
       
       if (data != null && data.length > 4 &&
               data[0] == 0x25 && // %

@@ -369,7 +369,6 @@
 
                                                 <table class="table1 table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
-                                                        <col width="80">
                                                         <col>
                                                         <col>
                                                         <col>
@@ -436,7 +435,6 @@
 
                                                 <table class="table1 table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
-                                                        <col width="80">
                                                         <col>
                                                         <col>
                                                         <col>
