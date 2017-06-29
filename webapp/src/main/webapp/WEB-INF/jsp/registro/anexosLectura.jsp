@@ -139,5 +139,5 @@
         </div>
     </div>
 </div>
-<%--Modal para ver los dtos de un Interesado--%>
+<%--Modal para ver los dtos de un Anexo--%>
 <c:import url="../registro/detalleAnexo.jsp"/>
