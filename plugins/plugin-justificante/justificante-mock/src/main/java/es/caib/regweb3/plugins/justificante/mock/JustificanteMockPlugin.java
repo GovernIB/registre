@@ -573,7 +573,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
                             } else{ taulaRepresentant.addCell(""); }
                             // Canal Notificacio
                             taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8));
-                            if(representante.getCanal() != null) {
+                            if(representante.getCanal() != null  && (representante.getCanal() != -1)) {
                                 String canalNotifRep = tradueixMissatge(locale,"canalNotificacion." + representante.getCanal());
                                 taulaRepresentant.addCell(new Paragraph(canalNotifRep, font8));
                             } else{ taulaRepresentant.addCell(""); }
