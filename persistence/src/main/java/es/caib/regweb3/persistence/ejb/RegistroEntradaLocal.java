@@ -282,7 +282,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception;
+    public RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Método que obtiene los destinatarios a los que distribuir el registro
