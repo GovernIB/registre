@@ -1,13 +1,13 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -37,20 +37,13 @@ import java.util.Date;
 public class AnexoFicheroController extends AnexoController {
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
-
-
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
-  
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
+    private RegistroDetalleLocal registroDetalleEjb;
 
 
 
@@ -143,17 +136,6 @@ public class AnexoFicheroController extends AnexoController {
             try {
                 //Preparamos los documentcustody, signaturecustody
                 manageDocumentCustodySignatureCustody(request, anexoForm);
-
-                Entidad entidad = getEntidadActiva(request);
-                //Comprobamos y validamos las firmas de los documentos.
-                final boolean force = false;
-                I18NTranslation i18n;
-                i18n = signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                        isSIR, I18NUtils.getLocale(), force);
-                if (i18n != null) {
-                  Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
-                  Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
-                }
 
                 request.getSession().setAttribute("anexoForm", anexoForm);
 
