@@ -457,7 +457,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                 log.info("Este registro no se puede rectificar");
                 Mensaje.saveMessageError(request, getMessage("registro.rectificar.no"));
             }
-
+        }catch (I18NException e){
+                log.info("Error al rectificar el registro");
+                e.printStackTrace();
+                Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));
         }catch (Exception e){
             log.info("Error al rectificar el registro");
             e.printStackTrace();

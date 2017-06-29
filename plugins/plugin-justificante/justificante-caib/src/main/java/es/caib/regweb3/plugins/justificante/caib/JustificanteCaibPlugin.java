@@ -8,9 +8,9 @@ import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
-import org.fundaciobit.plugins.utils.Base64;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -319,51 +319,106 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             document.add(new Paragraph(" "));
 
             // Añadimos los campos de la Información
-            PdfPTable taulaAnnexe = new PdfPTable(new float[]{20, 10, 15, 15, 25, 15});
+            PdfPTable taulaAnnexe = new PdfPTable(new float[]{15, 15, 10, 10, 10, 25, 12});
             taulaAnnexe.setWidthPercentage(100);
-            PdfPCell cellInfoAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.nombreAdjunto"), font8));
+            PdfPCell cellInfoAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.nombreAdjunto"), font8Bold));
             cellInfoAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellInfoAnnexe.setBorderColor(BaseColor.BLACK);
-            cellInfoAnnexe.setBorderWidth(1f);
             cellInfoAnnexe.setHorizontalAlignment(Element.ALIGN_MIDDLE);
             taulaAnnexe.addCell(cellInfoAnnexe);
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tamanyo"), font8)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validez"), font8)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAdjunto"), font8)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.hash"), font8)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.observacionesAdjunto"), font8)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.archivo"), font8Bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tamanyo"), font8Bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validez"), font8Bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAdjunto"), font8Bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.hash"), font8Bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.observacionesAdjunto"), font8Bold)));
 
             PdfPCell cellInfoAnnexe2 = new PdfPCell(new Paragraph("", font8));
             cellInfoAnnexe2.setBackgroundColor(BaseColor.WHITE);
             cellInfoAnnexe2.setBorderColor(BaseColor.BLACK);
             cellInfoAnnexe2.setBorderWidth(1f);
             cellInfoAnnexe2.setHorizontalAlignment(Element.ALIGN_LEFT);
-            for(AnexoFull anexo : anexos) {
-                cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
-                taulaAnnexe.addCell(cellInfoAnnexe2);
 
-                // Calcula i afegeix el tamany del document (Del DocumentCustody i si és null del SignatureCustody)
+            for(AnexoFull anexo : anexos) {
+                // Variables per calcular i afegeix el tamany del document (Del DocumentCustody i/o del SignatureCustody)
                 String tamanyFitxer = null;
-                if(anexo.getDocumentoCustody()!=null){
+                String nomFitxer = null;
+                String hash = null;
+
+                // És un document amb firma detached
+                if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
+                    cellInfoAnnexe2.setRowspan(2);
+                    taulaAnnexe.addCell(cellInfoAnnexe2);
+
+                    // Document
+                    hash = new String(anexo.getAnexo().getHash());
+                    nomFitxer = anexo.getDocumentoCustody().getName();
                     if(anexo.getDocumentoCustody().getData().length < 1024){
                         tamanyFitxer = "1 KB";
                     }else{
                         tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
                     }
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8));
+                    cellInfoAnnexe2.setRowspan(2);
+                    taulaAnnexe.addCell(cellInfoAnnexe2);
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8));
+                    cellInfoAnnexe2.setRowspan(2);
+                    taulaAnnexe.addCell(cellInfoAnnexe2);
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, font8)));
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8));
+                    cellInfoAnnexe2.setRowspan(2);
+                    taulaAnnexe.addCell(cellInfoAnnexe2);
+
+                    // Firma
+                    hash = tradueixMissatge(locale,"justificante.firma") + ": " + new String(RegwebUtils.obtenerHash(anexo.getSignatureCustody().getData()));
+                    nomFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + anexo.getSignatureCustody().getName();
+                    if (anexo.getSignatureCustody().getData().length < 1024) {
+                        tamanyFitxer = "1 KB";
+                    } else {
+                        tamanyFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                    }
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, font8)));
+
                 }else {
-                    if (anexo.getSignatureCustody() != null) {
-                        if (anexo.getSignatureCustody().getData().length < 1024) {
+                    // És un document sense firma
+                    if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA){
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
+                        taulaAnnexe.addCell(cellInfoAnnexe2);
+                        hash = new String(anexo.getAnexo().getHash());
+                        nomFitxer = anexo.getDocumentoCustody().getName();
+                        if(anexo.getDocumentoCustody().getData().length < 1024){
                             tamanyFitxer = "1 KB";
-                        } else {
-                            tamanyFitxer = String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                        }else{
+                            tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
+                        }
+                    }else {
+                        // És un document amb firma attached
+                        if (anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+                            cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
+                            taulaAnnexe.addCell(cellInfoAnnexe2);
+                            hash = new String(anexo.getAnexo().getHash());
+                            nomFitxer = anexo.getSignatureCustody().getName();
+                            if (anexo.getSignatureCustody().getData().length < 1024) {
+                                tamanyFitxer = "1 KB";
+                            } else {
+                                tamanyFitxer = String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
+                            }
                         }
                     }
                 }
-                taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
-                taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8)));
-                taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8)));
-                taulaAnnexe.addCell(new PdfPCell(new Paragraph(Base64.encode(anexo.getAnexo().getHash()), font8)));
-                taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8)));
+                if(anexo.getAnexo().getModoFirma()!=RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8)));
+                }
             }
             document.add(taulaAnnexe);
         }
@@ -477,7 +532,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 } else{ taulaInteresado.addCell(""); }
                 // Canal Notificacio
                 taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
-                if(interesado.getCanal() != null) {
+                if((interesado.getCanal() != null) && (interesado.getCanal() != -1) ) {
                     String canalNotif = tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal());
                     taulaInteresado.addCell(new Paragraph(canalNotif, font8negre));
                 } else{ taulaInteresado.addCell(""); }
