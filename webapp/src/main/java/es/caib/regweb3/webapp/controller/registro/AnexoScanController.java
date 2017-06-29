@@ -4,14 +4,11 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
-import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
-
 import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -27,22 +24,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfStamper;
-
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -54,13 +41,10 @@ public class AnexoScanController extends AnexoController {
 
 
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
-    public ScanWebModuleLocal scanWebModuleEjb;
+    private ScanWebModuleLocal scanWebModuleEjb;
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
-
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
+    private RegistroDetalleLocal registroDetalleEjb;
 
 
     @RequestMapping(value = "/new/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
@@ -118,56 +102,6 @@ public class AnexoScanController extends AnexoController {
                 validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, true);
             }
 
-            Entidad entidad = getEntidadActiva(request);
-            
-            
-            // EL PDF no ve signat. Intentarem signar-lo. Si no va bé no passa res.
-            
-            try {
-              
-              // BUG EN MiniApplet 1.4  IN SERVER firmant PDF/A 
-              DocumentCustody doc = anexoForm.getDocumentoCustody();
-              byte[] pdfOriginal = doc.getData();
-              InputStream input3 = new ByteArrayInputStream(pdfOriginal);
-
-              //InputStream input3 = new FileInputStream(sourcePre);
-              
-              PdfReader reader = new PdfReader(input3);
-              ByteArrayOutputStream output = new ByteArrayOutputStream();
-              PdfStamper stamper3 = new PdfStamper(reader, output);
-             
-              Map<String, String> info = reader.getInfo();              
-              stamper3.setMoreInfo(info);
-              stamper3.close();
-              
-              input3.close();              
-              reader.close();
-              
-              byte[] newPDF = output.toByteArray();
-              doc.setData(newPDF);
-              doc.setLength(newPDF.length);
-              
-              // FIRMAM SI ES POSSIBLE
-              signatureServerEjb.firmaPAdESEPES(anexoForm, entidad.getId(), I18NUtils.getLocale());
-
-            } catch (I18NException i18n) {
-              String msg = I18NUtils.tradueix(i18n.getTraduccio());
-              log.error(msg, i18n);
-              Mensaje.saveMessageAviso(request, msg);
-            } finally {
-              System.gc();
-            }
-           
-            
-            
-            final boolean force = false;
-            I18NTranslation i18n;
-            i18n = signatureServerEjb.checkDocumentAndSignature(anexoForm, entidad.getId(),
-                    isSIR, I18NUtils.getLocale(), force);
-            if (i18n != null) {
-              Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
-              Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
-            }
 
             request.getSession().setAttribute("anexoForm", anexoForm);
             return "redirect:/anexo/nou2";
