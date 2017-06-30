@@ -103,7 +103,7 @@ public class PropiedadGlobalUtil {
         String valor = getString(partialPropertyName);
 
         if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
-            valor = new String(".jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt., .xml, .xsig");
+            valor = ".jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt., .xml, .xsig";
         }
         return valor;
     }
@@ -133,7 +133,7 @@ public class PropiedadGlobalUtil {
 
         // Valor global si no existeix el de per entitat
         if (valor == null) {
-            valor = new Long(10485760);
+            valor = 10485760L;
         }
         return valor;
     }
@@ -148,7 +148,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "defaultlanguage";
         String valor = getString( partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
 
@@ -171,7 +171,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "preregistre";
         String valor = getString( partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
     /**
@@ -204,7 +204,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "hibernate.dialect";
         String valor = getString( partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
 
@@ -216,7 +216,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "archivos.path";
         String valor = getStringByEntidad(idEntidad, partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
     /**
@@ -227,7 +227,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "dir3caib.server";
         String valor = getString( partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
     /**
@@ -238,7 +238,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "dir3caib.username";
         String valor = getString( partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
     /**
@@ -249,7 +249,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "dir3caib.password";
         String valor = getString(partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
     /**
@@ -260,7 +260,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "sir.serverbase";
         String valor = getStringByEntidad(idEntidad, partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
     /**
@@ -271,7 +271,7 @@ public class PropiedadGlobalUtil {
         final String partialPropertyName = "oficioSalida.fecha";
         String valor = getString(partialPropertyName);
 
-        return valor != null ? valor : null;
+        return valor;
     }
 
 
@@ -305,8 +305,7 @@ public class PropiedadGlobalUtil {
      * @return
      */
     public static String getScanWebAbsoluteURL() {
-      String valor = System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE+"scanweb.absoluteurl");
-      return valor;
+        return System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE+"scanweb.absoluteurl");
     }
 
 

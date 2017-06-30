@@ -24,7 +24,7 @@ public class AnexoUtils {
      * @return
      * @throws Exception
      */
-    public static List<String> validarAnexosSir(List<AnexoFull> anexos, Long idEntidad) throws Exception{
+    public static List<String> validarAnexosSir(List<AnexoFull> anexos) throws Exception{
 
         List<String> mensajesError =  new ArrayList<String>();
 
@@ -52,7 +52,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
 
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
+                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     break;
@@ -60,11 +60,11 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
 
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
+                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
+                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     break;
@@ -72,7 +72,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
 
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
+                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     break;
