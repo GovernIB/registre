@@ -20,10 +20,8 @@ public class SirScheduler {
     private SchedulerLocal schedulerEjb;
 
 
-    @Scheduled(cron = "0 0 * * * *") //Cada hora, cada día
+    @Scheduled(cron = "0 0 * * * *") //Cada hora, cada día (cada 60 secs */60 * * * * *)
     public void reintentarEnvioSir(){
-
-        log.info("Dentro de SirScheduler: reenviar");
 
         try {
             schedulerEjb.reintentarEnviosSinConfirmacion();
