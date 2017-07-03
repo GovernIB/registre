@@ -534,12 +534,33 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("idEstado", idEstado);
         q.setParameter("idOficina", idOficina);
 
-        List<OficioRemision> oficios = q.getResultList();
+        List<OficioRemision> oficios = new ArrayList<OficioRemision>();
 
         // Inicializamos los Registros según su tipo de registro
-        for(OficioRemision oficio:oficios){
-            oficio.getRegistrosEntrada().size();
-            oficio.getRegistrosSalida().size();
+        for(OficioRemision oficio: (List<OficioRemision>) q.getResultList()){
+
+            if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                oficio.getRegistrosEntrada().size(); //Inicializamos collection
+
+                if(oficio.getRegistrosEntrada().get(0).getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) ||
+                        oficio.getRegistrosEntrada().get(0).getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)){
+
+                    oficios.add(oficio);
+                }
+            }
+
+            if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+                oficio.getRegistrosSalida().size();//Inicializamos collection
+
+                if(oficio.getRegistrosSalida().get(0).getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) ||
+                        oficio.getRegistrosSalida().get(0).getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)){
+
+                    oficios.add(oficio);
+                }
+            }
+
+
+
         }
 
         return oficios;
@@ -608,6 +629,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception {
+
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
                 "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos <=10");
 
@@ -621,13 +643,14 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception {
-        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
-                "and oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' " +
-                "and oficioRemision.numeroReintentos <=10");
 
-        q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-        q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+        Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
+                "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
+                "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057') " +
+                "and oficioRemision.numeroReintentos <= 10");
+
+        q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+        q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
         q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();
@@ -656,17 +679,18 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception{
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.identificadorIntercambio = :identificadorIntercambio and" +
-                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :devuelto");
+                " oficioRemision.oficina.codigo = :codigoEntidadRegistralDestino and oficioRemision.estado != :devuelto and oficioRemision.estado != :rechazado");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino", codigoEntidadRegistralDestino);
         q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
+        q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
 
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() == 1){
             return oficioRemision.get(0);
         }else{
-            return  null;
+            return null;
         }
     }
 

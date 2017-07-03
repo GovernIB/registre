@@ -840,9 +840,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public List<RegistroSir> getEnviadosSinAck(Long idEntidad) throws Exception{
+    @SuppressWarnings(value = "unchecked")
+    public List<Long> getEnviadosSinAck(Long idEntidad) throws Exception{
 
-        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
+        Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado and registroSir.numeroReintentos <=10");
 
         q.setParameter("idEntidad", idEntidad);
@@ -854,9 +855,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public List<RegistroSir> getEnviadosConError(Long idEntidad) throws Exception{
+    @SuppressWarnings(value = "unchecked")
+    public List<Long> getEnviadosConError(Long idEntidad) throws Exception{
 
-        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
+        Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
                 "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado " +
                 "and registroSir.codigoError = '0039' or registroSir.codigoError = '0046' or registroSir.codigoError = '0057' " +
                 " and registroSir.numeroReintentos <=10");

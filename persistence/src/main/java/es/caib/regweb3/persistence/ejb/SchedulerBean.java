@@ -35,7 +35,9 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
         for(Entidad entidad: entidades) {
+            log.info(" ");
             log.info("------------- Reintentado envios sin ack de " + entidad.getNombre() + " -------------");
+            log.info(" ");
             sirEjb.reintentarEnviosSinConfirmacion(entidad.getId());
         }
     }
@@ -46,7 +48,9 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getEntidadesSir();
 
         for(Entidad entidad: entidades) {
+            log.info(" ");
             log.info("------------- Reintentado envios con errores de " + entidad.getNombre() + " -------------");
+            log.info(" ");
             sirEjb.reintentarEnviosConError(entidad.getId());
         }
     }

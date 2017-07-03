@@ -76,14 +76,14 @@ public class SirBean implements SirLocal {
 
                 if (EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())) {
 
-                    log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() + " ya se ha recibido, enviamos otro ACK");
+                    log.info("El RegistroSir " + registroSir.getIdentificadorIntercambio() + " ya se habia recibido, enviamos otro ACK");
 
                 } else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
 
-                    log.info("Se ha intentado enviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+                    log.info("Se ha recibido un ENVIO que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
                 } else {
-                    log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    log.info("Se ha recibido un ENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
@@ -109,6 +109,7 @@ public class SirBean implements SirLocal {
                 if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
                         EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado()) ||
                         EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado()) ||
+                        EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
                         EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())) {
 
                     // Modificar el estado del Registro a RECIBIDO
@@ -136,14 +137,14 @@ public class SirBean implements SirLocal {
 
                 }else if (EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())) {
 
-                    log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+                    log.info("Se ha recibido un REENVIO que ya habia sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
                 }else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
 
-                    log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+                    log.info("Se ha recibido un REENVIO que ya habia sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
                 } else{
-                    log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    log.info("Se ha recibido un REENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
@@ -190,10 +191,10 @@ public class SirBean implements SirLocal {
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
 
                 }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
-                    log.info("Se ha intentado reenviar un ficheroIntercambio que ya ha sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+                    log.info("Se ha recibido un REENVIO que ya habia sido recibido previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
 
                 } else{
-                    log.info("Se ha intentado enviar un ficheroIntercambio con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    log.info("Se ha recibido un REENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
@@ -255,11 +256,11 @@ public class SirBean implements SirLocal {
 
                 }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_RECHAZADO){
 
-                    log.info("Se ha intentado rechazar un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
+                    log.info("Se ha recibido un RECHAZO de un registroSir que ya esta devuelto" + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
 
                 }else{
-                    log.info("Se ha intentado rechazar cuyo estado no lo permite: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    log.info("Se ha recibido un RECHAZO cuyo estado no lo permite: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
@@ -934,31 +935,42 @@ public class SirBean implements SirLocal {
         try {
 
             // RegistrosSir pendientes de volver a intentar su envío
-            List<RegistroSir> registrosSir = registroSirEjb.getEnviadosSinAck(idEntidad);
+            List<Long> registrosSir = registroSirEjb.getEnviadosSinAck(idEntidad);
 
-            log.info("Hay " + registrosSir.size() +  " RegistrosSir pendientes de volver a enviar al nodo CIR");
+            if(registrosSir.size() > 0){
 
-            // Volvemos a enviar los RegistrosSir
-            for (RegistroSir registroSir : registrosSir) {
+                log.info("Hay " + registrosSir.size() +  " RegistrosSir pendientes de volver a enviar al nodo CIR");
 
-                reintentarEnvio(registroSir);
+                // Volvemos a enviar los RegistrosSir
+                for (Long registroSir : registrosSir) {
+
+                    reintentarEnvio(registroSir);
+                }
+            }else{
+                log.info("No hay RegistrosSir pendientes de volver a enviar al nodo CIR");
             }
 
             // OficiosRemision pendientes de volver a intentar su envío
             List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosSinAck(idEntidad);
 
-            log.info("Hay " + oficios.size() +  " Oficios de Remision pendientes de volver a enviar al nodo CIR");
+            if(oficios.size() > 0){
 
-            // Volvemos a enviar los OficiosRemision
-            for (OficioRemision oficio : oficios) {
+                log.info("Hay " + oficios.size() +  " Oficios de Remision pendientes de volver a enviar al nodo CIR");
 
-                reintentarEnvioOficioRemision(oficio);
+                // Volvemos a enviar los OficiosRemision
+                for (OficioRemision oficio : oficios) {
+
+                    reintentarEnvioOficioRemision(oficio);
+                }
+            }else{
+                log.info("No hay Oficios de Remision pendientes de volver a enviar al nodo CIR");
             }
+
 
         } catch (I18NException e) {
             e.printStackTrace();
         }catch (Exception e){
-            log.info("Error al reintenar el envio");
+            log.info("Error al reintenar el envio de registros sin confirmacion");
             e.printStackTrace();
         }
     }
@@ -969,43 +981,57 @@ public class SirBean implements SirLocal {
         try {
 
             // RegistrosSir enviados con errores
-            List<RegistroSir> registrosSir = registroSirEjb.getEnviadosConError(idEntidad);
+            List<Long> registrosSir = registroSirEjb.getEnviadosConError(idEntidad);
 
-            log.info("Hay " + registrosSir.size() +  " RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
+            if(registrosSir.size() > 0){
 
-            // Volvemos a enviar los RegistrosSir
-            for (RegistroSir registroSir : registrosSir) {
+                log.info("Hay " + registrosSir.size() +  " RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
 
-                reintentarEnvio(registroSir);
+                // Volvemos a enviar los RegistrosSir
+                for (Long registroSir : registrosSir) {
+
+                    reintentarEnvio(registroSir);
+                }
+            }else{
+                log.info("No hay RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
             }
 
             // OficiosRemision enviados con errores
             List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(idEntidad);
 
-            log.info("Hay " + oficios.size() +  " Oficios de Remision enviados con errores, pendientes d volver a enviar al nodo CIR");
+            if(oficios.size() > 0){
 
-            // Volvemos a enviar los OficiosRemision
-            for (OficioRemision oficio : oficios) {
+                log.info("Hay " + oficios.size() +  " Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
 
-                reintentarEnvioOficioRemision(oficio);
+                // Volvemos a enviar los OficiosRemision
+                for (OficioRemision oficio : oficios) {
+
+                    reintentarEnvioOficioRemision(oficio);
+                }
+            }else{
+                log.info("No hay Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
             }
+
 
         } catch (I18NException e) {
             e.printStackTrace();
         }catch (Exception e){
-            log.info("Error al reintenar el envio");
+            log.info("Error al reintenar el envio de registros con error");
             e.printStackTrace();
         }
     }
 
     /**
      *
-     * @param registroSir
+     * @param idRegistroSir
      * @throws Exception
      */
-    private void reintentarEnvio(RegistroSir registroSir) throws Exception{
+    private void reintentarEnvio(Long idRegistroSir) throws Exception{
+
+        RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
 
         log.info("Reintentando envio registroSir a: " + registroSir.getDecodificacionEntidadRegistralDestino());
+
         emisionEjb.enviarFicheroIntercambio(registroSir);
         registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
         registroSir.setFechaEstado(new Date());

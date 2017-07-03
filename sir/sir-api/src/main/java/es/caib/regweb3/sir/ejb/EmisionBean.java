@@ -34,8 +34,7 @@ public class EmisionBean implements EmisionLocal{
     public void enviarFicheroIntercambio(RegistroSir registroSir)throws Exception{
 
         try {
-
-            log.info("Enviando el registro al nodo distribuido: " + registroSir.getIdentificadorIntercambio());
+            log.info("Enviando el Registro " + registroSir.getIdentificadorIntercambio()+ " al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
 
             // Enviamos el RegistroSir al nodo distribuido.
             enviar(registroSir);
@@ -55,7 +54,7 @@ public class EmisionBean implements EmisionLocal{
      */
     public void reenviarFicheroIntercambio(RegistroSir registroSir)  throws Exception {
 
-        log.info("Reenviando el RegistroSir al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
+        log.info("Reenviando el Registro " + registroSir.getIdentificadorIntercambio()+ " al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
 
         // Reenviamos el RegistroSir al nodo distribuido.
         enviar(registroSir);
@@ -68,7 +67,7 @@ public class EmisionBean implements EmisionLocal{
      */
     public void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception{
 
-        log.info("Rechazando el RegistroSir al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
+        log.info("Rechazando el Registro " + registroSir.getIdentificadorIntercambio()+ " al nodo distribuido: " + registroSir.getCodigoEntidadRegistralDestino() +" - " + registroSir.getDecodificacionEntidadRegistralDestino());
 
         // Rechazamos el RegistroSir al nodo distribuido.
         enviar(registroSir);

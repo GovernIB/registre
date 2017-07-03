@@ -144,7 +144,7 @@
                                             <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
                                                 <tr>
                                                     <td> ${registroSir.identificadorIntercambio}</td>
-                                                    <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                    <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy hh:mm:ss"/></td>
                                                     <td>
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
                                                             <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
