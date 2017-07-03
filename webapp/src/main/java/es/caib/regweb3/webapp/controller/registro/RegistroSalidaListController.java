@@ -233,7 +233,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             // Si es SIR, se validan los tamaños y tipos de anexos
             if(oficio.getSir()){
 
-                model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos, entidadActiva.getId()));
+                model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
             }
 
             model.addAttribute("anexos", anexos);
