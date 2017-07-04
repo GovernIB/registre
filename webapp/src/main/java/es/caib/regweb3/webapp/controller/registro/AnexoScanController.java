@@ -6,8 +6,8 @@ import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -91,11 +91,11 @@ public class AnexoScanController extends AnexoController {
                 long docSize=-1;
                 long firmaSize=-1;
                 if(anexoForm.getDocumentoCustody()!=null) {
-                    docExtension = FilenameUtils.getExtension(anexoForm.getDocumentoCustody().getName());
+                    docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
                     docSize = anexoForm.getDocumentoCustody().getLength();
                 }
                 if(anexoForm.getSignatureCustody()!=null){
-                    firmaExtension = FilenameUtils.getExtension(anexoForm.getSignatureCustody().getName());
+                    firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
 

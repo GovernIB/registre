@@ -529,7 +529,6 @@ public class AnexoController extends BaseController {
      * @param firmaSize tamaño de la firma a anexar
      * @param docExtension extensión del documento a anexar
      * @param firmaExtension extensión de la firma a anexar
-     * @param request
      * @param result
      * @param scan true si viene de scan, false si no viene de scan
      * @throws Exception
@@ -575,7 +574,7 @@ public class AnexoController extends BaseController {
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
         String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
         if(!docExtension.isEmpty()) {
-            if (!extensionesPermitidas.contains(docExtension.toLowerCase())) {
+            if (!extensionesPermitidas.contains(docExtension)) {
                 if (!scan) {
                     result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
                 } else {
@@ -583,7 +582,7 @@ public class AnexoController extends BaseController {
                 }
             }
         }else {// Solo comprobamos la extensión en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
-            if (!extensionesPermitidas.contains(firmaExtension.toLowerCase())) {
+            if (!extensionesPermitidas.contains(firmaExtension)) {
                 if (!scan) {
                     result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
                 } else {

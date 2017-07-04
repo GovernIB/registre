@@ -52,7 +52,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
 
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
+                    if(!extensionesPermitidas.contains(extension)){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     break;
@@ -60,11 +60,11 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
 
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
+                    if(!extensionesPermitidas.contains(extension)){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
+                    if(!extensionesPermitidas.contains(extension)){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     break;
@@ -72,7 +72,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
 
                     extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                    if(!extensionesPermitidas.contains(extension.toLowerCase())){
+                    if(!extensionesPermitidas.contains(extension)){
                         mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
                     }
                     break;
@@ -117,6 +117,6 @@ public class AnexoUtils {
      */
     public static String obtenerExtensionAnexo(String fileName){
 
-        return FilenameUtils.getExtension(fileName);
+        return FilenameUtils.getExtension(fileName).toLowerCase();
     }
 }

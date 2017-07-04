@@ -98,7 +98,7 @@ public class Anexo implements Serializable {
       this.tipoDocumental = a.tipoDocumental == null? null: new TipoDocumental(a.tipoDocumental);
       this.validezDocumento = a.validezDocumento;
       this.tipoDocumento = a.tipoDocumento;
-      //this.registroDetalle = a.registroDetalle;
+      this.registroDetalle = a.registroDetalle;
       this.observaciones = a.observaciones;
       this.origenCiudadanoAdmin = a.origenCiudadanoAdmin;
       this.fechaCaptura = a.fechaCaptura;
