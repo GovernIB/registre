@@ -379,6 +379,26 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         return "redirect:/registroSalida/"+idRegistro+"/detalle";
     }
 
+    @RequestMapping(value = "/pendientesSir/list/{pageNumber}")
+    public ModelAndView pendientesSir(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registroSalida/registrosSalidaEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = registroSalidaEjb.getSirRechazadosReenviadosPaginado(pageNumber,oficinaActiva.getId());
+
+            mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesSir"));
+            mav.addObject("url", "pendientesSir");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
+    }
+
     @RequestMapping(value = "/pendientesVisar/list/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView pendientesVisar(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
 

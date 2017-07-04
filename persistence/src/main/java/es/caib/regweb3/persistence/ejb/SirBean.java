@@ -650,7 +650,7 @@ public class SirBean implements SirLocal {
             oficioRemision.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
             oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
             oficioRemision.setDestinoExternoCodigo(registroSalida.interesadoDestinoCodigo());
-            oficioRemision.setDestinoExternoDenominacion(registroSalida.interesadoDestinoDenominacion());
+            oficioRemision.setDestinoExternoDenominacion(registroSalida.getInteresadoDestinoDenominacion());
             oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosEntrada(null);
@@ -899,7 +899,7 @@ public class SirBean implements SirLocal {
             oficioRemision.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
             oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
             oficioRemision.setDestinoExternoCodigo(registroSalida.interesadoDestinoCodigo());
-            oficioRemision.setDestinoExternoDenominacion(registroSalida.interesadoDestinoDenominacion());
+            oficioRemision.setDestinoExternoDenominacion(registroSalida.getInteresadoDestinoDenominacion());
             oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosEntrada(null);

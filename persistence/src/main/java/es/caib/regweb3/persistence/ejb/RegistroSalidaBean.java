@@ -587,10 +587,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             // Creamos la Trazabilidad de la rectificación
             Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECTIFICACION_SALIDA);
-            /*trazabilidad.setRegistroEntradaOrigen(null);
-            trazabilidad.setRegistroEntradaDestino(null);
-            trazabilidad.setRegistroSir(null);
-            trazabilidad.setOficioRemision(null);*/
             trazabilidad.setRegistroSalida(registroSalida);
             trazabilidad.setRegistroSalidaRectificado(getReference(idRegistro));
             trazabilidad.setFecha(new Date());
@@ -604,6 +600,63 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
 
         return rectificado;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idOficina) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select rs from RegistroSalida as rs where rs.oficina.id = :idOficina " +
+                "and rs.estado = :rechazado or rs.estado = :reenviado order by rs.fecha desc");
+
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+        q2 = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.oficina.id = :idOficina " +
+                "and rs.estado = :rechazado or rs.estado = :reenviado");
+
+        q2.setParameter("idOficina", idOficina);
+        q2.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q2.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroSalida> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select rs from RegistroSalida as rs where rs.oficina.id = :idOficinaActiva " +
+                "and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.fecha desc");
+
+        q.setMaxResults(total);
+        q.setParameter("idOficinaActiva", idOficina);
+        q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+        return q.getResultList();
     }
 
     public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException {

@@ -194,6 +194,23 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     public RegistroSalida rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception;
 
+    /**
+     *
+     * @param pageNumber
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception;
+
+    /**
+     * Busca los Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
+     * @param idOficina
+     * @param total
+     * @return
+     * @throws Exception
+     */
+    public List<RegistroSalida> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
 
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.

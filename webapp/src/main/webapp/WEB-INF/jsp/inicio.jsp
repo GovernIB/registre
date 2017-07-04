@@ -354,7 +354,118 @@
                                 </div>
                             </c:if>
 
-                            <%--REGISTROS RECHAZADOS--%>
+                            <%--Registros de Entrada Rechazados o Reenviados--%>
+                            <c:if test="${not empty entradasRechazadosReenviados}">
+                                <div class="col-xs-6 centrat">
+
+                                    <div id="entradasRechazadosReenviados" class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
+                                        </div>
+
+                                        <div class="panel-body">
+
+                                            <div class="table-responsive-inici">
+
+                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                    <colgroup>
+                                                        <col>
+                                                        <col>
+                                                        <col>
+                                                        <col width="51">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><spring:message code="registroEntrada.fechaRegistro"/></th>
+                                                        <th><spring:message code="registroSir.oficinaDestino"/></th>
+                                                        <th><spring:message code="registroEntrada.estado"/></th>
+                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <c:forEach var="registroEntrada" items="${entradasRechazadosReenviados}" varStatus="status">
+                                                        <tr>
+                                                            <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                            <td>${registroEntrada.registroDetalle.decodificacionEntidadRegistralDestino}</td>
+                                                            <td>
+                                                                <c:import url="registro/estadosRegistro.jsp">
+                                                                    <c:param name="estado" value="${registroEntrada.estado}"/>
+                                                                    <c:param name="decodificacionTipoAnotacion" value="${registroEntrada.registroDetalle.decodificacionTipoAnotacion}"/>
+                                                                </c:import>
+                                                            </td>
+
+                                                            <td class="center">
+                                                                <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+
+                            <%--Registros de Salida Rechazados o Reenviados--%>
+                            <c:if test="${not empty salidasRechazadasReenviadas}">
+                                <div class="col-xs-6 centrat">
+
+                                    <div id="salidasRechazadosReenviados" class="panel panel-primary">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSalida.rechazados.inicio"/></strong> </h3>
+                                        </div>
+
+                                        <div class="panel-body">
+
+                                            <div class="table-responsive-inici">
+
+                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                    <colgroup>
+                                                        <col>
+                                                        <col>
+                                                        <col>
+                                                        <col width="51">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th><spring:message code="registroSalida.fechaRegistro"/></th>
+                                                        <th><spring:message code="registroSir.oficinaDestino"/></th>
+                                                        <th><spring:message code="registroSalida.estado"/></th>
+                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                    </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                    <c:forEach var="registroSalida" items="${salidasRechazadasReenviadas}" varStatus="status">
+                                                        <tr>
+                                                            <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                            <td>${registroSalida.registroDetalle.decodificacionEntidadRegistralDestino}</td>
+                                                            <td>
+                                                                <c:import url="registro/estadosRegistro.jsp">
+                                                                    <c:param name="estado" value="${registroSalida.estado}"/>
+                                                                    <c:param name="decodificacionTipoAnotacion" value="${registroSalida.registroDetalle.decodificacionTipoAnotacion}"/>
+                                                                </c:import>
+                                                            </td>
+
+                                                            <td class="center">
+                                                                <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+
+
+                            <%--REGISTROS RECHAZADOS
                             <c:if test="${not empty oficiosRechazados}">
                                 <div class="col-xs-6 centrat">
 
@@ -420,7 +531,7 @@
                                 </div>
                             </c:if>
 
-                            <%--REGISTROS REENVIADOS--%>
+                            &lt;%&ndash;REGISTROS REENVIADOS&ndash;%&gt;
                             <c:if test="${not empty oficiosReenviados}">
                                 <div class="col-xs-6 centrat">
 
@@ -484,7 +595,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </c:if>
+                            </c:if>--%>
 
                         </div><!-- /.columnesInici -->
                     </div><!-- /.col-xs-12 -->

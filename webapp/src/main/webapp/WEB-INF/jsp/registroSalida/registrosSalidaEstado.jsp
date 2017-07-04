@@ -32,11 +32,11 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <div class="panel panel-danger">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i>
-                            <strong>${titulo}</strong>
+                           <strong>${titulo}</strong>
                         </h3>
                     </div>
 
@@ -47,7 +47,7 @@
 
                                 <c:if test="${empty paginacion.listado}">
                                     <div class="alert alert-grey">
-                                        <spring:message code="regweb.listado.vacio"/> <strong><spring:message code="registroEntrada.registroEntrada"/></strong>
+                                        <spring:message code="regweb.listado.vacio"/> <strong><spring:message code="registroSalida.registroSalida"/></strong>
                                     </div>
                                 </c:if>
 
@@ -55,10 +55,10 @@
 
                                     <div class="alert-grey">
                                         <c:if test="${paginacion.totalResults == 1}">
-                                            <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
+                                            <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalida"/>
                                         </c:if>
                                         <c:if test="${paginacion.totalResults > 1}">
-                                            <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
+                                            <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroSalida.registroSalida"/>
                                         </c:if>
 
                                         <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
@@ -79,18 +79,13 @@
                                         </colgroup>
                                         <thead>
                                             <tr>
-                                                <th class="center"><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                                <th class="center"><spring:message code="registroEntrada.fecha"/></th>
-                                                <th class="center"><spring:message code="registroEntrada.usuario"/></th>
-                                                <th class="center"><spring:message code="registroEntrada.oficina"/></th>
+                                                <th class="center"><spring:message code="registroSalida.numeroRegistro"/></th>
+                                                <th class="center"><spring:message code="registroSalida.fecha"/></th>
+                                                <th class="center"><spring:message code="registroSalida.usuario"/></th>
+                                                <th class="center"><spring:message code="registroSalida.oficina"/></th>
                                                 <th class="center"><spring:message code="organismo.destino"/></th>
-                                                <c:if test="${estado == 2}">
-                                                    <th class="center"><spring:message code="registroEntrada.reserva"/></th>
-                                                </c:if>
-                                                <c:if test="${estado != 2}">
-                                                    <th class="center"><spring:message code="registroEntrada.extracto"/></th>
-                                                </c:if>
-                                                <th class="center"><spring:message code="registroEntrada.estado"/></th>
+                                                <th class="center"><spring:message code="registroSalida.extracto"/></th>
+                                                <th class="center"><spring:message code="registroSalida.estado"/></th>
                                                 <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                 <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -104,13 +99,8 @@
                                                 <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td class="center">${registro.usuario.usuario.identificador}</td>
                                                 <td class="center"><label class="no-bold" rel="ayuda" data-content="${registro.oficina.codigo}" data-toggle="popover">${registro.oficina.denominacion}</label></td>
-                                                <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
-                                                <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                                                    <td>${registro.registroDetalle.reserva}</td>
-                                                </c:if>
-                                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                                                    <td>${registro.registroDetalle.extracto}</td>
-                                                </c:if>
+                                                <td>${registro.interesadoDestinoDenominacion}</td>
+                                                <td>${registro.registroDetalle.extracto}</td>
                                                 <td class="center">
                                                     <c:import url="../registro/estadosRegistro.jsp">
                                                         <c:param name="estado" value="${registro.estado}"/>
@@ -136,7 +126,7 @@
                                                 </c:if>
 
                                                 <td class="center">
-                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                    <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -145,7 +135,7 @@
 
                                     <!-- Paginacion -->
                                     <c:import url="../modulos/paginacion.jsp">
-                                        <c:param name="entidad" value="registroEntrada/${url}"/>
+                                        <c:param name="entidad" value="registroSalida/${url}"/>
                                     </c:import>
                                 </c:if>
 

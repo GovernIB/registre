@@ -70,7 +70,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception;
 
-
     /**
      *
      * @param pageNumber
@@ -306,6 +305,24 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
         Long entidadId, String idioma) throws Exception, I18NException;
+
+    /**
+     *
+     * @param pageNumber
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception;
+
+    /**
+     * Busca los Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
+     * @param idOficina
+     * @param total
+     * @return
+     * @throws Exception
+     */
+    public List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
 
     /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.

@@ -248,7 +248,7 @@ public class RegistroSalida implements IRegistro {
     }
 
     @Transient
-    public String interesadoDestinoDenominacion() throws Exception{
+    public String getInteresadoDestinoDenominacion() throws Exception{
 
         List<Interesado> interesados = this.getRegistroDetalle().getInteresados();
 
@@ -259,7 +259,7 @@ public class RegistroSalida implements IRegistro {
             }
         }
 
-        return null;
+        return "";
     }
 
     @Override

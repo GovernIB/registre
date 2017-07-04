@@ -538,29 +538,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         // Inicializamos los Registros según su tipo de registro
         for(OficioRemision oficio: (List<OficioRemision>) q.getResultList()){
-
-            if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-                oficio.getRegistrosEntrada().size(); //Inicializamos collection
-
-                if(oficio.getRegistrosEntrada().get(0).getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) ||
-                        oficio.getRegistrosEntrada().get(0).getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)){
-
-                    oficios.add(oficio);
-                }
-            }
-
-            if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-                oficio.getRegistrosSalida().size();//Inicializamos collection
-
-                if(oficio.getRegistrosSalida().get(0).getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) ||
-                        oficio.getRegistrosSalida().get(0).getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)){
-
-                    oficios.add(oficio);
-                }
-            }
-
-
-
+            oficio.getRegistrosEntrada().size(); //Inicializamos collection
+            oficio.getRegistrosSalida().size();//Inicializamos collection
         }
 
         return oficios;
@@ -631,7 +610,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where (oficioRemision.estado = :enviado or oficioRemision.estado = :reenviado) " +
-                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos <=10");
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad and oficioRemision.numeroReintentos <= 9");
 
         q.setParameter("enviado", RegwebConstantes.OFICIO_SIR_ENVIADO);
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
@@ -647,7 +626,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
                 "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
                 "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057') " +
-                "and oficioRemision.numeroReintentos <= 10");
+                "and oficioRemision.numeroReintentos <= 9");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);

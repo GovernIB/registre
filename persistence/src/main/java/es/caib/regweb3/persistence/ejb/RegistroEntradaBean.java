@@ -868,6 +868,63 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficina " +
+                "and re.estado = :rechazado or re.estado = :reenviado order by re.fecha desc");
+
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficina " +
+                "and re.estado = :rechazado or re.estado = :reenviado");
+
+        q2.setParameter("idOficina", idOficina);
+        q2.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q2.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+
+        Paginacion paginacion = null;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.fecha desc");
+
+        q.setMaxResults(total);
+        q.setParameter("idOficinaActiva", idOficina);
+        q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+        return q.getResultList();
+    }
+
     /**
      * Método que prepara el registro de entrada para distribuirlo.
      * La variable confAnexos indica que datos se envian en el segmento de anexo del registro de entrada.
