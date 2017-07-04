@@ -85,6 +85,11 @@
 
         <%--OficioRemision SIR--%>
         <c:if test="${oficioRemision.sir == true}">
+            <%--Identificador intercambio--%>
+            <p>
+                <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
+            </p>
+
             <%--Código y descripción error--%>
             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR ||
                           oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR}">
@@ -99,11 +104,6 @@
                 <c:if test="${oficioRemision.numeroReintentos > 0}">
                     <small><i class="fa fa-retweet"></i> <strong><spring:message code="oficioRemision.reintentos"/>:</strong> ${oficioRemision.numeroReintentos}</small>
                 </c:if>
-            </p>
-
-            <%--Identificador intercambio--%>
-            <p>
-                <small><i class="fa fa-qrcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${oficioRemision.identificadorIntercambio}</small>
             </p>
         </c:if>
 
