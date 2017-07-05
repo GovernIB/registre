@@ -390,7 +390,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             Paginacion paginacion = registroSalidaEjb.getSirRechazadosReenviadosPaginado(pageNumber,oficinaActiva.getId());
 
-            mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesSir"));
+            mav.addObject("titulo", getMessage("registroSalida.listado.pendientesSir"));
             mav.addObject("url", "pendientesSir");
             mav.addObject("paginacion", paginacion);
 
