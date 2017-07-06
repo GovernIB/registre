@@ -615,7 +615,10 @@
 
         <!-- Lleva la classe centrat al darrer panell dibuixat. Així funciona si només hi ha 2 panells -->
         <script type="text/javascript">
-            $( ".centrat" ).last().removeClass("centrat");
+            var numItems = $('.centrat').length;
+            if (numItems == '2') {
+                $(".centrat").last().removeClass("centrat");
+            }
         </script>
 
 
