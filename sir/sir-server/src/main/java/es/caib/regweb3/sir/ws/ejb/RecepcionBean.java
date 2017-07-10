@@ -115,7 +115,7 @@ public class RecepcionBean implements RecepcionLocal{
         // Validamos el mensaje recibido
         sicres3XML.validarMensaje(mensaje);
 
-        log.info("Recibiendo mensade de control: " + mensaje.getTipoMensaje() + " - " + mensaje.getIdentificadorIntercambio());
+        log.info("Recibiendo mensaje de control: " + mensaje.getTipoMensaje() + " - " + mensaje.getIdentificadorIntercambio());
 
         try {
 

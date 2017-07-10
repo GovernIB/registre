@@ -210,7 +210,7 @@ public class SirBean implements SirLocal {
             log.info("El ficheroIntercambio recibido es un RECHAZO");
 
             // Buscamos si el FicheroIntercambio ya existe en el sistema
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
             // Oficio Remision: Ha sido enviado por nosotros a SIR
             if(oficioRemision != null) { // Existe en el sistema
@@ -314,7 +314,7 @@ public class SirBean implements SirLocal {
         // Mensaje ACK
         if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
 
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
             RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
 
             if(oficioRemision != null){
@@ -329,7 +329,7 @@ public class SirBean implements SirLocal {
             // Mensaje CONFIRMACIÓN
         }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION)){
 
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
 
             if(oficioRemision != null){
                 procesarMensajeCONFIRMACION(oficioRemision, mensaje);
@@ -342,7 +342,7 @@ public class SirBean implements SirLocal {
             // Mensaje ERROR
         }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR)){
 
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio());
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
             RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
 
             if(oficioRemision != null){
