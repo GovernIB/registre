@@ -33,6 +33,8 @@ $(document).ready(function() {
     });
 });
 
+
+// Calcula donde posicionar el sello en el recuadro
 function posicionaSegellXY(x ,y, texto) {
     var pdfX=Math.floor(x/0.352777777777778);
     if(orientacion=="V"){
@@ -70,6 +72,7 @@ function posicionaSegellXY(x ,y, texto) {
     $("#marca").html("("+x.toFixed() +","+y.toFixed() +")");
 }
 
+// Posiciona el sello en el recuadro segun la posicion predeterminada elegida
 function posicionaSegell(pos) {
     var borde=19;
     var ampleSegell=45;

@@ -10,7 +10,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
-import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.utils.AbstractIText5PdfView;
 import es.caib.regweb3.webapp.utils.ElementSello;
 import org.apache.log4j.Logger;
@@ -69,7 +69,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
     private String nomUsuariComplet = null;
     private String entitat = null;
     private String decodificacioEntitat = null;
-    private String formatNumRegistre = null;
+    private String numRegformat = null;
     
     private ElementSello logoSello = null;
     private Entidad entidad = null;
@@ -79,6 +79,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
 
         Object registro = model.get("registro");
 
+        // Coordenadas del sello
         String x = (String) model.get("x");
         String y = (String) model.get("y");
         String orientacion = (String) model.get("orientacion");
@@ -91,160 +92,139 @@ public class SelloPdfView extends AbstractIText5PdfView {
         if(orientacion.equals("H")){
             document.setPageSize(PageSize.A4.rotate());
         }
-
         document.addAuthor("REGWEB3");
         document.addCreationDate();
         document.addCreator("iText library");
         document.newPage();
-
         document.addTitle("Segell");
 
-//        Font helvetica = new Font(Font.FontFamily.HELVETICA, 10);
+        // Inicializamos el contenido del sello
         String sello = null;
-        
-        //String numRegistreCompost = null;
+
+        // Formatos de fecha
         SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         SimpleDateFormat formatDiaDate = new SimpleDateFormat("dd/MM/yyyy");
         SimpleDateFormat formatHoraDate = new SimpleDateFormat("HH:mm:ss");
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
-        SimpleDateFormat formatMonthName = new SimpleDateFormat("MMMM"); // Afegir el locale?
+        SimpleDateFormat formatMonthName = new SimpleDateFormat("MMMM");
         SimpleDateFormat formatDay = new SimpleDateFormat("dd");
         SimpleDateFormat formatHour = new SimpleDateFormat("HH");
         SimpleDateFormat formatMin = new SimpleDateFormat("mm");
         SimpleDateFormat formatSeg = new SimpleDateFormat("ss");
 
-        // Registre Entrada
+        // Si es Registro de Entrada
         if(registro.getClass().getSimpleName().equals("RegistroEntrada")){
 
+            // Obtenemos el registro de entrada
             RegistroEntrada registroEntrada = (RegistroEntrada) model.get("registro");
+            // Obtiene la entidad
             entidad = registroEntrada.getUsuario().getEntidad();
-            
+            // Obtiene el formato del sello definido en la entidad
             sello = entidad.getSello();
-            formatNumRegistre = entidad.getNumRegistro();
-
-            //Si el registro no está Anulado ni Pendiente de Visar
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
-                    !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)){
-            	
-	            codiOficina = registroEntrada.getOficina().getCodigo();
-	            nomOficina = registroEntrada.getOficina().getDenominacion();
-	            numRegistre = String.valueOf(registroEntrada.getNumeroRegistro());
-	            // Data registre
-	            dataRegistre = formatDate.format(registroEntrada.getFecha());
-	            dataDiaRegistre = formatDiaDate.format(registroEntrada.getFecha());
-	            dataHoraRegistre = formatHoraDate.format(registroEntrada.getFecha());
-	            anyRegistre = formatYear.format(registroEntrada.getFecha());
-	            mesRegistre = formatMonth.format(registroEntrada.getFecha());
-	            nomMesRegistre = formatMonthName.format(registroEntrada.getFecha());
-	            diaRegistre = formatDay.format(registroEntrada.getFecha());
-	            horaRegistre = formatHour.format(registroEntrada.getFecha());
-	            minutRegistre = formatMin.format(registroEntrada.getFecha());
-	            segonRegistre = formatSeg.format(registroEntrada.getFecha());
-	            
-	            tipusRegistre = "E";
-                tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.entrada");
-                tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.entrada");
-	            
-	            nomUsuari = registroEntrada.getUsuario().getUsuario().getNombre();
-	            nomUsuariComplet = registroEntrada.getUsuario().getNombreCompleto();
-	            entitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-	            decodificacioEntitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
-	            
-	            formatNumRegistre = registroEntrada.getNumeroRegistroFormateado();
-                llibre = registroEntrada.getLibro().getNombre();
-                extracte = registroEntrada.getRegistroDetalle().getExtracto();
-
-                if(registroEntrada.getDestino() != null){
-                    destinatari = registroEntrada.getDestino().getDenominacion();
-                }else{
-                    destinatari = registroEntrada.getDestinoExternoDenominacion();
-                }
-
+            // Obtiene los datos del registro
+            codiOficina = registroEntrada.getOficina().getCodigo();
+            nomOficina = registroEntrada.getOficina().getDenominacion();
+            numRegistre = String.valueOf(registroEntrada.getNumeroRegistro());
+            dataRegistre = formatDate.format(registroEntrada.getFecha());
+            dataDiaRegistre = formatDiaDate.format(registroEntrada.getFecha());
+            dataHoraRegistre = formatHoraDate.format(registroEntrada.getFecha());
+            anyRegistre = formatYear.format(registroEntrada.getFecha());
+            mesRegistre = formatMonth.format(registroEntrada.getFecha());
+            nomMesRegistre = formatMonthName.format(registroEntrada.getFecha());
+            diaRegistre = formatDay.format(registroEntrada.getFecha());
+            horaRegistre = formatHour.format(registroEntrada.getFecha());
+            minutRegistre = formatMin.format(registroEntrada.getFecha());
+            segonRegistre = formatSeg.format(registroEntrada.getFecha());
+            tipusRegistre = "E";
+            tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.entrada");
+            tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.entrada");
+            nomUsuari = registroEntrada.getUsuario().getUsuario().getNombre();
+            nomUsuariComplet = registroEntrada.getUsuario().getNombreCompleto();
+            entitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNombre();
+            decodificacioEntitat = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            numRegformat = registroEntrada.getNumeroRegistroFormateado();
+            llibre = registroEntrada.getLibro().getNombre();
+            extracte = registroEntrada.getRegistroDetalle().getExtracto();
+            if(registroEntrada.getDestino() != null){
+                destinatari = registroEntrada.getDestino().getDenominacion();
+            }else{
+                destinatari = registroEntrada.getDestinoExternoDenominacion();
             }
         }
 
-        // Registre Sortida
+        // Si es Registro de Salida
         if(registro.getClass().getSimpleName().equals("RegistroSalida")){
 
+            // Obtenemos el registro de salida
             RegistroSalida registroSalida = (RegistroSalida) model.get("registro");
+            // Obtiene la entidad
             entidad = registroSalida.getUsuario().getEntidad();
-            
+            // Obtiene el formato del sello definido en la entidad
             sello = entidad.getSello();
-            formatNumRegistre = entidad.getNumRegistro();
-
-            //Si el registro no está Anulado ni Pendiente de Visar
-            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
-                    !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
-
-                codiOficina = registroSalida.getOficina().getCodigo();
-                nomOficina = registroSalida.getOficina().getDenominacion();
-                numRegistre = String.valueOf(registroSalida.getNumeroRegistro());
-                // Data registre
-                dataRegistre = formatDate.format(registroSalida.getFecha());
-                dataDiaRegistre = formatDiaDate.format(registroSalida.getFecha());
-                dataHoraRegistre = formatHoraDate.format(registroSalida.getFecha());
-                anyRegistre = formatYear.format(registroSalida.getFecha());
-                mesRegistre = formatMonth.format(registroSalida.getFecha());
-                nomMesRegistre = formatMonthName.format(registroSalida.getFecha());
-                diaRegistre = formatDay.format(registroSalida.getFecha());
-                horaRegistre = formatHour.format(registroSalida.getFecha());
-                minutRegistre = formatMin.format(registroSalida.getFecha());
-                segonRegistre = formatSeg.format(registroSalida.getFecha());
-
-                if (registroSalida.getOrigen() != null) {
-                    origen = registroSalida.getOrigen().getDenominacion();
-                } else {
-                    origen = registroSalida.getOrigenExternoDenominacion();
-                }
-                tipusRegistre = "S";
-                tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.salida");
-                tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.salida");
-                extracte = registroSalida.getRegistroDetalle().getExtracto();
-                llibre = registroSalida.getLibro().getNombre();
-                nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
-                nomUsuariComplet = registroSalida.getUsuario().getNombreCompleto();
-                entitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre();
-                decodificacioEntitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
-
-                formatNumRegistre = registroSalida.getNumeroRegistroFormateado();
-                llibre = registroSalida.getLibro().getNombre();
-                extracte = registroSalida.getRegistroDetalle().getExtracto();
-
-                if(registroSalida.getOrigen() != null){
-                    origen = registroSalida.getOrigen().getDenominacion();
-                }else{
-                    origen = registroSalida.getOrigenExternoDenominacion();
-                }
+            // Obtiene los datos del registro
+            codiOficina = registroSalida.getOficina().getCodigo();
+            nomOficina = registroSalida.getOficina().getDenominacion();
+            numRegistre = String.valueOf(registroSalida.getNumeroRegistro());
+            dataRegistre = formatDate.format(registroSalida.getFecha());
+            dataDiaRegistre = formatDiaDate.format(registroSalida.getFecha());
+            dataHoraRegistre = formatHoraDate.format(registroSalida.getFecha());
+            anyRegistre = formatYear.format(registroSalida.getFecha());
+            mesRegistre = formatMonth.format(registroSalida.getFecha());
+            nomMesRegistre = formatMonthName.format(registroSalida.getFecha());
+            diaRegistre = formatDay.format(registroSalida.getFecha());
+            horaRegistre = formatHour.format(registroSalida.getFecha());
+            minutRegistre = formatMin.format(registroSalida.getFecha());
+            segonRegistre = formatSeg.format(registroSalida.getFecha());
+            tipusRegistre = "S";
+            tipusRegistreCompletCatala = getMessage("sello.tipoRegistroCompletoCatalan.salida");
+            tipusRegistreCompletCastella = getMessage("sello.tipoRegistroCompletoCastellano.salida");
+            extracte = registroSalida.getRegistroDetalle().getExtracto();
+            llibre = registroSalida.getLibro().getNombre();
+            nomUsuari = registroSalida.getUsuario().getUsuario().getNombre();
+            nomUsuariComplet = registroSalida.getUsuario().getNombreCompleto();
+            entitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNombre();
+            decodificacioEntitat = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getDescripcion();
+            numRegformat = registroSalida.getNumeroRegistroFormateado();
+            llibre = registroSalida.getLibro().getNombre();
+            extracte = registroSalida.getRegistroDetalle().getExtracto();
+            if(registroSalida.getOrigen() != null){
+                origen = registroSalida.getOrigen().getDenominacion();
+            }else{
+                origen = registroSalida.getOrigenExternoDenominacion();
             }
         }
 
+        // Si el formato de sello está definido
         if(sello != null){
 
+            // Guardará el sello en lineas
         	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
-
+            // Separa cada linea del sello cuando encuentra un Retorno de carro + Salto de linea
         	String[] liniesSello = sello.split("\\r?\\n");
+            // Recorre cada una de las lineas del sello
         	for(String liniaSello: liniesSello) {
+                // Añade cada linea del sello con su valor correspondiente a linies
         		linies.addAll(processaLinia(liniaSello));
         	}
 
+            // Si hay algo que mostrar en el sello
         	if (!linies.isEmpty()) {
 
-	            // Cerca la línia més llarga per controlar que no surti del pdf
+	            // Busca la línea más larga para controlar que no salga del pdf
 	        	float max = ElementSello.maxPosx;
 	        	float may = ElementSello.maxPosy;
-	        	
-	        	float fx = calculaOrigenX(x, max, orientacion);
-        		float fy = calculaOrigenY(y, may, orientacion);// - linies.get(0).getPosy();
 
-        		// LogoSello
+                // Realiza el cálculo de las coordenadas para que no salga del pdf
+	        	float fx = calculaOrigenX(x, max, orientacion);
+        		float fy = calculaOrigenY(y, may, orientacion);
+
+        		// Si tiene definido LogoSello
         		if (logoSello != null && entidad.getLogoSello() != null) {
             		File file = FileSystemManager.getArchivo(entidad.getLogoSello().getId());
-//            		java.awt.image.BufferedImage logo = ImageIO.read(file);
-//            		Image imatgeSello = Image.getInstance(logo, null);
             		Image imatgeSello = Image.getInstance(file.getAbsolutePath());
             		float heigh = imatgeSello.getHeight();
-            		float width = imatgeSello.getWidth();
+            		float width;
             		if (logoSello.getAmple() != null) {
             			float proporcio = logoSello.getAmple()/imatgeSello.getWidth();
             			width = logoSello.getAmple();
@@ -256,12 +236,12 @@ public class SelloPdfView extends AbstractIText5PdfView {
             		canvas.addImage(imatgeSello); 
             	}
 
-        		// ElementsSello
+        		// Recorre cada una de las lineas de ElementSello
 	            for(ElementSello element: linies) {
 	            	Font font = new Font(element.getBf(), element.getFontSize(), element.getFontStyle(), element.getColor());
 	                Phrase frase = new Phrase(element.getText(), font);
 	                PdfContentByte canvas = writer.getDirectContent();
-	                //int yu = (int) (Float.valueOf(y)-12*j);
+
 	                ColumnText.showTextAligned(canvas, element.getAlineacio(), frase, fx + element.getPosx(), fy + element.getPosy(), 0);
 	            }
             }
@@ -270,10 +250,12 @@ public class SelloPdfView extends AbstractIText5PdfView {
             writer.addJavaScript("this.print(true, this.pageNum, this.pageNum);");
             writer.getDirectContent().setAction(PdfAction.javaScript("this.print(true, this.pageNum, this.pageNum);", writer), 0f, 0f, 800f, 830f);
 
+            // Resetea los valores de ElementSello
             ElementSello.clear();
         }
 
-        String nombreFichero = "Segell_" + formatNumRegistre + ".pdf";
+        // Crea el pdf
+        String nombreFichero = "Segell_" + numRegformat + ".pdf";
 
         // Cabeceras Response
         response.setContentType("application/pdf");
@@ -282,7 +264,15 @@ public class SelloPdfView extends AbstractIText5PdfView {
         response.setHeader("Content-Disposition","inline; filename="+nombreFichero);
         response.setHeader("Content-Type", "application/pdf;charset=UTF-8");
     }
-    
+
+    /**
+     * Calcula el origen de la coordenada Y para imprimir el sello, teniendo en cuenta el tamaño del valor del sello y la posición elegida
+     * para el sello
+     * @param y
+     * @param max
+     * @param orientacion
+     * @return
+     */
     private float calculaOrigenY(String y, float max, String orientacion) {
         Float pixelY = Float.valueOf(y);
         Float maxpixelY = orientacion.equals("V") ? 827f : 582f;
@@ -300,6 +290,14 @@ public class SelloPdfView extends AbstractIText5PdfView {
         return pixelY;
 	}
 
+    /**
+     * Calcula el origen de la coordenada X para imprimir el sello, teniendo en cuenta el tamaño del valor del sello y la posición elegida
+     * para el sello
+     * @param x
+     * @param max
+     * @param orientacion
+     * @return
+     */
 	private float calculaOrigenX(String x, float max, String orientacion) {
 		Float pixelX = Float.valueOf(x);
         if(pixelX < 15){
@@ -318,28 +316,36 @@ public class SelloPdfView extends AbstractIText5PdfView {
         return pixelX;
 	}
 
+    /**
+     * Recorre y Genera una linea del sello sustituyendo el parámetro contenido por su valor
+     * @param liniaSello
+     * @return
+     * @throws Exception
+     */
 	private java.util.List<ElementSello> processaLinia(String liniaSello) throws Exception {
-    	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
 
+    	java.util.List<ElementSello> linies = new ArrayList<ElementSello>();
     	java.util.List<ElementSello> partLinia = new ArrayList<ElementSello>();
     	
-    	if (liniaSello == null || "".equals(liniaSello)) {
+    	if (StringUtils.isEmpty(liniaSello)) {
     		partLinia.add(new ElementSello("", false));
     	} else {
-	    	while (!"".equals(liniaSello)) {
+	    	while (!StringUtils.isEmpty(liniaSello)) {
 	    		if (liniaSello.contains("${")) {
-    				// Text abans del primer paràmetre
+    				// Texto anterior del primer parámetro
 	    			String preParam = liniaSello.substring(0, liniaSello.indexOf("${"));
-	    			if (!"".equals(preParam)) {
+	    			if (!StringUtils.isEmpty(preParam)) {
 	    				partLinia.add(new ElementSello(preParam, false));
 	    			}
-	    			// Paràmetre
+	    			// Substituye el parámetro de la línea del sello por su valor
 	    			String param = liniaSello.substring(liniaSello.indexOf("${") + 2, liniaSello.indexOf("}"));
 	    			ElementSello ls = new ElementSello(param, true);
+                    // Si el parámetro es el logoSello
 	    			if (ls.getParam().equalsIgnoreCase("logoSello")) {
 	    				logoSello = ls;
-	    			} else {
+	    			} else {  // Si es un parámetro diferente de logoSello
 		    			ls.setText(getParamValue(ls.getParam()));
+                        // Revisa si cambia la posición Y, y actualiza en este caso
 		    			if (ls.isChangedPosy()) {
 		    				actualitzaPos(partLinia);
 		    				linies.addAll(partLinia);
@@ -349,7 +355,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
 		    				partLinia.add(ls);
 		    			}
 	    			}
-	    			// Text posterior al primer paràmetre
+	    			// Texto posterior al primer paràmetre
 	    			liniaSello = liniaSello.substring(liniaSello.indexOf("}") + 1);
 	    		} else {
 	    			partLinia.add(new ElementSello(liniaSello, false));
@@ -358,13 +364,17 @@ public class SelloPdfView extends AbstractIText5PdfView {
     		}
     	}
 
+        // Recalcula la alineación adecuada de la linea
     	actualitzaPos(partLinia);
     	linies.addAll(partLinia);
     	
 		return linies;
     }
-    
-    // Alineam totes les parts d'una mateixa línia
+
+    /**
+     * Alinea todos los elementos que componen una misma linea (texto y parámetros)
+     * @param linies
+     */
     private void actualitzaPos(java.util.List<ElementSello> linies) {
     	if (!linies.isEmpty()) {
 	    	int alt = 0;
@@ -378,7 +388,12 @@ public class SelloPdfView extends AbstractIText5PdfView {
 	    	ElementSello.posxRef = ElementSello.posxRefLinia;
     	}
     }
-    
+
+    /**
+     * Asigna el valor al parámetro del formato de sello
+     * @param paramName
+     * @return
+     */
     private String getParamValue(String paramName) {
     	if ("codiOficina".equalsIgnoreCase(paramName)) {
     		return codiOficina;
@@ -387,7 +402,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
     	} else if ("numRegistre".equalsIgnoreCase(paramName)) {
     		return numRegistre;
     	} else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
-    		return formatNumRegistre;
+    		return numRegformat;
     	} else if ("dataRegistre".equalsIgnoreCase(paramName)) {
     		return dataRegistre;
     	} else if ("dataDiaRegistre".equalsIgnoreCase(paramName)) {
@@ -411,13 +426,13 @@ public class SelloPdfView extends AbstractIText5PdfView {
     	} else if ("entitat".equalsIgnoreCase(paramName)) {
     		return entitat;
     	} else if ("destinatari".equalsIgnoreCase(paramName)) {
-            return (destinatari!=null && destinatari.length()>0) ? destinatari : "";
+            return (!StringUtils.isEmpty(destinatari)) ? destinatari : "";
     	} else if ("origen".equalsIgnoreCase(paramName)) {
-    		return (origen!=null && origen.length()>0) ? origen : "";
+    		return (!StringUtils.isEmpty(origen)) ? origen : "";
     	} else if ("tipusRegistre".equalsIgnoreCase(paramName)) {
     		return tipusRegistre;
     	} else if ("extracte".equalsIgnoreCase(paramName)) {
-    		return (extracte!=null && extracte.length()>0) ? extracte : "";
+    		return (!StringUtils.isEmpty(extracte)) ? extracte : "";
     	} else if ("llibre".equalsIgnoreCase(paramName)) {
     		return llibre;
     	} else if ("nomUsuari".equalsIgnoreCase(paramName)) {
@@ -427,7 +442,7 @@ public class SelloPdfView extends AbstractIText5PdfView {
     	} else if ("decodificacioEntitat".equalsIgnoreCase(paramName)) {
     		return decodificacioEntitat;
     	} else if ("formatNumRegistre".equalsIgnoreCase(paramName)) {
-    		return formatNumRegistre;
+    		return numRegformat;
     	} else if ("tipusRegistreComplet".equalsIgnoreCase(paramName)) {
     		return tipusRegistreComplet;
     	} else if ("tipusRegistreCompletCatala".equalsIgnoreCase(paramName)) {

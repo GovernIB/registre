@@ -679,20 +679,30 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
      */
-    @RequestMapping(value = "/{idRegistro}/sello", method = RequestMethod.GET)
+    @RequestMapping(value = "/{idRegistro}/sello", method = RequestMethod.POST)
     public ModelAndView sello(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("sello");
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 
-        mav.addObject("registro", registroEntrada);
-        mav.addObject("x", request.getParameter("x"));
-        mav.addObject("y", request.getParameter("y"));
-        mav.addObject("orientacion", request.getParameter("orientacion"));
-        mav.addObject("tipoRegistro", getMessage("informe.entrada"));
+        //Si el registro no está Anulado ni Pendiente de Visar
+        if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO) &&
+                !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
 
-        return mav;
+            mav.addObject("registro", registroEntrada);
+            mav.addObject("x", request.getParameter("x"));
+            mav.addObject("y", request.getParameter("y"));
+            mav.addObject("orientacion", request.getParameter("orientacion"));
+            mav.addObject("tipoRegistro", getMessage("informe.entrada"));
+
+            return mav;
+
+        }else{
+            Mensaje.saveMessageError(request, getMessage("aviso.sello.noImprimible"));
+            return new ModelAndView("redirect:/registroEntrada/"+idRegistro+"/detalle");
+        }
+
     }
 
 

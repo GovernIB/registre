@@ -52,7 +52,7 @@
             </div>
             <div class="modal-footer">
 
-                <form id="pagina" action="${urlSello}" method="get" target="_blank">
+                <form id="pagina" action="${urlSello}" method="post" target="_blank">
                     <input id="x" name="x" type="text" hidden="hidden" value="">
                     <input id="y" name="y" type="text" hidden="hidden" value="">
                     <input id="orientacion" name="orientacion" type="text" hidden="hidden" value="">

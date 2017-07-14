@@ -62,7 +62,7 @@
                             <div class="panel-footer center">
 
                                 <%--Si la entidad no es SIR o es una Reserva de Número, muestra el boton Modelo Recibo--%>
-                                <c:if test="${!entidadActiva.sir || registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
+                                <c:if test="${!entidadActiva.sir}">
                                     <%--Si hay varios Modelso Recibo, muestra select--%>
                                     <c:if test="${fn:length(modelosRecibo) > 1}">
                                         <form:form modelAttribute="modeloRecibo" method="post" cssClass="form-horizontal">
