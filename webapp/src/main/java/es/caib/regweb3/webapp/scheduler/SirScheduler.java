@@ -20,7 +20,7 @@ public class SirScheduler {
     private SchedulerLocal schedulerEjb;
 
 
-    @Scheduled(cron = "0 0 * * * *") //Cada hora, cada día (cada 60 secs */60 * * * * *)
+    @Scheduled(cron = "*/30 * * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void reintentarEnvioSir(){
 
         try {
