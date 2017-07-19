@@ -104,14 +104,12 @@ public class AvisoController extends BaseController {
 
             // Registros de Entrada Rechazados o Reenviados por SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                //mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO));
-                //mav.addObject("registrosReenviados", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.REGISTRO_REENVIADO));
-                mav.addObject("oficiosRechazados", oficioRemisionEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_RECHAZADO));
-                mav.addObject("oficiosReenviados", oficioRemisionEjb.getByOficinaEstadoCount(oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_DEVUELTO));
+                mav.addObject("entradasRechazadosReenviados", registroEntradaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
+                mav.addObject("salidasRechazadasReenviadas", registroSalidaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
             }
 
-
         }
+
         Long end = System.currentTimeMillis();
         log.debug("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
         return mav;

@@ -3,7 +3,7 @@
 
 <c:if test="${rolAutenticado.nombre == 'RWE_USUARI' && oficinaActiva != null}">
 
-    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + oficiosRechazados + oficiosReenviados}"/>
+    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + entradasRechazadosReenviados + salidasRechazadasReenviadas}"/>
 
     <c:if test="${total > 0}">
 
@@ -80,22 +80,22 @@
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${oficiosRechazados > 0}">
+                    <c:if test="${entradasRechazadosReenviados > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/rechazados/list/1"/>">
+                            <a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados"/> (${oficiosRechazados})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados.inicio"/> (${entradasRechazadosReenviados})
                                 </div>
                             </a>
                         </li>
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${oficiosReenviados > 0}">
+                    <c:if test="${salidasRechazadasReenviadas > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/devueltos/list/1"/>">
+                            <a href="<c:url value="/registroSalida/pendientesSir/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.reenviados"/> (${oficiosReenviados})
+                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroSalida.rechazados.inicio"/> (${salidasRechazadasReenviadas})
                                 </div>
                             </a>
                         </li>

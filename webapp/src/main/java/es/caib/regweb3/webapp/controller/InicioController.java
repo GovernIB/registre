@@ -85,11 +85,6 @@ public class InicioController extends BaseController{
                 mav.addObject("registrosSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("entradasRechazadosReenviados", registroEntradaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-
-                //mav.addObject("registrosRechazados", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                //mav.addObject("registrosReenviados", registroEntradaEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.REGISTRO_REENVIADO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                //mav.addObject("oficiosRechazados", oficioRemisionEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_RECHAZADO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                //mav.addObject("oficiosReenviados", oficioRemisionEjb.getByOficinaEstado(oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_DEVUELTO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
 
         }

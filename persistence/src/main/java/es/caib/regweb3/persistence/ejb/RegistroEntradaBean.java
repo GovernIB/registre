@@ -925,6 +925,22 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return q.getResultList();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.fecha desc");
+
+        q.setParameter("idOficinaActiva", idOficina);
+        q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+        return (Long) q.getSingleResult();
+    }
+
     /**
      * Método que prepara el registro de entrada para distribuirlo.
      * La variable confAnexos indica que datos se envian en el segmento de anexo del registro de entrada.

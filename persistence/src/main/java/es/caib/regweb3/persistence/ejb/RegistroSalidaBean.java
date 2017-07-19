@@ -659,6 +659,23 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return q.getResultList();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception{
+
+        Query q;
+
+        q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.oficina.id = :idOficinaActiva " +
+                "and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.fecha desc");
+
+
+        q.setParameter("idOficinaActiva", idOficina);
+        q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
+        q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+
+        return (Long) q.getSingleResult();
+    }
+
     public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin != null){

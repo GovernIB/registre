@@ -325,6 +325,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
 
     /**
+     * Total de Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
+
+    /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re

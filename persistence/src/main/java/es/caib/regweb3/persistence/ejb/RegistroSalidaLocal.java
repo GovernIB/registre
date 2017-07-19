@@ -213,6 +213,14 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     public List<RegistroSalida> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
 
     /**
+     * Total de Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
+
+    /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
      * @param rs
      * @return
