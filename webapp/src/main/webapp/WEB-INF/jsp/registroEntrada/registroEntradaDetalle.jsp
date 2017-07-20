@@ -57,36 +57,14 @@
                     <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
                     <c:if test="${oficinaRegistral}">
 
-                        <%--Botones imprimir Recibo, Justificante y Sello--%>
+                        <%--Botones Justificante y Sello--%>
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
                             <div class="panel-footer center">
 
-                                <%--Si la entidad no es SIR o es una Reserva de Número, muestra el boton Modelo Recibo--%>
-                                <c:if test="${!entidadActiva.sir || registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
-                                    <%--Si hay varios Modelos Recibo, muestra select--%>
-                                    <c:if test="${fn:length(modelosRecibo) > 1}">
-                                        <form:form modelAttribute="modeloRecibo" method="post" cssClass="form-horizontal">
-                                            <div class="col-xs-12 btn-block">
-                                                <div class="col-xs-6 no-pad-lateral list-group-item-heading">
-                                                    <form:select path="idModelo" cssClass="chosen-select">
-                                                        <form:options items="${modelosRecibo}" itemValue="id" itemLabel="nombre"/>
-                                                    </form:select>
-                                                </div>
-                                                <div class="col-xs-6 no-pad-right list-group-item-heading">
-                                                    <button type="button" class="btn btn-warning btn-sm btn-block" onclick="imprimirRecibo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/"/>')"><spring:message code="modeloRecibo.imprimir"/></button>
-                                                </div>
-                                            </div>
-                                        </form:form>
-                                    </c:if>
-                                    <%--Si hay 1 Modelo Recibo, muestra sólo el botón --%>
-                                    <c:if test="${fn:length(modelosRecibo) == 1}">
-                                        <div class="btn-group"><button type="button" class="btn btn-warning btn-sm" onclick="goTo('<c:url value="/modeloRecibo/${registro.id}/RE/imprimir/${modelosRecibo[0].id}"/>')"><spring:message code="modeloRecibo.imprimir"/></button></div>
-                                    </c:if>
-                                </c:if>
+                                <%--Si no és una Reserva de Número, se muestras las opciones del Justificante --%>
+                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
-                                <%--Si la entidad es SIR, no és una Reserva de Número y no tiene ya justificante, muestra el boton Justificante --%>
-                                <c:if test="${entidadActiva.sir && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-
+                                    <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>
                                     <c:if test="${idJustificante == null && registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -99,6 +77,7 @@
                                         </div>
                                     </c:if>
 
+                                    <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
                                     <c:if test="${idJustificante != null}">
                                         <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
                                     </c:if>

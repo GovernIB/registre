@@ -13,7 +13,6 @@ import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
-import es.caib.regweb3.webapp.form.ModeloForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
@@ -203,8 +202,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("entidadActiva", entidadActiva);
 
         // Modelo Recibo
-        model.addAttribute("modeloRecibo", new ModeloForm());
-        model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
+        //model.addAttribute("modeloRecibo", new ModeloForm());
+        //model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
 
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
