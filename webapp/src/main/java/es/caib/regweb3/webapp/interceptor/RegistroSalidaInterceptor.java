@@ -193,6 +193,13 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             RegistroSalida registroSalida = registroSalidaEjb.findById(Long.valueOf(idRegistroSalida));
             Long idJustificante = anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId());
 
+            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+                log.info("Aviso: Solo se puede generar un Justificante de un registro Válido");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.valido"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             //Si ya existe un justificante, da error
             if(idJustificante != null){
                 log.info("Aviso: El registro ya tiene un justificante asociado");
