@@ -658,7 +658,7 @@ public class OficioRemisionController extends BaseController {
      * Seleccionar un {@link es.caib.regweb3.model.ModeloOficioRemision}
      */
     @RequestMapping(value = "/{idOficioRemision}/imprimir/{idModelo}", method = RequestMethod.GET)
-    public ModelAndView imprimirModeloRecibo(@PathVariable Long idOficioRemision, @PathVariable Long idModelo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ModelAndView imprimirModeloOficio(@PathVariable Long idOficioRemision, @PathVariable Long idModelo, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision");
 
