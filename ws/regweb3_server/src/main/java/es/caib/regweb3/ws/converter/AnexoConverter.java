@@ -48,39 +48,32 @@ public class AnexoConverter extends CommonConverter {
         Anexo anexo = procesarAnexo(anexoWs, idEntidad,tipoDocumentalEjb);
         
         AnexoFull anexoFull = new AnexoFull(anexo);
-       
 
-        // Guardamos el Anexo datos básicos
-        //anexo = anexoEjb.persist(anexo);
-        
         
         // Si validez Documento --> Copia no se admite firma
        if (RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento()) && anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
-           //anexoWs.setNombreFirmaAnexada("");
-           //anexoWs.setFirmaAnexada(null);
-            //anexoWs.setTamanoFirmaAnexada(null);
-           //anexoWs.setTipoMIMEFirmaAnexada(null);
-           throw new Exception("Si la validesa del Document és  còpia = 01"
-                   + " no s'admet firma");
-        }
-
+           throw new Exception("Si la validez del documento es  cópia = 01"
+                   + " no se admite firma");
+       }
 
        final int modoFirma = anexoWs.getModoFirma();
        DocumentCustody doc = null;
-       if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null) {
+
+       if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado())  && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
            doc = new DocumentCustody();
            doc.setData(anexoWs.getFicheroAnexado());
            doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
            doc.setName(anexoWs.getNombreFicheroAnexado());
+       }else{
+           throw new Exception("Los campos 'nombreFicheroAnexado' o 'FicheroAnexado' no pueden estar vacios");
        }
        anexoFull.setDocumentoCustody(doc);
        anexoFull.setDocumentoFileDelete(false);
 
 
        SignatureCustody sign = null;
-       if (anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
+       if (StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)) {
            sign = new SignatureCustody();
-
            sign.setData(anexoWs.getFirmaAnexada());
            sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
            sign.setName(anexoWs.getNombreFirmaAnexada());
@@ -96,12 +89,12 @@ public class AnexoConverter extends CommonConverter {
                sign.setAttachedDocument(null);
                //El documento con la firma viene en la parte de documento y hay que pasarla a firma
                anexoFull.setDocumentoCustody(null);
-               if (anexoWs.getNombreFicheroAnexado() != null && anexoWs.getFicheroAnexado() != null) {
+               if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
                    sign.setData(anexoWs.getFicheroAnexado());
                    sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
                    sign.setName(anexoWs.getNombreFicheroAnexado());
                } else {
-                   throw new Exception("Els camps NombreFicheroAnexado i FicheroAnexado no poden ser null");
+                   throw new Exception("Los campos 'nombreFicheroAnexado' o 'FicheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
                }
 
                break;
@@ -110,14 +103,14 @@ public class AnexoConverter extends CommonConverter {
            case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
                // TODO Emprar mètode per descobrir tipus de signatura
                // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
-               if (anexoWs.getNombreFirmaAnexada() == null || anexoWs.getFirmaAnexada() == null) {
-                   throw new Exception("Els camps NombreFirmaAnexada i FirmaAnexada no poden ser null");
+               if (StringUtils.isEmpty(anexoWs.getNombreFirmaAnexada()) || anexoWs.getFirmaAnexada() == null || anexoWs.getFirmaAnexada().length ==0) {
+                   throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada' no pueden estar vacios caso FIRMA DETACHED");
                }
                sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
                sign.setAttachedDocument(false);
                if (doc == null) {
-                   throw new Exception("El document no s'envia i el modo de firma "
-                           + " és 'Firma en document separat'");
+                   throw new Exception("El documento no se envia y el modo de firma "
+                           + " es 'Firma en documento separado'");
                }
                break;
 

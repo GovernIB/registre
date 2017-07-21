@@ -68,6 +68,12 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
                 rejectValue(errors, "destino.codigo", "error.valor.requerido", "El camp és obligatori");
             }
         }
+        //Si el campo expone esta informado, el campo solicita se debe informar también
+        if(StringUtils.isNotEmpty(registroDetalle.getExpone())){
+            if(StringUtils.isEmpty(registroDetalle.getSolicita())){
+                rejectValue(errors, "registroDetalle.solicita", "error.valor.requerido", "El camp és obligatori");
+            }
+        }
 
 
     }

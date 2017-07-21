@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.validator;
 
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
 
@@ -76,6 +77,12 @@ public class RegistroSalidaValidator<T> extends AbstractRegWebValidator<T> {
         if (registroSalida.getOrigen() == null || registroSalida.getOrigen().getCodigo() == null || "".equals(registroSalida.getOrigen().getCodigo())) {
           rejectValue(errors, "origen.codigo", "error.valor.requerido", "El camp és obligatori");
         }
+
+      if(StringUtils.isNotEmpty(registroDetalle.getExpone())){
+          if(StringUtils.isEmpty(registroDetalle.getSolicita())){
+              rejectValue(errors, "registroDetalle.solicita", "error.valor.requerido", "El camp és obligatori");
+          }
+      }
 
     }
 
