@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<datasources>
+    <local-tx-datasource>
+        <jndi-name>es.caib.seycon.db.wl</jndi-name>
+        <connection-url>jdbc:postgresql://localhost:5432/seycon</connection-url>
+        <driver-class>org.postgresql.Driver</driver-class>
+        <user-name>seycon</user-name>
+        <password>seycon</password>
+    </local-tx-datasource>
+</datasources>
