@@ -35,6 +35,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
     private String declaracion = null;
     private String ley = null;
+    private Boolean sir = false;
 
 
     /**
@@ -63,16 +64,19 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
                 parrafo.setAlignment(Element.ALIGN_LEFT);
                 document.add(parrafo);
                 document.add(logoRW);
+
                 // Sir
-                InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
-                Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
-                logoSIR.setAlignment(Element.ALIGN_RIGHT);
-                logoSIR.scaleToFit(100, 100);
-                logoSIR.setAbsolutePosition(460f, 790f);
-                parrafo = new Paragraph("");
-                parrafo.setAlignment(Element.ALIGN_RIGHT);
-                document.add(parrafo);
-                document.add(logoSIR);
+                if(sir) {
+                    InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
+                    Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
+                    logoSIR.setAlignment(Element.ALIGN_RIGHT);
+                    logoSIR.scaleToFit(100, 100);
+                    logoSIR.setAbsolutePosition(460f, 790f);
+                    parrafo = new Paragraph("");
+                    parrafo.setAlignment(Element.ALIGN_RIGHT);
+                    document.add(parrafo);
+                    document.add(logoSIR);
+                }
                 document.add(new Paragraph(" "));
                 document.add(new Paragraph(" "));
             } catch (DocumentException ex) {
@@ -113,9 +117,10 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
      * @param locale
      * @throws Exception
      */
-    private void inicializarPropiedades(Locale locale) throws Exception{
+    private void inicializarPropiedades(Locale locale, Boolean entidadSir) throws Exception{
         declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
         ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
+        sir = entidadSir;
     }
 
 
@@ -126,7 +131,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale);
+        inicializarPropiedades(locale, registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getSir());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -166,7 +171,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
         // Interesados
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document);
+        llistarInteressats(interesados, locale, document, false);
 
         // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomDesti, expedient, registroEntrada.getClass().getSimpleName());
@@ -188,7 +193,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale);
+        inicializarPropiedades(locale, registroSalida.getOficina().getOrganismoResponsable().getEntidad().getSir());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -238,7 +243,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
 
         // Interesados
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document);
+        llistarInteressats(interesados, locale, document, true);
 
         // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
@@ -428,7 +433,7 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
     }
 
     // Lista los interesados y representantes tanto para el registro de entrada como el de salida
-    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document) throws Exception {
+    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws Exception {
 
         Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
         Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
@@ -436,7 +441,13 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
         // Creamos estilo para el título Interesado
         PdfPTable titolInteressat = new PdfPTable(1);
         titolInteressat.setWidthPercentage(100);
-        PdfPCell cellInteressat = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.interesado"), font8Bold));
+        String etiqueta;
+        if(isSalida){ // Si és una sortida
+            etiqueta = tradueixMissatge(locale,"justificante.destinatario");
+        }else{  // Si és una entrada
+            etiqueta = tradueixMissatge(locale,"justificante.interesado");
+        }
+        PdfPCell cellInteressat = new PdfPCell(new Paragraph(etiqueta, font8Bold));
         cellInteressat.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cellInteressat.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellInteressat.setBorder(Rectangle.BOTTOM);
@@ -685,8 +696,10 @@ public class JustificanteMockPlugin extends AbstractPluginProperties implements 
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), font8));
             taulaInformacio.addCell(new Paragraph(nomDesti, font8));
         }
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.expediente"), font8));
-        taulaInformacio.addCell(new Paragraph(expedient, font8));
+        if(!expedient.isEmpty()) {
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.expediente"), font8));
+            taulaInformacio.addCell(new Paragraph(expedient, font8));
+        }
         document.add(taulaInformacio);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));

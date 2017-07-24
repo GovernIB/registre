@@ -39,6 +39,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     private String declaracion = null;
     private String ley = null;
     private String validez = null;
+    private Boolean sir = false;
 
 
     /**
@@ -79,15 +80,17 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     document.add(logoGovern);
                 }
                 // Sir
-                InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
-                Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
-                logoSIR.setAlignment(Element.ALIGN_RIGHT);
-                logoSIR.scaleToFit(100, 100);
-                logoSIR.setAbsolutePosition(460f, 790f);
-                parrafo = new Paragraph("");
-                parrafo.setAlignment(Element.ALIGN_RIGHT);
-                document.add(parrafo);
-                document.add(logoSIR);
+                if(sir) {
+                    InputStream fileSIR = classLoader.getResourceAsStream("img/SIR_petit.jpg");
+                    Image logoSIR = Image.getInstance(cb, ImageIO.read(fileSIR), 1);
+                    logoSIR.setAlignment(Element.ALIGN_RIGHT);
+                    logoSIR.scaleToFit(100, 100);
+                    logoSIR.setAbsolutePosition(460f, 790f);
+                    parrafo = new Paragraph("");
+                    parrafo.setAlignment(Element.ALIGN_RIGHT);
+                    document.add(parrafo);
+                    document.add(logoSIR);
+                }
                 document.add(new Paragraph(" "));
                 document.add(new Paragraph(" "));
             } catch (DocumentException ex) {
@@ -138,13 +141,14 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
      * @param locale
      * @throws Exception
      */
-    private void inicializarPropiedades(Locale locale, String url, String specialValue, String csv) throws Exception{
+    private void inicializarPropiedades(Locale locale, String url, String specialValue, String csv, Boolean entidadSir) throws Exception{
         rutaImatge = this.getProperty(PROPERTY_CAIB_BASE + "logoPath");
         declaracion = this.getProperty(PROPERTY_CAIB_BASE + "declaracion." + locale);
         ley = this.getProperty(PROPERTY_CAIB_BASE + "ley." + locale);
         validez = this.getProperty(PROPERTY_CAIB_BASE + "validez." + locale);
         String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
+        sir = entidadSir;
     }
 
     @Override
@@ -154,7 +158,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, url, specialValue,csv);
+        inicializarPropiedades(locale, url, specialValue,csv,registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getSir());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -195,7 +199,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         // Interesados
         List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document);
+        llistarInteressats(interesados, locale, document, false);
 
         // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomDesti, expedient, registroEntrada.getClass().getSimpleName());
@@ -217,7 +221,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         Locale locale = new Locale(idioma);
 
         //Inicializamos las propiedades comunes
-        inicializarPropiedades(locale, url, specialValue,csv);
+        inicializarPropiedades(locale, url, specialValue,csv,registroSalida.getOficina().getOrganismoResponsable().getEntidad().getSir());
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream(4096);
 
@@ -267,7 +271,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         // Interesados
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-        llistarInteressats(interesados, locale, document);
+        llistarInteressats(interesados, locale, document, true);
 
         // Información adicional del Registro
         adicionalRegistre(locale, document, extracte, nomOrigen, expedient, registroSalida.getClass().getSimpleName());
@@ -464,7 +468,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     }
 
     // Lista los Interesados y Representantes tanto para el registro de entrada como el de salida
-    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document) throws Exception {
+    protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws Exception {
 
         Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
         font8gris.setColor(BaseColor.GRAY);
@@ -474,7 +478,13 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Creamos estilo para el título Interesado
         PdfPTable titolInteressat = new PdfPTable(1);
         titolInteressat.setWidthPercentage(100);
-        PdfPCell cellInteressat = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.interesado"), font8bold));
+        String etiqueta;
+        if(isSalida){ // Si és una sortida
+            etiqueta = tradueixMissatge(locale,"justificante.destinatario");
+        }else{  // Si és una entrada
+            etiqueta = tradueixMissatge(locale,"justificante.interesado");
+        }
+        PdfPCell cellInteressat = new PdfPCell(new Paragraph(etiqueta, font8bold));
         cellInteressat.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cellInteressat.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellInteressat.setBorder(Rectangle.BOTTOM);
@@ -728,8 +738,10 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), font8gris));
             taulaInformacio.addCell(new Paragraph(nomDesti, font8negre));
         }
-        taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale,"justificante.expediente"), font8gris));
-        taulaInformacio.addCell(new Paragraph(expedient, font8negre));
+        if(!expedient.isEmpty()) {
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.expediente"), font8gris));
+            taulaInformacio.addCell(new Paragraph(expedient, font8negre));
+        }
         document.add(taulaInformacio);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
