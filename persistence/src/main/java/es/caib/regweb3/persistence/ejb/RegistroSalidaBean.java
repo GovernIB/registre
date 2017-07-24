@@ -666,7 +666,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         Query q;
 
         q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.oficina.id = :idOficinaActiva " +
-                "and (rs.estado = :rechazado or rs.estado = :reenviado) order by rs.fecha desc");
+                "and (rs.estado = :rechazado or rs.estado = :reenviado)");
 
 
         q.setParameter("idOficinaActiva", idOficina);

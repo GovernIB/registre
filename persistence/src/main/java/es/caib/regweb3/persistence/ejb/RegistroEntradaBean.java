@@ -932,7 +932,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         Query q;
 
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
-                "and (re.estado = :rechazado or re.estado = :reenviado) order by re.fecha desc");
+                "and (re.estado = :rechazado or re.estado = :reenviado)");
 
         q.setParameter("idOficinaActiva", idOficina);
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
