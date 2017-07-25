@@ -305,7 +305,9 @@ public class PropiedadGlobalUtil {
      * @return
      */
     public static String getScanWebAbsoluteURL() {
-        return System.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE+"scanweb.absoluteurl");
+        final String partialPropertyName = "scanweb.absoluteurl";
+
+        return getString( partialPropertyName);
     }
 
 
