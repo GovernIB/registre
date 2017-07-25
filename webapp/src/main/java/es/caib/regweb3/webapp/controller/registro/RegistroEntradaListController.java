@@ -720,21 +720,28 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Creamos el anexo justificante y lo firmamos
-            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+            // Dispone de permisos para Editar el registro
+            if(permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)){
 
-            // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
-            if(anexoFull.getSignatureCustody()!=null){
-                request.getSession().setAttribute("justificante", true);
-            }else {
-                request.getSession().setAttribute("justificante", false);
+                // Creamos el anexo justificante y lo firmamos
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+
+                // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
+                if(anexoFull.getSignatureCustody() != null){
+                    request.getSession().setAttribute("justificante", true);
+                }else {
+                    request.getSession().setAttribute("justificante", false);
+                }
+
+            }else{
+                Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
             }
 
           
         } catch (I18NException e) {
-          Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
+            Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
         } catch (I18NValidationException ve) {
-          Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
+            Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
         }
 
         return new ModelAndView("redirect:/registroEntrada/"+idRegistro+"/detalle");

@@ -50,9 +50,13 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
 
+        // Comprova que existeix el plugin de justificant
+        if(signaturePlugin == null) {
+          // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
+          throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
+        }
 
         String reason = "FIRMA_JUSTIFICANT"; // Hem de canviar raó justificant????
-
 
         final String signType = FileInfoSignature.SIGN_TYPE_PADES;
         final int signMode = FileInfoSignature.SIGN_MODE_EXPLICIT;

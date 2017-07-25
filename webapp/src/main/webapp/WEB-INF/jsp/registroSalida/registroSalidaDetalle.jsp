@@ -61,8 +61,8 @@
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
                             <div class="panel-footer center">
 
-                                    <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>
-                                <c:if test="${idJustificante == null && registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+                                <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>
+                                <c:if test="${idJustificante == null && registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <spring:message code="justificante.boton"/> <span class="caret"></span>

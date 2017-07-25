@@ -20,6 +20,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.plugins.utils.Metadata;
 import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.hibernate.Hibernate;
@@ -1276,16 +1277,35 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       try {
           final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
-          // Carregam el plugin
-          IJustificantePlugin justificantePlugin;
-          justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
+          // Carregam el plugin del Justificant
+          IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
 
           // Comprova que existeix el plugin de justificant
           if(justificantePlugin == null) {
-            // No s´ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.
-            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.7"));
+              // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
+              throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.1"));
           }
-          
+
+          // Carregam el plugin del Custodia del Justificante
+          IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+          // Comprova que existeix el plugin de Custodia del Justificante
+          if(documentCustodyPlugin == null) {
+              // No s´ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.
+              throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.7"));
+          }
+
+          // Cerca el Plugin de Justificant definit a les Propietats Globals
+          ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
+
+          // Comprova que existeix el plugin de justificant
+          if(signaturePlugin == null) {
+              // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
+              throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
+          }
+
+
+          // Mensajes traducidos
           Locale locale = new Locale(idioma);
           String nombreFichero = I18NLogicUtils.tradueix(locale, "justificante.fichero") + ".pdf";
           String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
@@ -1296,23 +1316,19 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           Anexo anexo = anexoFull.getAnexo();
           anexo.setTitulo(tituloAnexo);
           anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-          TipoDocumental tipoDocumental = tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad);
-          anexo.setTipoDocumental(tipoDocumental);
+          anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
           anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
           anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
           anexo.setObservaciones(observacionesAnexo);
           anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-
           anexo.setJustificante(true);
 
           // Generam la Custòdia per tenir el CSV
-          Map<String,Object> custodyParameters;
-          custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
+          Map<String,Object> custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
-          IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
           String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
-
           Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+
           String csv = null;
           if(mcsv != null) {
               csv = mcsv.getValue();

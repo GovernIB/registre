@@ -582,14 +582,20 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Creamos el anexo justificante y lo firmamos
-            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+            // Dispone de permisos para Editar el registro
+            if(permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
 
-            // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
-            if(anexoFull.getSignatureCustody()!=null){
-                request.getSession().setAttribute("justificante", true);
-            }else {
-                request.getSession().setAttribute("justificante", false);
+                // Creamos el anexo justificante y lo firmamos
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+
+                // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
+                if(anexoFull.getSignatureCustody()!=null){
+                    request.getSession().setAttribute("justificante", true);
+                }else {
+                    request.getSession().setAttribute("justificante", false);
+                }
+            }else{
+                Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
             }
 
 
