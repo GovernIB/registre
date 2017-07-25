@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -12,7 +11,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -135,23 +133,33 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         tipoDocumentalEjb.nuevoTraduccion("TD99", entidad.getId(), "Altres", "Otros");
 
         // Creamos las propiedades globales por defecto
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.oficios","20","Resultados por página en los Oficios pendientes de remisión", entidad.getId(), 1L));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.lopd","20","Resultados por página en los informes LOPD", entidad.getId(), 1L));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"maxuploadsizeinbytes","10485760","Tamaño máximo permitido por anexo en bytes", entidad.getId(), 7L));
-        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cronExpression.inicializarContadores","0 0 0 1 1 ? *","Expresión del cron para la inicializacion de contadores", entidad.getId(), 1L));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.oficios","20","Resultados por página en los Oficios pendientes de remisión", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.lopd","20","Resultados por página en los informes LOPD", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"maxuploadsizeinbytes","10485760","Tamaño máximo permitido por anexo en bytes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
 
 
         // Creamos los Plugins
-        pluginEjb.persist(new Plugin("Justificante","Implementación base del plugin, genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
+        pluginEjb.persist(new Plugin("Justificante","Genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
                 "# Mensaje para la declaración en el justificante\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.\n" +
                 "# Mensaje para la ley en el justificante\n" +
                 "es.caib.regweb3.plugins.justificante.mock.ley.es=El registro realizado está amparado en el Artículo 16 de la Ley 39/2016.\n" +
-                "es.caib.regweb3.plugins.justificante.mock.ley.ca=El registre realitzat està amparat a l'Article 16 de la Llei 39/2016."));
-        pluginEjb.persist(new Plugin("Distribución","Implementación base del plugin, marca como distribuido un Registro","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_DISTRIBUCION,null,null));
-        pluginEjb.persist(new Plugin("Firma en servidor","Firma en servidor mediante el MiniApplet","org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_FIRMA_SERVIDOR,null,"# Base del Plugin de signature server"+
-                "es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=C:/Users/earrivi/Documents/Proyectos/OTAE/REGWEB3/"));
+                "es.caib.regweb3.plugins.justificante.mock.ley.ca=El registre realitzat està amparat a l'Article 16 de la Llei 39/2016.\n" +
+                "# Mensaje para la validez en el justificante\n" +
+                "es.caib.regweb3.plugins.justificante.mock.validez.es=El presente justificante tiene validez a efectos de presentación de la documentación. El inicio del cómputo de plazos para la Administración, en su caso, vendrá determinado por la fecha de la entrada de su solicitud en el registro del Organismo competente.\n" +
+                "es.caib.regweb3.plugins.justificante.mock.validez.ca=El present justificant té validesa a efectes de presentació de la documentació. L'inici del còmput de plaços per l'Administració, en el seu cas, vendrà determinat per la data de l'entrada de la seva sol·licitud en el registre de l'Organismo competent.\n" +
+                "# Path para el logo de la Entidad\n" +
+                "es.caib.regweb3.plugins.justificante.mock.logoPath=xxxx/logo_entitat.jpg"));
+
+        pluginEjb.persist(new Plugin("Distribución","Implementación base del plugin, cambia el estado de un Registro a Distribuido","es.caib.regweb3.plugins.distribucion.mock.DistribucionMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_DISTRIBUCION,null,null));
+
+
+        pluginEjb.persist(new Plugin("Firma en servidor","Firma en servidor mediante el MiniApplet","org.fundaciobit.plugins.signatureserver.miniappletinserver.MiniAppletInServerSignatureServerPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_FIRMA_SERVIDOR,null,"# Base del Plugin de signature server\n" +
+                "es.caib.regweb3.plugins.signatureserver.miniappletinserver.base_dir=xxxxxxxx/\n" +
+                "# Si signaturesSet.getCommonInfoSignature().getUsername() es null, llavors\n" +
+                "# s´utilitza aquest valor com a sistema de selecció del certificat amb el que firmar\n" +
+                "es.caib.regweb3.plugins.signatureserver.miniappletinserver.defaultAliasCertificate=regweb3"));
 
 
         return entidad;
