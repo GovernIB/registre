@@ -236,7 +236,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws Exception {
         String value = getPropertyByEntidad(idEntidad, clave);
         if (value == null) {
-            return true;
+            return false;
         } else {
             return "true".equals(value);
         }
@@ -244,7 +244,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     public Boolean getBooleanProperty(String clave) throws Exception{
         String value = getProperty(clave);
         if (value == null) {
-            return true;
+            return false;
         } else {
             return "true".equals(value);
         }

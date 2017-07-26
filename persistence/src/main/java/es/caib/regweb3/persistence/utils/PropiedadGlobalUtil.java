@@ -311,6 +311,18 @@ public class PropiedadGlobalUtil {
     }
 
 
+    /**
+     * Devuelve el valor de la propiedad que indica si se permiten adjuntar anexos con firma detached.
+     *
+     * @return
+     */
+    public static Boolean getPermitirAnexosDetached(Long idEntidad) {
+        final String partialPropertyName = "anexos.permitirfirmadetached";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+
 
     /**
      *

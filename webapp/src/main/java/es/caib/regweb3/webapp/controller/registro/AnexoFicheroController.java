@@ -1,9 +1,11 @@
 package es.caib.regweb3.webapp.controller.registro;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -63,6 +65,7 @@ public class AnexoFicheroController extends AnexoController {
         Boolean isOficioRemisionSir = (Boolean) session.getAttribute("LAST_isOficioRemisionSir");
 
 
+
         return new ModelAndView(new RedirectView("/anexoFichero/ficheros/" + registroDetalleID + "/" + tipoRegistro + "/" + registroID + (anexoID == null ? "" : ("/" + anexoID)) + "/" + isOficioRemisionSir, true));
     }
 
@@ -75,8 +78,8 @@ public class AnexoFicheroController extends AnexoController {
         log.info(" Passa per AnexoFicheroController::ficherosGet(" + registroDetalleID
                 + "," + tipoRegistro + ", " + registroID + ")");
 
+        Entidad entidad = getEntidadActiva(request);
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
         //Inicializamos el formulario de anexo
@@ -85,6 +88,7 @@ public class AnexoFicheroController extends AnexoController {
         anexoForm.setTipoRegistro(tipoRegistro);
         anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
+        anexoForm.setPermitirAnexoDetached(PropiedadGlobalUtil.getPermitirAnexosDetached(entidad.getId()));
         anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
         model.addAttribute("anexoForm" ,anexoForm);
 

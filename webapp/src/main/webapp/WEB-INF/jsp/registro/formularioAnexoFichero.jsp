@@ -49,13 +49,14 @@
                     <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="1"/><spring:message
                         code="anexo.tipofirma.attached"/>
                 </label>
+                <c:if test="${anexoForm.permitirAnexoDetached}">
+                    <label class="radio-inline">
+                        <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="2"/><spring:message
+                            code="anexo.tipofirma.detached"/>
+                    </label>
+                </c:if>
                 <label class="radio-inline">
-                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="2"/><spring:message
-                        code="anexo.tipofirma.detached"/>
-                </label>
-                <label class="radio-inline">
-                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma()"
-                                      value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
+                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma()"  value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
                 </label>
             </div>
             <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
@@ -244,11 +245,12 @@
                 }
 
                 break;
+
             case '2':<%--firma amb doc separat --%>
-                $("#labelFirma").html("<spring:message code="anexo.firma"/>");
-                $('#divInputArchivo').show();
-                $('#divInputFirma').show();
-                break;
+                    $("#labelFirma").html("<spring:message code="anexo.firma"/>");
+                    $('#divInputArchivo').show();
+                    $('#divInputFirma').show();
+                    break;
             default:
                 alert("Modo de firma no suportat(" + autofirma + ")");
         }

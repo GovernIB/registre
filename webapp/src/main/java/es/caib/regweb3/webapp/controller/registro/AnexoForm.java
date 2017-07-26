@@ -23,6 +23,8 @@ public class AnexoForm extends AnexoFull {
   Long registroID;
 
   Boolean oficioRemisionSir;
+
+  Boolean permitirAnexoDetached;
   
   public AnexoForm() {
     super();
@@ -83,5 +85,13 @@ public class AnexoForm extends AnexoFull {
 
   public void setOficioRemisionSir(Boolean oficioRemisionSir) {
     this.oficioRemisionSir = oficioRemisionSir;
+  }
+
+  public Boolean getPermitirAnexoDetached() {
+    return permitirAnexoDetached;
+  }
+
+  public void setPermitirAnexoDetached(Boolean permitirAnexoDetached) {
+    this.permitirAnexoDetached = permitirAnexoDetached;
   }
 }
