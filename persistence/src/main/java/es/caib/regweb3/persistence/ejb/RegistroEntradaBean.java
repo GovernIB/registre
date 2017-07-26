@@ -449,11 +449,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception {
+    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
 
-        Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.numeroRegistroFormateado = :numeroRegistroFormateado ");
+        Query q = em.createQuery("Select re from RegistroEntrada as re where re.numeroRegistroFormateado = :numeroRegistroFormateado " +
+                "and re.usuario.entidad.codigoDir3 = :codigoEntidad");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
+        q.setParameter("codigoEntidad", codigoEntidad);
 
         List<RegistroEntrada> registro = q.getResultList();
 

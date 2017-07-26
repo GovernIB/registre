@@ -70,7 +70,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception;
+    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
 
 
     /**

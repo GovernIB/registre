@@ -9,6 +9,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
@@ -738,7 +739,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), font8gris));
             taulaInformacio.addCell(new Paragraph(nomDesti, font8negre));
         }
-        if(!expedient.isEmpty()) {
+        if(StringUtils.isNotEmpty(expedient)) {
             taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.expediente"), font8gris));
             taulaInformacio.addCell(new Paragraph(expedient, font8negre));
         }

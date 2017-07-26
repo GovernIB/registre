@@ -122,13 +122,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
 
     /**
-     * Obtiene el RegistroEntrada a partir de su numero de registro formateado
+     * Obtiene el RegistroEntrada a partir de su numero de registro formateado y entidad
      *
+     * @param codigoEntidad
      * @param numeroRegistroFormateado
      * @return
      * @throws Exception
      */
-    public RegistroEntrada findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception;
+    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
 
     /**
      * Obtiene el numero de registro formateado de un RegistroEntrada

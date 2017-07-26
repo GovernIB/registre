@@ -2,6 +2,7 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.IdentificadorWs;
+import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
 import es.caib.regweb3.ws.model.RegistroSalidaWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
@@ -45,6 +46,18 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad")String entidad,
         @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs)
         throws Throwable,WsI18NException, WsValidationException;
+
+    /**
+     * Obtiene el Justificante del {@link es.caib.regweb3.model.RegistroSalida} indicado, si es la primera vez lo generará
+     * @param entidad
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
+    @WebMethod
+    public JustificanteWs obtenerJustificante(@WebParam(name = "entidad")String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
 
     /**

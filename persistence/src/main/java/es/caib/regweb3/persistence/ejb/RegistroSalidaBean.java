@@ -336,11 +336,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida findByNumeroRegistroFormateado(String numeroRegistroFormateado) throws Exception {
+    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
 
-        Query q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida where registroSalida.numeroRegistroFormateado = :numeroRegistroFormateado ");
+        Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistroFormateado = :numeroRegistroFormateado " +
+                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
+        q.setParameter("codigoEntidad", codigoEntidad);
 
         List<RegistroSalida> registro = q.getResultList();
 
