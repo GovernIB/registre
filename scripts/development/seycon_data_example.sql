@@ -1,6 +1,6 @@
 --USUARIOS
-INSERT INTO SC_WL_USUARI (USU_CODI,USU_PASS,USU_NOM) VALUES ('superadmin','rwe_superadmin','Usuario rwe_superadmin');
-INSERT INTO SC_WL_USUARI (USU_CODI,USU_PASS,USU_NOM) VALUES ('admin','rwe_admin','Usuario rwe_admin');
+INSERT INTO SC_WL_USUARI (USU_CODI,USU_PASS,USU_NOM) VALUES ('superadmin','superadmin','Usuario rwe_superadmin');
+INSERT INTO SC_WL_USUARI (USU_CODI,USU_PASS,USU_NOM) VALUES ('admin','admin','Usuario rwe_admin');
 INSERT INTO SC_WL_USUARI (USU_CODI,USU_PASS,USU_NOM) VALUES ('usuari','usuari','Usuario rwe_usuari');
 
 --USUARIOS-GRUPOS
