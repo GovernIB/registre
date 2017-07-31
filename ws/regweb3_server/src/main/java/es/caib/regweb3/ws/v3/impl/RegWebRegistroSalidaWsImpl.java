@@ -279,6 +279,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), entidad);
         }
 
+        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
         // 5.- Obtenemos el RegistroSalida
         RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
 
@@ -286,20 +288,20 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
-        // 6.- Comprobamos que el usuario tiene permisos de modificación para el RegistroSalida
-        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
-
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
-            throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
-        }
-
-        // 7.- Generamos el Justificante
+        // 6.- Generamos o descargamos el Justificante
         AnexoFull justificante = null;
         SignatureCustody sc = null;
 
-        if(!registroSalida.getRegistroDetalle().getTieneJustificante()){ // Si no tiene Justificante, lo generamos
+        // Si no tiene Justificante, lo generamos
+        if(!registroSalida.getRegistroDetalle().getTieneJustificante()){
 
-            if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) { // Solo se puede generar si el registro es Válido
+            // Permisos para Modificar el RegistroSalida?
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+                throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
+            }
+
+            // Solo se puede generar si el registro es Válido
+            if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
                 justificante = anexoEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),"ca");
                 sc = justificante.getSignatureCustody();
             }else{
@@ -307,6 +309,12 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             }
 
         }else{ // Tiene Justificante, lo obtenemos
+
+            // Permisos para Consultar el RegistroSalida?
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA)) {
+                throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
+            }
+
             justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()));
             sc = anexoEjb.getFirma(justificante.getAnexo().getCustodiaID(), true);
 
