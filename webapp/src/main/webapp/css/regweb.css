@@ -881,3 +881,23 @@ a.text-gris:focus {
 .margeDret5{
 	margin-right: 5px;
 }
+
+/* Estils per ajustar el tamany quan se trien valors molt llargs a Validez, Origen, ... */
+.ajustTamanySir{
+    word-break: break-all;
+    padding-left: 2px;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.senseMargesLaterals{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.tablePad2>thead>tr>th, .tablePad2>tbody>tr>th, .tablePad2>tfoot>tr>th, .tablePad2>thead>tr>td, .tablePad2>tbody>tr>td, .tablePad2>tfoot>tr>td {
+    padding: 10px 1px 10px 1px;
+}
+.padLateral5{
+    padding-left: 5px;
+    padding-right: 5px;
+}
+/* FI Estils per ajustar el tamany quan se trien valors molt llargs a Validez, Origen, ... */

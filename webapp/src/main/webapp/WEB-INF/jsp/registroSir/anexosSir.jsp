@@ -21,8 +21,8 @@
             </h3>
         </div>
 
-        <div class="panel-body">
-            <div class="col-xs-12">
+        <div class="panel-body senseMargesLaterals">
+            <div class="col-xs-12 padLateral5">
                 <div id="anexosdiv" class="table-responsive sin-scroll">
 
                     <c:if test="${empty anexosSirFull}">
@@ -32,7 +32,7 @@
                     </c:if>
 
                     <c:if test="${not empty anexosSirFull}">
-                        <table id="anexos" class="table table-bordered table-hover table-striped">
+                        <table id="anexos" class="table table-bordered table-hover table-striped tablePad2">
                             <colgroup>
                                 <col>
                                 <col>
@@ -63,7 +63,7 @@
 
                             <c:forEach var="anexo" items="${anexosSirFull}" varStatus="status">
                                 <tr id="anexo${anexo.documento.id}">
-                                    <td>
+                                    <td class="ajustTamanySir">
                                         <c:if test="${anexo.documento.nombreFichero != anexo.documento.nombreFicheroCorto}">
                                             <p rel="ayuda" data-content="${anexo.documento.nombreFichero}" data-toggle="popover">${anexo.documento.nombreFicheroCorto}</p>
                                         </c:if>
@@ -71,7 +71,7 @@
                                             ${anexo.documento.nombreFichero}
                                         </c:if>
                                     </td>
-                                    <td><spring:message code="tipoDocumento.${anexo.documento.tipoDocumento}"/></td>
+                                    <td class="ajustTamanySir"><spring:message code="tipoDocumento.${anexo.documento.tipoDocumento}"/></td>
                                     <%--<td>${anexo.documento.tamano} KB</td>--%>
 
                                         <%-- Gestionamos los campos NTI que no vienen informados por SICRES.
@@ -82,7 +82,7 @@
 
                                     <c:if test="${registroSir.estado == 'RECIBIDO'}">
                                         <c:if test="${empty anexo.documento.validezDocumento}">
-                                            <td>
+                                            <td class="ajustTamanySir">
                                                     <%--Si s'ha de posar valor per validez Documento--%>
                                                 <select id="camposNTIs[${status.index}].idValidezDocumento"
                                                         name="camposNTIs[${status.index}].idValidezDocumento"
@@ -98,11 +98,11 @@
 
                                         <c:if test="${not empty anexo.documento.validezDocumento}">
                                             <c:set var="validez" value="${anexo.documento.validezDocumento}" scope="request"/>
-                                            <td><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
+                                            <td class="ajustTamanySir"><spring:message code="tipoValidezDocumento.${RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES[anexo.documento.validezDocumento]}"/></td>
                                         </c:if>
 
 
-                                        <td>
+                                        <td class="ajustTamanySir">
                                             <select id="camposNTIs[${status.index}].idOrigen"
                                                     name="camposNTIs[${status.index}].idOrigen" class="chosen-select"
                                                     <c:if test="${anexo.documento.tipoDocumento == RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO[RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO] }">disabled</c:if>>
@@ -113,7 +113,7 @@
                                             </select>
                                         </td>
 
-                                        <td>
+                                        <td class="ajustTamanySir">
                                             <select id="camposNTIs[${status.index}].idTipoDocumental"
                                                     name="camposNTIs[${status.index}].idTipoDocumental"
                                                     class="chosen-select"
@@ -126,13 +126,13 @@
                                             </select>
                                         </td>
                                     </c:if>
-                                    <td class="center"><a class="btn btn-success btn-default btn-sm"
+                                    <td class="center ajustTamanySir"><a class="btn btn-success btn-default btn-sm"
                                                           href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
                                                           target="_blank"
                                                           title="<spring:message code="anexo.descargar"/>"><span
                                             class="fa fa-download"></span></a></td>
 
-                                    <td class="center">
+                                    <td class="center ajustTamanySir">
                                         <c:if test="${not empty anexo.firma}">
                                             <a class="btn btn-info btn-default btn-sm"
                                                               href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
