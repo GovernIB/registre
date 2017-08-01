@@ -52,7 +52,7 @@
                 </div>
 
 
-                <c:if test="${idTipoRegistro == 1}">
+                <c:if test="${idTipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
 
                     <!-- REGISTROS DE ENTRADA -->
                     <div class="panel panel-info">
@@ -231,12 +231,54 @@
 
                             </c:if>
 
+                            <!-- DESCARGAS DE JUSTIFICANTE SOBRE EL REGISTRO DE ENTRADA -->
+                            <div class="alert-lopd alert-info alert-dismissable">
+                                <strong><spring:message code="informe.lopd.justificante"/></strong>
+                            </div>
+
+                            <c:if test="${empty consultasJustificante}">
+                                <div class="alert alert-grey alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <spring:message code="regweb.busqueda.vacio"/>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${not empty consultasJustificante}">
+
+                                <div class="table-responsive">
+
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <colgroup>
+                                            <col>
+                                            <col width="400">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th><spring:message code="registroEntrada.fecha"/></th>
+                                            <th><spring:message code="usuario.usuario"/></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <c:forEach var="lopd" items="${consultasJustificante}" varStatus="status">
+                                            <tr>
+                                                <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                <td>${lopd.usuario.usuario.identificador}</td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </c:if>
+
                         </div>
                     </div>
 
                 </c:if>
 
-                <c:if test="${idTipoRegistro == 2}">
+                <c:if test="${idTipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
 
                     <!-- REGISTROS DE SALIDA -->
                     <div class="panel panel-danger">
@@ -403,6 +445,48 @@
 
                                         <tbody>
                                         <c:forEach var="lopd" items="${listados}" varStatus="status">
+                                            <tr>
+                                                <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                <td>${lopd.usuario.usuario.identificador}</td>
+                                            </tr>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+
+                            </c:if>
+
+                            <!-- DESCARGAS DE JUSTIFICANTE SOBRE EL REGISTRO DE ENTRADA -->
+                            <div class="alert-lopd alert-danger alert-dismissable">
+                                <strong><spring:message code="informe.lopd.justificante"/></strong>
+                            </div>
+
+                            <c:if test="${empty consultasJustificante}">
+                                <div class="alert alert-grey alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <spring:message code="regweb.busqueda.vacio"/>
+                                </div>
+                            </c:if>
+
+                            <c:if test="${not empty consultasJustificante}">
+
+                                <div class="table-responsive">
+
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <colgroup>
+                                            <col>
+                                            <col width="400">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th><spring:message code="registroEntrada.fecha"/></th>
+                                            <th><spring:message code="usuario.usuario"/></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <c:forEach var="lopd" items="${consultasJustificante}" varStatus="status">
                                             <tr>
                                                 <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                 <td>${lopd.usuario.usuario.identificador}</td>

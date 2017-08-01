@@ -159,7 +159,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
         }
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
@@ -282,7 +282,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         
         // Alta en tabla LOPD
-        lopdEjb.insertarRegistroEntrada(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
+        lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
         return "registroEntrada/registroEntradaDetalle";
     }
@@ -725,6 +725,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
                 // Creamos el anexo justificante y lo firmamos
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+
+                // Alta en tabla LOPD
+                if(anexoFull != null){
+                    lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                }
 
                 // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
                 if(anexoFull.getSignatureCustody() != null){

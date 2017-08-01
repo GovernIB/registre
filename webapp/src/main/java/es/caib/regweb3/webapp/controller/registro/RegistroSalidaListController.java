@@ -162,7 +162,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
 
             // Alta en tabla LOPD
-            lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
+            lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
         }
 
 
@@ -262,7 +262,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }
 
         // Alta en tabla LOPD
-        lopdEjb.insertarRegistroSalida(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
+        lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
        
         return "registroSalida/registroSalidaDetalle";
     }
@@ -587,6 +587,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
                 // Creamos el anexo justificante y lo firmamos
                 AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+
+                // Alta en tabla LOPD
+                if(anexoFull != null){
+                    lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                }
 
                 // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
                 if(anexoFull.getSignatureCustody()!=null){

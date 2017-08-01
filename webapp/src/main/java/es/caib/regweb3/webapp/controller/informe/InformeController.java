@@ -338,7 +338,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Paginacion paginacionEntrada = new Paginacion(0, 0);
             paginacionEntrada.setListado(new ArrayList<Object>(registrosEntrada));
             start = System.currentTimeMillis();
-            lopdEjb.insertarRegistrosEntrada(paginacionEntrada, usuarioEntidad.getId());
+            lopdEjb.insertarRegistros(paginacionEntrada, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
             end = System.currentTimeMillis();
             log.info("Tiempo lopdEjb.insertarRegistrosEntrada: " + TimeUtils.formatElapsedTime(end - start));
 
@@ -520,7 +520,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
             Paginacion paginacionSalida = new Paginacion(0, 0);
             List<Object> salidasList = new ArrayList<Object>(registrosSalida);
             paginacionSalida.setListado(salidasList);
-            lopdEjb.insertarRegistrosSalida(paginacionSalida, usuarioEntidad.getId());
+            lopdEjb.insertarRegistros(paginacionSalida, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
         }
@@ -800,6 +800,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
                     paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
                 }
+                // Justificantes Consultados
+                if(accion.equals(RegwebConstantes.LOPD_JUSTIFICANTE)) {
+                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_JUSTIFICANTE, RegwebConstantes.REGISTRO_ENTRADA);
+                }
             }
 
             if(tipo.equals(RegwebConstantes.REGISTRO_SALIDA)){
@@ -818,6 +822,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
                     paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
+                }
+                // Justificantes Consultados
+                if(accion.equals(RegwebConstantes.LOPD_JUSTIFICANTE)) {
+                    paginacion = lopdEjb.getByFechasUsuarioLibro(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libro.getId(), RegwebConstantes.LOPD_JUSTIFICANTE, RegwebConstantes.REGISTRO_SALIDA);
                 }
             }
 
@@ -858,6 +866,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
                     paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_ENTRADA);
                 }
+                // Justificantes Consultados
+                if(accion.equals(RegwebConstantes.LOPD_JUSTIFICANTE)) {
+                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_JUSTIFICANTE, RegwebConstantes.REGISTRO_ENTRADA);
+                }
             }
 
             if(tipo.equals(RegwebConstantes.REGISTRO_SALIDA)){
@@ -876,6 +888,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Registros Consultados
                 if(accion.equals(RegwebConstantes.LOPD_CONSULTA)) {
                     paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_CONSULTA, RegwebConstantes.REGISTRO_SALIDA);
+                }
+                // Justificantes Consultados
+                if(accion.equals(RegwebConstantes.LOPD_JUSTIFICANTE)) {
+                    paginacion = lopdEjb.getByFechasUsuario(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getUsuario(), libros, RegwebConstantes.LOPD_JUSTIFICANTE, RegwebConstantes.REGISTRO_SALIDA);
                 }
             }
 
@@ -943,14 +959,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
         Libro libro = libroEjb.findById(busqueda.getLibro());
         mav.addObject("libro", libro);
 
-        // Busca los registros según pasámetros de búsqueda
+        // Busca los registros según parámetros de búsqueda
         if((dataInici != null) && (dataFi != null)) {
             if (busqueda.getTipoRegistro().equals(RegwebConstantes.REGISTRO_ENTRADA)) {
                 Paginacion paginacion = lopdEjb.buscaEntradasPorLibroTipoNumero(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageLopd(entidadActiva.getId()), dataInici, dataFi, busqueda.getLibro(), busqueda.getNumeroRegistro());
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las entradas del listado
-                lopdEjb.insertarRegistrosEntrada(paginacion, usuarioEntidad.getId());
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
                 mav.addObject("entradas", true);
                 mav.addObject("salidas", false);
             }
@@ -959,7 +975,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 busqueda.setPageNumber(1);
                 mav.addObject("paginacion", paginacion);
                 // Alta en tabla LOPD de las salidas del listado
-                lopdEjb.insertarRegistrosSalida(paginacion, usuarioEntidad.getId());
+                lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
                 mav.addObject("entradas", false);
                 mav.addObject("salidas", true);
             }
@@ -1026,6 +1042,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
             List<Lopd> listados = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_ENTRADA);
             model.addAttribute("listados", listados);
+
+            List<Lopd> consultasJustificante = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_JUSTIFICANTE, RegwebConstantes.REGISTRO_ENTRADA);
+            model.addAttribute("consultasJustificante", consultasJustificante);
         }
 
         if(idTipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)){
@@ -1067,6 +1086,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
             List<Lopd> listados = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_LISTADO, RegwebConstantes.REGISTRO_SALIDA);
             model.addAttribute("listados", listados);
+
+            List<Lopd> consultasJustificante = lopdEjb.getByRegistro(anyoRegistro, numRegistro, idLibro, RegwebConstantes.LOPD_JUSTIFICANTE, RegwebConstantes.REGISTRO_SALIDA);
+            model.addAttribute("consultasJustificante", consultasJustificante);
         }
 
         model.addAttribute("idTipoRegistro", idTipoRegistro);

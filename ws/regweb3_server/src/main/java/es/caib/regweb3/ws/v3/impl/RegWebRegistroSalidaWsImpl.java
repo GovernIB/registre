@@ -304,6 +304,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
                 justificante = anexoEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),"ca");
                 sc = justificante.getSignatureCustody();
+                // Alta en la tabla de LOPD
+                lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
             }else{
                 throw new I18NException("registro.justificante.valido");
             }
@@ -317,7 +319,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
             justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()));
             sc = anexoEjb.getFirma(justificante.getAnexo().getCustodiaID(), true);
-
+            // Alta en la tabla de LOPD
+            lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
         }
 
         return new JustificanteWs(sc.getData());
@@ -401,7 +404,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // LOPD
-        lopdEjb.insertarRegistroSalida(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
+        lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
 
         // Retornamos el RegistroSalidaWs
         return RegistroSalidaConverter.getRegistroSalidaResponseWs(registro,
@@ -482,7 +485,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // LOPD
-        lopdEjb.insertarRegistroSalida(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId());
+        lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
 
         return new IdentificadorWs(registro.getNumeroRegistroFormateado(), numeroRegistro, registro.getFecha());
     }

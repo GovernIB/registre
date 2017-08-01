@@ -117,6 +117,7 @@
                                             <form:option value="4"><spring:message code="informe.lopd.modificacion"/></form:option>
                                             <form:option value="1"><spring:message code="informe.lopd.listado"/></form:option>
                                             <form:option value="2"><spring:message code="informe.lopd.consultado"/></form:option>
+                                            <form:option value="5"><spring:message code="informe.lopd.justificante"/></form:option>
                                         </form:select>
                                     </div>
                                     <span class="errors"></span>
@@ -144,7 +145,7 @@
                     <div class="row">
                         <div class="col-xs-12">
 
-                        <c:if test="${tipo == 1}">
+                        <c:if test="${tipo == RegwebConstantes.REGISTRO_ENTRADA}">
                             <!-- REGISTROS DE ENTRADA -->
                             <div class="panel panel-info">
                                 <div class="panel-heading">
@@ -155,7 +156,7 @@
                                     </h3>
                                 </div>
                                 <div class="panel-body">
-                                  <c:if test="${accion == 3}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_CREACION}">
                                     <!-- REGISTROS DE ENTRADA CREADOS -->
                                     <div class="alert-lopd alert-info alert-dismissable">
                                         <strong><spring:message code="regweb.creados"/></strong>
@@ -227,7 +228,7 @@
                                       </c:if>
                                     </div>
                                   </c:if>
-                                  <c:if test="${accion == 4}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_MODIFICACION}">
                                     <!-- REGISTROS DE ENTRADA MODIFICADOS -->
                                     <div class="alert-lopd alert-info alert-dismissable">
                                         <strong><spring:message code="regweb.modificados"/></strong>
@@ -298,7 +299,7 @@
                                         </c:if>
                                     </div>
                                   </c:if>
-                                  <c:if test="${accion == 2}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_CONSULTA}">
                                     <!-- REGISTROS DE ENTRADA CONSULTADOS -->
                                     <div class="alert-lopd alert-info alert-dismissable">
                                         <strong><spring:message code="regweb.consultados"/></strong>
@@ -365,7 +366,7 @@
                                         </c:if>
                                      </div>
                                   </c:if>
-                                  <c:if test="${accion == 1}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_LISTADO}">
                                     <!-- REGISTROS DE ENTRADA LISTADOS -->
                                     <div class="alert-lopd alert-info alert-dismissable">
                                         <strong><spring:message code="regweb.listados"/></strong>
@@ -431,13 +432,81 @@
                                                 </div>
                                             </div>
                                         </c:if>
-                                      </div>
-                                  </c:if>
+                                    </div>
+                                </c:if>
+                                <c:if test="${accion == RegwebConstantes.LOPD_JUSTIFICANTE}">
+                                    <!-- REGISTROS DE ENTRADA CONSULTA JUSTIFICANTE -->
+                                    <div class="alert-lopd alert-info alert-dismissable">
+                                        <strong><spring:message code="informe.lopd.justificante"/></strong>
+                                    </div>
+
+                                    <div class="row">
+
+                                        <c:if test="${empty paginacion.listado}">
+                                            <div class="alert alert-grey alert-dismissable">
+                                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                                <spring:message code="regweb.busqueda.vacio"/>
+                                            </div>
+                                        </c:if>
+
+                                        <c:if test="${not empty paginacion.listado}">
+
+                                            <div class="col-xs-12">
+                                                <div class="alert-grey">
+                                                    <c:if test="${paginacion.totalResults == 1}">
+                                                        <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
+                                                    </c:if>
+                                                    <c:if test="${paginacion.totalResults > 1}">
+                                                        <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntradas"/>
+                                                    </c:if>
+
+                                                    <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                                </div>
+
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                            <th><spring:message code="registroEntrada.anyRegistro"/></th>
+                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                                            <th><spring:message code="registroEntrada.fecha"/></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <c:forEach var="lopd" items="${paginacion.listado}" varStatus="status">
+                                                            <tr>
+                                                                <td>${lopd.numeroRegistro}</td>
+                                                                <td>${lopd.anyoRegistro}</td>
+                                                                <td>${lopd.libro.nombreCompleto}</td>
+                                                                <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <!-- Paginacion -->
+                                                    <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                        <c:param name="entidad" value="usuarioLopd"/>
+                                                    </c:import>
+
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </c:if>
                                 </div>
                             </div>
                         </c:if>
 
-                        <c:if test="${tipo == 2}">
+                        <c:if test="${tipo == RegwebConstantes.REGISTRO_SALIDA}">
                             <!-- REGISTROS DE SALIDA -->
                             <div class="panel panel-danger">
                                 <div class="panel-heading">
@@ -448,7 +517,7 @@
                                     </h3>
                                 </div>
                                 <div class="panel-body">
-                                  <c:if test="${accion == 3}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_CREACION}">
                                     <!-- REGISTROS DE SALIDA CREADOS -->
                                     <div class="alert-lopd alert-danger alert-dismissable">
                                         <strong><spring:message code="regweb.creados"/></strong>
@@ -518,7 +587,7 @@
                                         </c:if>
                                     </div>
                                   </c:if>
-                                  <c:if test="${accion == 4}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_MODIFICACION}">
                                     <!-- REGISTROS DE SALIDA MODIFICADOS -->
                                     <div class="alert-lopd alert-danger alert-dismissable">
                                         <strong><spring:message code="regweb.modificados"/></strong>
@@ -588,7 +657,7 @@
                                         </c:if>
                                      </div>
                                   </c:if>
-                                  <c:if test="${accion == 2}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_CONSULTA}">
                                     <!-- REGISTROS DE SALIDA CONSULTADOS -->
                                     <div class="alert-lopd alert-danger alert-dismissable">
                                         <strong><spring:message code="regweb.consultados"/></strong>
@@ -655,7 +724,7 @@
                                         </c:if>
                                     </div>
                                   </c:if>
-                                  <c:if test="${accion == 1}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_LISTADO}">
                                     <!-- REGISTROS DE SALIDA LISTADOS -->
                                     <div class="alert-lopd alert-danger alert-dismissable">
                                         <strong><spring:message code="regweb.listados"/></strong>
@@ -722,11 +791,79 @@
                                         </c:if>
                                     </div>
                                   </c:if>
+                                    <c:if test="${accion == RegwebConstantes.LOPD_JUSTIFICANTE}">
+                                        <!-- REGISTROS DE ENTRADA CONSULTA JUSTIFICANTE -->
+                                        <div class="alert-lopd alert-danger alert-dismissable">
+                                            <strong><spring:message code="informe.lopd.justificante"/></strong>
+                                        </div>
+
+                                        <div class="row">
+
+                                            <c:if test="${empty paginacion.listado}">
+                                                <div class="alert alert-grey alert-dismissable">
+                                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                                    <spring:message code="regweb.busqueda.vacio"/>
+                                                </div>
+                                            </c:if>
+
+                                            <c:if test="${not empty paginacion.listado}">
+
+                                                <div class="col-xs-12">
+                                                    <div class="alert-grey">
+                                                        <c:if test="${paginacion.totalResults == 1}">
+                                                            <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
+                                                        </c:if>
+                                                        <c:if test="${paginacion.totalResults > 1}">
+                                                            <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntradas"/>
+                                                        </c:if>
+
+                                                        <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                                    </div>
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-hover table-striped tablesorter">
+                                                            <colgroup>
+                                                                <col>
+                                                                <col>
+                                                                <col>
+                                                                <col>
+                                                            </colgroup>
+                                                            <thead>
+                                                            <tr>
+                                                                <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                                <th><spring:message code="registroEntrada.anyRegistro"/></th>
+                                                                <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                                                <th><spring:message code="registroEntrada.fecha"/></th>
+                                                            </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                            <c:forEach var="lopd" items="${paginacion.listado}" varStatus="status">
+                                                                <tr>
+                                                                    <td>${lopd.numeroRegistro}</td>
+                                                                    <td>${lopd.anyoRegistro}</td>
+                                                                    <td>${lopd.libro.nombreCompleto}</td>
+                                                                    <td><fmt:formatDate value="${lopd.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
+                                                                </tr>
+                                                            </c:forEach>
+                                                            </tbody>
+                                                        </table>
+
+                                                        <!-- Paginacion -->
+                                                        <c:import url="../modulos/paginacionBusqueda.jsp">
+                                                            <c:param name="entidad" value="usuarioLopd"/>
+                                                        </c:import>
+
+                                                    </div>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </c:if>
 
-                        <c:if test="${tipo == 3}">
+                        <c:if test="${tipo == RegwebConstantes.LOPD_TIPO_MIGRADO}">
                             <!-- REGISTROS MIGRADOS -->
                             <div class="panel panel-success">
                                 <div class="panel-heading">
@@ -737,7 +874,7 @@
                                     </h3>
                                 </div>
                                 <div class="panel-body">
-                                  <c:if test="${accion == 2}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_CONSULTA}">
                                     <!-- REGISTROS MIGRADOS CONSULTADOS -->
                                     <div class="alert-lopd alert-success alert-dismissable">
                                         <strong><spring:message code="regweb.consultados"/></strong>
@@ -812,7 +949,7 @@
                                         </c:if>
                                     </div>
                                   </c:if>
-                                  <c:if test="${accion == 1}">
+                                  <c:if test="${accion == RegwebConstantes.LOPD_LISTADO}">
                                     <!-- REGISTROS MIGRADOS LISTADOS -->
                                     <div class="alert-lopd alert-success alert-dismissable">
                                         <strong><spring:message code="regweb.listados"/></strong>
@@ -1078,13 +1215,16 @@ function actualizarUsuariosTodos(url, idSelect, seleccion, valorSelected, todos)
         if (tipo == 3) { //Registre Migrat
             $('#accion option[value="3"]').attr("disabled", "disabled");
             $('#accion option[value="4"]').attr("disabled", "disabled");
+            $('#accion option[value="5"]').attr("disabled", "disabled");
             $('#accion option[value="2"]').removeAttr("selected");
             $('#accion option[value="3"]').removeAttr("selected");
             $('#accion option[value="4"]').removeAttr("selected");
+            $('#accion option[value="5"]').removeAttr("selected");
             $('#accion option[value="1"]').attr("selected");
         }else{
             $('#accion option[value="3"]').removeAttr("disabled", "disabled");
             $('#accion option[value="4"]').removeAttr("disabled", "disabled");
+            $('#accion option[value="5"]').removeAttr("disabled", "disabled");
         }
         $('#accion').trigger("chosen:updated");
     }

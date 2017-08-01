@@ -430,6 +430,7 @@ public interface RegwebConstantes {
     Long LOPD_CONSULTA = 2L;
     Long LOPD_CREACION = 3L;
     Long LOPD_MODIFICACION = 4L;
+    Long LOPD_JUSTIFICANTE = 5L;
     String LOPDMIGRADO_LISTADO = "LIST";
     String LOPDMIGRADO_CONSULTA = "SELECT";
     String LOPDMIGRADO_CREACION = "INSERT";

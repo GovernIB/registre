@@ -61,40 +61,24 @@ public interface LopdLocal extends BaseEjb<Lopd, Long> {
     public List<Lopd> getByRegistro(String anyoRegistro, Integer numRegistro, Long idLibro, Long accion, Long tipoRegistro) throws Exception;
 
     /**
-     * Inserta la consulta de un Registro de Entrada en las tablas de Lopd
+     * Realiza una Alta en las tablas de Lopd
      * @param numeroRegistro
      * @param fecha
      * @param idLibro
      * @param idUsuarioEntidad
+     * @param tipoRegistro
+     * @param accion
      * @throws Exception
      */
-    public void insertarRegistroEntrada(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad) throws Exception;
+    public void altaLopd(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception;
 
     /**
-     * Inserta la búsqueda de un Registros de Entrada en las tablas de Lopd
+     * Inserta la búsqueda de Registros en las tablas de Lopd
      * @param paginacion
      * @param idUsuarioEntidad
      * @throws Exception
      */
-    public void insertarRegistrosEntrada(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Inserta la consulta de un Registro de Salida en las tablas de Lopd
-     * @param numeroRegistro
-     * @param fecha
-     * @param idLibro
-     * @param idUsuarioEntidad
-     * @throws Exception
-     */
-    public void insertarRegistroSalida(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad) throws Exception;
-
-    /**
-     * Inserta la búsqueda de un Registros de Salida en las tablas de Lopd
-     * @param paginacion
-     * @param idUsuarioEntidad
-     * @throws Exception
-     */
-    public void insertarRegistrosSalida(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
+    public void insertarRegistros(Paginacion paginacion, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception;
 
     /**
      * Comprueba si un usuario tiene Lopd
