@@ -33,8 +33,7 @@
                 <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <%--<a class="btn btn-warning btn-xs pull-right" href="<c:url value="/plugin/new"/>"
-                           role="button"><span class="fa fa-plus"></span> <spring:message code="plugin.nuevo"/></a>--%>
+                        <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/plugin/new"/>" role="button"><span class="fa fa-plus"></span> <spring:message code="plugin.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="plugin.listado"/></strong></h3>
                     </div>
 
@@ -65,8 +64,7 @@
 
                         <c:if test="${empty listado}">
                             <div class="alert alert-grey alert-dismissable">
-                                <button type="button" class="close" data-dismiss="alert"
-                                        aria-hidden="true">&times;</button>
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 <spring:message code="regweb.listado.vacio"/> <strong><spring:message
                                     code="plugin.plugin"/></strong>
                             </div>
