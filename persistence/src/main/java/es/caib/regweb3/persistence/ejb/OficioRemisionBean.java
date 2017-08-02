@@ -223,14 +223,15 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
             // Creamos un Registro de Salida y Trazabilidad por cada Registro de Entrada que contenga el OficioRemision
             for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
-                RegistroSalida registroSalida = new RegistroSalida();
 
-                registroSalida.setRegistroDetalle(registroDetalleEjb.findByRegistroEntrada(registroEntrada.getId()));
+                registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
+
+                RegistroSalida registroSalida = new RegistroSalida();
+                registroSalida.setRegistroDetalle(registroEntrada.getRegistroDetalle());
                 registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
                 registroSalida.setOficina(oficioRemision.getOficina());
-                registroSalida.setOrigen(libro.getOrganismo());//todo: Esta asignación es correcta?
+                registroSalida.setOrigen(libro.getOrganismo());
                 registroSalida.setLibro(oficioRemision.getLibro());
-
                 registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
 
                 // Registramos la Salida
@@ -260,6 +261,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
             // CREAMOS LA TRAZABILIDAD
             for (RegistroSalida registroSalida : oficioRemision.getRegistrosSalida()) {
+
+                registroSalida = registroSalidaEjb.findById(registroSalida.getId());
 
                 Trazabilidad trazabilidad = new Trazabilidad();
                 if(oficioRemision.getSir()){

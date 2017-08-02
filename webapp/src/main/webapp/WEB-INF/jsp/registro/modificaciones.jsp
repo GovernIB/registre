@@ -43,30 +43,9 @@
                             <c:if test="${isAdministradorLibro}"> <td>${historico.usuario.nombreCompleto}</td> </c:if>
                             <td>${historico.modificacion}</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${historico.estado == 1}">
-                                        <span class="label label-success"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${historico.estado == 2}">
-                                        <span class="label label-warning"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${historico.estado == 3}">
-                                        <span class="label label-info"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${historico.estado == 4 || historico.estado == 5}">
-                                        <span class="label label-default"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${historico.estado == 6}">
-                                        <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${historico.estado == 7}">
-                                        <span class="label label-primary"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                    <c:when test="${historico.estado == 8}">
-                                        <span class="label label-danger"><spring:message code="registro.estado.${historico.estado}" /></span>
-                                    </c:when>
-                                </c:choose>
-
+                                <c:import url="../registro/estadosRegistro.jsp">
+                                    <c:param name="estado" value="${historico.estado}"/>
+                                </c:import>
                             </td>
 
                             <%--BOTÓN COMPARAR--%>
