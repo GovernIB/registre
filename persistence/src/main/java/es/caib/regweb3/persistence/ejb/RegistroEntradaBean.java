@@ -540,7 +540,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
-                                        UsuarioEntidad usuarioEntidad) throws Exception {
+                                        UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
+
+        // Justificante: Si no tiene generado, lo hacemos
+        if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+            log.info("Generamos el Justificante ants de Distribuir");
+            registroEntrada = cargarAnexosFull(registroEntrada);
+            // Creamos el anexo del justificante y se lo añadimos al registro
+            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "ca");
+            registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+        }
 
         cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
 
@@ -732,15 +741,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 
         RegistroEntrada re = findById(id);
-        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-        for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-            anexosFull.add(anexoFull);
-        }
-        //Asignamos los documentos recuperados de custodia al registro de entrada.
-        re.getRegistroDetalle().setAnexosFull(anexosFull);
-        return re;
+
+        return cargarAnexosFull(re);
     }
 
     @Override
@@ -815,14 +817,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
         respuestaDistribucion.setDestinatarios(null);
         respuestaDistribucion.setEnviado(false);
 
         //Obtenemos plugin
-
         IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
         //Si han especificado plug-in
         if (distribucionPlugin != null) {
@@ -944,6 +946,26 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     /**
+     * Carga los Anexos Completos al RegistroEntrada pasado por parámetro
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
+
+        List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
+        return registroEntrada;
+    }
+
+    /**
      * Método que prepara el registro de entrada para distribuirlo.
      * La variable confAnexos indica que datos se envian en el segmento de anexo del registro de entrada.
      * <p/>
@@ -977,6 +999,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 List<Anexo> nuevosAnexos = new ArrayList<Anexo>();
                 for (Anexo anexo : anexos) {
                     Anexo nuevoAnexo = new Anexo();
+                    nuevoAnexo.setId(anexo.getId());
                     nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
                     nuevosAnexos.add(nuevoAnexo);
                 }

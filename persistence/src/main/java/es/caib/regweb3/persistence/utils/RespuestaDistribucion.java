@@ -11,10 +11,10 @@ import es.caib.regweb3.plugins.distribucion.Destinatarios;
  */
 public class RespuestaDistribucion {
 
-    Destinatarios destinatarios; //Lista de los destinatarios a los que se debe distribuir
-    Boolean enviado; //true si se ha distribuido(enviado) bien
-    Boolean hayPlugin; //true si se ha especificado plugin.
-    Boolean listadoDestinatariosModificable; //True si se puede modificar la lista de destinatarios.
+    private Destinatarios destinatarios; //Lista de los destinatarios a los que se debe distribuir
+    private Boolean enviado; //true si se ha distribuido(enviado) bien
+    private Boolean hayPlugin; //true si se ha especificado plugin.
+    private Boolean listadoDestinatariosModificable; //True si se puede modificar la lista de destinatarios.
 
     public RespuestaDistribucion() {
     }

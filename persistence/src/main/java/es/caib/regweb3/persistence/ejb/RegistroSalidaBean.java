@@ -535,16 +535,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
 
-        RegistroSalida re = findById(id);
-        List<Anexo> anexos = re.getRegistroDetalle().getAnexos();
-        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-        for (Anexo anexo : anexos) {
-            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-            anexosFull.add(anexoFull);
-        }
-        //Asignamos los documentos recuperados de custodia al registro de salida.
-        re.getRegistroDetalle().setAnexosFull(anexosFull);
-        return re;
+        RegistroSalida registroSalida = findById(id);
+        return cargarAnexosFull(registroSalida);
     }
 
     @Override
@@ -676,6 +668,26 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
         return (Long) q.getSingleResult();
+    }
+
+    /**
+     * Carga los Anexos Completos al RegistroSalida pasado por parámetro
+     * @param registroSalida
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroSalida cargarAnexosFull(RegistroSalida registroSalida) throws Exception, I18NException {
+
+        List<Anexo> anexos = registroSalida.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        registroSalida.getRegistroDetalle().setAnexosFull(anexosFull);
+        return registroSalida;
     }
 
     public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException {

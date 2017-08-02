@@ -624,7 +624,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         //Obtenemos los destinatarios a través del plugin de distribución
-        respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
+        try {
+            respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+        }
 
         if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
@@ -646,7 +650,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     public
     @ResponseBody
     Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, 
-        @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request) 
+        @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request)
             throws Exception, I18NException {
 
         log.info("Entramos en enviarDestinatariosRegistroEntrada");
@@ -664,7 +668,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
             // Marcamos el registro como tramitado, solo si se ha enviado bien
-            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+            try {
+                registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+            } catch (I18NValidationException e) {
+                e.printStackTrace();
+            }
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
         } else {
