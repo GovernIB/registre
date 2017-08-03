@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Plugin;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -13,7 +12,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +227,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         // Obtenemos la clase del Plugin
-        String className = plugin.getClase();
+        String className = plugin.getClase().trim();
 
         //log.info("Obtenido el plugin: " + className);
 
