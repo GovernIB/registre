@@ -30,6 +30,8 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.exolab.castor.xml.MarshalException;
+import org.exolab.castor.xml.Marshaller;
+import org.exolab.castor.xml.Unmarshaller;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.w3c.dom.Node;
@@ -109,7 +111,7 @@ public class Sicres3XML {
         try {
             InputStream is = new ByteArrayInputStream(xml.getBytes("UTF-8"));
             InputStreamReader isr = new InputStreamReader(is, "UTF-8");
-            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = Fichero_Intercambio_SICRES_3.unmarshal(isr);
+            Fichero_Intercambio_SICRES_3 ficheroIntercambioSICRES3 = (Fichero_Intercambio_SICRES_3) Unmarshaller.unmarshal(Fichero_Intercambio_SICRES_3.class,isr);
 
             if (ficheroIntercambioSICRES3 != null) {
                 ficheroIntercambio = new FicheroIntercambio(ficheroIntercambioSICRES3);
@@ -1908,7 +1910,7 @@ public class Sicres3XML {
                 msg.setIndicador_Prueba(Indicador_PruebaType.fromValue(mensaje.getIndicadorPrueba().getValue()));
             }
 
-            msg.marshal(stringWriter);
+            Marshaller.marshal(msg,stringWriter);
 
         } catch (Exception e) {
             log.error("Error al crear el XML del mensaje", e);
@@ -1929,7 +1931,8 @@ public class Sicres3XML {
 
         try {
 
-            De_Mensaje de_mensaje = De_Mensaje.unmarshal(new StringReader(xml));
+            De_Mensaje de_mensaje = (De_Mensaje) Unmarshaller.unmarshal(De_Mensaje.class,new StringReader(xml));
+
 
             if (de_mensaje != null) {
 
