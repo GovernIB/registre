@@ -387,7 +387,7 @@ public class OficioRemisionController extends BaseController {
                         getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
                         oficioRemisionForm.getIdLibro());
 
-            } else {//Oficio externo todo: Acabar oficio remisión externo
+            } else {//Oficio externo
 
                 oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionExterno(registrosEntrada,
                         getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
@@ -424,7 +424,7 @@ public class OficioRemisionController extends BaseController {
                         getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
                         oficioRemisionForm.getIdLibro());
 
-            } else {//Oficio externo todo: Acabar oficio remisión externo
+            } else {//Oficio externo
 
                 oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionExterno(registrosSalida,
                         getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
