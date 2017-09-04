@@ -41,13 +41,17 @@ public class OficioRemision implements Serializable {
 
   private Boolean sir = false;
   private String identificadorIntercambio;
-  private String codigoEntidadRegistralDestino; // Oficina que acepta o rechaza
-  private String decodificacionEntidadRegistralDestino; // Oficina que acepta o rechaza
+  private String codigoEntidadRegistralDestino;
+  private String decodificacionEntidadRegistralDestino;
   private String numeroRegistroEntradaDestino;
   private Date fechaEntradaDestino;
+  private String codigoEntidadRegistralProcesado; // Codigo de la oficina que acepta o rechaza, reenvia (en definitiva que procesa)
+  private String decodificacionEntidadRegistralProcesado; // Denominacion de la oficina que acepta o rechaza, reenvia (en definitiva que procesa)
   private String codigoError;
   private String descripcionError;
   private Integer numeroReintentos = 0;
+
+  private String contactosEntidadRegistralDestino;
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
@@ -271,6 +275,34 @@ public class OficioRemision implements Serializable {
 
   public void setNumeroReintentos(Integer numeroReintentos) {
     this.numeroReintentos = numeroReintentos;
+  }
+
+
+  @Column(name = "CONTACTOSDESTINO", length = 2000, nullable = true)
+  public String getContactosEntidadRegistralDestino() {
+    return contactosEntidadRegistralDestino;
+  }
+
+  public void setContactosEntidadRegistralDestino(String contactosEntidadRegistralDestino) {
+    this.contactosEntidadRegistralDestino = contactosEntidadRegistralDestino;
+  }
+
+  @Column(name = "COD_ENT_REG_PROC", length = 21, nullable = true)
+  public String getCodigoEntidadRegistralProcesado() {
+    return codigoEntidadRegistralProcesado;
+  }
+
+  public void setCodigoEntidadRegistralProcesado(String codigoEntidadRegistralProcesado) {
+    this.codigoEntidadRegistralProcesado = codigoEntidadRegistralProcesado;
+  }
+
+  @Column(name = "DEC_ENT_REG_PROC", length = 80, nullable = true)
+  public String getDecodificacionEntidadRegistralProcesado() {
+    return decodificacionEntidadRegistralProcesado;
+  }
+
+  public void setDecodificacionEntidadRegistralProcesado(String decodificacionEntidadRegistralProcesado) {
+    this.decodificacionEntidadRegistralProcesado = decodificacionEntidadRegistralProcesado;
   }
 
   @Override

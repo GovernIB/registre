@@ -1,5 +1,7 @@
 package es.caib.regweb3.webapp.controller;
 
+import es.caib.dir3caib.ws.api.oficina.ContactoTF;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -568,5 +570,24 @@ public class BaseController {
       
     }
 
+    /**
+     * Método que obtiene los contactos de la oficina Sir de destino
+     * @param oficinaSir
+     * @return
+     * @throws Exception
+     */
+    public String getContactosOficinaSir(OficinaTF oficinaSir) throws Exception {
+        StringBuilder stb = new StringBuilder();
+        for(ContactoTF contactoTF: oficinaSir.getContactos()){
+            String scontactoTF = contactoTF.getTipoContacto()+": "+ contactoTF.getValorContacto();
+            stb.append(scontactoTF);
+            String separador = System.getProperty("line.separator");
+            stb.append("\r\n");
+            //stb.append('\n');
+        }
 
+        log.info("XYZ ZZZZZZZZZZZ ContactosTF obtenidos: "+ oficinaSir.getContactos().size());
+        return stb.toString();
+
+    }
 }

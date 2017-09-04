@@ -17,7 +17,7 @@
         </h4>
     </div>
     <div class="timeline-body">
-        <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino} - ${oficioRemision.codigoEntidadRegistralDestino}</small></p>
+        <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralProcesado} - ${oficioRemision.codigoEntidadRegistralProcesado}</small></p>
         <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
             <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
             <p><small><i class="fa fa-barcode"></i> <strong><spring:message code="registroSir.numeroRegistro"/>:</strong> ${oficioRemision.numeroRegistroEntradaDestino}</small></p>

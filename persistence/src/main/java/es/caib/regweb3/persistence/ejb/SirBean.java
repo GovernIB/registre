@@ -94,7 +94,7 @@ public class SirBean implements SirLocal {
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
-        // REENVIO
+            // REENVIO
         }else if (TipoAnotacion.REENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             log.info("El ficheroIntercambio recibido es un REENVIO: " + ficheroIntercambio.getDescripcionTipoAnotacion() +" - " + ficheroIntercambio.getIdentificadorIntercambio());
@@ -148,7 +148,7 @@ public class SirBean implements SirLocal {
                     throw new ValidacionException(Errores.ERROR_0037);
                 }
 
-            // Oficio Remision: Ha sido enviado por nosotros a SIR
+                // Oficio Remision: Ha sido enviado por nosotros a SIR
             }else if(oficioRemision != null){ // Ya existe en el sistema
 
                 if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO ||
@@ -180,10 +180,8 @@ public class SirBean implements SirLocal {
                     }
 
                     // Actualizamos el oficio
-                    oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
-                    oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
-                   // oficioRemision.setCodigoEntidadRegistralProcesado(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
-                   // oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
+                    oficioRemision.setCodigoEntidadRegistralProcesado(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                    oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_DEVUELTO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
@@ -204,7 +202,7 @@ public class SirBean implements SirLocal {
                 log.info("El registroSir no existia en el sistema y se ha creado: " + registroSir.getIdentificadorIntercambio());
             }
 
-        // RECHAZO
+            // RECHAZO
         }else if (TipoAnotacion.RECHAZO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
 
             log.info("El ficheroIntercambio recibido es un RECHAZO");
@@ -244,10 +242,8 @@ public class SirBean implements SirLocal {
                     }
 
                     // Actualizamos el oficio
-                    oficioRemision.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
-                    oficioRemision.setDecodificacionEntidadRegistralDestino(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
-                   // oficioRemision.setCodigoEntidadRegistralProcesado(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
-                   // oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
+                    oficioRemision.setCodigoEntidadRegistralProcesado(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                    oficioRemision.setDecodificacionEntidadRegistralProcesado(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen());
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
@@ -441,10 +437,9 @@ public class SirBean implements SirLocal {
                 RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado() ||
                 RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR == oficioRemision.getEstado()){
 
-            oficioRemision.setCodigoEntidadRegistralDestino(mensaje.getCodigoEntidadRegistralOrigen());
-            oficioRemision.setDecodificacionEntidadRegistralDestino(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
-           // oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-            //oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+
+            oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+            oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
             oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
             oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
             oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
@@ -454,8 +449,24 @@ public class SirBean implements SirLocal {
             // Marcamos el Registro original como ACEPTADO
             if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
                 registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+
+                // TODO 31/07/2017 (pendiente de reunión despues de vacaciones para definir que hacer con los anexos en este caso.
+                //Borrar Anexos de Custodia
+                try {
+                    anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosEntrada().get(0).getRegistroDetalle().getId());
+                }catch(I18NException e){
+                    throw new Exception("Error al borrar los anexos de custodia del registro de Entrada: " + oficioRemision.getRegistrosEntrada().get(0).getId() );
+                }
+
             }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
                 registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                // TODO PENDIENTE DE PROBAR EN PROVES
+                //Borrar Anexos de Custodia
+                try {
+                    anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosSalida().get(0).getRegistroDetalle().getId());
+                }catch (I18NException e){
+                    throw new Exception("Error al borrar los anexos de custodia del registro de Salida: "+ oficioRemision.getRegistrosSalida().get(0).getId());
+                }
             }
 
         }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
@@ -552,8 +563,8 @@ public class SirBean implements SirLocal {
      */
     @Override
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
-        String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino, 
-        Oficina oficinaActiva, UsuarioEntidad usuario/*, String contactosEntidadRegistralDestino*/)
+                                                   String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
+                                                   Oficina oficinaActiva, UsuarioEntidad usuario, String contactosEntidadRegistralDestino)
             throws Exception, I18NException, I18NValidationException {
 
         RegistroSir registroSir = null;
@@ -610,7 +621,7 @@ public class SirBean implements SirLocal {
             oficioRemision.setRegistrosSalida(null);
             oficioRemision.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
             oficioRemision.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
-         //   oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
+            oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
 
             //Transformamos el registro de Entrada a RegistroSir
             registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);

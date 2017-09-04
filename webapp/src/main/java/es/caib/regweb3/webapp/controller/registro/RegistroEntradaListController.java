@@ -332,9 +332,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
         OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
 
+        log.info("Oficina Codigo Sir:" + oficinaSir.getCodigo());
+        //Obtenemos los contactos de la oficina Sir de destino
+        String contactosOficinaTF = getContactosOficinaSir(oficinaSir);
+
         try{
 
-            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad);
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
 
         }catch (SIRException e){
@@ -627,12 +631,15 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
             respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
         } catch (I18NValidationException e) {
-            e.printStackTrace();
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.error"));
+            return respuestaDistribucion;
         }
 
         if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }
+
+        // TODO eliminar referencia de custodia en los anexos si plugin arxiu digital
 
         return respuestaDistribucion;
     }
@@ -671,7 +678,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             try {
                 registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
             } catch (I18NValidationException e) {
-                e.printStackTrace();
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.noenviado"));
             }
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 

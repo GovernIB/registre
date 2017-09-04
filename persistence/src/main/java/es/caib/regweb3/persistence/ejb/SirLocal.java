@@ -48,8 +48,8 @@ public interface SirLocal {
      * @throws I18NException
      */
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
-        String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
-        Oficina oficinaActiva, UsuarioEntidad usuario/*, String contactosEntidadRegistralDestino*/)
+                                                   String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
+                                                   Oficina oficinaActiva, UsuarioEntidad usuario, String contactosEntidadRegistralDestino)
             throws Exception, I18NException, I18NValidationException;
 
     /**

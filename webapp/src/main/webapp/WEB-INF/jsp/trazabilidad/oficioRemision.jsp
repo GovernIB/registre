@@ -16,8 +16,8 @@
             </a>
         </h4>
         <p>
-            <small class="text-muted"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroEntrada.fechaRegistro"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small><br>
-            <small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroEntrada.numeroRegistro"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</small>
+            <small class="text-muted"><i class="fa fa-clock-o"></i> <strong><spring:message code="oficioRemision.fecha"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small><br>
+            <%--<small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroEntrada.numeroRegistro"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</small>--%>
         </p>
     </div>
     <div class="timeline-body">
@@ -36,6 +36,19 @@
                 <c:if test="${empty oficioRemision.organismoDestinatario}">${oficioRemision.destinoExternoDenominacion}</c:if>
             </small>
         </p>
+
+        <%--OficioRemision SIR--%>
+        <c:if test="${oficioRemision.sir == true}">
+            <!--Oficina destino -->
+
+            <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
+                <p rel="ayuda" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover">
+                    <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
+            </c:if>
+
+        </c:if>
+
+
 
         <%--Destino oficio--%>
         <c:if test="${oficioRemision.sir == false}">

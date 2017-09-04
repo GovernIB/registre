@@ -458,6 +458,9 @@ public class OficioRemisionController extends BaseController {
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
         OficinaTF oficinaSir = oficinasService.obtenerOficina(oficioRemisionForm.getOficinaSIRCodigo(), null, null);
 
+        //Obtenemos los contactos de la oficina Sir de destino
+        String contactosOficinaTF = getContactosOficinaSir(oficinaSir);
+
         // OFICIO DE REMISION ENTRADA
         if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
 
@@ -495,9 +498,9 @@ public class OficioRemisionController extends BaseController {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
-                            RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
-                            oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
-                            getOficinaActiva(request), usuarioEntidad);
+                                RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
+                                oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
+                                getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -556,9 +559,9 @@ public class OficioRemisionController extends BaseController {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
-                            RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
-                            oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
-                            getOficinaActiva(request), usuarioEntidad);
+                                RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
+                                oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
+                                getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -570,13 +573,13 @@ public class OficioRemisionController extends BaseController {
                 Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
                 return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
             } catch (I18NException e) {
-              log.error(I18NUtils.getMessage(e), e);
-              Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-              return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+                log.error(I18NUtils.getMessage(e), e);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
             } catch (I18NValidationException ve) {
-              log.error(I18NUtils.getMessage(ve), ve);
-              Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-              return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+                log.error(I18NUtils.getMessage(ve), ve);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
             }
         }
 

@@ -70,14 +70,14 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
 
     /**
-    * Listado de todos los Registros de Salida
-    */
-   @RequestMapping(value = "", method = RequestMethod.GET)
+     * Listado de todos los Registros de Salida
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String listado() {
-       return "redirect:/registroSalida/list";
+        return "redirect:/registroSalida/list";
     }
 
-   
+
     /**
      * Listado de registros de salida
      * @return
@@ -147,7 +147,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         }else { // Si no hay errores realizamos la búsqueda
             RegistroSalida registroSalida = busqueda.getRegistroSalida();
 
-        	// Ponemos la hora 23:59 a la fecha fin
+            // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
              /* Solución a los problemas de encoding del formulario GET */
@@ -313,23 +313,25 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
         OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
 
+        //Obtenemos los contactos de la oficina Sir de destino
+        String contactosOficinaTF = getContactosOficinaSir(oficinaSir);
         try {
 
             sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,
-                idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
-                getOficinaActiva(request), usuarioEntidad);
+                    idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
+                    getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
 
         } catch (SIRException e){
-          log.error("Error al cridar a sirEjb.enviarFicheroIntercambio();: "
-              + e.getMessage(), e);
-          Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+            log.error("Error al cridar a sirEjb.enviarFicheroIntercambio();: "
+                    + e.getMessage(), e);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         } catch (I18NException e) {
-          log.error(I18NUtils.getMessage(e), e);
-          Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+            log.error(I18NUtils.getMessage(e), e);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         } catch(I18NValidationException ve) {
-          log.error(I18NUtils.getMessage(ve), ve);
-          Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+            log.error(I18NUtils.getMessage(ve), ve);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
         }
 
         return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
