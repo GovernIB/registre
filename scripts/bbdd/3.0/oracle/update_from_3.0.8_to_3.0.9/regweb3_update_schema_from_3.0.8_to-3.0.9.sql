@@ -235,8 +235,8 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTID
 es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.
 es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.
 # Mensaje para la ley en el justificante
-es.caib.regweb3.plugins.justificante.mock.ley.es=El registro realizado está amparado en el Artículo 16 de la Ley 39/2016.
-es.caib.regweb3.plugins.justificante.mock.ley.ca=El registre realitzat està amparat a l''Article 16 de la Llei 39/2016.
+es.caib.regweb3.plugins.justificante.mock.ley.es=El registro realizado está amparado en el Artículo 16 de la Ley 39/2015.
+es.caib.regweb3.plugins.justificante.mock.ley.ca=El registre realitzat està amparat a l''Article 16 de la Llei 39/2015.
 # Mensaje para la validez en el justificante
 es.caib.regweb3.plugins.justificante.mock.validez.es=El presente justificante tiene validez a efectos de presentación de la documentación. El inicio del cómputo de plazos para la Administración, en su caso, vendrá determinado por la fecha de la entrada de su solicitud en el registro del Organismo competente.
 es.caib.regweb3.plugins.justificante.mock.validez.ca=El present justificant té validesa a efectes de presentació de la documentació. L''inici del còmput de plaços per l''Administració, en el seu cas, vendrà determinat per la data de l''entrada de la seva sol·licitud en el registre de l''Organismo competent.
