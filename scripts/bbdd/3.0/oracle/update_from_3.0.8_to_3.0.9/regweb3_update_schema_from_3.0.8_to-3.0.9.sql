@@ -236,7 +236,7 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDA
 es.caib.regweb3.plugins.documentcustody.filesystem.basedir=D:/xxxx/Justificantes/');
 
 --Plugin JustificanteMock
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT nextval('RWE_ALL_SEQ'),true, 'Justificante','Genera el justificante SIR de los registros','es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin',1,'# Mensaje para la declaración en el justificante
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Justificante','Genera el justificante SIR de los registros','es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin',1,'# Mensaje para la declaración en el justificante
 es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.
 es.caib.regweb3.plugins.justificante.mock.declaracion.ca=declara que les imatges electròniques adjuntes són imatge feel i íntegra dels documents en soport físic origen, en el marc de la normativa vigent.
 # Mensaje para la ley en el justificante
