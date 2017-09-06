@@ -174,6 +174,7 @@
         SIR bool not null,
         TEXTOPIE varchar(4000),
         TIPSCAN varchar(20),
+        CONTADOR_SIR int8,
         LOGOMENU int8,
         LOGOPIE int8,
         LOGOSELLO int8,
@@ -355,8 +356,11 @@
     create table RWE_OFICIO_REMISION (
         ID int8 not null,
         COD_ENT_REG_DEST varchar(21),
+        COD_ENT_REG_PROC varchar(21),
         COD_ERROR varchar(255),
+        CONTACTOSDESTINO varchar(2000),
         DEC_ENT_REG_DEST varchar(80),
+        DEC_ENT_REG_PROC varchar(80),
         DESC_ERROR varchar(2000),
         DESTINOEXTERNOCODIGO varchar(9),
         DESTINOEXTERNODENOMINA varchar(300),
@@ -832,6 +836,11 @@
         references RWE_ENTIDAD;
 
     create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO);
+
+    alter table RWE_ENTIDAD
+        add constraint RWE_ENTIDAD_CONT_SIR_FK
+        foreign key (CONTADOR_SIR)
+        references RWE_CONTADOR;
 
     alter table RWE_ENTIDAD
         add constraint RWE_ENTIDAD_LOGOSELLO_FK

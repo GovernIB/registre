@@ -31,4 +31,12 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
      */
     public void reiniciarContador(Long idContador) throws Exception;
 
+    /**
+     * Obtiene una secuenta de 8 dígitos a partir del Contador Sir de la Entidad
+     * @param idContador
+     * @return
+     * @throws Exception
+     */
+    public String secuenciaSir(Long idContador) throws Exception;
+
 }

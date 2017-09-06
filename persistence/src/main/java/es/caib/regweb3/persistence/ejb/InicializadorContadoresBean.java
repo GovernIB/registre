@@ -24,10 +24,13 @@ import java.util.List;
 public class InicializadorContadoresBean implements InicializadorContadoresLocal {
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
-    public EntidadLocal entidadEjb;
+    private EntidadLocal entidadEjb;
+
+    @EJB(mappedName = "regweb3/ContadorEJB/local")
+    private ContadorLocal contadorEjb;
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -132,9 +135,9 @@ public class InicializadorContadoresBean implements InicializadorContadoresLocal
             List<Entidad> entidades = entidadEjb.getAll();
 
             for(Entidad entidad: entidades) {
-
-                libroEjb.reiniciarContadoresEntidadTask(entidad.getId());
                 log.info("Ejecutado reiniciarContadores de:" + entidad.getNombre());
+                libroEjb.reiniciarContadoresEntidadTask(entidad.getId());
+                contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
             }
 
         } catch (Throwable e) {

@@ -95,5 +95,25 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
         em.flush();
     }
 
+    @Override
+    public String secuenciaSir(Long idContador) throws Exception{
+
+        NumeroRegistro numero = incrementarContador(idContador);
+
+        String secuencia = numero.getNumero().toString();
+
+        if(secuencia.length() < 8){
+            secuencia = String.format("%08d", numero.getNumero());
+
+        }else if(secuencia.length() > 8){
+            throw new Exception("El valor de la secuencia obtenido del Contador no puede ser superior a 8");
+        }
+
+        log.info("secuencia : " + secuencia);
+
+        return secuencia;
+
+    }
+
 
 }

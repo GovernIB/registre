@@ -8,7 +8,6 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -65,7 +64,9 @@ public class Entidad implements Serializable {
     @XmlTransient
     private Boolean sir = false;
     @XmlTransient
-    private Boolean oficioRemision = false;
+    private Contador contadorSir;
+    @XmlTransient
+    private Boolean oficioRemision = true;
     @XmlTransient
     private Boolean activo = true;
     
@@ -323,6 +324,17 @@ public class Entidad implements Serializable {
 
     public void setSir(Boolean sir) {
         this.sir = sir;
+    }
+
+    @ManyToOne(cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "CONTADOR_SIR")
+    @ForeignKey(name = "RWE_ENTIDAD_CONT_SIR_FK")
+    public Contador getContadorSir() {
+        return contadorSir;
+    }
+
+    public void setContadorSir(Contador contadorSir) {
+        this.contadorSir = contadorSir;
     }
 
     @Column(name="ACTIVO",nullable= false)

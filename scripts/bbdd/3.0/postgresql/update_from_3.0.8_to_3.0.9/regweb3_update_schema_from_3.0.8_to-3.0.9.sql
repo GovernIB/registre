@@ -283,3 +283,13 @@ alter table RWE_TRAZABILIDAD_SIR
     foreign key (REGISTRO_SIR)
     references RWE_REGISTRO_SIR;
 
+-- Nuevo campo Contador para genera el Identificador Intercambio SIR
+ALTER TABLE RWE_ENTIDAD add CONTADOR_SIR int8;
+ALTER TABLE RWE_ENTIDAD
+    add constraint RWE_ENTIDAD_CONT_SIR_FK
+    foreign key (CONTADOR_SIR)
+    references RWE_CONTADOR;
+
+-- Realizar tantos inserts como Entidades haya creadas, indicado su id
+INSERT into RWE_CONTADOR (id, numero) VALUES (nextval('RWE_ALL_SEQ'),0);
+UPDATE RWE_ENTIDAD set CONTADOR_SIR=CURRVAL('RWE_ALL_SEQ') where id=?;

@@ -64,8 +64,8 @@
                                 <%--Si no és una Reserva de Número, se muestras las opciones del Justificante --%>
                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
-                                    <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>
-                                    <c:if test="${idJustificante == null && registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
+                                    <%--Si no se ha generado el justificante y el registro no está ANULADO, muestra el boton para generarlo --%>
+                                    <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                                                 <spring:message code="justificante.boton"/> <span class="caret"></span>

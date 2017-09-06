@@ -157,6 +157,7 @@ create table RWE_ENTIDAD (
     SIR number(1,0) not null,
     TEXTOPIE varchar2(4000 char),
     TIPSCAN varchar2(20 char),
+    CONTADOR_SIR number(19,0),
     LOGOMENU number(19,0),
     LOGOPIE number(19,0),
     LOGOSELLO number(19,0),
@@ -332,8 +333,11 @@ create table RWE_OFICINA_SERVICIO (
 create table RWE_OFICIO_REMISION (
     ID number(19,0) not null,
     COD_ENT_REG_DEST varchar2(21 char),
+    COD_ENT_REG_PROC varchar2(21 char),
     COD_ERROR varchar2(255 char),
+    CONTACTOSDESTINO varchar2(2000 char),
     DEC_ENT_REG_DEST varchar2(80 char),
+    DEC_ENT_REG_PROC varchar2(80 char),
     DESC_ERROR varchar2(2000 char),
     DESTINOEXTERNOCODIGO varchar2(9 char),
     DESTINOEXTERNODENOMINA varchar2(300 char),
@@ -960,6 +964,11 @@ alter table RWE_DESCARGA
     add constraint RWE_DESCARGA_ENTIDAD_FK
 foreign key (ENTIDAD)
 references RWE_ENTIDAD;
+
+alter table RWE_ENTIDAD
+    add constraint RWE_ENTIDAD_CONT_SIR_FK
+foreign key (CONTADOR_SIR)
+references RWE_CONTADOR;
 
 alter table RWE_ENTIDAD
     add constraint RWE_ENTIDAD_LOGOSELLO_FK

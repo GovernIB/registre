@@ -52,6 +52,7 @@ public class SirBean implements SirLocal {
     @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB private ContadorLocal contadorEjb;
 
 
     /**
@@ -594,7 +595,7 @@ public class SirBean implements SirLocal {
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo()));
+            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo(), usuario.getEntidad()));
             registroDetalle.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
             registroDetalle.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
@@ -642,7 +643,7 @@ public class SirBean implements SirLocal {
 
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroSalida.getOficina().getCodigo()));
+            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroSalida.getOficina().getCodigo(), usuario.getEntidad()));
             registroDetalle.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
             registroDetalle.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
@@ -672,7 +673,7 @@ public class SirBean implements SirLocal {
         }
 
         // Registramos el Oficio de Remisión SIR
-        oficioRemision = oficioRemisionEjb.registrarOficioRemisionSIR(oficioRemision);
+        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
         // Enviamos el Registro al Componente CIR
         emisionEjb.enviarFicheroIntercambio(registroSir);
@@ -1119,16 +1120,16 @@ public class SirBean implements SirLocal {
      * Genera el identificador de intercambio a partir del código de la oficina de origen
      *
      * @param codOficinaOrigen
-     * @return
+     * @return el identificador intercambio (String)
      * @throws Exception
      */
-    private String generarIdentificadorIntercambio(String codOficinaOrigen) {
+    private String generarIdentificadorIntercambio(String codOficinaOrigen, Entidad entidad) throws Exception {
 
         SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits
+        String secuencia = contadorEjb.secuenciaSir(entidad.getContadorSir().getId());
 
-        String identificador = codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + getIdToken(); //todo: Añadir secuencia real
+        return codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + secuencia;
 
-        return identificador;
     }
 
     /**

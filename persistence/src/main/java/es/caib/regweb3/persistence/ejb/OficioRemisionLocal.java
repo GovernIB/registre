@@ -51,16 +51,6 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     public void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
-     *
-     * @param oficioRemision
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    public OficioRemision registrarOficioRemisionSIR(OficioRemision oficioRemision) throws Exception, I18NException, I18NValidationException;
-
-    /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
      * @param organismos
      * @return

@@ -59,6 +59,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB private ContadorLocal contadorEjb;
 
 
     @Override
@@ -102,8 +103,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Entidad nuevaEntidad(Entidad entidad) throws Exception{
 
-        //Usuario propietario = usuarioEjb.getReference(entidad.getPropietario().getId());
-        //entidad.setPropietario(propietario);
+        entidad.setContadorSir(contadorEjb.persist(new Contador()));
         entidad = persist(entidad);
 
         // Creamos el UsuarioEntidad del propietario
@@ -345,6 +345,10 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         /********* REGISTRO SIR *********/
         log.info("RegistroSir eliminados: " + registroSirEjb.eliminarByEntidad(idEntidad));
+
+        /********* SIR: PONER CONTADOR ID INTERCAMBIO A 0  *********/
+        Entidad entidad = findById(idEntidad);
+        contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
 
         em.flush();
 

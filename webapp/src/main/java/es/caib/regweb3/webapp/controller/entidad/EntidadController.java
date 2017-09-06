@@ -81,12 +81,12 @@ public class EntidadController extends BaseController {
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
-    
-    @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
-    private ScanWebModuleLocal scanWebModuleEjb;
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
+
+    @EJB(mappedName = "regweb3/ContadorEJB/local")
+    private ContadorLocal contadorEjb;
 
     /**
      * Listado de todas las Entidades
@@ -688,14 +688,19 @@ public class EntidadController extends BaseController {
     }
 
     /**
-     * Eliminar todos los Registros de una Entidad
+     * Reiniciar Contadoresde una Entidad
      */
     @RequestMapping(value = "/{idEntidad}/reiniciarContadores")
     public String reiniciarContadoresEntidad(@PathVariable Long idEntidad, HttpServletRequest request) {
 
         try {
 
+            // Reinicia los contadores de los Libros de la Entidad
             libroEjb.reiniciarContadoresEntidad(idEntidad);
+
+            // Reinicia el contador SIR de la Entidad
+            Entidad entidad = entidadEjb.findById(idEntidad);
+            contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
 
             Mensaje.saveMessageInfo(request, getMessage("aviso.contadores.reiniciar"));
 

@@ -223,3 +223,6 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,propiedades_admin
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.alias=<<ALIAS>>' ||
 'es.caib.regweb3.plugins.validatesignature.afirmacxf.authorization.ks.cert.password=<<PASSWORD>>',null);
 
+-- Nuevo Contador para genera el Identificador Intercambio SIR, realizar tantos inserts como Entidades haya creadas, indicado su id
+INSERT into RWE_CONTADOR (id, numero) VALUES (RWE_ALL_SEQ.nextVal,0);
+UPDATE RWE_ENTIDAD set CONTADOR_SIR=RWE_ALL_SEQ.currval where id=?;

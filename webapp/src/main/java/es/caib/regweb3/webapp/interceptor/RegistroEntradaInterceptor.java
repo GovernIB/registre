@@ -194,13 +194,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
             Long idJustificante = anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId());
 
-            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
-                log.info("Aviso: Solo se puede generar un Justificante de un registro Válido");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.valido"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
             //Si ya existe un justificante, da error
             if(idJustificante != null){
                 log.info("Aviso: El registro ya tiene un justificante asociado");
@@ -208,6 +201,14 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
+
+            if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)){
+                log.info("Aviso: No se puede generar un Justificante de un registro anulado");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.anulado"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
         }
 
         // Comprobaciones previas al reenvio

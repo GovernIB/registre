@@ -242,3 +242,10 @@ alter table RWE_TRAZABILIDAD_SIR
     foreign key (REGISTRO_SIR)
     references RWE_REGISTRO_SIR;
 grant select,insert,delete,update on RWE_TRAZABILIDAD_SIR to www_regweb;
+
+-- Nuevo campo Contador para genera el Identificador Intercambio SIR
+ALTER TABLE RWE_ENTIDAD add CONTADOR_SIR number(19,0);
+ALTER TABLE RWE_ENTIDAD
+  add constraint RWE_ENTIDAD_CONT_SIR_FK
+  foreign key (CONTADOR_SIR)
+  references RWE_CONTADOR;
