@@ -592,7 +592,6 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
             // Ocultamos imagen reload
             $('#reload' + tipoPersonas).hide();
-            alert("total: " + total);
 
             if(total == 0){ // Si no hay resultados
 
