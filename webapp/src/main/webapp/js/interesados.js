@@ -592,6 +592,7 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
             // Ocultamos imagen reload
             $('#reload' + tipoPersonas).hide();
+            alert("total: " + total);
 
             if(total == 0){ // Si no hay resultados
 
@@ -603,129 +604,137 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
             }else if(total != 0){
 
-                for ( var i = 0; i < total; i++) {
+                if(total > 1000) {  // Miramos si la búsqueda devuelve más de 1000 resultados
 
-                    var documento = '';
-                    if(result[i].documento != null){
-                        documento = result[i].documento;
-                    }
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.maxresultados']+'</div>');
 
-                    if(tipoPersonas == 'Fisicas'){
-                        var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
-                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
-                        tabla.append(linea);
+                } else{
 
-                    }else if(tipoPersonas == 'Juridicas'){
-                        var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
-                        var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value="+tradsinteresado['regweb3.anadir']+" onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
-                        tabla.append(linea);
+                    for (var i = 0; i < total; i++) {
 
-                    }else if(tipoPersonas == 'Todas'){
-                        var representado= $('#representado').val();
-
-                        var nombre = '';
-                        var tipoPersona = '';
-
-                        if(result[i].tipo==2){
-                            nombre = result[i].nombrePersonaFisicaCorto;
-                            tipoPersona = tradsinteresado['persona.fisica'];
-                        }else if(result[i].tipo==3){
-                            nombre = result[i].nombrePersonaJuridica;
-                            tipoPersona = tradsinteresado['persona.juridica'];
+                        var documento = '';
+                        if (result[i].documento != null) {
+                            documento = result[i].documento;
                         }
 
+                        if (tipoPersonas == 'Fisicas') {
+                            var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
+                            var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                            tabla.append(linea);
 
-                        var linea ="<tr><td style=\"text-align:left;\">"+nombre+"</td><td style=\"text-align:left;\">"+documento+"</td><td style=\"text-align:left;\">"+tipoPersona+"</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('"+result[i].id+"','"+representado+"','"+idRegistroDetalle+"')\"/></td></tr>";
-                        tabla.append(linea);
-                    }
-                }
+                        } else if (tipoPersonas == 'Juridicas') {
+                            var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
+                            var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                            tabla.append(linea);
 
-                // Mensaje con el total de resultados obtenidos
-                $('#resultadosBusquedaPersonas'+tipoPersonas).attr("display:block");
-                $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">'+tradsinteresado['interesado.hay']+' <strong>'+total+'</strong> '+tradsinteresado['interesado.resultados']+'</div>');
-                $('#resultadosBusquedaPersonas'+tipoPersonas).append(tabla);
+                        } else if (tipoPersonas == 'Todas') {
+                            var representado = $('#representado').val();
+
+                            var nombre = '';
+                            var tipoPersona = '';
+
+                            if (result[i].tipo == 2) {
+                                nombre = result[i].nombrePersonaFisicaCorto;
+                                tipoPersona = tradsinteresado['persona.fisica'];
+                            } else if (result[i].tipo == 3) {
+                                nombre = result[i].nombrePersonaJuridica;
+                                tipoPersona = tradsinteresado['persona.juridica'];
+                            }
 
 
-                // Paginamos el listado
-
-                if(total > 10) {
-
-
-                    $('#resultadosBusquedaPersonas' + tipoPersonas).each(function () {
-
-                        var currentPage = 1;
-                        var numPerPage = 10;
-
-                        var totalResults = total;
-                        var totalPages = Math.floor(totalResults / numPerPage);
-                        if (totalResults % numPerPage != 0) {
-                            totalPages = totalPages + 1;
+                            var linea = "<tr><td style=\"text-align:left;\">" + nombre + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tipoPersona + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('" + result[i].id + "','" + representado + "','" + idRegistroDetalle + "')\"/></td></tr>";
+                            tabla.append(linea);
                         }
+                    }
 
-                        var beginIndex = Math.max(1, currentPage - numPerPage);
-                        var endIndex = Math.min(beginIndex + 10, totalPages);
-                        var $pager = $('<ul class="pagination pagination-sm"></ul>');
+                    // Mensaje con el total de resultados obtenidos
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).attr("display:block");
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">'+tradsinteresado['interesado.hay']+' <strong>'+total+'</strong> '+tradsinteresado['interesado.resultados']+'</div>');
+                    $('#resultadosBusquedaPersonas'+tipoPersonas).append(tabla);
 
-                        var $table = $(this);
-                        $table.bind('repaginate', function () {
 
-                            $table.find('tbody tr').hide().slice((currentPage - 1) * numPerPage, currentPage * numPerPage).show();
-                            beginIndex = Math.max(1, currentPage - numPerPage);
-                            endIndex = Math.min(beginIndex + 10, totalPages);
+                    // Paginamos el listado
 
-                            $pager.empty();
-                            $pager = $('<ul class="pagination pagination-sm"></ul>');
+                    if(total > 10 ) {
 
-                            $('<li id="first"><a href="javascript:void(0);"><i class="fa fa-angle-double-left"></i></a></li>').bind('click', {
-                                newPage: 1
-                            }, function (event) {
-                                currentPage = event.data['newPage'];
-                                $table.trigger('repaginate');
-                            }).appendTo($pager);
 
-                            if (currentPage != 1 && currentPage >= endIndex) {
-                                $('<li id="previous"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i></a></li>').bind('click', {
-                                    newPage: currentPage - 1
+                        $('#resultadosBusquedaPersonas' + tipoPersonas).each(function () {
+
+                            var currentPage = 1;
+                            var numPerPage = 10;
+
+                            var totalResults = total;
+                            var totalPages = Math.floor(totalResults / numPerPage);
+                            if (totalResults % numPerPage != 0) {
+                                totalPages = totalPages + 1;
+                            }
+
+                            var beginIndex = Math.max(1, currentPage - numPerPage);
+                            var endIndex = Math.min(beginIndex + 10, totalPages);
+                            var $pager = $('<ul class="pagination pagination-sm"></ul>');
+
+                            var $table = $(this);
+                            $table.bind('repaginate', function () {
+
+                                $table.find('tbody tr').hide().slice((currentPage - 1) * numPerPage, currentPage * numPerPage).show();
+                                beginIndex = Math.max(1, currentPage - numPerPage);
+                                endIndex = Math.min(beginIndex + 10, totalPages);
+
+                                $pager.empty();
+                                $pager = $('<ul class="pagination pagination-sm"></ul>');
+
+                                $('<li id="first"><a href="javascript:void(0);"><i class="fa fa-angle-double-left"></i></a></li>').bind('click', {
+                                    newPage: 1
                                 }, function (event) {
                                     currentPage = event.data['newPage'];
                                     $table.trigger('repaginate');
                                 }).appendTo($pager);
 
-                            }
+                                if (currentPage != 1 && currentPage >= endIndex) {
+                                    $('<li id="previous"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i></a></li>').bind('click', {
+                                        newPage: currentPage - 1
+                                    }, function (event) {
+                                        currentPage = event.data['newPage'];
+                                        $table.trigger('repaginate');
+                                    }).appendTo($pager);
 
-                            for (var page = beginIndex; page <= endIndex; page++) {
-                                $('<li id=li' + page + '><a href ="javascript:void(0);">' + page + '</a></li>').bind('click', {
-                                    newPage: page
+                                }
+
+                                for (var page = beginIndex; page <= endIndex; page++) {
+                                    $('<li id=li' + page + '><a href ="javascript:void(0);">' + page + '</a></li>').bind('click', {
+                                        newPage: page
+                                    }, function (event) {
+                                        currentPage = event.data['newPage'];
+                                        $table.trigger('repaginate');
+                                    }).appendTo($pager);
+
+                                }
+
+                                if (currentPage != totalPages) {
+                                    $('<li id="next"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i></a></li>').bind('click', {
+                                        newPage: currentPage + 1
+                                    }, function (event) {
+                                        currentPage = event.data['newPage'];
+                                        $table.trigger('repaginate');
+                                    }).appendTo($pager);
+
+                                }
+
+                                $('<li id="last"><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i></a></li>').bind('click', {
+                                    newPage: totalPages
                                 }, function (event) {
                                     currentPage = event.data['newPage'];
                                     $table.trigger('repaginate');
                                 }).appendTo($pager);
 
-                            }
+                                $pager.insertAfter($table).find('#li' + currentPage).addClass('active');
 
-                            if (currentPage != totalPages) {
-                                $('<li id="next"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i></a></li>').bind('click', {
-                                    newPage: currentPage + 1
-                                }, function (event) {
-                                    currentPage = event.data['newPage'];
-                                    $table.trigger('repaginate');
-                                }).appendTo($pager);
-
-                            }
-
-                            $('<li id="last"><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i></a></li>').bind('click', {
-                                newPage: totalPages
-                            }, function (event) {
-                                currentPage = event.data['newPage'];
-                                $table.trigger('repaginate');
-                            }).appendTo($pager);
-
-                            $pager.insertAfter($table).find('#li' + currentPage).addClass('active');
+                            });
+                            $table.trigger('repaginate');
 
                         });
-                        $table.trigger('repaginate');
+                    }
 
-                    });
                 }
 
             }
