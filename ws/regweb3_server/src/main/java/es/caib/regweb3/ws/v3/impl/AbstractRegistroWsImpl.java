@@ -2,6 +2,7 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
@@ -19,7 +20,9 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.ejb.EJB;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -186,6 +189,25 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             throw new I18NException("error.valor.requerido.ws", "entidad");
         }
 
+    }
+
+
+    /**
+     * Obtiene un set de los identificadores del conjunto de organismos que se le pasan por parámetro
+     *
+     * @return
+     * @throws Exception
+     */
+    protected Set<Long> getOrganismosOficioRemision(Set<Organismo> organismos) throws Exception {
+
+        // Creamos un Set solo con los identificadores
+        Set<Long> organismosId = new HashSet<Long>();
+
+        for (Organismo organismo : organismos) {
+            organismosId.add(organismo.getId());
+
+        }
+        return organismosId;
     }
 
 

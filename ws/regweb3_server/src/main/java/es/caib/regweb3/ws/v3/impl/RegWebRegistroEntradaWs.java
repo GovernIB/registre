@@ -85,6 +85,18 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
     @WebMethod
     public void tramitarRegistroEntrada(@WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado, @WebParam(name = "usuario")String usuario, @WebParam(name = "entidad")String entidad) throws Throwable, WsI18NException, WsValidationException;
 
+
+    /**
+     *
+     * @param numeroRegistroFormateado
+     * @param entidad
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
+    @WebMethod
+    public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
+
     /**
      * Obtiene un {@link es.caib.regweb3.model.RegistroEntrada}
      * @param numeroRegistroFormateado

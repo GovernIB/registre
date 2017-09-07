@@ -6,6 +6,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -35,6 +36,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -440,6 +442,70 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     }
 
 
+    @RolesAllowed({ROL_USUARI})
+    @Override
+    @WebMethod
+    public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
+
+        // 1.- Validar campo obligatorio entidad
+        if(StringUtils.isEmpty(entidad)){
+            throw new I18NException("error.valor.requerido.ws", "entidad");
+        }
+
+        // 2.- Validar campo obligatorio numeroRegistroFormateado
+        if(StringUtils.isEmpty(numeroRegistroFormateado)){
+            throw new I18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
+        }
+
+        // 3.- Comprobar que la entidad existe y está activa
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        if(entidadActiva == null){
+            log.info("La entidad "+entidad+" no existe.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }else if(!entidadActiva.getActivo()){
+            throw new I18NException("registro.entidad.inactiva", entidad);
+        }
+
+        // 4.- Comprobamos que el Usuario pertenece a la Entidad indicada
+        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
+            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
+            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), entidad);
+        }
+
+        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
+        // 5.- Obtenemos el RegistroEntrada
+        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+
+        if (registroEntrada == null) {
+            throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+        }
+
+        // 6.- Comprobamos que el usuario tiene permisos para Distribuir el registro
+        if(!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO)){
+            throw new I18NException("registroEntrada.distribuir.error.permiso");
+        }
+
+        //7.- Obtenemos los organismos de la oficina en la que se ha realizado el registro que hace de oficinaActiva
+        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina()));
+
+        // Comprobamos que el RegistroEntrada se puede Distribuir
+        if (!registroEntradaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
+            throw new I18NException("registroEntrada.distribuir.error");
+        }
+
+
+        // 8.- Distribuimos el registro de entrada
+        RespuestaDistribucion respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuario);
+
+        if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
+            log.info("El registro de entrada se ha distribuido correctamente");
+        }
+
+    }
+
+
     /**
      * @param anyo
      * @param numeroRegistro
@@ -567,4 +633,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         RegistroEntradaBeanValidator rebv = new RegistroEntradaBeanValidator(registroEntradaValidator);
         rebv.throwValidationExceptionIfErrors(registroEntrada, true);
     }
+
+
+
 }
