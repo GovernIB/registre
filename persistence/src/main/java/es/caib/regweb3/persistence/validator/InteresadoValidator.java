@@ -124,6 +124,9 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                                     }
                                 }
                             }
+                        }else{
+                            interesado.setProvincia(null);
+                            interesado.setLocalidad(null);
                         }
 
                     } catch (Exception e) {

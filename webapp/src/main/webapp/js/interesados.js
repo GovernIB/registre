@@ -350,7 +350,7 @@ function editarInteresado(id){
             $('#telefono').val(result.telefono);
             if(result.canal != null){
                 $("#canal").val(result.canal);
-                actualizarCanalNotificacion();
+                actualizarCanalNotificacionInicio();
             }
             $('#observaciones').val(result.observaciones);
 
@@ -987,6 +987,43 @@ function actualizarCanalNotificacion() {
         $('#direccionElectronica').val('');
         $('#direccionElectronica').attr("disabled","disabled");
         resetPais();
+    }
+
+}
+
+/**
+ * Activa o deshabilita campos en función del Canal seleccionado al recargar la página
+ */
+function actualizarCanalNotificacionInicio() {
+
+    if($('#canal option:selected').val() == '-1'){
+        $('#direccion').val('');
+        $('#direccion').attr("disabled","disabled");
+        $('#cp').val('');
+        $('#cp').attr("disabled","disabled");
+        $('#direccionElectronica').val('');
+        $('#direccionElectronica').attr("disabled","disabled");
+
+    }else if($('#canal option:selected').val() == '1'){
+        $('#direccion').removeAttr("disabled","disabled");
+        $('#pais\\.id').removeAttr("disabled", "disabled");
+        $('#cp').removeAttr("disabled","disabled");
+        $('#direccionElectronica').attr("disabled","disabled");
+
+    }else  if($('#canal option:selected').val() == '2'){
+        $('#direccion').val('');
+        $('#direccion').attr("disabled","disabled");
+        $('#cp').val('');
+        $('#cp').attr("disabled","disabled");
+        $('#direccionElectronica').removeAttr("disabled","disabled");
+
+    }else  if($('#canal option:selected').val() == '3'){
+        $('#direccion').val('');
+        $('#direccion').attr("disabled","disabled");
+        $('#cp').val('');
+        $('#cp').attr("disabled","disabled");
+        $('#direccionElectronica').val('');
+        $('#direccionElectronica').attr("disabled","disabled");
     }
 
 }

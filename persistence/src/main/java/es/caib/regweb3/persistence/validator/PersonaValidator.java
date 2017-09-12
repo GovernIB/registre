@@ -109,6 +109,9 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
                                     rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
                                 }
                             }
+                        }else{
+                            persona.setProvincia(null);
+                            persona.setLocalidad(null);
                         }
 
                     } catch (Exception e) {

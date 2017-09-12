@@ -256,7 +256,7 @@
         actualizarLocalidad();
         actualizartipoPersona();
         actualizarPais();
-        actualizarCanalNotificacion();
+        actualizarCanalNotificacionInicio();
 
         // Gestión de los cambios del Canal de Notificación
         $('#canal').change(
