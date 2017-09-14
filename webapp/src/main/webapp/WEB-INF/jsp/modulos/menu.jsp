@@ -16,8 +16,8 @@
         <%--Si el usuario no es SuperAdministrador--%>
         <c:if test="${rolAutenticado.nombre != 'RWE_SUPERADMIN'}">
             <c:if test="${entidadActiva == null}">
-                <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="159"
-                                                        height="36" alt="Govern de les Illes Balears"/></div>
+                <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="70"
+                                                        height="70" alt="Govern de les Illes Balears"/></div>
             </c:if>
             <c:if test="${entidadActiva != null}">
                 <div class="govern-logo pull-left">
@@ -25,7 +25,7 @@
                         <img src="<c:url value="/archivo/${entidadActiva.logoMenu.id}"/>" alt="${entidadActiva.nombre}"/>
                     </c:if>
                     <c:if test="${entidadActiva.logoMenu == null}">
-                        <img src="<c:url value="/img/govern-logo.png"/>" width="159" height="36" alt="Govern de les Illes Balears"/>
+                        <img src="<c:url value="/img/govern-logo.png"/>" width="70" height="70" alt="Govern de les Illes Balears"/>
                     </c:if>
                 </div>
             </c:if>
