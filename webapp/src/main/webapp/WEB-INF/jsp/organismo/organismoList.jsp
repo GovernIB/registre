@@ -116,10 +116,10 @@
                                                         <td>${organismo.estado.descripcionEstadoEntidad}</td>
                                                         <td class="center">${fn:length(organismo.libros)}</td>
                                                         <td class="center">
-                                                            <c:if test="${organismo.estado.codigoEstadoEntidad == 'V'}">
+                                                            <c:if test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${organismo.id}/libros"/>" title="<spring:message code="organismo.libros"/>"><span class="fa fa-book"></span></a>
                                                             </c:if>
-                                                            <c:if test="${organismo.estado.codigoEstadoEntidad != 'V'}">
+                                                            <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
                                                                 <a class="btn btn-warning btn-sm disabled" title="<spring:message code="organismo.libros.no"/>"><span class="fa fa-book"></span></a>
                                                             </c:if>
                                                             <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/oficinas"/>" title="<spring:message code="organismo.oficinas"/>"><span class="fa fa-home"></span></a>
