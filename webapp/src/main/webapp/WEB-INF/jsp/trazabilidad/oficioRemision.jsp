@@ -42,7 +42,7 @@
             <!--Oficina destino -->
 
             <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
-                <p rel="ayuda" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover">
+                <p rel="ayuda" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover" data-html="true">
                     <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
             </c:if>
 
