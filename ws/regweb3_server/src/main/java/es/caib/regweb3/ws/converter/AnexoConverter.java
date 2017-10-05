@@ -65,7 +65,7 @@ public class AnexoConverter extends CommonConverter {
            doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
            doc.setName(anexoWs.getNombreFicheroAnexado());
        }else{
-           throw new Exception("Los campos 'nombreFicheroAnexado' o 'FicheroAnexado' no pueden estar vacios");
+           throw new Exception("Los campos 'nombreFicheroAnexado' y 'FicheroAnexado' no pueden estar vacios");
        }
        anexoFull.setDocumentoCustody(doc);
        anexoFull.setDocumentoFileDelete(false);

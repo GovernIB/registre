@@ -73,7 +73,7 @@ public class PropiedadGlobalUtil {
         Long valor = getLong(partialPropertyName);
 
         if(valor == null){//Si no hay ni propiedad global se devuelve por defecto 15 Mb
-            return new Long(15728640);
+            return 15728640L;
         }
         return valor;
     }
@@ -146,9 +146,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getDefaultLanguage() {
         final String partialPropertyName = "defaultlanguage";
-        String valor = getString( partialPropertyName);
 
-        return valor;
+        return getString( partialPropertyName);
     }
 
 
@@ -169,9 +168,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getPreregistreUrl() {
         final String partialPropertyName = "preregistre";
-        String valor = getString( partialPropertyName);
 
-        return valor;
+        return getString( partialPropertyName);
     }
 
     /**
@@ -193,6 +191,7 @@ public class PropiedadGlobalUtil {
      */
     public static Long getMaxUploadSizeInBytes() {
         final String partialPropertyName = "maxuploadsizeinbytes";
+
         return getLong(partialPropertyName);
     }
 
@@ -202,9 +201,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getHibernateDialect() {
         final String partialPropertyName = "hibernate.dialect";
-        String valor = getString( partialPropertyName);
 
-        return valor;
+        return getString( partialPropertyName);
     }
 
 
@@ -214,9 +212,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getArchivosPath(Long idEntidad) {
         final String partialPropertyName = "archivos.path";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
 
-        return valor;
+        return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
     /**
@@ -225,9 +222,9 @@ public class PropiedadGlobalUtil {
      */
     public static String getDir3CaibServer() {
         final String partialPropertyName = "dir3caib.server";
-        String valor = getString( partialPropertyName);
 
-        return valor;
+        return getString( partialPropertyName);
+
     }
 
     /**
@@ -236,9 +233,9 @@ public class PropiedadGlobalUtil {
      */
     public static String getDir3CaibUsername() {
         final String partialPropertyName = "dir3caib.username";
-        String valor = getString( partialPropertyName);
 
-        return valor;
+        return getString( partialPropertyName);
+
     }
 
     /**
@@ -247,9 +244,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getDir3CaibPassword() {
         final String partialPropertyName = "dir3caib.password";
-        String valor = getString(partialPropertyName);
 
-        return valor;
+        return getString(partialPropertyName);
     }
 
     /**
@@ -258,9 +254,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getSirServerBase(Long idEntidad) {
         final String partialPropertyName = "sir.serverbase";
-        String valor = getStringByEntidad(idEntidad, partialPropertyName);
 
-        return valor;
+        return  getStringByEntidad(idEntidad, partialPropertyName);
     }
 
     /**
@@ -269,9 +264,8 @@ public class PropiedadGlobalUtil {
      */
     public static String getFechaOficiosSalida() {
         final String partialPropertyName = "oficioSalida.fecha";
-        String valor = getString(partialPropertyName);
 
-        return valor;
+        return getString(partialPropertyName);
     }
 
 
@@ -293,7 +287,7 @@ public class PropiedadGlobalUtil {
      * @return
      */
     public static String getEnviosSirPendientesCronExpression() {
-        final String partialPropertyName = "cronExpression.enviosSirPendientes";
+        final String partialPropertyName = "sir.cronExpression.enviosSirPendientes";
         String valor = getString( partialPropertyName);
 
         return valor != null ? valor : RegwebConstantes.CRON_ENVIOS_SIR_PENDIENTES;
@@ -330,7 +324,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static String getStringByEntidad(Long idEntidad, final String partialPropertyName) {
+    private static String getStringByEntidad(Long idEntidad, final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getPropertyByEntidad(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -346,7 +340,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static String getString(final String partialPropertyName) {
+    private static String getString(final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -362,7 +356,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static Long getLongByEntidad(Long idEntidad, final String partialPropertyName) {
+    private static Long getLongByEntidad(Long idEntidad, final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getLongPropertyByEntitat(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -377,7 +371,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static Long getLong(final String partialPropertyName) {
+    private static Long getLong(final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getLongProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -393,7 +387,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static Boolean getBooleanByEntidad(Long idEntidad, final String partialPropertyName) {
+    private static Boolean getBooleanByEntidad(Long idEntidad, final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getBooleanPropertyByEntidad(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -408,7 +402,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static Boolean getBoolean(final String partialPropertyName) {
+    private static Boolean getBoolean(final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getBooleanProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -424,7 +418,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static Integer getIntegerByEntidad(Long idEntidad, final String partialPropertyName) {
+    private static Integer getIntegerByEntidad(Long idEntidad, final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getIntegerPropertyByEntitat(idEntidad,RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -439,7 +433,7 @@ public class PropiedadGlobalUtil {
      * @param partialPropertyName
      * @return
      */
-    protected static Integer getInteger(final String partialPropertyName) {
+    private static Integer getInteger(final String partialPropertyName) {
         try {
             PropiedadGlobalLocal propiedadGlobalEjb = getPropiedadGlobalEJB();
             return propiedadGlobalEjb.getIntegerProperty(RegwebConstantes.REGWEB3_PROPERTY_BASE + partialPropertyName);
@@ -455,7 +449,7 @@ public class PropiedadGlobalUtil {
      * @return
      * @throws Exception
      */
-    public static PropiedadGlobalLocal getPropiedadGlobalEJB() throws Exception {
+    private static PropiedadGlobalLocal getPropiedadGlobalEJB() throws Exception {
 
         if (propiedadGlobalEjb == null) {
             try {

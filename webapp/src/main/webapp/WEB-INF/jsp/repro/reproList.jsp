@@ -84,16 +84,15 @@
                                                 <c:if test="${repro.tipoRegistro == 2}"><span class="label label-danger"><spring:message code="registroSalida.registroSalida"/></span></c:if>
                                             </td>
                                             <td>
-                                                <form id="canviarEstatForm" class="form-horizontal" action="${pageContext.request.contextPath}/repro" method="get" enctype="multipart/form-data">
-                                                    <div id="actiu${repro.id}">
-                                                        <c:if test="${repro.activo}">
-                                                            <button type="button" class="label label-success" onclick="canviarEstatRepro(${repro.id},${repro.activo})" title="<spring:message code="repro.cambiar.estado"/>"><spring:message code="regweb.si"/></button>
-                                                        </c:if>
-                                                        <c:if test="${!repro.activo}">
-                                                            <button type="button" class="label label-danger" onclick="canviarEstatRepro(${repro.id},${repro.activo})" title="<spring:message code="repro.cambiar.estado"/>"><spring:message code="regweb.no"/></button>
-                                                        </c:if>
-                                                    </div>
-                                                </form>
+                                                <input id="canviarEstat" type="hidden" value="${pageContext.request.contextPath}/repro"/>
+                                                <div id="actiu${repro.id}">
+                                                    <c:if test="${repro.activo}">
+                                                        <button type="button" class="label label-success" onclick="canviarEstatRepro(${repro.id},${repro.activo})" title="<spring:message code="repro.cambiar.estado"/>"><spring:message code="regweb.si"/></button>
+                                                    </c:if>
+                                                    <c:if test="${!repro.activo}">
+                                                        <button type="button" class="label label-danger" onclick="canviarEstatRepro(${repro.id},${repro.activo})" title="<spring:message code="repro.cambiar.estado"/>"><spring:message code="regweb.no"/></button>
+                                                    </c:if>
+                                                </div>
                                             </td>
                                             <td class="center" width="210">
                                               <a class="btn btn-warning btn-sm" href="<c:url value="/repro/${repro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
@@ -254,7 +253,7 @@
      */
     function canviarEstatRepro(idRepro,actiu) {
 
-        var url = $("#canviarEstatForm").attr("action").concat('/'+idRepro+'/cambiarEstado');
+        var url = $("#canviarEstat").val().concat('/'+idRepro+'/cambiarEstado');
 
         $.ajax({
             url: url,
