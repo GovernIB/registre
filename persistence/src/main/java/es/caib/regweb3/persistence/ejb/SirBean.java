@@ -53,7 +53,7 @@ public class SirBean implements SirLocal {
     @EJB private MensajeLocal mensajeEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
-
+    @EJB private OficinaLocal oficinaEjb;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
@@ -64,6 +64,9 @@ public class SirBean implements SirLocal {
     public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
 
         RegistroSir registroSir;
+
+        // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
+        comprobarEntidad(ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
         // ENVIO
         if (TipoAnotacion.ENVIO.getValue().equals(ficheroIntercambio.getTipoAnotacion())) {
@@ -307,6 +310,9 @@ public class SirBean implements SirLocal {
      */
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
+
+        // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
+        comprobarEntidad(mensaje.getCodigoEntidadRegistralDestino());
 
         // Mensaje ACK
         if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
@@ -1130,6 +1136,34 @@ public class SirBean implements SirLocal {
 
         return codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + secuencia;
 
+    }
+
+    /**
+     * Comprueba a partir de la Oficina destino, si la Entidad está integrada en SIR
+     * @param codigoEntidadRegistralDestino
+     * @throws Exception
+     */
+    private void comprobarEntidad(String codigoEntidadRegistralDestino) throws Exception{
+
+        Entidad entidad;
+        Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
+
+        if(oficina != null){
+            entidad = oficina.getOrganismoResponsable().getEntidad();
+
+            if(!entidad.getActivo() || !entidad.getSir()){
+                log.info("La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
+                throw new ValidacionException(Errores.ERROR_0037);
+
+            }else if(!oficinaEjb.isSIRRecepcion(oficina.getId())){
+                log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para recibir asientos SIR");
+                throw new ValidacionException(Errores.ERROR_0037);
+            }
+
+        }else{
+            log.info("El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
+            throw new ValidacionException(Errores.ERROR_0037);
+        }
     }
 
     /**
