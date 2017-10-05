@@ -579,14 +579,11 @@ public class BaseController {
     public String getContactosOficinaSir(OficinaTF oficinaSir) throws Exception {
         StringBuilder stb = new StringBuilder();
         for(ContactoTF contactoTF: oficinaSir.getContactos()){
-            String scontactoTF = contactoTF.getTipoContacto()+": "+ contactoTF.getValorContacto();
+            String scontactoTF = "<b>" + contactoTF.getTipoContacto()+"</b>: "+ contactoTF.getValorContacto();
             stb.append(scontactoTF);
-            String separador = System.getProperty("line.separator");
-            stb.append("\r\n");
-            //stb.append('\n');
+            stb.append("<br>");
         }
 
-        log.info("XYZ ZZZZZZZZZZZ ContactosTF obtenidos: "+ oficinaSir.getContactos().size());
         return stb.toString();
 
     }
