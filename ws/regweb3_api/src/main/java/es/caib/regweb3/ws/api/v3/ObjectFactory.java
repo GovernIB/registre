@@ -24,36 +24,143 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
+    private final static QName _ObtenerJustificante_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificante");
     private final static QName _NuevoRegistroSalida_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "nuevoRegistroSalida");
-    private final static QName _AltaRegistroSalidaResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "altaRegistroSalidaResponse");
-    private final static QName _IdentificadorWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "identificadorWs");
-    private final static QName _DatosInteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "datosInteresadoWs");
+    private final static QName _JustificanteWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "justificanteWs");
     private final static QName _GetVersionResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "getVersionResponse");
     private final static QName _ObtenerRegistroSalidaIDResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistroSalidaIDResponse");
-    private final static QName _RegistroSalidaResponseWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "registroSalidaResponseWs");
     private final static QName _AnularRegistroSalida_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "anularRegistroSalida");
     private final static QName _AnexoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "anexoWs");
     private final static QName _AnularRegistroSalidaResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "anularRegistroSalidaResponse");
-    private final static QName _InteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "interesadoWs");
     private final static QName _ObtenerRegistroSalidaID_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistroSalidaID");
     private final static QName _RegistroResponseWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "registroResponseWs");
-    private final static QName _RegistroWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "registroWs");
-    private final static QName _WsI18NError_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "WsI18NError");
     private final static QName _ObtenerRegistroSalidaResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistroSalidaResponse");
-    private final static QName _AltaRegistroSalida_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "altaRegistroSalida");
     private final static QName _WsValidationErrors_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "WsValidationErrors");
+    private final static QName _GetVersion_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "getVersion");
+    private final static QName _GetVersionWsResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "getVersionWsResponse");
+    private final static QName _IdentificadorWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "identificadorWs");
+    private final static QName _AltaRegistroSalidaResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "altaRegistroSalidaResponse");
+    private final static QName _DatosInteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "datosInteresadoWs");
+    private final static QName _RegistroSalidaResponseWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "registroSalidaResponseWs");
+    private final static QName _InteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "interesadoWs");
+    private final static QName _WsI18NError_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "WsI18NError");
+    private final static QName _RegistroWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "registroWs");
+    private final static QName _AltaRegistroSalida_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "altaRegistroSalida");
     private final static QName _RegistroSalidaWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "registroSalidaWs");
     private final static QName _GetVersionWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "getVersionWs");
-    private final static QName _GetVersion_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "getVersion");
     private final static QName _ObtenerRegistroSalida_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistroSalida");
-    private final static QName _GetVersionWsResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "getVersionWsResponse");
     private final static QName _NuevoRegistroSalidaResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "nuevoRegistroSalidaResponse");
+    private final static QName _ObtenerJustificanteResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificanteResponse");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: es.caib.regweb3.ws.api.v3
      * 
      */
     public ObjectFactory() {
+    }
+
+    /**
+     * Create an instance of {@link NuevoRegistroSalida }
+     * 
+     */
+    public NuevoRegistroSalida createNuevoRegistroSalida() {
+        return new NuevoRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link GetVersion }
+     * 
+     */
+    public GetVersion createGetVersion() {
+        return new GetVersion();
+    }
+
+    /**
+     * Create an instance of {@link DatosInteresadoWs }
+     * 
+     */
+    public DatosInteresadoWs createDatosInteresadoWs() {
+        return new DatosInteresadoWs();
+    }
+
+    /**
+     * Create an instance of {@link ObtenerRegistroSalida }
+     * 
+     */
+    public ObtenerRegistroSalida createObtenerRegistroSalida() {
+        return new ObtenerRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link RegistroSalidaWs }
+     * 
+     */
+    public RegistroSalidaWs createRegistroSalidaWs() {
+        return new RegistroSalidaWs();
+    }
+
+    /**
+     * Create an instance of {@link WsI18NTranslation }
+     * 
+     */
+    public WsI18NTranslation createWsI18NTranslation() {
+        return new WsI18NTranslation();
+    }
+
+    /**
+     * Create an instance of {@link GetVersionResponse }
+     * 
+     */
+    public GetVersionResponse createGetVersionResponse() {
+        return new GetVersionResponse();
+    }
+
+    /**
+     * Create an instance of {@link RegistroResponseWs }
+     * 
+     */
+    public RegistroResponseWs createRegistroResponseWs() {
+        return new RegistroResponseWs();
+    }
+
+    /**
+     * Create an instance of {@link RegistroSalidaResponseWs }
+     * 
+     */
+    public RegistroSalidaResponseWs createRegistroSalidaResponseWs() {
+        return new RegistroSalidaResponseWs();
+    }
+
+    /**
+     * Create an instance of {@link WsI18NError }
+     * 
+     */
+    public WsI18NError createWsI18NError() {
+        return new WsI18NError();
+    }
+
+    /**
+     * Create an instance of {@link AnexoWs }
+     * 
+     */
+    public AnexoWs createAnexoWs() {
+        return new AnexoWs();
+    }
+
+    /**
+     * Create an instance of {@link InteresadoWs }
+     * 
+     */
+    public InteresadoWs createInteresadoWs() {
+        return new InteresadoWs();
+    }
+
+    /**
+     * Create an instance of {@link IdentificadorWs }
+     * 
+     */
+    public IdentificadorWs createIdentificadorWs() {
+        return new IdentificadorWs();
     }
 
     /**
@@ -65,11 +172,99 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WsI18NError }
+     * Create an instance of {@link ObtenerRegistroSalidaIDResponse }
      * 
      */
-    public WsI18NError createWsI18NError() {
-        return new WsI18NError();
+    public ObtenerRegistroSalidaIDResponse createObtenerRegistroSalidaIDResponse() {
+        return new ObtenerRegistroSalidaIDResponse();
+    }
+
+    /**
+     * Create an instance of {@link NuevoRegistroSalidaResponse }
+     * 
+     */
+    public NuevoRegistroSalidaResponse createNuevoRegistroSalidaResponse() {
+        return new NuevoRegistroSalidaResponse();
+    }
+
+    /**
+     * Create an instance of {@link WsI18NArgument }
+     * 
+     */
+    public WsI18NArgument createWsI18NArgument() {
+        return new WsI18NArgument();
+    }
+
+    /**
+     * Create an instance of {@link ObtenerRegistroSalidaResponse }
+     * 
+     */
+    public ObtenerRegistroSalidaResponse createObtenerRegistroSalidaResponse() {
+        return new ObtenerRegistroSalidaResponse();
+    }
+
+    /**
+     * Create an instance of {@link ObtenerJustificanteResponse }
+     * 
+     */
+    public ObtenerJustificanteResponse createObtenerJustificanteResponse() {
+        return new ObtenerJustificanteResponse();
+    }
+
+    /**
+     * Create an instance of {@link WsValidationErrors }
+     * 
+     */
+    public WsValidationErrors createWsValidationErrors() {
+        return new WsValidationErrors();
+    }
+
+    /**
+     * Create an instance of {@link AltaRegistroSalida }
+     * 
+     */
+    public AltaRegistroSalida createAltaRegistroSalida() {
+        return new AltaRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link RegistroWs }
+     * 
+     */
+    public RegistroWs createRegistroWs() {
+        return new RegistroWs();
+    }
+
+    /**
+     * Create an instance of {@link AnularRegistroSalida }
+     * 
+     */
+    public AnularRegistroSalida createAnularRegistroSalida() {
+        return new AnularRegistroSalida();
+    }
+
+    /**
+     * Create an instance of {@link GetVersionWsResponse }
+     * 
+     */
+    public GetVersionWsResponse createGetVersionWsResponse() {
+        return new GetVersionWsResponse();
+    }
+
+    /**
+     * Create an instance of {@link JustificanteWs }
+     * 
+     */
+    public JustificanteWs createJustificanteWs() {
+        return new JustificanteWs();
+    }
+
+    /**
+     * Create an instance of {@link AnularRegistroSalidaResponse }
+     * 
+     */
+    public AnularRegistroSalidaResponse createAnularRegistroSalidaResponse() {
+        return new AnularRegistroSalidaResponse();
     }
 
     /**
@@ -89,35 +284,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AnexoWs }
+     * Create an instance of {@link ObtenerJustificante }
      * 
      */
-    public AnexoWs createAnexoWs() {
-        return new AnexoWs();
-    }
-
-    /**
-     * Create an instance of {@link NuevoRegistroSalida }
-     * 
-     */
-    public NuevoRegistroSalida createNuevoRegistroSalida() {
-        return new NuevoRegistroSalida();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistroSalidaIDResponse }
-     * 
-     */
-    public ObtenerRegistroSalidaIDResponse createObtenerRegistroSalidaIDResponse() {
-        return new ObtenerRegistroSalidaIDResponse();
-    }
-
-    /**
-     * Create an instance of {@link WsI18NArgument }
-     * 
-     */
-    public WsI18NArgument createWsI18NArgument() {
-        return new WsI18NArgument();
+    public ObtenerJustificante createObtenerJustificante() {
+        return new ObtenerJustificante();
     }
 
     /**
@@ -129,147 +300,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WsValidationErrors }
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerJustificante }{@code >}}
      * 
      */
-    public WsValidationErrors createWsValidationErrors() {
-        return new WsValidationErrors();
-    }
-
-    /**
-     * Create an instance of {@link RegistroSalidaWs }
-     * 
-     */
-    public RegistroSalidaWs createRegistroSalidaWs() {
-        return new RegistroSalidaWs();
-    }
-
-    /**
-     * Create an instance of {@link GetVersionResponse }
-     * 
-     */
-    public GetVersionResponse createGetVersionResponse() {
-        return new GetVersionResponse();
-    }
-
-    /**
-     * Create an instance of {@link GetVersionWsResponse }
-     * 
-     */
-    public GetVersionWsResponse createGetVersionWsResponse() {
-        return new GetVersionWsResponse();
-    }
-
-    /**
-     * Create an instance of {@link IdentificadorWs }
-     * 
-     */
-    public IdentificadorWs createIdentificadorWs() {
-        return new IdentificadorWs();
-    }
-
-    /**
-     * Create an instance of {@link RegistroResponseWs }
-     * 
-     */
-    public RegistroResponseWs createRegistroResponseWs() {
-        return new RegistroResponseWs();
-    }
-
-    /**
-     * Create an instance of {@link AnularRegistroSalida }
-     * 
-     */
-    public AnularRegistroSalida createAnularRegistroSalida() {
-        return new AnularRegistroSalida();
-    }
-
-    /**
-     * Create an instance of {@link RegistroSalidaResponseWs }
-     * 
-     */
-    public RegistroSalidaResponseWs createRegistroSalidaResponseWs() {
-        return new RegistroSalidaResponseWs();
-    }
-
-    /**
-     * Create an instance of {@link DatosInteresadoWs }
-     * 
-     */
-    public DatosInteresadoWs createDatosInteresadoWs() {
-        return new DatosInteresadoWs();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistroSalidaResponse }
-     * 
-     */
-    public ObtenerRegistroSalidaResponse createObtenerRegistroSalidaResponse() {
-        return new ObtenerRegistroSalidaResponse();
-    }
-
-    /**
-     * Create an instance of {@link AltaRegistroSalida }
-     * 
-     */
-    public AltaRegistroSalida createAltaRegistroSalida() {
-        return new AltaRegistroSalida();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistroSalida }
-     * 
-     */
-    public ObtenerRegistroSalida createObtenerRegistroSalida() {
-        return new ObtenerRegistroSalida();
-    }
-
-    /**
-     * Create an instance of {@link GetVersion }
-     * 
-     */
-    public GetVersion createGetVersion() {
-        return new GetVersion();
-    }
-
-    /**
-     * Create an instance of {@link InteresadoWs }
-     * 
-     */
-    public InteresadoWs createInteresadoWs() {
-        return new InteresadoWs();
-    }
-
-    /**
-     * Create an instance of {@link RegistroWs }
-     * 
-     */
-    public RegistroWs createRegistroWs() {
-        return new RegistroWs();
-    }
-
-    /**
-     * Create an instance of {@link WsI18NTranslation }
-     * 
-     */
-    public WsI18NTranslation createWsI18NTranslation() {
-        return new WsI18NTranslation();
-    }
-
-    /**
-     * Create an instance of {@link AnularRegistroSalidaResponse }
-     * 
-     */
-    public AnularRegistroSalidaResponse createAnularRegistroSalidaResponse() {
-        return new AnularRegistroSalidaResponse();
-    }
-
-    /**
-     * Create an instance of {@link NuevoRegistroSalidaResponse }
-     * 
-     */
-    public NuevoRegistroSalidaResponse createNuevoRegistroSalidaResponse() {
-        return new NuevoRegistroSalidaResponse();
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerJustificante")
+    public JAXBElement<ObtenerJustificante> createObtenerJustificante(ObtenerJustificante value) {
+        return new JAXBElement<ObtenerJustificante>(_ObtenerJustificante_QNAME, ObtenerJustificante.class, null, value);
     }
 
     /**
@@ -282,30 +318,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link AltaRegistroSalidaResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link JustificanteWs }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "altaRegistroSalidaResponse")
-    public JAXBElement<AltaRegistroSalidaResponse> createAltaRegistroSalidaResponse(AltaRegistroSalidaResponse value) {
-        return new JAXBElement<AltaRegistroSalidaResponse>(_AltaRegistroSalidaResponse_QNAME, AltaRegistroSalidaResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link IdentificadorWs }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "identificadorWs")
-    public JAXBElement<IdentificadorWs> createIdentificadorWs(IdentificadorWs value) {
-        return new JAXBElement<IdentificadorWs>(_IdentificadorWs_QNAME, IdentificadorWs.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link DatosInteresadoWs }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "datosInteresadoWs")
-    public JAXBElement<DatosInteresadoWs> createDatosInteresadoWs(DatosInteresadoWs value) {
-        return new JAXBElement<DatosInteresadoWs>(_DatosInteresadoWs_QNAME, DatosInteresadoWs.class, null, value);
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "justificanteWs")
+    public JAXBElement<JustificanteWs> createJustificanteWs(JustificanteWs value) {
+        return new JAXBElement<JustificanteWs>(_JustificanteWs_QNAME, JustificanteWs.class, null, value);
     }
 
     /**
@@ -324,15 +342,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerRegistroSalidaIDResponse")
     public JAXBElement<ObtenerRegistroSalidaIDResponse> createObtenerRegistroSalidaIDResponse(ObtenerRegistroSalidaIDResponse value) {
         return new JAXBElement<ObtenerRegistroSalidaIDResponse>(_ObtenerRegistroSalidaIDResponse_QNAME, ObtenerRegistroSalidaIDResponse.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link RegistroSalidaResponseWs }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "registroSalidaResponseWs")
-    public JAXBElement<RegistroSalidaResponseWs> createRegistroSalidaResponseWs(RegistroSalidaResponseWs value) {
-        return new JAXBElement<RegistroSalidaResponseWs>(_RegistroSalidaResponseWs_QNAME, RegistroSalidaResponseWs.class, null, value);
     }
 
     /**
@@ -363,15 +372,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link InteresadoWs }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "interesadoWs")
-    public JAXBElement<InteresadoWs> createInteresadoWs(InteresadoWs value) {
-        return new JAXBElement<InteresadoWs>(_InteresadoWs_QNAME, InteresadoWs.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerRegistroSalidaID }{@code >}}
      * 
      */
@@ -390,12 +390,84 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link RegistroWs }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerRegistroSalidaResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "registroWs")
-    public JAXBElement<RegistroWs> createRegistroWs(RegistroWs value) {
-        return new JAXBElement<RegistroWs>(_RegistroWs_QNAME, RegistroWs.class, null, value);
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerRegistroSalidaResponse")
+    public JAXBElement<ObtenerRegistroSalidaResponse> createObtenerRegistroSalidaResponse(ObtenerRegistroSalidaResponse value) {
+        return new JAXBElement<ObtenerRegistroSalidaResponse>(_ObtenerRegistroSalidaResponse_QNAME, ObtenerRegistroSalidaResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link WsValidationErrors }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "WsValidationErrors")
+    public JAXBElement<WsValidationErrors> createWsValidationErrors(WsValidationErrors value) {
+        return new JAXBElement<WsValidationErrors>(_WsValidationErrors_QNAME, WsValidationErrors.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetVersion }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "getVersion")
+    public JAXBElement<GetVersion> createGetVersion(GetVersion value) {
+        return new JAXBElement<GetVersion>(_GetVersion_QNAME, GetVersion.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link GetVersionWsResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "getVersionWsResponse")
+    public JAXBElement<GetVersionWsResponse> createGetVersionWsResponse(GetVersionWsResponse value) {
+        return new JAXBElement<GetVersionWsResponse>(_GetVersionWsResponse_QNAME, GetVersionWsResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link IdentificadorWs }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "identificadorWs")
+    public JAXBElement<IdentificadorWs> createIdentificadorWs(IdentificadorWs value) {
+        return new JAXBElement<IdentificadorWs>(_IdentificadorWs_QNAME, IdentificadorWs.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link AltaRegistroSalidaResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "altaRegistroSalidaResponse")
+    public JAXBElement<AltaRegistroSalidaResponse> createAltaRegistroSalidaResponse(AltaRegistroSalidaResponse value) {
+        return new JAXBElement<AltaRegistroSalidaResponse>(_AltaRegistroSalidaResponse_QNAME, AltaRegistroSalidaResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link DatosInteresadoWs }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "datosInteresadoWs")
+    public JAXBElement<DatosInteresadoWs> createDatosInteresadoWs(DatosInteresadoWs value) {
+        return new JAXBElement<DatosInteresadoWs>(_DatosInteresadoWs_QNAME, DatosInteresadoWs.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link RegistroSalidaResponseWs }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "registroSalidaResponseWs")
+    public JAXBElement<RegistroSalidaResponseWs> createRegistroSalidaResponseWs(RegistroSalidaResponseWs value) {
+        return new JAXBElement<RegistroSalidaResponseWs>(_RegistroSalidaResponseWs_QNAME, RegistroSalidaResponseWs.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link InteresadoWs }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "interesadoWs")
+    public JAXBElement<InteresadoWs> createInteresadoWs(InteresadoWs value) {
+        return new JAXBElement<InteresadoWs>(_InteresadoWs_QNAME, InteresadoWs.class, null, value);
     }
 
     /**
@@ -408,12 +480,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerRegistroSalidaResponse }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link RegistroWs }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerRegistroSalidaResponse")
-    public JAXBElement<ObtenerRegistroSalidaResponse> createObtenerRegistroSalidaResponse(ObtenerRegistroSalidaResponse value) {
-        return new JAXBElement<ObtenerRegistroSalidaResponse>(_ObtenerRegistroSalidaResponse_QNAME, ObtenerRegistroSalidaResponse.class, null, value);
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "registroWs")
+    public JAXBElement<RegistroWs> createRegistroWs(RegistroWs value) {
+        return new JAXBElement<RegistroWs>(_RegistroWs_QNAME, RegistroWs.class, null, value);
     }
 
     /**
@@ -423,15 +495,6 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "altaRegistroSalida")
     public JAXBElement<AltaRegistroSalida> createAltaRegistroSalida(AltaRegistroSalida value) {
         return new JAXBElement<AltaRegistroSalida>(_AltaRegistroSalida_QNAME, AltaRegistroSalida.class, null, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link WsValidationErrors }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "WsValidationErrors")
-    public JAXBElement<WsValidationErrors> createWsValidationErrors(WsValidationErrors value) {
-        return new JAXBElement<WsValidationErrors>(_WsValidationErrors_QNAME, WsValidationErrors.class, null, value);
     }
 
     /**
@@ -453,15 +516,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetVersion }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "getVersion")
-    public JAXBElement<GetVersion> createGetVersion(GetVersion value) {
-        return new JAXBElement<GetVersion>(_GetVersion_QNAME, GetVersion.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerRegistroSalida }{@code >}}
      * 
      */
@@ -471,21 +525,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link GetVersionWsResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "getVersionWsResponse")
-    public JAXBElement<GetVersionWsResponse> createGetVersionWsResponse(GetVersionWsResponse value) {
-        return new JAXBElement<GetVersionWsResponse>(_GetVersionWsResponse_QNAME, GetVersionWsResponse.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link NuevoRegistroSalidaResponse }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "nuevoRegistroSalidaResponse")
     public JAXBElement<NuevoRegistroSalidaResponse> createNuevoRegistroSalidaResponse(NuevoRegistroSalidaResponse value) {
         return new JAXBElement<NuevoRegistroSalidaResponse>(_NuevoRegistroSalidaResponse_QNAME, NuevoRegistroSalidaResponse.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerJustificanteResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerJustificanteResponse")
+    public JAXBElement<ObtenerJustificanteResponse> createObtenerJustificanteResponse(ObtenerJustificanteResponse value) {
+        return new JAXBElement<ObtenerJustificanteResponse>(_ObtenerJustificanteResponse_QNAME, ObtenerJustificanteResponse.class, null, value);
     }
 
 }

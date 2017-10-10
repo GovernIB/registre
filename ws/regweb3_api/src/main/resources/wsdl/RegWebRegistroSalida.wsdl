@@ -16,8 +16,11 @@
   <xs:element name="getVersionWsResponse" type="tns:getVersionWsResponse"/>
   <xs:element name="identificadorWs" type="tns:identificadorWs"/>
   <xs:element name="interesadoWs" type="tns:interesadoWs"/>
+  <xs:element name="justificanteWs" type="tns:justificanteWs"/>
   <xs:element name="nuevoRegistroSalida" type="tns:nuevoRegistroSalida"/>
   <xs:element name="nuevoRegistroSalidaResponse" type="tns:nuevoRegistroSalidaResponse"/>
+  <xs:element name="obtenerJustificante" type="tns:obtenerJustificante"/>
+  <xs:element name="obtenerJustificanteResponse" type="tns:obtenerJustificanteResponse"/>
   <xs:element name="obtenerRegistroSalida" type="tns:obtenerRegistroSalida"/>
   <xs:element name="obtenerRegistroSalidaID" type="tns:obtenerRegistroSalidaID"/>
   <xs:element name="obtenerRegistroSalidaIDResponse" type="tns:obtenerRegistroSalidaIDResponse"/>
@@ -26,16 +29,21 @@
   <xs:element name="registroSalidaResponseWs" type="tns:registroSalidaResponseWs"/>
   <xs:element name="registroSalidaWs" type="tns:registroSalidaWs"/>
   <xs:element name="registroWs" type="tns:registroWs"/>
-  <xs:complexType name="anularRegistroSalida">
+  <xs:complexType name="obtenerJustificante">
     <xs:sequence>
-      <xs:element minOccurs="0" name="numeroRegistro" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
-      <xs:element name="anular" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="anularRegistroSalidaResponse">
-    <xs:sequence/>
+  <xs:complexType name="obtenerJustificanteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:justificanteWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="justificanteWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="justificante" type="xs:base64Binary"/>
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="wsFieldValidationError">
     <xs:sequence>
@@ -56,6 +64,17 @@
       <xs:element minOccurs="0" name="value" type="xs:string"/>
       <xs:element name="translate" type="xs:boolean"/>
     </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="anularRegistroSalida">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroRegistro" type="xs:string"/>
+      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element name="anular" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="anularRegistroSalidaResponse">
+    <xs:sequence/>
   </xs:complexType>
   <xs:complexType name="getVersion">
     <xs:sequence/>
@@ -272,6 +291,10 @@
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="obtenerJustificante">
+    <wsdl:part name="parameters" element="tns:obtenerJustificante">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="nuevoRegistroSalida">
     <wsdl:part name="parameters" element="tns:nuevoRegistroSalida">
     </wsdl:part>
@@ -332,11 +355,25 @@
     <wsdl:part name="parameters" element="tns:nuevoRegistroSalidaResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="obtenerJustificanteResponse">
+    <wsdl:part name="parameters" element="tns:obtenerJustificanteResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="WsValidationException">
     <wsdl:part name="WsValidationException" element="tns:WsValidationErrors">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebRegistroSalidaWs">
+    <wsdl:operation name="obtenerJustificante">
+      <wsdl:input name="obtenerJustificante" message="tns:obtenerJustificante">
+    </wsdl:input>
+      <wsdl:output name="obtenerJustificanteResponse" message="tns:obtenerJustificanteResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="anularRegistroSalida">
       <wsdl:input name="anularRegistroSalida" message="tns:anularRegistroSalida">
     </wsdl:input>
@@ -406,6 +443,21 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="anularRegistroSalidaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerJustificante">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerJustificante">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerJustificanteResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">

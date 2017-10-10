@@ -10,14 +10,19 @@
   <xs:element name="anularRegistroEntrada" type="tns:anularRegistroEntrada"/>
   <xs:element name="anularRegistroEntradaResponse" type="tns:anularRegistroEntradaResponse"/>
   <xs:element name="datosInteresadoWs" type="tns:datosInteresadoWs"/>
+  <xs:element name="distribuirRegistroEntrada" type="tns:distribuirRegistroEntrada"/>
+  <xs:element name="distribuirRegistroEntradaResponse" type="tns:distribuirRegistroEntradaResponse"/>
   <xs:element name="getVersion" type="tns:getVersion"/>
   <xs:element name="getVersionResponse" type="tns:getVersionResponse"/>
   <xs:element name="getVersionWs" type="tns:getVersionWs"/>
   <xs:element name="getVersionWsResponse" type="tns:getVersionWsResponse"/>
   <xs:element name="identificadorWs" type="tns:identificadorWs"/>
   <xs:element name="interesadoWs" type="tns:interesadoWs"/>
+  <xs:element name="justificanteWs" type="tns:justificanteWs"/>
   <xs:element name="nuevoRegistroEntrada" type="tns:nuevoRegistroEntrada"/>
   <xs:element name="nuevoRegistroEntradaResponse" type="tns:nuevoRegistroEntradaResponse"/>
+  <xs:element name="obtenerJustificante" type="tns:obtenerJustificante"/>
+  <xs:element name="obtenerJustificanteResponse" type="tns:obtenerJustificanteResponse"/>
   <xs:element name="obtenerRegistroEntrada" type="tns:obtenerRegistroEntrada"/>
   <xs:element name="obtenerRegistroEntradaID" type="tns:obtenerRegistroEntradaID"/>
   <xs:element name="obtenerRegistroEntradaIDResponse" type="tns:obtenerRegistroEntradaIDResponse"/>
@@ -28,6 +33,42 @@
   <xs:element name="registroWs" type="tns:registroWs"/>
   <xs:element name="tramitarRegistroEntrada" type="tns:tramitarRegistroEntrada"/>
   <xs:element name="tramitarRegistroEntradaResponse" type="tns:tramitarRegistroEntradaResponse"/>
+  <xs:complexType name="obtenerJustificante">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerJustificanteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:justificanteWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="justificanteWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="justificante" type="xs:base64Binary"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsFieldValidationError">
+    <xs:sequence>
+      <xs:element name="label" type="xs:string"/>
+      <xs:element name="field" type="xs:string"/>
+      <xs:element name="translation" type="tns:wsI18NTranslation"/>
+      <xs:element name="error" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NTranslation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NArgument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+      <xs:element name="translate" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="obtenerRegistroEntrada">
     <xs:sequence>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
@@ -135,26 +176,6 @@
       <xs:element minOccurs="0" name="tipoInteresado" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="wsFieldValidationError">
-    <xs:sequence>
-      <xs:element name="label" type="xs:string"/>
-      <xs:element name="field" type="xs:string"/>
-      <xs:element name="translation" type="tns:wsI18NTranslation"/>
-      <xs:element name="error" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="wsI18NTranslation">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="code" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="wsI18NArgument">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="value" type="xs:string"/>
-      <xs:element name="translate" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
   <xs:complexType name="tramitarRegistroEntrada">
     <xs:sequence>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
@@ -241,6 +262,15 @@
       <xs:element minOccurs="0" name="return" type="tns:identificadorWs"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="distribuirRegistroEntrada">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="distribuirRegistroEntradaResponse">
+    <xs:sequence/>
+  </xs:complexType>
   <xs:complexType name="altaRegistroEntrada">
     <xs:sequence>
       <xs:element minOccurs="0" name="registroEntradaWs" type="tns:registroEntradaWs"/>
@@ -284,6 +314,14 @@
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="distribuirRegistroEntrada">
+    <wsdl:part name="parameters" element="tns:distribuirRegistroEntrada">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerJustificante">
+    <wsdl:part name="parameters" element="tns:obtenerJustificante">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="obtenerRegistroEntrada">
     <wsdl:part name="parameters" element="tns:obtenerRegistroEntrada">
     </wsdl:part>
@@ -296,12 +334,12 @@
     <wsdl:part name="parameters" element="tns:altaRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerRegistroEntradaResponse">
-    <wsdl:part name="parameters" element="tns:obtenerRegistroEntradaResponse">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="WsI18NException">
     <wsdl:part name="WsI18NException" element="tns:WsI18NError">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerRegistroEntradaResponse">
+    <wsdl:part name="parameters" element="tns:obtenerRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="tramitarRegistroEntrada">
@@ -340,12 +378,20 @@
     <wsdl:part name="parameters" element="tns:getVersion">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="distribuirRegistroEntradaResponse">
+    <wsdl:part name="parameters" element="tns:distribuirRegistroEntradaResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="getVersionWsResponse">
     <wsdl:part name="parameters" element="tns:getVersionWsResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="anularRegistroEntradaResponse">
     <wsdl:part name="parameters" element="tns:anularRegistroEntradaResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerJustificanteResponse">
+    <wsdl:part name="parameters" element="tns:obtenerJustificanteResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="WsValidationException">
@@ -357,6 +403,16 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebRegistroEntradaWs">
+    <wsdl:operation name="obtenerJustificante">
+      <wsdl:input name="obtenerJustificante" message="tns:obtenerJustificante">
+    </wsdl:input>
+      <wsdl:output name="obtenerJustificanteResponse" message="tns:obtenerJustificanteResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="obtenerRegistroEntrada">
       <wsdl:input name="obtenerRegistroEntrada" message="tns:obtenerRegistroEntrada">
     </wsdl:input>
@@ -401,6 +457,16 @@
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="distribuirRegistroEntrada">
+      <wsdl:input name="distribuirRegistroEntrada" message="tns:distribuirRegistroEntrada">
+    </wsdl:input>
+      <wsdl:output name="distribuirRegistroEntradaResponse" message="tns:distribuirRegistroEntradaResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="altaRegistroEntrada">
       <wsdl:input name="altaRegistroEntrada" message="tns:altaRegistroEntrada">
     </wsdl:input>
@@ -430,6 +496,21 @@
   </wsdl:portType>
   <wsdl:binding name="RegWebRegistroEntradaWsServiceSoapBinding" type="tns:RegWebRegistroEntradaWs">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="obtenerJustificante">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerJustificante">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerJustificanteResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="obtenerRegistroEntrada">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="obtenerRegistroEntrada">
@@ -487,6 +568,21 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="nuevoRegistroEntradaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="distribuirRegistroEntrada">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="distribuirRegistroEntrada">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="distribuirRegistroEntradaResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">
