@@ -40,16 +40,14 @@ public interface SirLocal {
     /**
      * @param tipoRegistro
      * @param idRegistro
-     * @param codigoEntidadRegistralDestino
-     * @param denominacionEntidadRegistralDestino
      * @param oficinaActiva
      * @param usuario
+     * @param codigoOficinaSir
      * @throws Exception
      * @throws I18NException
      */
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
-                                                   String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
-                                                   Oficina oficinaActiva, UsuarioEntidad usuario, String contactosEntidadRegistralDestino)
+                                                   Oficina oficinaActiva, UsuarioEntidad usuario,String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
 
     /**

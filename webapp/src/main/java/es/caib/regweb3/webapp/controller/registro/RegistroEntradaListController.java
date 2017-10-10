@@ -1,13 +1,11 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
@@ -328,17 +326,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        // OficinaSir destino
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-        OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
-
-        log.info("Oficina Codigo Sir:" + oficinaSir.getCodigo());
-        //Obtenemos los contactos de la oficina Sir de destino
-        String contactosOficinaTF = getContactosOficinaSir(oficinaSir);
-
         try{
 
-            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(), getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, getOficinaActiva(request), usuarioEntidad,envioSirForm.getOficinaSIRCodigo());
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
 
         }catch (SIRException e){
@@ -658,7 +648,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, 
         @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request)
-            throws Exception, I18NException {
+            throws Exception, I18NException, I18NValidationException {
 
         log.info("Entramos en enviarDestinatariosRegistroEntrada");
 

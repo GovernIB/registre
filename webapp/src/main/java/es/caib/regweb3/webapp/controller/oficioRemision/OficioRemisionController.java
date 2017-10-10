@@ -1,7 +1,5 @@
 package es.caib.regweb3.webapp.controller.oficioRemision;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.ejb.*;
@@ -9,7 +7,6 @@ import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
@@ -454,13 +451,6 @@ public class OficioRemisionController extends BaseController {
             return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
         }
 
-        // OficinaSir destino
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-        OficinaTF oficinaSir = oficinasService.obtenerOficina(oficioRemisionForm.getOficinaSIRCodigo(), null, null);
-
-        //Obtenemos los contactos de la oficina Sir de destino
-        String contactosOficinaTF = getContactosOficinaSir(oficinaSir);
-
         // OFICIO DE REMISION ENTRADA
         if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
 
@@ -499,8 +489,7 @@ public class OficioRemisionController extends BaseController {
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
                                 RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
-                                oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
-                                getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
+                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -560,8 +549,7 @@ public class OficioRemisionController extends BaseController {
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
                                 RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
-                                oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
-                                getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
+                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
 
                         oficioRemisionList.add(oficioRemision);
                     }

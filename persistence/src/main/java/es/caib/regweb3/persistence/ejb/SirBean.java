@@ -1,5 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.ContactoTF;
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
@@ -570,8 +573,7 @@ public class SirBean implements SirLocal {
      */
     @Override
     public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
-                                                   String codigoEntidadRegistralDestino, String denominacionEntidadRegistralDestino,
-                                                   Oficina oficinaActiva, UsuarioEntidad usuario, String contactosEntidadRegistralDestino)
+                                                   Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException {
 
         RegistroSir registroSir = null;
@@ -584,6 +586,12 @@ public class SirBean implements SirLocal {
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
 
+        // OficinaSir destino
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        OficinaTF oficinaSir = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
+
+        //Obtenemos los contactos de la oficina Sir de destino
+        String contactosEntidadRegistralDestino = getContactosOficinaSir(oficinaSir);
 
         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
@@ -602,8 +610,8 @@ public class SirBean implements SirLocal {
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
             registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo(), usuario.getEntidad()));
-            registroDetalle.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
-            registroDetalle.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
+            registroDetalle.setCodigoEntidadRegistralDestino(oficinaSir.getCodigo());
+            registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSir.getDenominacion());
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
@@ -626,8 +634,8 @@ public class SirBean implements SirLocal {
             oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
             oficioRemision.setOrganismoDestinatario(null);
             oficioRemision.setRegistrosSalida(null);
-            oficioRemision.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
-            oficioRemision.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
+            oficioRemision.setCodigoEntidadRegistralDestino(oficinaSir.getCodigo());
+            oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSir.getDenominacion());
             oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
 
             //Transformamos el registro de Entrada a RegistroSir
@@ -650,8 +658,8 @@ public class SirBean implements SirLocal {
             // Actualizamos el Registro con campos SIR
             registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
             registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroSalida.getOficina().getCodigo(), usuario.getEntidad()));
-            registroDetalle.setCodigoEntidadRegistralDestino(codigoEntidadRegistralDestino);
-            registroDetalle.setDecodificacionEntidadRegistralDestino(denominacionEntidadRegistralDestino);
+            registroDetalle.setCodigoEntidadRegistralDestino(oficinaSir.getCodigo());
+            registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSir.getDenominacion());
             registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
             registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
 
@@ -1192,5 +1200,23 @@ public class SirBean implements SirLocal {
         return result;
     }
 
+
+    /**
+     * Método que obtiene los contactos de la oficina Sir de destino
+     * @param oficinaSir
+     * @return
+     * @throws Exception
+     */
+    private String getContactosOficinaSir(OficinaTF oficinaSir) throws Exception {
+        StringBuilder stb = new StringBuilder();
+        for(ContactoTF contactoTF: oficinaSir.getContactos()){
+            String scontactoTF = "<b>" + contactoTF.getTipoContacto()+"</b>: "+ contactoTF.getValorContacto();
+            stb.append(scontactoTF);
+            stb.append("<br>");
+        }
+
+        return stb.toString();
+
+    }
 
 }

@@ -1,16 +1,13 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
@@ -309,17 +306,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        // OficinaSir destino
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-        OficinaTF oficinaSir = oficinasService.obtenerOficina(envioSirForm.getOficinaSIRCodigo(), null, null);
-
-        //Obtenemos los contactos de la oficina Sir de destino
-        String contactosOficinaTF = getContactosOficinaSir(oficinaSir);
         try {
 
             sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_SALIDA_ESCRITO,
-                    idRegistro, oficinaSir.getCodigo(),oficinaSir.getDenominacion(),
-                    getOficinaActiva(request), usuarioEntidad,contactosOficinaTF);
+                    idRegistro, getOficinaActiva(request), usuarioEntidad,envioSirForm.getOficinaSIRCodigo());
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.envioSir.ok"));
 
         } catch (SIRException e){
