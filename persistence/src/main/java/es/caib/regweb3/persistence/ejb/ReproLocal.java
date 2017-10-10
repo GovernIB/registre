@@ -1,6 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Repro;
+import es.caib.regweb3.model.utils.ReproJson;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -125,6 +127,14 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @throws Exception
      */
     public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+
+    /**
+     *
+     * @param idRepro
+     * @return
+     * @throws Exception
+     */
+    public ReproJson obtenerRepro(Long idRepro, Entidad entidad) throws Exception;
 
 }
 
