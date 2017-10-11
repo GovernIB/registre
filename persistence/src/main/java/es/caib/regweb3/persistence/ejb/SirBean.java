@@ -563,10 +563,9 @@ public class SirBean implements SirLocal {
     /**
      *
      * @param idRegistro
-     * @param codigoEntidadRegistralDestino
-     * @param denominacionEntidadRegistralDestino
      * @param oficinaActiva
      * @param usuario
+     * @param codigoOficinaSir
      * @return
      * @throws Exception
      * @throws I18NException
