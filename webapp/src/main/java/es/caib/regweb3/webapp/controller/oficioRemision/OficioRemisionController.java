@@ -251,6 +251,7 @@ public class OficioRemisionController extends BaseController {
 
         HttpSession session = request.getSession();
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        Entidad entidadActiva =  getEntidadActiva(request);
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
@@ -266,7 +267,7 @@ public class OficioRemisionController extends BaseController {
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByOficioRemision(oficioRemision.getId());
 
         model.addAttribute(oficioRemision);
-        //model.addAttribute("registrosEntrada",registrosEntrada);
+        model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
         model.addAttribute("trazabilidades", trazabilidades);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()));
         model.addAttribute("modeloOficioRemision", new ModeloForm());

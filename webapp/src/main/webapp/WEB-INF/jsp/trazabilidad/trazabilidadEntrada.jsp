@@ -20,6 +20,7 @@
                         <li>
                             <c:set var="oficioRemision" value="${trazabilidad.oficioRemision}" scope="request"/>
                             <c:set var="registroSalida" value="${trazabilidad.registroSalida}" scope="request"/>
+                            <c:set var="maxReintentos" value="${maxReintentos}" scope="request"/>
                             <c:import url="../trazabilidad/oficioRemision.jsp"/>
                         </li>
 

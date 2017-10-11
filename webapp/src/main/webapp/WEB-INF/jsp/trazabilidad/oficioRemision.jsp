@@ -114,8 +114,11 @@
 
             <%--Reintentos--%>
             <p>
-                <c:if test="${oficioRemision.numeroReintentos > 0}">
+                <c:if test="${oficioRemision.numeroReintentos > 0 && oficioRemision.numeroReintentos < maxReintentos}">
                     <small><i class="fa fa-retweet"></i> <strong><spring:message code="oficioRemision.reintentos"/>:</strong> ${oficioRemision.numeroReintentos}</small>
+                </c:if>
+                <c:if test="${oficioRemision.numeroReintentos == maxReintentos}">
+                    <small><i class="fa fa-retweet"></i> <strong><spring:message code="oficioRemision.reintentos"/>:</strong> <spring:message code="oficioRemision.reintentos.max"/> (${maxReintentos})</small>
                 </c:if>
             </p>
         </c:if>

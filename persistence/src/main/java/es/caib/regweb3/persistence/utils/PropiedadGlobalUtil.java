@@ -138,6 +138,21 @@ public class PropiedadGlobalUtil {
         return valor;
     }
 
+    /**
+     * Retorna el valor de la propiedad del tamaño máximo en bytes permitido al subir un anexo a regweb.
+     * @return
+     */
+    public static Integer getMaxReintentosSir(Long idEntidad) {
+        final String partialPropertyName = "sir.reintentos";
+        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
+
+        // Si no está definida retornamos un valor fijo
+        if (valor == null) {
+            return 10;
+        }
+
+        return valor;
+    }
 
 
     /**

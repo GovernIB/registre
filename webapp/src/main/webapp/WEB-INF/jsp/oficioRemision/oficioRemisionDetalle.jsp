@@ -116,9 +116,13 @@
 
                                 </c:if>
                                 <%--Reintentos--%>
-                                <c:if test="${oficioRemision.numeroReintentos > 0}">
+                                <c:if test="${oficioRemision.numeroReintentos > 0 && oficioRemision.numeroReintentos < maxReintentos}">
                                     <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>:</dt>
                                     <dd> ${oficioRemision.numeroReintentos}</dd>
+                                </c:if>
+                                <c:if test="${oficioRemision.numeroReintentos == maxReintentos}">
+                                    <dt><i class="fa fa-retweet"></i> <spring:message code="oficioRemision.reintentos"/>:</dt>
+                                    <dd> <spring:message code="oficioRemision.reintentos.max"/> (${maxReintentos})</dd>
                                 </c:if>
                                 <%--Identificador intercambio--%>
                                 <dt><i class="fa fa-qrcode"></i> <spring:message code="registroSir.identificadorIntercambio"/>:</dt>
