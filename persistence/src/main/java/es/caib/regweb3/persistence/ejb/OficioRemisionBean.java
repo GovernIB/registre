@@ -228,7 +228,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
 
                 //Justificante, Si no tiene generado el Justificante, lo hacemos
-                if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                //No entra cuando es SIR porque ya ha generado el justificante previamente
+                if (!registroEntrada.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
 
                     registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntrada.getId());
 
@@ -268,7 +269,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 registroSalida = registroSalidaEjb.findById(registroSalida.getId());
 
                 //Justificante, Si no tiene generado el Justificante, lo hacemos
-                if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
+                //No entra cuando es SIR porque ya ha generado el justificante previamente
+                if (!registroSalida.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
 
                     registroSalida = registroSalidaEjb.getConAnexosFull(registroSalida.getId());
 
