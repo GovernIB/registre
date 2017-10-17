@@ -901,3 +901,9 @@ a.text-gris:focus {
     padding-right: 5px;
 }
 /* FI Estils per ajustar el tamany quan se trien valors molt llargs a Validez, Origen, ... */
+
+/* Estil per popover de Contactes Oficina */
+#popoverContactos {
+    position: relative;
+    max-width: max-content;
+}
