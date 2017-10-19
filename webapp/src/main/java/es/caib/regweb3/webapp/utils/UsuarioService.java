@@ -4,7 +4,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.util.*;
 
 /**
@@ -443,7 +441,7 @@ public class UsuarioService {
         List<String> roles = new ArrayList<String>();
         List<Rol> rolesUsuario = null;
 
-        if(rolesInfo.getRoles().length > 0){
+        if(rolesInfo != null && rolesInfo.getRoles().length > 0){
 
             Collections.addAll(roles, rolesInfo.getRoles());
             if(roles.size() > 0){
