@@ -61,13 +61,6 @@
 
     $("[rel='valorPropiedad']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
 
-    $("#contactosOficina").popover({
-        trigger: 'hover',
-        container:'body',
-        html : true,
-        placement: 'right'
-        }).data('bs.popover').tip().attr('id', 'popoverContactos');
-
     /*$.sessionTimeout({
      title: 'Sesion timeout',
      ignoreUserActivity:true,

@@ -125,3 +125,16 @@
 
     </div>
 </div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $("#contactosOficina").popover({
+            trigger: 'hover',
+            container: 'body',
+            html: true,
+            placement: 'right'
+        }).data('bs.popover').tip().attr('id', 'popoverContactos');
+    });
+
+</script>
