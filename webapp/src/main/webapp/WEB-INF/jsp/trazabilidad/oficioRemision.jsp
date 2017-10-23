@@ -43,7 +43,7 @@
 
             <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
                 <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
-                    <p id="contactosOficina" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover" data-html="true" onmouseover="mostrarContactesOfi()">
+                    <p id="contactosOficina" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover" style="cursor:help" rel="contactesOficina">
                     <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
                 </c:if>
                 <c:if test="${empty oficioRemision.contactosEntidadRegistralDestino}">
@@ -130,15 +130,3 @@
 
     </div>
 </div>
-
-<script type="text/javascript">
-    function mostrarContactesOfi() {
-        $("#contactosOficina").popover({
-            cursor: 'pointer',
-            trigger: 'hover',
-            container: 'body',
-            html: true,
-            placement: 'right'
-        }).data('bs.popover').tip().attr('id', 'popoverContactos');
-    }
-</script>
