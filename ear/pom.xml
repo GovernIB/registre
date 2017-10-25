@@ -262,12 +262,12 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!--Comentado de momento, descomentar cuando acabado de implementar -->
-    <!-- <dependency>
+
+     <dependency>
             <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugins-distribucionregweb-distribucionripea</artifactId>
+            <artifactId>plugin-distribucion-ripea</artifactId>
             <version>${project.version}</version>
-    </dependency>-->
+    </dependency>
 
     <!-- ============================================ -->
     <!-- ======== PLUGINS DE POSTPROCES =========== -->
