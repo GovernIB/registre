@@ -190,6 +190,19 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException;
 
+
+    /**
+     * Genera el justificante del registro de entrada en el caso que no esté generado.
+     * Se usa para generarlo antes de distribuir el registro
+     * @param registroEntrada
+     * @param usuarioEntidad
+     * @throws Exception
+     * @throws I18NValidationException
+     * @throws I18NException
+     */
+    public RegistroEntrada generarJustificanteRegistroEntrada(RegistroEntrada registroEntrada,
+                                                   UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException;
+
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroEntrada
      *
@@ -305,7 +318,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws I18NException
      */
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
-        Long entidadId, String idioma) throws Exception, I18NException;
+        Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException;
 
     /**
      *

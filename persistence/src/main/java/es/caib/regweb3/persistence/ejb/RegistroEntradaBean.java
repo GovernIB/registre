@@ -542,18 +542,31 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
                                         UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
 
-        // Justificante: Si no tiene generado, lo hacemos
-        if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-            log.info("Generamos el Justificante antes de Distribuir");
-            registroEntrada = cargarAnexosFull(registroEntrada);
-            // Creamos el anexo del justificante y se lo añadimos al registro
-            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "ca");
-            registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
-        }
-
         cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
 
     }
+
+
+
+
+    @Override
+    public RegistroEntrada generarJustificanteRegistroEntrada(RegistroEntrada registroEntrada,
+                                        UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
+
+        // Justificante: Si no tiene generado, lo hacemos
+        if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+            log.info("Generamos el justificante");
+             registroEntrada = cargarAnexosFull(registroEntrada);
+            // Creamos el anexo del justificante y se lo añadimos al registro
+            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "ca");
+            registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+
+        }
+
+        return registroEntrada;
+
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -834,6 +847,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
             respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
 
+
+            //Obtenemos los anexos en función de la configuración establecida
             re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
 
             if (configuracionDistribucion.listadoDestinatariosModificable) {// Si es modificable, mostraremos pop-up
@@ -858,7 +873,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
-        Long entidadId, String idioma) throws Exception, I18NException {
+        Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException {
 
         //Obtenemos plugin
         IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
@@ -979,17 +994,21 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
      * @throws Exception
      * @throws I18NException
      */
-    private RegistroEntrada obtenerAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException {
+    private RegistroEntrada obtenerAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException, I18NValidationException {
+
+        // Miramos si debemos generar el justificante
+        AnexoFull justificante = null;
+        if(!original.getRegistroDetalle().getTieneJustificante()) {
+            justificante = anexoEjb.crearJustificante(original.getUsuario(), original, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "ca");
+        }
+
         switch (confAnexos) {
             case 1: {//1.  Fitxer + firma + metadades + custodiaId
-                List<Anexo> anexos = original.getRegistroDetalle().getAnexos();
-                List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
-                for (Anexo anexo : anexos) {
-                    AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId());
-                    anexosFull.add(anexoFull);
+
+                cargarAnexosFull(original);
+                if(justificante!= null){
+                    original.getRegistroDetalle().getAnexosFull().add(justificante);
                 }
-                //Asignamos los documentos recuperados de custodia al registro de entrada.
-                original.getRegistroDetalle().setAnexosFull(anexosFull);
                 break;
             }
             case 2: {//2. custodiaId
@@ -1004,10 +1023,24 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     nuevoAnexo.setCustodiaID(anexo.getCustodiaID());
                     nuevosAnexos.add(nuevoAnexo);
                 }
+                //Añadimos el justificante si lo acabamos de crear
+                if(justificante != null){
+                    Anexo anexoJust = new Anexo();
+                    anexoJust.setId(justificante.getAnexo().getId());
+                    anexoJust.setJustificante(justificante.getAnexo().isJustificante());
+                    anexoJust.setCustodiaID(justificante.getAnexo().getCustodiaID());
+                    nuevosAnexos.add(justificante.getAnexo());
+                }
                 original.getRegistroDetalle().setAnexos(nuevosAnexos);
                 break;
             }
-            // 3. custodiaId + metadades (no se hace nada, es el caso por defecto)
+            case 3: {// 3. custodiaId + metadades (no se hace nada, es el caso por defecto)
+
+                //añadimos el justificante si lo acabamos de crear
+                if(justificante != null){
+                    original.getRegistroDetalle().getAnexos().add(justificante.getAnexo());
+                }
+            }
 
 
         }

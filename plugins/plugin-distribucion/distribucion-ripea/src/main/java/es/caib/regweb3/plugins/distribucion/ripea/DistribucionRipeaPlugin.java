@@ -2,6 +2,7 @@ package es.caib.regweb3.plugins.distribucion.ripea;
 
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.Destinatario;
 import es.caib.regweb3.plugins.distribucion.Destinatarios;
@@ -11,16 +12,20 @@ import es.caib.ripea.ws.v1.bustia.BustiaV1;
 import es.caib.ripea.ws.v1.bustia.RegistreAnnex;
 import es.caib.ripea.ws.v1.bustia.RegistreAnotacio;
 import es.caib.ripea.ws.v1.bustia.RegistreInteressat;
-
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
 /**
+ * Plugin para distribuir registros a Ripea
  * @author mgonzalez
  */
 public class DistribucionRipeaPlugin extends AbstractPluginProperties implements IDistribucionPlugin {
@@ -80,6 +85,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     public Destinatarios distribuir(RegistroEntrada registro) throws Exception {
 
         //nothing to do
+        //En este plugin los destinatarios(busties) se obtienen del organismo destino del registro.
         return null;
     }
 
@@ -104,31 +110,63 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
 
         //Parte de interesados
-        List<RegistreInteressat> registresInteressats = registreAnotacio.getInteressats();
         for (Interesado interesado : registro.getRegistroDetalle().getInteresados()) {
             RegistreInteressat registreInteressat = transformarARegistreInteressat(interesado, locale);
-            RegistreInteressat representant = transformarARegistreInteressat(interesado.getRepresentante(), locale);
-            registreInteressat.setRepresentant(representant);
-            registresInteressats.add(registreInteressat);
+            if(interesado.getRepresentante()!=null) {
+                RegistreInteressat representant = transformarARegistreInteressat(interesado.getRepresentante(), locale);
+                registreInteressat.setRepresentant(representant);
+            }
+
+          /*  log.info(registreInteressat.getNom());
+            log.info(registreInteressat.getLlinatge1());
+            log.info(registreInteressat.getRepresentant().getNom());
+            log.info(registreInteressat.getRepresentant().getLlinatge1());*/
+            registreAnotacio.getInteressats().add(registreInteressat);
         }
 
-        List<RegistreAnnex> registreAnnexes = registreAnotacio.getAnnexos();
-        for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
-            //Transformar a RegistreAnnex
-            RegistreAnnex registreAnnex = new RegistreAnnex();
-            registreAnnex.setFitxerGestioDocumentalId(anexo.getCustodiaID());
-            registreAnnexes.add(registreAnnex);
+
+
+        // Anexos : preparamos los anexos en función de la configuración establecida
+        switch (configurarDistribucion().getConfiguracionAnexos()){
+            // 1 =  metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
+            case 1:{
+                log.info("NUM ANEXOS FULL " + registro.getRegistroDetalle().getAnexosFull().size());
+                for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
+                    //Transformar a RegistreAnnex
+                    RegistreAnnex registreAnnex = transformarARegistreAnnex(anexoFull, configurarDistribucion().getConfiguracionAnexos());
+                    registreAnotacio.getAnnexos().add(registreAnnex);
+                }
+                break;
+            }
+            // 2 =  custodiaId. A dins el segment annexes de l'assentament només s'enviaria l'Id del sistema que custodia l'arxiu.
+            case 2:{
+                log.info("NUM ANEXOS " + registro.getRegistroDetalle().getAnexos().size());
+                for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
+                    //Transformar a RegistreAnnex
+                    RegistreAnnex registreAnnex = transformarARegistreAnnex(anexo);
+                    registreAnotacio.getAnnexos().add(registreAnnex);
+                }
+                break;
+            }
+            // 3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
+            case 3:{
+                log.info("NUM ANEXOS FULL " + registro.getRegistroDetalle().getAnexosFull().size());
+                for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
+                    //Transformar a RegistreAnnex
+                    RegistreAnnex registreAnnex = transformarARegistreAnnex(anexoFull, configurarDistribucion().getConfiguracionAnexos());
+                    registreAnotacio.getAnnexos().add(registreAnnex);
+                }
+                break;
+            }
         }
 
+        //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
+        String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
+        log.info("entidadCodigo " + entidadCodigo);
+        String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
+        log.info("unidadAdminitrativaCodigo "  + unidadAdministrativaCodigo);
 
-        //Demanar a n'en Victor
-        String entidadCodigo = "A04003003";
-       // String unidadAdministrativaCodigo = "A04003003";
-        // String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
-        // String unidadAdministrativaCodigo= registro.getOficina().getOrganismoResponsable().getCodigo();????
-         String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
-
-
+        //Invocamos ws de RIPEA
         client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
 
 
@@ -139,11 +177,11 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
         //especifica que información se enviará en el segmento de anexo del registro de entrada.
-        /* 1 = custodiaId + metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
+        /* 1 =  metadades + fitxer + firma. És a dir a dins el segment annexes de l'assentament s'enviaria tot el contingut de l'annexe.
         *  2 =  custodiaId. A dins el segment annexes de l'assentament només s'enviaria l'Id del sistema que custodia l'arxiu.
         *  3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
         * */
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 2);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 1);
         return cd;
 
     }
@@ -157,22 +195,33 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
      * @throws Exception
      */
     private RegistreAnotacio transformarARegistreAnotacio(RegistroEntrada re, Locale language) throws Exception {
+
         RegistreAnotacio registreAnotacio = new RegistreAnotacio();
+
 
         registreAnotacio.setIdentificador(re.getId().toString());
         registreAnotacio.setAplicacioCodi(re.getRegistroDetalle().getAplicacion());
         registreAnotacio.setAplicacioVersio(re.getRegistroDetalle().getVersion());
-        registreAnotacio.setAssumpteCodi(re.getRegistroDetalle().getTipoAsunto().getCodigo());
+        registreAnotacio.setOficinaCodi(re.getOficina().getCodigo());
+        registreAnotacio.setOficinaDescripcio(re.getOficina().getDenominacion());
 
-        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) re.getRegistroDetalle().getTipoAsunto().getTraduccion();
-        registreAnotacio.setAssumpteDescripcio(traduccionTipoAsunto.getNombre());
-        if (re.getRegistroDetalle().getCodigoAsunto() != null) {
-            registreAnotacio.setAssumpteTipusCodi(re.getRegistroDetalle().getCodigoAsunto().getCodigo());
+        if(re.getRegistroDetalle().getCodigoAsunto()!=null) {
+            registreAnotacio.setAssumpteCodi(re.getRegistroDetalle().getCodigoAsunto().getCodigo());
             TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) re.getRegistroDetalle().getCodigoAsunto().getTraduccion();
-            registreAnotacio.setAssumpteTipusDescripcio(traduccionCodigoAsunto.getNombre());
+            registreAnotacio.setAssumpteDescripcio(traduccionCodigoAsunto.getNombre());
         }
 
-        registreAnotacio.setData(null); //TODO XMLGregorianCalendar
+        registreAnotacio.setAssumpteTipusCodi(re.getRegistroDetalle().getTipoAsunto().getCodigo());
+        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) re.getRegistroDetalle().getTipoAsunto().getTraduccion();
+        registreAnotacio.setAssumpteTipusDescripcio(traduccionTipoAsunto.getNombre());
+
+
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(re.getFecha());
+        XMLGregorianCalendar date2 = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+
+
+        registreAnotacio.setData(date2);
         String codiDF = re.getRegistroDetalle().getTipoDocumentacionFisica().toString();
         registreAnotacio.setDocumentacioFisicaCodi(codiDF);
         //TODO Es crea dependencia al genapp.
@@ -192,10 +241,12 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         registreAnotacio.setReferencia(re.getRegistroDetalle().getReferenciaExterna());
         registreAnotacio.setSolicita(re.getRegistroDetalle().getSolicita());
         registreAnotacio.setTransportNumero(re.getRegistroDetalle().getNumeroTransporte());
-        String codigoTransporte = re.getRegistroDetalle().getTransporte().toString();
-        registreAnotacio.setTransportTipusCodi(codigoTransporte);
-        String transporte = I18NCommonUtils.tradueix(language, "transporte." + codigoTransporte);
-        registreAnotacio.setTransportTipusDescripcio(transporte);
+        if(re.getRegistroDetalle().getTransporte()!=null) {
+            String codigoTransporte = re.getRegistroDetalle().getTransporte().toString();
+            registreAnotacio.setTransportTipusCodi(codigoTransporte);
+            String transporte = I18NCommonUtils.tradueix(language, "transporte." + codigoTransporte);
+            registreAnotacio.setTransportTipusDescripcio(transporte);
+        }
         registreAnotacio.setUsuariCodi(re.getUsuario().getId().toString());
         registreAnotacio.setUsuariContacte(re.getUsuario().getUsuario().getEmail());
         registreAnotacio.setUsuariNom(re.getUsuario().getNombreCompleto());
@@ -204,17 +255,28 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
     }
 
+    /**
+     * Método que transforma de un {@link es.caib.regweb3.model.Interesado} a {@link es.caib.ripea.ws.v1.bustia.RegistreInteressat}
+     * @param interesado
+     * @param language
+     * @return
+     * @throws Exception
+     */
     private RegistreInteressat transformarARegistreInteressat(Interesado interesado, Locale language) throws Exception {
         RegistreInteressat registreInteressat = new RegistreInteressat();
 
         registreInteressat.setAdresa(interesado.getDireccion());
-        String canalNotificacion = I18NCommonUtils.tradueix(language,"canalNotificacion." + interesado.getCanal());
-        registreInteressat.setCanalPreferent(canalNotificacion);
+        if(interesado.getCanal()!=null && interesado.getCanal() != -1) {
+            registreInteressat.setCanalPreferent(RegwebConstantes.CODIGO_BY_CANALNOTIFICACION.get(interesado.getCanal()));
+        }
         registreInteressat.setCodiPostal(interesado.getCp());
-        registreInteressat.setDocumentNum(interesado.getDocumento());
 
-        String tipoDocumentoIdentificacion = I18NCommonUtils.tradueix(language, "tipoDocumentoIdentificacion." + interesado.getTipoDocumentoIdentificacion());
-        registreInteressat.setDocumentTipus(tipoDocumentoIdentificacion);
+
+        if(interesado.getTipoDocumentoIdentificacion()!=null) {
+            Character tipoDocumentoIdentificacion = RegwebConstantes.CODIGO_NTI_BY_TIPODOCUMENTOID.get(interesado.getTipoDocumentoIdentificacion());
+            registreInteressat.setDocumentTipus(tipoDocumentoIdentificacion.toString());
+            registreInteressat.setDocumentNum(interesado.getDocumento());
+        }
         registreInteressat.setEmail(interesado.getEmail());
         registreInteressat.setEmailHabilitat(interesado.getDireccionElectronica());
         registreInteressat.setNom(interesado.getNombre());
@@ -222,25 +284,122 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         registreInteressat.setLlinatge2(interesado.getApellido2());
         CatLocalidad localidad = interesado.getLocalidad();
         if (localidad != null) {
-            registreInteressat.setMunicipi(localidad.getNombre());
+            registreInteressat.setMunicipi(localidad.getCodigoLocalidad().toString());
         }
         registreInteressat.setObservacions(interesado.getObservaciones());
         CatPais pais = interesado.getPais();
         if (pais != null) {
-            registreInteressat.setPais(pais.getDescripcionPais());
+            registreInteressat.setPais(pais.getCodigoPais().toString());
         }
         CatProvincia provincia = interesado.getProvincia();
         if (provincia != null) {
-            registreInteressat.setProvincia(provincia.getDescripcionProvincia());
+            registreInteressat.setProvincia(provincia.getCodigoProvincia().toString());
         }
         registreInteressat.setRaoSocial(interesado.getRazonSocial());
         registreInteressat.setTelefon(interesado.getTelefono());
-        String tipo = I18NCommonUtils.tradueix(language, "interesado.tipo." + interesado.getTipo());
-        registreInteressat.setTipus(tipo);
+        if(interesado.getTipo()!=null) {
+            registreInteressat.setTipus(interesado.getTipo().toString());
+        }
 
         return registreInteressat;
 
+    }
 
+    /**
+     * Método que transforma un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.ripea.ws.v1.bustia.RegistreInteressat}
+     * @param anexo
+     * @return
+     * @throws Exception
+     */
+    public RegistreAnnex transformarARegistreAnnex(Anexo anexo) throws Exception{
+        RegistreAnnex registreAnnex = new RegistreAnnex();
+        registreAnnex.setFitxerArxiuUuid(anexo.getCustodiaID());
+        return registreAnnex;
+    }
+
+    /**
+     * Método que transforma un {@link es.caib.regweb3.model.utils.AnexoFull} en un {@link es.caib.ripea.ws.v1.bustia.RegistreInteressat}
+     * @param anexoFull
+     * @param configuracionDistribucion
+     * @return
+     * @throws Exception
+     */
+    public RegistreAnnex transformarARegistreAnnex(AnexoFull anexoFull,int  configuracionDistribucion) throws Exception{
+        RegistreAnnex registreAnnex = new RegistreAnnex();
+        registreAnnex.setTitol(anexoFull.getAnexo().getTitulo());
+
+       // registreAnnex.setNtiElaboracioEstat(RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexoFull.getAnexo().getValidezDocumento())); //TODO PENDIENTE ARREGLEN RIPEA
+        registreAnnex.setNtiElaboracioEstat("01");
+        registreAnnex.setNtiTipusDocument(anexoFull.getAnexo().getTipoDocumental().getCodigoNTI());
+        registreAnnex.setFirmaMode(anexoFull.getAnexo().getModoFirma());
+        registreAnnex.setObservacions(anexoFull.getAnexo().getObservaciones());
+        registreAnnex.setOrigenCiutadaAdmin(anexoFull.getAnexo().getOrigenCiudadanoAdmin().toString());
+        registreAnnex.setValidacioOCSP(Base64.encodeBase64String(anexoFull.getAnexo().getValidacionOCSPCertificado()));
+        registreAnnex.setSicresTipusDocument(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexoFull.getAnexo().getTipoDocumento()));
+
+        GregorianCalendar c = new GregorianCalendar();
+        c.setTime(anexoFull.getAnexo().getFechaCaptura());
+        XMLGregorianCalendar fechaCaptura = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+        registreAnnex.setDataCaptura(fechaCaptura);
+
+
+        //TODO METADADES
+       // registreAnnex.setMetadades(anexoFull.getMetadatas());
+
+        // Se monta el contenido de los anexos en función de la configuración del plugin
+        switch (configuracionDistribucion) {
+            case 1: {
+                //DOCUMENTO
+                if( anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+
+                    registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
+                    registreAnnex.setFitxerTamany((int)anexoFull.getDocSize());
+                    registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
+                    registreAnnex.setFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getDocumentoCustody().getData()));
+
+                }
+                //El anexo está en signature custody
+                if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+                    registreAnnex.setFitxerNom(anexoFull.getSignatureCustody().getName());
+                    registreAnnex.setFitxerTamany((int)anexoFull.getSignSize());
+                    registreAnnex.setFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
+                    registreAnnex.setFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getSignatureCustody().getData()));
+
+                }
+                if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
+
+                    //DOCUMENTO
+                    registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
+                    registreAnnex.setFitxerTamany((int)anexoFull.getDocSize());
+                    registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
+                    registreAnnex.setFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getDocumentoCustody().getData()));
+                    //FIRMA
+                    registreAnnex.setFirmaFitxerNom(anexoFull.getSignatureCustody().getName());
+                    registreAnnex.setFirmaFitxerTamany((int)anexoFull.getSignSize());
+                    registreAnnex.setFirmaFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
+                    registreAnnex.setFirmaCsv(anexoFull.getAnexo().getCsv());
+                    registreAnnex.setFirmaFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getSignatureCustody().getData()));
+
+                }
+                break;
+            }
+            case 3: {
+                if( anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA
+                        ||anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+
+                  registreAnnex.setFitxerArxiuUuid(anexoFull.getAnexo().getCustodiaID());
+
+                }
+                if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+                    registreAnnex.setFitxerArxiuUuid(anexoFull.getAnexo().getCustodiaID());
+                    registreAnnex.setFirmaFitxerArxiuUuid(anexoFull.getAnexo().getCustodiaID());
+                }
+                break;
+            }
+
+        }
+
+        return registreAnnex;
     }
 
 
