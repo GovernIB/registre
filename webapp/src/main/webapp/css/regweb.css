@@ -512,9 +512,9 @@ input[readonlyGris] {
     -webkit-border-radius:4px;
     -moz-border-radius:4px;
     border-radius:4px;
-    -webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    -moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
-    box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    /*-webkit-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);*/
+    /*-moz-box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);*/
+    /*box-shadow:inset 0 1px 1px rgba(0, 0, 0, 0.05);*/
 }
 .tree li {
     list-style-type:none;
