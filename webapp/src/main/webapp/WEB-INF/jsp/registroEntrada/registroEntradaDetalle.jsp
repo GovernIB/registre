@@ -32,6 +32,10 @@
 
         <div class="row">
 
+            <div class="col-xs-12" id="mensajesdetalle">
+                <c:import url="../modulos/mensajes.jsp"/>
+            </div>
+
             <!-- Panel Lateral -->
             <div class="col-xs-4">
 
@@ -202,59 +206,85 @@
             </div>
             <!-- Fin Panel Lateral -->
 
-            <div class="col-xs-8 pull-right" id="mensajesdetalle">
-                <c:import url="../modulos/mensajes.jsp"/>
-            </div>
+            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
 
-            <!-- ANEXOS COMPLETO-->
-            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar && !tieneJustificante}">
-                <c:import url="../registro/anexos.jsp">
-                    <c:param name="tipoRegistro" value="entrada"/>
-                </c:import>
+                <div class="col-xs-8">
+
+                    <ul class="nav nav-tabs" id="myTab">
+
+                        <li><a href="#general" data-toggle="tab">General</a></li>
+                        <c:if test="${not empty trazabilidades}">
+                            <li><a href="#trazabilidad" data-toggle="tab">Trazabilidad</a></li>
+                        </c:if>
+                        <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
+                            <li><a href="#modificaciones" data-toggle="tab">Modificaciones</a></li>
+                        </c:if>
+
+                    </ul>
+
+                    <div id="contenido" class="tab-content">
+
+                        <div class="tab-pane" id="general">
+                            <!-- ANEXOS COMPLETO-->
+                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar && !tieneJustificante}">
+                                <c:import url="../registro/anexos.jsp">
+                                    <c:param name="tipoRegistro" value="entrada"/>
+                                </c:import>
+                            </c:if>
+
+                            <%--ANEXOS SOLO LECTURA--%>
+                            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
+                                <c:import url="../registro/anexosLectura.jsp">
+                                    <c:param name="tipoRegistro" value="entrada"/>
+                                </c:import>
+                            </c:if>
+
+                            <%--INTERESADOS--%>
+                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar && !tieneJustificante}">
+                                <c:import url="../registro/interesados.jsp">
+                                    <c:param name="tipoRegistro" value="entrada"/>
+                                    <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
+                                    <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
+                                </c:import>
+                            </c:if>
+
+                            <%--INTERESADOS SOLO LECTURA--%>
+                            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
+                                <c:import url="../registro/interesadosLectura.jsp">
+                                    <c:param name="tipoRegistro" value="entrada"/>
+                                </c:import>
+                            </c:if>
+
+                            <%--EXPONE - SOLICITA--%>
+                            <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
+                                <c:import url="../registro/exponeSolicita.jsp">
+                                    <c:param name="tipoRegistro" value="entrada"/>
+                                </c:import>
+                            </c:if>
+                        </div>
+
+                        <%--TRAZABILIDAD--%>
+                        <c:if test="${not empty trazabilidades}">
+
+                            <div class="tab-pane" id="trazabilidad">
+
+                                <c:import url="../trazabilidad/trazabilidadEntrada.jsp"/>
+
+                            </div>
+                        </c:if>
+                        <!-- MODIFICACIONES REGISTRO -->
+                        <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
+                            <div class="tab-pane" id="modificaciones">
+                                <c:import url="../registro/modificaciones.jsp">
+                                    <c:param name="tipoRegistro" value="entrada"/>
+                                </c:import>
+                            </div>
+                        </c:if>
+
+                    </div>
+                </div>
             </c:if>
 
-            <%--ANEXOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
-                <c:import url="../registro/anexosLectura.jsp">
-                    <c:param name="tipoRegistro" value="entrada"/>
-                </c:import>
-            </c:if>
-
-            <%--INTERESADOS--%>
-            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar && !tieneJustificante}">
-                <c:import url="../registro/interesados.jsp">
-                    <c:param name="tipo" value="detalle"/>
-                    <c:param name="tipoRegistro" value="entrada"/>
-                    <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
-                    <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
-                </c:import>
-            </c:if>
-
-            <%--INTERESADOS SOLO LECTURA--%>
-            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
-                <c:import url="../registro/interesadosLectura.jsp">
-                    <c:param name="tipoRegistro" value="entrada"/>
-                </c:import>
-            </c:if>
-
-            <%--EXPONE - SOLICITA--%>
-            <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
-                <c:import url="../registro/exponeSolicita.jsp">
-                    <c:param name="tipoRegistro" value="entrada"/>
-                </c:import>
-            </c:if>
-
-            <%--TRAZABILIDAD--%>
-            <c:if test="${not empty trazabilidades}">
-                <c:import url="../trazabilidad/trazabilidadEntrada.jsp"/>
-            </c:if>
-
-            <!-- MODIFICACIONES REGISTRO -->
-            <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                <c:import url="../registro/modificaciones.jsp">
-                    <c:param name="tipoRegistro" value="entrada"/>
-                </c:import>
-            </c:if>
 
         </div>
         </div><!-- /div.row-->

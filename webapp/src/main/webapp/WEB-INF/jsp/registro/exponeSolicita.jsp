@@ -9,7 +9,7 @@
     <c:set var="color" value="danger"/>
 </c:if>
 
-<div class="col-xs-8 pull-right">
+<div class="col-xs-12">
     <div class="panel panel-${color}">
 
         <div class="panel-heading">

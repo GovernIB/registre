@@ -332,7 +332,6 @@
                <c:if test="${empty registroEntrada.id || registroEntrada.estado == RegwebConstantes.REGISTRO_RESERVA}">
                    <c:set var="registro" value="${registroEntrada}"/>
                    <c:import url="../registro/interesados.jsp">
-                       <c:param name="tipo" value="nuevo"/>
                        <c:param name="tipoRegistro" value="entrada"/>
                        <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
                    </c:import>

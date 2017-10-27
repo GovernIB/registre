@@ -9,12 +9,7 @@
     <c:set var="color" value="danger"/>
 </c:if>
 
-<c:if test="${param.tipo == 'nuevo'}">
-    <div class="col-xs-12">
-</c:if>
-<c:if test="${param.tipo == 'detalle'}">
-    <div class="col-xs-8 col-xs-offset pull-right">
-</c:if>
+<div class="col-xs-12">
 
     <div class="panel panel-${color}">
 
