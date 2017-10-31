@@ -190,7 +190,7 @@
 
             <div class="col-xs-8">
 
-                <ul class="nav nav-tabs" id="myTab">
+                <ul class="navDanger navDanger-tabs" id="myTab">
 
                     <li><a href="#general" data-toggle="tab">General</a></li>
                     <c:if test="${not empty trazabilidades}">
@@ -202,7 +202,7 @@
 
                 </ul>
 
-                <div id="contenido" class="tab-content">
+                <div id="contenido" class="tab-content contentDanger">
 
                     <div class="tab-pane" id="general">
 

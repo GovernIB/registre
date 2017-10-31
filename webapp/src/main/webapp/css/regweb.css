@@ -907,3 +907,191 @@ a.text-gris:focus {
     position: relative;
     max-width: max-content;
 }
+
+/* TABS INFO */
+/* ENTRADA */
+.contentInfo {
+    border: 1px solid #bce8f1;
+    border-radius: 4px;
+}
+.navInfo {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.navInfo > li {
+    position: relative;
+    display: block;
+}
+.navInfo > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.navInfo > li > a:hover,
+.navInfo > li > a:focus {
+    text-decoration: none;
+    background-color: #eee;
+}
+.navInfo > li.disabled > a {
+    color: #777;
+}
+.navInfo > li.disabled > a:hover,
+.navInfo > li.disabled > a:focus {
+    color: #31708f;
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+}
+.navInfo .open > a,
+.navInfo .open > a:hover,
+.navInfo .open > a:focus {
+    background-color: #eee;
+    border-color: #337ab7;
+}
+.navInfo .nav-divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #bce8f1;
+}
+.navInfo > li > a > img {
+    max-width: none;
+}
+.navInfo-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+.navInfo-tabs > li > a {
+    color: #31708f;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+.navInfo-tabs > li > a:hover {
+    border-color: #eee #eee #bce8f1;
+    background-color: #d9edf7;
+}
+.navInfo-tabs > li.active > a,
+.navInfo-tabs > li.active > a:hover,
+.navInfo-tabs > li.active > a:focus {
+    color: #31708f;
+    font-weight: bold;
+    cursor: default;
+    background-color: #d9edf7;
+    border: 1px solid #bce8f1;
+    border-bottom-color: transparent;
+}
+.navInfo-tabs.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+}
+.navInfo-tabs.nav-justified > li {
+    float: none;
+}
+.navInfo-tabs.nav-justified > li > a {
+    margin-bottom: 5px;
+    text-align: center;
+}
+.navInfo-tabs.nav-justified > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+}
+
+/* SORTIDA */
+.contentDanger {
+    border: 1px solid #ebccd1;
+    border-radius: 4px;
+}
+.navDanger {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.navDanger > li {
+    position: relative;
+    display: block;
+}
+.navDanger > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.navDanger > li > a:hover,
+.navDanger > li > a:focus {
+    text-decoration: none;
+    background-color: #eee;
+}
+.navDanger > li.disabled > a {
+    color: #777;
+}
+.navDanger > li.disabled > a:hover,
+.navDanger > li.disabled > a:focus {
+    color: #a94442;
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+}
+.navDanger .open > a,
+.navDanger .open > a:hover,
+.navDanger .open > a:focus {
+    background-color: #eee;
+    border-color: #337ab7;
+}
+.navDanger .nav-divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #ebccd1;
+}
+.navDanger > li > a > img {
+    max-width: none;
+}
+.navDanger > li {
+    float: left;
+    margin-bottom: -1px;
+}
+.navDanger-tabs > li > a {
+    color: #a94442;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+.navDanger-tabs > li > a:hover {
+    border-color: #eee #eee #ebccd1;
+    background-color: #f2dede;
+}
+.navDanger-tabs > li.active > a,
+.navDanger-tabs > li.active > a:hover,
+.navDanger-tabs > li.active > a:focus {
+    color: #a94442;
+    font-weight: bold;
+    cursor: default;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    border-bottom-color: transparent;
+}
+.navDanger-tabs.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+}
+.navDanger-tabs.nav-justified > li {
+    float: none;
+}
+.navInfo-tabs.nav-justified > li > a {
+    margin-bottom: 5px;
+    text-align: center;
+}
+.navDanger-tabs.nav-justified > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+}
+/* FI TABS INFO */
+
+/* SELECT CHOSEN AL 100% */
+.chosen-container.chosen-container-single {
+    width: 100% !important;
+}
+/* FI SELECT CHOSEN AL 100% */
