@@ -42,9 +42,12 @@
 
         <div class="form-group col-xs-10" id="divmodofirma">
             <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                <label><spring:message code="anexo.tipofirma"/></label>
+                <label><spring:message code="anexo.tipoDocumento"/></label>
             </div>
             <div class="col-xs-10">
+                <label class="radio-inline">
+                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma()"  value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
+                </label>
                 <label class="radio-inline">
                     <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="1"/><spring:message
                         code="anexo.tipofirma.attached"/>
@@ -55,9 +58,7 @@
                             code="anexo.tipofirma.detached"/>
                     </label>
                 </c:if>
-                <label class="radio-inline">
-                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma()"  value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
-                </label>
+
             </div>
             <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
 
