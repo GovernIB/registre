@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div class="col-xs-8 col-xs-offset pull-right">
+<div class="col-xs-12">
 
     <div class="panel panel-danger">
         <div class="panel-heading">
