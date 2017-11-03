@@ -192,12 +192,12 @@
 
                 <ul class="navDanger navDanger-tabs" id="myTab">
 
-                    <li><a href="#general" data-toggle="tab">General</a></li>
+                    <li><a href="#general" data-toggle="tab"><i class="fa fa-file-o"></i> General</a></li>
                     <c:if test="${not empty trazabilidades}">
-                        <li><a href="#trazabilidad" data-toggle="tab">Trazabilidad</a></li>
+                        <li><a href="#trazabilidad" data-toggle="tab"><i class="fa fa-clock-o fa-fw"></i> <spring:message code="registroEntrada.trazabilidad"/></a></li>
                     </c:if>
                     <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
-                        <li><a href="#modificaciones" data-toggle="tab">Modificaciones</a></li>
+                        <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
                     </c:if>
 
                 </ul>
