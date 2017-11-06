@@ -38,7 +38,7 @@
                         <a class="btn btn-warning btn-xs pull-right margin-left10" href="<c:url value="/organismo/arbolList"/>" role="button"><span class="fa fa-sitemap"></span> <spring:message code="organismo.organigrama"/></a>
                         <a class="btn btn-warning btn-xs pull-right" href="<c:url value="/entidad/librosCambiar"/>" role="button"><span class="fa fa-book"></span> <spring:message code="entidad.cambiarlibros"/></a>
                         <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message
-                                code="organismo.buscador.entidad"/> ${entidad.nombre}</strong></h3>
+                                code="organismo.buscador.entidad"/> ${entidad.nombre} (${entidad.codigoDir3})</strong></h3>
                     </div>
 
                     <div class="panel-body">
