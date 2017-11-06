@@ -6,9 +6,9 @@ package es.caib.regweb3.model.utils;
  */
 public enum DocumentacionFisica {
 
-    DOCUMENTACION_FISICA_REQUERIDA("1", "Acompaña documentación física requerida"),
-    DOCUMENTACION_FISICA_COMPLEMENTARIA("2", "Acompaña documentación física complementaria"),
-    SIN_DOCUMENTACION_FISICA("3", "No acompaña documentación física");
+    DOCUMENTACION_FISICA_REQUERIDA("1", "Documentación adjunta en soporte PAPEL (u otros soportes)"),
+    DOCUMENTACION_FISICA_COMPLEMENTARIA("2", "Documentación adjunta digitalizada y complementariamente en papel"),
+    SIN_DOCUMENTACION_FISICA("3", "Documentación adjunta digitalizada");
 
     private final String value;
     private final String name;
