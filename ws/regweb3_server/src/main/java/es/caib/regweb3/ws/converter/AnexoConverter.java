@@ -59,18 +59,18 @@ public class AnexoConverter extends CommonConverter {
        final int modoFirma = anexoWs.getModoFirma();
        DocumentCustody doc = null;
 
-       if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado())  && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
+       //Documento
+       if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado() != null && anexoWs.getFicheroAnexado().length > 0)) {
            doc = new DocumentCustody();
            doc.setData(anexoWs.getFicheroAnexado());
            doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
            doc.setName(anexoWs.getNombreFicheroAnexado());
-       }else{
-           throw new Exception("Los campos 'nombreFicheroAnexado' y 'FicheroAnexado' no pueden estar vacios");
        }
        anexoFull.setDocumentoCustody(doc);
        anexoFull.setDocumentoFileDelete(false);
 
 
+       //Firma
        SignatureCustody sign = null;
        if (StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)) {
            sign = new SignatureCustody();
@@ -87,16 +87,24 @@ public class AnexoConverter extends CommonConverter {
                sign = new SignatureCustody();
                sign.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
                sign.setAttachedDocument(null);
-               //El documento con la firma viene en la parte de documento y hay que pasarla a firma
+               /*  Inicialmente nos enviaban el documento con firma adjunta en "FicheroAnexado".
+                   Ahora soportamos los dos casos, que venga en uno o en otro, pero a partir de la versión 3.1 de regweb3,
+                   se especifica en la documentación  que debe ser en "firmaAnexada" donde venga el documento.
+               */
                anexoFull.setDocumentoCustody(null);
-               if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
-                   sign.setData(anexoWs.getFicheroAnexado());
-                   sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
-                   sign.setName(anexoWs.getNombreFicheroAnexado());
-               } else {
-                   throw new Exception("Los campos 'nombreFicheroAnexado' o 'FicheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
+               if(StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)){
+                   sign.setData(anexoWs.getFirmaAnexada());
+                   sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+                   sign.setName(anexoWs.getNombreFirmaAnexada());
+               }else{
+                   if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
+                       sign.setData(anexoWs.getFicheroAnexado());
+                       sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+                       sign.setName(anexoWs.getNombreFicheroAnexado());
+                   } else {
+                       throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada y 'nombreFicheroAnexado' o 'ficheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
+                   }
                }
-
                break;
 
            // Firma en document separat
