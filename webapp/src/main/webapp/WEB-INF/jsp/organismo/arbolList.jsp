@@ -45,7 +45,7 @@
                         <button type="button" class="btn btn-info btn-xs" onclick="goTo('<c:url value="/organismo/arbolList"/>')"><i class="fa fa-sitemap"></i> <spring:message code="organismo.arbol.abre"/></button>
                     </div>
                     <div class="btn-group pad-left">
-                        <button type="button" id="infoCopy" class="btn btn-default btn-xs hide" disabled style="cursor:default"><i class="fa fa-info-circle colophon">  <spring:message code="organismo.arbol.copiar"/></i></button>
+                        <button type="button" id="infoCopy" class="btn btn-default btn-xs" disabled style="cursor:default"><i class="fa fa-info-circle colophon">  <spring:message code="organismo.arbol.copiar"/></i></button>
                     </div>
 
                     <!-- LEYENDA -->
@@ -106,7 +106,7 @@
                     <div class="tree">
                         <ul>
                             <li>
-                                <span class="panel-heading btn-danger vuitanta-percent" id="entidad" onclick="copyToClipboard(this)" style="cursor:copy" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                <span class="panel-heading btn-danger vuitanta-percent" id="entidad" onclick="copyToClipboard(this)" style="cursor:copy"><i
                                         class=""></i> ${entidad.codigoDir3} - ${entidad.nombre}</span>
                                 <ul>
 
@@ -121,12 +121,12 @@
                                         <li>
                                             <c:if test="${organismo1.edp == false}">
                                                 <span class="panel-heading btn-primary vuitanta-percent" id="govern"
-                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                         class=""></i> ${organismo1.codigo} - ${organismo1.denominacion}</span>
                                             </c:if>
                                             <c:if test="${organismo1.edp == true}">
                                                 <span class="panel-heading btn-edp vuitanta-percent" id="govern"
-                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                         class=""></i> ${organismo1.codigo} - ${organismo1.denominacion}</span>
                                             </c:if>
 
@@ -137,7 +137,7 @@
                                                         <li>
                                                             <a href="javascript:void(0);"><span
                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                         </li>
                                                     </c:if>
@@ -149,7 +149,7 @@
                                                         <li>
                                                             <a href="javascript:void(0);"><span
                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                             <ul>
                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -157,7 +157,7 @@
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                             <ul>
                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -165,7 +165,7 @@
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                         </li>
                                                                                     </c:if>
@@ -184,7 +184,7 @@
                                                         <li>
                                                             <a href="javascript:void(0);"><span
                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                         </li>
                                                     </c:if>
@@ -195,7 +195,7 @@
                                                         <li>
                                                             <a href="javascript:void(0);"><span
                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                         </li>
                                                     </c:if>
@@ -208,13 +208,13 @@
                                                             <c:if test="${organismo2.edp  == false}">
                                                                 <span class="panel-heading btn-primary vuitanta-percent"
                                                                       id="primerNivell${contadorPrimer}"
-                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                         class=""></i> ${organismo2.codigo} - ${organismo2.denominacion}</span>
                                                             </c:if>
                                                             <c:if test="${organismo2.edp == true}">
                                                                 <span class="panel-heading btn-edp vuitanta-percent"
                                                                       id="primerNivell${contadorPrimer}"
-                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                         class=""></i> ${organismo2.codigo} - ${organismo2.denominacion}</span>
                                                             </c:if>
 
@@ -226,7 +226,7 @@
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                                         </li>
                                                                     </c:if>
@@ -238,7 +238,7 @@
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                                             <ul>
                                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -246,7 +246,7 @@
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                                             <ul>
                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -254,7 +254,7 @@
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
@@ -273,7 +273,7 @@
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                         </li>
                                                                     </c:if>
@@ -284,7 +284,7 @@
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                         </li>
                                                                     </c:if>
@@ -297,13 +297,13 @@
                                                                             <c:if test="${organismo3.edp == false}">
                                                                                 <span class="panel-heading btn-primary vuitanta-percent"
                                                                                       id="segonNivell${contadorSegon}"
-                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                         class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
                                                                             </c:if>
                                                                             <c:if test="${organismo3.edp == true}">
                                                                                 <span class="panel-heading btn-edp vuitanta-percent"
                                                                                       id="segonNivell${contadorSegon}"
-                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                         class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
                                                                             </c:if>
 
@@ -315,7 +315,7 @@
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                                                         </li>
                                                                                     </c:if>
@@ -327,7 +327,7 @@
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                                                             <ul>
                                                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -335,7 +335,7 @@
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                                                             <ul>
                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -343,7 +343,7 @@
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
@@ -362,7 +362,7 @@
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                         </li>
                                                                                     </c:if>
@@ -373,7 +373,7 @@
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                         </li>
                                                                                     </c:if>
@@ -386,13 +386,13 @@
                                                                                             <c:if test="${organismo4.edp == false}">
                                                                                                 <span class="panel-heading btn-primary vuitanta-percent"
                                                                                                       id="tercerNivell${contadorTercer}"
-                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                         class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
                                                                                             </c:if>
                                                                                             <c:if test="${organismo4.edp == true}">
                                                                                                 <span class="panel-heading btn-edp vuitanta-percent"
                                                                                                       id="tercerNivell${contadorTercer}"
-                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                         class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
                                                                                             </c:if>
 
@@ -404,7 +404,7 @@
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
@@ -416,7 +416,7 @@
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                                                                             <ul>
                                                                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -424,7 +424,7 @@
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                                                                             <ul>
                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -432,7 +432,7 @@
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
@@ -451,7 +451,7 @@
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
@@ -462,7 +462,7 @@
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
@@ -475,13 +475,13 @@
                                                                                                             <c:if test="${organismo5.edp == false}">
                                                                                                                 <span class="panel-heading btn-primary vuitanta-percent"
                                                                                                                       id="quartNivell${contadorQuart}"
-                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                         class=""></i> ${organismo5.codigo} - ${organismo5.denominacion}</span>
                                                                                                             </c:if>
                                                                                                             <c:if test="${organismo5.edp == true}">
                                                                                                                 <span class="panel-heading btn-edp vuitanta-percent"
                                                                                                                       id="quartNivell${contadorQuart}"
-                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                         class=""></i> ${organismo5.codigo} - ${organismo5.denominacion}</span>
                                                                                                             </c:if>
 
@@ -493,7 +493,7 @@
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
@@ -505,7 +505,7 @@
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                                                                                             <ul>
                                                                                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -513,7 +513,7 @@
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                                                                                             <ul>
                                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -521,7 +521,7 @@
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
@@ -540,7 +540,7 @@
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
@@ -551,7 +551,7 @@
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
@@ -564,13 +564,13 @@
                                                                                                                             <c:if test="${organismo6.edp == false}">
                                                                                                                                 <span class="panel-heading btn-primary vuitanta-percent"
                                                                                                                                       id="cinqueNivell${contadorCinque}"
-                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                         class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
                                                                                                                             </c:if>
                                                                                                                             <c:if test="${organismo6.edp == true}">
                                                                                                                                 <span class="panel-heading btn-edp vuitanta-percent"
                                                                                                                                       id="cinqueNivell${contadorCinque}"
-                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                         class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
                                                                                                                             </c:if>
 
@@ -582,7 +582,7 @@
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
@@ -594,7 +594,7 @@
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                                                                                                             <ul>
                                                                                                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -602,7 +602,7 @@
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                                                                                                             <ul>
                                                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -610,7 +610,7 @@
                                                                                                                                                                         <li>
                                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                                                         </li>
                                                                                                                                                                     </c:if>
@@ -629,7 +629,7 @@
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
@@ -640,7 +640,7 @@
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
@@ -653,13 +653,13 @@
                                                                                                                                             <c:if test="${organismo7.edp == false}">
                                                                                                                                                 <span class="panel-heading btn-primary vuitanta-percent"
                                                                                                                                                       id="siseNivell${contadorSise}"
-                                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                         class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
                                                                                                                                             </c:if>
                                                                                                                                             <c:if test="${organismo7.edp == true}">
                                                                                                                                                 <span class="panel-heading btn-edp vuitanta-percent"
                                                                                                                                                       id="siseNivell${contadorSise}"
-                                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                      style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                         class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
                                                                                                                                             </c:if>
 
@@ -671,7 +671,7 @@
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-llibre vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                     class="fa fa-book"></i> ${libroOrganismo.key}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
@@ -683,7 +683,7 @@
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                     class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
                                                                                                                                                             <ul>
                                                                                                                                                                 <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
@@ -691,7 +691,7 @@
                                                                                                                                                                         <li>
                                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
                                                                                                                                                                             <ul>
                                                                                                                                                                                 <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
@@ -699,7 +699,7 @@
                                                                                                                                                                                         <li>
                                                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
-                                                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                                                     class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
                                                                                                                                                                                         </li>
                                                                                                                                                                                     </c:if>
@@ -718,7 +718,7 @@
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-success vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                     class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
@@ -729,7 +729,7 @@
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)" onmouseover="mostraInfo()" onmouseleave="amagaInfo()"><i
+                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
                                                                                                                                                                     class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
@@ -841,17 +841,6 @@
 </script>
 
 <script type="text/javascript">
-
-    // Mostra la informació de copy text
-    function mostraInfo(){
-        $('#infoCopy').removeClass('hide');
-    }
-
-    // Amaga la informació de copy text
-    function amagaInfo(){
-        $('#infoCopy').addClass('hide');
-    }
-
     // Permet copiar la informació d'un span a dins el portapapers
     function copyToClipboard(that){
         var inp =document.createElement('input');
