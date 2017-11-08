@@ -1088,6 +1088,97 @@ a.text-gris:focus {
     top: auto;
     left: auto;
 }
+
+/* SIR */
+.contentPrimary {
+    border: 1px solid #337ab7;
+    border-radius: 4px;
+}
+.navPrimary {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.navPrimary > li {
+    position: relative;
+    display: block;
+}
+.navPrimary > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.navPrimary > li > a:hover,
+.navPrimary > li > a:focus {
+    text-decoration: none;
+    background-color: #eee;
+}
+.navPrimary > li.disabled > a {
+    color: #777;
+}
+.navPrimary > li.disabled > a:hover,
+.navPrimary > li.disabled > a:focus {
+    color: #31708f;
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+}
+.navPrimary .open > a,
+.navPrimary .open > a:hover,
+.navPrimary .open > a:focus {
+    background-color: #eee;
+    border-color: #337ab7;
+}
+.navPrimary .nav-divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #337ab7;
+}
+.navPrimary > li > a > img {
+    max-width: none;
+}
+.navPrimary-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+.navPrimary-tabs > li > a {
+    color: #31708f;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+.navPrimary-tabs > li > a:hover {
+    border-color: #eee #eee #337ab7;
+    background-color: #337ab7;
+    color: #ffffff;
+}
+.navPrimary-tabs > li.active > a,
+.navPrimary-tabs > li.active > a:hover,
+.navPrimary-tabs > li.active > a:focus {
+    color: #ffffff;
+    font-weight: bold;
+    cursor: default;
+    background-color: #337ab7;
+    border: 1px solid #337ab7;
+    border-bottom-color: transparent;
+}
+.navPrimary-tabs.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+}
+.navPrimary-tabs.nav-justified > li {
+    float: none;
+}
+.navPrimary-tabs.nav-justified > li > a {
+    margin-bottom: 5px;
+    text-align: center;
+}
+.navPrimary-tabs.nav-justified > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+}
 /* FI TABS INFO */
 
 /* SELECT CHOSEN AL 100% */

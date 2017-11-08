@@ -408,41 +408,72 @@
                 <c:import url="../modulos/mensajes.jsp"/>
             </div>
 
-            <!-- ANEXOS -->
-            <c:import url="anexosSir.jsp"/>
 
-            <%--INTERESADOS--%>
-            <c:import url="interesadosSir.jsp"/>
 
-            </form:form>
+            <div class="col-xs-8">
 
-            <%--EXPONE - SOLICITA--%>
-            <c:if test="${not empty registroSir.expone || not empty registroSir.solicita}">
-                <div class="col-xs-8 pull-right">
-                    <div class="panel panel-primary">
+                <ul class="navPrimary navPrimary-tabs" id="myTab">
 
-                        <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroDetalle.expone.solicita.titulo"/></strong></h3>
-                        </div>
+                    <li><a href="#general" data-toggle="tab"><i class="fa fa-file-o"></i> General</a></li>
+                    <c:if test="${not empty trazabilidades}">
+                        <li><a href="#trazabilidad" data-toggle="tab"><i class="fa fa-clock-o fa-fw"></i> <spring:message code="registroEntrada.trazabilidad"/></a></li>
+                    </c:if>
+                    <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
+                        <li><a href="#modificaciones" data-toggle="tab"><i class="fa fa-pencil-square-o"></i> <spring:message code="regweb.modificaciones"/></a></li>
+                    </c:if>
 
-                        <div class="panel-body">
-                            <c:if test="${not empty registroSir.expone}">
-                                <p><strong><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.expone"/>:</strong> ${registroSir.expone}</p>
-                            </c:if>
+                </ul>
 
-                            <c:if test="${ not empty registroSir.solicita}">
-                                <p><strong><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.solicita"/>:</strong> ${registroSir.solicita}</p>
-                            </c:if>
-                        </div>
+                <div id="contenido" class="tab-content contentPrimary">
+
+                    <div class="tab-pane" id="general">
+
+                        <!-- ANEXOS -->
+                        <c:import url="anexosSir.jsp"/>
+
+                        <%--INTERESADOS--%>
+                        <c:import url="interesadosSir.jsp"/>
+
+                        </form:form>
+
+                        <%--EXPONE - SOLICITA--%>
+                        <c:if test="${not empty registroSir.expone || not empty registroSir.solicita}">
+                            <div class="col-xs-12 pull-right">
+                                <div class="panel panel-primary">
+
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroDetalle.expone.solicita.titulo"/></strong></h3>
+                                    </div>
+
+                                    <div class="panel-body">
+                                        <c:if test="${not empty registroSir.expone}">
+                                            <p><strong><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.expone"/>:</strong> ${registroSir.expone}</p>
+                                        </c:if>
+
+                                        <c:if test="${ not empty registroSir.solicita}">
+                                            <p><strong><i class="fa fa-hand-o-right"></i> <spring:message code="registroDetalle.solicita"/>:</strong> ${registroSir.solicita}</p>
+                                        </c:if>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </c:if>
+
                     </div>
 
-                </div>
-            </c:if>
+                    <%--TRAZABILIDAD--%>
+                    <c:if test="${not empty trazabilidades}">
 
-            <%--TRAZABILIDAD--%>
-            <c:if test="${not empty trazabilidades}">
-                <c:import url="../trazabilidad/trazabilidadSir.jsp"/>
-            </c:if>
+                        <div class="tab-pane" id="trazabilidad">
+
+                            <c:import url="../trazabilidad/trazabilidadSir.jsp"/>
+
+                        </div>
+
+                    </c:if>
+
+                </div>
+            </div>
 
 
         </div><!-- /div.row-->
@@ -480,7 +511,7 @@
 
                                 </div> <!-- /.panel body -->
                             </div>
-                            <!-- /.panel panel-info -->
+                            <!-- /.panel panel-primary -->
                             <div class="form-actions">
                                 <input type="submit" value="<spring:message code="registroSir.estado.rechazar"/>"
                                        class="btn btn-danger btn-sm"
