@@ -38,16 +38,6 @@
         </repository>
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-
-            <id>genapp-maven-repos</id>
-            <name>GenApp Maven Repository</name>
-            <url>http://genapp.sourceforge.net/maven/</url>
-
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <pluginManagement>
             <plugins>

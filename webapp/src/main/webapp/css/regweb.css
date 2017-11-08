@@ -1095,3 +1095,9 @@ a.text-gris:focus {
     width: 100% !important;
 }
 /* FI SELECT CHOSEN AL 100% */
+
+/* TAMANY PER TEXT 14 */
+.text14{
+    font-size: 14px;
+}
+/* FI TAMANY PER TEXT 14 */
