@@ -76,6 +76,14 @@
                                 <dd><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy HH:mm:ss"/></dd>
                             </c:if>
 
+                            <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
+                            <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
+                                <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
+                            </c:if>
+                            <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
+                                <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
+                            </c:if>
+
                             <hr class="divider-primary">
 
                             <%--Unidad Tramitación Origen--%>
@@ -126,14 +134,6 @@
                                 </dd>
                             </c:if>
                             <hr class="divider-primary">
-
-                            <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>:</dt>
-                            <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
-                                <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
-                            </c:if>
-                            <c:if test="${registroSir.tipoRegistro == 'SALIDA'}">
-                                <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
-                            </c:if>
 
                             <c:if test="${not empty registroSir.nombreUsuario}">
                                 <dt><i class="fa fa-user"></i> <spring:message code="usuario.usuario"/>: </dt>
