@@ -150,7 +150,7 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDA
 '# També inclou "Codigo Aplicacion" definit a la propietat "connexio.codi_aplicacio"' ||
 '' ||
 '# EE01,EE02, EE03, EE04, EE99' ||
-'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.estat_elaboracio_EL=<#switch anexo.validezDocumento><#case 1>EE01<#break><#case 2>EE02<#break><#case 3>EE03<#break><#case 4>EE03<#break><#default>EE99</#switch>' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.estat_elaboracio_EL=<#switch anexo.validezDocumento><#case 1>EE99<#break><#case 2>EE99<#break><#case 3>EE03<#break><#case 4>EE01<#break><#default>EE99</#switch>' ||
 '' ||
 '# TIPO_DOC_ENI: TD01, TD02, TD03, ...' ||
 'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.tipus_documental_EL=${anexo.tipoDocumental.codigoNTI}' ||
@@ -185,6 +185,9 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDA
 '' ||
 'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.2.name=eni:termino_punto_acceso' ||
 'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.2.valueEL=Justificant' ||
+'' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.3.name=eni:interesados_exp' ||
+'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.expedient.automatic_metadata.3.valueEL=${ciudadano_idadministrativo}' ||
 '' ||
 '# ----------------------------------------------' ||
 '# Opcional. Metadades Automàtiques per Document Electrònic' ||
