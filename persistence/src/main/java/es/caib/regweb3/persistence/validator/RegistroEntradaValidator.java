@@ -54,9 +54,6 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors,"registroDetalle.numeroRegistroOrigen","error.valor.maxlenght","Tamaño demasiado largo");
         }
 
-        if(registroDetalle.getTipoDocumentacionFisica() == null){
-            rejectValue(errors, "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
-        }
 
         // TipoAsunto obligatorio
         if(registroDetalle.getTipoAsunto() == null || registroDetalle.getTipoAsunto().getId() == null || registroDetalle.getTipoAsunto().getId().equals((long) -1) ){
