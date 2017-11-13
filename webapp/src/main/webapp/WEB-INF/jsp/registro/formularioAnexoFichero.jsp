@@ -29,7 +29,7 @@
 
     <%-- Formulario que contiene el resto de campos del anexo. --%>
     <form:form id="anexoForm" action="${pageContext.request.contextPath}/anexoFichero/ficheros"
-               modelAttribute="anexoForm" method="POST" enctype="multipart/form-data">
+               modelAttribute="anexoForm" method="POST" enctype="multipart/form-data" cssClass="form-horizontal">
 
         <form:hidden path="anexo.id"/>
         <form:hidden path="anexo.registroDetalle.id"/>
@@ -40,82 +40,70 @@
         <form:hidden path="oficioRemisionSir"/>
 
 
-        <div class="form-group col-xs-10" id="divmodofirma">
-            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                <label><spring:message code="anexo.tipoDocumento"/></label>
+        <div class="form-group col-xs-12" id="divmodofirma">
+            <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                <label for="anexo.modoFirma" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoDocumento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
             </div>
-            <div class="col-xs-10">
-                <label class="radio-inline">
-                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma()"  value="0"/><spring:message code="anexo.tipofirma.sinfirma"/>
+            <div class="col-xs-10 radioButton">
+                <label class="radio">
+                    <form:radiobutton id="sinfirma" path="anexo.modoFirma" onclick="cambioTipoFirma()" value="0"/><span class="text12"> <spring:message code="anexo.tipofirma.sinfirma"/></span>
                 </label>
-                <label class="radio-inline">
-                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="1"/><spring:message
-                        code="anexo.tipofirma.attached"/>
+                <label class="radio">
+                    <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="1"/><span class="text12"> <spring:message code="anexo.tipofirma.attached"/></span>
                 </label>
                 <c:if test="${anexoForm.permitirAnexoDetached}">
-                    <label class="radio-inline">
-                        <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="2"/><spring:message
-                            code="anexo.tipofirma.detached"/>
+                    <label class="radio">
+                            <form:radiobutton path="anexo.modoFirma" onclick="cambioTipoFirma()" value="2"/><span class="text12"> <spring:message code="anexo.tipofirma.detached"/></span>
                     </label>
                 </c:if>
-
             </div>
             <form:errors path="anexo.modoFirma" cssClass="label label-danger"/>
 
         </div>
 
-        <div class="clearfix"></div>
-
-
         <!--ANEXO-->
-        <div class="form-group col-xs-10">
-            <div class="col-xs-10" id="divInputArchivo">
-                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                    <form:label path="documentoFile" id="labelDocumento"><spring:message
-                            code="anexo.archivo"/></form:label>&nbsp;
+        <div class="form-group col-xs-12" id="divInputArchivo">
+                <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                    <label for="documentoFile" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.archivo"/></label>
                 </div>
                 <div class="col-xs-6">
                     <div class="input-group">
-                                   <span class="input-group-btn">
-                                       <span class="btn btn-success btn-sm btn-file">
-                                          <spring:message code="regweb.explorar"/>&hellip;
-                                          <input id="documentoFile" name="documentoFile" type="file" multiple/>
-                                       </span>
-                                   </span>
+                           <span class="input-group-btn">
+                               <span class="btn btn-success btn-sm btn-file">
+                                  <spring:message code="regweb.explorar"/>&hellip;
+                                  <input id="documentoFile" name="documentoFile" type="file" multiple/>
+                               </span>
+                           </span>
                         <input type="text" id="documentFileText" class="form-control" readonly>
                     </div>
                     <form:errors path="documentoFile" cssClass="help-block" element="span"/>
                 </div>
                 <div class="col-xs-2">
-                    <button type="button" class="close" onClick="borrarCampo('documentFile');">×</button>
+                    <button type="button" class="close centrat-float-left" onClick="borrarCampo('documentFile');">×</button>
                 </div>
-            </div>
         </div>
 
         <!--FIN ANEXO-->
 
         <!--FIRMA -->
-        <div class="form-group col-xs-10">
-            <div class="col-xs-10" id="divInputFirma">
-                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                    <form:label path="firmaFile" id="labelFirma"><spring:message
-                            code="anexo.firma"/></form:label>
+        <div class="form-group col-xs-12" id="divInputFirma">
+            <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                <label for="firmaFile" rel="ayuda" data-content="<spring:message code="registro.ayuda.firma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.firma"/></label>
+            </div>
+            <div class="col-xs-6">
+                <div class="input-group">
+                       <span class="input-group-btn">
+                           <span class="btn btn-success btn-sm btn-file">
+                              <spring:message code="regweb.explorar"/>&hellip;
+                              <input id="firmaFile" name="firmaFile" type="file" multiple/>
+                           </span>
+                       </span>
+                    <input type="text" id="firmaFileText" class="form-control" readonly>
                 </div>
-                <div class="col-xs-6">
-                    <div class="input-group">
-                                   <span class="input-group-btn">
-                                       <span class="btn btn-success btn-sm btn-file">
-                                          <spring:message code="regweb.explorar"/>&hellip;
-                                          <input id="firmaFile" name="firmaFile" type="file" multiple/>
-                                       </span>
-                                   </span>
-                        <input type="text" id="firmaFileText" class="form-control" readonly>
-                    </div>
-                    <form:errors path="firmaFile" cssClass="help-block" element="span"/>
-                </div>
-                <div class="col-xs-2">
-                    <button type="button" class="close" onClick="borrarCampo('firmaFile');">×</button>
-                </div>
+                <form:errors path="firmaFile" cssClass="help-block" element="span"/>
+            </div>
+            <div class="col-xs-2">
+                <button type="button" class="close centrat-float-left" onClick="borrarCampo('firmaFile');">×</button>
             </div>
         </div>
 
