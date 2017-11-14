@@ -206,13 +206,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
-        //Si no esta marcada la opcion ROJA(Doc adjunta en PAPEL) y hay anexos.
-        Boolean mostrarAnexos = !registro.getRegistroDetalle().getTipoDocumentacionFisica().equals( RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA) || registro.getRegistroDetalle().getAnexos().size()>0;
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
         model.addAttribute("tieneJustificante", tieneJustificante);
-        model.addAttribute("mostrarAnexos", mostrarAnexos);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
         // Oficio Remision
@@ -239,6 +236,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             model.addAttribute("anexos", anexos);
         }
+        //Si no esta marcada la opcion ROJA(Doc adjunta en PAPEL) y hay anexos.
+        Boolean mostrarAnexos = !registro.getRegistroDetalle().getTipoDocumentacionFisica().equals( RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA) || registro.getRegistroDetalle().getAnexos().size()>0;
+        model.addAttribute("mostrarAnexos", mostrarAnexos);
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){
