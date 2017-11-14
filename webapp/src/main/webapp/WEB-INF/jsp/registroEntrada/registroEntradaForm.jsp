@@ -176,18 +176,17 @@
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                                    <label for="registroDetalle.tipoDocumentacionFisica" rel="ayuda" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.documentacionFisica"/></label>
                                </div>
-                               <div class="col-xs-10">
-
+                               <div class="col-xs-10 radioButton">
                                    <c:forEach items="${tiposDocumentacionFisica}" var="tipoDocFisica">
-                                       <label class="radio-inline">
+                                       <label class="radio">
                                            <c:if test="${tipoDocFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                               <form:radiobutton  path="registroDetalle.tipoDocumentacionFisica"  value="${tipoDocFisica}" /><span class="text-verd text12"> <spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></span>
+                                               <form:radiobutton  path="registroDetalle.tipoDocumentacionFisica"  value="${tipoDocFisica}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"/><span class="text-verd text12"> <spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></span>
                                            </c:if>
                                            <c:if test="${tipoDocFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                                               <form:radiobutton  path="registroDetalle.tipoDocumentacionFisica" checked="checked" value="${tipoDocFisica}"/><span class="text-vermell text12"> <spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></span>
+                                               <form:radiobutton  path="registroDetalle.tipoDocumentacionFisica" value="${tipoDocFisica}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"/><span class="text-vermell text12"> <spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></span>
                                            </c:if>
                                            <c:if test="${tipoDocFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                                               <form:radiobutton  path="registroDetalle.tipoDocumentacionFisica"  value="${tipoDocFisica}"/><span class="text-taronja text12"> <spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></span>
+                                               <form:radiobutton  path="registroDetalle.tipoDocumentacionFisica"  value="${tipoDocFisica}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"/><span class="text-taronja text12"> <spring:message code="tipoDocumentacionFisica.${tipoDocFisica}" /></span>
                                            </c:if>
                                        </label>
                                    </c:forEach>

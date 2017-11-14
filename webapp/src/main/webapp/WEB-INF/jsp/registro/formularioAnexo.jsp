@@ -30,7 +30,7 @@
 <c:import url="../modulos/mensajes.jsp"/>
 
 <%-- Formulario que contiene el resto de campos del anexo. --%>
-<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST" >
+<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST" cssClass="form-horizontal">
                 
                         
                         <form:hidden path="anexo.id" />
@@ -49,24 +49,23 @@
                         </script>
                         --%>
 
-                    <div class="col-xs-12">
-                        <div class="form-group col-xs-6">
-                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="titulo"><span class="text-danger">*</span>
-                                <spring:message code="anexo.titulo"/></label>
+                    <div class="form-group col-xs-12">
+                        <div class="col-xs-6">
+                           <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                <label for="titulo" rel="ayuda" data-content="<spring:message code="registro.ayuda.titulo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.titulo"/></label>
                            </div>
-                           <div class="col-xs-8">
+                           <div class="col-xs-9">
                                <form:input path="anexo.titulo" class="form-control"  maxlength="200"/>
                                <form:errors path="anexo.titulo" cssClass="label label-danger"/> 
                            </div>
                         </div>
 
 
-                        <div class="form-group col-xs-6">
-                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="origenCiudadanoAdmin"><span class="text-danger">*</span> <spring:message code="anexo.origen"/></label>
+                        <div class="col-xs-6">
+                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                <label for="origenCiudadanoAdmin" rel="ayuda" data-content="<spring:message code="registro.ayuda.origenAnexo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.origen"/></label>
                             </div>
-                            <div class="col-xs-8">
+                            <div class="col-xs-9">
                                 <form:select path="anexo.origenCiudadanoAdmin" class="chosen-select">
                                     <form:option value="0"><spring:message code="anexo.origen.ciudadano"/></form:option>
                                     <form:option value="1"><spring:message code="anexo.origen.administracion"/></form:option>
@@ -78,13 +77,12 @@
 
 
 
-                    <div class="col-xs-12">
-
-                        <div class="form-group col-xs-6">
-                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                               <label for="tipoDocumento"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
+                    <div class="form-group col-xs-12">
+                        <div class="col-xs-6">
+                           <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                               <label for="tipoDocumento" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoDocumentoAnexo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
                            </div>
-                           <div class="col-xs-8">
+                           <div class="col-xs-9">
                                <form:select path="anexo.tipoDocumento" class="chosen-select">
                                    <c:forEach items="${tiposDocumentoAnexo}" var="tipoDocumento">
                                        <form:option value="${tipoDocumento}"><spring:message code="tipoDocumento.0${tipoDocumento}"/></form:option>
@@ -94,13 +92,11 @@
                            </div>
                         </div>
 
-
-
-                       <div class="form-group col-xs-6">
-                          <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                              <label for="tipoDocumental"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumental"/></label>
+                       <div class="col-xs-6">
+                          <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                              <label for="tipoDocumental" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoDocumental"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumental"/></label>
                           </div>
-                          <div class="col-xs-8">
+                          <div class="col-xs-9">
                               <form:select path="anexo.tipoDocumental.id" class="chosen-select">
                                  <c:forEach items="${tiposDocumental}" var="tipoDocumental">
                                      <form:option value="${tipoDocumental.id}"><i:trad value="${tipoDocumental}" property="nombre"/></form:option>
@@ -112,14 +108,12 @@
                     </div>
 
 
-                    <div class="col-xs-12">
-
-                        <div class="form-group col-xs-6">
-                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="validezDocumento"><span class="text-danger">*</span>
-                                    <spring:message code="anexo.validezDocumento"/></label>
+                    <div class="form-group col-xs-12">
+                        <div class="col-xs-6">
+                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                <label for="validezDocumento" rel="ayuda" data-content="<spring:message code="registro.ayuda.validez"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.validezDocumento"/></label>
                                 </div>
-                                <div class="col-xs-8">
+                                <div class="col-xs-9">
                                     <form:select path="anexo.validezDocumento" class="chosen-select">
                                         <%--<form:option value="-1">...</form:option>--%>
                                         <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
@@ -130,11 +124,11 @@
                                 </div>
                         </div>
 
-                        <div class="form-group col-xs-6">
-                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                <label for="observacionesAnexo"><spring:message code="anexo.observaciones"/></label>
+                        <div class="col-xs-6">
+                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                <label for="observacionesAnexo" rel="ayuda" data-content="<spring:message code="registro.ayuda.observacionesAnexo"/>" data-toggle="popover"><spring:message code="anexo.observaciones"/></label>
                             </div>
-                            <div class="col-xs-8">
+                            <div class="col-xs-9">
                                 <form:textarea path="anexo.observaciones" class="form-control" rows="2"  maxlength="50"/>
                                 <form:errors path="anexo.observaciones" cssClass="label label-danger"/>
                             </div>
@@ -144,8 +138,11 @@
 
 
                     <div class="form-group col-xs-12" id="divmodofirma">
-                        <div class="col-xs-8 pull-left etiqueta_regweb control-label">
-                              <label><spring:message code="anexo.tipofirma"/></label> :
+                        <div class="col-xs-6">
+                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                              <label for="tipoFirma" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoFirma"/>" data-toggle="popover"><spring:message code="anexo.tipofirma"/></label>
+                            </div>
+                            <div class="col-xs-9 campFormText">
                               <c:choose>
                                   <c:when test="${anexoForm.anexo.modoFirma == 1}">
                                       <spring:message code="anexo.tipofirma.attached"/>
@@ -157,6 +154,7 @@
                                       <spring:message code="anexo.tipofirma.sinfirma"/>
                                   </c:when>
                               </c:choose>
+                            </div>
                         </div>
 
                     </div>
@@ -167,12 +165,11 @@
                     <!--ANEXO-->
                     <c:if test="${not empty anexoForm.documentoCustody}">
                         <div class="form-group col-xs-12">
-                            <div class="form-group col-xs-4" id="divInputArchivo">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                   <form:label path="documentoFile" id="labelDocumento"><spring:message
-                                           code="anexo.archivo"/></form:label>&nbsp;
+                            <div class="col-xs-6" id="divInputArchivo">
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                   <label for="documentoFile" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombreDoc"/>" data-toggle="popover"><spring:message code="anexo.archivo"/></label>
                                 </div>
-                                <div class="col-xs-8">
+                                <div class="col-xs-9 campFormText">
                                     <c:if test="${empty anexoForm.anexo.id}">
                                         <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
                                                 ${anexoForm.documentoCustody.name}
@@ -191,12 +188,11 @@
                     <!--FIRMA -->
                     <c:if test="${not empty anexoForm.signatureCustody}">
                         <div class="form-group col-xs-12">
-                            <div class="form-group col-xs-4" id="divInputFirma">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                   <form:label path="firmaFile" id="labelFirma"><spring:message
-                                           code="anexo.firma"/></form:label>
+                            <div class="col-xs-6" id="divInputFirma">
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                   <label for="firmaFile" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombreFirma"/>" data-toggle="popover"><spring:message code="anexo.firma"/></label>
                                 </div>
-                                <div class="col-xs-8">
+                                <div class="col-xs-8 campFormText">
                                 <c:if test="${empty anexoForm.anexo.id}">
                                     <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
                                             ${anexoForm.signatureCustody.name}</a>

@@ -866,11 +866,13 @@ a.text-gris:focus {
 /* Estils pels diferents iframes d'Annexe */
 .iframeAnexoFile{
     width: 100%;
-    height: 190px;
+    /*height: 240px;  SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+    height: 160px;
 }
 .iframeAnexo{
     width: 100%;
-    height: 380px;
+    /*height: 380px; SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+    height: 320px;
 }
 .iframeScan{
     width: 100%;
@@ -1198,3 +1200,17 @@ a.text-gris:focus {
     font-size: 12px;
 }
 /* FI TAMANY PER TEXT 12 */
+
+/* PER DIV AMB RADIOBUTTONS */
+.radioButton{
+    padding-left: 35px;
+    padding-right: 10px;
+}
+/* FI PER DIV AMB RADIOBUTTONS */
+
+/* CAMP DE FORMULARI TEXT LECTURA */
+.campFormText{
+    text-align: left;
+    padding-top: 6px;
+}
+/* FI PER CAMP DE FORMULARI TEXT LECTURA */

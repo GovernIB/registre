@@ -211,8 +211,10 @@
 <script type="text/javascript">
 
     // Variables de tamany definit al Modal
-    var tamModalAnexo = 280;
-    var tamModalFitxer = 480;
+//    var tamModalAnexo = 340;  SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
+//    var tamModalFitxer = 480; SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
+    var tamModalAnexo = 260;
+    var tamModalFitxer = 420;
     var tamModalScan = 710;
 
 

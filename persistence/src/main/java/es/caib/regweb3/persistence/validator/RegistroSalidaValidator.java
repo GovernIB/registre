@@ -34,10 +34,6 @@ public class RegistroSalidaValidator<T> extends AbstractRegWebValidator<T> {
           rejectValue(errors, "registroDetalle.extracto","error.valor.maxlenght","Tamaño demasiado largo");
         }
 
-        if(registroDetalle.getTipoDocumentacionFisica() == null){
-          rejectValue(errors,"registroDetalle.tipoDocumentacionFisica","error.valor.requerido","El camp és obligatori");
-        }
-
         if(registroDetalle.getIdioma() == null){
           rejectValue(errors,"registroDetalle.idioma","error.valor.requerido","El camp és obligatori");
         }
@@ -62,13 +58,7 @@ public class RegistroSalidaValidator<T> extends AbstractRegWebValidator<T> {
             rejectValue(errors, "registroDetalle.numeroRegistroOrigen","error.valor.maxlenght","Tamaño demasiado largo");
         }
 
-        if(registroDetalle.getTipoDocumentacionFisica() == null){
-            rejectValue(errors, "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
-        }
-
         // TipoAsunto obligatorio
-     
-        
         if(registroDetalle.getTipoAsunto() == null || registroDetalle.getTipoAsunto().getId() == null || registroDetalle.getTipoAsunto().getId().equals((long) -1) ){
           rejectValue(errors, "registroDetalle.tipoAsunto.id", "error.valor.requerido", "El camp és obligatori");
         }
