@@ -68,6 +68,7 @@
                                         <col>
                                         <col>
                                         <col>
+                                        <col>
                                         <col width="200">
                                     </colgroup>
                                     <thead>
@@ -75,6 +76,7 @@
                                             <th><spring:message code="regweb.nombre"/></th>
                                             <th><spring:message code="entidad.propietario"/></th>
                                             <th><spring:message code="entidad.codigoDir3"/></th>
+                                            <th><spring:message code="entidad.contadorSir"/></th>
                                             <th><spring:message code="regweb.activo"/></th>
                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
@@ -86,6 +88,7 @@
                                                 <td>${entidad.nombre}</td>
                                                 <td>${entidad.propietario.nombreCompleto}</td>
                                                 <td>${entidad.codigoDir3}</td>
+                                                <td>${entidad.contadorSir.numero}</td>
                                                 <td>
                                                     <c:if test="${entidad.activo}"><span class="label label-success">Si</span></c:if>
                                                     <c:if test="${not entidad.activo}"><span class="label label-danger">No</span></c:if>

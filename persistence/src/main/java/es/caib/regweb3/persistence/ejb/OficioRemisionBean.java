@@ -210,15 +210,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         // Guardamos el Oficio de Remisión
         oficioRemision = persist(oficioRemision);
 
-        // CREAMOS LA TRAZABILIDAD
-        Trazabilidad trazabilidad = new Trazabilidad();
-        trazabilidad.setOficioRemision(oficioRemision);
-        trazabilidad.setFecha(new Date());
-        if(oficioRemision.getSir()){
-            trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
-        }else{
-            trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
-        }
 
         // Oficio de Remisión Entrada
         if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
@@ -251,6 +242,14 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null, null);
 
                 // CREAMOS LA TRAZABILIDAD
+                Trazabilidad trazabilidad = new Trazabilidad();
+                trazabilidad.setOficioRemision(oficioRemision);
+                trazabilidad.setFecha(new Date());
+                if(oficioRemision.getSir()){
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
+                }else{
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                }
                 trazabilidad.setRegistroEntradaOrigen(registroEntrada);
                 trazabilidad.setRegistroSalida(registroSalida);
                 trazabilidad.setRegistroEntradaDestino(null);
@@ -280,6 +279,15 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
                 }
 
+                // CREAMOS LA TRAZABILIDAD
+                Trazabilidad trazabilidad = new Trazabilidad();
+                trazabilidad.setOficioRemision(oficioRemision);
+                trazabilidad.setFecha(new Date());
+                if(oficioRemision.getSir()){
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
+                }else{
+                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                }
                 trazabilidad.setRegistroEntradaOrigen(null);
                 trazabilidad.setRegistroSalida(registroSalida);
                 trazabilidad.setRegistroEntradaOrigen(null);
