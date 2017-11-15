@@ -8,9 +8,6 @@
 <c:if test="${param.tipoRegistro == 'salida'}">
     <c:set var="color" value="danger"/>
 </c:if>
-<c:if test="${param.tipoRegistro == 'preRegistro'}">
-    <c:set var="color" value="warning"/>
-</c:if>
 
 <div class="col-xs-12">
 
@@ -18,15 +15,18 @@
 
         <div class="panel-heading">
 
-            <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
+            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica != RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
 
-                <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"
-                   class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
-                    <spring:message code="anexo.archivo.nuevo"/></a>
+                <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
 
-                <c:if test="${teScan}">
-                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"
-                       class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
+                    <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"
+                       class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
+                        <spring:message code="anexo.archivo.nuevo"/></a>
+
+                    <c:if test="${teScan}">
+                        <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"
+                           class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
+                    </c:if>
                 </c:if>
             </c:if>
 
