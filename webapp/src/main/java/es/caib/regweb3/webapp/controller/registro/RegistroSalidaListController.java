@@ -236,9 +236,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             model.addAttribute("anexos", anexos);
         }
-        //Si no esta marcada la opcion ROJA(Doc adjunta en PAPEL) y hay anexos.
-        Boolean mostrarAnexos = !registro.getRegistroDetalle().getTipoDocumentacionFisica().equals( RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA) || registro.getRegistroDetalle().getAnexos().size()>0;
-        model.addAttribute("mostrarAnexos", mostrarAnexos);
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){

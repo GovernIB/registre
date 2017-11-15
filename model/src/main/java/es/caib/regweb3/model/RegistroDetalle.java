@@ -500,6 +500,27 @@ public class RegistroDetalle implements Serializable {
         return false;
     }
 
+    /**
+     * Devuelve si el registroDetalle tiene anexos
+     * @return
+     */
+    @Transient
+    public boolean getTieneAnexos(){
+
+        if(anexos.size()>=1){
+            //Si solo tiene un anexo y es el justificante, no tiene anexos
+            if(anexos.size() == 1 && getTieneJustificante()){
+                return false;
+            }
+            //Si solo tiene un anexo y no es el justificante, tiene un anexo
+            if(anexos.size() == 1 && !getTieneJustificante()){
+                return true;
+            }
+            return true; //Tiene más de un anexo
+        }
+        return false; // No tiene ningun anexo
+    }
+
     @Transient
     public String getExtractoCorto(){
 
