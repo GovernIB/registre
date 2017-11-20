@@ -876,7 +876,11 @@ a.text-gris:focus {
 }
 .iframeScan{
     width: 100%;
-    height: 620px;
+    /*height: 620px; PER MODAL GROS*/
+    height: 410px;
+    background-color: white;
+    min-height:200px;
+    border: 0;
 }
 /* FI Estils pels diferents iframes d'Annexe */
 

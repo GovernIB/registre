@@ -202,7 +202,7 @@
                 <input type="hidden" id="tamanyModal" name="tamany" value=""/>
             </div>
             <div class="modal-body">
-                <iframe src="" frameborder="0" id="targetiframe" name="targetframe" allowtransparency="true" class=""></iframe>
+                <iframe src="" frameborder="0" id="targetiframe" name="targetframe" allowtransparency="true" style="overflow:visible;" scrolling="no"></iframe>
             </div>
         </div>
     </div>
@@ -213,9 +213,10 @@
     // Variables de tamany definit al Modal
 //    var tamModalAnexo = 340;  SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
 //    var tamModalFitxer = 480; SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
+//    var tamModalScan = 710;   MODAL MOLT GROS PER SCAN
     var tamModalAnexo = 260;
     var tamModalFitxer = 420;
-    var tamModalScan = 710;
+    var tamModalScan = 500;
 
 
     // Afegeix el contingut HTML amb imatge de "pensar"

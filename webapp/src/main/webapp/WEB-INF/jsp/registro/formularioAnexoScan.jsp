@@ -44,34 +44,23 @@
             <div class="clearfix"></div>
                
             <c:if test="${teScan}">
-                <table style="width: 100%" border="0px">
-                <tr>
-                
-                <td width="95%">     
-
-                <div class="tab-pane" id="scan">
-                    <iframe src="${urlToPluginWebPage}" style="background-color: white; min-height:200px" frameborder='0' width="100%" height="600px"  id="myiframe" scrolling="auto">
-                        <p>NO IFRAME</p>
-                    </iframe>
-                      
+                <div class="col-xs-12">
+                    <div class="col-xs-11">
+                        <div class="tab-pane" id="scan">
+                            <iframe src="${urlToPluginWebPage}" id="myiframe" scrolling="no" class="iframeScan">
+                                <div>NO IFRAME</div>
+                            </iframe>
+                        </div>
+                    </div>
+                    <div class="col-xs-1 pull-right">
+                        <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
+                    </div>
                 </div>
-                <td valign="top">
-                <div class="pull-right" style="margin-top: 0px; ">
-                    <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
-                </div>
-                </td>
-                </tr>
-                </table>
             </c:if>
                     
-
-                    
-
-                
             <div class="hide col-xs-12 text-center centrat" id="reload">
                 <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
             </div>
-
 
 </form:form>
 
