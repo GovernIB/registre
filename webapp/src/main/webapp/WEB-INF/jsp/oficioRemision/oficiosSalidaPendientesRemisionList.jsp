@@ -194,7 +194,7 @@
                                                         <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('oficio','${paginacion.totalResults}');"><i class="fa fa-check-square"></i></th>
                                                         <th><spring:message code="registroSalida.numeroRegistro"/></th>
                                                         <th><spring:message code="registroSalida.fecha"/></th>
-                                                        <th><spring:message code="registroSalida.oficina"/></th>
+                                                        <th><spring:message code="oficina.origen"/></th>
                                                         <th><spring:message code="registroSalida.origen"/></th>
                                                         <th><spring:message code="registroSalida.extracto"/></th>
                                                         <th><spring:message code="registroSalida.destinatarios"/></th>

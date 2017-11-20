@@ -202,7 +202,7 @@
                                                             <th style="text-align:center;cursor: pointer;" onclick="seleccionarTodo('oficio','${paginacion.totalResults}');"><i class="fa fa-check-square"></i></th>
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
-                                                            <th><spring:message code="registroEntrada.oficina"/></th>
+                                                            <th><spring:message code="oficina.origen"/></th>
                                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                                             <th><spring:message code="registroEntrada.extracto"/></th>
                                                             <th><spring:message code="registroEntrada.interesados"/></th>
