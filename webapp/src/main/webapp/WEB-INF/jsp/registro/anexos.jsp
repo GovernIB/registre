@@ -20,7 +20,7 @@
                 <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
 
                     <c:if test="${!teScan}">
-                        <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.archivo.nuevo"/></a>
+                        <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
                     </c:if>
 
                     <%--<c:if test="${teScan}">--%>
