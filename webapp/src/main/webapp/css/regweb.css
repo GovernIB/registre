@@ -1218,3 +1218,24 @@ a.text-gris:focus {
     padding-top: 6px;
 }
 /* FI PER CAMP DE FORMULARI TEXT LECTURA */
+
+/* OPCIONS PEL BOTÓ DE NOU ANNEXE */
+.anexoDropdown-info{
+    min-width: 0;
+    font-size: 12px;
+}
+.anexoDropdown-info li > a:hover, .anexoDropdown .active > a, .anexoDropdown .active > a:hover {
+    cursor:pointer;
+    background-color: #bce8f1 !important;
+    color: #000000;
+}
+.anexoDropdown-danger{
+    min-width: 0;
+    font-size: 12px;
+}
+.anexoDropdown-danger li > a:hover, .anexoDropdown .active > a, .anexoDropdown .active > a:hover {
+    cursor:pointer;
+    background-color: #ebccd1 !important;
+    color: #000000;
+}
+/* FI OPCIONS PEL BOTÓ DE NOU ANNEXE */

@@ -19,14 +19,31 @@
 
                 <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
 
-                    <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"
-                       class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
-                        <spring:message code="anexo.archivo.nuevo"/></a>
+                    <c:if test="${!teScan}">
+                        <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.archivo.nuevo"/></a>
+                    </c:if>
+
+                    <%--<c:if test="${teScan}">--%>
+                        <%--<a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"--%>
+                           <%--class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>--%>
+                    <%--</c:if>--%>
 
                     <c:if test="${teScan}">
-                        <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"
-                           class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
+                        <div class="btn-group pull-right text12">
+                            <button type="button" class="btn btn-${color} btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <spring:message code="anexo.nuevo"/> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu anexoDropdown-${color}">
+                                <li class="submenu-complet">
+                                    <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.archivo"/></a>
+                                </li>
+                                <li class="submenu-complet">
+                                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.escaner"/></a>
+                                </li>
+                            </ul>
+                        </div>
                     </c:if>
+
                 </c:if>
             </c:if>
 
