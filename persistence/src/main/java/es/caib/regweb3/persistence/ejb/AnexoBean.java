@@ -1307,7 +1307,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           // Mensajes traducidos
           Locale locale = new Locale(idioma);
-          String nombreFichero = I18NLogicUtils.tradueix(locale, "justificante.fichero") + ".pdf";
+          String fileName  = I18NLogicUtils.tradueix(locale, "justificante.fichero") + "_" + registro.getNumeroRegistroFormateado() + ".pdf";
+          String nombreFichero = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
           String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
           String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
           
