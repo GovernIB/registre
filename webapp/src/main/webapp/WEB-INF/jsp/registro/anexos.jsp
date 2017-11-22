@@ -8,9 +8,6 @@
 <c:if test="${param.tipoRegistro == 'salida'}">
     <c:set var="color" value="danger"/>
 </c:if>
-<c:if test="${param.tipoRegistro == 'preRegistro'}">
-    <c:set var="color" value="warning"/>
-</c:if>
 
 <div class="col-xs-12">
 
@@ -18,28 +15,48 @@
 
         <div class="panel-heading">
 
-            <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
+            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica != RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
 
-                <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"
-                   class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i>
-                    <spring:message code="anexo.archivo.nuevo"/></a>
+                <c:if test="${empty numeromaxanexossir || fn:length(anexos) < numeromaxanexossir }">
 
-                <c:if test="${teScan}">
-                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"
-                       class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>
+                    <c:if test="${!teScan}">
+                        <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
+                    </c:if>
+
+                    <%--<c:if test="${teScan}">--%>
+                        <%--<a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"--%>
+                           <%--class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>--%>
+                    <%--</c:if>--%>
+
+                    <c:if test="${teScan}">
+                        <div class="btn-group pull-right text12">
+                            <button type="button" class="btn btn-${color} btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <spring:message code="anexo.nuevo"/> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu anexoDropdown-${color}">
+                                <li class="submenu-complet">
+                                    <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.archivo"/></a>
+                                </li>
+                                <li class="submenu-complet">
+                                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.escaner"/></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </c:if>
+
                 </c:if>
             </c:if>
 
             <h3 class="panel-title">
                 <i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong>:
                 <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                    <span class="text-vermell"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
+                    <span class="text-vermell text14"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
                 </c:if>
                 <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                    <span class="text-taronja"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
+                    <span class="text-taronja text14"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
                 </c:if>
                 <c:if test="${registro.registroDetalle.tipoDocumentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                    <span class="text-verd"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
+                    <span class="text-verd text14"><spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/></span>
                 </c:if>
             </h3>
         </div>
@@ -202,7 +219,7 @@
                 <input type="hidden" id="tamanyModal" name="tamany" value=""/>
             </div>
             <div class="modal-body">
-                <iframe src="" frameborder="0" id="targetiframe" name="targetframe" allowtransparency="true" class=""></iframe>
+                <iframe src="" frameborder="0" id="targetiframe" name="targetframe" allowtransparency="true" style="overflow:visible;" scrolling="no"></iframe>
             </div>
         </div>
     </div>
@@ -211,9 +228,12 @@
 <script type="text/javascript">
 
     // Variables de tamany definit al Modal
-    var tamModalAnexo = 280;
-    var tamModalFitxer = 480;
-    var tamModalScan = 710;
+//    var tamModalAnexo = 340;  SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
+//    var tamModalFitxer = 480; SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
+//    var tamModalScan = 710;   MODAL MOLT GROS PER SCAN
+    var tamModalAnexo = 260;
+    var tamModalFitxer = 420;
+    var tamModalScan = 500;
 
 
     // Afegeix el contingut HTML amb imatge de "pensar"

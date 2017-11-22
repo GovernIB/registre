@@ -866,15 +866,21 @@ a.text-gris:focus {
 /* Estils pels diferents iframes d'Annexe */
 .iframeAnexoFile{
     width: 100%;
-    height: 190px;
+    /*height: 240px;  SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+    height: 160px;
 }
 .iframeAnexo{
     width: 100%;
-    height: 380px;
+    /*height: 380px; SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+    height: 320px;
 }
 .iframeScan{
     width: 100%;
-    height: 620px;
+    /*height: 620px; PER MODAL GROS*/
+    height: 410px;
+    background-color: white;
+    min-height:200px;
+    border: 0;
 }
 /* FI Estils pels diferents iframes d'Annexe */
 
@@ -1088,6 +1094,97 @@ a.text-gris:focus {
     top: auto;
     left: auto;
 }
+
+/* SIR */
+.contentPrimary {
+    border: 1px solid #337ab7;
+    border-radius: 4px;
+}
+.navPrimary {
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+.navPrimary > li {
+    position: relative;
+    display: block;
+}
+.navPrimary > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+}
+.navPrimary > li > a:hover,
+.navPrimary > li > a:focus {
+    text-decoration: none;
+    background-color: #eee;
+}
+.navPrimary > li.disabled > a {
+    color: #777;
+}
+.navPrimary > li.disabled > a:hover,
+.navPrimary > li.disabled > a:focus {
+    color: #31708f;
+    text-decoration: none;
+    cursor: not-allowed;
+    background-color: transparent;
+}
+.navPrimary .open > a,
+.navPrimary .open > a:hover,
+.navPrimary .open > a:focus {
+    background-color: #eee;
+    border-color: #337ab7;
+}
+.navPrimary .nav-divider {
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #337ab7;
+}
+.navPrimary > li > a > img {
+    max-width: none;
+}
+.navPrimary-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+.navPrimary-tabs > li > a {
+    color: #31708f;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+}
+.navPrimary-tabs > li > a:hover {
+    border-color: #eee #eee #337ab7;
+    background-color: #337ab7;
+    color: #ffffff;
+}
+.navPrimary-tabs > li.active > a,
+.navPrimary-tabs > li.active > a:hover,
+.navPrimary-tabs > li.active > a:focus {
+    color: #ffffff;
+    font-weight: bold;
+    cursor: default;
+    background-color: #337ab7;
+    border: 1px solid #337ab7;
+    border-bottom-color: transparent;
+}
+.navPrimary-tabs.nav-justified {
+    width: 100%;
+    border-bottom: 0;
+}
+.navPrimary-tabs.nav-justified > li {
+    float: none;
+}
+.navPrimary-tabs.nav-justified > li > a {
+    margin-bottom: 5px;
+    text-align: center;
+}
+.navPrimary-tabs.nav-justified > .dropdown .dropdown-menu {
+    top: auto;
+    left: auto;
+}
 /* FI TABS INFO */
 
 /* SELECT CHOSEN AL 100% */
@@ -1095,3 +1192,50 @@ a.text-gris:focus {
     width: 100% !important;
 }
 /* FI SELECT CHOSEN AL 100% */
+
+/* TAMANY PER TEXT 14 */
+.text14{
+    font-size: 14px;
+}
+/* FI TAMANY PER TEXT 14 */
+
+/* TAMANY PER TEXT 12 */
+.text12{
+    font-size: 12px;
+}
+/* FI TAMANY PER TEXT 12 */
+
+/* PER DIV AMB RADIOBUTTONS */
+.radioButton{
+    padding-left: 35px;
+    padding-right: 10px;
+}
+/* FI PER DIV AMB RADIOBUTTONS */
+
+/* CAMP DE FORMULARI TEXT LECTURA */
+.campFormText{
+    text-align: left;
+    padding-top: 6px;
+}
+/* FI PER CAMP DE FORMULARI TEXT LECTURA */
+
+/* OPCIONS PEL BOTÓ DE NOU ANNEXE */
+.anexoDropdown-info{
+    min-width: 0;
+    font-size: 12px;
+}
+.anexoDropdown-info li > a:hover, .anexoDropdown .active > a, .anexoDropdown .active > a:hover {
+    cursor:pointer;
+    background-color: #bce8f1 !important;
+    color: #000000;
+}
+.anexoDropdown-danger{
+    min-width: 0;
+    font-size: 12px;
+}
+.anexoDropdown-danger li > a:hover, .anexoDropdown .active > a, .anexoDropdown .active > a:hover {
+    cursor:pointer;
+    background-color: #ebccd1 !important;
+    color: #000000;
+}
+/* FI OPCIONS PEL BOTÓ DE NOU ANNEXE */

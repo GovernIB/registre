@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div class="col-xs-8 pull-right">
+<div class="col-xs-12 pull-right">
 
     <div class="panel panel-primary">
 
@@ -10,13 +10,13 @@
             <h3 class="panel-title">
                 <i class="fa fa-pencil-square-o"></i> <strong><spring:message code="anexo.anexos"/></strong>:
                 <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                    <span class="text-vermell"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                    <span class="text-vermell text14"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
                 </c:if>
                 <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                    <span class="text-taronja"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                    <span class="text-taronja text14"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
                 </c:if>
                 <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                    <span class="text-verd"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
+                    <span class="text-verd text14"><spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/></span>
                 </c:if>
             </h3>
         </div>

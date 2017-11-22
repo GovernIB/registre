@@ -34,6 +34,7 @@ import java.util.Set;
 
 /**
  * Created by mgonzalez on 04/05/2017.
+ * Controller que se encarga de gestionar los anexos introducidos via scan
  */
 @Controller
 @RequestMapping(value = "/anexoScan")
@@ -56,11 +57,12 @@ public class AnexoScanController extends AnexoController {
         log.info(" Passa per AnexoScanController::ficherosGet(" + registroDetalleID
                 + "," + tipoRegistro + ", " + registroID + ")");
 
-
+        //Actualiza las variables con la ultima acción
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
 
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
+        //Prepara el anexoForm con los datos
         AnexoForm anexoForm = new AnexoForm();
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
@@ -77,12 +79,11 @@ public class AnexoScanController extends AnexoController {
     public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
                                BindingResult result, HttpServletRequest request,
                                HttpServletResponse response, Model model) throws Exception,I18NException {
-        //XYZ
-        log.info("llego al post de scan");
+
 
         boolean isSIR = anexoForm.getOficioRemisionSir();
         try {
-            //loadCommonAttributes(request, model);
+            //Preparamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
             manageDocumentCustodySignatureCustody(request, anexoForm);
             
             if (isSIR) {
@@ -90,15 +91,17 @@ public class AnexoScanController extends AnexoController {
                 String firmaExtension="";
                 long docSize=-1;
                 long firmaSize=-1;
+                //obtenemos tamaño y extensión del documento
                 if(anexoForm.getDocumentoCustody()!=null) {
                     docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
                     docSize = anexoForm.getDocumentoCustody().getLength();
                 }
+                //obtenemos tamaño y extensión de la firma
                 if(anexoForm.getSignatureCustody()!=null){
                     firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
-
+                //validamos las limitaciones SIR
                 validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, true);
             }
 
@@ -121,6 +124,14 @@ public class AnexoScanController extends AnexoController {
 
     }
 
+    /**
+     * Método que carga una serie de atributos comunes del scan
+     * @param request
+     * @param model
+     * @param registroID
+     * @throws Exception
+     * @throws I18NException
+     */
     protected void loadCommonAttributesScan(HttpServletRequest request, Model model,
                                         Long registroID) throws Exception, I18NException {
 
@@ -134,7 +145,7 @@ public class AnexoScanController extends AnexoController {
         model.addAttribute("teScan", teScan);
 
 
-        if (teScan) {
+        if (teScan) {//Si tiene scan
 
             String languageUI = request.getParameter("lang");
 
@@ -154,6 +165,16 @@ public class AnexoScanController extends AnexoController {
 
     }
 
+    /**
+     * Método que inicializa el plugin de escaneo
+     * @param request
+     * @param entitatID
+     * @param scanWebID
+     * @param languageUI
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
     private String initializeScan(HttpServletRequest request, long entitatID, final long scanWebID,
                                   String languageUI) throws Exception, I18NException {
 
@@ -207,7 +228,7 @@ public class AnexoScanController extends AnexoController {
     }
 
     /**
-     * Método que prepara el DocumentCustody y el Signature Custody de un anexo
+     * Método que prepara el DocumentCustody y el Signature Custody de un anexo que viene del escaner
      *
      * @param request
      * @param anexoForm

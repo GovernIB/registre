@@ -32,6 +32,7 @@ import java.util.Date;
 
 /**
  * Created by mgonzalez on 02/05/2017.
+ * Controller que se encarga de gestionar la entrada de anexos via web opción "Archivo"
  */
 @Controller
 @RequestMapping(value = "/anexoFichero")
@@ -79,6 +80,7 @@ public class AnexoFicheroController extends AnexoController {
                 + "," + tipoRegistro + ", " + registroID + ")");
 
         Entidad entidad = getEntidadActiva(request);
+        //Actualiza las variables con la ultima acción
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
         RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
@@ -89,7 +91,7 @@ public class AnexoFicheroController extends AnexoController {
         anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
         anexoForm.setPermitirAnexoDetached(PropiedadGlobalUtil.getPermitirAnexosDetached(entidad.getId()));
-        anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+        anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
         model.addAttribute("anexoForm" ,anexoForm);
 
         return "registro/formularioAnexoFichero";
@@ -108,9 +110,10 @@ public class AnexoFicheroController extends AnexoController {
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
         boolean isSIR = anexoForm.getOficioRemisionSir();
 
-        if (isSIR) {
+        if (isSIR) { //Verificación de las limitaciones de un anexo via SIR
             long docSize = -1;
             String docExtension = "";
+            //Obtenemos extensión y tamaño del archivo
             if (anexoForm.getDocumentoFile() != null) {
                 docSize = anexoForm.getDocumentoFile().getSize();
                 docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoFile().getOriginalFilename());
@@ -118,6 +121,7 @@ public class AnexoFicheroController extends AnexoController {
 
             long firmaSize = -1;
             String firmaExtension = "";
+            //Obtenemos extensión y tamaño del documento firma
             if (anexoForm.getFirmaFile() != null) {
                 firmaSize = anexoForm.getFirmaFile().getSize();
                 firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getFirmaFile().getOriginalFilename());
@@ -129,6 +133,7 @@ public class AnexoFicheroController extends AnexoController {
             if(anexoForm.getFirmaFile()!=null) {
                 log.info("FirmaFile " + anexoForm.getFirmaFile().getOriginalFilename());
             }
+            //Validamos las limitaciones SIR
             validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result,false);
 
         }
@@ -138,7 +143,7 @@ public class AnexoFicheroController extends AnexoController {
             return "registro/formularioAnexoFichero";
         } else {
             try {
-                //Preparamos los documentcustody, signaturecustody
+                //Preparamos los documentcustody, signaturecustody en el anexoForm para pasarlos a la siguiente pantalla
                 manageDocumentCustodySignatureCustody(request, anexoForm);
 
                 request.getSession().setAttribute("anexoForm", anexoForm);
@@ -164,7 +169,6 @@ public class AnexoFicheroController extends AnexoController {
 
     /**
      * Método que obtiene el signature custody del anexoForm.
-     * Devuelve el actual o el indicado en el formulario del anexo con los valores de custodia ajustados
      * @param anexoForm
      * @param dc
      * @param modoFirma
@@ -180,8 +184,6 @@ public class AnexoFicheroController extends AnexoController {
             log.debug(" anexoForm.isFirmaFileDelete() = " + anexoForm.isSignatureFileDelete());
         }
         log.debug(" anexoForm.getFirmaFile() = " + anexoForm.getFirmaFile());
-        //Cargamos el signature custody con el actual
-       // SignatureCustody sc = anexoForm.getSignatureCustody();
         SignatureCustody sc = null;
         if (!anexoForm.getFirmaFile().isEmpty()) {
             if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
@@ -226,7 +228,6 @@ public class AnexoFicheroController extends AnexoController {
 
     /**
      * Método que obtiene el documentCustody del anexo.
-     * Devuelve el actual o el indicado en el campo del formulario del anexo.
      * @param anexoForm
      * @return
      */
@@ -240,7 +241,6 @@ public class AnexoFicheroController extends AnexoController {
         }
 
         log.debug(" anexoForm.getDocumentoFile() = " + anexoForm.getDocumentoFile());
-        //DocumentCustody dc = anexoForm.getDocumentoCustody();
         DocumentCustody dc = null;
         if (!anexoForm.getDocumentoFile().isEmpty()) {
             dc = new DocumentCustody();
