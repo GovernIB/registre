@@ -171,6 +171,7 @@
                 <%--Información de Origen y destino--%>
                 <div class="row">
 
+                    <%--Origen--%>
                     <div class="col-lg-6">
                         <div class="panel panel-${color}">
                             <div class="panel-heading">
@@ -186,6 +187,7 @@
                         </div>
                     </div>
 
+                    <%--Destino--%>
                     <div class="col-lg-6">
                         <div class="panel panel-${color}">
                             <div class="panel-heading">
@@ -205,7 +207,9 @@
                                 </p>
                                 <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
                                     <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
-                                    <p><strong><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>:</strong> ${oficioRemision.numeroRegistroEntradaDestino}</p>
+                                    <c:if test="${oficioRemision.sir}">
+                                        <p><strong><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>:</strong> ${oficioRemision.numeroRegistroEntradaDestino}</p>
+                                    </c:if>
                                 </c:if>
 
                             </div>
