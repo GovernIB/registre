@@ -1274,6 +1274,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad,
         IRegistro registro, String tipoRegistro, String idioma) 
                 throws I18NException, I18NValidationException {
+      String custodyID=null;
+      boolean error = false;
+      IDocumentCustodyPlugin documentCustodyPlugin =null;
       try {
           final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
@@ -1287,7 +1290,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           }
 
           // Carregam el plugin del Custodia del Justificante
-          IDocumentCustodyPlugin documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+          documentCustodyPlugin = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
 
           // Comprova que existeix el plugin de Custodia del Justificante
           if(documentCustodyPlugin == null) {
@@ -1327,7 +1330,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           // Generam la Custòdia per tenir el CSV
           Map<String,Object> custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
-          String custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
+          custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
           Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
 
           String csv = null;
@@ -1363,14 +1366,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
           return anexoFull;
       } catch(I18NValidationException i18nve) {
+        error=true;
         throw i18nve;
       } catch(I18NException i18ne) {
+        error=true;
         throw i18ne;
       } catch(Exception e) {
-        throw new I18NException(e, "error.desconegut",
+          error=true;
+          throw new I18NException(e, "error.desconegut",
             new I18NArgumentString("Error no controlat generant justificant: " + e.getMessage()));
-      }
+      } finally {
+          if (error) {
+              if (documentCustodyPlugin != null && custodyID != null) {
 
+                  try {
+                      documentCustodyPlugin.deleteCustody(custodyID);
+                  } catch (Throwable th) {
+                      log.warn("Error esborrant justificant a custodia: " + th.getMessage(), th);
+                  }
+              }
+          }
+      }
     }
 
     
