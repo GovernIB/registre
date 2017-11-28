@@ -235,6 +235,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
 
             model.addAttribute("anexos", anexos);
+            model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
         }
 
         // Interesados, solo si el Registro en Válio

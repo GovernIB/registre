@@ -864,15 +864,23 @@ a.text-gris:focus {
 /* FI Panels d'Inici en 2 columnes */
 
 /* Estils pels diferents iframes d'Annexe */
+/* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
 .iframeAnexoFile{
     width: 100%;
-    /*height: 240px;  SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
     height: 160px;
 }
 .iframeAnexo{
     width: 100%;
-    /*height: 380px; SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
     height: 320px;
+}
+/* SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+.iframeAnexoFileGros{
+    width: 100%;
+    height: 240px;
+}
+.iframeAnexoGros{
+    width: 100%;
+    height: 380px;
 }
 .iframeScan{
     width: 100%;

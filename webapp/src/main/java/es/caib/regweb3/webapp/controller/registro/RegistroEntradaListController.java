@@ -248,6 +248,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 }
 
                 model.addAttribute("anexos", anexos);
+                model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
             }
 
             // Interesados

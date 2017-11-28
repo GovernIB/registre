@@ -231,8 +231,18 @@
 //    var tamModalAnexo = 340;  SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
 //    var tamModalFitxer = 480; SI HI HA L'OPCIO DE FIRMA EN DOCUMENT SEPARAT
 //    var tamModalScan = 710;   MODAL MOLT GROS PER SCAN
-    var tamModalAnexo = 260;
-    var tamModalFitxer = 420;
+
+    var tamModalAnexo;
+    var tamModalFitxer;
+
+    /* SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+    if(${anexoDetachedPermitido}) {
+        tamModalAnexo = 340;
+        tamModalFitxer = 480;
+    } else{   /* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
+        tamModalAnexo = 260;
+        tamModalFitxer = 420;
+    }
     var tamModalScan = 500;
 
 
@@ -265,6 +275,7 @@
         $('#targetiframe').attr('src', '');
         eliminaCssIframe();
         $('#targetiframe').height('');
+        $('#modalAnexos').find('.modal-content').css('height', '');
     }
 
     // Quan es tanca el modal, esborra el seu contingut
@@ -277,6 +288,8 @@
     function eliminaCssIframe() {
         $('#targetiframe').removeClass('iframeAnexo');
         $('#targetiframe').removeClass('iframeAnexoFile');
+        $('#targetiframe').removeClass('iframeAnexoGros');
+        $('#targetiframe').removeClass('iframeAnexoFileGros');
         $('#targetiframe').removeClass('iframeScan');
     }
 
@@ -287,7 +300,12 @@
         // Esborra les classes de iframe
         eliminaCssIframe();
         // Afegeix la classe a iframe
-        $('#targetiframe').addClass('iframeAnexo');
+        if(${anexoDetachedPermitido}) {
+            $('#targetiframe').addClass('iframeAnexoGros');
+        } else {
+            $('#targetiframe').addClass('iframeAnexo');
+        }
+
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
@@ -302,7 +320,12 @@
         // Esborra les classes de iframe
         eliminaCssIframe();
         // Afegeix la classe a iframe
-        $('#targetiframe').addClass('iframeAnexoFile');
+        if(${anexoDetachedPermitido}) {
+            $('#targetiframe').addClass('iframeAnexoFileGros');
+        } else {
+            $('#targetiframe').addClass('iframeAnexoFile');
+        }
+
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
@@ -332,7 +355,12 @@
         // Esborra les classes de iframe
         eliminaCssIframe();
         // Afegeix la classe a iframe
-        $('#targetiframe').addClass('iframeAnexo');
+        if(${anexoDetachedPermitido}) {
+            $('#targetiframe').addClass('iframeAnexoGros');
+        } else {
+            $('#targetiframe').addClass('iframeAnexo');
+        }
+
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
@@ -346,7 +374,11 @@
         document.getElementById('tamanyModal').setAttribute("value", tamModalFitxer);
         $('#modalAnexos').find('.modal-content').css('height', $('#tamanyModal').val());
         // Afegeix la classe a iframe
-        document.getElementById('targetiframe').setAttribute("class", 'iframeAnexo');
+        if(${anexoDetachedPermitido}) {
+            document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoGros');
+        } else {
+            document.getElementById('targetiframe').setAttribute("class", 'iframeAnexo');
+        }
     }
 
     <!-- Redimensiona el Modal amb Errors cap a AnnexeFile-->
@@ -357,7 +389,11 @@
         // Canvia tamany al height iframe
         $('#targetiframe').height('');
         // Afegeix la classe a iframe
-        document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoFile');
+        if(${anexoDetachedPermitido}) {
+            document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoFileGros');
+        }else {
+            document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoFile');
+        }
     }
 
 
