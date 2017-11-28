@@ -176,7 +176,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Comprobamos si se la oficina activa es la misma donde se creó el registro
-            if(!registroSalida.getOficina().getId().equals(oficinaActiva.getId()) || (registroSalida.getOficina().getOficinaResponsable() != null && !registroSalida.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()))){
+            if(!registroSalida.getOficina().getId().equals(oficinaActiva.getId()) && (registroSalida.getOficina().getOficinaResponsable() != null && !registroSalida.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()))){
                 log.info("Aviso: No puede editar un registro si no se encuentra en la oficina donde se creó");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar.oficina"));
                 response.sendRedirect("/regweb3/aviso");
