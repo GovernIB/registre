@@ -14,6 +14,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,6 +37,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
+
+    @Resource
+    private javax.ejb.SessionContext ejbContext;
 
     @EJB public LibroLocal libroEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
@@ -201,103 +205,114 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public synchronized OficioRemision registrarOficioRemision(OficioRemision oficioRemision,
         Long estado) throws Exception, I18NException, I18NValidationException {
 
-        // Obtenemos el Número de registro del OficioRemision
-        Libro libro = libroEjb.findById(oficioRemision.getLibro().getId());
-        NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorOficioRemision().getId());
-        oficioRemision.setNumeroOficio(numeroRegistro.getNumero());
-        oficioRemision.setFecha(numeroRegistro.getFecha());
+        try{
 
-        // Guardamos el Oficio de Remisión
-        oficioRemision = persist(oficioRemision);
+            // Obtenemos el Número de registro del OficioRemision
+            Libro libro = libroEjb.findById(oficioRemision.getLibro().getId());
+            NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorOficioRemision().getId());
+            oficioRemision.setNumeroOficio(numeroRegistro.getNumero());
+            oficioRemision.setFecha(numeroRegistro.getFecha());
 
+            // Guardamos el Oficio de Remisión
+            oficioRemision = persist(oficioRemision);
 
-        // Oficio de Remisión Entrada
-        if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
+            // Oficio de Remisión Entrada
+            if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
 
-            // Creamos un Registro de Salida y Trazabilidad por cada Registro de Entrada que contenga el OficioRemision
-            for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
+                // Creamos un Registro de Salida y Trazabilidad por cada Registro de Entrada que contenga el OficioRemision
+                for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
 
-                registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
+                    registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
 
-                //Justificante, Si no tiene generado el Justificante, lo hacemos
-                //No entra cuando es SIR porque ya ha generado el justificante previamente
-                if (!registroEntrada.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
+                    //Justificante, Si no tiene generado el Justificante, lo hacemos
+                    //No entra cuando es SIR porque ya ha generado el justificante previamente
+                    if (!registroEntrada.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
 
-                    registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntrada.getId());
+                        registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntrada.getId());
 
-                    // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(oficioRemision.getUsuarioResponsable(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "es");
-                    registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+                        // Creamos el anexo del justificante y se lo añadimos al registro
+                        AnexoFull anexoFull = anexoEjb.crearJustificante(oficioRemision.getUsuarioResponsable(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "es");
+                        registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+                    }
+
+                    RegistroSalida registroSalida = new RegistroSalida();
+                    registroSalida.setRegistroDetalle(registroEntrada.getRegistroDetalle());
+                    registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
+                    registroSalida.setOficina(oficioRemision.getOficina());
+                    registroSalida.setOrigen(libro.getOrganismo());
+                    registroSalida.setLibro(oficioRemision.getLibro());
+                    registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
+
+                    // Registramos la Salida
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null, null);
+
+                    // CREAMOS LA TRAZABILIDAD
+                    Trazabilidad trazabilidad = new Trazabilidad();
+                    trazabilidad.setOficioRemision(oficioRemision);
+                    trazabilidad.setFecha(new Date());
+                    if(oficioRemision.getSir()){
+                        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
+                    }else{
+                        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                    }
+                    trazabilidad.setRegistroEntradaOrigen(registroEntrada);
+                    trazabilidad.setRegistroSalida(registroSalida);
+                    trazabilidad.setRegistroEntradaDestino(null);
+                    trazabilidadEjb.persist(trazabilidad);
+
+                    // Modificamos el estado del Registro de Entrada
+                    registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,estado, oficioRemision.getUsuarioResponsable());
                 }
-
-                RegistroSalida registroSalida = new RegistroSalida();
-                registroSalida.setRegistroDetalle(registroEntrada.getRegistroDetalle());
-                registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
-                registroSalida.setOficina(oficioRemision.getOficina());
-                registroSalida.setOrigen(libro.getOrganismo());
-                registroSalida.setLibro(oficioRemision.getLibro());
-                registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
-
-                // Registramos la Salida
-                registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null, null);
-
-                // CREAMOS LA TRAZABILIDAD
-                Trazabilidad trazabilidad = new Trazabilidad();
-                trazabilidad.setOficioRemision(oficioRemision);
-                trazabilidad.setFecha(new Date());
-                if(oficioRemision.getSir()){
-                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
-                }else{
-                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
-                }
-                trazabilidad.setRegistroEntradaOrigen(registroEntrada);
-                trazabilidad.setRegistroSalida(registroSalida);
-                trazabilidad.setRegistroEntradaDestino(null);
-                trazabilidadEjb.persist(trazabilidad);
-
-                // Modificamos el estado del Registro de Entrada
-                registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,estado, oficioRemision.getUsuarioResponsable());
-            }
-        }
-
-        // Oficio de Remisión Salida
-        if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
-
-            // CREAMOS LA TRAZABILIDAD
-            for (RegistroSalida registroSalida : oficioRemision.getRegistrosSalida()) {
-
-                registroSalida = registroSalidaEjb.findById(registroSalida.getId());
-
-                //Justificante, Si no tiene generado el Justificante, lo hacemos
-                //No entra cuando es SIR porque ya ha generado el justificante previamente
-                if (!registroSalida.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
-
-                    registroSalida = registroSalidaEjb.getConAnexosFull(registroSalida.getId());
-
-                    // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(oficioRemision.getUsuarioResponsable(), registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), "es");
-                    registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
-                }
-
-                // CREAMOS LA TRAZABILIDAD
-                Trazabilidad trazabilidad = new Trazabilidad();
-                trazabilidad.setOficioRemision(oficioRemision);
-                trazabilidad.setFecha(new Date());
-                if(oficioRemision.getSir()){
-                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
-                }else{
-                    trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
-                }
-                trazabilidad.setRegistroEntradaOrigen(null);
-                trazabilidad.setRegistroSalida(registroSalida);
-                trazabilidad.setRegistroEntradaOrigen(null);
-                trazabilidad.setRegistroEntradaDestino(null);
-                trazabilidadEjb.persist(trazabilidad);
-
-                // Modificamos el estado del Registro de Salida
-                registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,estado, oficioRemision.getUsuarioResponsable());
             }
 
+            // Oficio de Remisión Salida
+            if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
+
+                // CREAMOS LA TRAZABILIDAD
+                for (RegistroSalida registroSalida : oficioRemision.getRegistrosSalida()) {
+
+                    registroSalida = registroSalidaEjb.findById(registroSalida.getId());
+
+                    //Justificante, Si no tiene generado el Justificante, lo hacemos
+                    //No entra cuando es SIR porque ya ha generado el justificante previamente
+                    if (!registroSalida.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
+
+                        registroSalida = registroSalidaEjb.getConAnexosFull(registroSalida.getId());
+
+                        // Creamos el anexo del justificante y se lo añadimos al registro
+                        AnexoFull anexoFull = anexoEjb.crearJustificante(oficioRemision.getUsuarioResponsable(), registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), "es");
+                        registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
+                    }
+
+                    // CREAMOS LA TRAZABILIDAD
+                    Trazabilidad trazabilidad = new Trazabilidad();
+                    trazabilidad.setOficioRemision(oficioRemision);
+                    trazabilidad.setFecha(new Date());
+                    if(oficioRemision.getSir()){
+                        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO_SIR);
+                    }else{
+                        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_OFICIO);
+                    }
+                    trazabilidad.setRegistroEntradaOrigen(null);
+                    trazabilidad.setRegistroSalida(registroSalida);
+                    trazabilidad.setRegistroEntradaOrigen(null);
+                    trazabilidad.setRegistroEntradaDestino(null);
+                    trazabilidadEjb.persist(trazabilidad);
+
+                    // Modificamos el estado del Registro de Salida
+                    registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,estado, oficioRemision.getUsuarioResponsable());
+                }
+
+            }
+
+        } catch (I18NException e) {
+            log.info("Error creando Oficio Remision: " + e.getLocalizedMessage());
+            ejbContext.setRollbackOnly();
+            throw e;
+        } catch (I18NValidationException ve) {
+            log.info("Error creando Oficio Remision: " + ve.getLocalizedMessage());
+            ejbContext.setRollbackOnly();
+            throw ve;
         }
 
         return oficioRemision;
