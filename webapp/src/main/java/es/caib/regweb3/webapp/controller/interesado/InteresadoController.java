@@ -448,8 +448,15 @@ public class InteresadoController extends BaseController{
             personas = personaEjb.busquedaJuridicas(entidad.getId(), persona.getRazonSocial(), persona.getDocumento(), persona.getTipo());
 
         }else if(persona.getTipo().equals(0L)) { // Todas las Personas
-            personas.addAll(personaEjb.busquedaFisicas(entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento(), RegwebConstantes.TIPO_PERSONA_FISICA));
-            personas.addAll(personaEjb.busquedaJuridicas(entidad.getId(), persona.getRazonSocial(), persona.getDocumento(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
+
+            if(StringUtils.isNotEmpty(persona.getNombre()) || StringUtils.isNotEmpty(persona.getApellido1()) || StringUtils.isNotEmpty(persona.getApellido2()) || StringUtils.isNotEmpty(persona.getDocumento())){
+                personas.addAll(personaEjb.busquedaFisicas(entidad.getId(), persona.getNombre(), persona.getApellido1(), persona.getApellido2(), persona.getDocumento(), RegwebConstantes.TIPO_PERSONA_FISICA));
+            }
+
+            if(StringUtils.isNotEmpty(persona.getRazonSocial()) || StringUtils.isNotEmpty(persona.getDocumento()) ){
+                personas.addAll(personaEjb.busquedaJuridicas(entidad.getId(), persona.getRazonSocial(), persona.getDocumento(), RegwebConstantes.TIPO_PERSONA_JURIDICA));
+            }
+
         }
 
         return personas;
