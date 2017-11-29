@@ -63,6 +63,7 @@ public class RegistroSalidaConverter extends CommonConverter {
         if (StringUtils.isNotEmpty(registroSalidaWs.getNumTransporte())) {registroDetalle.setNumeroTransporte(registroSalidaWs.getNumTransporte());}
         if (StringUtils.isNotEmpty(registroSalidaWs.getObservaciones())) {registroDetalle.setObservaciones(registroSalidaWs.getObservaciones());}
         //registroDetalle = getOficinaOrigen(registroSalidaWs.getOficina(),oficinaEjb, registroDetalle); todo Crear propiedad OficinaOrigen en es.caib.regweb3.ws.model.RegistroWs
+        registroDetalle.setOficinaOrigen(oficina);
         if(registroSalidaWs.getNumero() != null){registroDetalle.setNumeroRegistroOrigen(String.valueOf(registroSalidaWs.getNumero()));}
         if (registroSalidaWs.getFecha() != null) {registroDetalle.setFechaOrigen(registroSalidaWs.getFecha());}
         if (StringUtils.isNotEmpty(registroSalidaWs.getExpone())) {registroDetalle.setExpone(registroSalidaWs.getExpone());}

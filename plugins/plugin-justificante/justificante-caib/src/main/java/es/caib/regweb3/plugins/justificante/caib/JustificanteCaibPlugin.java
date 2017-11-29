@@ -224,12 +224,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         String oficinaOrigen = null;
         String numRegOrigen = null;
         String dataOrigen = null;
-        if(!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroEntrada.getOficina().getCodigo())) {
-            oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo();
-            numRegOrigen = registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen();
-            Date fechaOrigen = registroEntrada.getRegistroDetalle().getFechaOrigen();
-            dataOrigen = formatDate.format(fechaOrigen);
+        if(registroEntrada.getRegistroDetalle().getOficinaOrigen()!=null){
+            if(!registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroEntrada.getOficina().getCodigo())) {
+                oficinaOrigen = registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroEntrada.getRegistroDetalle().getOficinaOrigen().getCodigo();
+                numRegOrigen = registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen();
+                Date fechaOrigen = registroEntrada.getRegistroDetalle().getFechaOrigen();
+                dataOrigen = formatDate.format(fechaOrigen);
+            }
         }
+
         // Observacions
         String observacions = registroEntrada.getRegistroDetalle().getObservaciones();
         // Data Actual
@@ -340,12 +343,15 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         String oficinaOrigen = null;
         String numRegOrigen = null;
         String dataOrigen = null;
-        if(!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroSalida.getOficina().getCodigo())) {
-            oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo();
-            numRegOrigen = registroSalida.getRegistroDetalle().getNumeroRegistroOrigen();
-            Date fechaOrigen = registroSalida.getRegistroDetalle().getFechaOrigen();
-            dataOrigen = formatDate.format(fechaOrigen);
+        if(registroSalida.getRegistroDetalle().getOficinaOrigen()!=null){
+            if(!registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo().equals(registroSalida.getOficina().getCodigo())) {
+                oficinaOrigen = registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion() + " - " + registroSalida.getRegistroDetalle().getOficinaOrigen().getCodigo();
+                numRegOrigen = registroSalida.getRegistroDetalle().getNumeroRegistroOrigen();
+                Date fechaOrigen = registroSalida.getRegistroDetalle().getFechaOrigen();
+                dataOrigen = formatDate.format(fechaOrigen);
+            }
         }
+
         // Observacions
         String observacions = registroSalida.getRegistroDetalle().getObservaciones();
         // Data actual
