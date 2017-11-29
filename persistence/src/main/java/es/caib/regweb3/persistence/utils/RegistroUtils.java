@@ -43,13 +43,13 @@ public class RegistroUtils  implements  ValidateSignatureConstants {
 
         if(bean instanceof RegistroEntrada){
             jaxbCtx = JAXBContext.newInstance(RegistroEntrada.class);
-            log.info("Serializa RegistroEntrada");
+            //log.info("Serializa RegistroEntrada");
         }else if(bean instanceof RegistroSalida){
             jaxbCtx = JAXBContext.newInstance(RegistroSalida.class);
-            log.info("Serializa RegistroSalida");
+            //log.info("Serializa RegistroSalida");
         }else if(bean instanceof ReproJson){
             jaxbCtx = JAXBContext.newInstance(ReproJson.class);
-            log.info("Serializa ReproJson");
+            //log.info("Serializa ReproJson");
         }
 
         StringWriter xmlWriter = new StringWriter();
