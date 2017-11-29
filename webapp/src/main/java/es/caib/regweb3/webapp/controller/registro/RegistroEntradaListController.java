@@ -95,7 +95,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         registroEntradaBusqueda.setFechaInicio(new Date());
         registroEntradaBusqueda.setFechaFin(new Date());
 
-        model.addAttribute(getOficinaActiva(request));
+        model.addAttribute("oficinaActiva", getOficinaActiva(request));
         model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosDestino", organismosOficinaActiva);
