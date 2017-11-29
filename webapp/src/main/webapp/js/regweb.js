@@ -625,21 +625,26 @@ function cargarSelectOficinaExterno(url,idEntidad,idSelect, valorSelected, todos
 function clearForm(form) {
   // iterate over all of the inputs for the given form element
   $(':input', form).each(function() {
+    var nombre = this.name;
     var type = this.type;
     var tag = this.tagName.toLowerCase(); // normalize case
-    // it's ok to reset the value attr of text inputs,
-    // password inputs, and textareas
-    if (type == 'text' || type == 'password' || type == 'hidden' || tag == 'textarea' || type=='file')
-      this.value = "";
-    // checkboxes and radios need to have their checked state cleared
-    // but should *not* have their 'value' changed
-    else if (type == 'checkbox' || type == 'radio')
-      this.checked = false;
-    // select elements need to have their 'selectedIndex' property set to -1
-    // (this works for both single and multiple select elements)
-    else if (tag == 'select')
-      this.selectedIndex = 0;
-      $(this).trigger("chosen:updated");
+
+      if(nombre != 'idRegistroDetalle'){
+        // it's ok to reset the value attr of text inputs,
+        // password inputs, and textareas
+        if (type == 'text' || type == 'password' || type == 'hidden' || tag == 'textarea' || type=='file')
+            this.value = "";
+        // checkboxes and radios need to have their checked state cleared
+        // but should *not* have their 'value' changed
+        else if (type == 'checkbox' || type == 'radio')
+            this.checked = false;
+        // select elements need to have their 'selectedIndex' property set to -1
+        // (this works for both single and multiple select elements)
+        else if (tag == 'select')
+            this.selectedIndex = 0;
+        $(this).trigger("chosen:updated");
+    }
+
   });
 }
 
