@@ -249,11 +249,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q;
         Query q2;
 
-        StringBuilder query = new StringBuilder("Select re from RegistroEntrada as re where " + anyWhere +
+        StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
                 " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
                 "and re.destino.id = :idOrganismo and re.estado = :valido ");
 
-        q2 = em.createQuery(query.toString().replaceAll("Select re", "Select count(re.id)"));
+        q2 = em.createQuery(query.toString().replaceAll("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.registroDetalle.extracto", "Select count(re.id)"));
         query.append(" order by re.fecha desc ");
         q = em.createQuery(query.toString());
 
@@ -284,7 +284,24 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> result = q.getResultList();
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+
+        for (Object[] object : result) {
+            RegistroEntrada re = new RegistroEntrada();
+            re.setId((Long)  object[0]);
+            re.setNumeroRegistroFormateado((String) object[1]);
+            re.setFecha((Date) object[2]);
+            re.setOficina((Oficina) object[3]);
+            re.setDestino((Organismo) object[4]);
+            re.setRegistroDetalle(new RegistroDetalle());
+            re.getRegistroDetalle().setExtracto((String) object[5]);
+            //re.getRegistroDetalle().setInteresados((List<Interesado>) object[6]);
+
+            registros.add(re);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }
@@ -397,14 +414,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             anyWhere = "year(re.fecha) = :any and ";
         }
 
-        StringBuilder query = new StringBuilder("Select re from RegistroEntrada as re where " + anyWhere +
+        StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
                 " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
                 " and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido ");
 
         Query q;
         Query q2;
 
-        q2 = em.createQuery(query.toString().replaceAll("Select re", "Select count(re.id)"));
+        q2 = em.createQuery(query.toString().replaceAll("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.registroDetalle.extracto", "Select count(re.id)"));
         query.append(" order by re.fecha desc ");
         q = em.createQuery(query.toString());
 
@@ -434,7 +451,23 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> result = q.getResultList();
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+
+        for (Object[] object : result) {
+            RegistroEntrada re = new RegistroEntrada();
+            re.setId((Long)  object[0]);
+            re.setNumeroRegistroFormateado((String) object[1]);
+            re.setFecha((Date) object[2]);
+            re.setOficina((Oficina) object[3]);
+            re.setDestinoExternoCodigo((String) object[4]);
+            re.setDestinoExternoDenominacion((String) object[5]);
+            re.setRegistroDetalle(new RegistroDetalle());
+            re.getRegistroDetalle().setExtracto((String) object[6]);
+            registros.add(re);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }

@@ -235,11 +235,11 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Query q;
         Query q2;
 
-        StringBuilder query = new StringBuilder("Select rs from RegistroSalida as rs where " + anyWhere +
+        StringBuilder query = new StringBuilder("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.oficina, rs.origen, rs.registroDetalle.extracto from RegistroSalida as rs where " + anyWhere +
                 "rs.libro.id = :idLibro and rs.oficina.id = :idOficina and rs.estado = :valido and " + queryFecha +
                 " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and i.codigoDir3 = :codigoOrganismo) ");
 
-        q2 = em.createQuery(query.toString().replaceAll("Select rs", "Select count(rs.id)"));
+        q2 = em.createQuery(query.toString().replaceAll("Select rs.id, rs.numeroRegistroFormateado, rs.fecha, rs.oficina, rs.origen, rs.registroDetalle.extracto", "Select count(rs.id)"));
         query.append(" order by rs.fecha desc ");
         q = em.createQuery(query.toString());
 
@@ -281,7 +281,23 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             paginacion = new Paginacion(0, 0);
         }
 
-        paginacion.setListado(q.getResultList());
+        List<Object[]> result = q.getResultList();
+        List<RegistroSalida> registros = new ArrayList<RegistroSalida>();
+
+        for (Object[] object : result) {
+            RegistroSalida rs = new RegistroSalida();
+            rs.setId((Long)  object[0]);
+            rs.setNumeroRegistroFormateado((String) object[1]);
+            rs.setFecha((Date) object[2]);
+            rs.setOficina((Oficina) object[3]);
+            rs.setOrigen((Organismo) object[4]);
+            rs.setRegistroDetalle(new RegistroDetalle());
+            rs.getRegistroDetalle().setExtracto((String) object[5]);
+
+            registros.add(rs);
+        }
+
+        paginacion.setListado(registros);
 
         return paginacion;
     }

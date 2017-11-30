@@ -186,7 +186,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
-                                                        <col>
+                                                        <%--<col>--%>
                                                         <col width="50">
                                                     </colgroup>
                                                     <thead>
@@ -197,7 +197,7 @@
                                                         <th><spring:message code="oficina.origen"/></th>
                                                         <th><spring:message code="registroSalida.origen"/></th>
                                                         <th><spring:message code="registroSalida.extracto"/></th>
-                                                        <th><spring:message code="registroSalida.destinatarios"/></th>
+                                                        <%--<th><spring:message code="registroSalida.destinatarios"/></th>--%>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                     </tr>
                                                     </thead>
@@ -213,12 +213,12 @@
                                                             </td>
                                                             <td>${registroSalida.origen.denominacion}</td>
                                                             <td><c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/></td>
-                                                            <td class="center">
+                                                            <%--<td class="center">
                                                                 <label class="no-bold representante"
                                                                         rel="ayuda"
                                                                         data-content="<c:out value="${registroSalida.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                         data-toggle="popover">${registroSalida.registroDetalle.totalInteresados}</label>
-                                                            </td>
+                                                            </td>--%>
                                                             <td class="center">
                                                                 <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>"
                                                                    title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
