@@ -115,7 +115,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     public List<Descarga> getPaginationByEntidad(int inicio,Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id").setParameter("idEntidad", idEntidad);
+        Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id desc").setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
 
