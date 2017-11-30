@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -14,8 +15,10 @@ import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,10 +26,8 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created 16/07/14 12:52
@@ -85,14 +86,16 @@ public class OficioRemisionController extends BaseController {
         // Fijamos un libro por defecto
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setLibro(seleccionarLibroOficinaActiva(request, librosConsulta));
-        OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(oficioRemision, 1);
+        OficioRemisionBusquedaForm oficioRemisionBusqueda = new OficioRemisionBusquedaForm(oficioRemision, 1);
+        oficioRemisionBusqueda.setFechaInicio(new Date());
+        oficioRemisionBusqueda.setFechaFin(new Date());
 
         model.addAttribute("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION);
         model.addAttribute("destinosOficioRemision", RegwebConstantes.DESTINOS_OFICIO_REMISION);
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         model.addAttribute("librosConsulta", librosConsulta);
-        model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
-        model.addAttribute("anys", getAnys());
+        model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusqueda);
+        model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
 
         return mav;
     }
@@ -110,7 +113,10 @@ public class OficioRemisionController extends BaseController {
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), false);
+        // Ponemos la hora 23:59 a la fecha fin
+        Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(),busqueda.getFechaInicio(),fechaFin, busqueda.getUsuario(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), false);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -119,7 +125,7 @@ public class OficioRemisionController extends BaseController {
         mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION);
         mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("oficioRemisionBusqueda", busqueda);
-        mav.addObject("anys", getAnys());
+        mav.addObject("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
 
         return mav;
 
@@ -763,6 +769,13 @@ public class OficioRemisionController extends BaseController {
         }
 
         return "oficioRemision/oficioRemisionAceptado";
+    }
+
+    @InitBinder("oficioRemisionBusqueda")
+    public void oficioRemisionBusqueda(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);
+        binder.registerCustomEditor(java.util.Date.class,new CustomDateEditor(sdf, true));
     }
 
 }

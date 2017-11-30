@@ -94,7 +94,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, List<Libro> libros, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws Exception {
 
         Query q;
         Query q2;
@@ -113,7 +113,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
 
-        if(any!= null){where.add(" year(oficioRemision.fecha) = :any "); parametros.put("any",any);}
+        // Usuario
+        if (StringUtils.isNotEmpty(usuario)) {
+            where.add(DataBaseUtils.like("oficioRemision.usuarioResponsable.usuario.identificador", "usuario", parametros, usuario));
+        }
 
         // Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
         if(oficioRemision.getLibro().getId() != null && oficioRemision.getLibro().getId() > 0){
@@ -141,6 +144,10 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         if(StringUtils.isNotEmpty(oficioRemision.getIdentificadorIntercambio())){
             where.add(DataBaseUtils.like("oficioRemision.identificadorIntercambio", "identificadorIntercambio", parametros, oficioRemision.getIdentificadorIntercambio()));
         }
+
+        // Intervalo fechas
+        where.add(" (oficioRemision.fecha >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
+        where.add(" oficioRemision.fecha <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
 
         // Parametros
         if (parametros.size() != 0) {

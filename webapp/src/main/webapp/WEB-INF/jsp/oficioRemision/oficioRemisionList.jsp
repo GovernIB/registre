@@ -94,15 +94,33 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message
-                                        code="oficioRemision.anyRegistro"/></div>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.usuario"/></div>
                                 <div class="col-xs-8">
-                                    <form:select path="anyo" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach items="${anys}" var="anyo">
-                                            <form:option value="${anyo}">${anyo}</form:option>
+                                    <form:select path="usuario" class="chosen-select">
+                                        <form:option value="">...</form:option>
+                                        <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
+                                            <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${oficioRemisionBusqueda.usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
                                         </c:forEach>
                                     </form:select>
+                                </div>
+                            </div>
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.fechainicio"/></div>
+                                <div class="col-xs-8" id="fechaInicio">
+                                    <div class="input-group date no-pad-right">
+                                        <form:input path="fechaInicio" cssClass="form-control" maxlength="10"/>
+                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.fechafin"/></div>
+                                <div class="col-xs-8" id="fechaFin">
+                                    <div class="input-group date no-pad-right">
+                                        <form:input path="fechaFin" cssClass="form-control" maxlength="10"/>
+                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                    </div>
                                 </div>
                             </div>
 

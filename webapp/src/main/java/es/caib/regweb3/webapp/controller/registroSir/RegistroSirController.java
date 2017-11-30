@@ -12,14 +12,18 @@ import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -148,13 +152,14 @@ public class RegistroSirController extends BaseController {
         // Fijamos un libro por defecto
         OficioRemision oficioRemision = new OficioRemision();
         oficioRemision.setLibro(seleccionarLibroOficinaActiva(request, librosConsulta));
-        OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(oficioRemision, 1);
+        OficioRemisionBusquedaForm oficioRemisionBusqueda = new OficioRemisionBusquedaForm(oficioRemision, 1);
+        oficioRemisionBusqueda.setFechaInicio(new Date());
+        oficioRemisionBusqueda.setFechaFin(new Date());
 
         model.addAttribute("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         model.addAttribute("librosConsulta", librosConsulta);
-        model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
-        model.addAttribute("anys", getAnys());
+        model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusqueda);
 
         return mav;
     }
@@ -172,7 +177,7 @@ public class RegistroSirController extends BaseController {
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(),busqueda.getFechaFin(),null, oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -180,7 +185,6 @@ public class RegistroSirController extends BaseController {
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("oficioRemisionBusqueda", busqueda);
-        mav.addObject("anys", getAnys());
 
         return mav;
 
@@ -453,7 +457,12 @@ public class RegistroSirController extends BaseController {
         return null;
     }
 
-
+    @InitBinder("oficioRemisionBusqueda")
+    public void oficioRemisionBusqueda(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
+        binder.registerCustomEditor(java.util.Date.class,dateEditor);
+    }
 }
 
 

@@ -105,7 +105,7 @@
 
                                             <table class="table table-bordered table-hover table-striped tablesorter">
                                                 <colgroup>
-                                                    <col width="80">
+                                                    <col>
                                                     <col>
                                                     <col width="100">
                                                     <col>

@@ -7,6 +7,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -23,14 +24,16 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     /**
      * Realizada una Búsqueda según los parámetros
      * @param pageNumber
-     * @param any
+     * @param usuario
+     * @param fechaInicio
+     * @param fechaFin
      * @param oficioRemision
      * @param libros
      * @param tipoOficioRemision
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Integer any, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
 
     /**
      * Registra un OficioRemision asignandole número

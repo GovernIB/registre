@@ -84,15 +84,22 @@
                                 </div>
                             </div>
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message
-                                        code="oficioRemision.anyRegistro"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="anyo" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach items="${anys}" var="anyo">
-                                            <form:option value="${anyo}">${anyo}</form:option>
-                                        </c:forEach>
-                                    </form:select>
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.fechainicio"/></div>
+                                <div class="col-xs-8" id="fechaInicio">
+                                    <div class="input-group date no-pad-right">
+                                        <form:input path="fechaInicio" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
+                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-xs-6">
+                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.fechafin"/></div>
+                                <div class="col-xs-8" id="fechaFin">
+                                    <div class="input-group date no-pad-right">
+                                        <form:input path="fechaFin" type="text" cssClass="form-control"  maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
+                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                    </div>
                                 </div>
                             </div>
 

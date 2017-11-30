@@ -102,8 +102,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Obtenemos los usuarios de la Entidad
-        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
-        model.addAttribute("usuariosEntidad", usuariosEntidad);
+        model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
 
         return "registroEntrada/registroEntradaList";
     }

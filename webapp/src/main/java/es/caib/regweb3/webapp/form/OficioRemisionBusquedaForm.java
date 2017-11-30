@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.form;
 
 import es.caib.regweb3.model.OficioRemision;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * Created 4/04/14 16:09
@@ -11,7 +14,11 @@ public class OficioRemisionBusquedaForm {
 
   private OficioRemision oficioRemision;
   private Integer pageNumber;
-  private Integer anyo;
+  @DateTimeFormat(pattern = "dd/MM/yyyy")
+  private Date fechaInicio;
+  @DateTimeFormat(pattern = "dd/MM/yyyy")
+  private Date fechaFin;
+  private String usuario;
   private Long destinoOficioRemision;
   private Long tipoOficioRemision;
   private Integer estadoOficioRemision;
@@ -40,12 +47,28 @@ public class OficioRemisionBusquedaForm {
     this.pageNumber = pageNumber;
   }
 
-  public Integer getAnyo() {
-    return anyo;
+  public Date getFechaInicio() {
+    return fechaInicio;
   }
 
-  public void setAnyo(Integer anyo) {
-    this.anyo = anyo;
+  public void setFechaInicio(Date fechaInicio) {
+    this.fechaInicio = fechaInicio;
+  }
+
+  public Date getFechaFin() {
+    return fechaFin;
+  }
+
+  public void setFechaFin(Date fechaFin) {
+    this.fechaFin = fechaFin;
+  }
+
+  public String getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(String usuario) {
+    this.usuario = usuario;
   }
 
   public Long getDestinoOficioRemision() {
