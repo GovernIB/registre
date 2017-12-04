@@ -8,8 +8,16 @@
         <h4 class="timeline-title">
             <a href="<c:url value="/oficioRemision/${oficioRemision.id}/detalle"/>">
                 <c:if test="${oficioRemision.sir == false}">
-                    <spring:message code="oficioRemision.oficioRemision"/>
+                    <c:if test="${not empty oficioRemision.organismoDestinatario}">
+                        <spring:message code="oficioRemision.oficioRemision.interno"/>
+                    </c:if>
+
+                    <c:if test="${empty oficioRemision.organismoDestinatario}">
+                        <spring:message code="oficioRemision.oficioRemision.externo"/>
+                    </c:if>
+
                 </c:if>
+
                 <c:if test="${oficioRemision.sir == true}">
                     <spring:message code="oficioRemision.oficioRemision.sir"/>
                 </c:if>
@@ -56,7 +64,7 @@
 
 
         <%--Destino oficio--%>
-        <c:if test="${oficioRemision.sir == false}">
+        <%--<c:if test="${oficioRemision.sir == false}">
             <p>
                 <small><i class="fa fa-sign-in"></i> <strong><spring:message code="oficioRemision.destino"/>:</strong>
                     <c:if test="${not empty oficioRemision.organismoDestinatario}">
@@ -68,7 +76,7 @@
                     </c:if>
                 </small>
             </p>
-        </c:if>
+        </c:if>--%>
 
         <%--Registro Salida--%>
         <c:if test="${not empty registroSalida}">
