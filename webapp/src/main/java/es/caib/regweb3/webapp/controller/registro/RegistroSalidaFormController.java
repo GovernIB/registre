@@ -111,7 +111,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             model.addAttribute("libros", getLibrosRegistroSalida(request));
 
             // Organismo origen: Select
-            log.info("Origen: " + registroSalida.getOrigen().getCodigo());
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
             model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
