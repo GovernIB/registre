@@ -668,24 +668,68 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @SuppressWarnings(value = "unchecked")
     public List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception{
 
-        Query q= em.createQuery("select registroEntrada.numeroRegistroFormateado from RegistroEntrada registroEntrada, OficioRemision ofiRem " +
+        Query q= em.createQuery("select registroEntrada.registroDetalle.id, registroEntrada.numeroRegistroFormateado from RegistroEntrada registroEntrada, OficioRemision ofiRem " +
                 " where registroEntrada in elements(ofiRem.registrosEntrada) and ofiRem.id = :idOficioRemision");
 
         q.setParameter("idOficioRemision", idOficioRemision);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+
+        List<String> numeros = new ArrayList<String>();
+        Query q2;
+
+        for (Object[] object : result) {
+
+            q2 = em.createQuery("Select interesado from Interesado as interesado where interesado.registroDetalle.id = :registroDetalle " +
+                    "order by interesado.id");
+
+            q2.setParameter("registroDetalle",object[0]);
+
+            List<Interesado> interesados = q2.getResultList();
+            String nombreInteresado = "";
+            if(interesados.size() > 0){
+                nombreInteresado = interesados.get(0).getNombreCompletoInforme();
+            }
+
+            String numero = object[1] + " (" + nombreInteresado + ")";
+            numeros.add(numero);
+        }
+
+        return numeros;
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception{
 
-        Query q= em.createQuery("select registroSalida.numeroRegistroFormateado from RegistroSalida registroSalida, OficioRemision ofiRem " +
+        Query q= em.createQuery("select registroSalida.registroDetalle.id, registroSalida.numeroRegistroFormateado from RegistroSalida registroSalida, OficioRemision ofiRem " +
                 " where registroSalida in elements(ofiRem.registrosSalida) and ofiRem.id = :idOficioRemision");
 
         q.setParameter("idOficioRemision", idOficioRemision);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+
+        List<String> numeros = new ArrayList<String>();
+        Query q2;
+
+        for (Object[] object : result) {
+
+            q2 = em.createQuery("Select interesado from Interesado as interesado where interesado.registroDetalle.id = :registroDetalle " +
+                    "order by interesado.id");
+
+            q2.setParameter("registroDetalle",object[0]);
+
+            List<Interesado> interesados = q2.getResultList();
+            String nombreInteresado = "";
+            if(interesados.size() > 0){
+                nombreInteresado = interesados.get(0).getNombreCompletoInforme();
+            }
+
+            String numero = object[1] + " (" + nombreInteresado + ")";
+            numeros.add(numero);
+        }
+
+        return numeros;
     }
 
     @Override
