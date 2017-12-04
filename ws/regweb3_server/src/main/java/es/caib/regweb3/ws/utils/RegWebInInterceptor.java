@@ -58,9 +58,9 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
         HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
         log.info(" USR_1:  " + hsr.getRemoteUser());
 
-        log.info(" ROLE: RWE_SUPERADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_SUPERADMIN));
-        log.info(" ROLE: RWE_ADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_ADMIN));
-        log.info(" ROLE: RWE_USER  " + hsr.isUserInRole(RegwebConstantes.ROL_USUARI));
+        log.debug(" ROLE: RWE_SUPERADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_SUPERADMIN));
+        log.debug(" ROLE: RWE_ADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_ADMIN));
+        log.debug(" ROLE: RWE_USER  " + hsr.isUserInRole(RegwebConstantes.ROL_USUARI));
 
       } catch (Exception e) {
         log.error(e.getMessage());

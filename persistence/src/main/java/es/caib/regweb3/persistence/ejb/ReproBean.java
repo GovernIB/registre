@@ -347,7 +347,6 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
                 break;
 
             case 2: //RegistroSalida
-                log.info("Repro salida");
 
                 // Comprobamos la unidad origen
                 if(reproJson.getOrigenCodigo()!= null && reproJson.isOrigenExterno()){ // Preguntamos a DIR3 si está Vigente

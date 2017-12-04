@@ -89,14 +89,11 @@ public class UsuarioService {
 
         HttpSession session = request.getSession();
 
-        log.info("Usuario autenticado: " + usuario.getNombreCompleto());
-
         // Eliminamos las variables
         eliminarVariablesSesionCredenciales(session);
 
         List<Rol> rolesUsuario = obtenerRolesUsuarioAutenticado(request);
-
-        log.info("Roles en regweb3: " + Arrays.toString(rolesUsuario.toArray()));
+        log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Roles: " + Arrays.toString(rolesUsuario.toArray()));
 
         // Actualizamos los Roles del usuario en la bbdd, según los obtenidos del sistema externo
         usuario.setRoles(rolesUsuario);
@@ -127,7 +124,6 @@ public class UsuarioService {
      * @throws Exception
      */
     private void autorizarRol(Rol rolActivo,Entidad entidadActiva, HttpServletRequest request) throws Exception{
-
 
         HttpSession session = request.getSession();
         Usuario usuarioAutenticado = (Usuario) session.getAttribute(RegwebConstantes.SESSION_USUARIO);
@@ -234,7 +230,7 @@ public class UsuarioService {
                 session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidadActiva);
             }
 
-            log.info("Entidades asociadas operador: " + entidades.size());
+            //log.info("Entidades asociadas operador: " + entidades.size());
 
             //UsuarioEntidadActivo
             return setUsuarioEntidadActivo(usuarioAutenticado, entidadActiva, session);
