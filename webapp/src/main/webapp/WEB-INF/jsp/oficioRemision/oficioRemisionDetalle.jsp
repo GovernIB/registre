@@ -47,7 +47,13 @@
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
                                 <c:if test="${oficioRemision.sir == false}">
-                                    <spring:message code="oficioRemision.oficioRemision"/>
+                                    <c:if test="${not empty oficioRemision.organismoDestinatario}">
+                                        <spring:message code="oficioRemision.oficioRemision.interno"/>
+                                    </c:if>
+
+                                    <c:if test="${empty oficioRemision.organismoDestinatario}">
+                                        <spring:message code="oficioRemision.oficioRemision.externo"/>
+                                    </c:if>
                                 </c:if>
                                 <c:if test="${oficioRemision.sir == true}">
                                     <spring:message code="oficioRemision.oficioRemision.sir"/>
