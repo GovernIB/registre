@@ -332,15 +332,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     }
                 }
             }
-            end = System.currentTimeMillis();
-            log.info("Tiempo campos informe: " + TimeUtils.formatElapsedTime(end - start));
+
             // Alta en tabla LOPD de los registros del Informe
             Paginacion paginacionEntrada = new Paginacion(0, 0);
             paginacionEntrada.setListado(new ArrayList<Object>(registrosEntrada));
             start = System.currentTimeMillis();
             lopdEjb.insertarRegistros(paginacionEntrada, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_LISTADO);
-            end = System.currentTimeMillis();
-            log.info("Tiempo lopdEjb.insertarRegistrosEntrada: " + TimeUtils.formatElapsedTime(end - start));
 
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_ENTRADA);
 

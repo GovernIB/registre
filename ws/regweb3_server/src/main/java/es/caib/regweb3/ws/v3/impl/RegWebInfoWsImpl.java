@@ -264,7 +264,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
         LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
         librosOficinas.add(libroOficinaWs);
-        log.info("librosOficinas1: " + librosOficinas.size());
       }
 
       // Obtenemos las Oficinas que dan servicio al Organismo que pertenece el Libro
@@ -273,7 +272,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
         LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
         librosOficinas.add(libroOficinaWs);
-        log.info("librosOficinas2: " + librosOficinas.size());
       }
 
     }
@@ -334,7 +332,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
         LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
         librosOficinas.add(libroOficinaWs);
-        log.info("librosOficinas1: " + librosOficinas.size());
       }
 
       // Obtenemos las Oficinas que dan servicio al Organismo que pertenece el Libro
@@ -343,7 +340,6 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
         LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
         librosOficinas.add(libroOficinaWs);
-        log.info("librosOficinas2: " + librosOficinas.size());
       }
 
     }
