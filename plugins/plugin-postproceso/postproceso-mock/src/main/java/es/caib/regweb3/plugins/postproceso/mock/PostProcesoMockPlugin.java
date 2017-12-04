@@ -105,7 +105,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void nuevoInteresadoEntrada(Interesado interesado, String numeroEntrada) throws Exception{
-        log.info("Nuevo interesado entrada: " + interesado.getNombreCompleto());
+        log.debug("Nuevo interesado entrada: " + interesado.getNombreCompleto());
 
     }
 
@@ -119,7 +119,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void nuevoInteresadoSalida(Interesado interesado, String numeroSalida) throws Exception{
-        log.info("Nuevo interesado salida: " + interesado.getNombreCompleto());
+        log.debug("Nuevo interesado salida: " + interesado.getNombreCompleto());
 
     }
 
@@ -132,7 +132,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void actualizarInteresadoEntrada(Interesado interesado, String numeroEntrada) throws Exception{
-        log.info("Actualizar interesado entrada:" + interesado.getNombreCompleto());
+        log.debug("Actualizar interesado entrada:" + interesado.getNombreCompleto());
 
     }
 
@@ -145,7 +145,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void actualizarInteresadoSalida(Interesado interesado, String numeroSalida) throws Exception{
-        log.info("actualizar interesado salida: " + interesado.getNombreCompleto());
+        log.debug("actualizar interesado salida: " + interesado.getNombreCompleto());
 
     }
 
@@ -158,7 +158,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void eliminarInteresadoEntrada(Long idInteresado, String numeroEntrada) throws Exception{
-        log.info("Eliminar interesado entrada: " + idInteresado);
+        log.debug("Eliminar interesado entrada: " + idInteresado);
 
 
     }
@@ -172,7 +172,7 @@ public class PostProcesoMockPlugin extends AbstractPluginProperties implements I
      */
     @Override
     public void eliminarInteresadoSalida(Long idInteresado, String numeroSalida) throws Exception{
-        log.info("Eliminar interesado salida: " + idInteresado);
+        log.debug("Eliminar interesado salida: " + idInteresado);
 
     }
 

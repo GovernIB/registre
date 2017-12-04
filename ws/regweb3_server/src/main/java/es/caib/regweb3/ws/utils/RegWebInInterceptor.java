@@ -57,17 +57,14 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
         HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
         log.info(" USR_1:  " + hsr.getRemoteUser());
-
-        log.debug(" ROLE: RWE_SUPERADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_SUPERADMIN));
-        log.debug(" ROLE: RWE_ADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_ADMIN));
-        log.debug(" ROLE: RWE_USER  " + hsr.isUserInRole(RegwebConstantes.ROL_USUARI));
+        log.info(" ROLE: RWE_SUPERADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_SUPERADMIN));
+        log.info(" ROLE: RWE_ADMIN  " + hsr.isUserInRole(RegwebConstantes.ROL_ADMIN));
+        log.info(" ROLE: RWE_USER  " + hsr.isUserInRole(RegwebConstantes.ROL_USUARI));
 
       } catch (Exception e) {
         log.error(e.getMessage());
       }
 
-      log.info("RegWebInInterceptor::handleMessage() =>  Thread = "
-          + Thread.currentThread().getId());
     }
 
     SecurityContext context = message.get(SecurityContext.class);
@@ -79,12 +76,14 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
     String userapp = context.getUserPrincipal().getName();
     // DEBUG
     if (logEnable) {
-      log.info("RegWebInInterceptor::handleMessage() => user " + userapp);
-      log.info("RegWebInInterceptor::handleMessage() => RWE_USER "
+      log.debug("RegWebInInterceptor::handleMessage() =>  Thread = "
+              + Thread.currentThread().getId());
+      log.debug("RegWebInInterceptor::handleMessage() => user " + userapp);
+      log.debug("RegWebInInterceptor::handleMessage() => RWE_USER "
           + context.isUserInRole(RegwebConstantes.ROL_USUARI));
-      log.info("RegWebInInterceptor::handleMessage() => RWE_ADMIN "
+      log.debug("RegWebInInterceptor::handleMessage() => RWE_ADMIN "
           + context.isUserInRole(RegwebConstantes.ROL_ADMIN));
-      log.info("RegWebInInterceptor::handleMessage() => RWE_SUPERADMIN "
+      log.debug("RegWebInInterceptor::handleMessage() => RWE_SUPERADMIN "
           + context.isUserInRole(RegwebConstantes.ROL_SUPERADMIN));
     }
 
