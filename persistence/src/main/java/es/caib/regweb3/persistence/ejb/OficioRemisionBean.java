@@ -243,7 +243,29 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     }
 
                     RegistroSalida registroSalida = new RegistroSalida();
-                    registroSalida.setRegistroDetalle(registroEntrada.getRegistroDetalle());
+
+                    // Creamos un nuevo Registro Detalle para la SALIDA
+                    registroSalida.setRegistroDetalle(new RegistroDetalle(registroEntrada.getRegistroDetalle()));
+                    registroSalida.getRegistroDetalle().setId(null);
+                    registroSalida.getRegistroDetalle().setInteresados(null);
+
+                    Interesado destinatario =  new Interesado();
+                    destinatario.setTipo(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+                    destinatario.setTipoDocumentoIdentificacion(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN_ID);
+
+                    if(registroEntrada.getDestino() != null){
+                        destinatario.setCodigoDir3(registroEntrada.getDestino().getCodigo());
+                        destinatario.setDocumento(registroEntrada.getDestino().getCodigo());
+                        destinatario.setRazonSocial(registroEntrada.getDestino().getDenominacion());
+                    }else{
+                        destinatario.setCodigoDir3(registroEntrada.getDestinoExternoCodigo());
+                        destinatario.setDocumento(registroEntrada.getDestinoExternoCodigo());
+                        destinatario.setRazonSocial(registroEntrada.getDestinoExternoDenominacion());
+                    }
+
+                    List<Interesado> destinatarios = new ArrayList<Interesado>();
+                    destinatarios.add(destinatario);
+
                     registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
                     registroSalida.setOficina(oficioRemision.getOficina());
                     registroSalida.setOrigen(libro.getOrganismo());
@@ -251,7 +273,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
 
                     // Registramos la Salida
-                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), null, null);
+                    registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null);
 
                     // CREAMOS LA TRAZABILIDAD
                     Trazabilidad trazabilidad = new Trazabilidad();
