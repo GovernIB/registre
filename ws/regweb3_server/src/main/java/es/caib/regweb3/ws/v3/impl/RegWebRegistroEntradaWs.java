@@ -28,8 +28,11 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws Throwable
      * @throws WsI18NException
      * @throws WsValidationException
+     *
+     * @deprecated  A partir de la versión 3.0.9, es reemplazado por {@link #nuevoRegistroEntrada(String, RegistroEntradaWs)}
      */
     @WebMethod
+    @Deprecated
     public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")RegistroEntradaWs registroEntradaWs) throws Throwable, WsI18NException, WsValidationException;
 
     /**

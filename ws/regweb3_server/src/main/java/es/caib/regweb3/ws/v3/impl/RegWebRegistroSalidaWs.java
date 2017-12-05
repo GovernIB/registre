@@ -28,8 +28,11 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws Throwable
      * @throws org.fundaciobit.genapp.common.ws.WsI18NException
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
+     *
+     * @deprecated  A partir de la versión 3.0.9, es reemplazado por {@link #nuevoRegistroSalida(String, RegistroSalidaWs)}
      */
     @WebMethod
+    @Deprecated
     public IdentificadorWs altaRegistroSalida(
             @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs)
             throws Throwable,WsI18NException, WsValidationException;
