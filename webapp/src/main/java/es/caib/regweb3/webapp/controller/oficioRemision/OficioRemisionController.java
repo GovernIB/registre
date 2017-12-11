@@ -259,15 +259,29 @@ public class OficioRemisionController extends BaseController {
         Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
         Entidad entidadActiva =  getEntidadActiva(request);
 
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
-        // Si no es la Oficina Activa no se puede consultar
-        if(!oficioRemision.getOficina().equals(oficinaActiva)){
-            log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
-            return "redirect:/oficioRemision/list";
-        }
+        // Interno
+        if(oficioRemision.getOrganismoDestinatario()!= null){
 
+            // Solo si es la oficna que lo generó o alguna que depende del organismo destinatario del Oficio
+            if(!oficioRemision.getOficina().equals(oficinaActiva) && !organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario())){
+                log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
+                return "redirect:/oficioRemision/list";
+            }
+
+        }else{ // Externo
+
+            // Si no es la Oficina Activa no se puede consultar
+            if(!oficioRemision.getOficina().equals(oficinaActiva)){
+                log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
+                return "redirect:/oficioRemision/list";
+            }
+        }
 
         //List<RegistroEntrada> registrosEntrada = oficioRemisionEjb.getByOficioRemision(oficioRemision.getId());
         List<Trazabilidad> trazabilidades = trazabilidadEjb.getByOficioRemision(oficioRemision.getId());
@@ -288,9 +302,19 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/{idOficioRemision}/anular", method = RequestMethod.GET)
     public String anularOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
+        HttpSession session = request.getSession();
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
 
+        // Si no es la Oficina Activa no se puede consultar
+        if(!oficioRemision.getOficina().equals(oficinaActiva)){
+            log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
+            return "redirect:/oficioRemision/" + idOficioRemision + "/detalle";
+        }
+
+        // Comprobación de permisos
         if (permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), oficioRemision.getLibro().getId()) &&
                 oficioRemision.getEstado() == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.getEstado() == RegwebConstantes.OFICIO_EXTERNO_ENVIADO) {
 
@@ -337,7 +361,48 @@ public class OficioRemisionController extends BaseController {
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-        Paginacion paginacion = oficioRemisionEjb.oficiosPendientesLlegadaBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision());
+        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_INTERNO_ENVIADO);
+
+        busqueda.setPageNumber(1);
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
+        mav.addObject("oficioRemisionBusqueda", busqueda);
+
+        return mav;
+    }
+
+    /**
+     * Listado de oficios de remisión aceptados
+     */
+    @RequestMapping(value = "/aceptados/list", method = RequestMethod.GET)
+    public ModelAndView oficiosAceptados(Model model, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("oficioRemision/oficiosAceptadosList");
+
+        OficioRemisionBusquedaForm oficioRemisionBusquedaForm = new OficioRemisionBusquedaForm(new OficioRemision(), 1);
+
+        model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
+        model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
+
+        return mav;
+    }
+
+    /**
+     * Listado de oficios de remisión aceptados
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/aceptados/list", method = RequestMethod.POST)
+    public ModelAndView oficiosAceptados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("oficioRemision/oficiosAceptadosList");
+
+        OficioRemision oficioRemision = busqueda.getOficioRemision();
+
+        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
+
+        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_ACEPTADO);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);

@@ -401,7 +401,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public Paginacion oficiosPendientesLlegadaBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision) throws Exception {
+    public Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws Exception {
 
         Query q;
         Query q2;
@@ -412,20 +412,14 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         // Tipo Oficio
         where.add(" oficioRemision.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
-
+        // Destinatario
         where.add(" oficioRemision.organismoDestinatario in (:organismos)"); parametros.put("organismos",organismos);
-        where.add(" oficioRemision.estado = :estado");parametros.put("estado",RegwebConstantes.OFICIO_INTERNO_ENVIADO);
-
+        // Estado
+        where.add(" oficioRemision.estado = :estado");parametros.put("estado",estado);
+        // Número
         if(oficioRemision.getNumeroOficio()!= null && oficioRemision.getNumeroOficio() > 0){where.add(" oficioRemision.numeroOficio = :numeroOficio"); parametros.put("numeroOficio",oficioRemision.getNumeroOficio());}
 
-        /*// Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
-        if(oficioRemision.getLibro().getId() != null && oficioRemision.getLibro().getId() > 0){
-            where.add(" oficioRemision.libro.id = :idLibro"); parametros.put("idLibro",oficioRemision.getLibro().getId());
-        }else{
-            where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
-        }*/
-
-
+        // Parámetros
         if (parametros.size() != 0) {
             query.append("where ");
             int count = 0;

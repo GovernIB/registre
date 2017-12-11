@@ -1,7 +1,8 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
+import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -18,7 +19,7 @@ import java.util.Set;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para el Registro de Entrada
+ * Interceptor para Oficio Remision
  *
  * @author earrivi
  * Date: 5/06/14
@@ -27,20 +28,11 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    public OficioRemisionLocal oficioRemisionEjb;
-
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
-    public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
+    private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
-
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

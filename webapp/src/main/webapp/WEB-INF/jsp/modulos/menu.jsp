@@ -183,8 +183,9 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a href="<c:url value="/oficioRemision/list"/>"><spring:message code="oficioRemision.listado"/></a></li>
-                                    <li>
-                                        <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/aceptados/list"/>"><spring:message code="oficioRemision.aceptados"/></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><spring:message code="registroEntrada.oficiosRemision"/></a></li>
                                     <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><spring:message code="registroSalida.oficiosRemision"/></a></li>
