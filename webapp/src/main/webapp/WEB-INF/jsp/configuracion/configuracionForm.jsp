@@ -37,7 +37,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
                             <strong>
-                                <spring:message code="regweb.configurar"/>
+                                <spring:message code="regweb.apariencia"/>
                             </strong>
                         </h3>
                     </div>

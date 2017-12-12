@@ -49,7 +49,7 @@
 
                 <div class="panel panel-${color}">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-file-o"></i>
+                        <h3 class="panel-title"><i class="fa fa-envelope-o"></i>
                             <strong>
                                 <c:if test="${oficioRemision.sir == false}">
                                     <c:if test="${not empty oficioRemision.organismoDestinatario}">
@@ -236,7 +236,7 @@
 
                         <div class="panel-heading">
 
-                            <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
+                            <h3 class="panel-title"><i class="fa fa-file-o"></i>
                                 <strong>
                                     <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
                                         <spring:message code="oficioRemision.registrosEntrada"/>:

@@ -38,7 +38,7 @@
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong><spring:message code="registroSalida.buscador.oficiosRemision"/></strong></h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSalida.buscador.oficiosRemision"/></strong></h3>
                     </div>
                     <div class="panel-body">
 
