@@ -175,8 +175,8 @@
                                     <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="<c:url value="/oficioRemision/list"/>"><i class="fa fa-envelope"></i> <spring:message code="oficioRemision.listado"/></a></li>
-                                    <li><a href="<c:url value="/oficioRemision/aceptados/list"/>"><i class="fa fa-envelope-open"></i> <spring:message code="oficioRemision.aceptados"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="oficioRemision.listado"/></a></li>
+                                    <li><a href="<c:url value="/oficioRemision/aceptados/list"/>"><i class="fa fa-envelope-open-o"></i> <spring:message code="oficioRemision.aceptados"/></a></li>
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
                                     <li class="divider"></li>
