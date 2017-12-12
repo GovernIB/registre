@@ -18,7 +18,7 @@
                         <li>
                             <a href="<c:url value="/registroEntrada/pendientesVisar/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.pendientesVisar"/> (${pendientesVisarEntrada})
+                                    <i class="fa fa-eye"></i> <spring:message code="registroEntrada.pendientesVisar"/> (${pendientesVisarEntrada})
                                 </div>
                             </a>
                         </li>
@@ -29,7 +29,7 @@
                         <li>
                             <a href="<c:url value="/registroSalida/pendientesVisar/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroSalida.pendientesVisar"/> (${pendientesVisarSalida})
+                                    <i class="fa fa-eye"></i> <spring:message code="registroSalida.pendientesVisar"/> (${pendientesVisarSalida})
                                 </div>
                             </a>
                         </li>
@@ -40,7 +40,7 @@
                         <li>
                             <a href="<c:url value="/registroEntrada/reservas/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.reserva"/> (${reservas})
+                                    <i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/> (${reservas})
                                 </div>
                             </a>
                         </li>
@@ -51,7 +51,7 @@
                         <li>
                             <a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.oficiosRemision"/> (${oficiosEntradaPendientesRemision})
+                                    <i class="fa fa-mail-forward"></i> <spring:message code="registroEntrada.oficiosRemision"/> (${oficiosEntradaPendientesRemision})
                                 </div>
                             </a>
                         </li>
@@ -62,7 +62,7 @@
                         <li>
                             <a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroSalida.oficiosRemision"/> (${oficiosSalidaPendientesRemision})
+                                    <i class="fa fa-mail-forward"></i> <spring:message code="registroSalida.oficiosRemision"/> (${oficiosSalidaPendientesRemision})
                                 </div>
                             </a>
                         </li>
@@ -73,7 +73,7 @@
                         <li>
                             <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="oficioRemision.pendientesLlegada"/> (${oficiosPendientesLlegada})
+                                    <i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/> (${oficiosPendientesLlegada})
                                 </div>
                             </a>
                         </li>
@@ -84,7 +84,7 @@
                         <li>
                             <a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroEntrada.rechazados.inicio"/> (${entradasRechazadosReenviados})
+                                    <i class="fa fa-warning"></i> <spring:message code="registroEntrada.rechazados.inicio"/> (${entradasRechazadosReenviados})
                                 </div>
                             </a>
                         </li>
@@ -95,7 +95,7 @@
                         <li>
                             <a href="<c:url value="/registroSalida/pendientesSir/list/1"/>">
                                 <div>
-                                    <i class="fa fa-comment fa-fw"></i> <spring:message code="registroSalida.rechazados.inicio"/> (${salidasRechazadasReenviadas})
+                                    <i class="fa fa-warning"></i> <spring:message code="registroSalida.rechazados.inicio"/> (${salidasRechazadasReenviadas})
                                 </div>
                             </a>
                         </li>
@@ -104,7 +104,7 @@
 
                     <li>
                         <div>
-                         <span class="pull-right text-muted small">
+                         <span class="pull-right text-muted small date">
                              <c:set var="ahora" value="<%=new java.util.Date()%>" />
                              <spring:message code="aviso.generado"/> <fmt:formatDate type="time" value="${ahora}" />
                          </span>
