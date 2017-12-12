@@ -40,6 +40,9 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     private String ley = null;
     private String validez = null;
     private Boolean sir = false;
+    private Font lletraGovern8;
+    private Font lletraGovern8bold;
+    private Font lletraGovern14bold;
 
 
     /**
@@ -149,6 +152,17 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         String estampacion = this.getPropertyRequired(PROPERTY_CAIB_BASE + "estampacion");
         estampat = MessageFormat.format(estampacion, url, specialValue, csv);
         sir = entidadSir;
+        // Inicialitza estils de lletra
+        FontFactory.register("img/LegacySanITC-Book.otf", "Legacy");
+        lletraGovern8 = FontFactory.getFont("Legacy", 8);
+        lletraGovern8.setColor(BaseColor.BLACK);
+        lletraGovern8.setStyle(Font.NORMAL);
+        lletraGovern8bold = FontFactory.getFont("Legacy", 8);
+        lletraGovern8bold.setColor(BaseColor.BLACK);
+        lletraGovern8bold.setStyle(Font.BOLD);
+        lletraGovern14bold = FontFactory.getFont("Legacy", 14);
+        lletraGovern14bold.setColor(BaseColor.BLACK);
+        lletraGovern14bold.setStyle(Font.BOLD);
     }
 
     @Override
@@ -399,14 +413,11 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     // Lista los anexos tanto para el registro de entrada como el de salida
     protected void llistarAnnexes(List<AnexoFull> anexos, Locale locale, Document document, String denominacio) throws Exception {
 
-        Font font8 = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        Font font8Bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
-
         if(anexos.size()>0) {
             // Creamos estilo para el título Adjuntos
             PdfPTable titolAnnexe = new PdfPTable(1);
             titolAnnexe.setWidthPercentage(100);
-            PdfPCell cellAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.adjuntos"), font8Bold));
+            PdfPCell cellAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.adjuntos"), lletraGovern8bold));
             cellAnnexe.setBackgroundColor(BaseColor.LIGHT_GRAY);
             cellAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
             cellAnnexe.setBorder(Rectangle.BOTTOM);
@@ -419,19 +430,19 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             // Añadimos los campos de la Información
             PdfPTable taulaAnnexe = new PdfPTable(new float[]{15, 15, 10, 10, 10, 25, 12});
             taulaAnnexe.setWidthPercentage(100);
-            PdfPCell cellInfoAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.nombreAdjunto"), font8Bold));
+            PdfPCell cellInfoAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.nombreAdjunto"), lletraGovern8bold));
             cellInfoAnnexe.setBackgroundColor(BaseColor.WHITE);
             cellInfoAnnexe.setBorderColor(BaseColor.BLACK);
             cellInfoAnnexe.setHorizontalAlignment(Element.ALIGN_MIDDLE);
             taulaAnnexe.addCell(cellInfoAnnexe);
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.archivo"), font8Bold)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tamanyo"), font8Bold)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validez"), font8Bold)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAdjunto"), font8Bold)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.hash"), font8Bold)));
-            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.observacionesAdjunto"), font8Bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.archivo"), lletraGovern8bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tamanyo"), lletraGovern8bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.validez"), lletraGovern8bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.tipoAdjunto"), lletraGovern8bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.hash"), lletraGovern8bold)));
+            taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.observacionesAdjunto"), lletraGovern8bold)));
 
-            PdfPCell cellInfoAnnexe2 = new PdfPCell(new Paragraph("", font8));
+            PdfPCell cellInfoAnnexe2 = new PdfPCell(new Paragraph("", lletraGovern8));
             cellInfoAnnexe2.setBackgroundColor(BaseColor.WHITE);
             cellInfoAnnexe2.setBorderColor(BaseColor.BLACK);
             cellInfoAnnexe2.setBorderWidth(1f);
@@ -445,7 +456,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
                 // És un document amb firma detached
                 if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
                     cellInfoAnnexe2.setRowspan(2);
                     taulaAnnexe.addCell(cellInfoAnnexe2);
 
@@ -457,16 +468,16 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     }else{
                         tamanyFitxer = String.valueOf(anexo.getDocumentoCustody().getData().length/1024) + " KB";
                     }
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8));
                     cellInfoAnnexe2.setRowspan(2);
                     taulaAnnexe.addCell(cellInfoAnnexe2);
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8));
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(tradueixMissatge(locale,"tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8));
                     cellInfoAnnexe2.setRowspan(2);
                     taulaAnnexe.addCell(cellInfoAnnexe2);
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, font8)));
-                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
+                    cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8));
                     cellInfoAnnexe2.setRowspan(2);
                     taulaAnnexe.addCell(cellInfoAnnexe2);
 
@@ -478,14 +489,14 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     } else {
                         tamanyFitxer = tradueixMissatge(locale,"justificante.firma") + ": " + String.valueOf(anexo.getSignatureCustody().getData().length / 1024) + " KB";
                     }
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
 
                 }else {
                     // És un document sense firma
                     if(anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA){
-                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
+                        cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
                         taulaAnnexe.addCell(cellInfoAnnexe2);
                         hash = new String(anexo.getAnexo().getHash());
                         nomFitxer = anexo.getDocumentoCustody().getName();
@@ -497,7 +508,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     }else {
                         // És un document amb firma attached
                         if (anexo.getAnexo().getModoFirma()==RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
-                            cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), font8));
+                            cellInfoAnnexe2 = new PdfPCell(new Paragraph(anexo.getAnexo().getTitulo(), lletraGovern8));
                             taulaAnnexe.addCell(cellInfoAnnexe2);
                             hash = new String(anexo.getAnexo().getHash());
                             nomFitxer = anexo.getSignatureCustody().getName();
@@ -510,12 +521,12 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     }
                 }
                 if(anexo.getAnexo().getModoFirma()!=RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, font8)));
-                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), font8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(nomFitxer, lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tamanyFitxer, lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoValidezDocumento." + anexo.getAnexo().getValidezDocumento()), lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(tradueixMissatge(locale, "tipoDocumento.0" + anexo.getAnexo().getTipoDocumento()), lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(hash, lletraGovern8)));
+                    taulaAnnexe.addCell(new PdfPCell(new Paragraph(anexo.getAnexo().getObservaciones(), lletraGovern8)));
                 }
             }
             document.add(taulaAnnexe);
@@ -524,7 +535,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Pie de anexo
         PdfPTable peuAnnexe = new PdfPTable(1);
         peuAnnexe.setWidthPercentage(100);
-        PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, font8));
+        PdfPCell cellPeuAnnexe = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.la") + " " + denominacio + " " + declaracion, lletraGovern8));
         cellPeuAnnexe.setBackgroundColor(BaseColor.WHITE);
         cellPeuAnnexe.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellPeuAnnexe.setBorder(Rectangle.TOP);
@@ -538,7 +549,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Parágrafo Ley
         PdfPTable titolLlei = new PdfPTable(1);
         titolLlei.setWidthPercentage(100);
-        PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, font8));
+        PdfPCell cellLlei = new PdfPCell(new Paragraph(ley, lletraGovern8));
         cellLlei.setBackgroundColor(BaseColor.WHITE);
         cellLlei.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellLlei.setBorderColor(BaseColor.WHITE);
@@ -549,7 +560,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         // Parágrafo Plazos
         PdfPTable titolPlazos = new PdfPTable(1);
         titolPlazos.setWidthPercentage(100);
-        PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, font8));
+        PdfPCell cellPlazos = new PdfPCell(new Paragraph(validez, lletraGovern8));
         cellPlazos.setBackgroundColor(BaseColor.WHITE);
         cellPlazos.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellPlazos.setBorderColor(BaseColor.WHITE);
@@ -564,11 +575,6 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
     // Lista los Interesados y Representantes tanto para el registro de entrada como el de salida
     protected void llistarInteressats(List<Interesado> interesados, Locale locale, Document document, Boolean isSalida) throws Exception {
 
-        Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        font8gris.setColor(BaseColor.GRAY);
-        Font font8negre = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        Font font8bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
-
         // Creamos estilo para el título Interesado
         PdfPTable titolInteressat = new PdfPTable(1);
         titolInteressat.setWidthPercentage(100);
@@ -578,7 +584,7 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         }else{  // Si és una entrada
             etiqueta = tradueixMissatge(locale,"justificante.interesado");
         }
-        PdfPCell cellInteressat = new PdfPCell(new Paragraph(etiqueta, font8bold));
+        PdfPCell cellInteressat = new PdfPCell(new Paragraph(etiqueta, lletraGovern8bold));
         cellInteressat.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cellInteressat.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellInteressat.setBorder(Rectangle.BOTTOM);
@@ -592,9 +598,11 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
 
         PdfPTable taulaInteresado = new PdfPTable(new float[] { 15, 30, 15, 30 });
         // Añadimos una entrada para cada interesado
+        int i;
         for(Interesado interesado : interesados) {
             // Añadimos título
             if(!interesado.getIsRepresentante()) {
+                i=0;
                 document.add(titolInteressat);
                 // Añadimos campos del interesado
                 taulaInteresado.setWidthPercentage(100);
@@ -602,58 +610,91 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                 taulaInteresado.getDefaultCell().setBorder(0);
                 taulaInteresado.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                 // Document
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.identificacion"), font8gris));
-                taulaInteresado.addCell(new Paragraph(interesado.getDocumento(), font8negre));
-                // Pais
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), font8gris));
-                if(interesado.getPais() != null) {
-                    taulaInteresado.addCell(new Paragraph(interesado.getPais().getDescripcionPais(), font8negre));
-                } else{ taulaInteresado.addCell(""); }
+                if(StringUtils.isNotEmpty(interesado.getDocumento())) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.documento"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getDocumento(), lletraGovern8));
+                }
+                // Tipus Document
+                if(interesado.getTipoDocumentoIdentificacion()!= null) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.tipoDocumento"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(I18NJustificanteUtils.tradueix(locale, "tipoDocumentoIdentificacion." + interesado.getTipoDocumentoIdentificacion(), null), lletraGovern8));
+                }
                 // Nom - Organ
                 if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), font8gris));
-                    taulaInteresado.addCell(new Paragraph(interesado.getNombreCompleto(), font8negre));
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getNombreCompleto(), lletraGovern8));
                 } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), font8gris));
-                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), font8negre));
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), lletraGovern8));
                 } else if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), font8gris));
-                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), font8negre));
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getRazonSocial(), lletraGovern8));
+                }
+                // Pais
+                if(interesado.getPais() != null) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getPais().getDescripcionPais(), lletraGovern8));
+                }
+                // Adreça
+                if(StringUtils.isNotEmpty(interesado.getDireccion())) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.direccion"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getDireccion(), lletraGovern8));
+                }
+                // Municipi
+                if(interesado.getLocalidad() != null && interesado.getCp() != null) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.municipio"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getCp() + " - " + interesado.getLocalidad().getNombre(), lletraGovern8));
+                }
+                // Provincia
+                if(interesado.getProvincia() != null) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getProvincia().getDescripcionProvincia(), lletraGovern8));
                 }
                 // Telefon
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.telefono"), font8gris));
-                taulaInteresado.addCell(new Paragraph(interesado.getTelefono(), font8negre));
-                // Adreça
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.direccion"), font8gris));
-                taulaInteresado.addCell(new Paragraph(interesado.getDireccion(), font8negre));
+                if(StringUtils.isNotEmpty(interesado.getTelefono())) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.telefono"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getTelefono(), lletraGovern8));
+                }
                 // Mail
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.correo"), font8gris));
-                taulaInteresado.addCell(new Paragraph(interesado.getEmail(), font8negre));
-                // Municipi
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), font8gris));
-                if(interesado.getLocalidad() != null && interesado.getCp() != null) {
-                    taulaInteresado.addCell(new Paragraph(interesado.getCp() + " - " + interesado.getLocalidad().getNombre(), font8negre));
-                } else{ taulaInteresado.addCell(""); }
+                if(StringUtils.isNotEmpty(interesado.getEmail())) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.correo"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getEmail(), lletraGovern8));
+                }
                 // Canal Notificacio
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
                 if((interesado.getCanal() != null) && (interesado.getCanal() != -1)) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), lletraGovern8bold));
                     String canalNotif = tradueixMissatge(locale,"canalNotificacion." + interesado.getCanal());
-                    taulaInteresado.addCell(new Paragraph(canalNotif, font8negre));
-                } else{ taulaInteresado.addCell(""); }
-                // Provincia
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8gris));
-                if(interesado.getProvincia() != null) {
-                    taulaInteresado.addCell(new Paragraph(interesado.getProvincia().getDescripcionProvincia(), font8negre));
-                } else{ taulaInteresado.addCell(""); }
-                // Observacions
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.observaciones"), font8gris));
-                taulaInteresado.addCell(new Paragraph(interesado.getObservaciones(), font8negre));
+                    taulaInteresado.addCell(new Paragraph(canalNotif, lletraGovern8));
+                }
                 // Direccio Electronica Habilitada
-                taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale,"justificante.deh"), font8gris));
-                taulaInteresado.addCell(new Paragraph(interesado.getDireccionElectronica(), font8negre));
+                if(StringUtils.isNotEmpty(interesado.getDireccionElectronica())) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.deh"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getDireccionElectronica(), lletraGovern8));
+                }
+                // Observacions
+                if(StringUtils.isNotEmpty(interesado.getObservaciones())) {
+                    i += 1;
+                    taulaInteresado.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observaciones"), lletraGovern8bold));
+                    taulaInteresado.addCell(new Paragraph(interesado.getObservaciones(), lletraGovern8));
+                }
                 // Completa la cel·la buida
-                taulaInteresado.addCell("");
-                taulaInteresado.addCell("");
+                if(!esPar(i)) {
+                    taulaInteresado.addCell("");
+                    taulaInteresado.addCell("");
+                }
 
                 document.add(taulaInteresado);
                 // Vaciamos el contenido del interesado para rellenarlo con uno nuevo
@@ -666,7 +707,8 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                     for(Interesado representante : interesados) {
                         // Encuentra su representante y lo muestra
                         if (interesado.getRepresentante().getId().equals(representante.getId())) {
-                            PdfPCell cellRepresentant = new PdfPCell(new Paragraph(tradueixMissatge(locale, "justificante.representante") + " de " + interesado.getNombreCompleto(), font8gris));
+                            i = 0;
+                            PdfPCell cellRepresentant = new PdfPCell(new Paragraph(tradueixMissatge(locale, "justificante.representante") + " de " + interesado.getNombreCompleto(), lletraGovern8bold));
                             cellRepresentant.setBackgroundColor(BaseColor.WHITE);
                             cellRepresentant.setHorizontalAlignment(Element.ALIGN_LEFT);
                             cellRepresentant.setBorder(Rectangle.BOTTOM);
@@ -681,59 +723,91 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                             taulaRepresentant.getDefaultCell().setBorder(0);
                             taulaRepresentant.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
                             // Document
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.identificacion"), font8gris));
-                            taulaRepresentant.addCell(new Paragraph(representante.getDocumento(), font8negre));
-                            // Pais
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), font8gris));
-                            if(representante.getPais() != null) {
-                                taulaRepresentant.addCell(new Paragraph(representante.getPais().getDescripcionPais(), font8negre));
-                            } else{ taulaRepresentant.addCell(""); }
+                            if(StringUtils.isNotEmpty(representante.getDocumento())) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.documento"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getDocumento(), lletraGovern8));
+                            }
+                            // Tipus Document
+                            if(representante.getTipoDocumentoIdentificacion()!=null) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.tipoDocumento"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(I18NJustificanteUtils.tradueix(locale, "tipoDocumentoIdentificacion." + representante.getTipoDocumentoIdentificacion(), null), lletraGovern8));
+                            }
                             // Nom - Organ
                             if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), font8gris));
-                                taulaRepresentant.addCell(new Paragraph(representante.getNombreCompleto(), font8negre));
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.nombre"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getNombreCompleto(), lletraGovern8));
                             } else if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), font8gris));
-                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), font8negre));
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.razonSocial"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), lletraGovern8));
                             } else if(representante.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), font8gris));
-                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), font8negre));
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.organismo"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getRazonSocial(), lletraGovern8));
+                            }
+                            // Pais
+                            if(representante.getPais() != null) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.pais"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getPais().getDescripcionPais(), lletraGovern8));
+                            }
+                            // Adreça
+                            if(StringUtils.isNotEmpty(representante.getDireccion())) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.direccion"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getDireccion(), lletraGovern8));
+                            }
+                            // Municipi
+                            if(representante.getLocalidad() != null && representante.getCp() != null) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getCp() + " - " + representante.getLocalidad().getNombre(), lletraGovern8));
+                            }
+                            // Provincia
+                            if(representante.getProvincia() != null) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getProvincia().getDescripcionProvincia(), lletraGovern8));
                             }
                             // Telefon
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.telefono"), font8gris));
-                            taulaRepresentant.addCell(new Paragraph(representante.getTelefono(), font8negre));
-                            // Adreça
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.direccion"), font8gris));
-                            taulaRepresentant.addCell(new Paragraph(representante.getDireccion(), font8negre));
+                            if(StringUtils.isNotEmpty(representante.getTelefono())) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.telefono"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getTelefono(), lletraGovern8));
+                            }
                             // Mail
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.correo"), font8gris));
-                            taulaRepresentant.addCell(new Paragraph(representante.getEmail(), font8negre));
-                            // Municipi
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.municipio"), font8gris));
-                            if(representante.getLocalidad() != null && representante.getCp() != null) {
-                                taulaRepresentant.addCell(new Paragraph(representante.getCp() + " - " + representante.getLocalidad().getNombre(), font8negre));
-                            } else{ taulaRepresentant.addCell(""); }
+                            if(StringUtils.isNotEmpty(representante.getEmail())) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.correo"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getEmail(), lletraGovern8));
+                            }
                             // Canal Notificacio
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), font8gris));
                             if((representante.getCanal() != null) && (representante.getCanal() != -1)) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.canalNot"), lletraGovern8bold));
                                 String canalNotifRep = tradueixMissatge(locale,"canalNotificacion." + representante.getCanal());
-                                taulaRepresentant.addCell(new Paragraph(canalNotifRep, font8negre));
-                            } else{ taulaRepresentant.addCell(""); }
-                            // Provincia
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.provincia"), font8gris));
-                            if(representante.getProvincia() != null) {
-                                taulaRepresentant.addCell(new Paragraph(representante.getProvincia().getDescripcionProvincia(), font8negre));
-                            } else{ taulaRepresentant.addCell(""); }
-                            // Observacions
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.observaciones"), font8gris));
-                            taulaRepresentant.addCell(new Paragraph(representante.getObservaciones(), font8negre));
+                                taulaRepresentant.addCell(new Paragraph(canalNotifRep, lletraGovern8));
+                            }
                             // Direccio Electronica Habilitada
-                            taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale,"justificante.deh"), font8gris));
-                            taulaRepresentant.addCell(new Paragraph(representante.getDireccionElectronica(), font8negre));
-                            // Completa la cel·la buida
-                            taulaRepresentant.addCell("");
-                            taulaRepresentant.addCell("");
-
+                            if(StringUtils.isNotEmpty(representante.getDireccionElectronica())) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.deh"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getDireccionElectronica(), lletraGovern8));
+                            }
+                            // Observacions
+                            if(StringUtils.isNotEmpty(representante.getObservaciones())) {
+                                i += 1;
+                                taulaRepresentant.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observaciones"), lletraGovern8bold));
+                                taulaRepresentant.addCell(new Paragraph(representante.getObservaciones(), lletraGovern8));
+                            }
+                            if(!esPar(i)) {
+                                // Completa la cel·la buida
+                                taulaRepresentant.addCell("");
+                                taulaRepresentant.addCell("");
+                            }
                             document.add(taulaRepresentant);
                             // Vaciamos el contenido del representante para rellenarlo con uno nuevo
                             taulaRepresentant.deleteBodyRows();
@@ -753,16 +827,10 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                       String dataRegistre, String numeroRegistroFormateado, Long tipoDocumentacionFisica,
                                       String tipoRegistro) throws Exception {
 
-        Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        font8gris.setColor(BaseColor.GRAY);
-        Font font8negre = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        Font font14bold = FontFactory.getFont(FontFactory.HELVETICA, 14, Font.BOLD);
-        Font font8bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
-
         document.addTitle(tradueixMissatge(locale,"justificante.anexo.titulo"));
         PdfPTable titulo = new PdfPTable(1);
         titulo.setWidthPercentage(100);
-        PdfPCell cellTitulo= new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.titulo"), font14bold));
+        PdfPCell cellTitulo= new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.mensaje.titulo"), lletraGovern14bold));
         cellTitulo.setBackgroundColor(BaseColor.WHITE);
         cellTitulo.setHorizontalAlignment(Element.ALIGN_CENTER);
         cellTitulo.setBorder(Rectangle.BOTTOM);
@@ -778,22 +846,22 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         taulaRegistre.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         taulaRegistre.getDefaultCell().setBorder(0);
         taulaRegistre.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.oficina"), font8gris));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.oficina"), lletraGovern8bold));
         String oficina = denominacionOficina + " - " + codigoOficina;
-        taulaRegistre.addCell(new Paragraph(oficina, font8negre));
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaPresentacion"), font8gris));
-        taulaRegistre.addCell(new Paragraph(dataRegistre, font8negre));
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), font8gris));
-        taulaRegistre.addCell(new Paragraph(numeroRegistroFormateado, font8bold));
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.tipusRegistre"), font8gris));
+        taulaRegistre.addCell(new Paragraph(oficina, lletraGovern8));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.fechaPresentacion"), lletraGovern8bold));
+        taulaRegistre.addCell(new Paragraph(dataRegistre, lletraGovern8));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.numRegistro"), lletraGovern8bold));
+        taulaRegistre.addCell(new Paragraph(numeroRegistroFormateado, lletraGovern8));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.tipusRegistre"), lletraGovern8bold));
         if(tipoRegistro.equals("RegistroEntrada")) {
-            taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.entrada"), font8bold));
+            taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.entrada"), lletraGovern8));
         }else{
-            taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.salida"), font8bold));
+            taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.salida"), lletraGovern8));
         }
-        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.docFisica"), font8gris));
+        taulaRegistre.addCell(new Paragraph(tradueixMissatge(locale,"justificante.docFisica"), lletraGovern8bold));
         String docFisica = tradueixMissatge(locale,"tipoDocumentacionFisica." + tipoDocumentacionFisica);
-        taulaRegistre.addCell(new Paragraph(docFisica, font8negre));
+        taulaRegistre.addCell(new Paragraph(docFisica, lletraGovern8));
         document.add(taulaRegistre);
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
@@ -806,15 +874,10 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
                                      String numTransport, String oficinaOrigen, String numRegOrigen, String dataOrigen,
                                      String observacions) throws Exception {
 
-        Font font8gris = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        font8gris.setColor(BaseColor.GRAY);
-        Font font8negre = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.NORMAL);
-        Font font8bold = FontFactory.getFont(FontFactory.HELVETICA, 8, Font.BOLD);
-
         // Creamos estilo para el título Información
         PdfPTable titolInformacio = new PdfPTable(1);
         titolInformacio.setWidthPercentage(100);
-        PdfPCell cellInformacio = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.informacion"), font8bold));
+        PdfPCell cellInformacio = new PdfPCell(new Paragraph(tradueixMissatge(locale,"justificante.informacion"), lletraGovern8bold));
         cellInformacio.setBackgroundColor(BaseColor.LIGHT_GRAY);
         cellInformacio.setHorizontalAlignment(Element.ALIGN_LEFT);
         cellInformacio.setBorder(Rectangle.BOTTOM);
@@ -830,70 +893,90 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
         taulaInformacio.getDefaultCell().setBorder(0);
         taulaInformacio.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
 
+        int i = 0;
+
         // Destí - Centre Directiu
         if(StringUtils.isNotEmpty(nomDesti)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), font8gris));
-            taulaInformacio.addCell(new Paragraph(nomDesti, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.unidad"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(nomDesti, lletraGovern8));
         }
         // Extracte
         if(StringUtils.isNotEmpty(extracte)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.resumen"), font8gris));
-            taulaInformacio.addCell(new Paragraph(extracte, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.resumen"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(extracte, lletraGovern8));
         }
         // Tipus assumpte
         if(StringUtils.isNotEmpty(tipoAsunto)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.tipoAsunto"), font8gris));
-            taulaInformacio.addCell(new Paragraph(tipoAsunto, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.tipoAsunto"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(tipoAsunto, lletraGovern8));
         }
         // Codi assumpte
         if(StringUtils.isNotEmpty(codigoAsunto)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.codigoAsunto"), font8gris));
-            taulaInformacio.addCell(new Paragraph(codigoAsunto, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.codigoAsunto"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(codigoAsunto, lletraGovern8));
         }
         // Idioma
         if(StringUtils.isNotEmpty(idioma)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.idioma"), font8gris));
-            taulaInformacio.addCell(new Paragraph(idioma, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.idioma"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(idioma, lletraGovern8));
         }
         // Referència externa
         if(StringUtils.isNotEmpty(refExterna)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.refExterna"), font8gris));
-            taulaInformacio.addCell(new Paragraph(refExterna, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.refExterna"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(refExterna, lletraGovern8));
         }
         // Expedient
         if(StringUtils.isNotEmpty(expedient)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.expediente"), font8gris));
-            taulaInformacio.addCell(new Paragraph(expedient, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.expediente"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(expedient, lletraGovern8));
         }
         // Transport
         if(StringUtils.isNotEmpty(transport)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.transport"), font8gris));
-            taulaInformacio.addCell(new Paragraph(transport, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.transport"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(transport, lletraGovern8));
         }
         // Número transport
         if(StringUtils.isNotEmpty(numTransport)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numTransport"), font8gris));
-            taulaInformacio.addCell(new Paragraph(numTransport, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numTransport"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(numTransport, lletraGovern8));
         }
         // Oficina origen
         if(StringUtils.isNotEmpty(oficinaOrigen)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.oficinaOrigen"), font8gris));
-            taulaInformacio.addCell(new Paragraph(oficinaOrigen, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.oficinaOrigen"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(oficinaOrigen, lletraGovern8));
         }
         // Número Registre origen
         if(StringUtils.isNotEmpty(numRegOrigen)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numRegOrigen"), font8gris));
-            taulaInformacio.addCell(new Paragraph(numRegOrigen, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.numRegOrigen"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(numRegOrigen, lletraGovern8));
         }
         // Data Registre origen
         if(StringUtils.isNotEmpty(dataOrigen)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.dataOrigen"), font8gris));
-            taulaInformacio.addCell(new Paragraph(dataOrigen, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.dataOrigen"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(dataOrigen, lletraGovern8));
         }
         // Observacions
         if(StringUtils.isNotEmpty(observacions)) {
-            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observacions"), font8gris));
-            taulaInformacio.addCell(new Paragraph(observacions, font8negre));
+            i += 1;
+            taulaInformacio.addCell(new Paragraph(tradueixMissatge(locale, "justificante.observacions"), lletraGovern8bold));
+            taulaInformacio.addCell(new Paragraph(observacions, lletraGovern8));
+        }
+        if(!esPar(i)) {
+            // Completa la cel·la buida
+            taulaInformacio.addCell("");
+            taulaInformacio.addCell("");
         }
 
         document.add(taulaInformacio);
@@ -1037,6 +1120,11 @@ public class JustificanteCaibPlugin extends AbstractPluginProperties implements 
             }
             return bundle;
         }
+    }
+
+    public static boolean esPar(int numero) {
+        //Si el resto de numero entre 2 es 0, el numero es par
+        return numero % 2 == 0;
     }
 
 }
