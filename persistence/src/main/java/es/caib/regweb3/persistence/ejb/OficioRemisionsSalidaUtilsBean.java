@@ -463,9 +463,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         Oficio oficio = new Oficio();
 
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida(); // Fecha a partir de la cual se generarán oficios de salida
 
-        if(StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))){
+        if((StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))) && registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
 
             if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
                 oficio.setOficioRemision(true);

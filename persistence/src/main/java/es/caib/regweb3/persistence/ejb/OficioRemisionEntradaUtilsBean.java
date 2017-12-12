@@ -352,11 +352,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro  and " +
+                "re.id = :idRegistro and re.estado = :valido and " +
                 "re.destino != null and " + organismosWhere);
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -371,10 +372,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.destino is null");
+                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
 
         return q.getResultList().size() > 0;
@@ -386,10 +388,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         Query q;
         q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.destino is null");
+                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
         List<String> result = q.getResultList();
 
