@@ -297,3 +297,4 @@ UPDATE RWE_ENTIDAD set CONTADOR_SIR=CURRVAL('RWE_ALL_SEQ') where id=?;
 
 --Aumento tamaño del campo USUARIO
 alter table RWE_REGISTROLOPD_MIGRADO alter USUARIO type varchar(255);
+alter table RWE_MODIFICACIONLOPD_MIGRADO alter USUARIO type varchar(255);

@@ -325,7 +325,7 @@
         FECHA timestamp not null,
         FECHAMOD timestamp not null,
         TIPOACCESO varchar(10) not null,
-        USUARIO varchar(10) not null,
+        USUARIO varchar(255) not null,
         REGMIG int8,
         primary key (ID)
     );
