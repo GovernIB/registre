@@ -297,7 +297,7 @@
                                     </li>
 
                                     <c:if test="${registrosMigrados}">
-                                        <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><spring:message code="informe.migradoLopd"/></a></li>
+                                        <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><i class="fa fa-exchange"></i> <spring:message code="informe.migradoLopd"/></a></li>
                                     </c:if>
                                     <li class="divider"></li>
 
