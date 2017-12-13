@@ -1016,7 +1016,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public Long getIdJustificante(Long idRegistroDetalle) throws Exception {
         Query query = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
-                "anexo.justificante = true");
+                "anexo.justificante = true order by anexo.id");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
 
         List<Long> justificante = query.getResultList();
