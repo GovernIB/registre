@@ -72,7 +72,7 @@ public class RegistroLopdMigrado implements Serializable {
         this.tipoAcceso = tipoAcceso;
     }
 
-    @Column(name = "USUARIO", nullable = false, length = 10)
+    @Column(name = "USUARIO", nullable = false, length = 255)
     public String getUsuario() {
         return this.usuario;
     }

@@ -294,3 +294,6 @@ ALTER TABLE RWE_ENTIDAD
 -- Realizar tantos inserts como Entidades haya creadas, indicado su id
 INSERT into RWE_CONTADOR (id, numero) VALUES (nextval('RWE_ALL_SEQ'),0);
 UPDATE RWE_ENTIDAD set CONTADOR_SIR=CURRVAL('RWE_ALL_SEQ') where id=?;
+
+--Aumento tamaño del campo USUARIO
+alter table RWE_REGISTROLOPD_MIGRADO alter USUARIO type varchar(255);

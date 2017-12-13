@@ -444,7 +444,7 @@
         ID number(19,0) not null,
         FECHA timestamp not null,
         TIPOACCESO varchar2(10 char) not null,
-        USUARIO varchar2(10 char) not null,
+        USUARIO varchar2(255 char) not null,
         REGMIG number(19,0)
     );
 
