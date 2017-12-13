@@ -87,10 +87,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q;
         q = em.createQuery("Select distinct re.destino.codigo, re.destino.denominacion from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino != null " + organismosWhere);
+                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente " + organismosWhere);
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
 
@@ -145,10 +146,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino != null " + organismosWhere);
+                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente " + organismosWhere);
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
 
@@ -353,11 +355,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :valido and " +
-                "re.destino != null and " + organismosWhere);
+                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente and " + organismosWhere);
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);

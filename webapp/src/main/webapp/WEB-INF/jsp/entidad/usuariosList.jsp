@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-globe"></i> <spring:message code="organismo.organismos"/></a></li>
+                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-home"></i> <spring:message code="organismo.organismos"/></a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></li>
                 </ol>
             </div>

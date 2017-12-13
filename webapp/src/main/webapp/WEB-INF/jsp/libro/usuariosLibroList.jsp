@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
-                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-globe"></i> ${libro.organismo.entidad.nombre}</a></li>
+                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-institution"></i> ${libro.organismo.entidad.nombre}</a></li>
                     <li><a href="<c:url value="/libro/${libro.organismo.id}/libros"/>">${libro.organismo.denominacion}</a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i><strong>Usuarios del Libro ${libro.nombre}</strong></li>
                 </ol>

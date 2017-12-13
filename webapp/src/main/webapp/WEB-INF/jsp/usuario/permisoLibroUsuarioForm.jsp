@@ -22,7 +22,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
-                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-globe"></i> ${entidad.nombre}</a></li>
+                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-institution"></i> ${entidad.nombre}</a></li>
                     <li><a href="<c:url value="/entidad/usuarios"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <strong><spring:message
                             code="usuario.modificar.permisos"/>

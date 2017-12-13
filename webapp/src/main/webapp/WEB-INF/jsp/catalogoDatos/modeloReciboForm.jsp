@@ -19,7 +19,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${entidadActiva.nombre}</a></li>
+                    <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${entidadActiva.nombre}</a></li>
                     <li><a href="<c:url value="/modeloRecibo/list"/>" ><i class="fa fa-list"></i> <spring:message code="modeloRecibo.listado"/></a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${not empty modeloReciboForm.modeloRecibo.id}"><spring:message code="modeloRecibo.editar"/></c:if>

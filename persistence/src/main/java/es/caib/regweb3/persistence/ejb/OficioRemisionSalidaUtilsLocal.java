@@ -34,7 +34,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
+    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
@@ -44,7 +44,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception;
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
 
     /**
      * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto

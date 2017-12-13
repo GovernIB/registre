@@ -74,17 +74,17 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     @Override
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception {
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
 
         String queryFecha="";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+        Long total = 0L;
 
         if(StringUtils.isNotEmpty(fecha)){
             queryFecha = " rs.fecha >= :fecha and ";
         }
 
-        Query q;
-        q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where " +
+        Query q = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " + queryFecha +
                 " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
@@ -99,14 +99,43 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q.setParameter("fecha", sdf.parse(fecha));
         }
 
+        List<Long> registros = q.getResultList();
 
-        return (Long) q.getSingleResult();
+        if(registros.size() > 0){
+
+            Query q2 = em.createQuery("Select i.codigoDir3 from Interesado as i where i.tipo = :administracion and " +
+                    "i.registroDetalle.id in (:registros)");
+
+            // Parámetros
+            q2.setParameter("registros", registros);
+            q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+
+            List<String> destinos = q2.getResultList();
+
+            for (String destino : destinos) {
+                Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(destino, entidadActiva);
+
+                if(organismo != null){ // Interno
+
+                    // Solo los internos vigentes
+                    if(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                        total = total + 1;
+                    }
+                }else{ // Externo
+
+                    total = total + 1;
+                }
+
+            }
+        }
+
+        return total;
 
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos) throws Exception {
+    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
 
         String queryFecha="";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -150,7 +179,19 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             List<Object[]> destinos = q2.getResultList();
 
             for (Object[] object : destinos) {
-                organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
+                Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero((String) object[0], entidadActiva);
+
+                if(organismo != null){ // Interno
+
+                    // Solo los internos vigentes
+                    if(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                        organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
+                    }
+                }else{ // Externo
+
+                    organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
+                }
+
             }
         }
 
@@ -516,7 +557,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         if(StringUtils.isNotEmpty(codigoDir3)){
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
-            return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) == null;
+            return organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoDir3, idEntidad) == null;
         }
 
         return false;

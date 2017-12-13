@@ -20,8 +20,8 @@
            <div class="row">
                 <div class="col-xs-12">
                     <ol class="breadcrumb">
-                        <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${entidadActiva.nombre}</a></li>
-                        <li><a href="<c:url value="/tipoAsunto/list"/>" ><i class="fa fa-globe"></i> <spring:message code="tipoAsunto.tipoAsunto"/></a></li>
+                        <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${entidadActiva.nombre}</a></li>
+                        <li><a href="<c:url value="/tipoAsunto/list"/>" ><i class="fa fa-institution"></i> <spring:message code="tipoAsunto.tipoAsunto"/></a></li>
                         <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="tipoAsunto.editar"/> ${tipoAsunto.traduccion.nombre}</li>
                     </ol>
                 </div>

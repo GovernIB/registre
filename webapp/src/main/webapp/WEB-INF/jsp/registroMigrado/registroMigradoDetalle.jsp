@@ -48,7 +48,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-12"><i class="fa fa-globe"></i> <strong><spring:message code="entidad.entidad"/>:</strong> ${registroMigrado.entidad.nombre}</div>
+                                <div class="col-xs-12"><i class="fa fa-institution"></i> <strong><spring:message code="entidad.entidad"/>:</strong> ${registroMigrado.entidad.nombre}</div>
                             </div>
                             <div class="form-group col-xs-12">
                                 <div class="col-xs-6"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaEntrada"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy"/></div>
@@ -144,7 +144,7 @@
                             </div>
                             <div class="panel-body">
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-12"><i class="fa fa-globe"></i> <strong><spring:message code="entidad.entidad"/>:</strong> ${registroMigrado.entidad.nombre}</div>
+                                    <div class="col-xs-12"><i class="fa fa-institution"></i> <strong><spring:message code="entidad.entidad"/>:</strong> ${registroMigrado.entidad.nombre}</div>
                                 </div>
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-6"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroMigrado.fechaSalida"/>:</strong> <fmt:formatDate value="${registroMigrado.fechaRegistro}" pattern="dd/MM/yyyy"/></div>

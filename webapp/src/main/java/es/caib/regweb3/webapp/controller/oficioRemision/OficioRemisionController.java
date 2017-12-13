@@ -203,6 +203,7 @@ public class OficioRemisionController extends BaseController {
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosSalidaPendientesRemisionList");
         List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         Oficina oficinaActiva = getOficinaActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         // Fijamos la oficina activa como la seleccionada por defecto
         RegistroSalida registroSalida = new RegistroSalida();
@@ -210,7 +211,7 @@ public class OficioRemisionController extends BaseController {
         registroSalida.setOficina(oficinaActiva);
 
         model.addAttribute("librosRegistro", librosRegistroSalida);
-        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(getOrganismosOficinaActiva(request))));
+        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(getOrganismosOficinaActiva(request)), entidadActiva.getId()));
         model.addAttribute("registroSalidaBusqueda", new OficioSalidaPendienteBusquedaForm(registroSalida, 1));
         model.addAttribute("anys", getAnys());
 
@@ -240,7 +241,7 @@ public class OficioRemisionController extends BaseController {
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
         mav.addObject("librosRegistro", librosRegistroEntrada);
-        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemisionSalida(getOrganismosOficinaActiva(request))));
+        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemisionSalida(getOrganismosOficinaActiva(request)), entidadActiva.getId()));
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA));
         mav.addObject("anys", getAnys());

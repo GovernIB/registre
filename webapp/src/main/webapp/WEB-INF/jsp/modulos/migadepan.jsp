@@ -6,7 +6,7 @@
 </c:if>
 <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
     <c:if test="${fn:length(entidades) >= 1}">
-        <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${entidadActiva.nombre}</a></li>
+        <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${entidadActiva.nombre}</a></li>
     </c:if>
     <c:if test="${fn:length(entidades) == 0}">
         <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
@@ -25,7 +25,7 @@
         <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
     </c:if>
     <c:if test="${fn:length(oficinas) == 0}">
-        <li><a href="<c:url value="/inici"/>"><i class="fa fa-globe"></i> ${entidadActiva.nombre}</a></li>
+        <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${entidadActiva.nombre}</a></li>
         <li><i class="fa fa-home"></i> <spring:message code="error.oficina.ninguna"/></li>
     </c:if>
 

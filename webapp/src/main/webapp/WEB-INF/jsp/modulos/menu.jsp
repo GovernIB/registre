@@ -71,11 +71,11 @@
                         <c:if test="${fn:length(entidades) > 1}">
 
                             <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-globe"></i> <spring:message code="entidad.entidades"/> <i class="fa fa-caret-down"></i></a>
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-institution"></i> <spring:message code="entidad.entidades"/> <i class="fa fa-caret-down"></i></a>
                                 <ul class="dropdown-menu">
                                     <c:forEach var="entidad" items="${entidades}">
                                         <c:if test="${entidad.id != entidadActiva.id}">
-                                            <li><a href="<c:url value="/cambioEntidad/${entidad.id}"/>"><i class="fa fa-home"></i> ${entidad.nombre}</a></li>
+                                            <li><a href="<c:url value="/cambioEntidad/${entidad.id}"/>"><i class="fa fa-institution"></i> ${entidad.nombre}</a></li>
                                         </c:if>
                                     </c:forEach>
 
@@ -262,7 +262,7 @@
                                         ${entidadActiva.nombre} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><i class="fa fa-home"></i> <spring:message code="menu.entidad.editar"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><i class="fa fa-institution"></i> <spring:message code="menu.entidad.editar"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/plugin/list"/>"><i class="fa fa-plug"></i> <spring:message code="plugin.plugins"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
                                     <li class="divider"></li>
@@ -330,7 +330,7 @@
                             <spring:message code="menu.configuracion"/> <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><i class="fa fa-home"></i> <spring:message code="entidad.entidades"/></a>
+                            <li class="submenu-complet"><a href="<c:url value="/entidad/list"/>"><i class="fa fa-institution"></i> <spring:message code="entidad.entidades"/></a>
                                     <%--<ul class="dropdown-menu">
                                         <li><a href="<c:url value="/admin/organismo/list"/>"><spring:message
                                                 code="organismo.listado"/></a></li>
