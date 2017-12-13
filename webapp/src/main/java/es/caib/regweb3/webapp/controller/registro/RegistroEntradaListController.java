@@ -409,6 +409,26 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return mav;
     }
 
+    @RequestMapping(value = "/validos/list/{pageNumber}")
+    public ModelAndView validos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        if(isOperador(request) && oficinaActiva != null) {
+
+            Paginacion paginacion = registroEntradaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_VALIDO);
+
+            mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesDistribuir"));
+            mav.addObject("url", "validos");
+            mav.addObject("paginacion", paginacion);
+
+        }
+
+        return mav;
+    }
+
     @RequestMapping(value = "/pendientesSir/list/{pageNumber}")
     public ModelAndView pendientesSir(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
 
@@ -723,31 +743,33 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             throws Exception {
 
         try {
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+            synchronized (this) {
 
-            // Dispone de permisos para Editar el registro
-            if(permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)){
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                // Creamos el anexo justificante y lo firmamos
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+                // Dispone de permisos para Editar el registro
+                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
 
-                // Alta en tabla LOPD
-                if(anexoFull != null){
-                    lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                    // Creamos el anexo justificante y lo firmamos
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+
+                    // Alta en tabla LOPD
+                    if (anexoFull != null) {
+                        lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                    }
+
+                    // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
+                    if (anexoFull.getSignatureCustody() != null) {
+                        request.getSession().setAttribute("justificante", true);
+                    } else {
+                        request.getSession().setAttribute("justificante", false);
+                    }
+
+                } else {
+                    Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
                 }
-
-                // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
-                if(anexoFull.getSignatureCustody() != null){
-                    request.getSession().setAttribute("justificante", true);
-                }else {
-                    request.getSession().setAttribute("justificante", false);
-                }
-
-            }else{
-                Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
             }
-
           
         } catch (I18NException e) {
             Mensaje.saveMessageError(request, I18NUtils.getMessage(e));

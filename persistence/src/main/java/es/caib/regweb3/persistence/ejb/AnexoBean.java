@@ -1021,7 +1021,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         List<Long> justificante = query.getResultList();
 
-        if (justificante.size() == 1) {
+        if (justificante.size() >= 1) {
             return justificante.get(0);
         } else {
             return null;
@@ -1271,13 +1271,20 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      */
     @Override
-    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad,
+    public synchronized AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad,
         IRegistro registro, String tipoRegistro, String idioma) 
                 throws I18NException, I18NValidationException {
-      String custodyID=null;
+
+      String custodyID = null;
       boolean error = false;
-      IDocumentCustodyPlugin documentCustodyPlugin =null;
+      IDocumentCustodyPlugin documentCustodyPlugin = null;
+
       try {
+          // Comprobamos si ya se ha generado el Justificante
+          if(registro.getRegistroDetalle().getTieneJustificante()){
+              throw new I18NException("aviso.justificante.existe");
+          }
+
           final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
           // Carregam el plugin del Justificant

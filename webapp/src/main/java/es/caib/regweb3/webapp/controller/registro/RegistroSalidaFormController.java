@@ -43,10 +43,10 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
 
     /**
@@ -65,6 +65,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        eliminarVariableSesion(request, "justificante");
 
         model.addAttribute(getEntidadActiva(request));
         model.addAttribute(getUsuarioAutenticado(request));
@@ -179,6 +180,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        eliminarVariableSesion(request, "justificante");
 
         RegistroSalida registroSalida = null;
 

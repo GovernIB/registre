@@ -573,30 +573,33 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             throws Exception {
 
         try {
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
-            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            // Dispone de permisos para Editar el registro
-            if(permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
+            synchronized (this) {
 
-                // Creamos el anexo justificante y lo firmamos
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                // Alta en tabla LOPD
-                if(anexoFull != null){
-                    lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                // Dispone de permisos para Editar el registro
+                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+
+                    // Creamos el anexo justificante y lo firmamos
+                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+
+                    // Alta en tabla LOPD
+                    if (anexoFull != null) {
+                        lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
+                    }
+
+                    // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
+                    if (anexoFull.getSignatureCustody() != null) {
+                        request.getSession().setAttribute("justificante", true);
+                    } else {
+                        request.getSession().setAttribute("justificante", false);
+                    }
+                } else {
+                    Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
                 }
-
-                // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
-                if(anexoFull.getSignatureCustody()!=null){
-                    request.getSession().setAttribute("justificante", true);
-                }else {
-                    request.getSession().setAttribute("justificante", false);
-                }
-            }else{
-                Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
             }
-
 
         } catch (I18NException e) {
             Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
