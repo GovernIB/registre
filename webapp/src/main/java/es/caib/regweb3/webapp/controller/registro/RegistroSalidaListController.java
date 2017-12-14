@@ -206,9 +206,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
+        Boolean puedeEditar = permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA);
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
-        model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
+        model.addAttribute("puedeEditar", puedeEditar);
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
@@ -222,8 +223,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("oficio", oficio);
 
         // Anexos completo
-        if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)
-                && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
+        Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))&& oficinaRegistral && puedeEditar && !tieneJustificante;
+        if(anexosCompleto) { // Si se muestran los anexos
 
             List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
             initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
@@ -237,6 +238,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             model.addAttribute("anexos", anexos);
             model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
         }
+        model.addAttribute("anexosCompleto", anexosCompleto);
 
         // Interesados, solo si el Registro en Válio
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){

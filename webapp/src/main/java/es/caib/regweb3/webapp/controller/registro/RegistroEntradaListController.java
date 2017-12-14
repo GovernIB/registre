@@ -214,9 +214,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
+        Boolean puedeEditar = permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA);
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registro.getLibro().getId()));
-        model.addAttribute("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA));
+        model.addAttribute("puedeEditar", puedeEditar);
         model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO));
         model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
         model.addAttribute("tieneJustificante", tieneJustificante);
@@ -235,8 +236,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("oficio", oficio);
 
             // Anexos
-            if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)
-                    && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
+            Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))&& oficinaRegistral && puedeEditar && !tieneJustificante;
+            if(anexosCompleto) { // Si se muestran los anexos completo
 
                 List<AnexoFull> anexos = anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
                 initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
@@ -246,10 +247,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
                     model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
                 }
-
                 model.addAttribute("anexos", anexos);
                 model.addAttribute("anexoDetachedPermitido", PropiedadGlobalUtil.getPermitirAnexosDetached(entidadActiva.getId()));
             }
+            model.addAttribute("anexosCompleto" , anexosCompleto);
 
             // Interesados
             if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){
