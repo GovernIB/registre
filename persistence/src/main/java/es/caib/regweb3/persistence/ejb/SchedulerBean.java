@@ -69,7 +69,7 @@ public class SchedulerBean implements SchedulerLocal{
             List<Entidad> entidades = entidadEjb.getAll();
 
             for(Entidad entidad: entidades) {
-                log.info("Ejecutado reiniciarContadores de:" + entidad.getNombre());
+                log.info("Inicializando contadores de:" + entidad.getNombre());
                 libroEjb.reiniciarContadoresEntidadTask(entidad.getId());
                 contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
             }

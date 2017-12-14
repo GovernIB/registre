@@ -1,9 +1,5 @@
 package es.caib.regweb3.webapp.scheduler;
 
-/**
- * Created by mgonzalez on 14/12/2017.
- */
-
 import es.caib.regweb3.persistence.ejb.SchedulerLocal;
 import org.apache.log4j.Logger;
 import org.springframework.scheduling.annotation.Scheduled;
