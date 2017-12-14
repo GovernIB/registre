@@ -185,31 +185,6 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
         }
 
-        // Comprobaciones previas a la consulta de RegistroEntrada
-        if(url.contains("justificante")){
-
-            String idRegistroSalida =  url.replace("/registroSalida/","").replace("/justificante", "").replace("/ca", "").replace("/es", ""); //Obtenemos el id a partir de la url
-
-            RegistroSalida registroSalida = registroSalidaEjb.findById(Long.valueOf(idRegistroSalida));
-            Long idJustificante = anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId());
-
-            //Si ya existe un justificante, da error
-            if(idJustificante != null){
-                log.info("Aviso: El registro ya tiene un justificante asociado");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.existe"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-            if(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)){
-                log.info("Aviso: No se puede generar un Justificante de un registro anulado");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.justificante.anulado"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-        }
-
         // Comprobaciones previas al reenvio
         if(url.contains("reenviar")){
             String idRegistroEntrada =  url.replace("/registroSalida/","").replace("/reenviar", ""); //Obtenemos el id a partir de la url

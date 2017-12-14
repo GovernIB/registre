@@ -584,7 +584,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro
-                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                     // Creamos el anexo justificante y lo firmamos
                     AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
