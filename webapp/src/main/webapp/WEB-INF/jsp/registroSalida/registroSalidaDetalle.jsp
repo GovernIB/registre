@@ -208,14 +208,14 @@
 
                         <c:if test="${registro.registroDetalle.tipoDocumentacionFisica != RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || registro.registroDetalle.tieneAnexos}">
                             <!-- ANEXOS COMPLETO-->
-                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR)&& oficinaRegistral && puedeEditar && !tieneJustificante}">
+                            <c:if test="${anexosCompleto}">
                                 <c:import url="../registro/anexos.jsp">
                                     <c:param name="tipoRegistro" value="salida"/>
                                 </c:import>
                             </c:if>
 
                                 <%--ANEXOS SOLO LECTURA--%>
-                            <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar || tieneJustificante}">
+                            <c:if test="${not anexosCompleto}">
                                 <c:import url="../registro/anexosLectura.jsp">
                                     <c:param name="tipoRegistro" value="salida"/>
                                 </c:import>
