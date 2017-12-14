@@ -24,5 +24,11 @@ public interface SchedulerLocal {
      */
     public void reintentarEnviosConError() throws Exception;
 
+    /**
+     *
+     * @throws Exception
+     */
+    public void reiniciarContadoresEntidad() throws Exception;
+
 }
 

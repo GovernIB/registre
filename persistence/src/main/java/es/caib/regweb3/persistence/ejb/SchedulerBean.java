@@ -28,6 +28,13 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     private EntidadLocal entidadEjb;
 
+    @EJB(mappedName = "regweb3/LibroEJB/local")
+    private LibroLocal libroEjb;
+
+
+    @EJB(mappedName = "regweb3/ContadorEJB/local")
+    private ContadorLocal contadorEjb;
+
 
     @Override
     public void reintentarEnviosSinConfirmacion() throws Exception {
@@ -53,5 +60,23 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             sirEjb.reintentarEnviosConError(entidad.getId());
         }
+    }
+
+    @Override
+    public void reiniciarContadoresEntidad() throws Exception {
+        try{
+
+            List<Entidad> entidades = entidadEjb.getAll();
+
+            for(Entidad entidad: entidades) {
+                log.info("Ejecutado reiniciarContadores de:" + entidad.getNombre());
+                libroEjb.reiniciarContadoresEntidadTask(entidad.getId());
+                contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
+            }
+
+        } catch (Throwable e) {
+            log.error("Error Inicializando contadores entidad ...", e);
+        }
+
     }
 }
