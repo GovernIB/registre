@@ -12,6 +12,7 @@ import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
+import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -258,12 +259,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Justificante
             if(tieneJustificante){
-                Long idJustificante = anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId());
-                model.addAttribute("idJustificante", idJustificante);
 
-                // Descarga el Justificante creado anteriormente en /justificante
-                Object justificante = request.getSession().getAttribute("justificante");
-                model.addAttribute("justificante", justificante);
+                model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
             }
 
             // Historicos
@@ -738,18 +735,21 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.GET)
-    public ModelAndView justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+    @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.POST)
+    public JsonResponse justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
             throws Exception {
 
+        JsonResponse jsonResponse = new JsonResponse();
+
         try {
+
             synchronized (this) {
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro
-                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
+                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                     // Creamos el anexo justificante y lo firmamos
                     AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
@@ -759,25 +759,25 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                         lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
                     }
 
-                    // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
-                    if (anexoFull.getSignatureCustody() != null) {
-                        request.getSession().setAttribute("justificante", true);
-                    } else {
-                        request.getSession().setAttribute("justificante", false);
-                    }
+                    jsonResponse.setStatus("SUCCESS");
 
                 } else {
-                    Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
+                    jsonResponse.setStatus("FAIL");
+                    jsonResponse.setError(getMessage("aviso.registro.editar"));
                 }
             }
           
         } catch (I18NException e) {
-            Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
+            e.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(e));
         } catch (I18NValidationException ve) {
-            Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
+            ve.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(ve));
         }
 
-        return new ModelAndView("redirect:/registroEntrada/"+idRegistro+"/detalle");
+        return jsonResponse;
 
     }
 

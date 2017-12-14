@@ -1,11 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div id="modalSincro" class="modal fade bs-example-modal-lg">
+<div id="modalSincro" class="modal fade modal-lg">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><spring:message code="regweb.procesando"/></h3>
+                <h3>${textoModal}</h3>
             </div>
             <div class="modal-body">
                 <div class="col-xs-4 centrat" id="carga">

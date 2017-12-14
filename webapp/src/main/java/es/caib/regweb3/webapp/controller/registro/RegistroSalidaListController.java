@@ -14,6 +14,7 @@ import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
+import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -224,7 +225,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)
                 && oficinaRegistral && !tieneJustificante) { // Si se muestran los anexos
 
-            List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de entrada.
+            List<AnexoFull> anexos = anexoEjb.getByRegistroSalida(registro); //Inicializamos los anexos del registro de salida.
             initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
 
             // Si es SIR, se validan los tamaños y tipos de anexos
@@ -245,6 +246,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Justificante
         if(tieneJustificante){
+
             model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
         }
 
@@ -568,9 +570,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
      * @throws Exception
      */
     @ResponseBody
-    @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.GET)
-    public ModelAndView justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+    @RequestMapping(value = "/{idRegistro}/justificante/{idioma}", method=RequestMethod.POST)
+    public JsonResponse justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
             throws Exception {
+
+        JsonResponse jsonResponse = new JsonResponse();
 
         try {
 
@@ -590,25 +594,25 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                         lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
                     }
 
-                    // Crea variable de sesión para indicar al Registro Detalle que hay que descargar el justificante
-                    if (anexoFull.getSignatureCustody() != null) {
-                        request.getSession().setAttribute("justificante", true);
-                    } else {
-                        request.getSession().setAttribute("justificante", false);
-                    }
+                    jsonResponse.setStatus("SUCCESS");
+
                 } else {
-                    Mensaje.saveMessageError(request, getMessage("aviso.registro.editar"));
+                    jsonResponse.setStatus("FAIL");
+                    jsonResponse.setError(getMessage("aviso.registro.editar"));
                 }
             }
 
         } catch (I18NException e) {
-            Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
+            e.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(e));
         } catch (I18NValidationException ve) {
-            Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
+            ve.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(ve));
         }
 
-
-        return new ModelAndView("redirect:/registroSalida/"+idRegistro+"/detalle");
+        return jsonResponse;
 
     }
 

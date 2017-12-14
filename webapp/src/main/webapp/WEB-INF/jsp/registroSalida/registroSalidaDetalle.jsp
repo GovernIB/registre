@@ -72,8 +72,8 @@
                                             <spring:message code="justificante.boton"/> <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li class="submenu-complet"><a href="<c:url value="/registroSalida/${registro.id}/justificante/ca"/>"><spring:message code="regweb.catalan"/></a></li>
-                                            <li class="submenu-complet"><a href="<c:url value="/registroSalida/${registro.id}/justificante/es"/>"><spring:message code="regweb.castellano"/></a></li>
+                                            <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroSalida/${idRegistro}/justificante/ca"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.catalan"/></a></li>
+                                            <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroSalida/${idRegistro}/justificante/es"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.castellano"/></a></li>
                                         </ul>
                                     </div>
                                 </c:if>
@@ -283,6 +283,11 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
+<spring:message code="justificante.generando" var="textoModal" scope="request"/>
+<c:import url="../modalSincro.jsp">
+    <c:param name="textoModal" value="${textoModal}"/>
+</c:import>
+
 <%--<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>--%>
 <script type="text/javascript" src="<c:url value="/js/sello.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/repro.js"/>"></script>
@@ -291,7 +296,7 @@
 
     // Descarga el justificante si se ha generado manualmente
     window.onload = function descargaJustificante(){
-        <c:if test="${justificante}">
+        <c:if test="${param.justificante==true}">
             goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>');
         </c:if>
     };
@@ -309,6 +314,33 @@
     function actualizarLocalidad(){
         <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidades" />
         actualizarSelect('${obtenerLocalidades}','#localidad\\.id',$('#provincia\\.id option:selected').val(),$('#localidad\\.id option:selected').val(),false,false);
+    }
+
+    /**
+     * Genera el Justificante del Registro
+     * @param url
+     */
+    function crearJustificante(url){
+
+        $.ajax({
+            url:url,
+            type:'POST',
+            beforeSend: function(objeto){
+                $('#modalSincro').modal('show');
+            },
+            success:function(respuesta){
+
+                if(respuesta.status == 'SUCCESS'){
+                    goTo('<c:url value="/registroSalida/${idRegistro}/detalle?justificante=true"/>');
+
+                }else if(respuesta.status == 'FAIL') {
+                    $('#modalSincro').modal('hide');
+                    mensajeError('#mensajes', respuesta.error);
+                }
+
+            }
+        });
+
     }
 
 </script>

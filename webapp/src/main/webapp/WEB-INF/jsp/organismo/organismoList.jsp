@@ -163,7 +163,10 @@
     </div>
 </div> <!-- /container -->
 
-<c:import url="../modalSincro.jsp"/>
+<spring:message code="regweb.procesando" var="textoModal" scope="request"/>
+<c:import url="../modalSincro.jsp">
+    <c:param name="textoModal" value="${textoModal}"/>
+</c:import>
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript" src="<c:url value="/js/organismosaprocesar.js"/>"></script>

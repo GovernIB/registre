@@ -101,7 +101,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
-        eliminarVariableSesion(request, "justificante");
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
@@ -235,7 +234,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
-        eliminarVariableSesion(request, "justificante");
 
         RegistroEntrada registroEntrada = null;
 
