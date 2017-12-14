@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div id="modalSincro" class="modal fade modal-lg">
+<div id="modalSincro" class="modal fade bs-example-modal-lg">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
