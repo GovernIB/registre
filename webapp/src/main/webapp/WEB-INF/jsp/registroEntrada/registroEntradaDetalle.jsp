@@ -308,10 +308,6 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
-<spring:message code="justificante.generando" var="textoModal" scope="request"/>
-<c:import url="../modalSincro.jsp">
-    <c:param name="textoModal" value="${textoModal}"/>
-</c:import>
 
 <script type="text/javascript">
     var urlDistribuir = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
@@ -367,7 +363,7 @@
                 url:url,
                 type:'POST',
                 beforeSend: function(objeto){
-                    $('#modalSincro').modal('show');
+                    waitingDialog.show('<spring:message code="justificante.generando"/>', {dialogSize: 'm', progressType: 'info'});
                 },
                 success:function(respuesta){
 
@@ -375,7 +371,6 @@
                         goTo('<c:url value="/registroEntrada/${idRegistro}/detalle?justificante=true"/>');
 
                     }else if(respuesta.status == 'FAIL') {
-                            $('#modalSincro').modal('hide');
                             mensajeError('#mensajes', respuesta.error);
                     }
 
