@@ -229,7 +229,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Organismo origen
         if (StringUtils.isNotEmpty((organoOrigen))) {
-            Organismo organismo = organismoEjb.findByCodigoEntidad(organoOrigen, idEntidad);
+            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(organoOrigen, idEntidad);
             if (organismo == null) {
                 where.add(" registroSalida.origenExternoCodigo = :organoOrigen ");
             } else {

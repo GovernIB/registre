@@ -177,6 +177,30 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
+                "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
+                "organismo.estado.codigoEstadoEntidad=:vigente");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        List<Object[]> result = q.getResultList();
+        if (result.size() == 1) {
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
+            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            return organismo;
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select organismo from Organismo as organismo where " +
@@ -234,30 +258,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         } else {
             return null;
         }
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
-
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
-                "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
-                "organismo.estado.codigoEstadoEntidad=:vigente");
-
-        q.setParameter("codigo", codigo);
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
-        List<Object[]> result = q.getResultList();
-        if (result.size() == 1) {
-            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
-            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
-            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
-            return organismo;
-        } else {
-            return null;
-        }
-
     }
 
     @Override
