@@ -330,6 +330,7 @@
 
                 }else if(respuesta.status == 'FAIL') {
                     mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
                 }
 
             }

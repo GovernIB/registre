@@ -373,7 +373,8 @@
                         goTo('<c:url value="/registroEntrada/${idRegistro}/detalle?justificante=true"/>');
 
                     }else if(respuesta.status == 'FAIL') {
-                            mensajeError('#mensajes', respuesta.error);
+                        mensajeError('#mensajes', respuesta.error);
+                        waitingDialog.hide();
                     }
 
                 }
