@@ -217,7 +217,6 @@ que se le indica -->
         $('#localidad' + paramTipo).attr("disabled", "disabled").trigger("chosen:updated");
 
         actualizarSelectLocalidad('${obtenerLocalidades}', '#localidad' + paramTipo, $(provinciaString).val(), null, true, true);
-        //actualizarSelect('${obtenerLocalidades}','#localidadOrganismoDestino',$(provinciaString).val(),null,true,true);
     }
 
     function actualizarProvinciaDestinatarios(paramTipo) {

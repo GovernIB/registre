@@ -203,183 +203,189 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
             localidad: localidad,
             oficinasSir: oficinasSir
         },
-        success: function (result) {
+        success: function (result,estado) {
 
             $('#resultadosbusqueda' + tipoOrganismo).css('display', 'block');
-            var len = result.length;
-            for (var i = 0; i < len; i++) {
-                var denominacion = '';
-                var codigo = '';
-
-
-                // Sustituimos comillas simples y dobles para evitar problemas en la llamada
-                // a la función posterior
-                denominacion = normalizarTexto(result[i].denominacion);
-                codigo = result[i].codigo;
-
-
-                var title = result[i].raiz;
-                // el elemento superior puede ser null, en ese caso le ponemos un texto por defecto
-                var superior = $('#organismo_superior').val() + ": " + result[i].superior;
-                if (result[i].superior == null) {
-                    superior = tradorganismo['organismo.superior.vacio'];
-                }
-
-
-                // definimos el contenido de la tabla en función de los resultados de la busqueda.
-                var organigramaTab = '#organigrama' + tipoOrganismo;
-
-                //Definimos si tiene oficinas sir o no
-                var tieneOficinaSir = '<span class="label label-danger">'+tradorganismo['organismo.oficinaSir.no']+'</span>';
-                if(result[i].tieneOficinaSir) {
-                    tieneOficinaSir = '<span class="label label-success">'+tradorganismo['organismo.oficinaSir.si']+'</span>'
-                }
-
-                //Definimos si se muestra la información de que tieneOficinaSir
-                var mostrarOficinaSir = "";
-                if(tipoOrganismo != 'OficinaOrigen' && tipoOrganismo != 'OficinaSir' ){
-                    mostrarOficinaSir = '<td style=\"text-align:center;\">'+tieneOficinaSir+'</td>';
-                }
-
-                //Mostramos la localidad en Administraciones Locales y de Justicia si son organismos y siempre que sean oficinas.
-                var mostrarLocalidad = "";
-                if(codNivelAdministracion == 3 || codNivelAdministracion == 6 || tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir' ){
-                    mostrarLocalidad = '<td style=\"text-align:left;\"> ' + result[i].localidad + '</td>';
-                }
-
-                if (tipoOrganismo == 'OrganismoInteresado') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addOrganismoInteresadoModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
-                } else if (tipoOrganismo == 'OrganismoDestino' || tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
-                } else if (tipoOrganismo == 'OficinaOrigen') {
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
-                }else if (tipoOrganismo == 'OficinaSir') {
-                    // Obtenemos el organismo responsable de la oficina viene como string combinado en el elemento raiz de la siguiente forma " Denominacion - Codigo".
-                    var codigoOrganismoResponsable = result[i].superior.split(" - ")[1];
-                    var denominacionOrganismoResponsable = normalizarTexto(result[i].superior.split(" - ")[0]);
-                    var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>"+ mostrarLocalidad + mostrarOficinaSir +"<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOficinaSir('" + codigo + "','" + denominacion + "','"+codigoOrganismoResponsable+"','"+denominacionOrganismoResponsable+"','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
-                }
-
-                table.append(linea);
-            }
-            // Ocultamos imagen reload
-            $('#reloadorg' + tipoOrganismo).hide();
-            // Se muestra solo si hay resultados
-            if (len != 0) {
-                $('#resultadosbusqueda' + tipoOrganismo).attr("display:block");
-                var paginacion = '';
-                paginacion += "<div class='alert-grey'>";
-
-                if (len == 1) {
-                    paginacion += tradorganismo['regweb.resultado'] + ' <strong>' + len + '</strong>&nbsp;' + tradorganismo['interesado.resultado'];
-                }
-                if (len > 1) {
-                    paginacion += tradorganismo['regweb.resultados'] + ' <strong>' + len + '</strong>&nbsp;' + tradorganismo['interesado.resultados'];
-                }
-                paginacion += '<div/>';
-
-                $('#resultadosbusqueda' + tipoOrganismo).append(paginacion);
-                $('#resultadosbusqueda' + tipoOrganismo).append(table);
-
-            } else if (len == 0) {
-                //$('#resultadosbusqueda'+tipoOrganismo).attr("display:none");
+            if (estado == 'nocontent') {
+                $('#reloadorg' + tipoOrganismo).hide();
                 $('#resultadosbusqueda' + tipoOrganismo).html('<br/><div class="alert alert-grey" style="text-align:left;">' + tradorganismo['regweb.noresultados'] + '</div>');
-            }
-
-            // mostramos el listado paginado.
-            $('#tresultadosbusqueda' + tipoOrganismo, 'td').each(function (i) {
-                $(this).text(i + 1);
-            });
-
-            $('#resultadosbusqueda' + tipoOrganismo).append('<ul class="pagination pagination-lg pager" ></ul>');
+            } else {
+                var len = result.length;
+                for (var i = 0; i < len; i++) {
+                    var denominacion = '';
+                    var codigo = '';
 
 
-            $('#tresultadosbusqueda' + tipoOrganismo).each(function () {
+                    // Sustituimos comillas simples y dobles para evitar problemas en la llamada
+                    // a la función posterior
+                    denominacion = normalizarTexto(result[i].denominacion);
+                    codigo = result[i].codigo;
 
-                var currentPage = 1;
-                var numPerPage = 10;
-                // calculo de las paginas a mostrar
 
-                var totalResults = len;
-                var totalPages = Math.floor(totalResults / numPerPage);
-                if (totalResults % numPerPage != 0) {
-                    totalPages = totalPages + 1;
+                    var title = result[i].raiz;
+                    // el elemento superior puede ser null, en ese caso le ponemos un texto por defecto
+                    var superior = $('#organismo_superior').val() + ": " + result[i].superior;
+                    if (result[i].superior == null) {
+                        superior = tradorganismo['organismo.superior.vacio'];
+                    }
+
+
+                    // definimos el contenido de la tabla en función de los resultados de la busqueda.
+                    var organigramaTab = '#organigrama' + tipoOrganismo;
+
+                    //Definimos si tiene oficinas sir o no
+                    var tieneOficinaSir = '<span class="label label-danger">' + tradorganismo['organismo.oficinaSir.no'] + '</span>';
+                    if (result[i].tieneOficinaSir) {
+                        tieneOficinaSir = '<span class="label label-success">' + tradorganismo['organismo.oficinaSir.si'] + '</span>'
+                    }
+
+                    //Definimos si se muestra la información de que tieneOficinaSir
+                    var mostrarOficinaSir = "";
+                    if (tipoOrganismo != 'OficinaOrigen' && tipoOrganismo != 'OficinaSir') {
+                        mostrarOficinaSir = '<td style=\"text-align:center;\">' + tieneOficinaSir + '</td>';
+                    }
+
+                    //Mostramos la localidad en Administraciones Locales y de Justicia si son organismos y siempre que sean oficinas.
+                    var mostrarLocalidad = "";
+                    if (codNivelAdministracion == 3 || codNivelAdministracion == 6 || tipoOrganismo == 'OficinaOrigen' || tipoOrganismo == 'OficinaSir') {
+                        mostrarLocalidad = '<td style=\"text-align:left;\"> ' + result[i].localidad + '</td>';
+                    }
+
+                    if (tipoOrganismo == 'OrganismoInteresado') {
+                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addOrganismoInteresadoModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                    } else if (tipoOrganismo == 'OrganismoDestino' || tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida') {
+                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                    } else if (tipoOrganismo == 'OficinaOrigen') {
+                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
+                    } else if (tipoOrganismo == 'OficinaSir') {
+                        // Obtenemos el organismo responsable de la oficina viene como string combinado en el elemento raiz de la siguiente forma " Denominacion - Codigo".
+                        var codigoOrganismoResponsable = result[i].superior.split(" - ")[1];
+                        var denominacionOrganismoResponsable = normalizarTexto(result[i].superior.split(" - ")[0]);
+                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOficinaSir('" + codigo + "','" + denominacion + "','" + codigoOrganismoResponsable + "','" + denominacionOrganismoResponsable + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
+                    }
+
+                    table.append(linea);
+                }
+                // Ocultamos imagen reload
+                $('#reloadorg' + tipoOrganismo).hide();
+                // Se muestra solo si hay resultados
+                if (len != 0) {
+                    $('#resultadosbusqueda' + tipoOrganismo).attr("display:block");
+                    var paginacion = '';
+                    paginacion += "<div class='alert-grey'>";
+
+                    if (len == 1) {
+                        paginacion += tradorganismo['regweb.resultado'] + ' <strong>' + len + '</strong>&nbsp;' + tradorganismo['interesado.resultado'];
+                    }
+                    if (len > 1) {
+                        paginacion += tradorganismo['regweb.resultados'] + ' <strong>' + len + '</strong>&nbsp;' + tradorganismo['interesado.resultados'];
+                    }
+                    paginacion += '<div/>';
+
+                    $('#resultadosbusqueda' + tipoOrganismo).append(paginacion);
+                    $('#resultadosbusqueda' + tipoOrganismo).append(table);
+
+                } else if (len == 0) {
+                    alert("Entramos aqui en len 0");
+                    //$('#resultadosbusqueda'+tipoOrganismo).attr("display:none");
+                    $('#resultadosbusqueda' + tipoOrganismo).html('<br/><div class="alert alert-grey" style="text-align:left;">' + tradorganismo['regweb.noresultados'] + '</div>');
                 }
 
+                // mostramos el listado paginado.
+                $('#tresultadosbusqueda' + tipoOrganismo, 'td').each(function (i) {
+                    $(this).text(i + 1);
+                });
 
-                var beginIndex = Math.max(1, currentPage - numPerPage);
-                var endIndex = Math.min(beginIndex + 10, totalPages);
-                var $pager = $('<ul class="pagination pagination-sm"></ul>');
+                $('#resultadosbusqueda' + tipoOrganismo).append('<ul class="pagination pagination-lg pager" ></ul>');
 
 
+                $('#tresultadosbusqueda' + tipoOrganismo).each(function () {
 
-                var $table = $(this);
-                $table.bind('repaginate', function () {
+                    var currentPage = 1;
+                    var numPerPage = 10;
+                    // calculo de las paginas a mostrar
 
-                    $table.find('tbody tr').hide().slice((currentPage - 1) * numPerPage, currentPage * numPerPage).show();
-                    beginIndex = Math.max(1, currentPage - numPerPage);
-                    endIndex = Math.min(beginIndex + 10, totalPages);
+                    var totalResults = len;
+                    var totalPages = Math.floor(totalResults / numPerPage);
+                    if (totalResults % numPerPage != 0) {
+                        totalPages = totalPages + 1;
+                    }
 
-                    $pager.empty();
-                    $pager = $('<ul class="pagination pagination-sm"></ul>');
 
-                    $('<li id="first"><a href="javascript:void(0);"><i class="fa fa-angle-double-left"></i></a></li>').bind('click', {
-                        newPage: 1
-                    }, function (event) {
-                        currentPage = event.data['newPage'];
-                        // $(this).addClass('active').siblings().removeClass('active');
-                        $table.trigger('repaginate');
-                    }).appendTo($pager);
+                    var beginIndex = Math.max(1, currentPage - numPerPage);
+                    var endIndex = Math.min(beginIndex + 10, totalPages);
+                    var $pager = $('<ul class="pagination pagination-sm"></ul>');
 
-                    if (currentPage != 1 && currentPage >= endIndex) {
-                        $('<li id="previous"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i></a></li>').bind('click', {
-                            newPage: currentPage - 1
+
+                    var $table = $(this);
+                    $table.bind('repaginate', function () {
+
+                        $table.find('tbody tr').hide().slice((currentPage - 1) * numPerPage, currentPage * numPerPage).show();
+                        beginIndex = Math.max(1, currentPage - numPerPage);
+                        endIndex = Math.min(beginIndex + 10, totalPages);
+
+                        $pager.empty();
+                        $pager = $('<ul class="pagination pagination-sm"></ul>');
+
+                        $('<li id="first"><a href="javascript:void(0);"><i class="fa fa-angle-double-left"></i></a></li>').bind('click', {
+                            newPage: 1
                         }, function (event) {
                             currentPage = event.data['newPage'];
                             // $(this).addClass('active').siblings().removeClass('active');
                             $table.trigger('repaginate');
                         }).appendTo($pager);
 
-                    }
+                        if (currentPage != 1 && currentPage >= endIndex) {
+                            $('<li id="previous"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i></a></li>').bind('click', {
+                                newPage: currentPage - 1
+                            }, function (event) {
+                                currentPage = event.data['newPage'];
+                                // $(this).addClass('active').siblings().removeClass('active');
+                                $table.trigger('repaginate');
+                            }).appendTo($pager);
 
-                    for (var page = beginIndex; page <= endIndex; page++) {
-                        $('<li id=li' + page + '><a href ="javascript:void(0);">' + page + '</a></li>').bind('click', {
-                            newPage: page
+                        }
+
+                        for (var page = beginIndex; page <= endIndex; page++) {
+                            $('<li id=li' + page + '><a href ="javascript:void(0);">' + page + '</a></li>').bind('click', {
+                                newPage: page
+                            }, function (event) {
+                                currentPage = event.data['newPage'];
+                                // $(this).addClass('active').siblings().removeClass('active');
+                                $table.trigger('repaginate');
+                            }).appendTo($pager);
+
+                        }
+
+
+                        if (currentPage != totalPages) {
+                            $('<li id="next"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i></a></li>').bind('click', {
+                                newPage: currentPage + 1
+                            }, function (event) {
+                                currentPage = event.data['newPage'];
+                                // $(this).addClass('active').siblings().removeClass('active');
+                                $table.trigger('repaginate');
+                            }).appendTo($pager);
+
+                        }
+
+                        $('<li id="last"><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i></a></li>').bind('click', {
+                            newPage: totalPages
                         }, function (event) {
                             currentPage = event.data['newPage'];
                             // $(this).addClass('active').siblings().removeClass('active');
                             $table.trigger('repaginate');
                         }).appendTo($pager);
 
-                    }
+                        $pager.insertAfter($table).find('#li' + currentPage).addClass('active');
 
-
-                    if (currentPage != totalPages) {
-                        $('<li id="next"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i></a></li>').bind('click', {
-                            newPage: currentPage + 1
-                        }, function (event) {
-                            currentPage = event.data['newPage'];
-                            // $(this).addClass('active').siblings().removeClass('active');
-                            $table.trigger('repaginate');
-                        }).appendTo($pager);
-
-                    }
-
-                    $('<li id="last"><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i></a></li>').bind('click', {
-                        newPage: totalPages
-                    }, function (event) {
-                        currentPage = event.data['newPage'];
-                        // $(this).addClass('active').siblings().removeClass('active');
-                        $table.trigger('repaginate');
-                    }).appendTo($pager);
-
-                    $pager.insertAfter($table).find('#li' + currentPage).addClass('active');
+                    });
+                    $table.trigger('repaginate');
 
                 });
-                $table.trigger('repaginate');
 
-            });
 
+            }
         }
 
     });
