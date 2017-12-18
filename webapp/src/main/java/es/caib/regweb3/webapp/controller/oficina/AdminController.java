@@ -62,7 +62,7 @@ public class AdminController extends BaseController {
         Organismo organismo = new Organismo();
         organismo.setEstado(vigente);
 
-        OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1);
+        OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1, false);
 
         model.addAttribute("organismoBusqueda", organismoBusqueda);
         model.addAttribute("entidades", entidadEjb.getAll());
@@ -84,7 +84,7 @@ public class AdminController extends BaseController {
 
         Organismo organismo = busqueda.getOrganismo();
 
-        Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), busqueda.getEntidad(), organismo.getCodigo(), organismo.getDenominacion(), organismo.getEstado().getId());
+        Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), busqueda.getEntidad(), organismo.getCodigo(), organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
 
         mav.addObject("paginacion", paginacion);
         mav.addObject("organismoBusqueda", busqueda);

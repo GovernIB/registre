@@ -63,9 +63,9 @@ public class OrganismoController extends BaseController {
        Organismo organismo = new Organismo();
        organismo.setEstado(vigente);
 
-       OrganismoBusquedaForm organismoBusqueda =  new OrganismoBusquedaForm(organismo,1);
+       OrganismoBusquedaForm organismoBusqueda =  new OrganismoBusquedaForm(organismo,1, false);
 
-       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), null, null, vigente.getId());
+       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), null, null, vigente.getId(), false);
 
        // Mirant si es una sincronitzacio o actualitzacio
        Descarga descarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidad.getId());
@@ -94,7 +94,7 @@ public class OrganismoController extends BaseController {
       Organismo organismo = busqueda.getOrganismo();
       Entidad entidad = getEntidadActiva(request);
 
-       Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), null, organismo.getDenominacion(), organismo.getEstado().getId());
+      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), null, organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
 
       // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
       Descarga descarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidad.getId());

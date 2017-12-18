@@ -402,7 +402,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad, Boolean libros) throws Exception {
 
         Query q;
         Query q2;
@@ -420,6 +420,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         if (idCatEstadoEntidad != null && idCatEstadoEntidad > 0) {
             where.add(" organismo.estado.id = :idCatEstadoEntidad");
             parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
+        }
+        // Buscamos registros de entrada con anexos
+        if (libros) {
+            where.add(" organismo.id in (select distinct(libro.organismo.id) from Libro as libro) ");
         }
 
         // Añadimos la Entidad

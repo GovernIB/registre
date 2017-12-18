@@ -157,10 +157,11 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @param pageNumber
      * @param idEntidad
      * @param denominacion
+     * @param libros
      * @return Paginacion
      * @throws Exception
     */
-   public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
+   public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad, Boolean libros) throws Exception;
 
    /**
      * Método que obtiene los organismos vigentes y en los que puede registrar la oficina activa.
