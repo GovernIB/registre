@@ -274,7 +274,7 @@
                                             <c:if test="${oficiosRemisionOrganismo.externo == false}">
                                                 <div class="btn-group">
                                                     <c:if test="${oficiosRemisionOrganismo.vigente && oficiosRemisionOrganismo.oficinas}">
-                                                        <button type="button" onclick="doForm('#oficio')" class="btn btn-sm btn-success dropdown-toggle">
+                                                        <button type="button" onclick="crearOficioRemision()" class="btn btn-sm btn-success dropdown-toggle">
                                                     </c:if>
 
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false || oficiosRemisionOrganismo.oficinas == false}">
@@ -290,7 +290,7 @@
                                             <c:if test="${oficiosRemisionOrganismo.externo == true}">
                                                 <div class="btn-group">
                                                     <c:if test="${oficiosRemisionOrganismo.vigente}">
-                                                        <button type="button" onclick="doForm('#oficio')" class="btn btn-sm btn-success dropdown-toggle">
+                                                        <button type="button" onclick="crearOficioRemision()" class="btn btn-sm btn-success dropdown-toggle">
                                                     </c:if>
 
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false}">
@@ -327,6 +327,17 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
+
+    /**
+     * Genera el Oficio de Remisón
+     */
+    function crearOficioRemision(){
+        waitingDialog.show('<spring:message code="oficioRemision.generando"/>', {dialogSize: 'm', progressType: 'success'});
+        doForm('#oficio');
+
+    }
+
+
     //Selecciona todos los oficios de remision de un organismo
     function seleccionarTodo(nomOficio, filas) {
         var len = parseInt(filas);
