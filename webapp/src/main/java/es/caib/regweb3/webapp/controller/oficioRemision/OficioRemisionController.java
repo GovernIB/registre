@@ -467,11 +467,11 @@ public class OficioRemisionController extends BaseController {
 
             }  catch (I18NException e) {
                 log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
                 return ("redirect:/oficioRemision/entradasPendientesRemision");
             } catch (I18NValidationException ve) {
                 log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
                 return ("redirect:/oficioRemision/entradasPendientesRemision");
             }
 
@@ -515,11 +515,11 @@ public class OficioRemisionController extends BaseController {
 
             }  catch (I18NException e) {
                 log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
                 return ("redirect:/oficioRemision/salidasPendientesRemision");
             } catch (I18NValidationException ve) {
                 log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
                 return ("redirect:/oficioRemision/salidasPendientesRemision");
             }
 
