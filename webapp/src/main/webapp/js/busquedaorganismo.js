@@ -137,6 +137,12 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
     var conOficinas = false;
     var oficinasSir = false;
 
+
+    var vigentes = true;
+    if(tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida'){
+        vigentes = false
+    }
+
     // Variables configurables en función del tipo de organismo indicado.
     var url = getUrlBusqueda(tipoOrganismo, urlServidor);
     // Caso administracion interesado
@@ -171,6 +177,14 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
         mostrarColLocalidad = '<col width="125">';
     }
 
+    //Mostramos el estado del organismo o oficina
+    var mostrarThEstado="";
+    var mostrarColEstado="";
+    if(tipoOrganismo == 'listaRegEntrada' ){
+        mostrarThEstado = '<th>' + tradorganismo['organismo.estado'] + '</th>';
+        mostrarColEstado ='<col width="100">';
+    }
+
     var mostrarThSir="";
     var mostrarColSir="";
     //Mostramos si tiene Oficinas sir cuando sean organismos
@@ -179,8 +193,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
         mostrarColSir='<col width="50">';
     }
 
-    table.append('<colgroup><col width="310"><col width="310">'+ mostrarColLocalidad + mostrarColSir +'<col width="100"></colgroup>');
-    table.append('<thead><tr><th>' + tradorganismo['organismo.denominacion'] + '</th><th>' + tradorganismo['organismo.raiz'] + '</th>'+ mostrarThLocalidad + mostrarThSir +'<th>' + tradorganismo['regweb.acciones'] + '</th></tr></thead><tbody></tbody>');
+    table.append('<colgroup><col width="310"><col width="310">'+  mostrarColLocalidad +  mostrarColEstado + mostrarColSir +'<col width="100"></colgroup>');
+    table.append('<thead><tr><th>' + tradorganismo['organismo.denominacion'] + '</th><th>' + tradorganismo['organismo.raiz'] + '</th>' + mostrarThLocalidad + mostrarThEstado + mostrarThSir +'<th>' + tradorganismo['regweb.acciones'] + '</th></tr></thead><tbody></tbody>');
 
 
     //Mostram la imatge de reload
@@ -201,7 +215,8 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
             unidadRaiz: unidadRaiz,
             provincia: provincia,
             localidad: localidad,
-            oficinasSir: oficinasSir
+            oficinasSir: oficinasSir,
+            vigentes: vigentes
         },
         success: function (result,estado) {
 
@@ -233,6 +248,20 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                     // definimos el contenido de la tabla en función de los resultados de la busqueda.
                     var organigramaTab = '#organigrama' + tipoOrganismo;
 
+                    //Mostramos el estado
+                    var mostrarEstado="";
+                    if(tipoOrganismo == 'listaRegEntrada'){
+                        if(result[i].descripcionEstado == 'V') {
+                            mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-success">' + tradorganismo['organismo.estado.vigente']  + '</span></td>';
+                        }else if(result[i].descripcionEstado == 'A'){
+                            mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-danger">' +  tradorganismo['organismo.estado.anulado'] + '</span></td>';
+                        }else if(result[i].descripcionEstado == 'E'){
+                            mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-danger">' +  tradorganismo['organismo.estado.extinguido'] + '</span></td>';
+                        }else if(result[i].descripcionEstado == 'T'){
+                            mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-danger">' +  tradorganismo['organismo.estado.transitorio'] + '</span></td>';
+                        }
+                    }
+
                     //Definimos si tiene oficinas sir o no
                     var tieneOficinaSir = '<span class="label label-danger">' + tradorganismo['organismo.oficinaSir.no'] + '</span>';
                     if (result[i].tieneOficinaSir) {
@@ -254,7 +283,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                     if (tipoOrganismo == 'OrganismoInteresado') {
                         var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addOrganismoInteresadoModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                     } else if (tipoOrganismo == 'OrganismoDestino' || tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida') {
-                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad +  mostrarEstado + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                     } else if (tipoOrganismo == 'OficinaOrigen') {
                         var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                     } else if (tipoOrganismo == 'OficinaSir') {
