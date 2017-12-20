@@ -321,7 +321,7 @@
             url:url,
             type:'POST',
             beforeSend: function(objeto){
-                waitingDialog.show('<spring:message code="justificante.generando"/>', {dialogSize: 'm', progressType: 'danger'});
+                waitingDialog.show('<spring:message code="justificante.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'danger'});
             },
             success:function(respuesta){
 
