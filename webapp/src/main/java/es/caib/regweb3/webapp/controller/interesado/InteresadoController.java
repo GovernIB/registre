@@ -184,7 +184,7 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value="/gestionar/{tipoRegistro}/nuevo/{idRegistroDetalle}", method= RequestMethod.POST)
     @ResponseBody
-    public JsonResponse nuevoInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
+    public synchronized JsonResponse nuevoInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
 
         JsonResponse jsonResponse = new JsonResponse();
 
@@ -193,7 +193,7 @@ public class InteresadoController extends BaseController{
         Boolean isRepresentante = interesado.getIsRepresentante();
         String idRepresentado = null;
 
-        log.info("Nuevo interesado: " + interesado.getNombreCompleto());
+        log.info("Nuevo interesado: " + interesado.getNombreCompletoInforme());
 
         // Comprobamos si es se trata de un representante
         if (isRepresentante) {

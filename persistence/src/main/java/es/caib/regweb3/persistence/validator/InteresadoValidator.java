@@ -185,11 +185,12 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                     try {
 
                         if (interesado.getId() == null) {
+                            log.info("Comprueba la existencia de la persona: " + interesado.getDocumento());
                             existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
                         }
 
                     } catch (Exception e) {
-                        log.error("Error comprobando si persona ya existe: ", e);
+                        log.info("Error comprobando si persona ya existe: ", e);
                         existe = true;
                     }
 
