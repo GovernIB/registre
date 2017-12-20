@@ -250,14 +250,23 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
                     //Mostramos el estado
                     var mostrarEstado="";
+                    var estado=result[i].descripcionEstado;
+
+                    //definimos la variable para desabilitar el botón del arbol en caso de que no sea el estado vigente
+                    var arbolDisabled="";
+                    if(estado!='V'){
+                        arbolDisabled = "disabled=disabled";
+                    }
+
+                    // si es busqueda de registros de entrada, se muestra el estado
                     if(tipoOrganismo == 'listaRegEntrada'){
-                        if(result[i].descripcionEstado == 'V') {
+                        if(estado == 'V') {
                             mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-success">' + tradorganismo['organismo.estado.vigente']  + '</span></td>';
-                        }else if(result[i].descripcionEstado == 'A'){
+                        }else if(estado == 'A'){
                             mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-danger">' +  tradorganismo['organismo.estado.anulado'] + '</span></td>';
-                        }else if(result[i].descripcionEstado == 'E'){
+                        }else if(estado == 'E'){
                             mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-danger">' +  tradorganismo['organismo.estado.extinguido'] + '</span></td>';
-                        }else if(result[i].descripcionEstado == 'T'){
+                        }else if(estado == 'T'){
                             mostrarEstado = '<td style=\"text-align:center;\"><span class="label label-danger">' +  tradorganismo['organismo.estado.transitorio'] + '</span></td>';
                         }
                     }
@@ -283,7 +292,7 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
                     if (tipoOrganismo == 'OrganismoInteresado') {
                         var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"addOrganismoInteresadoModal('" + codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                     } else if (tipoOrganismo == 'OrganismoDestino' || tipoOrganismo == 'listaRegEntrada' || tipoOrganismo == 'listaRegSalida') {
-                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad +  mostrarEstado + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\"><span class=\"fa fa-sitemap\"></span></a></td></tr>";
+                        var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].denominacion + " - " + result[i].codigo + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad +  mostrarEstado + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a><a class=\"btn btn-success btn-sm\" title=\"Arbol\" onclick=\"mostrarArbol('" + codigo + "','" + urlServidor + "','" + tipoOrganismo + "','" + idRegistroDetalle + "')\" "+arbolDisabled+" ><span class=\"fa fa-sitemap\"></span></a></td></tr>";
                     } else if (tipoOrganismo == 'OficinaOrigen') {
                         var linea = "<tr><td style=\"text-align:left;\"><label rel=\"popover\" class=\"no-bold text-gris\" style=\"cursor: pointer;\" title=\"" + superior + "\">" + result[i].codigo + " - " + result[i].denominacion + "</label></td><td style=\"text-align:left;\"> " + title + "</td>" + mostrarLocalidad + mostrarOficinaSir + "<td class=\"center\"><a class=\"btn btn-warning btn-sm\" title=\"Seleccionar\" onclick=\"asignarOrganismo('" + codigo + "','" + denominacion + "','" + tipoOrganismo + "')\"><span class=\"fa fa-hand-o-right\"></span></a></td></tr>";
                     } else if (tipoOrganismo == 'OficinaSir') {
@@ -566,33 +575,36 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
         type: 'GET',
         dataType: 'json',
         data: {codigo: organismo},
-        success: function (result) {
-            var denominacion = normalizarTexto(result.denominacion);
-
-
-            html += '<ul>';
-            html += '<li>';
-            if (tipoOrganismo == 'OrganismoInteresado') {
-                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
+        success: function (result,estado) {
+            if (estado == 'nocontent') {
+                $('#arbol' + tipoOrganismo).html('<br/><div class="alert alert-grey" style="text-align:left;">' + tradorganismo['regweb.noresultados'] + '</div>');
             } else {
-                html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
-            }
+                var denominacion = normalizarTexto(result.denominacion);
 
-            //imprimir los hijos
-            var hijoslen = result.hijos.length;
 
-            if (hijoslen > 0) {
-                html += pintarHijos(result.hijos, tipoOrganismo, idRegistroDetalle);
+                html += '<ul>';
+                html += '<li>';
+                if (tipoOrganismo == 'OrganismoInteresado') {
+                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
+                } else {
+                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
+                }
+
+                //imprimir los hijos
+                var hijoslen = result.hijos.length;
+
+                if (hijoslen > 0) {
+                    html += pintarHijos(result.hijos, tipoOrganismo, idRegistroDetalle);
+                }
+                html += '</li>';
+                html += '</ul>';
+                html += '</li>';
+                html += '</ul>';
+                html += '</li>';
+                html += '</ul>';
+                $('#arbol' + tipoOrganismo).html(html);
             }
-            html += '</li>';
-            html += '</ul>';
-            html += '</li>';
-            html += '</ul>';
-            html += '</li>';
-            html += '</ul>';
-            $('#arbol' + tipoOrganismo).html(html);
         }
-
     });
     $('#tab' + tipoOrganismo + ' a:last').show();
     $('#tab' + tipoOrganismo + ' a:last').tab('show');
