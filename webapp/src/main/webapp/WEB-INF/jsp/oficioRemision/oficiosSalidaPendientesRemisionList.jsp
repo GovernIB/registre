@@ -312,7 +312,7 @@
      * Genera el Oficio de Remisón
      */
     function crearOficioRemision(){
-        waitingDialog.show('<spring:message code="oficioRemision.generando"/>', {dialogSize: 'm', progressType: 'success'});
+        waitingDialog.show('<spring:message code="oficioRemision.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
         doForm('#oficio');
 
     }
