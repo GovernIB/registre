@@ -4,11 +4,11 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Repro;
 import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,19 +31,16 @@ import java.util.List;
 @Controller
 public class ComunController extends BaseController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
+    protected final Logger log = Logger.getLogger(getClass());
 
     @Autowired
     private UsuarioService usuarioService;
     
     @EJB(mappedName = "regweb3/RolEJB/local")
-    public RolLocal rolEjb;
-    
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RolLocal rolEjb;
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
-    public ReproLocal reproEjb;
+    private ReproLocal reproEjb;
     
 
     @RequestMapping(value = "/noAutorizado")

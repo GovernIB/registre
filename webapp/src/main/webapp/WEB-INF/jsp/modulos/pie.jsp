@@ -54,7 +54,7 @@
 
 
 <!-- Input File -->
-<script>
+<script type="text/javascript">
     $(document)
         .on('change', '.btn-file :file', function() {
             var input = $(this),
@@ -77,13 +77,9 @@
 
         });
     });
-</script>
 <!-- Fin input file -->
 
-
-
 <!-- COLOR MENU -->
-<script>
     $(document).ready(function() {
         $(function () {
             <!--Si es SuperAdministrador-->
@@ -98,6 +94,14 @@
             }
         });
     });
+<!-- Fin COLOR MENU -->
+
+    <%-- Traducciones para generales --%>
+    var trads_general = new Array();
+    trads_general['sesion.expirar.titulo'] = "<spring:message code='regweb.sesion.expirar.titulo' javaScriptEscape='true' />";
+    trads_general['sesion.expirar.mensaje'] = "<spring:message code='regweb.sesion.expirar.mensaje' javaScriptEscape='true' />";
+    trads_general['sesion.expirar.boton'] = "<spring:message code='regweb.sesion.expirar.boton' javaScriptEscape='true' />";
 
 </script>
-<!-- Fin COLOR MENU -->
+
+

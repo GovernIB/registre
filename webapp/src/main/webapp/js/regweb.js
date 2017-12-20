@@ -63,19 +63,19 @@
 
     $("[rel='contactesOficina']").popover({ trigger: 'hover', container: 'body', html: true, placement: 'right'});
 
-    /*$.sessionTimeout({
-     title: 'Sesion timeout',
-     ignoreUserActivity:true,
-     message: 'Tu sesión va a expirar en menos de un minuto.',
-     keepAliveButton:'Seguir conectado',
-     keepAliveUrl: '/regweb3/aumentarSesion',
-     keepAlive: false,
-     redirUrl: '/regweb3/logout',
-     logoutUrl: '/regweb3/logout',
-     warnAfter: 600000,
-     redirAfter: 800000,
-     countdownBar: true
-     });*/
+
+    $.sessionTimeout({
+        title:trads_general['sesion.expirar.titulo'],
+        message:trads_general['sesion.expirar.mensaje'],
+        ignoreUserActivity:true,
+        keepAliveUrl: '/regweb3/rest/extenderSesion',
+        keepAliveButton: trads_general['sesion.expirar.boton'],
+        logoutUrl: 'login.html',
+        redirUrl: 'http://www.google.es' ,
+        warnAfter: 1740000,
+        redirAfter: 1788000,
+        countdownBar: true
+    });
 
 });
 
@@ -1082,5 +1082,3 @@ var waitingDialog = waitingDialog || (function ($) {
     };
 
 })(jQuery);
-
-

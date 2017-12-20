@@ -255,4 +255,13 @@ public class RestController {
         return null;
 
     }
+
+    /**
+     * Extiende la sesion
+     */
+    @RequestMapping(value = "/extenderSesion", method = RequestMethod.POST)
+    @ResponseBody
+    public void extenderSesion() throws Exception {
+
+    }
 }
