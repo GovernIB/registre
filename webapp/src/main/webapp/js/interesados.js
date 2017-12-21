@@ -546,6 +546,8 @@ function actualizarNombrePersonaInteresados(idPersona, nombre, mensaje) {
  */
 function buscarPersonas(tipoPersonas, idRegistroDetalle) {
 
+    var busqueda = true;
+
     var tabla = $('<table id="resultadosBusquedaPersona"></table>').addClass('paginated table table-bordered table-hover table-striped');
     tabla.append('<colgroup><col><col><col><col width="100"></colgroup>');
 
@@ -568,96 +570,103 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
         var tipo = '0';
         var json = { "nombre" : $('#nombre'+tipoPersonas).val(), "apellido1" : $('#apellido1'+tipoPersonas).val(), "apellido2" : $('#apellido2'+tipoPersonas).val(), "documento" : $('#documento'+tipoPersonas).val(),"razonSocial" : $('#razonSocial'+tipoPersonas).val(), "tipo": tipo};
 
+        if(json.nombre.length==0 && json.apellido1.length==0 && json.apellido2.length==0 && json.documento.length==0 && json.razonSocial.length==0){
+
+            busqueda = false;
+        }
+
         tabla.append('<thead><tr><th>'+tradsinteresado['persona.persona']+'</th><th>'+tradsinteresado['persona.documento']+'</th><th>'+tradsinteresado['persona.tipoPersona']+'</th><th>'+tradsinteresado['regweb.acciones']+'</th></tr></thead><tbody></tbody>');
     }
 
-    //Mostram la imatge de reload
-    $('#reload' + tipoPersonas).show();
-    // realizamos la busqueda en dir3 mediante REST.
-    $.ajax({
-        url: $("#buscadorPersonasForm"+tipoPersonas).attr( "action"),
-        data: JSON.stringify(json),
-        type: "POST",
 
-        beforeSend: function(xhr) {
-            xhr.setRequestHeader("Accept", "application/json");
-            xhr.setRequestHeader("Content-Type", "application/json");
-        },
-        success: function(result) {
+    if(busqueda){
 
-            // Limpiamos los resultados:
-            $('#resultadosBusquedaPersonas'+tipoPersonas).html('');
-            $('#paginacionPersonas').remove();
-            var total = result.length;
+        //Mostram la imatge de reload
+        $('#reload' + tipoPersonas).show();
+        // realizamos la busqueda en dir3 mediante REST.
 
-            // Ocultamos imagen reload
-            $('#reload' + tipoPersonas).hide();
+        $.ajax({
+            url: $("#buscadorPersonasForm"+tipoPersonas).attr( "action"),
+            data: JSON.stringify(json),
+            type: "POST",
 
-            if(total == 0){ // Si no hay resultados
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.setRequestHeader("Content-Type", "application/json");
+            },
+            success: function(result) {
 
-                if(tipoPersonas == 'Todas'){
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html("<div class=\"alert alert-grey\" style=\"text-align:left;\">"+tradsinteresado['interesado.noresultados.escoge']+"<a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+representado+",'','"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.anadir']+"</a></div>");
-                }else{
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.noresultados']+'</div>');
-                }
+                // Limpiamos los resultados:
+                $('#resultadosBusquedaPersonas'+tipoPersonas).html('');
+                $('#paginacionPersonas').remove();
+                var total = result.length;
 
-            }else if(total != 0){
+                // Ocultamos imagen reload
+                $('#reload' + tipoPersonas).hide();
 
-                if(total > 1000) {  // Miramos si la búsqueda devuelve más de 1000 resultados
+                if(total == 0){ // Si no hay resultados
 
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.maxresultados']+'</div>');
-
-                } else{
-
-                    for (var i = 0; i < total; i++) {
-
-                        var documento = '';
-                        if (result[i].documento != null) {
-                            documento = result[i].documento;
-                        }
-
-                        if (tipoPersonas == 'Fisicas') {
-                            var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
-                            var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
-                            tabla.append(linea);
-
-                        } else if (tipoPersonas == 'Juridicas') {
-                            var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
-                            var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
-                            tabla.append(linea);
-
-                        } else if (tipoPersonas == 'Todas') {
-                            var representado = $('#representado').val();
-
-                            var nombre = '';
-                            var tipoPersona = '';
-
-                            if (result[i].tipo == 2) {
-                                nombre = result[i].nombrePersonaFisicaCorto;
-                                tipoPersona = tradsinteresado['persona.fisica'];
-                            } else if (result[i].tipo == 3) {
-                                nombre = result[i].nombrePersonaJuridica;
-                                tipoPersona = tradsinteresado['persona.juridica'];
-                            }
-
-
-                            var linea = "<tr><td style=\"text-align:left;\">" + nombre + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tipoPersona + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('" + result[i].id + "','" + representado + "','" + idRegistroDetalle + "')\"/></td></tr>";
-                            tabla.append(linea);
-                        }
+                    if(tipoPersonas == 'Todas'){
+                        $('#resultadosBusquedaPersonas'+tipoPersonas).html("<div class=\"alert alert-grey\" style=\"text-align:left;\">"+tradsinteresado['interesado.noresultados.escoge']+" <a href=\"#modalInteresado\" onclick=\"gestionarRepresentante("+representado+",'','"+urlObtenerInteresado+"')\">"+tradsinteresado['interesado.representante.anadir']+"</a></div>");
+                    }else{
+                        $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.noresultados']+'</div>');
                     }
 
-                    // Mensaje con el total de resultados obtenidos
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).attr("display:block");
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">'+tradsinteresado['interesado.hay']+' <strong>'+total+'</strong> '+tradsinteresado['interesado.resultados']+'</div>');
-                    $('#resultadosBusquedaPersonas'+tipoPersonas).append(tabla);
+                }else if(total != 0){
+
+                    if(total > 1000) {  // Miramos si la búsqueda devuelve más de 1000 resultados
+
+                        $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.maxresultados']+'</div>');
+
+                    } else{
+
+                        for (var i = 0; i < total; i++) {
+
+                            var documento = '';
+                            if (result[i].documento != null) {
+                                documento = result[i].documento;
+                            }
+
+                            if (tipoPersonas == 'Fisicas') {
+                                var nombrePersonaFisica = normalizarTexto(result[i].nombrePersonaFisica);
+                                var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaFisica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.fisica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaFisica + "','Persona Física','No','#modalBuscadorPersonasFisicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                                tabla.append(linea);
+
+                            } else if (tipoPersonas == 'Juridicas') {
+                                var nombrePersonaJuridica = normalizarTexto(result[i].nombrePersonaJuridica);
+                                var linea = "<tr><td style=\"text-align:left;\">" + result[i].nombrePersonaJuridica + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tradsinteresado['persona.juridica'] + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=" + tradsinteresado['regweb3.anadir'] + " onclick=\"addPersonaInteresado('" + result[i].id + "','" + nombrePersonaJuridica + "','Persona Juridica','No','#modalBuscadorPersonasJuridicas','" + idRegistroDetalle + "')\"/></td></tr>";
+                                tabla.append(linea);
+
+                            } else if (tipoPersonas == 'Todas') {
+                                var representado = $('#representado').val();
+
+                                var nombre = '';
+                                var tipoPersona = '';
+
+                                if (result[i].tipo == 2) {
+                                    nombre = result[i].nombrePersonaFisicaCorto;
+                                    tipoPersona = tradsinteresado['persona.fisica'];
+                                } else if (result[i].tipo == 3) {
+                                    nombre = result[i].nombrePersonaJuridica;
+                                    tipoPersona = tradsinteresado['persona.juridica'];
+                                }
 
 
-                    // Paginamos el listado
+                                var linea = "<tr><td style=\"text-align:left;\">" + nombre + "</td><td style=\"text-align:left;\">" + documento + "</td><td style=\"text-align:left;\">" + tipoPersona + "</td><td class=\"center\"><input type=\"button\" class=\"btn btn-warning btn-sm\" value=\"Afegir\" onclick=\"addRepresentante('" + result[i].id + "','" + representado + "','" + idRegistroDetalle + "')\"/></td></tr>";
+                                tabla.append(linea);
+                            }
+                        }
 
-                    if(total > 10 ) {
+                        // Mensaje con el total de resultados obtenidos
+                        $('#resultadosBusquedaPersonas'+tipoPersonas).attr("display:block");
+                        $('#resultadosBusquedaPersonas'+tipoPersonas).append('<div class="alert-grey" style="text-align:left;">'+tradsinteresado['interesado.hay']+' <strong>'+total+'</strong> '+tradsinteresado['interesado.resultados']+'</div>');
+                        $('#resultadosBusquedaPersonas'+tipoPersonas).append(tabla);
 
 
-                        $('#resultadosBusquedaPersonas' + tipoPersonas).each(function () {
+                        // Paginamos el listado
+
+                        if(total > 10 ) {
+
 
                             var currentPage = 1;
                             var numPerPage = 10;
@@ -672,7 +681,7 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
                             var endIndex = Math.min(beginIndex + 10, totalPages);
                             var $pager = $('<ul class="pagination pagination-sm"></ul>');
 
-                            var $table = $(this);
+                            var $table = $("#resultadosBusquedaPersona");
                             $table.bind('repaginate', function () {
 
                                 $table.find('tbody tr').hide().slice((currentPage - 1) * numPerPage, currentPage * numPerPage).show();
@@ -731,15 +740,23 @@ function buscarPersonas(tipoPersonas, idRegistroDetalle) {
                             });
                             $table.trigger('repaginate');
 
-                        });
+
+                        }
+
                     }
 
                 }
 
             }
+        });
 
-        }
-    });
+    }else{
+
+        $('#resultadosBusquedaPersonas'+tipoPersonas).html('<div class="alert alert-grey" style="text-align:left;">'+tradsinteresado['interesado.camposBusqueda.vacios']+'</div>');
+
+    }
+
+
 
 }
 
