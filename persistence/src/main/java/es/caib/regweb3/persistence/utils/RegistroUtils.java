@@ -6,7 +6,6 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.ReproJson;
 import org.apache.log4j.Logger;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -24,7 +23,7 @@ import java.util.Date;
  * Date: 14/07/14
  */
 
-public class RegistroUtils  implements  ValidateSignatureConstants {
+public class RegistroUtils{
 
     public static final Logger log = Logger.getLogger(RegistroUtils.class);
 
@@ -210,17 +209,17 @@ public class RegistroUtils  implements  ValidateSignatureConstants {
     }
 
 
-    /**
+   /* *//**
      * Comprueba la firma de un Anexo es válida
      * @param perfil
      * @param tipo
      * @return
-     */
+     *//*
     public static boolean validaTipoPerfilFirmaSir(String perfil, String tipo) {
         return !SIGNPROFILE_BES.equals(perfil)
                 && !SIGNPROFILE_PADES_BASIC.equals(perfil)
                 && (SIGNTYPE_CAdES.equals(tipo) || SIGNTYPE_XAdES.equals(tipo)
                 || SIGNTYPE_PAdES.equals(tipo) || SIGNTYPE_ODF.equals(tipo));
-    }
+    }*/
 
 }
