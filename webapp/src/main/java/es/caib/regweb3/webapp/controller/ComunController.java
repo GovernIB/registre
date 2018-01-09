@@ -4,11 +4,16 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Repro;
 import es.caib.regweb3.model.Rol;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +46,10 @@ public class ComunController extends BaseController {
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
     private ReproLocal reproEjb;
-    
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
+
 
     @RequestMapping(value = "/noAutorizado")
     public ModelAndView noautorizado(HttpServletRequest request, HttpServletResponse response) {
@@ -62,6 +70,7 @@ public class ComunController extends BaseController {
             if(!usuarioService.cambioRol(rolNuevo, request)){
                 Mensaje.saveMessageError(request, getMessage("error.rol.autorizacion"));
             }
+            return comprobarConfiguracionPluginsPropiedadesGlobalesByRol(request,rolNuevo);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,6 +173,71 @@ public class ComunController extends BaseController {
 
 
         return mav;
+    }
+
+
+    /**
+     * Método que comprueba que esten configurados los plugins necesarios para el funcionamiento
+     * básico de la aplicación, en función del rol
+     * @param request
+     * @param rol
+     * @return
+     * @throws Exception
+     */
+    public String comprobarConfiguracionPluginsPropiedadesGlobalesByRol(HttpServletRequest request, Rol rol) throws Exception{
+
+        //Si es operador
+        if(rol.getNombre().equals(RegwebConstantes.ROL_USUARI)) {
+            //Comprobamos la existencia de plugins necesarios para el funcionamiento de la aplicación
+            Entidad entidadActiva = getEntidadActiva(request);
+            try {
+                //Plugin Generación Justificante
+                if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
+                    log.info("No existe el plugin de generación del justificante");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
+                    return "redirect:/aviso";
+                }
+                //Plugin Custodia Justificante
+                if (!pluginEjb.existPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+                    log.info("No existe el plugin de custodia del justificante");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
+                    return "redirect:/aviso";
+
+                }
+                // Plugin Custodia
+                if (!pluginEjb.existPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA)) {
+                    log.info("No existe el plugin de custodia");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
+                    return "redirect:/aviso";
+
+                }
+                //Plugin Firma en Servidor
+                if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
+                    log.info("No existe el plugin de firma en servidor");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
+                    return "redirect:/aviso";
+
+                }
+
+                if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
+                    log.info("Error, falta propiedad sirserverbase");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
+                    return "redirect:/aviso";
+                }
+
+              /*  //Comprobaciones url de prergistro
+                if(Configuracio.isCAIB() && Configuracio.getUrlPreregistre()== null){
+                    log.info("No está definida la url de preregistro. ");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.preregistro"));
+                    return "redirect:/aviso";
+                }*/
+
+            }  catch (I18NException i18ne) {
+                throw new Exception(i18ne);
+            }
+        }
+
+        return "redirect:/inici";
     }
 
 }

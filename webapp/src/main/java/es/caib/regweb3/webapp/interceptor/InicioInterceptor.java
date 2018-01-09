@@ -1,12 +1,15 @@
 package es.caib.regweb3.webapp.interceptor;
 
+import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.EntidadLocal;
 import es.caib.regweb3.persistence.ejb.PendienteLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -49,13 +52,12 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
         Object handler) throws Exception {
-      //log.info(" ++++++++++++++++++++ ENTRA InicioInterceptor ++++++++++++++");
+     // log.info(" ++++++++++++++++++++ ENTRA InicioInterceptor ++++++++++++++");
       //long start = System.currentTimeMillis();
       try {
 
         HttpSession session = request.getSession();
-        //Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-        //Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
 
         if(request.getRequestURI().equals("/regweb3/noAutorizado") ){
           return true;
@@ -141,6 +143,39 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                 }*/
 
             }
+
+            // Validamos las propiedades de dir3 para poder atacar a dir3caib
+            if(request.getRequestURI().equals("/regweb3/dir3/datosCatalogo")){
+                if(PropiedadGlobalUtil.getDir3CaibServer() == null){
+                    log.info("La propiedad Dir3CaibServer no está definida");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
+                if(PropiedadGlobalUtil.getDir3CaibUsername() == null){
+                    log.info("La propiedad Dir3CaibUsername no está definida");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
+                if(PropiedadGlobalUtil.getDir3CaibPassword() == null){
+                    log.info("La propiedad Dir3CaibPassword no está definida");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
+
+            }
+
+            //Validamos variable es.caib.regweb3.archivos.path
+            //comprobar variable archivos path
+            if(request.getRequestURI().equals("/regweb3/configuracion/editar")&& FileSystemManager.getArchivosPath() == null && rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)) {
+                log.info("Error, editar entidad");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
 
         }else{
             response.sendRedirect("/regweb3/noAutorizado");

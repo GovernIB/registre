@@ -514,6 +514,22 @@ public interface RegwebConstantes {
     int MODO_FIRMA_ANEXO_ATTACHED = 1; // Document amb firma adjunta
     int MODO_FIRMA_ANEXO_DETACHED = 2; // Firma en document separat
 
+    /* -------------- ANEXO ORIGEN -------------------------- */
+    Integer ANEXO_ORIGEN_CIUDADANO = 0;
+    Integer ANEXO_ORIGEN_ADMINISTRACION = 1;
+
+    /* -------------- ANEXO MIME --------------*/
+    int ANEXO_TIPOMIME_MAXLENGTH_SIR = 20;
+    int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
+    int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
+    int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
+
+    /* ---------------ANEXO LIMITACIONES SIR ----------*/
+    String ANEXO_EXTENSIONES_SIR = ".jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt., .xml, .xsig";
+    int    ANEXO_NUMEROMAX_SIR = 5;
+    Long   ANEXO_TAMANOMAX_SIR = 10485760L;
+    Long   ANEXO_TAMANOMAXTOTAL_SIR = 15728640L;
+
 
     /* -------- TIPO DOCUMENTO ---------- */
     Long TIPO_DOCUMENTO_FORMULARIO = 1L;
@@ -568,10 +584,6 @@ public interface RegwebConstantes {
     Long INFORME_TIPO_REGISTRO_SALIDA = 2L;
 
 
-    /* -------------- ANEXO ORIGEN -------------------------- */
-    Integer ANEXO_ORIGEN_CIUDADANO = 0;
-    Integer ANEXO_ORIGEN_ADMINISTRACION = 1;
-
 
     /* -------------- CAT SERVICIOS -------------------------- */
     Long OFICINA_REGISTRO = 1L;
@@ -599,13 +611,6 @@ public interface RegwebConstantes {
     /* -------------- OFICINA VIRTUAL --------------*/
     Boolean OFICINA_VIRTUAL_SI = true; // Las incluimos en los resultados obtenidos
     Boolean OFICINA_VIRTUAL_NO = false; // No las incluimos en los resultados obtenidos
-
-
-    /* -------------- ANEXO MIME --------------*/
-    int ANEXO_TIPOMIME_MAXLENGTH_SIR = 20;
-    int ANEXO_NOMBREFICHERO_MAXLENGTH_SIR = 80;
-    int ANEXO_OBSERVACIONES_MAXLENGTH_SIR = 50;
-    int ANEXO_IDENTIFICADOR_MAXLENGTH_SIR = 50;
 
 
     /* -------------- EXPRESIÓN CRON --------------*/

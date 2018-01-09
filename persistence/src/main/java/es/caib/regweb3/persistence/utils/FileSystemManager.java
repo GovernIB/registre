@@ -59,7 +59,11 @@ public class FileSystemManager {
      * @return
      */
     public static File getArchivosPath() {
-        return new File(System.getProperty(RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY));
+        if(System.getProperty(RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY) != null) {
+            return new File(System.getProperty(RegwebConstantes.ARCHIVOS_LOCATION_PROPERTY));
+        }else{
+            return null;
+        }
     }
 
     /**

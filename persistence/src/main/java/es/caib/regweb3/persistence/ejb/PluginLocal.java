@@ -1,12 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Plugin;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import java.util.List;
 
 /**
@@ -73,6 +71,15 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @throws Exception
      */
     public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
+
+    /**
+     * Comprueba si el plugin está definido
+     * @param idEntidad
+     * @param tipoPlugin
+     * @return
+     * @throws I18NException
+     */
+    public boolean existPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
     /**
      * Obtiene todos los plgins del tipo espeficicado

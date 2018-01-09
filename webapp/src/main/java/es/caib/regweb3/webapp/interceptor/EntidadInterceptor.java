@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.DescargaLocal;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -56,6 +57,13 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
                 if(!(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
                     log.info("Error, editar entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.edit"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
+                //comprobar variable archivos path
+                if(FileSystemManager.getArchivosPath()==null && rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+                    log.info("Error, editar entidad");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }

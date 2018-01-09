@@ -73,7 +73,7 @@ public class PropiedadGlobalUtil {
         Long valor = getLong(partialPropertyName);
 
         if(valor == null){//Si no hay ni propiedad global se devuelve por defecto 15 Mb
-            return 15728640L;
+            return RegwebConstantes.ANEXO_TAMANOMAXTOTAL_SIR;
         }
         return valor;
     }
@@ -103,7 +103,7 @@ public class PropiedadGlobalUtil {
         String valor = getString(partialPropertyName);
 
         if(valor == null){ //si no esta definida la propiedad a nivel global se devuelven los formatos por defecto.
-            valor = ".jpg, .jpeg, .odt, .odp, .ods, .odg, .docx, .xlsx, .pptx, .pdf, .png, .rtf, .svg, .tiff, .txt., .xml, .xsig";
+            valor = RegwebConstantes.ANEXO_EXTENSIONES_SIR;
         }
         return valor;
     }
@@ -118,7 +118,7 @@ public class PropiedadGlobalUtil {
         Integer valor = getInteger(partialPropertyName);
 
         if(valor== null){// si no esta definida la propiedad a nivel global se devuelve por defecto 5.
-            valor = 5;
+            valor = RegwebConstantes.ANEXO_NUMEROMAX_SIR;
         }
         return valor;
     }
@@ -133,7 +133,7 @@ public class PropiedadGlobalUtil {
 
         // Valor global si no existeix el de per entitat
         if (valor == null) {
-            valor = 10485760L;
+            valor = RegwebConstantes.ANEXO_TAMANOMAX_SIR;
         }
         return valor;
     }

@@ -192,6 +192,21 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     }
 
     @Override
+    public boolean existPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
+
+        try {
+            List<Plugin> plugins;
+
+            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+
+            return (plugins.size()>0);
+        } catch (Exception e) {
+            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+        }
+
+    }
+
+    @Override
     public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception{
 
         List<Plugin> plugins = findByEntidadTipo(idEntidad, tipoPlugin);

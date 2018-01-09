@@ -17,6 +17,7 @@
             <div class="well well-white">
 
             <c:import url="modulos/mensajes.jsp"/>
+                <div id="mensajes"></div>
 
                 <div class="row">
 

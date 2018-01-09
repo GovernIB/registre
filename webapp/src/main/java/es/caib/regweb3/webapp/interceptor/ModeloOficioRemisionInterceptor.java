@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Rol;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
@@ -36,6 +37,14 @@ public class ModeloOficioRemisionInterceptor extends HandlerInterceptorAdapter {
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
+            //comprobar variable archivos path
+            if(FileSystemManager.getArchivosPath()==null){
+                log.info("Error, no esta definida la variable archivos path");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
