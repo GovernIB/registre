@@ -146,19 +146,19 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
             // Validamos las propiedades de dir3 para poder atacar a dir3caib
             if(request.getRequestURI().equals("/regweb3/dir3/datosCatalogo")){
-                if(PropiedadGlobalUtil.getDir3CaibServer() == null){
+                if(PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()){
                     log.info("La propiedad Dir3CaibServer no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-                if(PropiedadGlobalUtil.getDir3CaibUsername() == null){
+                if(PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()){
                     log.info("La propiedad Dir3CaibUsername no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-                if(PropiedadGlobalUtil.getDir3CaibPassword() == null){
+                if(PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()){
                     log.info("La propiedad Dir3CaibPassword no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
                     response.sendRedirect("/regweb3/aviso");
