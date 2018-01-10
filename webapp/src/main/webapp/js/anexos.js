@@ -48,3 +48,18 @@ function limpiarAnexoDetalle(){
     $('#tipoDocumental').html('');
 
 }
+
+function quitarErrorAnexo(campo){
+    $(campo).parents(".form-group").removeClass("has-error");
+    $(campo).remove();
+}
+
+function limpiarAnexoForm(){
+    //$('#reload').show();
+    quitarErrorAnexo('#documentoFile\\.errors');
+    quitarErrorAnexo('#firmaFile\\.errors');
+}
+
+function quitarMensajeError(){
+    $('#mensajeError').remove();
+}
