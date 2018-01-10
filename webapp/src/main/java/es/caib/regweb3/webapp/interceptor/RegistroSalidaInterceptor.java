@@ -38,11 +38,11 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
 
+    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
+    private TipoAsuntoLocal tipoAsuntoEjb;
+
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
-
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
@@ -195,6 +195,13 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
                 log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
+            if(tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId()).size()==0){
+                log.info("Aviso: No hay ningún Tipo Asunto activo para la Entidad Activa");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoAsunto"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

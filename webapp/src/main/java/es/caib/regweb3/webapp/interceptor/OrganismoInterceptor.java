@@ -37,6 +37,7 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
 
         try {
 
+           // log.info("Entro en Organismo Interceptor");
             HttpSession session = request.getSession();
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
 
@@ -48,7 +49,7 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-                if(PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()){
+                if(PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()){
                     log.info("La propiedad Dir3CaibServer no está definida");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
                     response.sendRedirect("/regweb3/aviso");
