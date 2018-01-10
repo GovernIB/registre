@@ -31,7 +31,7 @@
             var off = elm.offset();
             var l = off.left;
             var w = elm.width();
-            var m = 30
+            var m = 30;
             var docW = $(".container").width();
 
             var isEntirelyVisible = (l + w + m <= docW);
@@ -50,8 +50,8 @@
     $(function () {
 
         var config = {
-            '.chosen-select': {width: "100%", search_contains: true},
-        }
+            '.chosen-select': {width: "100%", search_contains: true}
+        };
         for (var selector in config) {
             $(selector).chosen(config[selector]);
         }
@@ -150,7 +150,7 @@ function confirm(url, mensaje) {
 }
 
 // Muestra el cuadro de confirmación para enviar un registro SIR sin anexos
-function confirmEnvioSinAnexos(url, mensaje, mensajeTitulo, mensajeEnviar, mensajeAñadir) {
+function confirmEnvioSinAnexos(url, mensaje, mensajeTitulo, mensajeEnviar, mensajeCuerpo) {
 
     var confirmModal =
         $("<div class=\"modal fade\">" +
@@ -166,7 +166,7 @@ function confirmEnvioSinAnexos(url, mensaje, mensajeTitulo, mensajeEnviar, mensa
             "</div>" +
 
             "<div class=\"modal-footer\">" +
-            "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">"+mensajeAñadir+"</button>"+
+            "<button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\">"+mensajeCuerpo+"</button>"+
             "<button type=\"button\" id=\"okButton\" class=\"btn btn-success\">"+mensajeEnviar+"</button>"+
             "</div>" +
             "</div>" +
@@ -225,38 +225,6 @@ function imprimirRecibo(url) {
     document.location.href=url2;
 }
 
-// Realiza el Registro de un PreRegistro
-function registrarPreRegistro(url) {
-    var libro = true;
-    var idioma  = true;
-    var tipoAsunto  = true;
-    var idLibro = $('#idLibro').val();
-    var idIdioma = $('#idIdioma').val();
-    var idTipoAsunto = $('#idTipoAsunto').val();
-
-    // Valida que haya un libro elegido
-    if(!validaCampo(idLibro, 'libro')){
-        libro = false;
-    }
-    // Valida que haya un idioma elegido
-    if(!validaCampo(idIdioma, 'idioma')){
-        idioma = false;
-    }
-    // Valida que haya un tipoAsunto elegido
-    if(!validaSelect(idTipoAsunto, 'tipoAsunto')){
-        tipoAsunto = false;
-    }
-    // Mira si todos los campos son correctos
-    if((libro)&&(idioma)&&(tipoAsunto)){
-        var url2=url.concat(idLibro+"/");
-        var url3=url2.concat(idIdioma+"/");
-        var url4=url3.concat(idTipoAsunto);
-        document.location.href=url4;
-        return true;
-    } else{
-        return false;
-    }
-}
 
 /**
  * Añade un mensaje de error con el texto indicado en el div con el id indicado

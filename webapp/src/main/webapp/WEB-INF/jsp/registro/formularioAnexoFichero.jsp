@@ -134,15 +134,9 @@
 <!-- JavaScript -->
 <script type="text/javascript" src="<c:url value="/js/bootstrap.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/js/bootstrap-dropdown-on-hover-plugin.js"/>"></script>
-<!-- DateTimePicker -->
-<script type="text/javascript" src="<c:url value="/js/datepicker/moment.min.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/datepicker/bootstrap-datetimepicker.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/datepicker/bootstrap-datetimepicker.ca.js"/>"></script>
-<!-- Selects multiple -->
-<script type="text/javascript" src="<c:url value="/js/chosen.jquery.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/regweb.js"/>"></script>
 <!-- Upload file jquery -->
 <script type="text/javascript" src="<c:url value="/js/jquery.form.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/anexos.js"/>"></script>
 
 <!-- Redimensiona el Modal per si ha d'acursar errors antics -->
 <script>
@@ -262,9 +256,6 @@
         $('#' + campo + 'Text').val("");
     }
 
-    function quitarMensajeError(){
-        $('#mensajeError').remove();
-    }
 
 
     <%-- Redimensiona el modal si hi ha errors --%>
