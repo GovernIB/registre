@@ -347,6 +347,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
 
     /**
+     * Actualiza el Destino extinguido por el que le sustituye
+     * @param idOrganismoExtinguido
+     * @param idOrganismo
+     * @throws Exception
+     */
+    public void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws Exception;
+
+    /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re

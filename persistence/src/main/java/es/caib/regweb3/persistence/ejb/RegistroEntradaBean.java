@@ -849,9 +849,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
             //Obtenemos los anexos en función de la configuración establecida
-            re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+            re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
 
-            if (configuracionDistribucion.listadoDestinatariosModificable) {// Si es modificable, mostraremos pop-up
+            if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
 
             } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
@@ -958,6 +958,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
         return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws Exception {
+
+        Query q = em.createQuery("update RegistroEntrada set destino = :idOrganismoSustituto where destino = :idOrganismoExtinguido and estado = :valido");
+        q.setParameter("idOrganismoSustituto", idOrganismoSustituto);
+        q.setParameter("idOrganismoExtinguido", idOrganismoExtinguido);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        q.executeUpdate();
+
     }
 
     /**
