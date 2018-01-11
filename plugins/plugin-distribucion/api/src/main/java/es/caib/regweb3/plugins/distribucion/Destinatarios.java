@@ -17,9 +17,9 @@ import java.util.List;
 public class Destinatarios {
 
     @XmlAttribute
-    public List<Destinatario> propuestos;
+    private List<Destinatario> propuestos;
     @XmlAttribute
-    public List<Destinatario> posibles;
+    private List<Destinatario> posibles;
 
 
     public Destinatarios() {

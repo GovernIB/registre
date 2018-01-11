@@ -9,8 +9,8 @@ package es.caib.regweb3.plugins.distribucion;
  */
 public class Destinatario {
 
-    String id;
-    String name;
+    private String id;
+    private String name;
 
     public Destinatario() {
     }

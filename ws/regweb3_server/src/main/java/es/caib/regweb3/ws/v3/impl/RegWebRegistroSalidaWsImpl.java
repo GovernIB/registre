@@ -110,6 +110,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @Override
     @RolesAllowed({ROL_USUARI})
     @WebMethod
+    @Deprecated
     public IdentificadorWs altaRegistroSalida(@WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
 
         Entidad entidad = null;

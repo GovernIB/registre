@@ -120,6 +120,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @RolesAllowed({ROL_USUARI})
     @WebMethod
+    @Deprecated
     public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")
             RegistroEntradaWs registroEntradaWs)
             throws Throwable, WsI18NException, WsValidationException {
@@ -492,15 +493,25 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
-            throw new I18NException("registroEntrada.distribuir.error");
+            throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
+        try{
+            // 8.- Distribuimos el registro de entrada
+            RespuestaDistribucion respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuario);
 
-        // 8.- Distribuimos el registro de entrada
-        RespuestaDistribucion respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuario);
+            // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
+            if(respuestaDistribucion.getDestinatarios() != null){
+                throw new I18NException("registroEntrada.distribuir.destinatarios");
+            }
 
-        if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
-            log.info("El registro de entrada se ha distribuido correctamente");
+            // Si no se ha enviado, es porque algo ha fallado
+            if(!respuestaDistribucion.getEnviado()){
+                throw new I18NException("registroEntrada.distribuir.error");
+            }
+
+        }catch (Exception e){
+            throw new I18NException("registroEntrada.distribuir.error");
         }
 
     }
