@@ -223,6 +223,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             // Guardamos el Oficio de Remisión
             oficioRemision = persist(oficioRemision);
 
+            log.info(" ");
+            log.info("-------------------------------------------");
+            log.info("Registrando Oficio Remision " + oficioRemision.getNumeroOficio() +" de " + oficioRemision.getOficina().getDenominacion());
+            log.info(" ");
+
             // Oficio de Remisión Entrada
             if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
 
@@ -333,6 +338,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 }
 
             }
+
+            log.info("");
+            log.info("Fin Registrando Oficio Remision " + oficioRemision.getNumeroOficio());
+            log.info("-------------------------------------------");
+            log.info(" ");
 
         } catch (I18NException e) {
             log.info("Error creando Oficio Remision: " + e.getLocalizedMessage());

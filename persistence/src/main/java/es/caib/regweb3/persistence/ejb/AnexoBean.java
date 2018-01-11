@@ -231,7 +231,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
-            
+
+            if (anexo.isJustificante()) {
+                log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+            }
             
             // ---------- BBDD -------------
             // Guardamos el anexo per a que tengui ID
