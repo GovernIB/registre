@@ -5,71 +5,17 @@
 
             <!-- General -->
             es.caib.regweb3.defaultlanguage=ca
-            es.caib.regweb3.iscaib=false
             es.caib.regweb3.showtimestamp=false
+
+            <!-- Caib -->
+            es.caib.regweb3.iscaib=false
             es.caib.regweb3.preregistre=http://www.caib.es
 
-            <!-- SIR -->
+            <!-- Url de WS SIR -->
             es.caib.regweb3.sir.serverbase=http://localhost:8380/services
 
             <!-- Directorio base para los archivos generales -->
-            es.caib.regweb3.archivos.path=D:/dades/dades/Proyectos/REGWEB/Archivos/
-
-            <!-- Nou a la versió 3.0.7. Opcional. Indica quan s'afegeix un annexe amb origen escàner, el valor del camp Validesa Documental quan aquest no correspon amb el Mode de Firma. Si no es defineix llavors s'assigna el valor COPIA_COMPULSADA. El valors possibles són:
-                  -1: Indica que volem llançar una excepció i que ha de ser l'usuari que ha de posar el valor correcte
-                  2: Assigna el valor COPIA_COMPULSADA.
-                  3: Assigna el valor COPIA_ORIGINAL.
-                  4: Assigna el valor DOCUMENTO_ORIGINAL
-            -->
-            es.caib.regweb3.scan_default_validez_documento=2
-
-
-            <!-- Configuració del plugin de Información de usuarios -->
-
-            <!-- ======== PLUGIN USER-INFORMATION - DATABASE ======= -->
-            es.caib.regweb3.userinformationplugin=org.fundaciobit.plugins.userinformation.database.DataBaseUserInformationPlugin
-            es.caib.regweb3.plugins.userinformation.database.jndi=java:/es.caib.seycon.db.wl
-            es.caib.regweb3.plugins.userinformation.database.users_table=SC_WL_USUARI
-            es.caib.regweb3.plugins.userinformation.database.username_column=USU_CODI
-            es.caib.regweb3.plugins.userinformation.database.administrationid_column=USU_NIF
-            es.caib.regweb3.plugins.userinformation.database.name_column=USU_NOM
-            #es.caib.regweb3.plugins.userinformation.database.surname_1_column
-            #es.caib.regweb3.plugins.userinformation.database.surname_2_column
-            #es.caib.regweb3.plugins.userinformation.database.language_column
-            #es.caib.regweb3.plugins.userinformation.database.telephone_column
-            #es.caib.regweb3.plugins.userinformation.database.email_column
-            #es.caib.regweb3.plugins.userinformation.database.gender_column
-            #es.caib.regweb3.plugins.userinformation.database.password_column
-            es.caib.regweb3.plugins.userinformation.database.userroles_table=SC_WL_USUGRU
-            es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_CODGRU
-            es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU
-
-
-            <!-- ======== PLUGIN USER-INFORMATION - LDAP ======= -->
-            <!--
-            es.caib.regweb3.userinformationplugin=org.fundaciobit.plugins.userinformation.ldap.LdapUserInformationPlugin
-
-            es.caib.regweb3.plugins.userinformation.ldap.host_url=ldap://ldap.ibit.org:389
-            es.caib.regweb3.plugins.userinformation.ldap.security_principal=[LDAPUSERNAME]
-            es.caib.regweb3.plugins.userinformation.ldap.security_authentication=simple
-            es.caib.regweb3.plugins.userinformation.ldap.security_credentials=[PASSWORD of LDAPUSERNAME]
-            es.caib.regweb3.plugins.userinformation.ldap.users_context_dn=cn=Users,dc=ibitnet,dc=lan
-            es.caib.regweb3.plugins.userinformation.ldap.search_scope=onelevel
-            es.caib.regweb3.plugins.userinformation.ldap.search_filter=(|(memberOf=CN=@PFI_ADMIN,CN=Users,DC=ibitnet,DC=lan)(memberOf=CN=@PFI_USER,CN=Users,DC=ibitnet,DC=lan))
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.username=sAMAccountName
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.mail=mail
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.administration_id=postOfficeBox
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.name=givenName
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.surname=sn
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.telephone=telephoneNumber
-            es.caib.regweb3.plugins.userinformation.ldap.attribute.memberof=memberOf
-            es.caib.regweb3.plugins.userinformation.ldap.prefix_role_match_memberof=CN=@
-            es.caib.regweb3.plugins.userinformation.ldap.suffix_role_match_memberof=,CN=Users,DC=ibitnet,DC=lan
-            -->
-
-   
-   
-
+            es.caib.regweb3.archivos.path=D:/XXX/Archivos/
 
         </attribute>
     </mbean>
