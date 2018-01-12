@@ -25,6 +25,8 @@
             </div>
         </div><!-- /.row -->
 
+        <div id="mensajes"></div>
+
         <div class="row">
             <div class="col-xs-12">
 
@@ -74,10 +76,10 @@
 
 
                         <c:if test="${not empty descarga}">
-                           <input type="button" id="actuali" value="<spring:message code="catalogoDir3.actualizar"/>"  class="btn btn-success btn-sm"/>
+                           <input type="button" id="actuali" onclick="sincronitzarCataleg('<c:url value="/dir3/actualizarCatalogo"/>')" value="<spring:message code="catalogoDir3.actualizar"/>"  class="btn btn-success btn-sm"/>
                         </c:if>
                         <c:if test="${empty descarga}">
-                          <input type="button" id="sincro" value="<spring:message code="catalogoDir3.sincronizar"/>"  class="btn btn-success btn-sm"/>
+                          <input type="button" id="sincro" onclick="sincronitzarCataleg('<c:url value="/dir3/sincronizarCatalogo"/>')"  value="<spring:message code="catalogoDir3.sincronizar"/>"  class="btn btn-success btn-sm"/>
                         </c:if>
                         <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/inici"/>')" class="btn btn-sm">
 
@@ -98,34 +100,32 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#sincro').click(function(){
-            $.ajax({
-                url:'<c:url value="/dir3/sincronizarCatalogo"/>',
-                type:'GET',
-                beforeSend: function(objeto){
-                    $('#modalSincro').modal('show');
-                },
-                complete:function(){
-                    $('#modalSincro').modal('hide');
+
+    /**
+     * Sincronitzam el catàleg
+     */
+    function sincronitzarCataleg(url){
+
+        $.ajax({
+            url:url,
+            type:'POST',
+            beforeSend: function(objeto){
+                waitingDialog.show('<spring:message code="catalogoDir3.sincronizando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
+            },
+            success:function(respuesta){
+
+                if(respuesta.status == 'SUCCESS'){
+                    alert("SUCCES");
                     goTo('<c:url value="/dir3/datosCatalogo"/>');
+
+                }else if(respuesta.status == 'FAIL') {
+                    mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
                 }
-            });
+            }
         });
-        $('#actuali').click(function(){
-            $.ajax({
-                url:'<c:url value="/dir3/actualizarCatalogo"/>',
-                type:'GET',
-                beforeSend: function(objeto){
-                    $('#modalSincro').modal('show');
-                },
-                complete:function(){
-                    $('#modalSincro').modal('hide');
-                    goTo('<c:url value="/dir3/datosCatalogo"/>');
-                }
-            });
-        });
-    });
+    }
+
 </script>
 
 </body>

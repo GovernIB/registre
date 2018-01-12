@@ -1,14 +1,14 @@
 package es.caib.regweb3.webapp.controller.dir3;
 
-
 import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.utils.JsonResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
@@ -78,54 +78,51 @@ public class Dir3Controller extends BaseController {
     /**
      * Sincronizar el CatalogoDIR3
      */
-    @RequestMapping(value = "/sincronizarCatalogo", method = RequestMethod.GET)
-    public ModelAndView sincronizar( HttpServletRequest request) {
-
-        ModelAndView mav = new ModelAndView("/catalogoDir3/catalogoDir3List");
+    @ResponseBody
+    @RequestMapping(value = "/sincronizarCatalogo", method = RequestMethod.POST)
+    public JsonResponse sincronizar(HttpServletRequest request) throws Exception {
 
         log.info("Inicio sincronización catalogo DIR3");
 
+        JsonResponse jsonResponse = new JsonResponse();
+
         try {
-
-            Descarga descarga = sincronizadorCatalogoEjb.sincronizarCatalogo();
-
-            Mensaje.saveMessageInfo(request, getMessage("catalogoDir3.sincronizar.ok"));
-            mav.addObject("descarga", descarga);
+            sincronizadorCatalogoEjb.sincronizarCatalogo();
+            jsonResponse.setError(getMessage("catalogoDir3.sincronizar.ok"));
 
         } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("catalogoDir3.sincronizar.error"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("catalogoDir3.sincronizar.error"));
             e.printStackTrace();
         }
 
-        return mav;
+        return jsonResponse;
     }
 
 
      /**
      * Actualizar el CatalogoDIR3
      */
-    @RequestMapping(value = "/actualizarCatalogo", method = RequestMethod.GET)
-     public ModelAndView actualizar(HttpServletRequest request){
-
-        ModelAndView mav = new ModelAndView("/catalogoDir3/catalogoDir3List");
+     @ResponseBody
+     @RequestMapping(value = "/actualizarCatalogo", method = RequestMethod.POST)
+     public JsonResponse actualizar(HttpServletRequest request){
 
         log.info("Inicio actualizacion catalogo DIR3");
 
+        JsonResponse jsonResponse = new JsonResponse();
+
         try {
-
-            Descarga descarga = sincronizadorCatalogoEjb.actualizarCatalogo();
-            Mensaje.saveMessageInfo(request, getMessage("catalogoDir3.actualizar.ok"));
-
-            mav.addObject("descarga", descarga);
+            sincronizadorCatalogoEjb.actualizarCatalogo();
+            jsonResponse.setStatus("SUCCESS");
+            jsonResponse.setError(getMessage("catalogoDir3.actualizar.ok"));
 
         } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("catalogoDir3.actualizar.error"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("catalogoDir3.actualizar.error"));
             e.printStackTrace();
         }
 
-        return mav;
-
+        return jsonResponse;
      }
-
 
 }
