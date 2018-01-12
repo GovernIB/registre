@@ -142,6 +142,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
 
         //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
+        //TODO Definir bien los criterios de distribución (organismo destinatario, codigoasunto, tipoasunto
         String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
         log.info("entidadCodigo " + entidadCodigo);
         String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
@@ -352,7 +353,9 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
      */
     public RegistreAnnex transformarARegistreAnnex(Anexo anexo) throws Exception{
         RegistreAnnex registreAnnex = new RegistreAnnex();
-        registreAnnex.setFitxerArxiuUuid(anexo.getCustodiaID());
+        //PARCHE uuid Anexo, veure si finalment passam numExpediente#numDoc o no
+        String id = anexo.getCustodiaID();
+        registreAnnex.setFitxerArxiuUuid(id.substring(id.lastIndexOf('#')+1));
         return registreAnnex;
     }
 
@@ -397,7 +400,8 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
             registreAnnex.setFitxerTamany((int)anexoFull.getDocSize());
             registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
-            registreAnnex.setFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getDocumentoCustody().getData()));
+            registreAnnex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
+
 
         }
         //El anexo está en signature custody
@@ -405,7 +409,8 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             registreAnnex.setFitxerNom(anexoFull.getSignatureCustody().getName());
             registreAnnex.setFitxerTamany((int)anexoFull.getSignSize());
             registreAnnex.setFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
-            registreAnnex.setFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getSignatureCustody().getData()));
+            registreAnnex.setFitxerContingut(anexoFull.getSignatureCustody().getData());
+
 
         }
         if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED){
@@ -414,7 +419,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
             registreAnnex.setFitxerTamany((int)anexoFull.getDocSize());
             registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
-            registreAnnex.setFitxerContingutBase64(Base64.encodeBase64String(anexoFull.getDocumentoCustody().getData()));
+            registreAnnex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
 
             //FIRMA ANTIGUA
             // TODO FALTA ESTO EN LA NUEVA VERSION registreAnnex.setFirmaFitxerTamany((int)anexoFull.getSignSize());
