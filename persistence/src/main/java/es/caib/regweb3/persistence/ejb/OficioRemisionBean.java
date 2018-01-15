@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -44,10 +43,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB public LibroLocal libroEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroDetalleLocal registroDetalleEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private ContadorLocal contadorEjb;
-    @EJB private AnexoLocal anexoEjb;
 
 
     @Override
@@ -223,11 +220,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             // Guardamos el Oficio de Remisión
             oficioRemision = persist(oficioRemision);
 
-            log.info(" ");
-            log.info("-------------------------------------------");
-            log.info("Registrando Oficio Remision " + oficioRemision.getNumeroOficio() +" de " + oficioRemision.getOficina().getDenominacion());
-            log.info(" ");
-
             // Oficio de Remisión Entrada
             if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
 
@@ -235,17 +227,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
 
                     registroEntrada = registroEntradaEjb.findById(registroEntrada.getId());
-
-                    //Justificante, Si no tiene generado el Justificante, lo hacemos
-                    //No entra cuando es SIR porque ya ha generado el justificante previamente
-                    if (!registroEntrada.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
-
-                        registroEntrada = registroEntradaEjb.getConAnexosFull(registroEntrada.getId());
-
-                        // Creamos el anexo del justificante y se lo añadimos al registro
-                        AnexoFull anexoFull = anexoEjb.crearJustificante(oficioRemision.getUsuarioResponsable(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "es");
-                        registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
-                    }
 
                     RegistroSalida registroSalida = new RegistroSalida();
 
@@ -307,17 +288,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
                     registroSalida = registroSalidaEjb.findById(registroSalida.getId());
 
-                    //Justificante, Si no tiene generado el Justificante, lo hacemos
-                    //No entra cuando es SIR porque ya ha generado el justificante previamente
-                    if (!registroSalida.getRegistroDetalle().getTieneJustificante() && !oficioRemision.getSir()) {
-
-                        registroSalida = registroSalidaEjb.getConAnexosFull(registroSalida.getId());
-
-                        // Creamos el anexo del justificante y se lo añadimos al registro
-                        AnexoFull anexoFull = anexoEjb.crearJustificante(oficioRemision.getUsuarioResponsable(), registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), "es");
-                        registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
-                    }
-
                     // CREAMOS LA TRAZABILIDAD
                     Trazabilidad trazabilidad = new Trazabilidad();
                     trazabilidad.setOficioRemision(oficioRemision);
@@ -338,11 +308,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 }
 
             }
-
-            log.info("");
-            log.info("Fin Registrando Oficio Remision " + oficioRemision.getNumeroOficio());
-            log.info("-------------------------------------------");
-            log.info(" ");
 
         } catch (I18NException e) {
             log.info("Error creando Oficio Remision: " + e.getLocalizedMessage());

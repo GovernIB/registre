@@ -555,7 +555,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Justificante: Si no tiene generado, lo hacemos
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-            log.info("Generamos el justificante");
              registroEntrada = cargarAnexosFull(registroEntrada);
             // Creamos el anexo del justificante y se lo añadimos al registro
             AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "ca");
