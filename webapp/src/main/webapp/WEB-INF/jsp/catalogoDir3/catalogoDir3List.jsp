@@ -115,7 +115,6 @@
             success:function(respuesta){
 
                 if(respuesta.status == 'SUCCESS'){
-                    alert("SUCCES");
                     goTo('<c:url value="/dir3/datosCatalogo"/>');
 
                 }else if(respuesta.status == 'FAIL') {
