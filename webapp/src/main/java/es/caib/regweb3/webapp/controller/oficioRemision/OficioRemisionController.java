@@ -427,6 +427,11 @@ public class OficioRemisionController extends BaseController {
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
         OficioRemision oficioRemision = null;
 
+        log.info(" ");
+        log.info("-------------------------------------------");
+        log.info("Registrando Oficio Remision");
+        log.info(" ");
+
         // OFICIO DE REMISION ENTRADA
         if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
 
@@ -453,6 +458,7 @@ public class OficioRemisionController extends BaseController {
                 }
 
                 // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
+                oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
                 if (interno) { //Oficio interno
                     oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(registrosEntrada,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
@@ -501,6 +507,7 @@ public class OficioRemisionController extends BaseController {
                 }
 
                 // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
+                oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
                 if (interno) { //Oficio interno
                     oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(registrosSalida,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
@@ -524,6 +531,11 @@ public class OficioRemisionController extends BaseController {
             }
 
         }
+
+        log.info("");
+        log.info("Fin Registrando Oficio Remision " + oficioRemision.getNumeroOficio());
+        log.info("-------------------------------------------");
+        log.info(" ");
 
         return "redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle";
     }

@@ -68,7 +68,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @EJB(name = "CatEstadoEntidadEJB")
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
-
+    @EJB private AnexoLocal anexoEjb;
 
 
     @Override
@@ -552,6 +552,26 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         return oficioRemision;
 
+    }
+
+    @Override
+    public void crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+
+
+        for (RegistroEntrada registro : registros) {
+
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registro.getId());
+
+            //Justificante, Si no tiene generado el Justificante, lo hacemos
+            //No entra cuando es SIR porque ya ha generado el justificante previamente
+            if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+
+                // Creamos el anexo del justificante y se lo añadimos al registro
+                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
+            }
+
+        }
     }
 
 

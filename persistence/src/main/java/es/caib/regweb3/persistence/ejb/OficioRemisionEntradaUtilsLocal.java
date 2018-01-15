@@ -128,6 +128,16 @@ public interface OficioRemisionEntradaUtilsLocal {
                                                      Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
                                                      String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
+    /**
+     * Genera los Justificantes de todos los registros de un Oficio de Remisión
+     * @param registros
+     * @param usuario
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    public void crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
+
 
     /**
      * @param oficioRemision
