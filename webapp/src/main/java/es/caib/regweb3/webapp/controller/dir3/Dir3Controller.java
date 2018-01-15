@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.JsonResponse;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,7 +64,13 @@ public class Dir3Controller extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/datosCatalogo", method = RequestMethod.GET)
-    public ModelAndView datosCatalogo()throws Exception {
+    public ModelAndView datosCatalogo(HttpServletRequest request)throws Exception {
+
+        if(request.getParameter("result")!=null) {
+            if (request.getParameter("result").equals("ok")) {
+                Mensaje.saveMessageInfo(request, getMessage("catalogoDir3.sincronizar.ok"));
+            }
+        }
 
         ModelAndView mav = new ModelAndView("catalogoDir3/catalogoDir3List");
         Descarga ultimaDescarga = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
@@ -88,7 +95,7 @@ public class Dir3Controller extends BaseController {
 
         try {
             sincronizadorCatalogoEjb.sincronizarCatalogo();
-            jsonResponse.setError(getMessage("catalogoDir3.sincronizar.ok"));
+            jsonResponse.setStatus("SUCCESS");
 
         } catch (Exception e) {
             jsonResponse.setStatus("FAIL");
@@ -114,7 +121,6 @@ public class Dir3Controller extends BaseController {
         try {
             sincronizadorCatalogoEjb.actualizarCatalogo();
             jsonResponse.setStatus("SUCCESS");
-            jsonResponse.setError(getMessage("catalogoDir3.actualizar.ok"));
 
         } catch (Exception e) {
             jsonResponse.setStatus("FAIL");

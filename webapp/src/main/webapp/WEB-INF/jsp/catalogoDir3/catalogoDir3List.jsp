@@ -64,7 +64,7 @@
 
                                     <tbody>
                                             <tr>
-                                                <td><fmt:formatDate pattern="dd/MM/yyyy" value="${descarga.fechaImportacion}" /></td>
+                                                <td id="fechaImportacion"><fmt:formatDate pattern="dd/MM/yyyy" value="${descarga.fechaImportacion}" /></td>
                                             </tr>
                                     </tbody>
                                 </table>
@@ -115,7 +115,7 @@
             success:function(respuesta){
 
                 if(respuesta.status == 'SUCCESS'){
-                    goTo('<c:url value="/dir3/datosCatalogo"/>');
+                    goTo('<c:url value="/dir3/datosCatalogo?result=ok"/>');
 
                 }else if(respuesta.status == 'FAIL') {
                     mensajeError('#mensajes', respuesta.error);
