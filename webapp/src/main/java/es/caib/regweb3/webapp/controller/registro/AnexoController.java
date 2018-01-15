@@ -325,9 +325,6 @@ public class AnexoController extends BaseController {
                     anexo.getAnexo().isJustificante(), true, response);
         }
 
-        // Eliminamos la variable de sesion para que no vuelva a descargar el Justificante al recargar la página
-        request.getSession().removeAttribute("justificante");
-
     }
 
 
