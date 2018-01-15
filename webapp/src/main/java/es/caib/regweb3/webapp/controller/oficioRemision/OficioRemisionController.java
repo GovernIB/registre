@@ -458,7 +458,14 @@ public class OficioRemisionController extends BaseController {
                 }
 
                 // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
-                oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
+                try{
+                    oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
+                }catch (Exception e){
+                    log.info("Error generando los Justificantes del Oficio Remision");
+                    e.printStackTrace();
+                    return ("redirect:/oficioRemision/entradasPendientesRemision");
+                }
+
                 if (interno) { //Oficio interno
                     oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(registrosEntrada,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
@@ -507,7 +514,15 @@ public class OficioRemisionController extends BaseController {
                 }
 
                 // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
-                oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
+
+                try{
+                    oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
+                }catch (Exception e){
+                    log.info("Error generando los Justificantes del Oficio Remision");
+                    e.printStackTrace();
+                    return ("redirect:/oficioRemision/salidasPendientesRemision");
+                }
+
                 if (interno) { //Oficio interno
                     oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(registrosSalida,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
