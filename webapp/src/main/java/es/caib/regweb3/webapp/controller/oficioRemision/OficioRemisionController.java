@@ -463,6 +463,7 @@ public class OficioRemisionController extends BaseController {
                 }catch (Exception e){
                     log.info("Error generando los Justificantes del Oficio Remision");
                     e.printStackTrace();
+                    Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
                     return ("redirect:/oficioRemision/entradasPendientesRemision");
                 }
 
@@ -520,6 +521,7 @@ public class OficioRemisionController extends BaseController {
                 }catch (Exception e){
                     log.info("Error generando los Justificantes del Oficio Remision");
                     e.printStackTrace();
+                    Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
                     return ("redirect:/oficioRemision/salidasPendientesRemision");
                 }
 
