@@ -22,7 +22,7 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
      * @return
      * @throws Exception
      */
-    public Long getTotal(Long idEntidad) throws Exception;
+    Long getTotal(Long idEntidad) throws Exception;
 
     /**
      *
@@ -30,7 +30,7 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
      * @return
      * @throws Exception
      */
-    public List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception;
+    List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception;
 
     /**
      *
@@ -39,7 +39,7 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
      * @return
      * @throws Exception
      */
-    public List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws Exception;
+    List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
      * Elimina los {@link es.caib.regweb3.model.ModeloOficioRemision} de una Entidad
@@ -47,6 +47,6 @@ public interface ModeloOficioRemisionLocal extends BaseEjb<ModeloOficioRemision,
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

@@ -24,6 +24,6 @@ public interface RegistroEntradaCambiarEstadoLocal extends BaseEjb<RegistroEntra
      * @param idEstado
      * @throws Exception
      */
-    public void cambiarEstado(Long idRegistro, Long idEstado) throws Exception;
+    void cambiarEstado(Long idRegistro, Long idEstado) throws Exception;
 
 }

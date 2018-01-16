@@ -72,6 +72,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad " +
@@ -97,6 +98,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.activo = true order by usuarioEntidad.id");
@@ -107,6 +109,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public UsuarioEntidad findByIdentificador(String identificador) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad "
@@ -124,6 +127,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> findByUsuario(Long idUsuario) throws Exception{
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad "
@@ -137,6 +141,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
@@ -156,6 +161,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception{
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
                 "upper(usuarioEntidad.usuario.identificador) = :identificador and " +
@@ -173,6 +179,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public UsuarioEntidad findByDocumento(String documento) throws Exception{
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.usuario.documento = :documento");
 
@@ -187,6 +194,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
@@ -207,6 +215,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
@@ -218,6 +227,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
@@ -229,6 +239,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
@@ -247,6 +258,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
@@ -266,6 +278,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.oficioRemision from UsuarioEntidad as usuarioEntidad where " +
@@ -288,6 +301,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion busqueda(Integer pageNumber,Long idEntidad,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception {
 
         Query q;
@@ -364,6 +378,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> findUsuariosRepro(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad.id, usuarioEntidad.usuario.id, usuarioEntidad.usuario.identificador " +
@@ -401,6 +416,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +

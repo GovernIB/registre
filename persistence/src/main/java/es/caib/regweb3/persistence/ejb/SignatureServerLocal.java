@@ -20,7 +20,7 @@ public interface SignatureServerLocal {
   
       
     // La configuracio del plugin indicarà quin certificat usar
-    public static final String CONFIG_USERNAME = null; 
+    String CONFIG_USERNAME = null;
   
 
     /**Método que genera la Firma de un File para una Entidad en concreto
@@ -30,8 +30,8 @@ public interface SignatureServerLocal {
      * @return
      * @throws Exception
      */
-    public SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-        Long idEntidadActiva) throws Exception, I18NException;
+    SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
+                                      Long idEntidadActiva) throws Exception, I18NException;
     
     
     /**
@@ -43,8 +43,8 @@ public interface SignatureServerLocal {
      * @return
      * @throws I18NException
      */
-    public I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
-        boolean sir, Locale locale, boolean force) throws I18NException;
+    I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
+                                              boolean sir, Locale locale, boolean force) throws I18NException;
 
 
     /**
@@ -55,7 +55,7 @@ public interface SignatureServerLocal {
      * @param locale
      * @throws I18NException
      */
-    public void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException;
+    void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException;
 
     /**
      *
@@ -65,6 +65,6 @@ public interface SignatureServerLocal {
      * @param force
      * @throws I18NException
      */
-    public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException;
+    List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException;
     
 }

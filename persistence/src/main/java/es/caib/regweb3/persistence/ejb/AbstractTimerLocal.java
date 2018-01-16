@@ -7,9 +7,9 @@ package es.caib.regweb3.persistence.ejb;
  */
 public interface AbstractTimerLocal {
 
-    public void startScheduler();
+    void startScheduler();
 
-    public void stopScheduler();
+    void stopScheduler();
 
-    public void executeTask();
+    void executeTask();
 }

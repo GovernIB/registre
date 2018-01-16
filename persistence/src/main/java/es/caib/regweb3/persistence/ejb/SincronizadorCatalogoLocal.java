@@ -16,6 +16,6 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN"})
 public interface SincronizadorCatalogoLocal {
 
-  public Descarga sincronizarCatalogo() throws Exception;
-  public Descarga actualizarCatalogo() throws Exception;
+  Descarga sincronizarCatalogo() throws Exception;
+  Descarga actualizarCatalogo() throws Exception;
 }

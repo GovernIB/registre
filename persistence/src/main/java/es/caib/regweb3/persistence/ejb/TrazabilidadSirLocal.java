@@ -22,7 +22,7 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
      * @return
      * @throws Exception
      */
-    public List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws Exception;
+    List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws Exception;
 
     /**
      * Eimina todas las TrazabilidadesSir de una Entidad
@@ -30,6 +30,6 @@ public interface TrazabilidadSirLocal extends BaseEjb<TrazabilidadSir, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

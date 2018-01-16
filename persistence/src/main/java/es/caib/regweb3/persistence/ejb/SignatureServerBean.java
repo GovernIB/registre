@@ -232,10 +232,10 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       I18NTranslation trans = i18ne.getTraduccio();
       return trans;
   
-    };
-    
+    }
 
-    //No s'utilitza 
+
+  //No s'utilitza
     /*
     protected ValidateSignatureResponse callToValidaFirma(Locale locale, SignatureCustody sign,
         DocumentCustody doc) throws I18NException {
@@ -599,11 +599,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
           endOfPdf[i] = data[data.length - 10 + i];
         }
         
-        String str = new String(endOfPdf); 
+        String str = new String(endOfPdf);
 
-        if (str.indexOf("%%EOF") != -1) {
-          return true;
-        }
+        return str.contains("%%EOF");
 
       }
       return false;

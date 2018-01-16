@@ -22,7 +22,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      * @return
      * @throws Exception
      */
-    public Long getTotal(Long idEntidad) throws Exception;
+    Long getTotal(Long idEntidad) throws Exception;
 
     /**
      *
@@ -31,7 +31,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      * @return
      * @throws Exception
      */
-    public List<TipoDocumental> getPagination(int inicio, Long idEntidad) throws Exception;
+    List<TipoDocumental> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.TipoDocumental} asociado a un codigo.
@@ -40,7 +40,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      * @return
      * @throws Exception
      */
-    public TipoDocumental findByCodigoEntidad(String codigoNTI,Long idEntidad) throws Exception;
+    TipoDocumental findByCodigoEntidad(String codigoNTI, Long idEntidad) throws Exception;
 
     /**
      * Comprueba la existencia del codigo en algún TipoDocumental
@@ -50,7 +50,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws Exception;
+    Boolean existeCodigoEdit(String codigoNTI, Long idTipoDocumental, Long idEntidad) throws Exception;
 
   /**
    * Obtiene los tipos documentales de una entidad
@@ -58,7 +58,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
    * @return
    * @throws Exception
    */
-    public List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception;
+  List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Elimina los TipoDocumental de una Entidad
@@ -66,7 +66,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Crea un TipoDocumental con sus traducciones en Catalán y Castellano
@@ -77,7 +77,7 @@ public interface TipoDocumentalLocal extends BaseEjb<TipoDocumental, Long> {
      * @return
      * @throws Exception
      */
-    public TipoDocumental nuevoTraduccion(String codigo, Long idEntidad, String nombreCa, String nombreES) throws Exception;
+    TipoDocumental nuevoTraduccion(String codigo, Long idEntidad, String nombreCa, String nombreES) throws Exception;
 
 
 }

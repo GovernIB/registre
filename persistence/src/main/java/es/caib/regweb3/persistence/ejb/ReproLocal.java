@@ -25,7 +25,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Repro findByOrden(Long idUsuario, int orden) throws Exception;
+    Repro findByOrden(Long idUsuario, int orden) throws Exception;
 
     /**
      * Obtiene todas las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.Usuario}, paginadas.
@@ -34,7 +34,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Repro> getPaginationUsuario(int inicio, Long idUsuario) throws Exception;
+    List<Repro> getPaginationUsuario(int inicio, Long idUsuario) throws Exception;
 
     /**
      * Obtiene todas las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.Usuario}
@@ -42,7 +42,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Repro> getAllbyUsuario(Long idUsuario) throws Exception;
+    List<Repro> getAllbyUsuario(Long idUsuario) throws Exception;
 
     /**
      * Obtiene las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.Usuario} Activas
@@ -50,7 +50,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Repro> getActivasbyUsuario(Long idUsuario, Long tipoRegistro) throws Exception;
+    List<Repro> getActivasbyUsuario(Long idUsuario, Long tipoRegistro) throws Exception;
 
     /**
      * Obtiene el número total de {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.Usuario}
@@ -58,7 +58,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Long getTotalbyUsuario(Long idUsuario) throws Exception;
+    Long getTotalbyUsuario(Long idUsuario) throws Exception;
 
     /**
      * Obtiene el orden máximo de una {@link es.caib.regweb3.model.Repro} existente
@@ -66,7 +66,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Integer maxOrdenRepro(Long idUsuario) throws Exception;
+    Integer maxOrdenRepro(Long idUsuario) throws Exception;
 
     /**
      * Obtener usuario de una {@link es.caib.regweb3.model.Repro}
@@ -74,7 +74,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Long obtenerUsuarioRepro(Long idRepro) throws Exception;
+    Long obtenerUsuarioRepro(Long idRepro) throws Exception;
 
     /**
      * Modifica orden en una {@link es.caib.regweb3.model.Repro}
@@ -84,7 +84,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public void modificarOrden(Long idRepro, int orden) throws Exception;
+    void modificarOrden(Long idRepro, int orden) throws Exception;
 
     /**
      * Sube orden en una {@link es.caib.regweb3.model.Repro}
@@ -93,7 +93,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean subirOrden(Long idRepro) throws Exception;
+    Boolean subirOrden(Long idRepro) throws Exception;
 
     /**
      * Baja orden en una {@link es.caib.regweb3.model.Repro}
@@ -101,7 +101,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean bajarOrden(Long idRepro) throws Exception;
+    Boolean bajarOrden(Long idRepro) throws Exception;
 
     /**
      * Cambiar estado de una {@link es.caib.regweb3.model.Repro}
@@ -109,7 +109,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean cambiarEstado(Long idRepro) throws Exception;
+    Boolean cambiarEstado(Long idRepro) throws Exception;
 
     /**
      * Elimina las Repros de una Entidad
@@ -117,7 +117,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Comprueba si un usuario tiene Repro
@@ -126,7 +126,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      *
@@ -134,7 +134,7 @@ public interface ReproLocal extends BaseEjb<Repro, Long> {
      * @return
      * @throws Exception
      */
-    public ReproJson obtenerRepro(Long idRepro, Entidad entidad) throws Exception;
+    ReproJson obtenerRepro(Long idRepro, Entidad entidad) throws Exception;
 
 }
 

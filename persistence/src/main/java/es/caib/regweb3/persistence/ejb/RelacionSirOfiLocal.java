@@ -19,9 +19,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSirOfiPK> {
 
-    public void deleteAll() throws Exception;
+    void deleteAll() throws Exception;
 
-    public int deleteByOficinaEntidad(Long idOficina) throws Exception;
+    int deleteByOficinaEntidad(Long idOficina) throws Exception;
 
     /**
      * Busca una RelacionSirOfi a partir de la Oficina y el Organismo que la componen
@@ -31,7 +31,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @return
      * @throws Exception
      */
-    public RelacionSirOfi getRelacionSir(Long idOficina, Long idOrganismo) throws Exception;
+    RelacionSirOfi getRelacionSir(Long idOficina, Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las oficinas que son SIR de una Entidad según un estado
@@ -40,7 +40,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @return
      * @throws Exception
      */
-    public List<RelacionSirOfi> oficinasSirByEntidadEstado(Long idEntidad, String estado) throws Exception;
+    List<RelacionSirOfi> oficinasSirByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
      * Obtiene las Oficinas SIR con el Organismo seleccionado
@@ -49,7 +49,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
+    List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene los Organismos a los que da Servicio Sir una Oficina  integrada en SIR
@@ -57,7 +57,7 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @return
      * @throws Exception
      */
-    public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception;
+    List<Organismo> organimosServicioSIR(Long idOficina) throws Exception;
 
     /**
      * Elimina las RelacionSirOfi de una Entidad
@@ -66,5 +66,5 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

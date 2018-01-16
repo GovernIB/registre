@@ -19,17 +19,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizativaOfi, RelacionOrganizativaOfiPK> {
   
-  public void deleteAll() throws Exception;
+  void deleteAll() throws Exception;
 
-  public int deleteByOficinaEntidad(Long idOficina) throws Exception;
-
-    /**
-     * Obtiene las Oficinas relacionadas con el Organismo seleccionado
-     * @param idOrganismo
-     * @return
-     * @throws Exception
-     */
-    public List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws Exception;
+  int deleteByOficinaEntidad(Long idOficina) throws Exception;
 
     /**
      * Obtiene las Oficinas relacionadas con el Organismo seleccionado
@@ -37,7 +29,15 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene las Oficinas relacionadas con el Organismo seleccionado
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene los Organismosr elacionados con la Oficina seleccionada
@@ -45,7 +45,7 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @return
      * @throws Exception
      */
-    public List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception;
+    List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception;
 
     /**
      * Busca una RelacionOrganizativaOfi a partir de la Oficina y el Organismo que la componen
@@ -54,7 +54,7 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @return
      * @throws Exception
      */
-    public RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws Exception;
+    RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las Relaciones organizativas de las Oficinas cuya Entidad responsable es la indicada
@@ -63,7 +63,7 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @return
      * @throws Exception
      */
-    public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception;
+    List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
      * Elimina las RelacionOrganizativaOfi de una Entidad
@@ -71,6 +71,6 @@ public interface RelacionOrganizativaOfiLocal extends BaseEjb<RelacionOrganizati
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

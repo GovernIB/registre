@@ -23,7 +23,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception;
+    List<Trazabilidad> getByRegistroSalida(Long idRegistroSalida) throws Exception;
 
     /**
      * Obtiene la Trazabilidad de un RegistroEntrada
@@ -31,7 +31,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception;
+    List<Trazabilidad> getByRegistroEntrada(Long idRegistroEntrada) throws Exception;
 
     /**
      * Obtiene las Trazabilidades de un OficioRemision
@@ -39,7 +39,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception;
+    List<Trazabilidad> getByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Obtiene la Trazabilidad correspondiente a un OficioRemision y a un RegistroEntrada
@@ -48,7 +48,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws Exception;
+    Trazabilidad getByOficioRegistroEntrada(Long idOficioRemision, Long idRegistroEntrada) throws Exception;
 
     /**
      * Obtiene la Trazabilidad correspondiente a un OficioRemision y a un RegistroSalida
@@ -57,7 +57,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception;
+    Trazabilidad getByOficioRegistroSalida(Long idOficioRemision, Long idRegistroSalida) throws Exception;
 
     /**
      * Obtiene las Trazabilidades de un RegistroSir
@@ -65,7 +65,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception;
+    List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception;
 
     /**
      * Elimina las Trazabilidades de una Entidad
@@ -73,13 +73,13 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los RegistroSalida generados en un OficioRemision
      * @param idOficioRemision
      * @return
      */
-    public List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception;
+    List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception;
 
 }

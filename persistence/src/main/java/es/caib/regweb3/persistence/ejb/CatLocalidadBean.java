@@ -56,6 +56,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatLocalidad> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad order by catLocalidad.id");
@@ -66,6 +67,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception {
          Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia and catLocalidad.entidadGeografica.codigoEntidadGeografica =:codigoEntidadGeografica");
 
@@ -83,6 +85,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception{
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia");
 
@@ -98,6 +101,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception {
 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.provincia.id = :idProvincia order by catLocalidad.nombre");
@@ -109,6 +113,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatLocalidad> getByCodigoProvincia(Long codigoProvincia) throws Exception {
         log.info("inicio getByProvincia");
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.provincia.codigoProvincia = :codigoProvincia order by catLocalidad.nombre");
@@ -120,6 +125,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Object[]> getByCodigoProvinciaObject(Long codigoProvincia) throws Exception {
 
         Query q = em.createQuery("Select catLocalidad.codigoLocalidad, catLocalidad.nombre, catLocalidad.entidadGeografica.codigoEntidadGeografica from CatLocalidad as catLocalidad where catLocalidad.provincia.codigoProvincia = :codigoProvincia order by catLocalidad.nombre");
@@ -131,6 +137,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatLocalidad findByNombre(String nombre) throws Exception{
 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.nombre =:nombre");

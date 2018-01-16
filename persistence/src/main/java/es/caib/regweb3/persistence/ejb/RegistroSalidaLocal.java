@@ -31,7 +31,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception;
+    RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception;
 
     /**
      * Guarda un Registro de Salida (con anexos)
@@ -39,8 +39,8 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+    RegistroSalida registrarSalida(RegistroSalida registroSalida,
+                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException;
     
 
@@ -51,7 +51,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
 
     
     /**
@@ -62,7 +62,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
+    RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
 
     /**
      * Obtiene el RegistroSalida a partir de su numero de registro formateado
@@ -70,7 +70,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
+    RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
 
 
     /**
@@ -80,7 +80,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+    String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
     /**
      * Anula un RegistroSalida, cambiandole el estado a anulado.
@@ -88,7 +88,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Activa un RegistroSalida, cambiandole el estado a anulado.
@@ -96,7 +96,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    void activarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Visa un RegistroSalida, cambiandole el estado a anulado.
@@ -104,7 +104,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    void visarRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Elimina los RegistroSalida de una Entidad
@@ -112,7 +112,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroSalida
@@ -120,7 +120,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Long getLibro(Long idRegistroSalida) throws Exception;
+    Long getLibro(Long idRegistroSalida) throws Exception;
 
     /**
      * Busca los Registros de Salida de un listado de Libros en función de su estado.
@@ -129,7 +129,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
+    Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Salida de un listado de Libros en función de su estado.
@@ -139,7 +139,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
+    List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Salida de un Libro.
@@ -147,7 +147,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Long getTotalByLibro(Long idLibro) throws Exception;
+    Long getTotalByLibro(Long idLibro) throws Exception;
 
     /**
      * Comprueba si un usuario tiene RegistroSalida
@@ -156,7 +156,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Cambia el estado de un RegistroSalida
@@ -165,7 +165,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void cambiarEstadoTrazabilidad(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+    void cambiarEstadoTrazabilidad(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.
@@ -174,7 +174,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException;
+    RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException;
     /**
      * Método que devuelve un registro de salida completo, con los anexos completos
      *
@@ -183,7 +183,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+    RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
 
     /**
      * Rectificar Registro de Salida
@@ -192,7 +192,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public RegistroSalida rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception;
+    RegistroSalida rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      *
@@ -201,7 +201,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception;
+    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idOficina) throws Exception;
 
     /**
      * Busca los Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
@@ -210,7 +210,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
+    List<RegistroSalida> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
 
     /**
      * Total de Registros de Salida de una OficinaActiva Rechazados o Reenviados por SIR
@@ -218,7 +218,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
+    Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
 
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
@@ -226,7 +226,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
+    void postProcesoNuevoRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
     /**
      * Metodo que llama al plugin de postproceso cuando actualizamos un registro de salida
@@ -234,6 +234,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @return
      * @throws Exception
      */
-    public void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
+    void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
 }

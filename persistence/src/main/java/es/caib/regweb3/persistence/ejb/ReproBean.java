@@ -69,6 +69,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
         return (Repro) q.getSingleResult();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Repro> getAll() throws Exception {
 
@@ -83,6 +84,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
         return (Long) q.getSingleResult();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Repro> getPagination(int inicio) throws Exception {
 
@@ -94,6 +96,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Repro> getPaginationUsuario(int inicio, Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select repro from Repro as repro  " +
@@ -107,6 +110,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Repro> getAllbyUsuario(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select repro from Repro as repro  " +
@@ -118,6 +122,7 @@ public class ReproBean extends BaseEjbJPA<Repro, Long> implements ReproLocal{
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Repro> getActivasbyUsuario(Long idUsuario, Long tipoRegistro) throws Exception {
 
         Query q = em.createQuery("Select repro.id, repro.nombre from Repro as repro  " +

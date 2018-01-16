@@ -22,7 +22,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @return
      * @throws Exception
      */
-    public Usuario findByIdentificador(String identificador) throws Exception;
+    Usuario findByIdentificador(String identificador) throws Exception;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.Usuario} asociado a un documento.
@@ -30,7 +30,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @return
      * @throws Exception
      */
-    public Usuario findByDocumento(String documento) throws Exception;
+    Usuario findByDocumento(String documento) throws Exception;
 
     /**
      * Comprueba si el identificador dado existe en algún usuario excepto el selccionado.
@@ -39,7 +39,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws Exception;
+    Boolean existeIdentificadorEdit(String identificador, Long idUsuario) throws Exception;
 
     /**
      * Comprueba si el documento dado existe en algún usuario excepto el selccionado.
@@ -48,7 +48,7 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception;
+    Boolean existeDocumentioEdit(String documento, Long idUsuario) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Usuario} según los parámetros
@@ -62,5 +62,5 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
+    Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
 }

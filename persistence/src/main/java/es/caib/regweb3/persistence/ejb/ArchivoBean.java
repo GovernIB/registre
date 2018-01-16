@@ -55,6 +55,7 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Archivo> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select archivo from Archivo as archivo order by archivo.id");

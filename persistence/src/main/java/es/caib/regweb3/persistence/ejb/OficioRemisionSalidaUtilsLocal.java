@@ -34,7 +34,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
+    List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
@@ -44,7 +44,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
+    Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
 
     /**
      * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto
@@ -57,7 +57,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
+    OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
 
     /**
      * @param registrosSalida
@@ -67,7 +67,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @param idLibro
      * @return
      */
-    public OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
+    OficioRemision crearOficioRemisionInterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param registrosSalida
@@ -78,7 +78,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @param idLibro
      * @return
      */
-    public OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
+    OficioRemision crearOficioRemisionExterno(List<RegistroSalida> registrosSalida, Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExterno, String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Genera los Justificantes de todos los registros de un Oficio de Remisión
@@ -88,7 +88,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public void crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
+    void crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param oficioRemision
@@ -100,9 +100,9 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                        UsuarioEntidad usuario, Oficina oficinaActiva,
-                                                        List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
+    List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
+                                                UsuarioEntidad usuario, Oficina oficinaActiva,
+                                                List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
@@ -111,7 +111,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception;
+    Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
@@ -120,7 +120,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision externo o no
@@ -129,7 +129,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
     /**
      * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
@@ -138,5 +138,5 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 }

@@ -56,6 +56,7 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatNivelAdministracion> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion order by catNivelAdministracion.id");
@@ -66,6 +67,7 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatNivelAdministracion findByCodigo(Long codigo) throws Exception {
          Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion where catNivelAdministracion.codigoNivelAdministracion = :codigo");
 

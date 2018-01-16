@@ -22,5 +22,5 @@ public interface RolLocal extends BaseEjb<Rol, Long> {
      * @return
      * @throws Exception
      */
-    public List<Rol> getByRol(List<String> roles) throws Exception;
+    List<Rol> getByRol(List<String> roles) throws Exception;
 }

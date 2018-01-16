@@ -275,6 +275,7 @@ public class InformeBean implements InformeLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;

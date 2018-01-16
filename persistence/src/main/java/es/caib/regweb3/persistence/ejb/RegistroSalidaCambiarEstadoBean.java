@@ -59,6 +59,7 @@ public class RegistroSalidaCambiarEstadoBean extends BaseEjbJPA<RegistroSalida, 
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroSalida> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select registroSalida from RegistroSalida as registroSalida order by registroSalida.id");

@@ -77,6 +77,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
 
         String queryFecha="";

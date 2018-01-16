@@ -22,7 +22,7 @@ public interface InteresadoSirLocal extends BaseEjb<InteresadoSir, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }
 

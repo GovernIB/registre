@@ -17,11 +17,11 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface CatProvinciaLocal extends BaseEjb<CatProvincia, Long> {
 
-  public CatProvincia findByCodigo(Long codigo) throws Exception;
+  CatProvincia findByCodigo(Long codigo) throws Exception;
 
-  public List<ObjetoBasico> getByComunidadObject(Long codigoComunidad) throws Exception;
+  List<ObjetoBasico> getByComunidadObject(Long codigoComunidad) throws Exception;
 
-  public List<CatProvincia> getByComunidad(Long codigoComunidad) throws Exception;
+  List<CatProvincia> getByComunidad(Long codigoComunidad) throws Exception;
 
 }
 

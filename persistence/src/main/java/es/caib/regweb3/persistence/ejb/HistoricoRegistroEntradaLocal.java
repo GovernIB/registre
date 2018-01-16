@@ -18,7 +18,7 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistroEntrada, Long> {
 
-    public List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception;
+    List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception;
 
     /**
      * Crea un HistoricoRegistroEntrada según los parámetros
@@ -30,7 +30,7 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
      * @return
      * @throws Exception
      */
-    public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
+    HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
 
     /**
      * Comprueba si un usuario tiene HistoricoRegistroEntrada
@@ -39,7 +39,7 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
      * @return
      * @throws Exception
      */
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Elimina las HistoricoRegistroSalida de una Entidad
@@ -48,7 +48,7 @@ public interface HistoricoRegistroEntradaLocal extends BaseEjb<HistoricoRegistro
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 
 }

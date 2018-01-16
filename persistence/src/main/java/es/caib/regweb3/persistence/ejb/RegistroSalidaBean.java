@@ -70,6 +70,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     private PluginLocal pluginEjb;
 
     @Override
+    @SuppressWarnings("unchecked")
     public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception{
         Query q;
 
@@ -314,6 +315,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception {
 
         Query q = em.createQuery("Select registroSalida "
@@ -336,6 +338,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
 
         Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistroFormateado = :numeroRegistroFormateado " +
@@ -353,6 +356,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
     public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception {
 
         Query q = em.createQuery("Select registroSalida.numeroRegistroFormateado "
@@ -418,6 +423,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
         List<Object> registros = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where rs.usuario.entidad.id = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
@@ -431,6 +437,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Long getLibro(Long idRegistroSalida) throws Exception {
 
         Query q;
@@ -463,6 +470,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception {
 
         Query q;

@@ -57,6 +57,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PropiedadGlobal> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal order by propiedadGlobal.id");
@@ -87,6 +88,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public PropiedadGlobal findByClaveEntidad(String clave, Long idEntidad, Long idPropiedadGlobal) throws Exception {
 
         String entidadQuery = "";
@@ -311,6 +313,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad = :idEntidad ");
@@ -321,9 +324,10 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         return (List<PropiedadGlobal>) list;
 
     }
-    
-    
+
+
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<PropiedadGlobal> getAllProperties() throws Exception {
 
         Query q = em.createQuery("Select pg from PropiedadGlobal as pg where pg.entidad is null");

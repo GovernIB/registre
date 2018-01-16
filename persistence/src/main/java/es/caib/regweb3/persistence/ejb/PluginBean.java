@@ -64,6 +64,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Plugin> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select plugin from Plugin as plugin order by plugin.id");

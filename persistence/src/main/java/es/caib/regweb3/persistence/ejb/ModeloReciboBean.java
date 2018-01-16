@@ -65,6 +65,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModeloRecibo> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select modeloRecibo.id, modeloRecibo.nombre from ModeloRecibo as modeloRecibo where modeloRecibo.entidad.id = :idEntidad");
@@ -83,6 +84,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModeloRecibo> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select modeloRecibo from ModeloRecibo as modeloRecibo order by modeloRecibo.id");
@@ -93,6 +95,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModeloRecibo> getPagination(int inicio, Long idEntidad) throws Exception {
 
          Query q = em.createQuery("Select modeloRecibo from ModeloRecibo as modeloRecibo where modeloRecibo.entidad.id = :idEntidad order by modeloRecibo.id");

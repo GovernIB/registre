@@ -22,6 +22,6 @@ public interface SincronizadorDir3Local {
    * @return
    * @throws Exception
    */
-  public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
+  int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception;
 
 }

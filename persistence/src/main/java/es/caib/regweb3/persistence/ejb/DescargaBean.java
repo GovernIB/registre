@@ -39,6 +39,8 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         return em.find(Descarga.class, id);
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
      public Descarga findByTipo(String tipo) throws Exception {
         Query query = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? order by descarga.id desc");
         query.setParameter(1, tipo);
@@ -51,7 +53,9 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         }
 
      }
-    
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Descarga findByTipoEntidad(String tipo, Long idEntidad) throws Exception {
 
         Query query = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id =? order by descarga.id desc");
@@ -66,6 +70,8 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         } 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception {
 
         Query query = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id = ? order by descarga.id asc");
@@ -103,6 +109,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Descarga> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga order by descarga.id");
@@ -112,7 +119,8 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
         return q.getResultList();
     }
 
-
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Descarga> getPaginationByEntidad(int inicio,Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id=:idEntidad order by descarga.id desc").setParameter("idEntidad", idEntidad);
@@ -121,7 +129,9 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
         return q.getResultList();
     }
-    
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public void deleteByTipo(String tipo) throws Exception {
 
         Query query = em.createQuery("delete from Descarga as descarga where descarga.tipo=?");
@@ -131,6 +141,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Descarga> findByEntidad(Long idEntidad) throws Exception{
 
        return em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id =:idEntidad order by descarga.id").setParameter("idEntidad",idEntidad).getResultList();
@@ -161,6 +172,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Descarga> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select descarga from Descarga as descarga where descarga.entidad.id = :idEntidad order by descarga.id desc");

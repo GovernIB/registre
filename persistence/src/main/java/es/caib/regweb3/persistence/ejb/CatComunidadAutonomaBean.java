@@ -56,6 +56,7 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatComunidadAutonoma> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma order by catComunidadAutonoma.id");
@@ -66,6 +67,7 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatComunidadAutonoma findByCodigo(Long codigo) throws Exception {
          Query q = em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma where catComunidadAutonoma.codigoComunidad = :codigo");
 

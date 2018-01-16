@@ -4,7 +4,6 @@ import es.caib.regweb3.model.PropiedadGlobal;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public List<PropiedadGlobal> findByEntidad(Long idEntidad, Long tipo) throws Exception;
+    List<PropiedadGlobal> findByEntidad(Long idEntidad, Long tipo) throws Exception;
 
     /**
      * Obtiene una {@link es.caib.regweb3.model.PropiedadGlobal} de una Entidad, según su clave
@@ -34,14 +33,14 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public PropiedadGlobal findByClaveEntidad(String clave, Long idEntidad, Long idPropiedadGlobal) throws Exception;
+    PropiedadGlobal findByClaveEntidad(String clave, Long idEntidad, Long idPropiedadGlobal) throws Exception;
 
     /**
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception;
+    Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception;
 
     /**
      * @param inicio
@@ -49,20 +48,20 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception;
+    List<PropiedadGlobal> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception;
 
     /**
      * @return
      * @throws Exception
      */
-    public Long getTotalREGWEB3(Long tipo) throws Exception;
+    Long getTotalREGWEB3(Long tipo) throws Exception;
 
     /**
      * @param inicio
      * @return
      * @throws Exception
      */
-    public List<PropiedadGlobal> getPaginationREGWEB3(int inicio, Long tipo) throws Exception;
+    List<PropiedadGlobal> getPaginationREGWEB3(int inicio, Long tipo) throws Exception;
 
     /**
      * Elimina los {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
@@ -71,7 +70,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene el valor de una {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
@@ -80,7 +79,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public String getPropertyByEntidad(Long idEntidad, String clave) throws Exception;
+    String getPropertyByEntidad(Long idEntidad, String clave) throws Exception;
 
     /**
      * Obtiene el valor de una {@link es.caib.regweb3.model.PropiedadGlobal}
@@ -88,7 +87,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public String getProperty(String clave) throws Exception;
+    String getProperty(String clave) throws Exception;
 
     /**
      * Obtiene el valor Boolean de una {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
@@ -97,7 +96,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws Exception;
+    Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws Exception;
 
     /**
      * Obtiene el valor Boolean de una {@link es.caib.regweb3.model.PropiedadGlobal}
@@ -105,7 +104,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean getBooleanProperty(String clave) throws Exception;
+    Boolean getBooleanProperty(String clave) throws Exception;
 
     /**
      * Obtiene el valor Long de una {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
@@ -114,7 +113,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Long getLongPropertyByEntitat(Long idEntidad, String clave) throws Exception;
+    Long getLongPropertyByEntitat(Long idEntidad, String clave) throws Exception;
 
     /**
      * Obtiene el valor Long de una {@link es.caib.regweb3.model.PropiedadGlobal}
@@ -122,7 +121,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Long getLongProperty(String clave) throws Exception;
+    Long getLongProperty(String clave) throws Exception;
 
     /**
      * Obtiene el valor Integer de una {@link es.caib.regweb3.model.PropiedadGlobal}
@@ -131,7 +130,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws Exception;
+    Integer getIntegerPropertyByEntitat(Long idEntidad, String clave) throws Exception;
 
     /**
      * Obtiene el valor Integer de una {@link es.caib.regweb3.model.PropiedadGlobal}
@@ -139,7 +138,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public Integer getIntegerProperty(String clave) throws Exception;
+    Integer getIntegerProperty(String clave) throws Exception;
 
     /**
      * Obtiene las {@link es.caib.regweb3.model.PropiedadGlobal} de una {@link es.caib.regweb3.model.Entidad}
@@ -147,7 +146,7 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception;
+    List<PropiedadGlobal> getAllPropertiesByEntidad(Long idEntidad) throws Exception;
     
     /**
      * Obtiene todas las {@link es.caib.regweb3.model.PropiedadGlobal} que no estan asociadas 
@@ -155,5 +154,5 @@ public interface PropiedadGlobalLocal extends BaseEjb<PropiedadGlobal, Long> {
      * @return
      * @throws Exception
      */
-    public List<PropiedadGlobal> getAllProperties() throws Exception;
+    List<PropiedadGlobal> getAllProperties() throws Exception;
 }

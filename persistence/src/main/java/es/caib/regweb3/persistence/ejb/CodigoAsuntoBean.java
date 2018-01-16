@@ -63,6 +63,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CodigoAsunto> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto order by codigoAsunto.id");
@@ -73,6 +74,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CodigoAsunto> getPagination(int inicio, Long idTipoAsunto) throws Exception {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto order by codigoAsunto.id");
@@ -84,6 +86,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto order by codigoAsunto.id");
@@ -95,6 +98,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CodigoAsunto> getActivosByTipoAsunto(Long idTipoAsunto) throws Exception {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto " +
@@ -107,6 +111,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CodigoAsunto findByCodigo(String codigo) throws Exception {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo");
@@ -123,6 +128,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo and codigoAsunto.tipoAsunto.entidad.id = :idEntidad");

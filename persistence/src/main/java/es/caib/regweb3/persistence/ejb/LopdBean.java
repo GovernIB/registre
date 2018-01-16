@@ -161,6 +161,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Lopd> getByRegistro(String anyoRegistro, Integer numRegistro, Long idLibro, Long accion, Long tipoRegistro) throws Exception {
 
         Query q = em.createQuery("Select lopd from Lopd as lopd where lopd.anyoRegistro = :anyoRegistro and " +
@@ -177,6 +178,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Lopd> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select lopd from Lopd as lopd order by lopd.id");
@@ -187,6 +189,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public void altaLopd(Integer numeroRegistro, Date fecha, Long idLibro, Long idUsuarioEntidad, Long tipoRegistro, Long accion) throws Exception {
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
@@ -445,6 +448,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion salidaModificadaPorUsuarioLibro(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, Long idLibro) throws Exception{
 
         Query q;
@@ -562,6 +566,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion entradaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
 
         Query q;
@@ -624,6 +629,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion buscaSalidaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long usuario, List<Libro> libros) throws Exception {
 
         Query q;
@@ -679,6 +685,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion salidaModificadaPorUsuario(Integer pageNumber, final Integer resultsPerPage, Date fechaInicio, Date fechaFin, Long idUsuario, List<Libro> libros) throws Exception{
 
         Query q;
@@ -741,6 +748,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion getByUsuario(Integer pageNumber, final Integer resultsPerPage, Date dataInici, Date dataFi, String usuario, String accion) throws Exception {
 
         Query q;

@@ -15,6 +15,6 @@ import javax.ejb.Local;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface CatComunidadAutonomaLocal extends BaseEjb<CatComunidadAutonoma, Long> {
 
-  public CatComunidadAutonoma findByCodigo(Long codigo) throws Exception;
+  CatComunidadAutonoma findByCodigo(Long codigo) throws Exception;
 }
 

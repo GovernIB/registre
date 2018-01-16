@@ -56,6 +56,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatTipoVia> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia order by catTipoVia.id");
@@ -66,6 +67,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatTipoVia findByCodigo(Long codigo) throws Exception {
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.codigoTipoVia = :codigo");
@@ -81,6 +83,8 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public CatTipoVia findByDescripcion(String descripcion) throws Exception{
 
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.descripcionTipoVia = :descripcion");

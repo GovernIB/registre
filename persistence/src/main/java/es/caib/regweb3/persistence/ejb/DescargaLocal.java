@@ -22,7 +22,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return
    * @throws Exception
    */
-  public Descarga findByTipo(String tipo) throws Exception;
+  Descarga findByTipo(String tipo) throws Exception;
 
   /**
    *  Obtiene el valor de la última descarga de un tipo y de una entidad
@@ -30,7 +30,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return  la descarga encontrada
    * @throws Exception
    */
-  public Descarga findByTipoEntidad(String tipo, Long idEntidad) throws Exception;
+  Descarga findByTipoEntidad(String tipo, Long idEntidad) throws Exception;
 
   /**
    *  Obtiene el valor de la primera descarga de un tipo y de una entidad
@@ -39,7 +39,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return  la descarga encontrada
    * @throws Exception
    */
-  public Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception;
+  Descarga findByTipoEntidadInverse(String tipo, Long idEntidad) throws Exception;
 
   /**
    * Calcula el total por entidad
@@ -47,7 +47,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return
    * @throws Exception
    */
-  public Long getTotalByEntidad(Long idEntidad) throws Exception;
+  Long getTotalByEntidad(Long idEntidad) throws Exception;
 
   /**
    * Obtiene la paginación por entidad
@@ -56,9 +56,9 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return
    * @throws Exception
    */
-  public List<Descarga> getPaginationByEntidad(int inicio,Long idEntidad) throws Exception;
+  List<Descarga> getPaginationByEntidad(int inicio, Long idEntidad) throws Exception;
 
-  public void deleteByTipo(String tipo) throws Exception;
+  void deleteByTipo(String tipo) throws Exception;
 
   /**
    * Obtiene las descargas de una entidad ordenadas por código;
@@ -74,7 +74,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return
    * @throws Exception
    */
-  public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+  Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
   /**
    * @param inicio
@@ -82,12 +82,12 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return
    * @throws Exception
    */
-  public List<Descarga> getPagination(int inicio, Long idEntidad) throws Exception;
+  List<Descarga> getPagination(int inicio, Long idEntidad) throws Exception;
 
   /**
    * @param idEntidad
    * @return
    * @throws Exception
    */
-  public Long getTotalEntidad(Long idEntidad) throws Exception;
+  Long getTotalEntidad(Long idEntidad) throws Exception;
 }

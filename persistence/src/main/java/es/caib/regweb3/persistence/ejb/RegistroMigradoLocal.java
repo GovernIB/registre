@@ -24,7 +24,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean tieneRegistrosMigrados(Long entidad) throws Exception;
+    Boolean tieneRegistrosMigrados(Long entidad) throws Exception;
 
     /**
      * Busca los Registros Migrados en función de los parámetros
@@ -38,14 +38,14 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, Integer numeroRegistro, Integer anoRegistro, RegistroMigrado registroMigrado, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, Integer numeroRegistro, Integer anoRegistro, RegistroMigrado registroMigrado, Long idEntidad) throws Exception;
 
     /**
      * Busca las Oficinas existentes en los Registros Migrados
      * @return
      * @throws Exception
      */
-    public List<String[]> getOficinas() throws Exception;
+    List<String[]> getOficinas() throws Exception;
 
     /**
      * Inserta la consulta de un Registro Migrado en las tablas de Lopd
@@ -53,7 +53,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
      * @param idUsuarioEntidad
      * @throws Exception
      */
-    public void insertarRegistroLopdMigrado(Long idRegistroMigrado, Long idUsuarioEntidad) throws Exception;
+    void insertarRegistroLopdMigrado(Long idRegistroMigrado, Long idUsuarioEntidad) throws Exception;
 
     /**
      * Inserta la búsqueda de un Registros Migrado en las tablas de Lopd
@@ -61,7 +61,7 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
      * @param idUsuarioEntidad
      * @throws Exception
      */
-    public void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
+    void insertarRegistrosLopdMigrado(Paginacion paginacion, Long idUsuarioEntidad) throws Exception;
 
     /**
      * Elimina todos los RegistroMigrado de la Entidad
@@ -69,6 +69,6 @@ public interface RegistroMigradoLocal extends BaseEjb<RegistroMigrado, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

@@ -25,7 +25,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws Exception;
+    List<UsuarioEntidad> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
      * Obtiene el total de registros para la paginacion
@@ -33,7 +33,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public Long getTotal(Long idEntidad) throws Exception;
+    Long getTotal(Long idEntidad) throws Exception;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador.
@@ -41,7 +41,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public UsuarioEntidad findByIdentificador(String identificador) throws Exception;
+    UsuarioEntidad findByIdentificador(String identificador) throws Exception;
 
     /**
      *  Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y a una Entidad
@@ -50,7 +50,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws Exception;
+    UsuarioEntidad findByIdentificadorEntidad(String identificador, Long idEntidad) throws Exception;
 
     /**
      *  Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador y el código DIR3 de la entidad
@@ -59,7 +59,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception;
+    UsuarioEntidad findByIdentificadorCodigoEntidad(String identificador, String codigoEntidad) throws Exception;
 
 
     /**
@@ -68,7 +68,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public UsuarioEntidad findByDocumento(String documento) throws Exception;
+    UsuarioEntidad findByDocumento(String documento) throws Exception;
 
 
     /**
@@ -77,7 +77,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Retorna todos los UsuarioEntidad activos de una entidad
@@ -85,7 +85,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_ADMIN
@@ -93,7 +93,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findAdministradoresByEntidad(Long idEntidad) throws Exception;
 
     /**
      *  Busca un UsuarioEntidad a partir del idUsuario y idEntidad
@@ -102,7 +102,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception;
+    UsuarioEntidad findByUsuarioEntidad(Long idUsuario, Long idEntidad) throws Exception;
 
     /**
      * Busca un UsuarioEntidad activo a partir del idUsuario y idEntidad
@@ -111,7 +111,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception;
+    UsuarioEntidad findByUsuarioEntidadActivo(Long idUsuario, Long idEntidad) throws Exception;
 
     /**
      * Obtiene todas las Entidades en las cuales el Usuario está asociado
@@ -119,7 +119,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception;
+    List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception;
 
     /**
     * Retorna los {@link es.caib.regweb3.model.UsuarioEntidad} de un Usuario activos.
@@ -127,7 +127,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     * @return
     * @throws Exception
     */
-    public List<UsuarioEntidad> findByUsuario(Long idUsuario) throws Exception;
+    List<UsuarioEntidad> findByUsuario(Long idUsuario) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.UsuarioEntidad} según los parámetros
@@ -139,7 +139,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber,Long idEntidad,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
 
     /**
      * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario
@@ -148,7 +148,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findUsuariosRepro(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
+    List<UsuarioEntidad> findUsuariosRepro(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
 
     /**
      * Modifica la última Oficina utilizada por el usuario
@@ -156,7 +156,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param idOficina
      * @throws Exception
      */
-    public void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception;
+    void actualizarOficinaUsuario(Long idUsuario, Long idOficina) throws Exception;
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_USUARIO activos o no activos
@@ -164,7 +164,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception;
+    List<UsuarioEntidad> findOperadoresByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Elimina las UsuarioEntidad de una Entidad
@@ -172,7 +172,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Comprueba las diferentes dependencias del UsuarioEntidad para saber si es posible eliminarlo
@@ -181,5 +181,5 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception;
+    Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception;
 }

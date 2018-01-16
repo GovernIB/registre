@@ -58,6 +58,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Contador> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select contador from Contador as contador order by contador.id");

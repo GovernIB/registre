@@ -47,6 +47,8 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws Exception {
 
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.estado=:estado and pendiente.procesado=:procesado");
@@ -56,11 +58,13 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Pendiente> findPendientesProcesar() throws Exception {
 
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
-        return q.getResultList();
 
+        return q.getResultList();
     }
 
 
@@ -81,6 +85,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Pendiente> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente order by pendiente.id");

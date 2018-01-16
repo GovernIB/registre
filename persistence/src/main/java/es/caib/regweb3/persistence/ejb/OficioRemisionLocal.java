@@ -33,7 +33,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
 
     /**
      * Registra un OficioRemision asignandole número
@@ -42,7 +42,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
+    OficioRemision registrarOficioRemision(OficioRemision oficioRemision, Long estado)
         throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -51,7 +51,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception;
+    void anularOficioRemision(Long idOficioRemision, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
@@ -59,7 +59,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception;
+    List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión de los organismos seleccionados según su estado
@@ -68,7 +68,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws Exception;
+    Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber, OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws Exception;
 
     /**
      * Devuelve los Oficios de Remisión pendientes de procesar de los organismos seleccionados
@@ -76,7 +76,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws Exception;
+    Long oficiosPendientesLlegadaCount(Set<Organismo> organismos) throws Exception;
 
     /**
      * Busca Registros de Entrada que pertenecen a un OficioRemision
@@ -84,7 +84,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws Exception;
+    List<RegistroEntrada> getEntradasByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
@@ -93,7 +93,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws Exception;
+    List<OficioRemision> getByOficinaEstado(Long idOficina, int idEstado, int total) throws Exception;
 
     /**
      * Obtiene los Oficios de Remisión de un determinado Estado y Entidad
@@ -102,7 +102,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws Exception;
+    Long getByOficinaEstadoCount(Long idOficina, int idEstado) throws Exception;
 
     /**
      * Busca los Oficios de Remisión según su oficia origen y estado
@@ -112,7 +112,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws Exception;
+    Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Integer idEstado) throws Exception;
 
     /**
      * Obtiene los Oficios de Remisión que han de reintentar su envío al componente CIR
@@ -120,7 +120,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception;
+    List<OficioRemision> getEnviadosSinAck(Long idEntidad) throws Exception;
 
     /**
      *
@@ -128,7 +128,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception;
+    List<OficioRemision> getEnviadosConError(Long idEntidad) throws Exception;
 
     /**
      * Busca Registros de Salida que pertenecen a un OficioRemision
@@ -136,7 +136,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
+    List<RegistroSalida> getSalidasByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
@@ -144,7 +144,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
+    OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
 
     /**
      * Modifica el Estado de un OficioRemision
@@ -152,7 +152,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @param estado
      * @throws Exception
      */
-    public void modificarEstado(Long idOficioRemision, int estado) throws Exception;
+    void modificarEstado(Long idOficioRemision, int estado) throws Exception;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
@@ -160,7 +160,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+    List<String> getNumerosRegistroEntradaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Busca los Números de Registro Formateados de los Registros de Salida que pertenecen a un OficioRemision
@@ -168,7 +168,7 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+    List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
 
     /**
      * Elimina los Oficios de remisión de una Entidad
@@ -176,5 +176,5 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

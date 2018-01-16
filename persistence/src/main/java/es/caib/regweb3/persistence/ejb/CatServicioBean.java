@@ -56,6 +56,7 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatServicio> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catServicio from CatServicio as catServicio order by catServicio.id");
@@ -66,6 +67,7 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatServicio findByCodigo(Long codigo) throws Exception {
          Query q = em.createQuery("Select catServicio from CatServicio as catServicio where catServicio.codServicio = :codigo");
 

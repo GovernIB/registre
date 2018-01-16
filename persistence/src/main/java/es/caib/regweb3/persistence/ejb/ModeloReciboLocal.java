@@ -22,7 +22,7 @@ public interface ModeloReciboLocal extends BaseEjb<ModeloRecibo, Long> {
    * @return
    * @throws Exception
    */
-   public Long getTotal(Long idEntidad) throws Exception;
+  Long getTotal(Long idEntidad) throws Exception;
 
    /**
     *
@@ -30,7 +30,7 @@ public interface ModeloReciboLocal extends BaseEjb<ModeloRecibo, Long> {
     * @return
     * @throws Exception
     */
-    public List<ModeloRecibo> getByEntidad(Long idEntidad) throws Exception;
+   List<ModeloRecibo> getByEntidad(Long idEntidad) throws Exception;
 
   /**
    *
@@ -39,7 +39,7 @@ public interface ModeloReciboLocal extends BaseEjb<ModeloRecibo, Long> {
    * @return
    * @throws Exception
    */
-   public List<ModeloRecibo> getPagination(int inicio, Long idEntidad) throws Exception;
+  List<ModeloRecibo> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
      * Elimina los {@link es.caib.regweb3.model.ModeloRecibo} de una Entidad
@@ -47,6 +47,6 @@ public interface ModeloReciboLocal extends BaseEjb<ModeloRecibo, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

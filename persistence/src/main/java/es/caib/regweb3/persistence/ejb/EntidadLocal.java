@@ -2,12 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.UsuarioEntidad;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import java.util.List;
 
 /**
@@ -28,7 +26,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Entidad nuevaEntidad(Entidad entidad) throws Exception;
+    Entidad nuevaEntidad(Entidad entidad) throws Exception;
 
     /**
      * Retorna la Entidad cuyo CódigoDir3 es el indicado por parámetro
@@ -37,7 +35,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Entidad findByCodigoDir3(String codigo) throws Exception;
+    Entidad findByCodigoDir3(String codigo) throws Exception;
 
     /**
      * Comprueba su una {@link es.caib.regweb3.model.Entidad} tiene algún {@link es.caib.regweb3.model.Organismo} asociado.
@@ -46,7 +44,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean tieneOrganismos(Long idEntidad) throws Exception;
+    Boolean tieneOrganismos(Long idEntidad) throws Exception;
 
     /**
      * Obtiene las entidades de un Usuario
@@ -55,7 +53,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception;
+    List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception;
 
     /**
      * Obtiene las entidades de un Usuario de las que es Propietario
@@ -64,7 +62,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception;
+    List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception;
 
     /**
      * Comprueba si el codigoDir3 dado existe en alguna entidad excepto la selccionado.
@@ -74,7 +72,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception;
+    Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Comprueba si un Usuario es Administrador de la Entidad
@@ -84,7 +82,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception;
+    Boolean esAdministrador(Long idEntidad, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Determina si un usuario es propietario o administrador de esa entidad
@@ -94,7 +92,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
+    Boolean esAutorizado(Long idEntidad, Long idUsuario) throws Exception;
 
     /**
      * Comprueba si una Entidad está marcada como Sir
@@ -103,14 +101,14 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean isSir(Long idEntidad) throws Exception;
+    Boolean isSir(Long idEntidad) throws Exception;
 
     /**
      * Obtiene todas las entidades que están marcadas como SIR
      * @return
      * @throws Exception
      */
-    public List<Entidad> getEntidadesSir() throws Exception;
+    List<Entidad> getEntidadesSir() throws Exception;
 
     /**
      * Elimina todos los Registros y relaciones de una Entidad.
@@ -118,7 +116,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    public void eliminarRegistros(Long idEntidad) throws Exception, I18NException;
+    void eliminarRegistros(Long idEntidad) throws Exception, I18NException;
 
 
     /**
@@ -127,5 +125,5 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    public void eliminarEntidad(Long idEntidad) throws Exception, I18NException;
+    void eliminarEntidad(Long idEntidad) throws Exception, I18NException;
 }

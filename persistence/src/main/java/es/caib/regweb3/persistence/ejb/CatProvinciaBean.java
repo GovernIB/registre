@@ -58,6 +58,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CatProvincia> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia order by catProvincia.id");
@@ -68,6 +69,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CatProvincia findByCodigo(Long codigo) throws Exception {
          Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.codigoProvincia = :codigo");
 
@@ -83,6 +85,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CatProvincia> getByComunidad(Long codigoComunidad) throws Exception {
 
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
@@ -93,6 +96,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<ObjetoBasico> getByComunidadObject(Long codigoComunidad) throws Exception {
 
         Query q = em.createQuery("Select catProvincia.codigoProvincia, catProvincia.descripcionProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");

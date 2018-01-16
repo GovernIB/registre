@@ -56,6 +56,7 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CatEntidadGeografica> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica order by catEntidadGeografica.id");
@@ -66,6 +67,7 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CatEntidadGeografica findByCodigo(String codigo) throws Exception {
         Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica where catEntidadGeografica.codigoEntidadGeografica = :codigo");
 

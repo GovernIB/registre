@@ -65,6 +65,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RelacionSirOfi> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi ");
@@ -91,6 +92,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RelacionSirOfi getRelacionSir(Long idOficina, Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select distinct relacionSirOfi.oficina from RelacionSirOfi as relacionSirOfi " +
@@ -111,6 +113,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RelacionSirOfi> oficinasSirByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.entidad.id =:idEntidad and relacionSirOfi.estado.codigoEstadoEntidad =:estado order by relacionSirOfi.oficina.codigo");
@@ -122,6 +125,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select distinct rso.oficina.id, rso.oficina.codigo, rso.oficina.denominacion, oficina.organismoResponsable.id from RelacionSirOfi as rso " +
@@ -145,6 +149,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception{
 
         Query q = em.createQuery("Select distinct rso.organismo.id, rso.organismo.codigo, rso.organismo.denominacion from RelacionSirOfi as rso " +

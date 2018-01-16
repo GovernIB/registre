@@ -35,7 +35,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception;
+    RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception;
 
     /**
      * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)
@@ -44,8 +44,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
+    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -58,7 +58,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
@@ -68,7 +68,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception;
+    List<RegistroBasico> getByOficinaEstado(Long idOficina, Long idEstado, Integer total) throws Exception;
 
     /**
      *
@@ -78,7 +78,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception;
+    Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
@@ -88,7 +88,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception;
+    Long getByOficinaEstadoCount(Long idOficinaActiva, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
@@ -99,7 +99,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
+    List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
@@ -109,7 +109,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
+    Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
 
     /**
      * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
@@ -118,7 +118,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param idEstado
      * @throws Exception
      */
-    public void cambiarEstadoTrazabilidad(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+    void cambiarEstadoTrazabilidad(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
 
     /**
@@ -129,7 +129,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
+    RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
 
     /**
      * Obtiene el numero de registro formateado de un RegistroEntrada
@@ -141,7 +141,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
+    RegistroEntrada findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
 
     /**
      * Devuelve el numero de registro formateado a partir de un registro detalle.
@@ -151,7 +151,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
+    String findNumeroRegistroFormateadoByRegistroDetalle(Long idRegistroDetalle) throws Exception;
 
 
     /**
@@ -161,7 +161,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Activa un RegistroEntrada, cambiandole el estado a anulado.
@@ -170,7 +170,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void activarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void activarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Visa un RegistroEntrada, cambiandole el estado a anulado.
@@ -179,7 +179,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void visarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void visarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
 
     /**
      * Tramita un RegistroEntrada, cambiandole el estado a tramitado.
@@ -188,7 +188,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param usuarioEntidad
      * @throws Exception
      */
-    public void tramitarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException;
+    void tramitarRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException;
 
 
     /**
@@ -200,8 +200,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws I18NValidationException
      * @throws I18NException
      */
-    public RegistroEntrada generarJustificanteRegistroEntrada(RegistroEntrada registroEntrada,
-                                                   UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException;
+    RegistroEntrada generarJustificanteRegistroEntrada(RegistroEntrada registroEntrada,
+                                                       UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException;
 
     /**
      * Retorna el identificador del Libro al que pertenece el RegistroEntrada
@@ -210,7 +210,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Long getLibro(Long idRegistroEntrada) throws Exception;
+    Long getLibro(Long idRegistroEntrada) throws Exception;
 
     /**
      * Comprueba si un Registro de Entrada se puede tramitar o no
@@ -220,7 +220,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception;
+    Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception;
 
     /**
      * Elimina los RegistroEntrada de una Entidad
@@ -229,7 +229,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Entrada de un Libro.
@@ -238,7 +238,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Long getTotalByLibro(Long idLibro) throws Exception;
+    Long getTotalByLibro(Long idLibro) throws Exception;
 
     /**
      * Comprueba si un usuario tiene RegistroEntrada
@@ -247,7 +247,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Comprueba si un RegistroEntrada tiene un Estado en concreto
@@ -257,7 +257,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception;
+    Boolean tieneEstado(Long idRegistroEntrada, Long idEstado) throws Exception;
 
     /**
      * Método que devuelve un registro de entrada completo, con anexoFull pero sin los documentos fisicos.
@@ -267,7 +267,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
+    RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
 
     /**
      * Método que devuelve un registro de entrada completo, con los anexos completos
@@ -277,7 +277,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+    RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
 
     /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio
@@ -286,7 +286,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
+    RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
 
     /**
      * Rectificar un Registro de entrada, creando una nuevo informando de ello
@@ -295,7 +295,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Método que obtiene los destinatarios a los que distribuir el registro
@@ -306,7 +306,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Método que envia un registro de entrada a un conjunto de destinatarios
@@ -317,8 +317,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
-        Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException;
+    Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
+                   Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException;
 
     /**
      *
@@ -327,7 +327,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber,Long idOficina) throws Exception;
+    Paginacion getSirRechazadosReenviadosPaginado(Integer pageNumber, Long idOficina) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
@@ -336,7 +336,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
+    List<RegistroEntrada> getSirRechazadosReenviados(Long idOficina, Integer total) throws Exception;
 
     /**
      * Total de Registros de Entrada de una OficinaActiva Rechazados o Reenviados por SIR
@@ -344,7 +344,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
+    Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
 
     /**
      * Actualiza el Destino extinguido por el que le sustituye
@@ -352,7 +352,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param idOrganismo
      * @throws Exception
      */
-    public void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws Exception;
+    void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws Exception;
 
     /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
@@ -361,13 +361,13 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    public void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
+    void postProcesoActualizarRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
 
     /**
      * @param re
      * @return
      * @throws Exception
      */
-    public void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
+    void postProcesoNuevoRegistro(RegistroEntrada re, Long entidadId) throws Exception, I18NException;
 
 }

@@ -56,6 +56,7 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Rol> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select rol from Rol as rol order by rol.id");
@@ -66,6 +67,7 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Rol> getByRol(List<String> roles) throws Exception {
 
         Query q = em.createQuery("Select rol from Rol as rol where rol.nombre IN (:roles) order by rol.orden");

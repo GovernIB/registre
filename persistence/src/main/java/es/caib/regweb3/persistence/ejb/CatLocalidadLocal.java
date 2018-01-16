@@ -16,15 +16,15 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface CatLocalidadLocal extends BaseEjb<CatLocalidad, Long> {
 
-    public CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception;
+    CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception;
 
-    public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception;
+    CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception;
 
-    public List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception;
+    List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception;
 
-    public List<Object[]> getByCodigoProvinciaObject(Long codigoProvincia) throws Exception;
+    List<Object[]> getByCodigoProvinciaObject(Long codigoProvincia) throws Exception;
 
-    public List<CatLocalidad> getByCodigoProvincia(Long codigoProvincia) throws Exception;
+    List<CatLocalidad> getByCodigoProvincia(Long codigoProvincia) throws Exception;
 
     /**
      * Obtiene la Localidad a partir de su nombre
@@ -32,7 +32,7 @@ public interface CatLocalidadLocal extends BaseEjb<CatLocalidad, Long> {
      * @return
      * @throws Exception
      */
-    public CatLocalidad findByNombre(String nombre) throws Exception;
+    CatLocalidad findByNombre(String nombre) throws Exception;
 
 }
 

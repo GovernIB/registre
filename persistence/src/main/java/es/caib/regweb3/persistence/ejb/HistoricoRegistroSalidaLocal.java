@@ -18,7 +18,7 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroSalida, Long> {
 
-    public List<HistoricoRegistroSalida> getByRegistroSalida(Long idRegistro) throws Exception;
+    List<HistoricoRegistroSalida> getByRegistroSalida(Long idRegistro) throws Exception;
 
     /**
      * Crea un HistoricoRegistroSalida según los parámetros
@@ -29,7 +29,7 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
      * @return
      * @throws Exception
      */
-    public HistoricoRegistroSalida crearHistoricoRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
+    HistoricoRegistroSalida crearHistoricoRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception;
 
 
     /**
@@ -39,7 +39,7 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
      * @return
      * @throws Exception
      */
-    public Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
+    Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Elimina las HistoricoRegistroEntrada de una Entidad
@@ -47,7 +47,7 @@ public interface HistoricoRegistroSalidaLocal extends BaseEjb<HistoricoRegistroS
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 
 }

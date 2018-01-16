@@ -200,6 +200,8 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         return libros;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosConsulta(Long idUsuarioEntidad) throws Exception{
         CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 

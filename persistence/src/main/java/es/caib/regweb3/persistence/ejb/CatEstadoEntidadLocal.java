@@ -21,6 +21,6 @@ public interface CatEstadoEntidadLocal extends BaseEjb<CatEstadoEntidad, Long> {
      * @return
      * @throws Exception
      */
-    public CatEstadoEntidad findByCodigo(String codigo) throws Exception;
+    CatEstadoEntidad findByCodigo(String codigo) throws Exception;
 
 }

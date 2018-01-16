@@ -23,5 +23,5 @@ public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
      * @throws Exception
      */
     @RolesAllowed({"RWE_ADMIN"})
-    public boolean borrarArchivo(Archivo archivo) throws Exception;
+    boolean borrarArchivo(Archivo archivo) throws Exception;
 }

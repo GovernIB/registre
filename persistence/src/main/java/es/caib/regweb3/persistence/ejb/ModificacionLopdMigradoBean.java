@@ -58,6 +58,7 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModificacionLopdMigrado> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado order by modificacionLopdMigrado.id");
@@ -69,6 +70,7 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModificacionLopdMigrado> getByRegistroMigrado(Long numRegistroMigrado) throws Exception {
 
         Query q = em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado where " +

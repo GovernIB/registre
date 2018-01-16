@@ -22,6 +22,6 @@ public interface ModificacionLopdMigradoLocal extends BaseEjb<ModificacionLopdMi
      * @return
      * @throws Exception
      */
-    public List<ModificacionLopdMigrado> getByRegistroMigrado(Long numRegistroMigrado) throws Exception;
+    List<ModificacionLopdMigrado> getByRegistroMigrado(Long numRegistroMigrado) throws Exception;
 
 }

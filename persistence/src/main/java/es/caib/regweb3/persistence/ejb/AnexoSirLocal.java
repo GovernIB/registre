@@ -22,6 +22,6 @@ public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }
 

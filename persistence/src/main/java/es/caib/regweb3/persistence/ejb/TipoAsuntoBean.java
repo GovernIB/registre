@@ -65,6 +65,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<TipoAsunto> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto order by tipoAsunto.id");
@@ -75,6 +76,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<TipoAsunto> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.activo desc, tipoAsunto.codigo");
@@ -84,10 +86,10 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
 
         return q.getResultList();
     }
-    
-    
-    
+
+
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<TipoAsunto> getAll(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.entidad.id = :idEntidad order by tipoAsunto.id");
@@ -112,6 +114,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public TipoAsunto findByCodigo(String codigo) throws Exception {
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.codigo = :codigo");
@@ -142,6 +145,7 @@ public class TipoAsuntoBean extends BaseEjbJPA<TipoAsunto, Long> implements Tipo
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public TipoAsunto findByCodigoEntidad(String codigo,Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select tipoAsunto from TipoAsunto as tipoAsunto where tipoAsunto.codigo = :codigo " +

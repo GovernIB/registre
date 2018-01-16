@@ -25,7 +25,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Oficina findByCodigo(String codigo) throws Exception;
+    Oficina findByCodigo(String codigo) throws Exception;
 
     /**
      * Obtiene la oficina del codigo indicado, la entidad indicada independientemente del estado.
@@ -34,7 +34,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception;
+    Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Busca una Oficina a partir de su código
@@ -42,7 +42,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return Solo el id de la Oficina
      * @throws Exception
      */
-    public Oficina findByCodigoLigero(String codigo) throws Exception;
+    Oficina findByCodigoLigero(String codigo) throws Exception;
 
     /**
      * Busca una Oficina a partir de su código y la Entidad a la que pertenece
@@ -50,7 +50,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
+    Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Busca una Oficina válida a partir de su código
@@ -58,7 +58,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Oficina findByCodigoVigente(String codigo) throws Exception;
+    Oficina findByCodigoVigente(String codigo) throws Exception;
 
     /**
      * Obtiene las Oficinas cuyo Organismo responsable es el indicado
@@ -66,7 +66,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws Exception;
+    List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las Oficinas funcionales de un Organismo
@@ -75,7 +75,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasFuncionales(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    List<Oficina> oficinasFuncionales(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene las Oficinas organizativas de un Organismo
@@ -84,7 +84,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene las Oficinas SIR de un Organismo
@@ -92,7 +92,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
+    List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada
@@ -100,7 +100,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> findByEntidad(Long idEntidad) throws Exception;
+    List<Oficina> findByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene las Oficinas cuya Entidad responsable es la indicada y tienen el estado indicado
@@ -109,7 +109,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception;
+    List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception;
 
     /**
      * Obtiene las Oficinas responsables cuya Entidad responsable es la indicada
@@ -118,7 +118,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws Exception;
+    List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
      * Obtiene las Oficinas dependientes cuya Entidad responsable es la indicada
@@ -127,7 +127,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception;
+    List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception;
 
     /**
      * Retorna las Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
@@ -137,7 +137,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public LinkedHashSet<Oficina> oficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    LinkedHashSet<Oficina> oficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Booleano si tiene Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
@@ -147,7 +147,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean tieneOficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    Boolean tieneOficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
 
     /**
@@ -156,7 +156,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception;
+    LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception;
 
     /**
      * Obtiene las Oficinas que dan servicio SIR a los Libros seleccionados
@@ -164,7 +164,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public LinkedHashSet<Oficina> oficinasSIR(List<Libro> libros) throws Exception;
+    LinkedHashSet<Oficina> oficinasSIR(List<Libro> libros) throws Exception;
 
     /**
      * Consulta si una Oficina puede recibir via SIR
@@ -172,7 +172,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean isSIRRecepcion(Long idOficina) throws Exception;
+    Boolean isSIRRecepcion(Long idOficina) throws Exception;
 
     /**
      * Consulta si una Oficina puede enviar via SIR
@@ -180,7 +180,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean isSIREnvio(Long idOficina) throws Exception;
+    Boolean isSIREnvio(Long idOficina) throws Exception;
 
     /**
      * Elimina las Oficinas de una Entidad
@@ -188,7 +188,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.Oficina} según los parámetros
@@ -199,7 +199,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
 
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina
@@ -207,5 +207,5 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    public Long obtenerEntidad(String codigo) throws Exception;
+    Long obtenerEntidad(String codigo) throws Exception;
 }

@@ -23,7 +23,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosEntidad(Long idEntidad) throws Exception;
+    List<Libro> getLibrosEntidad(Long idEntidad) throws Exception;
 
 
     /**
@@ -33,7 +33,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeCodigoEdit(String codigo, Long idLibro, Long idEntidad) throws Exception;
+    Boolean existeCodigoEdit(String codigo, Long idLibro, Long idEntidad) throws Exception;
 
     /**
      * Retorna un Libro a partir de su código
@@ -41,7 +41,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Libro findByCodigo(String codigo) throws Exception;
+    Libro findByCodigo(String codigo) throws Exception;
 
     /**
      * Retorna un Libro a partir de su código y la Entidad a la que pertenece
@@ -50,7 +50,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
+    Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Lista los Libros activos de un Organismo
@@ -58,7 +58,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception;
+    List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception;
 
     /**
      * Lista los Libros activos de un Organismo
@@ -66,7 +66,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception;
+    List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception;
 
     /**
      * Lista los Libros de un Organismo
@@ -74,7 +74,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception;
+    List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception;
 
     /**
      * Obtiene los libros de un organismo solo cargando el id, la denominación y el estado
@@ -82,7 +82,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Libro> getLibrosOrganismoLigero(Long idOrganismo) throws Exception;
+    List<Libro> getLibrosOrganismoLigero(Long idOrganismo) throws Exception;
 
     /**
      * Retorna todos los Libros de relacionados con algún Organismos de la Entidad, activo o no
@@ -90,7 +90,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception;
+    List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception;
 
     /**
      * Retorna si la entidad indicada tiene libros.
@@ -98,21 +98,21 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean tieneLibrosEntidad(Long idEntidad) throws Exception;
+    Boolean tieneLibrosEntidad(Long idEntidad) throws Exception;
 
     /**
      * Pone a 0 todos los contadores de un Libro
      * @param idLibro
      * @throws Exception
      */
-    public void reiniciarContadores(Long idLibro) throws Exception;
+    void reiniciarContadores(Long idLibro) throws Exception;
 
     /**
      * Reinicia los Contadores de todos los Libros de la Entidad
      * @param idEntidad
      * @throws Exception
      */
-    public void reiniciarContadoresEntidad(Long idEntidad) throws Exception;
+    void reiniciarContadoresEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los Organismos vigentes que tienen Libro activo de una Entidad
@@ -120,7 +120,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public List<Organismo> organismosConLibro(Long idEntidad) throws Exception;
+    List<Organismo> organismosConLibro(Long idEntidad) throws Exception;
 
     /**
      * Crea un libro y le asocia sus contadores
@@ -128,7 +128,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Libro crearLibro(Libro libro) throws Exception;
+    Libro crearLibro(Libro libro) throws Exception;
 
     /**
      * Elimina los Libros de una Entidad
@@ -136,7 +136,7 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Elimina un Libro
@@ -144,12 +144,12 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @return
      * @throws Exception
      */
-    public Long eliminarLibro(Long idLibro) throws Exception;
+    Long eliminarLibro(Long idLibro) throws Exception;
 
     /**
      * Tarea que reinicia los contadores de los libros de una entidad
      * @param idEntidad
      */
-    public void reiniciarContadoresEntidadTask(Long idEntidad);
+    void reiniciarContadoresEntidadTask(Long idEntidad);
 
 }

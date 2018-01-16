@@ -57,6 +57,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<InteresadoSir> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select interesadoSir from InteresadoSir as interesadoSir order by interesadoSir.id");

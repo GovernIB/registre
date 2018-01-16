@@ -21,21 +21,21 @@ public interface PendienteLocal extends BaseEjb<Pendiente, Long>  {
    * @return
    * @throws Exception
    */
-  public Pendiente findByIdOrganismo(Long idOrganismo) throws Exception;
+  Pendiente findByIdOrganismo(Long idOrganismo) throws Exception;
   /**
    * Función que devuelve los pendientes en función de su estado
    * @param estado
    * @return
    * @throws Exception
    */
-  public List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws Exception;
+  List<Pendiente> findByEstadoProcesado(String estado, Boolean procesado) throws Exception;
 
   /**
    * Función que devuelve los pendientes de procesar
    * @return
    * @throws Exception
    */
-  public List<Pendiente> findPendientesProcesar() throws Exception;
+  List<Pendiente> findPendientesProcesar() throws Exception;
 
 
 }

@@ -22,14 +22,14 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
      * @return
      * @throws Exception
      */
-    public NumeroRegistro incrementarContador(Long idContador) throws Exception;
+    NumeroRegistro incrementarContador(Long idContador) throws Exception;
 
     /**
      * Pone a 0 el Contador
      * @param idContador
      * @throws Exception
      */
-    public void reiniciarContador(Long idContador) throws Exception;
+    void reiniciarContador(Long idContador) throws Exception;
 
     /**
      * Obtiene una secuenta de 8 dígitos a partir del Contador Sir de la Entidad
@@ -37,6 +37,6 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
      * @return
      * @throws Exception
      */
-    public String secuenciaSir(Long idContador) throws Exception;
+    String secuenciaSir(Long idContador) throws Exception;
 
 }

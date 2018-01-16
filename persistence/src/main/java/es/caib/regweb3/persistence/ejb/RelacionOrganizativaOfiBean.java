@@ -65,6 +65,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RelacionOrganizativaOfi> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi ");
@@ -91,6 +92,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> getOficinasByOrganismo(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.oficina from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
@@ -108,6 +110,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> oficinasOrganizativas(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
 
         String oficinaVirtualWhere = "";
@@ -139,6 +142,8 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         return oficinas;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> getOrganismosByOficina(Long idOficina) throws Exception{
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.organismo from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
@@ -151,6 +156,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public RelacionOrganizativaOfi getRelacionOrganizativa(Long idOficina, Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select distinct relacionOrganizativaOfi.oficina from RelacionOrganizativaOfi as relacionOrganizativaOfi " +
@@ -171,6 +177,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
                 "relacionOrganizativaOfi.organismo.entidad.id =:idEntidad and relacionOrganizativaOfi.estado.codigoEstadoEntidad =:estado order by relacionOrganizativaOfi.oficina.codigo");
@@ -182,6 +189,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
         List<?> relaciones = em.createQuery("Select distinct(o.id) from RelacionOrganizativaOfi as o where o.organismo.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();

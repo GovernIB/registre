@@ -73,6 +73,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina order by oficina.id");
@@ -83,6 +84,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Oficina findByCodigo(String codigo) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
@@ -100,6 +102,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Oficina findByCodigoEntidadSinEstado(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
@@ -133,6 +136,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         return null;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Oficina findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
@@ -152,6 +157,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Oficina findByCodigoVigente(String codigo) throws Exception {
 
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
@@ -170,6 +176,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> findByOrganismoResponsable(Long idOrganismo) throws Exception{
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
@@ -185,6 +192,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> oficinasFuncionales(Long idOrganismo, Boolean oficinaVirtual) throws Exception{
 
         String oficinaVirtualWhere = "";
@@ -228,6 +236,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> findByEntidad(Long idEntidad) throws Exception{
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad");
@@ -241,6 +250,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> findByEntidadByEstado(Long idEntidad, String estado) throws Exception{
 
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion from Oficina as oficina where " +
@@ -261,6 +271,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> responsableByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
@@ -282,6 +293,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Oficina> dependienteByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion, oficina.oficinaResponsable.id, oficina.organismoResponsable.id from Oficina as oficina where " +
                 "oficina.organismoResponsable.entidad.id =:idEntidad and oficina.estado.codigoEstadoEntidad =:estado and " +
@@ -437,6 +449,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception {
 
         Query q;

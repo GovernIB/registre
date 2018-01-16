@@ -68,6 +68,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select libro from Libro as libro order by libro.id");
@@ -78,6 +79,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosEntidad(Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select libro.id, libro.nombre,libro.codigo, libro.organismo.id,libro.organismo.denominacion from Libro as libro where libro.activo = true and libro.organismo.entidad.id = :idEntidad order by libro.id");
@@ -112,6 +114,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Libro findByCodigo(String codigo) throws Exception {
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo");
@@ -129,6 +132,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo " +
@@ -148,6 +152,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception{
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
@@ -168,6 +173,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception{
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
@@ -188,6 +194,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception{
 
         Query q = em.createQuery("Select libro from Libro as libro where " +
@@ -199,6 +206,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosOrganismoLigero(Long idOrganismo) throws Exception {
 
         Query q = em.createQuery("Select libro.id, libro.nombre, libro.activo from Libro as libro where " +
@@ -219,6 +227,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.organismo.entidad.id = :idEntidad order by libro.id");
@@ -285,6 +294,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         return  organismos;
     }
 
+    @Override
     public Libro crearLibro(Libro libro) throws Exception{
 
         Contador contadorEntrada = contadorEjb.persist(new Contador());

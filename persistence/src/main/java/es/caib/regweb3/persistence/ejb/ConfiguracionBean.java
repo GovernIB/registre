@@ -56,6 +56,7 @@ public class ConfiguracionBean extends BaseEjbJPA<Configuracion, Long> implement
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Configuracion> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select configuracion from Configuracion as configuracion order by configuracion.id");

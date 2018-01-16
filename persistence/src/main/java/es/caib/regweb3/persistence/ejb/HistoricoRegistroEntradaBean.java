@@ -63,6 +63,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<HistoricoRegistroEntrada> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada order by historicoRegistroEntrada.id");

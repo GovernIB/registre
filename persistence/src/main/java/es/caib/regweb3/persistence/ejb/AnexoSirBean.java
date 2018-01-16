@@ -57,6 +57,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<AnexoSir> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir order by anexoSir.id");

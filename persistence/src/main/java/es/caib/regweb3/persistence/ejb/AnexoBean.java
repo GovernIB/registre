@@ -944,6 +944,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Anexo> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select anexo from Anexo as anexo order by anexo.id");
@@ -991,6 +992,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Anexo> getByRegistroDetalle(Long idRegistroDetalle) throws Exception {
         Query query = em.createQuery("Select anexo from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle order by anexo.id");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
@@ -999,6 +1001,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception {
         Query query = em.createQuery("Select anexo.titulo, anexo.tipoDocumento from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
@@ -1013,6 +1016,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Long getIdJustificante(Long idRegistroDetalle) throws Exception {
         Query query = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
                 "anexo.justificante = true order by anexo.id");

@@ -113,6 +113,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> getAllByEntidad(Long entidad) throws Exception {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
@@ -551,6 +552,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * @return
      * @throws Exception
      */
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<String> organismoSir(Long idOrganismo) throws Exception {
         List<String> oficinasSir = new ArrayList<String>();
 

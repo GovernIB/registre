@@ -22,7 +22,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public Long getTotal(Long idEntidad) throws Exception;
+    Long getTotal(Long idEntidad) throws Exception;
     
     /**
      * 
@@ -30,7 +30,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public List<TipoAsunto> getAll(Long idEntidad) throws Exception;
+    List<TipoAsunto> getAll(Long idEntidad) throws Exception;
 
     /**
      *
@@ -39,7 +39,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public List<TipoAsunto> getPagination(int inicio, Long idEntidad) throws Exception;
+    List<TipoAsunto> getPagination(int inicio, Long idEntidad) throws Exception;
 
     /**
     * Método que obtiene los tipos asuntos que están activos.
@@ -47,7 +47,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
     * @return
     * @throws Exception
     */
-    public List<TipoAsunto> getActivosEntidad(Long idEntidad) throws Exception;
+    List<TipoAsunto> getActivosEntidad(Long idEntidad) throws Exception;
 
     /**
      * Comprueba la existencia del codigo en algún TipoAsunto
@@ -56,7 +56,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public Boolean existeCodigoEdit(String codigo, Long idTipoAsunto,Long idEntidad) throws Exception;
+    Boolean existeCodigoEdit(String codigo, Long idTipoAsunto, Long idEntidad) throws Exception;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.TipoAsunto} asociado a un codigo.
@@ -64,7 +64,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public TipoAsunto findByCodigo(String codigo) throws Exception;
+    TipoAsunto findByCodigo(String codigo) throws Exception;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.TipoAsunto} asociado a un codigo y a una Entidad
@@ -72,7 +72,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public TipoAsunto findByCodigoEntidad(String codigo,Long idEntidad) throws Exception;
+    TipoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Obtiene el Total de {@link es.caib.regweb3.model.TipoAsunto} asociado a una Entidad
@@ -80,7 +80,7 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public Long getTotalEntidad(Long idEntidad) throws Exception;
+    Long getTotalEntidad(Long idEntidad) throws Exception;
 
     /**
      * Elimina los {@link es.caib.regweb3.model.TipoAsunto} de una Entidad
@@ -88,5 +88,5 @@ public interface TipoAsuntoLocal extends BaseEjb<TipoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 }

@@ -61,6 +61,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Usuario> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select usuario from Usuario as usuario order by usuario.id");
@@ -71,6 +72,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Usuario findByIdentificador(String identificador) throws Exception {
 
         Query q = em.createQuery("Select usuario from Usuario as usuario where usuario.identificador = :identificador");
@@ -87,6 +89,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Usuario findByDocumento(String documento) throws Exception{
         Query q = em.createQuery("Select usuario from Usuario as usuario where usuario.documento = :documento");
 
@@ -125,6 +128,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Paginacion busqueda(Integer pageNumber,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception {
 
         Query q;

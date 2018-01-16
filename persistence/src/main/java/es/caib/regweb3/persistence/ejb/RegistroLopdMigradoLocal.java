@@ -23,7 +23,7 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      * @return
      * @throws Exception
      */
-    public List<RegistroLopdMigrado> getByRegistroMigrado(Long numRegistro, String accion) throws Exception;
+    List<RegistroLopdMigrado> getByRegistroMigrado(Long numRegistro, String accion) throws Exception;
 
     /**
      * Devuelve el registro Lopd de un Registro Migrado concreto
@@ -32,7 +32,7 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      * @return
      * @throws Exception
      */
-    public RegistroLopdMigrado getCreacion(Long numRegistro, String accion) throws Exception;
+    RegistroLopdMigrado getCreacion(Long numRegistro, String accion) throws Exception;
 
     /**
      * Elimina todos los Registros LOPD de una entidad
@@ -40,6 +40,6 @@ public interface RegistroLopdMigradoLocal extends BaseEjb<RegistroLopdMigrado, L
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

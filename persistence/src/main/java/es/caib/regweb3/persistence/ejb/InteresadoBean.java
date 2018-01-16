@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -14,7 +13,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +68,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Interesado> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select interesado from Interesado as interesado order by interesado.id");
@@ -80,6 +79,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long registroDetalle) throws Exception{
         Query q = em.createQuery("Select interesado from Interesado as interesado where interesado.codigoDir3 = :codigoDir3 " +
                 "and interesado.registroDetalle.id = :registroDetalle");
@@ -145,6 +145,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public String existeInteresadoAdministracion(Long idRegistroDetalle) throws Exception{
         Query q = em.createQuery("Select interesado.codigoDir3 from Interesado as interesado where " +
                 "interesado.registroDetalle.id = :idRegistroDetalle and interesado.tipo = :administracion");

@@ -16,19 +16,19 @@ public interface SchedulerLocal {
      *
      * @throws Exception
      */
-    public void reintentarEnviosSinConfirmacion() throws Exception;
+    void reintentarEnviosSinConfirmacion() throws Exception;
 
     /**
      *
      * @throws Exception
      */
-    public void reintentarEnviosConError() throws Exception;
+    void reintentarEnviosConError() throws Exception;
 
     /**
      *
      * @throws Exception
      */
-    public void reiniciarContadoresEntidad() throws Exception;
+    void reiniciarContadoresEntidad() throws Exception;
 
 }
 

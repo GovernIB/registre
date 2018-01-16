@@ -56,6 +56,7 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<CatPais> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catPais from CatPais as catPais order by catPais.id");
@@ -66,6 +67,7 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public CatPais findByCodigo(Long codigo) throws Exception {
          Query q = em.createQuery("Select catPais from CatPais as catPais where catPais.codigoPais = :codigo");
 

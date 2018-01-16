@@ -74,6 +74,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     private PluginLocal pluginEjb;
 
 
+    @SuppressWarnings("unchecked")
     @Override
     public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception{
 

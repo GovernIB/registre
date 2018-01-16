@@ -34,7 +34,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+    List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
 
     /**
      * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión
@@ -44,7 +44,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+    Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
 
     /**
      * Obtiene todos los Registros de Entrada que están considerados Oficios de Remisión de un Organismo destinatario en concreto
@@ -58,7 +58,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
+    OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
 
 
     /**
@@ -68,7 +68,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception;
+    Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision interno o no
@@ -78,7 +78,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
+    Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no
@@ -86,7 +86,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception;
+    Boolean isOficioRemisionExterno(Long idRegistro) throws Exception;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
@@ -94,7 +94,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
+    List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
 
     /**
      * @param registrosEntrada
@@ -107,9 +107,9 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
-                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad,
-                                                     Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
+    OficioRemision crearOficioRemisionInterno(List<RegistroEntrada> registrosEntrada,
+                                              Oficina oficinaActiva, UsuarioEntidad usuarioEntidad,
+                                              Long idOrganismo, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
 
     /**
@@ -124,9 +124,9 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
-                                                     Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
-                                                     String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
+    OficioRemision crearOficioRemisionExterno(List<RegistroEntrada> registrosEntrada,
+                                              Oficina oficinaActiva, UsuarioEntidad usuarioEntidad, String organismoExternoCodigo,
+                                              String organismoExternoDenominacion, Long idLibro) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Genera los Justificantes de todos los registros de un Oficio de Remisión
@@ -136,7 +136,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public void crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
+    void crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
 
 
     /**
@@ -149,8 +149,8 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                        UsuarioEntidad usuario, Oficina oficinaActiva,
-                                                        List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
+    List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
+                                                UsuarioEntidad usuario, Oficina oficinaActiva,
+                                                List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException;
 
 }

@@ -65,6 +65,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModeloOficioRemision> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select modelo.id, modelo.nombre from ModeloOficioRemision as modelo where modelo.entidad.id = :idEntidad");
@@ -82,8 +83,8 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     }
 
 
-
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModeloOficioRemision> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision order by modeloOficioRemision.id");
@@ -94,6 +95,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<ModeloOficioRemision> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision where modeloOficioRemision.entidad.id = :idEntidad order by modeloOficioRemision.id");

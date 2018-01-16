@@ -27,7 +27,7 @@ public interface SirLocal {
      * @param ficheroIntercambio
      * @throws Exception
      */
-    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control
@@ -35,7 +35,7 @@ public interface SirLocal {
      * @param mensaje
      * @throws Exception
      */
-    public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
+    void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
 
     /**
      * @param tipoRegistro
@@ -46,8 +46,8 @@ public interface SirLocal {
      * @throws Exception
      * @throws I18NException
      */
-    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
-                                                   Oficina oficinaActiva, UsuarioEntidad usuario,String codigoOficinaSir)
+    OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
+                                            Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -55,14 +55,14 @@ public interface SirLocal {
      * @param idEntidad
      * @throws Exception
      */
-    public void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception;
+    void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception;
 
     /**
      * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
      * @param idEntidad
      * @throws Exception
      */
-    public void reintentarEnviosConError(Long idEntidad) throws Exception;
+    void reintentarEnviosConError(Long idEntidad) throws Exception;
 
     /**
      * @param registroSir
@@ -74,7 +74,7 @@ public interface SirLocal {
      * @param camposNTIs
      * @return
      */
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception;
 
 
     /**
@@ -87,21 +87,21 @@ public interface SirLocal {
      * @param observaciones
      * @throws Exception
      */
-    public void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException;
+    void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException;
 
     /**
      * Reenvio de un Registro SIR
      * @param registroSir
      * @throws Exception
      */
-    public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario,String observaciones) throws Exception;
+    void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
 
     /**
      * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
      * @param estado del RegistroSir
      * @return
      */
-    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado);
+    boolean puedeReenviarRegistroSir(EstadoRegistroSir estado);
 
     /**
      *
@@ -111,7 +111,7 @@ public interface SirLocal {
      * @return
      * @throws Exception
      */
-    public void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
+    void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception;
 
 }
 

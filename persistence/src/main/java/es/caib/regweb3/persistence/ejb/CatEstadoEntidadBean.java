@@ -56,6 +56,7 @@ public class CatEstadoEntidadBean extends BaseEjbJPA<CatEstadoEntidad, Long> imp
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<CatEstadoEntidad> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select catEstadoEntidad from CatEstadoEntidad as catEstadoEntidad order by catEstadoEntidad.id");
@@ -66,6 +67,7 @@ public class CatEstadoEntidadBean extends BaseEjbJPA<CatEstadoEntidad, Long> imp
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public CatEstadoEntidad findByCodigo(String codigo) throws Exception {
         Query q = em.createQuery("Select catEstadoEntidad from CatEstadoEntidad as catEstadoEntidad where catEstadoEntidad.codigoEstadoEntidad = :codigo");
 

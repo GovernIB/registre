@@ -1,12 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroDetalle;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
-
-import org.fundaciobit.genapp.common.i18n.I18NException;
-
 import java.util.Set;
 
 /**
@@ -25,7 +23,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    public RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws Exception;
+    RegistroDetalle findByRegistroEntrada(Long idRegistroEntrada) throws Exception;
 
     /**
      * Elimina los RegistroDetalle
@@ -33,7 +31,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminar(Set<Long> ids) throws Exception, I18NException;
+    Integer eliminar(Set<Long> ids) throws Exception, I18NException;
 
     /**
      * Obtiene todos los RegistroDetalle de una Entidad
@@ -41,7 +39,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    public Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception;
+    Set<Long> getRegistrosDetalle(Long idEntidad) throws Exception;
 
     /**
      * Elimina un anexo de un registroDetalle. Puesto aqui por referencias cruzadas
@@ -51,6 +49,6 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, 
-        Long idRegistroDetalle) throws Exception, I18NException;
+    boolean eliminarAnexoRegistroDetalle(Long idAnexo,
+                                         Long idRegistroDetalle) throws Exception, I18NException;
 }

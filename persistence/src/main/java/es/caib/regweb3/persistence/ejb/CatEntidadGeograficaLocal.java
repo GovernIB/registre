@@ -21,6 +21,6 @@ public interface CatEntidadGeograficaLocal extends BaseEjb<CatEntidadGeografica,
        * @return
        * @throws Exception
        */
-      public CatEntidadGeografica findByCodigo(String codigo) throws Exception;
+  CatEntidadGeografica findByCodigo(String codigo) throws Exception;
 }
 

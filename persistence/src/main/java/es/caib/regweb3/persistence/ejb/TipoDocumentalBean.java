@@ -66,6 +66,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<TipoDocumental> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental order by tipoDocumental.id");
@@ -76,6 +77,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<TipoDocumental> getPagination(int inicio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad order by tipoDocumental.id");
@@ -87,6 +89,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public TipoDocumental findByCodigoEntidad(String codigoNTI,Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.codigoNTI = :codigoNTI " +
@@ -120,6 +123,7 @@ public class TipoDocumentalBean extends BaseEjbJPA<TipoDocumental, Long> impleme
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<TipoDocumental> getByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select tipoDocumental from TipoDocumental as tipoDocumental where tipoDocumental.entidad.id = :idEntidad");

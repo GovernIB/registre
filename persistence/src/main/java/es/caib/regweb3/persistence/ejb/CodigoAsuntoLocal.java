@@ -22,7 +22,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public Long getTotal(Long idTipoAsunto) throws Exception;
+    Long getTotal(Long idTipoAsunto) throws Exception;
 
     /**
      *
@@ -31,7 +31,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public List<CodigoAsunto> getPagination(int inicio, Long idTipoAsunto) throws Exception;
+    List<CodigoAsunto> getPagination(int inicio, Long idTipoAsunto) throws Exception;
 
     /**
      * Obtiene los CodigoAsunto pertenecientes a un TipoAsunto
@@ -39,7 +39,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception;
+    List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception;
 
     /**
      * Obtiene los CodigoAsunto Activos pertenecientes a un TipoAsunto
@@ -47,7 +47,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public List<CodigoAsunto> getActivosByTipoAsunto(Long idTipoAsunto) throws Exception;
+    List<CodigoAsunto> getActivosByTipoAsunto(Long idTipoAsunto) throws Exception;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.CodigoAsunto} asociado a un codigo.
@@ -55,7 +55,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public CodigoAsunto findByCodigo(String codigo) throws Exception;
+    CodigoAsunto findByCodigo(String codigo) throws Exception;
 
     /**
      * Comprueba que el {@link es.caib.regweb3.model.CodigoAsunto} codigo de asunto ya no existe para una Entidad.
@@ -64,7 +64,7 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
+    CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Elimina los CodigoAsunto de una Entidad
@@ -72,6 +72,6 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

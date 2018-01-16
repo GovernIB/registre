@@ -24,14 +24,14 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws Exception
      */
-    public List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws Exception;
+    List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws Exception;
 
     /**
      * @param idEntidad
      * @return
      * @throws Exception
      */
-    public Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception;
+    Long getTotalByEntidad(Long idEntidad, Long tipo) throws Exception;
 
     /**
      * @param inicio
@@ -39,20 +39,20 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws Exception
      */
-    public List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception;
+    List<Plugin> getPaginationByEntidad(int inicio, Long idEntidad, Long tipo) throws Exception;
 
     /**
      * @return
      * @throws Exception
      */
-    public Long getTotalREGWEB3(Long tipo) throws Exception;
+    Long getTotalREGWEB3(Long tipo) throws Exception;
 
     /**
      * @param inicio
      * @return
      * @throws Exception
      */
-    public List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws Exception;
+    List<Plugin> getPaginationREGWEB3(int inicio, Long tipo) throws Exception;
 
     /**
      * Elimina los {@link Plugin} de una {@link es.caib.regweb3.model.Entidad}
@@ -61,7 +61,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene en plugin determinado
@@ -70,7 +70,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws Exception
      */
-    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
+    Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
     /**
      * Comprueba si el plugin está definido
@@ -79,7 +79,7 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws I18NException
      */
-    public boolean existPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
+    boolean existPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
     /**
      * Obtiene todos los plgins del tipo espeficicado
@@ -88,6 +88,6 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @return
      * @throws Exception
      */
-    public List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception;
+    List<Object> getPlugins(Long idEntidad, Long tipoPlugin) throws Exception;
 
 }

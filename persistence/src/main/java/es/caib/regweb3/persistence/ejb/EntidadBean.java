@@ -91,6 +91,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Entidad> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select entidad from Entidad as entidad order by entidad.id");
@@ -167,6 +168,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Entidad findByCodigoDir3(String codigo) throws Exception {
 
         Query q = em.createQuery("Select entidad from Entidad as entidad where entidad.codigoDir3 = :codigo ");
@@ -184,6 +186,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public Boolean tieneOrganismos(Long idEntidad) throws Exception{
         Query q = em.createQuery("Select organismo.id from Organismo as organismo where organismo.entidad.id = :idEntidad");
 
@@ -195,6 +198,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesAdministrador(Long idUsuario) throws Exception{
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad, UsuarioEntidad as usuarioEntidad where usuarioEntidad in elements(entidad.administradores) " +
@@ -216,6 +220,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception {
 
         Query q = em.createQuery("Select entidad.id, entidad.nombre, entidad.oficioRemision from Entidad as entidad where entidad.propietario.id = :idUsuario " +

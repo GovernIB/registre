@@ -73,6 +73,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<RegistroMigrado> getPagination(int inicio) throws Exception {
 
         Query q = em.createQuery("Select registroMigrado from RegistroMigrado as registroMigrado order by registroMigrado.id");
@@ -169,6 +170,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
     public List<String[]> getOficinas() throws Exception{
 
         Query q;
