@@ -20,33 +20,33 @@ public interface WebServicesMethodsLocal {
      * @param mensaje
      * @throws Exception
      */
-    public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
+    void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      * @param ficheroIntercambio
      * @throws Exception
      */
-    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      *
      * @return
      * @throws Exception
      */
-    public Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception;
+    Dir3CaibObtenerOficinasWs getObtenerOficinasService() throws Exception;
 
     /**
      *
      * @return
      * @throws Exception
      */
-    public Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception;
+    Dir3CaibObtenerUnidadesWs getObtenerUnidadesService() throws Exception;
 
     /**
      *
      * @return
      * @throws Exception
      */
-    public String getFormatosAnexosSir() throws Exception;
+    String getFormatosAnexosSir() throws Exception;
 }
