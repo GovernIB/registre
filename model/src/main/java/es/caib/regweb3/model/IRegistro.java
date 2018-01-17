@@ -10,40 +10,40 @@ import java.util.Date;
  */
 public interface IRegistro extends Serializable {
 
-  public Long getId();
+  Long getId();
 
-  public void setId(Long id);
+  void setId(Long id);
 
-  public UsuarioEntidad getUsuario();
+  UsuarioEntidad getUsuario();
 
-  public void setUsuario(UsuarioEntidad usuario);
+  void setUsuario(UsuarioEntidad usuario);
 
-  public Oficina getOficina();
+  Oficina getOficina();
 
-  public void setOficina(Oficina oficina);
+  void setOficina(Oficina oficina);
 
-  public Date getFecha();
+  Date getFecha();
 
-  public void setFecha(Date fecha);
+  void setFecha(Date fecha);
 
-  public Libro getLibro();
+  Libro getLibro();
 
-  public void setLibro(Libro libro);
+  void setLibro(Libro libro);
 
-  public Integer getNumeroRegistro();
+  Integer getNumeroRegistro();
 
-  public void setNumeroRegistro(Integer numeroRegistro);
+  void setNumeroRegistro(Integer numeroRegistro);
 
-  public String getNumeroRegistroFormateado();
+  String getNumeroRegistroFormateado();
 
-  public void setNumeroRegistroFormateado(String numeroRegistroFormateado);
+  void setNumeroRegistroFormateado(String numeroRegistroFormateado);
 
-  public Long getEstado();
+  Long getEstado();
 
-  public void setEstado(Long estado);
+  void setEstado(Long estado);
 
-  public RegistroDetalle getRegistroDetalle();
+  RegistroDetalle getRegistroDetalle();
 
-  public void setRegistroDetalle(RegistroDetalle registroDetalle);
+  void setRegistroDetalle(RegistroDetalle registroDetalle);
 
 }

@@ -41,15 +41,12 @@ public class CatProvincia implements Serializable {
         this.id= Long.valueOf(id);
     }
 
-    
-    
+
   /**
-     * @param id
-     * @param codigoProvincia
-     * @param comunidadAutonoma
-     * @param descripcionProvincia
-     */
-    public CatProvincia(CatProvincia cp) {
+   *
+   * @param cp
+   */
+  public CatProvincia(CatProvincia cp) {
       super();
       this.id = cp.id;
       this.codigoProvincia = cp.codigoProvincia;

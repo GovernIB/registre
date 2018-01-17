@@ -43,7 +43,7 @@ public class Traducible implements Serializable {
      * @return La traduccion en el idioma per defecto.
      */
     public Traduccion getTraduccion() {
-        return (Traduccion) traducciones.get(Configuracio.getDefaultLanguage());
+        return traducciones.get(Configuracio.getDefaultLanguage());
     }
 
     /**
@@ -52,7 +52,7 @@ public class Traducible implements Serializable {
      * @return Traduccion en el idioma indicado o <code>null</code> si no existe.
      */
     public Traduccion getTraduccion(String idioma) {
-        return (Traduccion) traducciones.get(idioma);
+        return traducciones.get(idioma);
     }
 
 

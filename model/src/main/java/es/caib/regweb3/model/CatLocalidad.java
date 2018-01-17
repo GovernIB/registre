@@ -47,18 +47,13 @@ public class CatLocalidad implements Serializable {
     public CatLocalidad(String id){
         this.id= Long.valueOf(id);
     }
-    
-    
 
 
   /**
-     * @param id
-     * @param codigoLocalidad
-     * @param provincia
-     * @param nombre
-     * @param entidadGeografica
-     */
-    public CatLocalidad(CatLocalidad cl) {
+   *
+   * @param cl
+   */
+  public CatLocalidad(CatLocalidad cl) {
       super();
       this.id = cl.id;
       this.codigoLocalidad = cl.codigoLocalidad;

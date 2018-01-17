@@ -46,16 +46,11 @@ public class TipoAsunto extends Traducible {
     public TipoAsunto(String id) {
         this.id = Long.valueOf(id);
     }
-    
-    
-    
+
 
     /**
-     * @param id
-     * @param entidad
-     * @param codigo
-     * @param codigosAsunto
-     * @param activo
+     *
+     * @param ta
      */
     public TipoAsunto(TipoAsunto ta) {
       super();

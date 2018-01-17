@@ -9,9 +9,9 @@ import es.caib.regweb3.model.AnexoSir;
  */
 public class AnexoSirFull {
 
-    public AnexoSir documento;
-    public AnexoSir firma;
-    public boolean tieneFirma;
+    private AnexoSir documento;
+    private AnexoSir firma;
+    private boolean tieneFirma;
 
     public AnexoSirFull() {
 

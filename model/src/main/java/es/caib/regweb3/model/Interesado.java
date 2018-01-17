@@ -534,7 +534,7 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getNombrePersonaFisicaCorto(){
+    private String getNombrePersonaFisicaCorto(){
 
         String personaFisica = "" ;
 
@@ -569,7 +569,7 @@ public class Interesado implements Serializable {
     }
 
     @Transient
-    public String getNombreOrganismo(){
+    private String getNombreOrganismo(){
         String nombre = (getRazonSocial() != null) ? getRazonSocial() : getNombre();
 
         if (getCodigoDir3() != null) {

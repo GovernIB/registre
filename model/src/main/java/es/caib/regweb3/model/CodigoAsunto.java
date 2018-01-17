@@ -48,14 +48,11 @@ public class CodigoAsunto extends Traducible {
     public CodigoAsunto(String id) {
         this.id = Long.valueOf(id);
     }
-    
-    
+
 
     /**
-     * @param id
-     * @param tipoAsunto
-     * @param codigo
-     * @param activo
+     *
+     * @param ta
      */
     public CodigoAsunto(CodigoAsunto ta) {
 

@@ -34,15 +34,11 @@ public class CatPais implements Serializable {
   public CatPais(String id) {
     this.id = Long.valueOf(id);
   }
-  
-  
+
 
   /**
-   * @param id
-   * @param codigoPais
-   * @param descripcionPais
-   * @param alfa3Pais
-   * @param alfa2Pais
+   *
+   * @param cp
    */
   public CatPais(CatPais cp) {
     this.id = cp.id;
