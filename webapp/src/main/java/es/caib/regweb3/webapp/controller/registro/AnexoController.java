@@ -30,9 +30,8 @@ import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -349,20 +348,19 @@ public class AnexoController extends BaseController {
 
         try {
 
-            // Si l'arxiu té identificador, entram
+            // Si l'arxiu tÃ© identificador, entram
             if (custodiaID != null) {
-                if (!firma) { //Si no tiene firma
 
-                // Si és un arxiu sense firma
+                // Si Ã©s un arxiu sense firma
                 if (!firma) {
                     DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante);
                     filename = dc.getName();
                     data = dc.getData();
 
-                } else {   // Si és firma d'un arxiu
+                } else {   // Si Ã©s firma d'un arxiu
 
                     data = null;
-                    // Si és justificant
+                    // Si Ã©s justificant
                     if(isJustificante){
 
                         String url = null;
@@ -400,7 +398,7 @@ public class AnexoController extends BaseController {
                             }
 
                         }catch(Exception e){
-                            log.error("Error descarregant justificant des de url de validació (" + url + ")", e);
+                            log.error("Error descarregant justificant des de url de validaciÃ³ (" + url + ")", e);
                             data = null;
                         }
 
@@ -415,7 +413,7 @@ public class AnexoController extends BaseController {
 
                 }
 
-                if (contentType == null) {//escribimos el contenido en un archivo temporal y lo establecemos como contentType
+                if (contentType == null) {
                     try {
                         File tmp = File.createTempFile("regweb_annex_", filename);
                         FileOutputStream fos = new FileOutputStream(tmp);
@@ -441,7 +439,7 @@ public class AnexoController extends BaseController {
                 output.flush();
             }
         } catch(I18NException i18ne) {
-          log.error(I18NUtils.getMessage(i18ne), i18ne);
+            log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (NumberFormatException e) {
             // TODO QUE FER
             log.info(e);
