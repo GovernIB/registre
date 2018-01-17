@@ -104,7 +104,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroMigrado from RegistroMigrado as registroMigrado ");
+        StringBuilder query = new StringBuilder("Select registroMigrado from RegistroMigrado as registroMigrado ");
 
 
         where.add(" registroMigrado.tipoRegistro = :tipoRegistro"); parametros.put("tipoRegistro",registroMigrado.isTipoRegistro());
@@ -152,7 +152,7 @@ public class RegistroMigradoBean extends BaseEjbJPA<RegistroMigrado, Long> imple
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
             Long total = (Long)q2.getSingleResult();

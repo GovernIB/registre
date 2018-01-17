@@ -23,8 +23,7 @@ public class FileSystemManager {
      * @return
      */
     public static File getArchivo(Long id) {
-        File newFile = new File(getArchivosPath(), String.valueOf(id));
-        return newFile;
+        return new File(getArchivosPath(), String.valueOf(id));
     }
 
     /**

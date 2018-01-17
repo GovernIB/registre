@@ -99,7 +99,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select oficioRemision from OficioRemision as oficioRemision ");
+        StringBuilder query = new StringBuilder("Select oficioRemision from OficioRemision as oficioRemision ");
 
         // Oficios Remisión no SIR
         where.add(" oficioRemision.sir = :sir "); parametros.put("sir",sir);
@@ -175,7 +175,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
             Long total = (Long)q2.getSingleResult();
@@ -385,7 +385,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select oficioRemision from OficioRemision as oficioRemision ");
+        StringBuilder query = new StringBuilder("Select oficioRemision from OficioRemision as oficioRemision ");
 
         // Tipo Oficio
         where.add(" oficioRemision.tipoOficioRemision = :tipoOficioRemision "); parametros.put("tipoOficioRemision",tipoOficioRemision);
@@ -424,7 +424,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
             Long total = (Long)q2.getSingleResult();
@@ -546,7 +546,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q2.setParameter("idEstado", idEstado);
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();

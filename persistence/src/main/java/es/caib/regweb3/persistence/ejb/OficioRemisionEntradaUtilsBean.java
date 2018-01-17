@@ -134,7 +134,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @Override
     public Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
 
-        Long total = null;
+        Long total;
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
@@ -274,7 +274,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -403,9 +403,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
             String codigoDir3 = result.get(0);
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
 
-            return oficinasSIR;
+            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
 
         return null;
@@ -445,7 +444,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();

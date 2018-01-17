@@ -374,30 +374,38 @@ public class SirBean implements SirLocal {
      */
     private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
 
-        if (RegwebConstantes.OFICIO_SIR_ENVIADO == oficioRemision.getEstado()){
+        switch (oficioRemision.getEstado()) {
 
-            // Actualizamos el OficioRemision
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemisionEjb.merge(oficioRemision);
+            case RegwebConstantes.OFICIO_SIR_ENVIADO:
 
-        } else if (RegwebConstantes.OFICIO_SIR_REENVIADO == oficioRemision.getEstado()){
+                // Actualizamos el OficioRemision
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemisionEjb.merge(oficioRemision);
 
-            // Actualizamos el OficioRemision
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemisionEjb.merge(oficioRemision);
+                break;
 
-        } else if (RegwebConstantes.OFICIO_SIR_ENVIADO_ACK == oficioRemision.getEstado() ||
-                RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado()){
+            case RegwebConstantes.OFICIO_SIR_REENVIADO:
 
-            log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+                // Actualizamos el OficioRemision
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemisionEjb.merge(oficioRemision);
 
-        }else{
-            log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
-            throw new ValidacionException(Errores.ERROR_0037);
+                break;
+
+            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+
+                log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+
+                break;
+
+            default:
+                log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+                throw new ValidacionException(Errores.ERROR_0037);
         }
     }
 
@@ -440,52 +448,57 @@ public class SirBean implements SirLocal {
      */
     private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
 
-        if (RegwebConstantes.OFICIO_SIR_ENVIADO == oficioRemision.getEstado()  ||
-                RegwebConstantes.OFICIO_SIR_ENVIADO_ACK == oficioRemision.getEstado() ||
-                RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR == oficioRemision.getEstado() ||
-                RegwebConstantes.OFICIO_SIR_REENVIADO == oficioRemision.getEstado()  ||
-                RegwebConstantes.OFICIO_SIR_REENVIADO_ACK == oficioRemision.getEstado() ||
-                RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR == oficioRemision.getEstado()){
+        switch (oficioRemision.getEstado()) {
 
+            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
 
-            oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
-            oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(),mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
-            oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
-            oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
-            oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
-            oficioRemisionEjb.merge(oficioRemision);
+                oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+                oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+                oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
+                oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
+                oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
+                oficioRemisionEjb.merge(oficioRemision);
 
-            // Marcamos el Registro original como ACEPTADO
-            if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-                registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                // Marcamos el Registro original como ACEPTADO
+                if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+                    registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
 
-                // TODO 31/07/2017 (pendiente de reunión despues de vacaciones para definir que hacer con los anexos en este caso.
-                //Borrar Anexos de Custodia
+                    // TODO 31/07/2017 (pendiente de reunión despues de vacaciones para definir que hacer con los anexos en este caso.
+                    //Borrar Anexos de Custodia
                 /*try {
                     anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosEntrada().get(0).getRegistroDetalle().getId());
                 }catch(I18NException e){
                     throw new Exception("Error al borrar los anexos de custodia del registro de Entrada: " + oficioRemision.getRegistrosEntrada().get(0).getId() );
                 }*/
 
-            }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-                registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-                // TODO PENDIENTE DE PROBAR EN PROVES
-                //Borrar Anexos de Custodia
+                } else if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+                    // TODO PENDIENTE DE PROBAR EN PROVES
+                    //Borrar Anexos de Custodia
                 /*try {
                     anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosSalida().get(0).getRegistroDetalle().getId());
                 }catch (I18NException e){
                     throw new Exception("Error al borrar los anexos de custodia del registro de Salida: "+ oficioRemision.getRegistrosSalida().get(0).getId());
                 }*/
-            }
+                }
 
-        }else  if(oficioRemision.getEstado() == (RegwebConstantes.OFICIO_ACEPTADO)){
+                break;
 
-            log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
+            case (RegwebConstantes.OFICIO_ACEPTADO):
 
-        }else{
-            log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0037);
+                log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
+
+                break;
+
+            default:
+                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                throw new ValidacionException(Errores.ERROR_0037);
         }
     }
 
@@ -497,30 +510,35 @@ public class SirBean implements SirLocal {
      */
     private void procesarMensajeERROR(OficioRemision oficioRemision, Mensaje mensaje) throws Exception{
 
-        if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO)){
+        switch (oficioRemision.getEstado()) {
 
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-            oficioRemision.setCodigoError(mensaje.getCodigoError());
-            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            case (RegwebConstantes.OFICIO_SIR_ENVIADO):
 
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+                oficioRemision.setCodigoError(mensaje.getCodigoError());
+                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
 
-        } else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO)){
+                break;
 
-            oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
-            oficioRemision.setCodigoError(mensaje.getCodigoError());
-            oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-            oficioRemision.setNumeroReintentos(0);
-            oficioRemision.setFechaEstado(new Date());
-            oficioRemisionEjb.merge(oficioRemision);
+            case (RegwebConstantes.OFICIO_SIR_REENVIADO):
 
-        }  else if (oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) ||
-                oficioRemision.getEstado() == (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR)){
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+                oficioRemision.setCodigoError(mensaje.getCodigoError());
+                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                oficioRemision.setNumeroReintentos(0);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
 
-            log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
-            throw new ValidacionException(Errores.ERROR_0037);
+                break;
+
+            case (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR):
+            case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
+
+                log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+                throw new ValidacionException(Errores.ERROR_0037);
 
         }
     }
@@ -711,7 +729,7 @@ public class SirBean implements SirLocal {
         log.info("Aceptando RegistroSir " + registroSir.getIdentificadorIntercambio());
 
         // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
-        RegistroEntrada registroEntrada = null;
+        RegistroEntrada registroEntrada;
         try {
             registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
 
@@ -1189,7 +1207,7 @@ public class SirBean implements SirLocal {
             if (TIME_STAMP.compareAndSet(last, now))
                 break;
         }
-        long unsignedValue = Long.toString(now).hashCode() & 0xffffffffl;
+        long unsignedValue = Long.toString(now).hashCode() & 0xffffffffL;
         String result = Long.toString(unsignedValue);
         if (result.length() > 8) {
             result = result.substring(result.length() - 8, result.length());

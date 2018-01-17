@@ -22,14 +22,11 @@ public class RegistroEntradaBeanValidator extends AbstractRegWebBeanValidator<Re
   public RegistroEntradaBeanValidator() { 
     this(new RegistroEntradaValidator<RegistroEntrada>());
   }
-  
-  
+
 
   /**
+   *
    * @param _validator
-   * @param registroEntradaEjb
-   * @param registroEntradaEjb
-   * @param catPaisEjb
    */
   public RegistroEntradaBeanValidator(RegistroEntradaValidator<RegistroEntrada> _validator) {
     super();

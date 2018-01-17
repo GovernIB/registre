@@ -136,7 +136,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select usuario from Usuario as usuario ");
+        StringBuilder query = new StringBuilder("Select usuario from Usuario as usuario ");
 
         if(identificador!= null && identificador.length() > 0){where.add(DataBaseUtils.like("usuario.identificador","identificador",parametros,identificador));}
         if(nombre!= null && nombre.length() > 0){where.add(DataBaseUtils.like("usuario.nombre","nombre",parametros,nombre));}
@@ -174,7 +174,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
             q = em.createQuery(query.toString());
         }
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
             Long total = (Long)q2.getSingleResult();

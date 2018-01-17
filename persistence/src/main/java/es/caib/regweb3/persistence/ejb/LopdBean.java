@@ -97,7 +97,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("accion", accion);
         q2.setParameter("tipoRegistro", tipoRegistro);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -143,7 +143,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("accion", accion);
         q2.setParameter("tipoRegistro", tipoRegistro);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -301,7 +301,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -363,7 +363,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("accio", accio);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -422,7 +422,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -484,7 +484,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("accio", accio);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -539,7 +539,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("idUsuario", idUsuario);
         q2.setParameter("libros", libros);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -602,7 +602,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("libros", libros);
         q2.setParameter("accio", accio);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -658,7 +658,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("usuario", usuario);
         q2.setParameter("libros", libros);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -721,7 +721,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("libros", libros);
         q2.setParameter("accio", accio);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -778,7 +778,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q2.setParameter("usuario", usuario);
         q2.setParameter("accion", accion);
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -814,11 +814,11 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroEntrada.id, registroEntrada.numeroRegistro, registroEntrada.fecha, " +
+        StringBuilder query = new StringBuilder("Select registroEntrada.id, registroEntrada.numeroRegistro, registroEntrada.fecha, " +
                 "registroEntrada.libro.id, registroEntrada.libro.nombre, registroEntrada.oficina.denominacion, registroEntrada.libro.organismo.denominacion " +
                 "from RegistroEntrada as registroEntrada ");
 
-        StringBuffer query2 = new StringBuffer("Select count(registroEntrada.id)from RegistroEntrada as registroEntrada ");
+        StringBuilder query2 = new StringBuilder("Select count(registroEntrada.id)from RegistroEntrada as registroEntrada ");
 
         if (fechaInicio != null) {
             where.add(" registroEntrada.fecha >= :fechaInicio");
@@ -862,7 +862,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -897,11 +897,11 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroSalida.id, registroSalida.numeroRegistro, registroSalida.fecha, " +
+        StringBuilder query = new StringBuilder("Select registroSalida.id, registroSalida.numeroRegistro, registroSalida.fecha, " +
                 "registroSalida.libro.id, registroSalida.libro.nombre, registroSalida.oficina.denominacion, registroSalida.libro.organismo.denominacion " +
                 "from RegistroSalida as registroSalida ");
 
-        StringBuffer query2 = new StringBuffer("Select count(registroSalida.id) from RegistroSalida as registroSalida ");
+        StringBuilder query2 = new StringBuilder("Select count(registroSalida.id) from RegistroSalida as registroSalida ");
 
         if (fechaInicio != null) {
             where.add(" registroSalida.fecha >= :fechaInicio");
@@ -944,7 +944,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
 
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();

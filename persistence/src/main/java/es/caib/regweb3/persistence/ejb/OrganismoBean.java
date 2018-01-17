@@ -410,7 +410,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select organismo from Organismo as organismo ");
+        StringBuilder query = new StringBuilder("Select organismo from Organismo as organismo ");
 
         if (codigo != null && codigo.length() > 0) {
             where.add(DataBaseUtils.like("organismo.codigo", "codigo", parametros, codigo));
@@ -457,7 +457,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             q = em.createQuery(query.toString());
         }
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();

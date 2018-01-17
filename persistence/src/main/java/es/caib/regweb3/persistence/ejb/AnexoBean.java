@@ -98,7 +98,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             AnexoFull anexoFull = new AnexoFull(anexo);
 
-            IDocumentCustodyPlugin custody = null;
+            IDocumentCustodyPlugin custody;
             if(anexo.isJustificante()){
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
             }else{
@@ -139,7 +139,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             AnexoFull anexoFull = new AnexoFull(anexo);
 
-            IDocumentCustodyPlugin custody = null;
+            IDocumentCustodyPlugin custody;
             if(anexo.isJustificante()){
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
             }else{
@@ -748,7 +748,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                   anexo.getOrigenCiudadanoAdmin()));
           }
   
-          /**
+          /*
            * tipoValidezDocumento.1=Còpia
            * tipoValidezDocumento.2=Còpia Compulsada
            * tipoValidezDocumento.3=Còpia Original
@@ -1073,7 +1073,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws I18NException, Exception {
 
-        IDocumentCustodyPlugin custody = null;
+        IDocumentCustodyPlugin custody;
 
         if (custodiaID == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
@@ -1111,7 +1111,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     public SignatureCustody getFirma(String custodiaID, boolean isJustificante) throws I18NException, Exception {
 
-        IDocumentCustodyPlugin custody = null;
+        IDocumentCustodyPlugin custody;
 
         if (custodiaID == null) {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
@@ -1131,7 +1131,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception, I18NException {
 
-        IDocumentCustodyPlugin custody = null;
+        IDocumentCustodyPlugin custody;
 
         if (custodiaID == null) {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());

@@ -91,7 +91,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @SuppressWarnings(value = "unchecked")
     public PropiedadGlobal findByClaveEntidad(String clave, Long idEntidad, Long idPropiedadGlobal) throws Exception {
 
-        String entidadQuery = "";
+        String entidadQuery;
         String propiedadQuery = "";
 
         if (idEntidad != null) {
@@ -237,19 +237,13 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
     @Override
     public Boolean getBooleanPropertyByEntidad(Long idEntidad, String clave) throws Exception {
         String value = getPropertyByEntidad(idEntidad, clave);
-        if (value == null) {
-            return false;
-        } else {
-            return "true".equals(value);
-        }
+
+        return value != null && "true".equals(value);
     }
-    public Boolean getBooleanProperty(String clave) throws Exception{
+    public Boolean getBooleanProperty(String clave) throws Exception {
         String value = getProperty(clave);
-        if (value == null) {
-            return false;
-        } else {
-            return "true".equals(value);
-        }
+
+        return value != null && "true".equals(value);
     }
 
     @Override

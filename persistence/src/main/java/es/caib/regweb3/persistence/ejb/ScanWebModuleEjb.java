@@ -1,20 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.annotation.security.RunAs;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
@@ -22,8 +9,14 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
-import es.caib.regweb3.utils.RegwebConstantes;
+import javax.annotation.security.RunAs;
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -272,7 +265,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
   
   /**
    * Comprueba si la entidad tiene definido un tipo de escaneo vàlido
-   * @param pluginID
+   * @param entitatID
    * @return
    */
   @Override

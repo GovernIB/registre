@@ -82,6 +82,9 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    private RegistroEntradaLocal registroEntradaEjb;
+
     //Caches
     private Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
     private Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();
@@ -122,19 +125,18 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             for (UnidadTF unidadTF : arbol) {
 
-                Organismo organismo = sincronizarOrganismo(unidadTF, entidadId);
-
-                if (organismo != null) { // Si se ha sincronizado organismo, miramos si puede ser pendiente de procesar
-                    //Miramos si es un candidato a pendiente y si lo es se guarda en la tabla de pendientes.
-                    guardarPendiente(organismo);
-                }
+                sincronizarOrganismo(unidadTF, entidadId);
             }
 
             // Sincronizamos los históricos del arbol de organismos obtenido
             for (UnidadTF unidadTF : arbol) {
                 if (unidadTF != null) {
+
                     Organismo organismo = organismoEjb.findByCodigoEntidadSinEstado(unidadTF.getCodigo(), entidadId);
                     sincronizarHistoricosOrganismo(organismo, unidadTF, entidadId);
+
+                    // Comprobamos si se ha extinguido y hay que realizar acciones en consecuencia
+                    procesarExtinguido(organismo);
                 }
             }
 
@@ -381,7 +383,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                         relacionOrganizativaOfi.setOrganismo(organismoOrg);
 
                         log.info("Relacion ORG entre " + oficina.getDenominacion() + " - " + organismoOrg.getDenominacion());
-                        relacionOrganizativaOfi = relacionOrganizativaOfiEjb.persist(relacionOrganizativaOfi);
+                        relacionOrganizativaOfiEjb.persist(relacionOrganizativaOfi);
 
                     }
 
@@ -432,7 +434,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                         relacionSirOfi.setOrganismo(organismoOrg);
 
                         log.info("Relacion SIR entre " + oficina.getDenominacion() + " - " + organismoOrg.getDenominacion());
-                        relacionSirOfi = relacionSirOfiEjb.persist(relacionSirOfi);
+                        relacionSirOfiEjb.persist(relacionSirOfi);
 
                     }
 
@@ -611,22 +613,39 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     }
 
     /**
-     * Función que crea una entrada en la tabla de RWE_PENDIENTE que indica que es un organismo que está pendiente
+     * Comprueba si el Organismo se ha extinguido y realiza las acciones en consecuencia:
+     *
+     * 1- Crea una entrada en la tabla de RWE_PENDIENTE que indica que es un organismo que está pendiente
      * de procesar(reasignar sus libros a los organismos que lo sustituyen). Se crea según el estado del organismo
      * recibido y si tiene libros.
      *
-     * @param org organismo a tratar
+     * 2- Reasigna el destino de los Registros de Entrada que estaban dirigidos al organismo extinguido
+     *
+     * @param organismo organismo a tratar
      * @throws Exception
      */
-    private void guardarPendiente(Organismo org) throws Exception {
-        if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(org.getEstado().getCodigoEstadoEntidad())
-                || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(org.getEstado().getCodigoEstadoEntidad())
-                || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(org.getEstado().getCodigoEstadoEntidad())) {
-            if (org.getLibros() != null && org.getLibros().size() > 0) {
-                Pendiente pendiente = new Pendiente(org.getId(), false, org.getEstado().getCodigoEstadoEntidad());
-                pendienteEjb.persist(pendiente);
+    private void procesarExtinguido(Organismo organismo) throws Exception {
+
+        if(organismo != null){
+
+            String estado = organismo.getEstado().getCodigoEstadoEntidad();
+
+            if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(estado)
+                    || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(estado)
+                    || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(estado)) {
+
+                // TODO Actualizamos los Registros cuyo destino ha sido extinguido por el que lo sustituye
+                //registroEntradaEjb.actualizarDestinoExtinguido(organismo.getId(), organismo.getHistoricoUO().);
+
+                // Creamos un registro en la tabla RWE_PENDIENTE
+                if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
+
+                    pendienteEjb.persist(new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
+                }
             }
+
         }
+
     }
 
     /**

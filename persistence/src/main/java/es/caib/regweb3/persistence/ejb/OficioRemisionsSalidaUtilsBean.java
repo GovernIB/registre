@@ -314,7 +314,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q2.setParameter("fecha", sdf.parse(fecha));
         }
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -598,9 +598,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         if(StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
 
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
 
-            return oficinasSIR;
+            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
         }
 
         return null;

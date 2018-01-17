@@ -155,7 +155,7 @@ public class PersonaValidator<T> extends AbstractRegWebValidator<T> {
 
             String documento = persona.getDocumento().toUpperCase();
 
-            Validacion validacionDocumento = null;
+            Validacion validacionDocumento;
             try {
                 validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
             } catch (Exception e) {

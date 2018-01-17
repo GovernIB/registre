@@ -154,7 +154,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     @SuppressWarnings(value = "unchecked")
     public List<Plugin> findByEntidadTipo(Long idEntidad, Long tipo) throws Exception {
 
-        String entidadQuery = "";
+        String entidadQuery;
 
         if (idEntidad != null) {
             entidadQuery = "p.entidad = :idEntidad";
@@ -237,15 +237,12 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
         // Si no existe el plugin, retornamos null
         if (plugin == null) {
-            log.info("No existe ningun plugin de tipo: " + plugin
-                + " definido en el sistema", new Exception());
+            log.info("No existe ningun plugin de este tipo definido en el sistema", new Exception());
             return null;
         }
 
         // Obtenemos la clase del Plugin
         String className = plugin.getClase().trim();
-
-        //log.info("Obtenido el plugin: " + className);
 
         // Obtenemos sus propiedades
         Properties prop = new Properties();

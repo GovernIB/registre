@@ -57,7 +57,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @SuppressWarnings(value = "unchecked")
     public List<Persona> getAllbyEntidadTipo(Long idEntidad, Long tipoPersona) throws Exception {
 
-        StringBuffer query = new StringBuffer("Select persona from Persona as persona  " +
+        StringBuilder query = new StringBuilder("Select persona from Persona as persona  " +
                 "where persona.entidad.id = :idEntidad ");
 
         if (tipoPersona != null) {
@@ -172,7 +172,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select persona from Persona as persona ");
+        StringBuilder query = new StringBuilder("Select persona from Persona as persona ");
 
         if (nombre != null && nombre.length() > 0) {
             where.add(
@@ -225,7 +225,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -251,7 +251,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.documento, persona.tipo from Persona as persona ");
+        StringBuilder query = new StringBuilder("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.documento, persona.tipo from Persona as persona ");
 
         if (nombre != null && nombre.length() > 0) {
             where.add(DataBaseUtils.like("persona.nombre", "nombre", parametros, nombre));
@@ -318,7 +318,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona ");
+        StringBuilder query = new StringBuilder("Select persona.id, persona.razonSocial, persona.documento, persona.tipo from Persona as persona ");
 
         if (razonSocial != null && razonSocial.length() > 0) {
             where.add(DataBaseUtils.like("persona.razonSocial", "razonSocial", parametros, razonSocial));
@@ -480,7 +480,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.razonSocial, persona.documento, persona.tipo, persona.email, persona.telefono from Persona as persona ");
+        StringBuilder query = new StringBuilder("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2, persona.razonSocial, persona.documento, persona.tipo, persona.email, persona.telefono from Persona as persona ");
 
         if (nombre != null && nombre.length() > 0) {
             where.add(

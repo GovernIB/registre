@@ -246,7 +246,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
+        StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
 
         where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
@@ -291,7 +291,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -316,7 +316,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroSir from RegistroSir as registroSir ");
+        StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
 
         where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
 
@@ -351,7 +351,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -884,7 +884,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         List<InteresadoSir> interesadosSir = new ArrayList<InteresadoSir>();
 
         for (Interesado interesado : interesados) {
-            InteresadoSir interesadoSir = null;
+            InteresadoSir interesadoSir;
 
             if (!interesado.getIsRepresentante()){
                 interesadoSir = transformarInteresadoSir(interesado, interesado.getRepresentante());
@@ -1053,9 +1053,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         for(AnexoFull anexoFull:anexosFull){
 
-
             final int modoFirma = anexoFull.getAnexo().getModoFirma();
             Anexo anexo = anexoFull.getAnexo();
+            AnexoSir anexoSir;
 
             switch (modoFirma){
 
@@ -1066,7 +1066,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     String identificador_fichero = generateIdentificadorFichero(identificadorIntercambio, secuencia, sc.getName());
                     secuencia++;
 
-                    AnexoSir anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
+                    anexoSir = crearAnexoSir(sc.getName(),identificador_fichero,
                             CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento()),
                             CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()),anexo.getCertificado(),
                             anexo.getFirma(),anexo.getTimestamp(), anexo.getValidacionOCSPCertificado(),
@@ -1080,7 +1080,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 case MODO_FIRMA_ANEXO_DETACHED:
 
                     // ================= SEGMENTO 1: DOCUMENT ==================
-                    anexoSir = new AnexoSir();
 
                     DocumentCustody dc = anexoFull.getDocumentoCustody();
 
@@ -1097,7 +1096,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     anexosSir.add(anexoSir);
 
                     // ================= SEGMENTO 2: FIRMA ==================
-                    anexoSir = new AnexoSir();
 
                     sc = anexoFull.getSignatureCustody();
 
@@ -1196,14 +1194,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     protected String generateIdentificadorFichero(String identificadorIntercambio, int secuencia, String fileName) {
 
-        String result = new StringBuffer()
-                .append(identificadorIntercambio)
-                .append("_01_")
-                .append(StringUtils.leftPad(
-                        String.valueOf(secuencia), 4, "0"))
-                .append(".").append(getExtension(fileName)).toString();
-
-        return result;
+        return identificadorIntercambio +
+                "_01_" +
+                StringUtils.leftPad(
+                        String.valueOf(secuencia), 4, "0") +
+                "." + getExtension(fileName);
     }
 
     /**
@@ -1232,7 +1227,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws Exception
      */
     private String obtenerCodigoOficinaOrigen(RegistroDetalle registroDetalle, String codigoOficia) {
-        String codOficinaOrigen = null;
+        String codOficinaOrigen;
 
         if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
             codOficinaOrigen = codigoOficia;
@@ -1254,7 +1249,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws Exception
      */
     private String obtenerDenominacionOficinaOrigen(RegistroDetalle registroDetalle, String denominacionOficia) {
-        String denominacionOficinaOrigen = null;
+        String denominacionOficinaOrigen;
 
         if ((registroDetalle.getOficinaOrigenExternoCodigo() == null) && (registroDetalle.getOficinaOrigen() == null)) {
             denominacionOficinaOrigen = denominacionOficia;

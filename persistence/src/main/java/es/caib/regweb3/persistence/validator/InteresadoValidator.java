@@ -169,7 +169,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
             String documento = interesado.getDocumento().toUpperCase();
 
-            Validacion validacionDocumento = null;
+            Validacion validacionDocumento;
             try {
                 validacionDocumento = DocumentoUtils.comprobarDocumento(documento, tipoDocumento);
             } catch (Exception e) {

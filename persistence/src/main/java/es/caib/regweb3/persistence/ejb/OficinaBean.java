@@ -457,7 +457,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select oficina from Oficina as oficina ");
+        StringBuilder query = new StringBuilder("Select oficina from Oficina as oficina ");
 
         // Entidad a la que pertenece
         where.add(" oficina.organismoResponsable.entidad.id = :idEntidad ");
@@ -504,7 +504,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();

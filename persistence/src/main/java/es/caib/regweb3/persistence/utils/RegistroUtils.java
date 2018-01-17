@@ -67,7 +67,7 @@ public class RegistroUtils{
      */
     public static ReproJson desSerilizarReproXml(String repro) {
 
-        JAXBContext jaxbCtx = null;
+        JAXBContext jaxbCtx;
         ReproJson reproJson = null;
         try {
             jaxbCtx = JAXBContext.newInstance(ReproJson.class);
@@ -89,7 +89,7 @@ public class RegistroUtils{
      */
     public static RegistroEntrada desSerilizarREXml(String registroEntradaOriginal) {
 
-        JAXBContext jaxbCtx = null;
+        JAXBContext jaxbCtx;
         RegistroEntrada registroEntrada = null;
         try {
             jaxbCtx = JAXBContext.newInstance(RegistroEntrada.class);
@@ -110,7 +110,7 @@ public class RegistroUtils{
      */
     public static RegistroSalida desSerilizarRSXml(String registroSalidaOriginal) {
 
-        JAXBContext jaxbCtx = null;
+        JAXBContext jaxbCtx;
         RegistroSalida registroEntrada = null;
         try {
             jaxbCtx = JAXBContext.newInstance(RegistroSalida.class);

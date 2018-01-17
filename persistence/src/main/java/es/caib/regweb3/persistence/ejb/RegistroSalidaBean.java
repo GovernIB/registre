@@ -182,7 +182,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         List<String> where = new ArrayList<String>();
 
         String queryBase = "Select DISTINCT registroSalida from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat ";
-        StringBuffer query = new StringBuffer(queryBase);
+        StringBuilder query = new StringBuilder(queryBase);
 
         // Numero registro
         if (StringUtils.isNotEmpty(registroSalida.getNumeroRegistroFormateado())) {
@@ -297,7 +297,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
@@ -626,7 +626,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q2.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
 
-        Paginacion paginacion = null;
+        Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();

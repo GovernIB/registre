@@ -68,9 +68,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         doc.setMime(FileInfoSignature.PDF_MIME_TYPE);
         doc.setName("justificante.pdf");
 
-        SignatureCustody sc = signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI), reason);
-
-        return sc;
+        return signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI), reason);
 
     }
     
@@ -229,8 +227,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         throw i18ne;
       }
       
-      I18NTranslation trans = i18ne.getTraduccio();
-      return trans;
+      return i18ne.getTraduccio();
   
     }
 
@@ -595,9 +592,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         
 
         byte[] endOfPdf = new byte[10];
-        for (int i = 0; i <10; i++) {
-          endOfPdf[i] = data[data.length - 10 + i];
-        }
+        System.arraycopy(data, data.length - 10, endOfPdf, 0, 10);
         
         String str = new String(endOfPdf);
 

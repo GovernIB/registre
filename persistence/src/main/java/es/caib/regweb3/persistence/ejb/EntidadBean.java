@@ -300,20 +300,20 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         log.info("Dentro eliminar Registros Entidad");
 
-        /********* TRAZABILIDAD *********/
+        // TRAZABILIDAD 
         log.info("Trazabilidades eliminadas: " +trazabilidadEjb.eliminarByEntidad(idEntidad));
 
-        /********* TRAZABILIDAD SIR *********/
+        // TRAZABILIDAD SIR 
         log.info("TrazabilidadSir eliminados: " + trazabilidadSirEjb.eliminarByEntidad(idEntidad));
 
-        /********* OFICIOS REMISIÓN *********/
+        // OFICIOS REMISIÓN 
         log.info("OficiosRemision eliminados: " +oficioRemisionEjb.eliminarByEntidad(idEntidad));
 
-        /********* PERSONAS *********/
+        // PERSONAS 
         log.info("Personas eliminadas: " + personaEjb.eliminarByEntidad(idEntidad));
 
 
-        /********* REGISTROS ENTRADA *********/
+        // REGISTROS ENTRADA 
 
         // HistoricoRegistroEntrada
         log.info("HistoricosEntrada eliminados: " + historicoRegistroEntradaEjb.eliminarByEntidad(idEntidad));
@@ -323,7 +323,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         log.info("RegistrosEntrada eliminados: " +registroEntradaEjb.eliminarByEntidad(idEntidad));
 
-        /********* REGISTROS SALIDA *********/
+        // REGISTROS SALIDA 
 
         // HistoricoRegistroSalida
         log.info("HistoricosSalida eliminados: " + historicoRegistroSalidaEjb.eliminarByEntidad(idEntidad));
@@ -332,27 +332,27 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("RegistrosSalida eliminados: " +registroSalidaEjb.eliminarByEntidad(idEntidad));
 
 
-        /********* REGISTROS DETALLE *********/
+        // REGISTROS DETALLE 
 
         log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle));
 
-        /********* REPRO *********/
+        // REPRO 
         log.info("Repros eliminados: " +reproEjb.eliminarByEntidad(idEntidad));
 
-        /********* LOPD *********/
+        // LOPD 
         log.info("Lopds eliminados: " + lopdEjb.eliminarByEntidad(idEntidad));
 
-        /********* LIBROS: PONER CONTADORES A 0  *********/
+        // LIBROS: PONER CONTADORES A 0  
         List<Libro> libros = libroEjb.getLibrosEntidad(idEntidad);
         for (Libro libro : libros) {
            libroEjb.reiniciarContadores(libro.getId());
         }
         log.info("Libros reiniciados: " +libros.size());
 
-        /********* REGISTRO SIR *********/
+        // REGISTRO SIR 
         log.info("RegistroSir eliminados: " + registroSirEjb.eliminarByEntidad(idEntidad));
 
-        /********* SIR: PONER CONTADOR ID INTERCAMBIO A 0  *********/
+        // SIR: PONER CONTADOR ID INTERCAMBIO A 0  
         Entidad entidad = findById(idEntidad);
         contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
 
@@ -369,53 +369,53 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
         eliminarRegistros(idEntidad);
 
-        /********* PERMISO LIBRO USUARIO *********/
+        // PERMISO LIBRO USUARIO 
         log.info("PermisoLibroUsuarios eliminados: " + permisoLibroUsuarioEjb.eliminarByEntidad(idEntidad));
 
-        /********* LIBROS *********/
+        // LIBROS 
         log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(idEntidad));
 
-        /********* RelacionOrganizativaOfi *********/
+        // RelacionOrganizativaOfi 
         log.info("RelacionOrganizativaOfi eliminadas: " + relacionOrganizativaOfiEjb.eliminarByEntidad(idEntidad));
 
-        /********* RelacionSirOfi *********/
+        // RelacionSirOfi 
         log.info("RelacionOrganizativaOfi eliminadas: " + relacionSirOfiEjb.eliminarByEntidad(idEntidad));
 
-        /********* USUARIOS ENTIDAD *********/
+        // USUARIOS ENTIDAD 
         log.info("UsuariosEntidad eliminados: " + usuarioEntidadEjb.eliminarByEntidad(idEntidad));
 
-        /********* OFICINAS *********/
+        // OFICINAS 
         log.info("Oficinas eliminadas: " + oficinaEjb.eliminarByEntidad(idEntidad));
 
-        /********* ORGANISMOS *********/
+        // ORGANISMOS 
         log.info("Organismos eliminados: " + organismoEjb.eliminarByEntidad(idEntidad));
 
-        /********* TIPOS ASUNTO Y CODIGOS ASUNTO *********/
+        // TIPOS ASUNTO Y CODIGOS ASUNTO 
         log.info("TipoAsuntos: " + tipoAsuntoEjb.eliminarByEntidad(idEntidad));
 
-        /********* TIPOS DOCUMENTAL *********/
+        // TIPOS DOCUMENTAL 
         log.info("TiposDocumental: " + tipoDocumentalEjb.eliminarByEntidad(idEntidad));
 
-        /********* Modelo OficioRemision *********/
+        // Modelo OficioRemision 
         log.info("Modelo OficioRemision: " + modeloOficioRemisionEjb.eliminarByEntidad(idEntidad));
 
-        /********* Modelo Recibo *********/
+        // Modelo Recibo 
         log.info("Modelo Recibo: " + modeloReciboEjb.eliminarByEntidad(idEntidad));
 
-        /********* DESCARGAS *********/
+        // DESCARGAS 
         log.info("Descargas: " + descargaEjb.eliminarByEntidad(idEntidad));
 
-        /********* PROPIEDADES GLOBALES *********/
+        // PROPIEDADES GLOBALES 
         log.info("Propiedades globales: " + propiedadGlobalEjb.eliminarByEntidad(idEntidad));
 
-        /********* REGISTROS MIGRADOS *********/
+        // REGISTROS MIGRADOS 
         log.info("RegistrosMigradosLopd: " + registroMigradoLopdEjb.eliminarByEntidad(idEntidad));
         log.info("RegistrosMigrados: " + registroMigradoEjb.eliminarByEntidad(idEntidad));
 
-        /********* PLUGINS *********/
+        // PLUGINS 
         log.info("Plugins: " + pluginEjb.eliminarByEntidad(idEntidad));
 
-        /********* ENTIDAD *********/
+        // ENTIDAD 
         em.flush();
 
         //em.createQuery("delete from Entidad where id = :idEntidad ").setParameter("idEntidad", idEntidad).executeUpdate();

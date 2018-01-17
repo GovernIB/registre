@@ -330,7 +330,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     @Override
     public Long eliminarLibro(Long idLibro) throws Exception{
 
-        /********* ELIMINA PERMISOS LIBRO USUARIO *********/
+        // ELIMINA PERMISOS LIBRO USUARIO
         List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.libro.id =:idLibro").setParameter("idLibro",idLibro).getResultList();
         if(plus.size() > 0){
             log.info("PermisoLibroUsuarios eliminados: " + em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate());
@@ -338,13 +338,13 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
             log.info("PermisoLibroUsuarios eliminados: 0");
         }
 
-        /********* ELIMINA CONTADORES *********/
+        // ELIMINA CONTADORES
         Libro libro = findById(idLibro);
         contadorEjb.remove(contadorEjb.findById(libro.getContadorEntrada().getId()));
         contadorEjb.remove(contadorEjb.findById(libro.getContadorSalida().getId()));
         contadorEjb.remove(contadorEjb.findById(libro.getContadorOficioRemision().getId()));
 
-        /********* ELIMINA LIBRO *********/
+        // ELIMINA LIBRO
         em.createQuery("delete from Libro where id = :idLibro ").setParameter("idLibro", idLibro).executeUpdate();
 
         return libro.getId();

@@ -46,7 +46,7 @@ public class InformeBean implements InformeLocal {
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroEntrada.id, " +
+        StringBuilder query = new StringBuilder("Select registroEntrada.id, " +
                 "registroEntrada.libro.id, " +
                 "registroEntrada.libro.nombre, " +
                 "registroEntrada.oficina.id, " +
@@ -191,7 +191,7 @@ public class InformeBean implements InformeLocal {
                 Map<String, Object> parametros2 = new HashMap<String, Object>();
                 List<String> where2 = new ArrayList<String>();
 
-                StringBuffer query2 = new StringBuffer("Select interessat.id, " +
+                StringBuilder query2 = new StringBuilder("Select interessat.id, " +
                         "interessat.nombre, " +
                         "interessat.apellido1, " +
                         "interessat.apellido2, " +
@@ -282,7 +282,7 @@ public class InformeBean implements InformeLocal {
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        StringBuffer query = new StringBuffer("Select registroSalida.id, " +
+        StringBuilder query = new StringBuilder("Select registroSalida.id, " +
                 "registroSalida.libro.id, " +
                 "registroSalida.libro.nombre, " +
                 "registroSalida.oficina.id, " +
@@ -429,7 +429,7 @@ public class InformeBean implements InformeLocal {
                 Map<String, Object> parametros2 = new HashMap<String, Object>();
                 List<String> where2 = new ArrayList<String>();
 
-                StringBuffer query2 = new StringBuffer("Select interessat.id, " +
+                StringBuilder query2 = new StringBuilder("Select interessat.id, " +
                         "interessat.nombre, " +
                         "interessat.apellido1, " +
                         "interessat.apellido2, " +
