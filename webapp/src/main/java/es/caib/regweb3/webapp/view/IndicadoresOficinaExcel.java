@@ -32,6 +32,7 @@ public class IndicadoresOficinaExcel extends AbstractExcelView {
         return I18NUtils.tradueix(key);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 

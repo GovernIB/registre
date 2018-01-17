@@ -61,8 +61,8 @@ public class ReciboRtfView extends AbstractView {
 
         DatosRecibo datosRecibo = null;
         String formatNumRegistre = null;
-        String interessats = "";
-        String annexes = "";
+        StringBuilder interessats = new StringBuilder();
+        StringBuilder annexes = new StringBuilder();
         String tipoRegistroCa = "";
         String tipoRegistroEs = "";
 
@@ -133,17 +133,17 @@ public class ReciboRtfView extends AbstractView {
 
             for(int i=0;i<datosRecibo.getInteresados().size();i++){
                 if (datosRecibo.getInteresados().get(i).getIsRepresentante()) {
-                    interessats = interessats + "(Repres.) ";
+                    interessats.append("(Repres.) ");
                 }
                 if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-                    interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaJuridica();
+                    interessats.append(datosRecibo.getInteresados().get(i).getNombrePersonaJuridica());
                     }else if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-                            interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaFisica();
+                            interessats.append(datosRecibo.getInteresados().get(i).getNombrePersonaFisica());
                         }else if(datosRecibo.getInteresados().get(i).getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-                                interessats = interessats + datosRecibo.getInteresados().get(i).getNombrePersonaJuridica();
+                                interessats.append(datosRecibo.getInteresados().get(i).getNombrePersonaJuridica());
                             }
                 if(i<datosRecibo.getInteresados().size()-1){
-                    interessats = interessats + ", ";
+                    interessats.append(", ");
                 }
             }
         }
@@ -151,10 +151,10 @@ public class ReciboRtfView extends AbstractView {
         // Annexes
         if (datosRecibo.getAnexos()!=null){
             for(int i=0;i<datosRecibo.getAnexos().size();i++){
-                annexes = annexes + datosRecibo.getAnexos().get(i).getTitulo();
+                annexes.append(datosRecibo.getAnexos().get(i).getTitulo());
 
                 if(i<datosRecibo.getAnexos().size()-1){
-                    annexes = annexes + ", ";
+                    annexes.append(", ");
                 }
             }
         }
@@ -178,8 +178,8 @@ public class ReciboRtfView extends AbstractView {
         if (datosRecibo.getUsuarioNombreCompleto()!=null) ht.put("(nomUsuariCompletRegistre)", ConvertirTexto.toCp1252(datosRecibo.getUsuarioNombreCompleto()));
         if (datosRecibo.getEntitat()!=null) ht.put("(entitat)", ConvertirTexto.toCp1252(datosRecibo.getEntitat()));
         if (datosRecibo.getDecodificacioEntitat()!=null) ht.put("(decodificacioEntitat)", ConvertirTexto.toCp1252(datosRecibo.getDecodificacioEntitat()));
-        if (interessats.length()>0) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats));
-        if (annexes.length() > 0) ht.put("(annexos)", ConvertirTexto.toCp1252(annexes));
+        if (interessats.length()>0) ht.put("(interessats)", ConvertirTexto.toCp1252(interessats.toString()));
+        if (annexes.length() > 0) ht.put("(annexos)", ConvertirTexto.toCp1252(annexes.toString()));
         if (usuario!=null) ht.put("(nomUsuari)", ConvertirTexto.toCp1252(usuario.getNombreCompleto()));
         if (fechaReciboCatalan!=null) ht.put("(dataRebutCA)", ConvertirTexto.toCp1252(fechaReciboCatalan));
         if (fechaReciboCastellano!=null) ht.put("(dataRebutES)", ConvertirTexto.toCp1252(fechaReciboCastellano));
@@ -210,7 +210,7 @@ public class ReciboRtfView extends AbstractView {
         outstream.flush();
         
         } finally {
-          try { cs.close(); } catch (Exception e) {};
+          try { cs.close(); } catch (Exception e) {}
         }
 
     }

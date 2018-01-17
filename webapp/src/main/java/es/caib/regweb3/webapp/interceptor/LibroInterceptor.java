@@ -29,7 +29,7 @@ public class LibroInterceptor extends HandlerInterceptorAdapter {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

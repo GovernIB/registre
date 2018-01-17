@@ -167,15 +167,13 @@ public class UsuarioService {
      */
     private void asignarEntidadesAdministradas(Usuario usuario,Entidad entidadActiva, HttpSession session) throws Exception{
 
-        ArrayList<Entidad> entidadesAdministradas = new ArrayList<Entidad>();
-        ArrayList<Entidad> entidadesPropietario = new ArrayList<Entidad>();
         ArrayList<Entidad> entidades = new ArrayList<Entidad>();
 
         // Obtenemos las entidades administradas
-        entidadesAdministradas.addAll(entidadEjb.getEntidadesAdministrador(usuario.getId()));
+        ArrayList<Entidad> entidadesAdministradas = new ArrayList<Entidad>(entidadEjb.getEntidadesAdministrador(usuario.getId()));
 
         // Obtenemos las entidades propietarias
-        entidadesPropietario.addAll(entidadEjb.getEntidadesPropietario(usuario.getId()));
+        ArrayList<Entidad> entidadesPropietario = new ArrayList<Entidad>(entidadEjb.getEntidadesPropietario(usuario.getId()));
 
         // Las guardamos en la sesion
         entidades.addAll(entidadesAdministradas);
@@ -383,6 +381,7 @@ public class UsuarioService {
      * @param request
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public Boolean cambioRol(Rol rolNuevo, HttpServletRequest request) throws Exception{
         log.info("Cambiando el rol a: " + rolNuevo.getNombre());
         HttpSession session = request.getSession();

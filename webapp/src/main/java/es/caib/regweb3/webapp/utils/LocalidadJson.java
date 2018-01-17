@@ -5,9 +5,9 @@ package es.caib.regweb3.webapp.utils;
  */
 public class LocalidadJson {
 
-    String id;
-    String nombre;
-    String codigoEntidadGeografica;
+    private String id;
+    private String nombre;
+    private String codigoEntidadGeografica;
 
     public LocalidadJson(String id, String nombre, String codigoEntidadGeografica) {
         this.id = id;

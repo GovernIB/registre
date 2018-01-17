@@ -29,7 +29,7 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
 
 
     @Override

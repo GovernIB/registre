@@ -43,13 +43,13 @@ public class RegistroMigradoController extends BaseController {
     private RegistroMigradoBusquedaValidator registroMigradoBusquedaValidator;
 
     @EJB(mappedName = "regweb3/RegistroMigradoEJB/local")
-    public RegistroMigradoLocal registroMigradoEjb;
+    private RegistroMigradoLocal registroMigradoEjb;
 
     @EJB(mappedName = "regweb3/RegistroLopdMigradoEJB/local")
-    public RegistroLopdMigradoLocal registroLopdMigradoEjb;
+    private RegistroLopdMigradoLocal registroLopdMigradoEjb;
 
     @EJB(mappedName = "regweb3/ModificacionLopdMigradoEJB/local")
-    public ModificacionLopdMigradoLocal modificacionLopdMigradoEjb;
+    private ModificacionLopdMigradoLocal modificacionLopdMigradoEjb;
 
     /**
      * Listado de {@link es.caib.regweb3.model.RegistroMigrado}
@@ -105,7 +105,7 @@ public class RegistroMigradoController extends BaseController {
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
 
-            Paginacion paginacion = null;
+            Paginacion paginacion;
 
             // Ponemos la hora 23:59 a la fecha fin
             if(busqueda.getFechaFin() != null){
@@ -195,7 +195,7 @@ public class RegistroMigradoController extends BaseController {
         model.addAttribute("registroMigrado", registroMigrado);
 
         // Registros Migrados Listados y Consultados
-        Long numRegistroMigrado = Long.valueOf(idRegistroMigrado);
+        Long numRegistroMigrado = idRegistroMigrado;
 
         List<ModificacionLopdMigrado> visados = modificacionLopdMigradoEjb.getByRegistroMigrado(numRegistroMigrado);
         model.addAttribute("visados", visados);

@@ -1101,11 +1101,7 @@ function validaFormulario(form) {
         usuario = false;
     }
     // Si todos los campos son correctos, hace el submit
-    if((fechaInicio)&&(fechaFin)&&(fechas)&&(usuario)){
-        return true;
-    } else{
-        return false;
-    }
+    return (fechaInicio) && (fechaFin) && (fechas) && (usuario);
 }
 
 function actualizarUsuariosTodos(url, idSelect, seleccion, valorSelected, todos){

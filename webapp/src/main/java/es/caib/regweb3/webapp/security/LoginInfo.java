@@ -52,11 +52,23 @@ public class LoginInfo {
 
   final boolean neededConfigAdmin;
 
-  
+
   /**
-   * @param usuari
-   * @param entidadActiva
+   *
+   * @param springSecurityUser
+   * @param usuariPersona
+   * @param roleUser
+   * @param roleAdmin
+   * @param roleSuperAdmin
+   * @param entitatIDActual
+   * @param entitatsPerID
+   * @param usuariEntitatPerEntitatID
    * @param roles
+   * @param rolesAutenticado
+   * @param rolAutenticado
+   * @param oficinas
+   * @param oficinaActiva
+   * @param neededConfigAdmin
    */
   public LoginInfo(User springSecurityUser, Usuario usuariPersona, 
       boolean roleUser, boolean roleAdmin, boolean roleSuperAdmin,

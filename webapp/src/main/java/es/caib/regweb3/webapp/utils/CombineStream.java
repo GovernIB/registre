@@ -11,26 +11,26 @@ import java.io.InputStream;
 
 public class CombineStream extends InputStream {
 
-    java.io.InputStream inputStream = null;
+    private java.io.InputStream inputStream;
     @SuppressWarnings("rawtypes")
-    java.util.Hashtable values      = null;
+    private java.util.Hashtable values;
 
-    int LENOUT = 1024*40;
-    int LENIN  = 1024*40;
+    private int LENOUT = 1024*40;
+    private int LENIN  = 1024*40;
 
-    byte bufferOut[] = new byte[LENOUT];
-    byte bufferIn[]  = new byte[LENIN];
+    private byte[] bufferOut = new byte[LENOUT];
+    private byte[] bufferIn  = new byte[LENIN];
 
-    int  posReadOut  = 0; // Posició del pròxim caràcter a llegir
-    int  posLastOut  = 0; // Posició del primer caràcter no llegit
-    boolean EOFOut= false;
+    private int  posReadOut  = 0; // Posició del pròxim caràcter a llegir
+    private int  posLastOut  = 0; // Posició del primer caràcter no llegit
+    private boolean EOFOut= false;
 
-    boolean inBuffer = false;
+    private boolean inBuffer = false;
 
-    int posReadIn     = 0;
-    int posLastIn     = 0;
+    private int posReadIn     = 0;
+    private int posLastIn     = 0;
 
-    int oldChar = 0;
+    private int oldChar = 0;
 
 
     public CombineStream(java.io.InputStream is,@SuppressWarnings("rawtypes") java.util.Hashtable val) {

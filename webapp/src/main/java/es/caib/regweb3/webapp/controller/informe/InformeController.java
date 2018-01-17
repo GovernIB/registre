@@ -39,28 +39,28 @@ public class InformeController extends AbstractRegistroCommonFormController {
     //protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    public HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
     @EJB(mappedName = "regweb3/LopdEJB/local")
-    public LopdLocal lopdEjb;
+    private LopdLocal lopdEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
+    private TipoAsuntoLocal tipoAsuntoEjb;
     
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    public HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
     @EJB(mappedName = "regweb3/InformeEJB/local")
-    public InformeLocal informeEjb;
+    private InformeLocal informeEjb;
 
 
     /**
@@ -357,156 +357,155 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 registrosLibro.add(new ArrayList<String>());
                 RegistroSalida registroSalida = registrosSalida.get(i);
 
-                for( Iterator<String> it = campos.iterator(); it.hasNext();) {
-                    String valorCamp = (String) it.next();
-                    if(valorCamp.equals("codAs")){
-                        if(registroSalida.getRegistroDetalle().getCodigoAsunto() != null){
+                for (String valorCamp : campos) {
+                    if (valorCamp.equals("codAs")) {
+                        if (registroSalida.getRegistroDetalle().getCodigoAsunto() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getCodigoAsunto().getCodigo());
-                        } else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("anyRe")){
-                        if(registroSalida.getFecha() != null){
+                    } else if (valorCamp.equals("anyRe")) {
+                        if (registroSalida.getFecha() != null) {
                             String anoRegistro = formatYear.format(registroSalida.getFecha());
                             registrosLibro.get(i).add(anoRegistro);
-                        } else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("estat")){
-                        if(registroSalida.getEstado() != null){
-                            registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." + registroSalida.getEstado() ));
-                        }else{
+                    } else if (valorCamp.equals("estat")) {
+                        if (registroSalida.getEstado() != null) {
+                            registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." + registroSalida.getEstado()));
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("exped")){
-                        if(registroSalida.getRegistroDetalle().getExpediente() != null){
+                    } else if (valorCamp.equals("exped")) {
+                        if (registroSalida.getRegistroDetalle().getExpediente() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getExpediente());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("extra")){
-                        if(registroSalida.getRegistroDetalle().getExtracto() != null){
+                    } else if (valorCamp.equals("extra")) {
+                        if (registroSalida.getRegistroDetalle().getExtracto() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getExtracto());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("data")){
-                        if(registroSalida.getFecha() != null){
+                    } else if (valorCamp.equals("data")) {
+                        if (registroSalida.getFecha() != null) {
                             registrosLibro.get(i).add(registroSalida.getFecha().toString());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("numRe")){
-                        if(registroSalida.getNumeroRegistro() != null){
+                    } else if (valorCamp.equals("numRe")) {
+                        if (registroSalida.getNumeroRegistro() != null) {
                             registrosLibro.get(i).add(registroSalida.getNumeroRegistro().toString());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("ofici")){
-                        if(registroSalida.getOficina().getDenominacion() != null){
+                    } else if (valorCamp.equals("ofici")) {
+                        if (registroSalida.getOficina().getDenominacion() != null) {
                             registrosLibro.get(i).add(registroSalida.getOficina().getDenominacion());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("tipAs")){
-                        if(registroSalida.getRegistroDetalle().getTipoAsunto() != null){
+                    } else if (valorCamp.equals("tipAs")) {
+                        if (registroSalida.getRegistroDetalle().getTipoAsunto() != null) {
                             String nombre = traduccionTiposAsunto.get(registroSalida.getRegistroDetalle().getTipoAsunto().getId());
                             registrosLibro.get(i).add(nombre);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("obser")){
-                        if(registroSalida.getRegistroDetalle().getObservaciones() != null){
+                    } else if (valorCamp.equals("obser")) {
+                        if (registroSalida.getRegistroDetalle().getObservaciones() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getObservaciones());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("llibr")){
-                        if(registroSalida.getLibro().getNombre() != null){
+                    } else if (valorCamp.equals("llibr")) {
+                        if (registroSalida.getLibro().getNombre() != null) {
                             registrosLibro.get(i).add(registroSalida.getLibro().getNombre());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("docFi")){
-                        if(registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null){
-                            
+                    } else if (valorCamp.equals("docFi")) {
+                        if (registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null) {
+
                             registrosLibro.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroSalida.getRegistroDetalle().getTipoDocumentacionFisica()));
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("orgDe")){
-                        if(registroSalida.getOrigen() != null){
+                    } else if (valorCamp.equals("orgDe")) {
+                        if (registroSalida.getOrigen() != null) {
                             registrosLibro.get(i).add(registroSalida.getOrigen().getDenominacion());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("idiom")){
-                        if(registroSalida.getRegistroDetalle().getIdioma() != null){
-                          final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma()); 
+                    } else if (valorCamp.equals("idiom")) {
+                        if (registroSalida.getRegistroDetalle().getIdioma() != null) {
+                            final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma());
                             registrosLibro.get(i).add(nombre);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("refEx")){
-                        if(registroSalida.getRegistroDetalle().getReferenciaExterna() != null){
+                    } else if (valorCamp.equals("refEx")) {
+                        if (registroSalida.getRegistroDetalle().getReferenciaExterna() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getReferenciaExterna());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("trans")){
-                        if(registroSalida.getRegistroDetalle().getTransporte() != null){
+                    } else if (valorCamp.equals("trans")) {
+                        if (registroSalida.getRegistroDetalle().getTransporte() != null) {
                             registrosLibro.get(i).add(I18NUtils.tradueix("transporte." + registroSalida.getRegistroDetalle().getTransporte()));
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("numTr")){
-                        if(registroSalida.getRegistroDetalle().getNumeroTransporte() != null){
-                          final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma()); 
+                    } else if (valorCamp.equals("numTr")) {
+                        if (registroSalida.getRegistroDetalle().getNumeroTransporte() != null) {
+                            final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma());
                             registrosLibro.get(i).add(nombre);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("orgOr")){
-                        if(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null){
+                    } else if (valorCamp.equals("orgOr")) {
+                        if (registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo());
-                        }else{
-                            if(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null){
+                        } else {
+                            if (registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
                                 registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
-                            }else{
+                            } else {
                                 registrosLibro.get(i).add("");
                             }
                         }
-                    } else if(valorCamp.equals("numOr")){
-                        if(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen() != null){
+                    } else if (valorCamp.equals("numOr")) {
+                        if (registroSalida.getRegistroDetalle().getNumeroRegistroOrigen() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("datOr")){
-                        if(registroSalida.getRegistroDetalle().getFechaOrigen() != null){
+                    } else if (valorCamp.equals("datOr")) {
+                        if (registroSalida.getRegistroDetalle().getFechaOrigen() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getFechaOrigen().toString());
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if(valorCamp.equals("nomIn")){
-                        if(registroSalida.getRegistroDetalle().getInteresados() != null){
+                    } else if (valorCamp.equals("nomIn")) {
+                        if (registroSalida.getRegistroDetalle().getInteresados() != null) {
                             String interessats = "";
 
-                            for(int k=0;k<registroSalida.getRegistroDetalle().getInteresados().size();k++){
+                            for (int k = 0; k < registroSalida.getRegistroDetalle().getInteresados().size(); k++) {
                                 Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
-                                if(interesado.getIsRepresentante()){
+                                if (interesado.getIsRepresentante()) {
                                     interessats = interessats + "(Rep.) ";
                                 }
 
                                 // Añadimos el nombre completo del interesado
                                 interessats = interessats + interesado.getNombreCompletoInforme();
 
-                                if(i<registroSalida.getRegistroDetalle().getInteresados().size()-1){
+                                if (i < registroSalida.getRegistroDetalle().getInteresados().size() - 1) {
                                     interessats = interessats + ", ";
                                 }
                             }
                             registrosLibro.get(i).add(interessats);
-                        }else{
+                        } else {
                             registrosLibro.get(i).add("");
                         }
                     }
@@ -1274,7 +1273,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
     }
 
 
-    List<Libro> libros(HttpServletRequest request) throws Exception {
+    private List<Libro> libros(HttpServletRequest request) throws Exception {
 
         List<Libro> libros = null;
 
@@ -1300,16 +1299,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
     /**
      * Obtiene las {@link es.caib.regweb3.model.Oficina} del Usuario actual
      */
-    List<Oficina> oficinasInformeOficina(HttpServletRequest request) throws Exception {
+    private List<Oficina> oficinasInformeOficina(HttpServletRequest request) throws Exception {
 
         List<Oficina> oficinas = new ArrayList<Oficina>();
 
         // Es operador
         if(isOperador(request)){
             LinkedHashSet<Oficina> llistaOficines = getOficinasAutenticado(request);
-            for(Oficina ofi:llistaOficines){
-                oficinas.add(ofi);
-            }
+            oficinas.addAll(llistaOficines);
         }
 
         // Es Administrador de Entidad
@@ -1320,7 +1317,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
         return oficinas;
     }
 
-    public List<UsuarioEntidad> usuarios(HttpServletRequest request) throws Exception {
+    private List<UsuarioEntidad> usuarios(HttpServletRequest request) throws Exception {
 
         getRolActivo(request);
 
@@ -1439,7 +1436,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
+    private void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         List<String> entradaAnosValor = new ArrayList<String>();
@@ -1489,7 +1486,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
+    private void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         List<String> salidaAnosValor = new ArrayList<String>();
@@ -1540,7 +1537,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
+    private void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
@@ -1610,9 +1607,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
             }
             // Montamos la fechaInicio para la búsqueda del próximo mes
             cal.add(Calendar.DATE, 1);
-            cal.set(Calendar.HOUR_OF_DAY, 00);
-            cal.set(Calendar.MINUTE, 00);
-            cal.set(Calendar.SECOND, 00);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
             dataInici = cal.getTime();
         }
         mav.addObject("entradaMesesValor", entradaMesesValor);
@@ -1629,7 +1626,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
+    private void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
@@ -1699,9 +1696,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
             }
             // Montamos la fechaInicio para la búsqueda del próximo mes
             cal.add(Calendar.DATE, 1);
-            cal.set(Calendar.HOUR_OF_DAY, 00);
-            cal.set(Calendar.MINUTE, 00);
-            cal.set(Calendar.SECOND, 00);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
             dataInici = cal.getTime();
         }
 
@@ -1718,15 +1715,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param organismos
      * @throws Exception
      */
-    public void totalRegistresEntradaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
+    private void totalRegistresEntradaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
 
         List<String> entradaConselleriaValor = new ArrayList<String>();
         List<String> entradaConselleriaNombre = new ArrayList<String>();
 
-        for(int i=0; i<organismos.size(); i++){
-            Organismo organismo = organismos.get(i);
+        for (Organismo organismo : organismos) {
             Long total = informeEjb.buscaEntradaPorConselleria(dataInici, dataFi, organismo.getId());
-            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 entradaConselleriaNombre.add(organismo.getDenominacion());
                 entradaConselleriaValor.add(String.valueOf(total));
             }
@@ -1745,15 +1741,14 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param organismos
      * @throws Exception
      */
-    public void totalRegistresSalidaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
+    private void totalRegistresSalidaOrganismo(ModelAndView mav,Date dataInici, Date dataFi, List<Organismo> organismos) throws Exception{
 
         List<String> salidaConselleriaValor = new ArrayList<String>();
         List<String> salidaConselleriaNombre = new ArrayList<String>();
 
-        for(int i=0; i<organismos.size(); i++){
-            Organismo organismo = organismos.get(i);
+        for (Organismo organismo : organismos) {
             Long total = informeEjb.buscaSalidaPorConselleria(dataInici, dataFi, organismo.getId());
-            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 salidaConselleriaNombre.add(organismo.getDenominacion());
                 salidaConselleriaValor.add(String.valueOf(total));
             }
@@ -1773,13 +1768,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idEntidad
      * @throws Exception
      */
-    public void totalRegistresEntradaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
+    private void totalRegistresEntradaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
 
         List<String> entradaAsuntoValor = new ArrayList<String>();
         List<String> entradaAsuntoNombre = new ArrayList<String>();
 
-        for(int i=0; i<tiposAsunto.size(); i++){
-            TipoAsunto tipoAsunto = tiposAsunto.get(i);
+        for (TipoAsunto tipoAsunto : tiposAsunto) {
             TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion();
             entradaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
             entradaAsuntoValor.add(String.valueOf(informeEjb.buscaEntradaPorAsunto(dataInici, dataFi, tipoAsunto.getId(), idEntidad)));
@@ -1797,13 +1791,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idEntidad
      * @throws Exception
      */
-    public void totalRegistresSalidaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
+    private void totalRegistresSalidaTipoAsunto(ModelAndView mav,Date dataInici, Date dataFi,List<TipoAsunto> tiposAsunto, Long idEntidad) throws Exception{
 
           List<String> salidaAsuntoValor = new ArrayList<String>();
         List<String> salidaAsuntoNombre = new ArrayList<String>();
 
-        for(int i=0; i<tiposAsunto.size(); i++){
-            TipoAsunto tipoAsunto = tiposAsunto.get(i);
+        for (TipoAsunto tipoAsunto : tiposAsunto) {
             TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) tipoAsunto.getTraduccion();
 
             salidaAsuntoNombre.add(traduccionTipoAsunto.getNombre());
@@ -1823,19 +1816,16 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param organismos
      * @throws Exception
      */
-    public void totalRegistresEntradaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
+    private void totalRegistresEntradaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
 
         List<String> entradaLibroValor = new ArrayList<String>();
         List<String> entradaLibroNombre = new ArrayList<String>();
 
-        for(int i=0; i<organismos.size(); i++){
-            Organismo organismo = organismos.get(i);
+        for (Organismo organismo : organismos) {
             List<Libro> libros = libroEjb.getLibrosOrganismo(organismo.getId());
-            for(int j=0; j<libros.size(); j++){
-                Libro libro = libros.get(j);
-
+            for (Libro libro : libros) {
                 Long total = informeEjb.buscaEntradaPorLibro(dataInici, dataFi, libro.getId());
-                if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                     entradaLibroNombre.add(libro.getNombre());
                     entradaLibroValor.add(String.valueOf(total));
                 }
@@ -1854,19 +1844,16 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param organismos
      * @throws Exception
      */
-    public void totalRegistresSalidaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
+    private void totalRegistresSalidaLibro(ModelAndView mav,Date dataInici, Date dataFi,List<Organismo> organismos) throws Exception{
 
         List<String> salidaLibroValor = new ArrayList<String>();
         List<String> salidaLibroNombre = new ArrayList<String>();
 
-        for(int i=0; i<organismos.size(); i++){
-            Organismo organismo = organismos.get(i);
+        for (Organismo organismo : organismos) {
             List<Libro> libros = libroEjb.getLibrosOrganismo(organismo.getId());
-            for(int j=0; j<libros.size(); j++){
-                Libro libro = libros.get(j);
-
+            for (Libro libro : libros) {
                 Long total = informeEjb.buscaSalidaPorLibro(dataInici, dataFi, libro.getId());
-                if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+                if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                     salidaLibroNombre.add(libro.getNombre());
                     salidaLibroValor.add(String.valueOf(total));
                 }
@@ -1885,16 +1872,13 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param oficinas
      * @throws Exception
      */
-    public void totalRegistresEntradaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
+    private void totalRegistresEntradaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
         List<String> entradaOficinaValor = new ArrayList<String>();
         List<String> entradaOficinaNombre = new ArrayList<String>();
 
-
-        for(int i=0; i<oficinas.size(); i++){
-            Oficina oficina = oficinas.get(i);
-
+        for (Oficina oficina : oficinas) {
             Long total = informeEjb.buscaEntradaPorOficina(dataInici, dataFi, oficina.getId());
-            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 entradaOficinaNombre.add(oficina.getDenominacion());
                 entradaOficinaValor.add(String.valueOf(total));
             }
@@ -1912,17 +1896,15 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param oficinas
      * @throws Exception
      */
-    public void totalRegistresSalidaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
+    private void totalRegistresSalidaOficina(ModelAndView mav,Date dataInici, Date dataFi,List<Oficina> oficinas) throws Exception{
 
         List<String> salidaOficinaValor = new ArrayList<String>();
         List<String> salidaOficinaNombre = new ArrayList<String>();
 
 
-        for(int i=0; i<oficinas.size(); i++){
-            Oficina oficina = oficinas.get(i);
-
+        for (Oficina oficina : oficinas) {
             Long total = informeEjb.buscaSalidaPorOficina(dataInici, dataFi, oficina.getId());
-            if(total > 0){ // Solo lo añadimos al informe si tiene algún registro
+            if (total > 0) { // Solo lo añadimos al informe si tiene algún registro
                 salidaOficinaNombre.add(oficina.getDenominacion());
                 salidaOficinaValor.add(String.valueOf(total));
             }
@@ -1941,7 +1923,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresEntradaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
+    private void totalRegistresEntradaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         List<String> entradaIdiomaValor = new ArrayList<String>();
         List<String> entradaIdiomaNombre = new ArrayList<String>();
@@ -1969,7 +1951,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @param idOficina
      * @throws Exception
      */
-    public void totalRegistresSalidaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
+    private void totalRegistresSalidaIdioma(ModelAndView mav,Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
         List<String> salidaIdiomaValor = new ArrayList<String>();
         List<String> salidaIdiomaNombre = new ArrayList<String>();

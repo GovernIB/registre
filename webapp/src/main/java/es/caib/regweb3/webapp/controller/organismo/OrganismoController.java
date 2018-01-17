@@ -36,19 +36,19 @@ public class OrganismoController extends BaseController {
     private LibroValidator libroValidator;
     
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
     
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
-    public CatEstadoEntidadLocal catEstadoEntidadEjb;
+    private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
 
     @EJB(mappedName = "regweb3/RelacionSirOfiEJB/local")
-    public RelacionSirOfiLocal relacionSirOfiEjb;
+    private RelacionSirOfiLocal relacionSirOfiEjb;
 
 
    /**
@@ -231,10 +231,10 @@ public class OrganismoController extends BaseController {
         List<RelacionOrganizativaOfi> relacionOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<CodigoValor> oficinasOrganizativas = new ArrayList<CodigoValor>();
         if(!relacionOrganizativaOfi.isEmpty()) {
-            for (int i = 0; i < relacionOrganizativaOfi.size(); i++) {
+            for (RelacionOrganizativaOfi aRelacionOrganizativaOfi : relacionOrganizativaOfi) {
                 CodigoValor codigoValor = new CodigoValor();
-                codigoValor.setId(relacionOrganizativaOfi.get(i).getOrganismo().getId().toString());
-                codigoValor.setNombre(relacionOrganizativaOfi.get(i).getOficina().getCodigo() + " - " + relacionOrganizativaOfi.get(i).getOficina().getDenominacion());
+                codigoValor.setId(aRelacionOrganizativaOfi.getOrganismo().getId().toString());
+                codigoValor.setNombre(aRelacionOrganizativaOfi.getOficina().getCodigo() + " - " + aRelacionOrganizativaOfi.getOficina().getDenominacion());
                 oficinasOrganizativas.add(codigoValor);
             }
         }
@@ -242,10 +242,10 @@ public class OrganismoController extends BaseController {
         List<RelacionSirOfi> relacionSirOfi = relacionSirOfiEjb.oficinasSirByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<CodigoValor> oficinasSir = new ArrayList<CodigoValor>();
         if(!relacionSirOfi.isEmpty()) {
-            for (int i = 0; i < relacionSirOfi.size(); i++) {
+            for (RelacionSirOfi aRelacionSirOfi : relacionSirOfi) {
                 CodigoValor codigoValor = new CodigoValor();
-                codigoValor.setId(relacionSirOfi.get(i).getOrganismo().getId().toString());
-                codigoValor.setNombre(relacionSirOfi.get(i).getOficina().getCodigo() + " - " + relacionSirOfi.get(i).getOficina().getDenominacion());
+                codigoValor.setId(aRelacionSirOfi.getOrganismo().getId().toString());
+                codigoValor.setNombre(aRelacionSirOfi.getOficina().getCodigo() + " - " + aRelacionSirOfi.getOficina().getDenominacion());
                 oficinasSir.add(codigoValor);
             }
         }
@@ -253,70 +253,70 @@ public class OrganismoController extends BaseController {
         // Lista los libros de los organismos según el nivel del Organismo al que pertenecen
         Map<String, Long> librosOrganismoPrimerNivel = new HashMap<String, Long>();
         if(!organismosPrimerNivel.isEmpty()) {
-            for (int i = 0; i < organismosPrimerNivel.size(); i++) {
-                List<Libro> librosPrimer = libroEjb.getLibrosActivosOrganismo(organismosPrimerNivel.get(i).getId());
-                for (int j = 0; j < librosPrimer.size(); j++) {
-                    librosOrganismoPrimerNivel.put(librosPrimer.get(j).getCodigo() + " - " + librosPrimer.get(j).getNombre(), organismosPrimerNivel.get(i).getId());
+            for (Organismo anOrganismosPrimerNivel : organismosPrimerNivel) {
+                List<Libro> librosPrimer = libroEjb.getLibrosActivosOrganismo(anOrganismosPrimerNivel.getId());
+                for (Libro aLibrosPrimer : librosPrimer) {
+                    librosOrganismoPrimerNivel.put(aLibrosPrimer.getCodigo() + " - " + aLibrosPrimer.getNombre(), anOrganismosPrimerNivel.getId());
                 }
             }
         }
 
         Map<String, Long> librosOrganismoSegundoNivel = new HashMap<String, Long>();
         if(!organismosSegundoNivel.isEmpty()) {
-            for (int i = 0; i < organismosSegundoNivel.size(); i++) {
-                List<Libro> librosSegundo = libroEjb.getLibrosActivosOrganismo(organismosSegundoNivel.get(i).getId());
-                for (int j = 0; j < librosSegundo.size(); j++) {
-                    librosOrganismoSegundoNivel.put(librosSegundo.get(j).getCodigo() + " - " + librosSegundo.get(j).getNombre(), organismosSegundoNivel.get(i).getId());
+            for (Organismo anOrganismosSegundoNivel : organismosSegundoNivel) {
+                List<Libro> librosSegundo = libroEjb.getLibrosActivosOrganismo(anOrganismosSegundoNivel.getId());
+                for (Libro aLibrosSegundo : librosSegundo) {
+                    librosOrganismoSegundoNivel.put(aLibrosSegundo.getCodigo() + " - " + aLibrosSegundo.getNombre(), anOrganismosSegundoNivel.getId());
                 }
             }
         }
 
         Map<String, Long> librosOrganismoTercerNivel = new HashMap<String, Long>();
         if(!organismosTercerNivel.isEmpty()) {
-            for (int i = 0; i < organismosTercerNivel.size(); i++) {
-                List<Libro> librosTercer = libroEjb.getLibrosActivosOrganismo(organismosTercerNivel.get(i).getId());
-                for (int j = 0; j < librosTercer.size(); j++) {
-                    librosOrganismoTercerNivel.put(librosTercer.get(j).getCodigo() + " - " + librosTercer.get(j).getNombre(), organismosTercerNivel.get(i).getId());
+            for (Organismo anOrganismosTercerNivel : organismosTercerNivel) {
+                List<Libro> librosTercer = libroEjb.getLibrosActivosOrganismo(anOrganismosTercerNivel.getId());
+                for (Libro aLibrosTercer : librosTercer) {
+                    librosOrganismoTercerNivel.put(aLibrosTercer.getCodigo() + " - " + aLibrosTercer.getNombre(), anOrganismosTercerNivel.getId());
                 }
             }
         }
 
         Map<String, Long> librosOrganismoCuartoNivel = new HashMap<String, Long>();
         if(!organismosCuartoNivel.isEmpty()) {
-            for (int i = 0; i < organismosCuartoNivel.size(); i++) {
-                List<Libro> librosCuarto = libroEjb.getLibrosActivosOrganismo(organismosCuartoNivel.get(i).getId());
-                for (int j = 0; j < librosCuarto.size(); j++) {
-                    librosOrganismoCuartoNivel.put(librosCuarto.get(j).getCodigo() + " - " + librosCuarto.get(j).getNombre(), organismosCuartoNivel.get(i).getId());
+            for (Organismo anOrganismosCuartoNivel : organismosCuartoNivel) {
+                List<Libro> librosCuarto = libroEjb.getLibrosActivosOrganismo(anOrganismosCuartoNivel.getId());
+                for (Libro aLibrosCuarto : librosCuarto) {
+                    librosOrganismoCuartoNivel.put(aLibrosCuarto.getCodigo() + " - " + aLibrosCuarto.getNombre(), anOrganismosCuartoNivel.getId());
                 }
             }
         }
 
         Map<String, Long> librosOrganismoQuintoNivel = new HashMap<String, Long>();
         if(!organismosQuintoNivel.isEmpty()) {
-            for (int i = 0; i < organismosQuintoNivel.size(); i++) {
-                List<Libro> librosQuinto = libroEjb.getLibrosActivosOrganismo(organismosQuintoNivel.get(i).getId());
-                for (int j = 0; j < librosQuinto.size(); j++) {
-                    librosOrganismoQuintoNivel.put(librosQuinto.get(j).getCodigo() + " - " + librosQuinto.get(j).getNombre(), organismosQuintoNivel.get(i).getId());
+            for (Organismo anOrganismosQuintoNivel : organismosQuintoNivel) {
+                List<Libro> librosQuinto = libroEjb.getLibrosActivosOrganismo(anOrganismosQuintoNivel.getId());
+                for (Libro aLibrosQuinto : librosQuinto) {
+                    librosOrganismoQuintoNivel.put(aLibrosQuinto.getCodigo() + " - " + aLibrosQuinto.getNombre(), anOrganismosQuintoNivel.getId());
                 }
             }
         }
 
         Map<String, Long> librosOrganismoSextoNivel = new HashMap<String, Long>();
         if(!organismosSextoNivel.isEmpty()) {
-            for (int i = 0; i < organismosSextoNivel.size(); i++) {
-                List<Libro> librosSexto = libroEjb.getLibrosActivosOrganismo(organismosSextoNivel.get(i).getId());
-                for (int j = 0; j < librosSexto.size(); j++) {
-                    librosOrganismoSextoNivel.put(librosSexto.get(j).getCodigo() + " - " + librosSexto.get(j).getNombre(), organismosSextoNivel.get(i).getId());
+            for (Organismo anOrganismosSextoNivel : organismosSextoNivel) {
+                List<Libro> librosSexto = libroEjb.getLibrosActivosOrganismo(anOrganismosSextoNivel.getId());
+                for (Libro aLibrosSexto : librosSexto) {
+                    librosOrganismoSextoNivel.put(aLibrosSexto.getCodigo() + " - " + aLibrosSexto.getNombre(), anOrganismosSextoNivel.getId());
                 }
             }
         }
 
         Map<String, Long> librosOrganismoSeptimoNivel = new HashMap<String, Long>();
         if(!organismosSeptimoNivel.isEmpty()) {
-            for (int i = 0; i < organismosSeptimoNivel.size(); i++) {
-                List<Libro> librosSeptimo = libroEjb.getLibrosActivosOrganismo(organismosSeptimoNivel.get(i).getId());
-                for (int j = 0; j < librosSeptimo.size(); j++) {
-                    librosOrganismoSeptimoNivel.put(librosSeptimo.get(j).getCodigo() + " - " + librosSeptimo.get(j).getNombre(), organismosSeptimoNivel.get(i).getId());
+            for (Organismo anOrganismosSeptimoNivel : organismosSeptimoNivel) {
+                List<Libro> librosSeptimo = libroEjb.getLibrosActivosOrganismo(anOrganismosSeptimoNivel.getId());
+                for (Libro aLibrosSeptimo : librosSeptimo) {
+                    librosOrganismoSeptimoNivel.put(aLibrosSeptimo.getCodigo() + " - " + aLibrosSeptimo.getNombre(), anOrganismosSeptimoNivel.getId());
                 }
             }
         }

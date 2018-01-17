@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.UsuarioService;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -28,7 +27,7 @@ public class UsuarioValidator implements Validator {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
-    public UsuarioLocal usuarioEjb;
+    private UsuarioLocal usuarioEjb;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -58,7 +57,7 @@ public class UsuarioValidator implements Validator {
 
                 String documento = usuario.getDocumento();
                 String letras = "TRWAGMYFPDXBNJZSQVHLCKE";
-                int valor = 0;
+                int valor;
 
                 if (documento.length() == 9) {
                     String numeroNif = documento.substring(0, documento.length() - 1);

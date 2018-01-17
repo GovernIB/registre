@@ -81,6 +81,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
      * Guardar un nuevo {@link es.caib.regweb3.model.RegistroSalida}
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
+    @SuppressWarnings("unchecked")
     public String nuevoRegistroSalida(@ModelAttribute("registroSalida") RegistroSalida registroSalida,
         BindingResult result, Model model, SessionStatus status,
         HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
@@ -324,7 +325,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
-        RegistroSalida registroSalidaRectificado = null;
+        RegistroSalida registroSalidaRectificado;
 
         // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
         if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA)) {

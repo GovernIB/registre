@@ -32,10 +32,10 @@ public class ReproInterceptor extends HandlerInterceptorAdapter {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
+    private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
-    public ReproLocal reproEjb;
+    private ReproLocal reproEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

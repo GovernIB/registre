@@ -34,10 +34,10 @@ import javax.validation.Valid;
 public class ConfiguracionController extends BaseController {
 
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
+    private ArchivoLocal archivoEjb;
 
     @EJB(mappedName = "regweb3/ConfiguracionEJB/local")
-    public ConfiguracionLocal configuracionEjb;
+    private ConfiguracionLocal configuracionEjb;
 
     /**
      * Carga el formulario para editar la {@link es.caib.regweb3.model.Configuracion}
@@ -84,15 +84,10 @@ public class ConfiguracionController extends BaseController {
 
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
 
-            try {
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return "configuracionForm";
+            return "configuracion/configuracionForm";
         }
         // Si no hay errores actualizamos la configuracion
-        ArchivoFormManager afm = null;
+        ArchivoFormManager afm;
 
         try {
             Configuracion configuracion = configuracionForm.getConfiguracion();

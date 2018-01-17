@@ -183,8 +183,7 @@ public class PersonaController extends BaseController {
 
             try {
 
-                persona = personaEjb.merge(persona);
-
+                personaEjb.merge(persona);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 

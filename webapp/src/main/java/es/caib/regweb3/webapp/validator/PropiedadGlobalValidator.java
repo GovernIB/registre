@@ -30,7 +30,7 @@ public class PropiedadGlobalValidator implements Validator {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/PropiedadGlobalEJB/local")
-    public PropiedadGlobalLocal propiedadGlobalEjb;
+    private PropiedadGlobalLocal propiedadGlobalEjb;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -57,7 +57,7 @@ public class PropiedadGlobalValidator implements Validator {
                     idEntidad = entidadActiva.getId();
                 }
 
-                PropiedadGlobal p = null;
+                PropiedadGlobal p;
 
                 if (propiedadGlobal.getId() == null) { // Nueva propiedad
                     p = propiedadGlobalEjb.findByClaveEntidad(propiedadGlobal.getClave(), idEntidad, null);

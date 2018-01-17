@@ -8,8 +8,8 @@ package es.caib.regweb3.webapp.utils;
  */
 public class PersonaJson {
 
-    String id;
-    String nombre;
+    private String id;
+    private String nombre;
     private Boolean isRepresentante = false;
     private PersonaJson representado;
 

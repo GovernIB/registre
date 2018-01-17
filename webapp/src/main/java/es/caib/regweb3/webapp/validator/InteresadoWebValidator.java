@@ -35,10 +35,7 @@ public class InteresadoWebValidator implements Validator {
 
 
   /**
-   * @param _validator
-   * @param interesadoEjb
-   * @param personaEjb
-   * @param catPaisEjb
+   *
    */
   public InteresadoWebValidator() {
     super();

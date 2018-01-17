@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -38,7 +36,7 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     public CatNivelAdministracionLocal catNivelAdministracionEjb;
 
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    public CatProvinciaLocal catProvinciaEjb;
+    private CatProvinciaLocal catProvinciaEjb;
 
     @EJB(mappedName = "regweb3/ModeloReciboEJB/local")
     public ModeloReciboLocal modeloReciboEjb;
@@ -50,10 +48,10 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     public LopdLocal lopdEjb;
 
     @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    public CatPaisLocal catPaisEjb;
+    private CatPaisLocal catPaisEjb;
     
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
-    public ScanWebModuleLocal scanWebModuleEjb;
+    private ScanWebModuleLocal scanWebModuleEjb;
 
   
     @ModelAttribute("comunidadesAutonomas")

@@ -43,10 +43,10 @@ public class ModeloOficioRemisionController extends BaseController {
     private ModeloOficioRemisionValidator modeloOficioRemisionValidator;
     
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
-    public ModeloOficioRemisionLocal modeloOficioRemisionEjb;
+    private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
     
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
+    private ArchivoLocal archivoEjb;
     
    
     /**
@@ -111,7 +111,7 @@ public class ModeloOficioRemisionController extends BaseController {
             return "catalogoDatos/modeloOficioRemisionForm";
         }else{ // Si no hay errores guardamos el registro
 
-            ArchivoFormManager afm = null;
+            ArchivoFormManager afm;
 
             try {
 
@@ -190,7 +190,7 @@ public class ModeloOficioRemisionController extends BaseController {
             return "catalogoDatos/modeloOficioRemisionForm";
         }else {
 
-            ArchivoFormManager afm = null;
+            ArchivoFormManager afm;
 
             try {
 

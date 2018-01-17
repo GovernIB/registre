@@ -120,6 +120,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * Guardar un nuevo {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/new", method = RequestMethod.POST)
+    @SuppressWarnings("unchecked")
     public String nuevoRegistroEntrada(@ModelAttribute("registroEntrada") RegistroEntrada registroEntrada,
         BindingResult result, Model model, SessionStatus status,
         HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
@@ -289,6 +290,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * Editar un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/edit", method = RequestMethod.POST)
+    @SuppressWarnings("unchecked")
     public String editarRegistroEntrada(@ModelAttribute("registroEntrada") RegistroEntrada registroEntrada, BindingResult result,
                                         Model model, SessionStatus status,HttpServletRequest request) throws Exception{
 
@@ -432,7 +434,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-        RegistroEntrada registroEntradaRectificado = null;
+        RegistroEntrada registroEntradaRectificado;
 
         // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
         if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA)) {

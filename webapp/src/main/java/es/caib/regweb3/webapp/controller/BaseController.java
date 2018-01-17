@@ -313,6 +313,7 @@ public class BaseController {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public LinkedHashSet<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
 
@@ -395,9 +396,8 @@ public class BaseController {
      * @throws Exception
      */
     public Set<Oficina> getOficinasOrigen(HttpServletRequest request ) throws  Exception {
-        Set<Oficina> oficinasOrigen = new HashSet<Oficina>();
-        oficinasOrigen.addAll(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-        return oficinasOrigen;
+
+        return new HashSet<Oficina>(oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
     }
 
     /**

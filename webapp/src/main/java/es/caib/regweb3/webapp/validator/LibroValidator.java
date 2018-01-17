@@ -29,10 +29,10 @@ public class LibroValidator implements Validator {
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
-    public OficinaLocal oficinaEjb;
+    private OficinaLocal oficinaEjb;
 
 
     @Override

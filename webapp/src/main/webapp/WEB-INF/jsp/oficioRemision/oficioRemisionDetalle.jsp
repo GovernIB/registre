@@ -379,9 +379,8 @@
     function imprimirOficio(url) {
 
         var idModelo = $('#id').val();
-        var url2=url.concat(idModelo);
 
-        document.location.href=url2;
+        document.location.href=url.concat(idModelo);
     }
 </script>
 

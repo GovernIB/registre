@@ -36,6 +36,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //Obtenemos mapas y arrays de valores

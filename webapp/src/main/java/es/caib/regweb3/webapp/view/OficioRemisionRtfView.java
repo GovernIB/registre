@@ -40,6 +40,7 @@ public class OficioRemisionRtfView extends AbstractView {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
         HttpServletResponse response) throws Exception {
 
@@ -152,7 +153,7 @@ public class OficioRemisionRtfView extends AbstractView {
 
         // Flush byte array to servlet output stream.
         ServletOutputStream outstream = response.getOutputStream();
-        int l=0;
+        int l;
         while ((l=cs.read())!=-1) {
             outstream.write(l);
         }
@@ -160,7 +161,7 @@ public class OficioRemisionRtfView extends AbstractView {
         outstream.flush();
         
         } finally {
-          try { cs.close(); } catch (Exception e) {};
+          try { cs.close(); } catch (Exception e) {}
         }
 
     }

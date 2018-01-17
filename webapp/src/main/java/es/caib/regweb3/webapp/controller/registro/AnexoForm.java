@@ -20,11 +20,11 @@ public class AnexoForm extends AnexoFull {
   
   String tipoRegistro;
   
-  Long registroID;
+  private Long registroID;
 
-  Boolean oficioRemisionSir;
+  private Boolean oficioRemisionSir;
 
-  Boolean permitirAnexoDetached;
+  private Boolean permitirAnexoDetached;
   
   public AnexoForm() {
     super();

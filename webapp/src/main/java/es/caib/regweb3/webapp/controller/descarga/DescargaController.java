@@ -37,7 +37,7 @@ public class DescargaController extends BaseController {
     //protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
-    public DescargaLocal descargaEjb;
+    private DescargaLocal descargaEjb;
 
 
     /**

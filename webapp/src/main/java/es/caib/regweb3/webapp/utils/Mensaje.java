@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Mensaje {
 
+    @SuppressWarnings("unchecked")
     public static void saveMessageInfo(HttpServletRequest request, String mensaje) {
         HttpSession session = request.getSession();
 

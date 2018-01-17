@@ -31,10 +31,7 @@ public class PersonaWebValidator implements Validator {
 
 
   /**
-   * @param _validator
-   * @param personaEjb
-   * @param personaEjb
-   * @param catPaisEjb
+   *
    */
   public PersonaWebValidator() {
     super();

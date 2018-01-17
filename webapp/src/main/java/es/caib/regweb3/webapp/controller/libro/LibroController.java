@@ -1,7 +1,9 @@
 package es.caib.regweb3.webapp.controller.libro;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.LibroLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEditor;
@@ -37,20 +39,14 @@ public class LibroController extends BaseController {
     @Autowired
     private LibroValidator libroValidator;
     
-    @EJB(mappedName = "regweb3/ContadorEJB/local")
-    public ContadorLocal contadorEjb;
-    
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
-    
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     /**
      * Listado de libros de un Organismo
@@ -257,7 +253,6 @@ public class LibroController extends BaseController {
             if(registrosEntrada==0 && registrosSalida==0){
 
                 // Elimina el Libro
-                /********* LIBRO *********/
                 log.info("Libro eliminado: " + libroEjb.eliminarLibro(idLibro));
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));

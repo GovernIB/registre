@@ -29,7 +29,7 @@ public class ArchivoController extends BaseController{
     //protected final Logger log = Logger.getLogger(getClass());
     
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
-    public ArchivoLocal archivoEjb;
+    private ArchivoLocal archivoEjb;
 
     @RequestMapping(value = "/archivo/{archivoId}", method = RequestMethod.GET)
     public void  archivo(@PathVariable("archivoId") Long archivoId, HttpServletRequest request, HttpServletResponse response)  {
@@ -47,8 +47,8 @@ public class ArchivoController extends BaseController{
 
     public void fullDownload(Long archivoId, String filename, String contentType, HttpServletResponse response) {
 
-        FileInputStream input = null;
-        OutputStream output = null;
+        FileInputStream input;
+        OutputStream output;
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
 
         try {

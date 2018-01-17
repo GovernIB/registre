@@ -337,7 +337,7 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
         document.add(new Paragraph(" "));
         document.add(new Paragraph(" "));
 
-        if(registrosEntrada.equals("0")){
+        if(registrosEntrada.equals(0)){
             PdfPTable buit = new PdfPTable(1);
             buit.setWidthPercentage(100);
             buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
@@ -474,7 +474,7 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
 
 
         // Final Sortides
-        if(registrosSalida.equals("0")){
+        if(registrosSalida.equals(0)){
             PdfPTable buit = new PdfPTable(1);
             buit.setWidthPercentage(100);
             buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
@@ -498,7 +498,8 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
      * @param model
      * @throws Exception
      */
-    public void obtenerValoresEntrada(Map<String, Object> model) throws Exception{
+    @SuppressWarnings("unchecked")
+    private void obtenerValoresEntrada(Map<String, Object> model) throws Exception{
         entradaAnosValor = (ArrayList<String>) model.get("entradaAnosValor");
         entradaAnosNombre = (ArrayList<String>) model.get("entradaAnosNombre");
         entradaMesesValor = (ArrayList<String>) model.get("entradaMesesValor");
@@ -512,7 +513,8 @@ public class IndicadoresOficinaPdf extends AbstractIText5PdfView{
      * @param model
      * @throws Exception
      */
-    public void obtenerValoresSalida(Map<String, Object> model) throws Exception{
+    @SuppressWarnings("unchecked")
+    private void obtenerValoresSalida(Map<String, Object> model) throws Exception{
         salidaAnosValor = (ArrayList<String>) model.get("salidaAnosValor");
         salidaAnosNombre = (ArrayList<String>) model.get("salidaAnosNombre");
         salidaMesesValor = (ArrayList<String>) model.get("salidaMesesValor");

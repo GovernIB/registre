@@ -91,7 +91,7 @@ public class InteresadoController extends BaseController{
 
                 }
 
-                añadirInteresadoSesion(organismo, session, variableSesion);
+                addInteresadoSesion(organismo, session, variableSesion);
 
             }else{ // Edición de un registro, lo añadimos a la bbdd
 
@@ -139,7 +139,7 @@ public class InteresadoController extends BaseController{
         String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
-        Interesado interesado = null;
+        Interesado interesado;
 
         try {
             Persona persona = personaEjb.findById(id);
@@ -149,7 +149,7 @@ public class InteresadoController extends BaseController{
 
                 if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, utilizamos la sesion.
 
-                    añadirInteresadoSesion(interesado,session, variableSesion);
+                    addInteresadoSesion(interesado,session, variableSesion);
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
                     interesado.setId(null);
@@ -279,10 +279,10 @@ public class InteresadoController extends BaseController{
                         interesado.setRepresentado(representado);
                         representado.setRepresentante(interesado);
 
-                        añadirRepresentanteSesion(representado, interesado, session, variableSesion);
+                        addRepresentanteSesion(representado, interesado, session, variableSesion);
 
                     } else {
-                        añadirInteresadoSesion(interesado,session, variableSesion);
+                        addInteresadoSesion(interesado,session, variableSesion);
                     }
 
                 }else{ // Edición de un registro, lo añadimos a la bbdd
@@ -499,7 +499,7 @@ public class InteresadoController extends BaseController{
 
                 // Añadimos el representante a la sesion
                 representante.setRepresentado(representado);
-                añadirInteresadoSesion(representante, session, variableSesion);
+                addInteresadoSesion(representante, session, variableSesion);
 
                 //Actualizamos el representado
                 representado.setRepresentante(representante);
@@ -516,7 +516,7 @@ public class InteresadoController extends BaseController{
                 representante = interesadoEjb.persist(representante);
                 Entidad entidadActiva= getEntidadActiva(request);
                 //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
-                String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle),tipoRegistro);
+                String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(idRegistroDetalle,tipoRegistro);
                 interesadoEjb.postProcesoNuevoInteresado(representante,numRegistroFormateado, tipoRegistro, entidadActiva.getId());
 
                 // Actualizamos el representado
@@ -696,6 +696,7 @@ public class InteresadoController extends BaseController{
      * @param session donde buscar
      * @return
      */
+    @SuppressWarnings("unchecked")
     private Interesado obtenerInteresadoSesion(Long idInteresado, HttpSession session, String variableSesion){
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
@@ -721,6 +722,7 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
+    @SuppressWarnings("unchecked")
     private Boolean eliminarInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion)throws Exception{
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
@@ -740,6 +742,7 @@ public class InteresadoController extends BaseController{
      * @param session
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     private Boolean eliminarOrganismoSesion(String codigoDir3, HttpSession session, String variableSesion) throws Exception{
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
@@ -787,6 +790,7 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
+    @SuppressWarnings("unchecked")
     private void actualizarInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion){
         log.info("");
         log.info("actualizarInteresadoSesion");
@@ -811,7 +815,8 @@ public class InteresadoController extends BaseController{
      * @param interesado
      * @param session
      */
-    private void añadirInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion){
+    @SuppressWarnings("unchecked")
+    private void addInteresadoSesion(Interesado interesado, HttpSession session, String variableSesion){
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
@@ -833,7 +838,8 @@ public class InteresadoController extends BaseController{
      * @param session
      * @param variableSesion
      */
-    private void añadirRepresentanteSesion(Interesado representado, Interesado interesado, HttpSession session, String variableSesion) {
+    @SuppressWarnings("unchecked")
+    private void addRepresentanteSesion(Interesado representado, Interesado interesado, HttpSession session, String variableSesion) {
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
 
         // Añadimos el onuevo representante a la sesión
@@ -909,6 +915,7 @@ public class InteresadoController extends BaseController{
      * Comprueba si hay algún OrganismoInteresado ya añadido
      * @param session
      */
+    @SuppressWarnings("unchecked")
     private String hayOrganismoInteresado(HttpSession session){
 
         List<Interesado> interesados = (List<Interesado>) session.getAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA);
@@ -931,9 +938,9 @@ public class InteresadoController extends BaseController{
 
 
         if(tipoRegistro.equals("entrada")){
-            return  registroEntradaEjb.findNumeroRegistroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle));
+            return  registroEntradaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
         }else{
-            return registroSalidaEjb.findNumeroRegistroFormateadoByRegistroDetalle(Long.valueOf(idRegistroDetalle));
+            return registroSalidaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
         }
     }
 

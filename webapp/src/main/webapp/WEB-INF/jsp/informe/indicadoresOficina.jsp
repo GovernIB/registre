@@ -133,11 +133,7 @@
             }
         }
         // Si todos los campos son correctos, hace el submit
-        if((fechaInicio)&&(fechaFin)&&(fechas)){
-            return true;
-        } else{
-            return false;
-        }
+        return (fechaInicio) && (fechaFin) && (fechas);
     }
 
 </script>

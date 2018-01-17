@@ -54,7 +54,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
@@ -613,7 +613,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
-        respuestaDistribucion.setDestinatarios(null);
+        //respuestaDistribucion.setDestinatarios(null);
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 

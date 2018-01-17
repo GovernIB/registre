@@ -41,7 +41,7 @@ public class PropiedadGlobalController extends BaseController {
     private PropiedadGlobalValidator propiedadGlobalValidator;
 
     @EJB(mappedName = "regweb3/PropiedadGlobalEJB/local")
-    public PropiedadGlobalLocal propiedadGlobalEjb;
+    private PropiedadGlobalLocal propiedadGlobalEjb;
 
 
     /**
@@ -168,7 +168,7 @@ public class PropiedadGlobalController extends BaseController {
     @RequestMapping(value = "/{propiedadGlobalId}/edit", method = RequestMethod.GET)
     public String editarPropiedad(@PathVariable("propiedadGlobalId") Long propiedadGlobalId, Model model, HttpServletRequest request) {
 
-        PropiedadGlobal propiedadGlobal = null;
+        PropiedadGlobal propiedadGlobal;
 
         try {
             propiedadGlobal = propiedadGlobalEjb.findById(propiedadGlobalId);

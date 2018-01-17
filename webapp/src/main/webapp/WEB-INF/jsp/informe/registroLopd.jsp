@@ -337,11 +337,7 @@ function validaFormulario(form) {
         numeroRegistro = false;
     }
     // Si todos los campos son correctos, hace el submit
-    if((fechaInicio)&&(fechaFin)&&(fechas)&&(numeroRegistro)&&(libro)){
-        return true;
-    } else{
-        return false;
-    }
+    return (fechaInicio) && (fechaFin) && (fechas) && (numeroRegistro) && (libro);
 }
 
 </script>

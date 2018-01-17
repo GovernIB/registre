@@ -10,31 +10,32 @@ import java.util.List;
  * @author mgonzalez
  */
 public class OrganismoJson {
-  String id;
-  String nombre;
-  List<LibroOrganismo> libroOrganismos;
 
-  public String getId() {
-    return id;
-  }
+    private String id;
+    private String nombre;
+    private List<LibroOrganismo> libroOrganismos;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public String getNombre() {
-    return nombre;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
+    public String getNombre() {
+        return nombre;
+    }
 
-  public List<LibroOrganismo> getLibroOrganismos() {
-    return libroOrganismos;
-  }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-  public void setLibroOrganismos(List<LibroOrganismo> libroOrganismos) {
-    this.libroOrganismos = libroOrganismos;
-  }
+    public List<LibroOrganismo> getLibroOrganismos() {
+        return libroOrganismos;
+    }
+
+    public void setLibroOrganismos(List<LibroOrganismo> libroOrganismos) {
+        this.libroOrganismos = libroOrganismos;
+    }
 }

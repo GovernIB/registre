@@ -168,7 +168,7 @@ public class PluginController extends BaseController {
     @RequestMapping(value = "/{pluginId}/edit", method = RequestMethod.GET)
     public String editarPlugin(@PathVariable("pluginId") Long pluginId, Model model, HttpServletRequest request) {
 
-        Plugin plugin = null;
+        Plugin plugin;
 
         try {
             plugin = pluginEjb.findById(pluginId);

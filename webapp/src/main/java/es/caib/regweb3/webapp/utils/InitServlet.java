@@ -80,7 +80,7 @@ public class InitServlet extends HttpServlet {
       Properties prop = System.getProperties();
       
       Set<Object> keys = prop.keySet();
-      StringBuffer str = new StringBuffer("\r\n");
+      StringBuilder str = new StringBuilder("\r\n");
       for (Object keyO : keys) {
          String key = (String)keyO;
          if (key.startsWith("es.caib.regweb3.")) {

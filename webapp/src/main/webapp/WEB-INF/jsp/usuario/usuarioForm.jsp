@@ -183,7 +183,7 @@
             $('#documento').removeAttr("disabled", "disabled");
             $('#apellido1').removeAttr("disabled", "disabled");
             $('#apellido2').removeAttr("disabled", "disabled");
-        };
+        }
 
         if (tipoUsuario == <%=RegwebConstantes.TIPO_USUARIO_APLICACION%>) { //Aplicación
             $('#documento').val("");
@@ -192,7 +192,7 @@
             $('#apellido1').attr("disabled", "disabled");
             $('#apellido2').val("");
             $('#apellido2').attr("disabled", "disabled");
-        };
+        }
     }
 
 </script>

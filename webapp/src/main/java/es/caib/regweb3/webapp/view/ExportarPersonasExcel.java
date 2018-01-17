@@ -2,7 +2,6 @@ package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.utils.RegwebConstantes;
-
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 import java.util.Map;
 
@@ -36,8 +34,8 @@ public class ExportarPersonasExcel extends AbstractExcelView {
         return I18NUtils.tradueix(key);
     }
 
-    @SuppressWarnings("unused")
     @Override
+    @SuppressWarnings("unchecked")
     protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //Obtenemos las personas

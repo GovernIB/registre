@@ -6,34 +6,35 @@ package es.caib.regweb3.webapp.utils;
  * @author mgonzalez
  */
 public class AnexoJson {
-  String id;
-  String nombre;
-  private Boolean isPrimerAnexo = false;
 
-  public AnexoJson() {
-  }
+    private String id;
+    private String nombre;
+    private Boolean isPrimerAnexo = false;
 
-  public String getId() {
-    return id;
-  }
+    public AnexoJson() {
+    }
 
-  public void setId(String id) {
-    this.id = id;
-  }
+    public String getId() {
+        return id;
+    }
 
-  public String getNombre() {
-    return nombre;
-  }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
-  }
+    public String getNombre() {
+        return nombre;
+    }
 
-  public Boolean getPrimerAnexo() {
-    return isPrimerAnexo;
-  }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-  public void setPrimerAnexo(Boolean primerAnexo) {
-    isPrimerAnexo = primerAnexo;
-  }
+    public Boolean getPrimerAnexo() {
+        return isPrimerAnexo;
+    }
+
+    public void setPrimerAnexo(Boolean primerAnexo) {
+        isPrimerAnexo = primerAnexo;
+    }
 }

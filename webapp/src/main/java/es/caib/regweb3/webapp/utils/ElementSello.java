@@ -14,9 +14,9 @@ public class ElementSello {
 	public static float posxRefLinia = 0;
 	public static float posxRef = 0;
 	public static float posyRef = 0;
-	public static float fontSizeRef = 10f;
-	public static int fontStyleRef = Font.NORMAL;
-	public static BaseColor colorRef = BaseColor.BLACK;
+	private static float fontSizeRef = 10f;
+	private static int fontStyleRef = Font.NORMAL;
+	private static BaseColor colorRef = BaseColor.BLACK;
 	public static float maxPosx = 0;
 	public static float maxPosy = 0;
 	

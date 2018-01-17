@@ -144,8 +144,8 @@ public class ConvertirTexto {
         };
 
         String temp = texto;
-        for(int i=0; i<conversion.length; i++) {
-            temp = temp.replaceAll(conversion[i][1], "\\\\'" + conversion[i][0]);
+        for (String[] aConversion : conversion) {
+            temp = temp.replaceAll(aConversion[1], "\\\\'" + aConversion[0]);
         }
         return temp;
     }

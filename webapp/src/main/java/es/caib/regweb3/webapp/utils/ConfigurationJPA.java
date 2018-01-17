@@ -50,8 +50,7 @@ public class ConfigurationJPA {
 
   @Bean
   public DataSource dataSource() {
-    DataSource ds = (DataSource) getFromInitialContext("java:/es.caib.regweb3.db");
-    return ds;
+    return (DataSource) getFromInitialContext("java:/es.caib.regweb3.db");
   }
 
   private Properties additionalProperties() {
@@ -88,7 +87,7 @@ public class ConfigurationJPA {
   }
 
   private Object getFromInitialContext(String jndiValue) {
-    Context ctx = null;
+    Context ctx;
     Object object = null;
     try {
       ctx = new InitialContext();

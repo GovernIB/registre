@@ -427,9 +427,7 @@ public class ReproController extends BaseController {
 
         Entidad entidad = getEntidadActiva(request);
 
-        ReproJson reproJson = reproEjb.obtenerRepro(idRepro,entidad);
-
-        return reproJson;
+        return reproEjb.obtenerRepro(idRepro,entidad);
 
     }
 

@@ -207,11 +207,11 @@ que se le indica -->
     tradorganismo['regweb.noresultados'] = "<spring:message code='regweb.noresultados' javaScriptEscape='true' />";
     tradorganismo['regweb.resultado'] = "<spring:message code='regweb.resultado' javaScriptEscape='true' />";
     tradorganismo['regweb.resultados'] = "<spring:message code='regweb.resultados' javaScriptEscape='true' />";
-    tradorganismo['organismo.estado'] = "<spring:message code='organismo.estado' javaScriptEscape='true' />"
-    tradorganismo['organismo.estado.vigente'] = "<spring:message code='unidad.estado.V' javaScriptEscape='true' />"
-    tradorganismo['organismo.estado.extinguido'] = "<spring:message code='unidad.estado.E' javaScriptEscape='true' />"
-    tradorganismo['organismo.estado.anulado'] = "<spring:message code='unidad.estado.A' javaScriptEscape='true' />"
-    tradorganismo['organismo.estado.transitorio'] = "<spring:message code='unidad.estado.T' javaScriptEscape='true' />"
+    tradorganismo['organismo.estado'] = "<spring:message code='organismo.estado' javaScriptEscape='true' />";
+    tradorganismo['organismo.estado.vigente'] = "<spring:message code='unidad.estado.V' javaScriptEscape='true' />";
+    tradorganismo['organismo.estado.extinguido'] = "<spring:message code='unidad.estado.E' javaScriptEscape='true' />";
+    tradorganismo['organismo.estado.anulado'] = "<spring:message code='unidad.estado.A' javaScriptEscape='true' />";
+    tradorganismo['organismo.estado.transitorio'] = "<spring:message code='unidad.estado.T' javaScriptEscape='true' />";
 
     function actualizarLocalidadDestinatarios(paramTipo) {
 

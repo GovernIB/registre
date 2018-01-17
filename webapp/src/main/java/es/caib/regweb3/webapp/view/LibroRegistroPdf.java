@@ -36,6 +36,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         //Obtenemos mapas y arrays de valores
@@ -288,8 +289,8 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 
             for (ArrayList<String> aRegistrosLibro : registrosLibro) {
-                for (int j = 0; j < aRegistrosLibro.size(); j++) {
-                    table.addCell(new Paragraph(aRegistrosLibro.get(j), font10));
+                for (String anARegistrosLibro : aRegistrosLibro) {
+                    table.addCell(new Paragraph(anARegistrosLibro, font10));
                 }
             }
 

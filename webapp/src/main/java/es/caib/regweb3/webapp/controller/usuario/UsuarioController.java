@@ -10,7 +10,6 @@ import es.caib.regweb3.webapp.form.UsuarioBusquedaForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.UsuarioService;
 import es.caib.regweb3.webapp.validator.UsuarioValidator;
-
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ public class UsuarioController extends BaseController {
     private UsuarioService usuarioService;
        
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
-    public UsuarioLocal usuarioEjb;
+    private UsuarioLocal usuarioEjb;
     
      /**
       * Listado de todos los Usuarios

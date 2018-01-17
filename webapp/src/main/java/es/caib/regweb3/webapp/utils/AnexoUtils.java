@@ -20,7 +20,6 @@ public class AnexoUtils {
     /**
      *
      * @param anexos
-     * @param idEntidad
      * @return
      * @throws Exception
      */

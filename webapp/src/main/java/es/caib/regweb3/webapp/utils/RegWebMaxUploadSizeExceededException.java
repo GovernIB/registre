@@ -11,7 +11,10 @@ public class RegWebMaxUploadSizeExceededException extends org.springframework.we
   final String msgCode;
 
   /**
-   * @param msg
+   *
+   * @param cause
+   * @param maxSize
+   * @param msgCode
    */
   public RegWebMaxUploadSizeExceededException(Throwable cause, long maxSize, String msgCode) {
     super(maxSize, cause);    

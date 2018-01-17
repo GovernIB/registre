@@ -191,7 +191,7 @@ public class EntidadController extends BaseController {
                 Entidad entidad = entidadForm.getEntidad();
 
                 //Guardamos la nueva Entidad y sus propiedades por defecto
-                entidad = entidadEjb.nuevaEntidad(entidad);
+                entidadEjb.nuevaEntidad(entidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
             }catch (Exception e) {
@@ -289,7 +289,7 @@ public class EntidadController extends BaseController {
            return "entidad/entidadForm";
         }
         // Si no hay errores actualizamos el registro
-          ArchivoFormManager afm = null;
+          ArchivoFormManager afm;
 
           try {
               Entidad entidad = entidadForm.getEntidad();
@@ -1006,7 +1006,7 @@ public class EntidadController extends BaseController {
      * @return
      * @throws Exception
      */
-    public List<UsuarioEntidad> administradoresEntidadModificar(Usuario propietario, 
+    private List<UsuarioEntidad> administradoresEntidadModificar(Usuario propietario,
         Entidad entidad) throws Exception, I18NException {
 
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
@@ -1069,7 +1069,7 @@ public class EntidadController extends BaseController {
 
 
 
-    public byte[] redimensionaLogoMenu(byte[] logoMenu) throws IOException {
+    private byte[] redimensionaLogoMenu(byte[] logoMenu) throws IOException {
 
         // Obtenemos la imagen del Logo
         ByteArrayInputStream in = new ByteArrayInputStream(logoMenu);
@@ -1123,7 +1123,7 @@ public class EntidadController extends BaseController {
      * @param request
      * @throws Exception
      */
-    public void actualizarEntidadExtincionUnidadRaiz(Long entidadId, HttpServletRequest request) throws Exception {
+    private void actualizarEntidadExtincionUnidadRaiz(Long entidadId, HttpServletRequest request) throws Exception {
         Entidad entidad = entidadEjb.findById(entidadId);
         Organismo organismoRaizEntidad = organismoEjb.findByCodigoEntidadSinEstado(entidad.getCodigoDir3(), entidadId);
         Set<Organismo> historicosFinales = new HashSet<Organismo>();

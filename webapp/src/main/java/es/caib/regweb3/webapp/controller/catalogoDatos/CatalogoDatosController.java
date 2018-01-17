@@ -44,14 +44,13 @@ public class CatalogoDatosController extends BaseController {
     private TipoDocumentalValidator tipoDocumentalValidator;
     
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
-    public CodigoAsuntoLocal codigoAsuntoEjb;
-    
-    
+    private CodigoAsuntoLocal codigoAsuntoEjb;
+
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private TipoDocumentalLocal tipoDocumentalEjb;
     
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    public TipoAsuntoLocal tipoAsuntoEjb;
+    private TipoAsuntoLocal tipoAsuntoEjb;
 
 
     /* GESTIÓN DE TIPOS DE ASUNTO */

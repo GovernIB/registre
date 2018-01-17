@@ -130,7 +130,7 @@ public class AuthenticationSuccessListener implements
 
 
     // Obtener todos los usuario-entidad de todas las entidades
-    List<UsuarioEntidad> usuariEntitats = null;
+    List<UsuarioEntidad> usuariEntitats;
     if (usuarioEntidadEjb == null) {
       try {
         usuarioEntidadEjb = (UsuarioEntidadLocal) new InitialContext()

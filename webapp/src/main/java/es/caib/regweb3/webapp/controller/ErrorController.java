@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.utils.RegWebMaxUploadSizeExceededException;
-
 import org.apache.commons.fileupload.FileUploadBase.SizeLimitExceededException;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
@@ -60,7 +58,7 @@ public class ErrorController {
         return mav;
     }
 
-    public static String getStackTraceComoString ( Throwable e )
+    private static String getStackTraceComoString ( Throwable e )
     {
         if (e == null){
             return "";
@@ -163,8 +161,7 @@ public class ErrorController {
 
         Mensaje.saveMessageError(request, I18NUtils.tradueix(msgCode, currentSize, maxUploadSize));
 
-        ModelAndView mav = new ModelAndView(new RedirectView(request.getServletPath(), true));
-        return mav;
+          return new ModelAndView(new RedirectView(request.getServletPath(), true));
       }
       return null;
     }

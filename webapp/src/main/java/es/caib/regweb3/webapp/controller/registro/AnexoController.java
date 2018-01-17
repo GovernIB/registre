@@ -55,22 +55,22 @@ public class AnexoController extends BaseController {
 
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
-    public AnexoLocal anexoEjb;
+    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    public RegistroEntradaLocal registroEntradaEjb;
+    private RegistroEntradaLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    public RegistroDetalleLocal registroDetalleEjb;
+    private RegistroDetalleLocal registroDetalleEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    public TipoDocumentalLocal tipoDocumentalEjb;
+    private TipoDocumentalLocal tipoDocumentalEjb;
 
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
-    public ScanWebModuleLocal scanWebModuleEjb;
+    private ScanWebModuleLocal scanWebModuleEjb;
 
 
 
@@ -274,22 +274,19 @@ public class AnexoController extends BaseController {
         } else {
             String nombreCompleto = getNombreCompletoTipoRegistro(tipoRegistro);
             if (registroID == null || registroID == 0) {
-                String url = "redirect:/" + nombreCompleto + "/list";
-                //log.info("DELETE URL 1 = " + url);
-                return url;
+
+                return "redirect:/" + nombreCompleto + "/list";
             } else {
-                String url = "redirect:/" + nombreCompleto + "/" + registroID + "/detalle";
-                //log.info("DELETE URL 2 = " + url);
-                return url;
+
+                return "redirect:/" + nombreCompleto + "/" + registroID + "/detalle";
             }
         }
     }
 
 
     protected String getNombreCompletoTipoRegistro(String tipoRegistro) {
-        String nombreCompletoTipoRegistro = "registro" + Character.toUpperCase(tipoRegistro.charAt(0))
+        return "registro" + Character.toUpperCase(tipoRegistro.charAt(0))
                 + tipoRegistro.substring(1);
-        return nombreCompletoTipoRegistro;
     }
 
 
@@ -342,8 +339,8 @@ public class AnexoController extends BaseController {
      */
     private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response) {
 
-        String filename = null;
-        OutputStream output = null;
+        String filename;
+        OutputStream output;
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         byte[] data;
         try {
@@ -377,7 +374,7 @@ public class AnexoController extends BaseController {
                 }
                 response.setContentType(contentType);
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-                response.setContentLength((int) data.length);
+                response.setContentLength(data.length);
 
                 output = response.getOutputStream();
                 output.write(data);
@@ -425,13 +422,10 @@ public class AnexoController extends BaseController {
         fullDownload(filename, contentType, data, response);
     }
 
-    public void fullDownload(String filename, String contentType, byte[] data,
+    private void fullDownload(String filename, String contentType, byte[] data,
                              HttpServletResponse response) {
 
-        //FileInputStream input = null;
-
-
-        OutputStream output = null;
+        OutputStream output;
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
 
         try {
@@ -453,7 +447,7 @@ public class AnexoController extends BaseController {
             }
             response.setContentType(contentType);
             response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-            response.setContentLength((int) data.length);
+            response.setContentLength(data.length);
 
             output = response.getOutputStream();
             output.write(data);
@@ -499,7 +493,7 @@ public class AnexoController extends BaseController {
      * @throws Exception
      * @throws I18NException
      */
-    public List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
+    private List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
@@ -672,7 +666,7 @@ public class AnexoController extends BaseController {
 
     protected static AnexoLocal anexoEjbStatic = null;
 
-    public static AnexoLocal getAnexoLocalEJBStatic() throws Exception {
+    private static AnexoLocal getAnexoLocalEJBStatic() throws Exception {
 
         if (anexoEjbStatic == null) {
 

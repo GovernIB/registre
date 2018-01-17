@@ -443,39 +443,35 @@ if (numCampos<2){
 
 // Valida el formuario si las fechas Inicio y Fin son correctas, hay almenos 2 campos seleccionados, hay un Libro seleccionado
 function validaFormulario(form) {
-var fechaInicio = true;
-var fechaFin = true;
-var libros = true;
-var campos = true;
-var fechas = true;
-// Valida el formato de Fecha de Inicio
-if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
-    fechaInicio = false;
-}
-// Valida el formato de Fecha de Fin
-if (!validaFecha(form.fechaFin, 'fechaFin')) {
-    fechaFin = false;
-}
-// Si las Fechas son correctas, Valida el Fecha Inicio y Fecha Fin menor o igual que fecha actual, Fecha Inicio menor o igual que Fecha Fin
-if((fechaInicio)&&(fechaFin)){
-    if (!validaFechasConjuntas(form.fechaInicio, form.fechaFin, 'fechaInicio', 'fechaFin')) {
-        fechas = false;
+    var fechaInicio = true;
+    var fechaFin = true;
+    var libros = true;
+    var campos = true;
+    var fechas = true;
+    // Valida el formato de Fecha de Inicio
+    if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
+        fechaInicio = false;
     }
-}
-// Valida los libros seleccionados
-if (!librosSeleccionados(form.libros, 'libr')){
-    libros = false;
-}
-// Valida los campos seleccionados
-if (!camposSeleccionados(form.campos, 'campos')){
-    campos = false;
-}
-// Si todos los campos son correctos, hace el submit
-if((fechaInicio)&&(fechaFin)&&(libros)&&(campos)&&(fechas)){
-    return true;
-} else{
-    return false;
-}
+    // Valida el formato de Fecha de Fin
+    if (!validaFecha(form.fechaFin, 'fechaFin')) {
+        fechaFin = false;
+    }
+    // Si las Fechas son correctas, Valida el Fecha Inicio y Fecha Fin menor o igual que fecha actual, Fecha Inicio menor o igual que Fecha Fin
+    if((fechaInicio)&&(fechaFin)){
+        if (!validaFechasConjuntas(form.fechaInicio, form.fechaFin, 'fechaInicio', 'fechaFin')) {
+            fechas = false;
+        }
+    }
+    // Valida los libros seleccionados
+    if (!librosSeleccionados(form.libros, 'libr')){
+        libros = false;
+    }
+    // Valida los campos seleccionados
+    if (!camposSeleccionados(form.campos, 'campos')){
+        campos = false;
+    }
+    // Si todos los campos son correctos, hace el submit
+    return (fechaInicio) && (fechaFin) && (libros) && (campos) && (fechas);
 }
 
 </script>

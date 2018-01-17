@@ -8,8 +8,8 @@ package es.caib.regweb3.webapp.form;
  */
 public class LibroOrganismo{
 
-    String libro;
-    String organismo;
+    private String libro;
+    private String organismo;
 
 
   public LibroOrganismo(String libro, String organismo, String extinguido) {

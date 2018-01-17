@@ -40,16 +40,16 @@ public class ModeloReciboController extends BaseController {
    private ModeloReciboValidator modeloReciboValidator;
    
    @EJB(mappedName = "regweb3/ArchivoEJB/local")
-   public ArchivoLocal archivoEjb;
+   private ArchivoLocal archivoEjb;
    
    @EJB(mappedName = "regweb3/ModeloReciboEJB/local")
-   public ModeloReciboLocal modeloReciboEjb;
+   private ModeloReciboLocal modeloReciboEjb;
    
    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-   public RegistroSalidaLocal registroSalidaEjb;
+   private RegistroSalidaLocal registroSalidaEjb;
 
    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-   public RegistroEntradaLocal registroEntradaEjb;
+   private RegistroEntradaLocal registroEntradaEjb;
    
   /**
    * Listado de todos los Modelos de Recibo
@@ -114,7 +114,7 @@ public class ModeloReciboController extends BaseController {
             return "catalogoDatos/modeloReciboForm";
         }else{ // Si no hay errores guardamos el registro
           ModeloRecibo modeloRecibo = modeloReciboForm.getModeloRecibo();
-          ArchivoFormManager afm = null;
+          ArchivoFormManager afm;
 
           try {
 
@@ -191,7 +191,7 @@ public class ModeloReciboController extends BaseController {
            return "catalogoDatos/modeloReciboForm";
        }else {
 
-           ArchivoFormManager afm = null;
+           ArchivoFormManager afm;
 
            try {
 

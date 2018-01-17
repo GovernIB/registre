@@ -53,7 +53,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    public RegistroSalidaLocal registroSalidaEjb;
+    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;

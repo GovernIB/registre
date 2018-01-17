@@ -144,9 +144,7 @@ public class ComunController extends BaseController {
     @RequestMapping(value = "/aviso")
     public ModelAndView aviso(HttpServletRequest request) throws Exception{
 
-        ModelAndView mav = new ModelAndView("aviso");
-
-        return mav;
+        return new ModelAndView("aviso");
     }
 
     @RequestMapping(value = "/reprosUsuario/{tipoRegistro}")
@@ -184,7 +182,7 @@ public class ComunController extends BaseController {
      * @return
      * @throws Exception
      */
-    public String comprobarConfiguracionPluginsPropiedadesGlobalesByRol(HttpServletRequest request, Rol rol) throws Exception{
+    private String comprobarConfiguracionPluginsPropiedadesGlobalesByRol(HttpServletRequest request, Rol rol) throws Exception{
 
         //Si es operador
         if(rol.getNombre().equals(RegwebConstantes.ROL_USUARI)) {
