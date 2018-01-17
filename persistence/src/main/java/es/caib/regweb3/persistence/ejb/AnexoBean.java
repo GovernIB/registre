@@ -1155,6 +1155,25 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return custody.getSignatureInfoOnly(custodiaID);
     }
 
+    @Override
+    public SignatureCustody getSignatureInfoOnly(String custodiaID, boolean isJustificante) throws I18NException, Exception {
+
+        IDocumentCustodyPlugin custody = null;
+
+        if (custodiaID == null) {
+            log.warn("getSignatureInfoOnly :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+        if(isJustificante) {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        } else {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        }
+
+        return custody.getSignatureInfoOnly(custodiaID);
+    }
+
     /**
      * Obtiene la info + contenido físico(byte[]) de la firma existente en el sistema de archivos
      *
@@ -1373,4 +1392,33 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
     }
 
+
+    /**
+     * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
+     *
+     * @param custodiaID
+     * @param isJustificante
+     * @return
+     */
+    public String getUrlValidation(String custodiaID, boolean isJustificante) throws I18NException, Exception {
+
+        IDocumentCustodyPlugin custody = null;
+
+        if (custodiaID == null) {
+            log.warn("getUrlValidation :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+        if(isJustificante) {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+        } else {
+            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
+        }
+
+        return custody.getValidationUrl(custodiaID,new HashMap<String, Object>());
+    }
+
+
+
+    /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 }
