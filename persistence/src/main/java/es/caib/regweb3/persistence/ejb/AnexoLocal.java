@@ -120,7 +120,9 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     
     
     SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception, I18NException;
-    
+
+    SignatureCustody getSignatureInfoOnly(String custodiaID, boolean isJustificante) throws Exception, I18NException;
+
     /**
      * Obtiene la firma existente en el sistema de archivos
      * @param custodiaID
@@ -150,6 +152,12 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro,
                                 String tipoRegistro, String idioma) throws I18NException, I18NValidationException;
 
-
+    /**
+     * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
+     * @param custodiaID
+     * @param isJustificante
+     * @return
+     */
+    String getUrlValidation(String custodiaID, boolean isJustificante) throws I18NException, Exception;
 
 }

@@ -30,9 +30,8 @@ import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -331,6 +330,7 @@ public class AnexoController extends BaseController {
      * @param custodiaID     identificador del archivo
      * @param contentType
      * @param isJustificante
+     * @param firma
      * @param response
      * @return Descarga el archivo y además devuelve true o false en funcion de si ha encontrado el archivo indicado.
      * En la api de custodia antigua, los documentos firmados se guardaban en DocumentCustody y en la nueva en SignatureCustody.
@@ -339,22 +339,77 @@ public class AnexoController extends BaseController {
      */
     private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response) {
 
-        String filename;
+        String filename = null;
         OutputStream output;
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         byte[] data;
+
         try {
+
+            // Si l'arxiu té identificador, entram
             if (custodiaID != null) {
+
+                // Si és un arxiu sense firma
                 if (!firma) {
                     DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante);
                     filename = dc.getName();
                     data = dc.getData();
-                } else {
-                    SignatureCustody sc = anexoEjb.getFirma(custodiaID, isJustificante);
-                    filename = sc.getName();
-                    data = sc.getData();
-                }
 
+                } else {   // Si és firma d'un arxiu
+
+                    data = null;
+                    // Si és justificant
+                    if(isJustificante){
+
+                        String url = null;
+
+                        try {
+
+                            url = anexoEjb.getUrlValidation(custodiaID, isJustificante);
+
+                            // Si soporta url, davalla arxiu de la url
+                            if (url != null) {
+
+                                BufferedInputStream in = null;
+                                ByteArrayOutputStream fout = null;
+                                try {
+                                    in = new BufferedInputStream(new URL(url).openStream());
+                                    fout = new ByteArrayOutputStream();
+
+                                    final byte buffer[] = new byte[1024];
+                                    int count;
+                                    while ((count = in.read(buffer, 0, 1024)) != -1) {
+                                        fout.write(buffer, 0, count);
+                                    }
+                                    data = fout.toByteArray();
+                                } finally {
+                                    if (in != null) {
+                                        in.close();
+                                    }
+                                    if (fout != null) {
+                                        fout.close();
+                                    }
+                                }
+
+                                SignatureCustody sc = anexoEjb.getSignatureInfoOnly(custodiaID, isJustificante);
+                                filename = sc.getName();
+                            }
+
+                        }catch(Exception e){
+                            log.error("Error descarregant justificant des de url de validació (" + url + ")", e);
+                            data = null;
+                        }
+
+                    }
+
+                    // Si no ha soportat url, davalla l'arxiu original
+                    if(data==null){
+                        SignatureCustody sc = anexoEjb.getFirma(custodiaID, isJustificante);
+                        filename = sc.getName();
+                        data = sc.getData();
+                    }
+
+                }
 
                 if (contentType == null) {
                     try {
