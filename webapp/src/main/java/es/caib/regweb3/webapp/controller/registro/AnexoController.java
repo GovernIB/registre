@@ -40,6 +40,8 @@ import java.util.List;
 /**
  * Created 3/06/14 14:22
  *
+ * Controller para gestionar la parte común de los anexos
+ *
  * @author mgonzalez
  * @author anadal (plugin de custodia, errors i refactoring no ajax)
  * @author anadal migracio a ScanWebApi 2.0.0 (06/07/2016)
@@ -78,11 +80,15 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
     public String crearAnexoGet2(HttpServletRequest request,
                                  HttpServletResponse response, Model model) throws I18NException, Exception {
+
+        //Recibimos de sesión los datos en anexoForm
         AnexoForm anexoForm = (AnexoForm) request.getSession().getAttribute("anexoForm");
 
         model.addAttribute("anexoForm", anexoForm);
 
+        //Cargamos atributos comunes
         loadCommonAttributes(request, model);
+        //Cuando creamos un anexo, no se carga el tipo de validez de documento "Copia Compulsada"
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
         return "registro/formularioAnexo";
     }
@@ -97,12 +103,12 @@ public class AnexoController extends BaseController {
 
         log.info(" Passa per crearAnexoPost");
 
+        //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
         if (!result.hasErrors()) { // Si no hay errores
 
             try {
-
                 anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
 
@@ -125,7 +131,7 @@ public class AnexoController extends BaseController {
 
         }
 
-        // Errors
+        // si hay errores, volvemos al formulario cargando los valores comunes
         loadCommonAttributes(request, model);
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
 
@@ -135,7 +141,9 @@ public class AnexoController extends BaseController {
     }
 
 
-    // edit
+     /*
+      Prepara los datos de un anexo para su edición
+      */
     @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}",
             method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
@@ -154,10 +162,9 @@ public class AnexoController extends BaseController {
         }
 
         AnexoFull anexoFull2 = anexoEjb.getAnexoFullLigero(anexoID);
-
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, anexoID, isOficioRemisionSir);
 
-
+        //Preparamos el formulario con los datos a mostrar
         AnexoForm anexoForm = new AnexoForm(anexoFull2);
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
@@ -177,12 +184,13 @@ public class AnexoController extends BaseController {
         }
 
         final long scanWebID = registroID;
-
         scanWebModuleEjb.closeScanWebProcess(request, scanWebID);
 
         model.addAttribute("anexoForm", anexoForm);
 
+        //Cargamos los atributos comunes
         loadCommonAttributes(request, model);
+        // En caso de edición se cargan todos los tipos de validez documento
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
 
         return "registro/formularioAnexo";
@@ -190,6 +198,9 @@ public class AnexoController extends BaseController {
     }
 
 
+    /**
+     * Modifica los datos de un anexo
+     */
     @RequestMapping(value = "/editar", method = RequestMethod.POST)
     public String editarAnexoPost(@ModelAttribute AnexoForm anexoForm,
                                   BindingResult result, HttpServletRequest request,
@@ -202,8 +213,6 @@ public class AnexoController extends BaseController {
         if (!result.hasErrors()) { // Si no hay errores
 
             try {
-
-
                 anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(),false);
 
@@ -222,7 +231,6 @@ public class AnexoController extends BaseController {
         loadCommonAttributes(request, model);
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         return "registro/formularioAnexo";
-
 
     }
 
@@ -256,15 +264,9 @@ public class AnexoController extends BaseController {
     }
 
 
-    protected Long getRegistroDetalleID(AnexoForm anexoForm) {
-        try {
-            return anexoForm.getAnexo().getRegistroDetalle().getId();
-        } catch (Throwable e) {
-            return null;
-        }
-    }
-
-
+    /**
+     * Método que monta la url a donde ir después de eliminar un anexo
+     */
     protected String getRedirectURL2(HttpServletRequest request, String tipoRegistro,
                                      Long registroID) {
         if (StringUtils.isEmpty(tipoRegistro)) {
@@ -326,7 +328,7 @@ public class AnexoController extends BaseController {
 
 
     /**
-     * Función que obtiene los datos de un archivo para mostrarlo
+     * Función que obtiene los datos de un archivo del sistema de custodia para mostrarlo
      *
      * @param custodiaID     identificador del archivo
      * @param contentType
@@ -345,7 +347,7 @@ public class AnexoController extends BaseController {
         byte[] data;
         try {
             if (custodiaID != null) {
-                if (!firma) {
+                if (!firma) { //Si no tiene firma
                     DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante);
                     filename = dc.getName();
                     data = dc.getData();
@@ -356,7 +358,7 @@ public class AnexoController extends BaseController {
                 }
 
 
-                if (contentType == null) {
+                if (contentType == null) {//escribimos el contenido en un archivo temporal y lo establecemos como contentType
                     try {
                         File tmp = File.createTempFile("regweb_annex_", filename);
                         FileOutputStream fos = new FileOutputStream(tmp);
@@ -422,6 +424,9 @@ public class AnexoController extends BaseController {
         fullDownload(filename, contentType, data, response);
     }
 
+    /*
+    Método que muestra y carga un archivo a partir del nombre del archivo y de su byte[]
+     */
     private void fullDownload(String filename, String contentType, byte[] data,
                              HttpServletResponse response) {
 
@@ -464,7 +469,15 @@ public class AnexoController extends BaseController {
     }
 
 
-
+    /**
+     * Guarda en sesión los datos asociados al ultimo anexo
+     * @param request
+     * @param registroDetalleID
+     * @param registroID
+     * @param tipoRegistro
+     * @param anexoID
+     * @param isOficioRemisionSir
+     */
     protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
                                         Long registroID, String tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
         HttpSession session = request.getSession();
@@ -476,7 +489,12 @@ public class AnexoController extends BaseController {
     }
 
 
-
+    /**
+     * Se cargan los atributos comunes de los anexos
+     * @param request
+     * @param model
+     * @throws Exception
+     */
     protected void loadCommonAttributes(HttpServletRequest request, Model model) throws Exception {
         model.addAttribute("tiposDocumental", tipoDocumentalEjb.getByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("tiposDocumentoAnexo", RegwebConstantes.TIPOS_DOCUMENTO);

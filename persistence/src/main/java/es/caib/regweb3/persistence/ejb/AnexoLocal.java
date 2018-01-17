@@ -42,7 +42,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     AnexoFull getAnexoFullLigero(Long anexoID) throws I18NException;
 
   /**
-   * Método que levanta los archivos
+   * Método que levanta toda la información de los anexos incluidos los archivos físicos
    *
    * @param anexoID
    * @return
@@ -89,6 +89,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     * @throws Exception
     */
     List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception;
+  /**
+   * Elimina los anexos de custodia del registro detalle indicado menos el justificante
+   * @param idRegistroDetalle
+   * @return
+   * @throws Exception
+   */
+    //TODO PENDIENTE CERRAR CON FELIP
+   // void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle) throws Exception, I18NException;
+
 
     /**
      *  Obtiene el id del Justificante que tiene un registroDetalle
@@ -98,27 +107,50 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     Long getIdJustificante(Long idRegistroDetalle) throws Exception;
 
-    
-    byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws I18NException, Exception;
-    
-
-    byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception, I18NException;
-    
-
-    /**
-     * Obtiene el fichero existente en el sistema de archivos
+     /**
+     * Obtiene el contenido físico del documento como byte[]
+     *
      * @param custodiaID
-     * @param isJustificante
      * @return
      */
+    byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws I18NException, Exception;
 
+
+    /**
+     * Obtiene el contenido físico de la firma como byte[]
+     *
+     * @param custodiaID
+     * @return
+     */
+    byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception, I18NException;
+
+
+    /**
+     * Obtiene la info + contenido físico(byte[]) del fichero existente en el sistema de archivos
+     *
+     * @param custodiaID
+     * @return
+     */
     DocumentCustody getArchivo(String custodiaID, boolean isJustificante) throws I18NException, Exception;
 
-    
-    
+
+    /**
+     * Obtiene solo la info del Documento (sin byte[])
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
     DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception, I18NException;
-    
-    
+
+
+    /**
+     * Obtiene solo la info de la firma (sin byte[])
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
     SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception, I18NException;
     
     /**

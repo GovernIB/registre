@@ -608,7 +608,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/distribuir", method = RequestMethod.GET)
     public
     @ResponseBody
-    RespuestaDistribucion distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException {
+    RespuestaDistribucion distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
 
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -640,7 +640,16 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
             respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
         } catch (I18NValidationException e) {
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.error"));
+            e.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
+            return respuestaDistribucion;
+        } catch (I18NException ie){
+            ie.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
+            return respuestaDistribucion;
+        } catch (Exception ie){
+            ie.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error"));
             return respuestaDistribucion;
         }
 

@@ -92,22 +92,28 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     public AnexoFull getAnexoFullLigero(Long anexoID) throws I18NException {
 
         try {
+            //Obtenemos el anexo de la tabla de anexos de regweb
             Anexo anexo = em.find(Anexo.class, anexoID);
 
+            //Obtenemos el identificador de custodia
             String custodyID = anexo.getCustodiaID();
 
+            //Montamos un AnexoFull( Anexo + toda la parte de custodia)
             AnexoFull anexoFull = new AnexoFull(anexo);
 
+            // Los justificantes y los anexos se guardan en plugins diferentes,
+            // por eso se carga el plugin en función de si es justificante o no
             IDocumentCustodyPlugin custody;
-            if(anexo.isJustificante()){
+            if(anexo.isJustificante()){ // Si es justificante cargamos el plugin de custodia del justificante
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-            }else{
+            }else{ //si no, cargamos el plugin de anexos que no son justificantes
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
             }
 
-            anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID));
+            //Obtenemos la información(sin el contenido físico en bytes[]) del anexo guardados en custodia
+            anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID)); //Documento asociado al anexo
             anexoFull.setDocumentoFileDelete(false);
-            anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID));
+            anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
             anexoFull.setSignatureFileDelete(false);
 
             if (log.isDebugEnabled()) {
@@ -133,25 +139,27 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     public AnexoFull getAnexoFull(Long anexoID) throws I18NException {
 
         try {
+            //Obtenemos el anexo de la tabla de anexos de regweb
             Anexo anexo = em.find(Anexo.class, anexoID);
 
+            //Obtenemos el identificador de custodia
             String custodyID = anexo.getCustodiaID();
 
             AnexoFull anexoFull = new AnexoFull(anexo);
 
+            // Los justificantes y los anexos se guardan en plugins diferentes,
+            // por eso se carga el plugin en función de si es justificante o no
             IDocumentCustodyPlugin custody;
-            if(anexo.isJustificante()){
+            if(anexo.isJustificante()){ // Si es justificante cargamos el plugin de custodia del justificante
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-            }else{
+            }else{//si no, cargamos el plugin de anexos que no son justificantes
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
             }
 
-            anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID));
-
+            //Obtenemos la información(con el contenido físico en bytes[]) del anexo guardados en custodia
+            anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
             anexoFull.setDocumentoFileDelete(false);
-
-            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));
-
+            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
             anexoFull.setSignatureFileDelete(false);
 
             return anexoFull;
@@ -185,7 +193,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-        public AnexoFull crearJustificanteAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+    public AnexoFull crearJustificanteAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
                 Long registroID, String tipoRegistro, String custodyID) throws I18NException, I18NValidationException{
 
         IDocumentCustodyPlugin custody = null;
@@ -229,7 +237,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
-            IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
+            IRegistro registro = getIRegistro(registroID, tipoRegistro);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
             
             // ---------- BBDD -------------
@@ -335,10 +343,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexo.setFechaCaptura(new Date());
 
 
+            //Cargamos el plugin de custodia
             IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
-            IRegistro registro = getIRegistro(registroID, tipoRegistro, anexo, isNew);
+            IRegistro registro = getIRegistro(registroID, tipoRegistro);
 
             //Actualizamos custodia solo cuando no venimos via web
             if(noWeb) {
@@ -351,7 +360,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                         registro, isNew);
             }
 
-            //Actualizamos los datos de anexo
+            //Actualizamos los datos de anexo en BBDD
             anexo = this.merge(anexo);
             anexoFull.setAnexo(anexo);
 
@@ -374,17 +383,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     /**
-     *
+     * Clonamos el registro indicado por el identificador registroID
      * @param registroID
      * @param tipoRegistro
-     * @param anexo
-     * @param isNou
      * @return
      * @throws Exception
      */
-    protected IRegistro getIRegistro(Long registroID, String tipoRegistro, Anexo anexo, boolean isNou) throws Exception {
+    protected IRegistro getIRegistro(Long registroID, String tipoRegistro) throws Exception {
         IRegistro registro;
         IRegistro cloneRegistro;
+        //Recuperamos el registro de la BD
         if ("entrada".equals(tipoRegistro)) {
             registro = registroEntradaEjb.findById(registroID);
 
@@ -393,18 +401,20 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         }
 
+        //Cargamos el tipo asunto y los interesados
         Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
         Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
 
+        //Creamos un registro a partir del cargado previamente
         if ("entrada".equals(tipoRegistro)) {
             cloneRegistro = new RegistroEntrada((RegistroEntrada) registro);
         } else {
             cloneRegistro = new RegistroSalida((RegistroSalida) registro);
         }
 
-
+        //cargamos y clonamos los anexos del registro
         List<Anexo> anexos = Anexo.clone(registro.getRegistroDetalle().getAnexos());
-
+        //Se los asignamos al registro clonado.
         cloneRegistro.getRegistroDetalle().setAnexos(anexos);
 
 
@@ -481,7 +491,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /**
-     * Método que crea/actualiza un anexo en función de lo que recibe en anexoFull
+     * Método que crea/actualiza la información de custodia del anexo indicado
      *
      * @param anexoFull
      * @param custodyParameters
@@ -503,9 +513,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 throw new I18NException("anexo.error.sinfichero");
             }
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED && anexoFull.getSignatureCustody() == null) {
+                //Si la firma es adjunta, el documento con su firma adjunta debe venir en SignatureCustody
                 throw new I18NException("anexo.error.sinfichero");
             }
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED && (anexoFull.getDocumentoCustody() == null || anexoFull.getSignatureCustody() == null)) {
+                //Si la firma es por separado, se esperan dos documentos (el original + la firma)
                 throw new I18NException("anexo.error.faltadocumento");
             }
         } else {//Actualización
@@ -602,7 +614,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // XMAS SAVEALL DocumentCustody doc = guardarDocumentCustody(anexoFull.getDocumentoCustody(),
             //      custody, custodyID, custodyParameters, anexo,  mimeFinal);
             documentCustody = anexoFull.getDocumentoCustody();
-            mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, anexo, mimeFinal);
+            mimeFinal = arreglarDocumentCustody(documentCustody, anexo, mimeFinal);
 
             //Guardamos la signatureCustody
             // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
@@ -619,7 +631,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 //Guardamos el documentCustody
                 // XMAS SAVEALL guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                 documentCustody = anexoFull.getDocumentoCustody();
-                mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, 
+                mimeFinal = arreglarDocumentCustody(documentCustody,
                   anexo, mimeFinal);
 
                 //Borrar lo que haya en signature custody
@@ -647,7 +659,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 } else { //PARCHE PARA API ANTIGUA
                     log.info("PARCHE DC " + anexoFull.getDocumentoCustody());
                     documentCustody = doc;
-                    mimeFinal = arreglarDocumentCustody(documentCustody, custodyID, 
+                    mimeFinal = arreglarDocumentCustody(documentCustody,
                       anexo, mimeFinal);
                     
                     signatureCustody = null;
@@ -722,7 +734,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
   
           //  String tipoDeDocumento; //  varchar(100)
           if (anexo.getTipoDocumento() != null) {
-            // TODO A quin tipus ENI es correspon AIXÒ !!!!
             metadades.add(new Metadata("anexo.tipoDocumento",
                       I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
           }
@@ -798,16 +809,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /**
-     *
+     * Método que prepara para actualizar los datos de un DocumentCustody
      * @param doc
-     * @param custodyID
      * @param anexo
      * @param mimeFinal
      * @return
      * @throws Exception
      */
     public String arreglarDocumentCustody(DocumentCustody doc,
-         String custodyID, Anexo anexo,  String mimeFinal) throws Exception {
+         Anexo anexo,  String mimeFinal) throws Exception {
 
         if (doc != null && doc.getData() != null) {// si nos envian documento
         
@@ -828,7 +838,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      }
 
     /**
-     *
+     * Método que prepara para actualizar los datos de un SignatureCustody
      * @param signature
      * @param doc
      * @param anexo
@@ -838,14 +848,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     public String arreglarSignatureCustody(SignatureCustody signature,
         DocumentCustody doc,  Anexo anexo, String mimeFinal) throws Exception {
-      //Obtenemos la firma que nos envian
+
 
       if (signature != null && signature.getData() != null) {//Si nos envian firma
       
        
         //Preparamos todos los datos para guardar la firma en custodia.
         String signType = (doc == null) ? SignatureCustody.OTHER_SIGNATURE_WITH_ATTACHED_DOCUMENT : SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT;
-        
+
+          //Asignamos los datos nuevos recibidos
         signature.setName(checkFileName(signature.getName(), "signature.bin"));
         
         final String mime = signature.getMime();
@@ -875,10 +886,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
+    /**
+     * Verifica el nombre del fichero
+     * @param name
+     * @param defaultName
+     * @return
+     * @throws Exception
+     */
     protected String checkFileName(String name, String defaultName) throws Exception {
         if (name == null || name.trim().length() == 0) {
             return defaultName;
-        } else {
+        } else { //Si no, lo recorta
             return StringUtils.recortarNombre(name, RegwebConstantes.ANEXO_NOMBREARCHIVO_MAXLENGTH);
         }
     }
@@ -976,6 +994,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         return anexosSinJustificante;
     }
 
+    /**
+     * Método que devuelve todos los anexos de un registro de salida sin el justificante
+     * @param registroSalida
+     * @return
+     * @throws Exception
+     */
     @Override
     public List<AnexoFull> getByRegistroSalida(RegistroSalida registroSalida) throws Exception, I18NException {
 
@@ -1033,12 +1057,28 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
-    /* METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
+    //@Override
+    //TODO PENDIENTE DE CERRAR CON FELIP
+   /* public void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle) throws Exception, I18NException{
+        Query query = em.createQuery("select anexo.custodiaID, anexo.justificante from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle");
+        query.setParameter("idRegistroDetalle", idRegistroDetalle);
+
+        List<Object[]> result = query.getResultList();
+        for(Object[] object :result){
+            boolean isJustificante =((Boolean)object[1]).booleanValue();
+            String custodiaID = (String) object[0];
+            //Se borran todos los anexos menos el justificante
+            if(!isJustificante) {
+                eliminarCustodia(custodiaID, isJustificante);
+            }
+        }
+    }*/
+
+
 
 
     /**
-     * Obtiene la info del fichero existente en el sistema de archivos
-     * (No obtiene el array de bytes)
+     * Obtiene la info + contenido físico(byte[]) del fichero existente en el sistema de archivos
      *
      * @param custodiaID
      * @return
@@ -1064,8 +1104,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     /**
-     * Obtiene la info del fichero existente en el sistema de archivos
-     * (No obtiene el array de bytes)
+     * Obtiene el contenido físico del documento como byte[]
      *
      * @param custodiaID
      * @return
@@ -1090,12 +1129,26 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
+    /**
+     * Obtiene solo la info del Documento (sin byte[])
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
     @Override
     public DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception, I18NException {
         IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
         return custody.getDocumentInfoOnly(custodiaID);
     }
 
+    /**
+     * Obtiene solo la info de la firma (sin byte[])
+     * @param custodiaID
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
     @Override
     public SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception, I18NException {
         IDocumentCustodyPlugin custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
@@ -1103,8 +1156,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     /**
-     * Obtiene la info de la firma existente en el sistema de archivos
-     * (No obtiene el array de bytes)
+     * Obtiene la info + contenido físico(byte[]) de la firma existente en el sistema de archivos
      *
      * @param custodiaID
      * @return
@@ -1128,6 +1180,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
 
+    /**
+     * Obtiene el contenido físico de la firma como byte[]
+     *
+     * @param custodiaID
+     * @return
+     */
     @Override
     public byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception, I18NException {
 
@@ -1176,92 +1234,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-
-    /**
-     * Crea o actualiza un anexos en el sistema de custodia
-     * TODO PENDENT D'EMPLEAR PER LES PROVES RECEPCIO SIR, pero hauria de retornar
-     *
-     * @param name
-     * @param file
-     * @param signatureName
-     * @param signature
-     * @param signatureMode
-     * @param custodyID         Si vale null significa que creamos el archivo. Otherwise actualizamos el fichero.
-     * @param custodyParameters JSON del registre
-     * @return Identificador de custodia
-     * @throws Exception
-     */
-    // TODO mime de doc i firma
-    /*
-    public String crearArchivo(String name, byte[] file, String signatureName,
-                               byte[] signature, int signatureMode, String custodyID,
-                               Map<String, Object> custodyParameters, boolean isJustificante) throws Exception {
-
-        IDocumentCustodyPlugin instance = getInstance(isJustificante);
-
-        if (custodyID == null) {
-            custodyID = instance.reserveCustodyID(custodyParameters);
-        }
-
-
-        if (signatureMode == RegwebConstantes.TIPO_FIRMA_CSV) {
-            // CSV == Referencia a DocumentCustody
-            throw new Exception("Modo de firma(signatureMode) RegwebConstantes.TIPO_FIRMA_CSV "
-                    + " no suportat. Es suportarà a partir de la posada en marxa de l'Arxiu Electrònic");
-        }
-
-
-        if (name != null && file != null) {
-            DocumentCustody document = new DocumentCustody(name, file);
-            instance.saveDocument(custodyID, custodyParameters, document);
-        }
-
-
-        if (signatureName != null && signature != null) {
-
-            SignatureCustody docSignature = new SignatureCustody();
-            docSignature.setName(signatureName);
-            docSignature.setData(signature);
-
-            final long signType = (long) signatureMode;
-
-            // Cases en doc. doc/AnalisiGestioDocumentsSIRDocumentCustodyAPI2Regweb.odt
-
-            if (signType == RegwebConstantes.TIPO_FIRMA_XADES_DETACHED_SIGNATURE) {
-                // Cas 4
-                docSignature.setSignatureType(SignatureCustody.XADES_SIGNATURE);
-                docSignature.setAttachedDocument(false);
-            } else if (signType == RegwebConstantes.TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE) {
-                // CAS 3
-                docSignature.setSignatureType(SignatureCustody.XADES_SIGNATURE);
-                docSignature.setAttachedDocument(true);
-            } else if (signType == RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE) {
-                // CAS 4
-                docSignature.setSignatureType(SignatureCustody.CADES_SIGNATURE);
-                docSignature.setAttachedDocument(false);
-            } else if (signType == RegwebConstantes.TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE) {
-                // CAS 3
-                docSignature.setSignatureType(SignatureCustody.CADES_SIGNATURE);
-                docSignature.setAttachedDocument(true);
-            } else if (signType == RegwebConstantes.TIPO_FIRMA_PADES) {
-                // CAS 5
-                docSignature.setSignatureType(SignatureCustody.PADES_SIGNATURE);
-                docSignature.setAttachedDocument(null);
-            } else { //    default:
-                String msg = "No es suporta signatureMode amb valor  " + signatureMode;
-                log.error(msg, new Exception());
-                throw new Exception(msg);
-            }
-
-
-            instance.saveSignature(custodyID, custodyParameters, docSignature);
-        }
-
-        //log.info("Creamos el file: " + getArchivosPath()+dstId.toString());
-
-        return custodyID;
-    }
-*/
 
     /**
      * Crea un Jusitificante, lo firma y lo crea como anexo al registro
@@ -1401,9 +1373,4 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       }
     }
 
-    
-
-    
-
-    /* FIN METODOS DEL AnnexDocumentCustodyManager.java hecho por marilen del TODO DE TONI*/
 }

@@ -22,8 +22,10 @@ function distribuir() {
         type: 'GET',
         dataType: 'json',
         contentType: 'application/json',
+        beforeSend: function(objeto){
+            waitingDialog.show(traddistribuir['distribuir.distribuyendo'], {dialogSize: 'm', progressType: 'success'});
+        },
         success: function (result) {
-
             // Si no hay plugin definido, o el plugin ya envió directamente el registro,
             // se marca como Tramitado y recargamos página.
 
@@ -35,12 +37,14 @@ function distribuir() {
                 if (!result.listadoDestinatariosModificable && !result.enviado) {
                     // Error en el envio
                     mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
+                    waitingDialog.hide();
                 }
 
 
                 // Si hay destinatarios mostramos pop-up, solo hay este caso.
                 if (result.destinatarios != null) {
                     if ((result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
+
 
                         // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
                         html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
@@ -65,15 +69,13 @@ function distribuir() {
 
                     } else { // No hay destinatarios
                         mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
-
                     }
                 } else { // No hay destinatarios
                     mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
-
                 }
 
             }
-
+            waitingDialog.hide();
 
         }
 

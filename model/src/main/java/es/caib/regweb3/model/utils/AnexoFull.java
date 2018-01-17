@@ -11,6 +11,11 @@ import javax.persistence.Transient;
 import java.util.List;
 
 /**
+ * Clase que representa un Anexo + toda la parte de custodia
+ * La custodia de un anexo está formada por
+ * DocumentCustody: Almacena el documento del anexo sin firma
+ * SignatureCustody: Almacena la firma del documento(cuando es detached) o el documento+firma cuando la firma es attached
+ * Metadatas: guarda la lista de metadatos asociados al anexo.
  * @author anadal
  */
 public class AnexoFull {
