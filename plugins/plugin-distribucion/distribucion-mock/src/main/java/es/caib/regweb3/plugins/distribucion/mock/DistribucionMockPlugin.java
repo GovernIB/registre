@@ -5,7 +5,6 @@ import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.Destinatario;
 import es.caib.regweb3.plugins.distribucion.Destinatarios;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
-
 import org.apache.log4j.Logger;
 import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 
@@ -14,6 +13,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 /**
+ * Plugin de distribución por defecto
  * @author mgonzalez
  */
 public class DistribucionMockPlugin extends AbstractPluginProperties implements IDistribucionPlugin {
@@ -54,7 +54,7 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
 
 
         //La implementación Mock no devuelve destinatarios.
-        Destinatarios destinatarios = new Destinatarios();
+       Destinatarios destinatarios = new Destinatarios();
 
         //Código de ejemplo para posibles implementaciones
        /* List<Destinatario> destinatariosPosibles = new ArrayList<Destinatario>();
@@ -86,6 +86,7 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
 
 
         return destinatarios;
+
     }
 
     @Override
@@ -126,7 +127,7 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
     @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
         //Configuración por defecto de la implementación Mock
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 2);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 2);
         return cd;
 
     }
