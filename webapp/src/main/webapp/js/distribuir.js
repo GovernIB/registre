@@ -39,38 +39,36 @@ function distribuir() {
                     mensajeError('#mensajes', respuesta.error);
                     waitingDialog.hide();
                 }
-                if(respuesta.result.listadoDestinatariosModificable) {
-                    if (respuesta.result.destinatarios != null) {
-                        if ((respuesta.result.destinatarios.posibles != null && respuesta.result.destinatarios.posibles.length > 0) || (respuesta.result.destinatarios.propuestos != null && respuesta.result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
+                if (respuesta.result.destinatarios != null) {
+                    if ((respuesta.result.destinatarios.posibles != null && respuesta.result.destinatarios.posibles.length > 0) || (respuesta.result.destinatarios.propuestos != null && respuesta.result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
 
-                            // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
-                            html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
-                            var lenposibles = respuesta.result.destinatarios.posibles.length;
-                            for (var i = 0; i < lenposibles; i++)
-                                html += '<option value="' + respuesta.result.destinatarios.posibles[i].id + '">'
-                                    + respuesta.result.destinatarios.posibles[i].name + '</option>';
-                            var lenpropuestos = respuesta.result.destinatarios.propuestos.length;
-                            for (var j = 0; j < lenpropuestos; j++)
-                                html += '<option value="' + respuesta.result.destinatarios.propuestos[j].id + '" selected="selected">'
-                                    + respuesta.result.destinatarios.propuestos[j].name + '</option>';
+                        // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
+                        html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
+                        var lenposibles = respuesta.result.destinatarios.posibles.length;
+                        for (var i = 0; i < lenposibles; i++)
+                            html += '<option value="' + respuesta.result.destinatarios.posibles[i].id + '">'
+                                + respuesta.result.destinatarios.posibles[i].name + '</option>';
+                        var lenpropuestos = respuesta.result.destinatarios.propuestos.length;
+                        for (var j = 0; j < lenpropuestos; j++)
+                            html += '<option value="' + respuesta.result.destinatarios.propuestos[j].id + '" selected="selected">'
+                                + respuesta.result.destinatarios.propuestos[j].name + '</option>';
 
-                            html += '</select>';
-                            html += '<span id="destinatariosError"></span>';
-                            $('#divdestinatarios').html(html);
+                        html += '</select>';
+                        html += '<span id="destinatariosError"></span>';
+                        $('#divdestinatarios').html(html);
 
-                            $('#destinatarios').chosen({width: "100%"});
-                            $('#destinatarios').trigger("chosen:update");
+                        $('#destinatarios').chosen({width: "100%"});
+                        $('#destinatarios').trigger("chosen:update");
 
-                            $('#distribuirModal').modal('show');
+                        $('#distribuirModal').modal('show');
 
 
-                        } else { // No hay destinatarios
-
-                            mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
-                        }
                     } else { // No hay destinatarios
+
                         mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
                     }
+                } else { // No hay destinatarios
+                    mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
                 }
 
             }
