@@ -28,7 +28,6 @@ function distribuir() {
         success:function(respuesta){
 
             if(respuesta.status =='NO_HAY_PLUGIN' || respuesta.status == 'ENVIADO'  || respuesta.status == 'SUCCESS'){
-                alert("Entro en 1");
                 goTo(urlDetalle);
 
             }else{
