@@ -25,58 +25,57 @@ function distribuir() {
         beforeSend: function(objeto){
             waitingDialog.show(traddistribuir['distribuir.distribuyendo'], {dialogSize: 'm', progressType: 'success'});
         },
-        success: function (result) {
-            // Si no hay plugin definido, o el plugin ya envió directamente el registro,
-            // se marca como Tramitado y recargamos página.
+        success:function(respuesta){
 
-            if (!result.hayPlugin || result.enviado){
+            if(respuesta.status =='NO_HAY_PLUGIN' || respuesta.status == 'ENVIADO'  || respuesta.status == 'SUCCESS'){
+                alert("Entro en 1");
                 goTo(urlDetalle);
-            }else{
 
-                // Si se debia enviar directamente sin seleccionar destinatarios y falló el envío directo
-                if (!result.listadoDestinatariosModificable && !result.enviado) {
-                    // Error en el envio
-                    mensajeError('#mensajesdetalle', traddistribuir['distribuir.noenviado']);
+            }else{
+                if(respuesta.status == 'FAIL'){
+                    mensajeError('#mensajes', respuesta.error);
                     waitingDialog.hide();
                 }
+                if(respuesta.status == 'DESTIN_NO_MODIFICABLE' && respuesta.status == 'NO_ENVIADO') {
+                    mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
+                }
+                if(respuesta.result.listadoDestinatariosModificable) {
+                    if (respuesta.result.destinatarios != null) {
+                        if ((respuesta.result.destinatarios.posibles != null && respuesta.result.destinatarios.posibles.length > 0) || (respuesta.result.destinatarios.propuestos != null && respuesta.result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
+
+                            // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
+                            html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
+                            var lenposibles = respuesta.result.destinatarios.posibles.length;
+                            for (var i = 0; i < lenposibles; i++)
+                                html += '<option value="' + respuesta.result.destinatarios.posibles[i].id + '">'
+                                    + respuesta.result.destinatarios.posibles[i].name + '</option>';
+                            var lenpropuestos = respuesta.result.destinatarios.propuestos.length;
+                            for (var j = 0; j < lenpropuestos; j++)
+                                html += '<option value="' + respuesta.result.destinatarios.propuestos[j].id + '" selected="selected">'
+                                    + respuesta.result.destinatarios.propuestos[j].name + '</option>';
+
+                            html += '</select>';
+                            html += '<span id="destinatariosError"></span>';
+                            $('#divdestinatarios').html(html);
+
+                            $('#destinatarios').chosen({width: "100%"});
+                            $('#destinatarios').trigger("chosen:update");
+
+                            $('#distribuirModal').modal('show');
 
 
-                // Si hay destinatarios mostramos pop-up, solo hay este caso.
-                if (result.destinatarios != null) {
-                    if ((result.destinatarios.posibles != null && result.destinatarios.posibles.length > 0) || (result.destinatarios.propuestos != null && result.destinatarios.propuestos.length > 0)) { // Si hay destinatarios, mostramos pop-up
+                        } else { // No hay destinatarios
 
-
-                        // Pintamos el select con las opciones propuestas seleccionadas y las posibles sin seleccionar
-                        html += '<select data-placeholder="" id="destinatarios"  name="destinatarios"  class="chosen-select" multiple="true">';
-                        var lenposibles = result.destinatarios.posibles.length;
-                        for (var i = 0; i < lenposibles; i++)
-                            html += '<option value="' + result.destinatarios.posibles[i].id + '">'
-                                + result.destinatarios.posibles[i].name + '</option>';
-                        var lenpropuestos = result.destinatarios.propuestos.length;
-                        for (var j = 0; j < lenpropuestos; j++)
-                            html += '<option value="' + result.destinatarios.propuestos[j].id + '" selected="selected">'
-                                + result.destinatarios.propuestos[j].name + '</option>';
-
-                        html += '</select>';
-                        html += '<span id="destinatariosError"></span>';
-                        $('#divdestinatarios').html(html);
-
-                        $('#destinatarios').chosen({width: "100%"});
-                        $('#destinatarios').trigger("chosen:update");
-
-                        $('#distribuirModal').modal('show');
-
-
+                            mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
+                        }
                     } else { // No hay destinatarios
-                        mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
+                        mensajeError('#mensajes', traddistribuir['distribuir.nodestinatarios']);
                     }
-                } else { // No hay destinatarios
-                    mensajeError('#mensajesdetalle', traddistribuir['distribuir.nodestinatarios']);
                 }
 
             }
             waitingDialog.hide();
-
         }
 
 
