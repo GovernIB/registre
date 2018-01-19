@@ -127,7 +127,7 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
     @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
         //Configuración por defecto de la implementación Mock
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(true, 2);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 2);
         return cd;
 
     }
