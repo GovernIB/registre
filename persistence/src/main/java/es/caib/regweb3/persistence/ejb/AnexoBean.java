@@ -279,10 +279,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         } catch (I18NException i18n) {
             error = true;
+            log.info("Error creant un anexe: " + i18n.getMessage(), i18n);
             throw i18n;
         } catch (Exception e) {
             error = true;
-            log.error("Error creant un anexe: " + e.getMessage(), e);
+            log.info("Error creant un anexe: " + e.getMessage(), e);
             throw new I18NException(e, "anexo.error.guardando", new I18NArgumentString(e.getMessage()));
         } finally {
             if (error) {
@@ -1279,8 +1280,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
               throw new I18NException("aviso.justificante.existe");
           }
 
+          log.info("------------------------------------------------------------");
           log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
-
+          log.info("");
           final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
           // Carregam el plugin del Justificant
@@ -1367,6 +1369,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           // Cream l'annex justificant
           anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro,custodyID);
 
+          log.info("");
+          log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+          log.info("------------------------------------------------------------");
+
           return anexoFull;
       } catch(I18NValidationException i18nve) {
         error=true;
@@ -1376,12 +1382,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         throw i18ne;
       } catch(Exception e) {
           error=true;
-          throw new I18NException(e, "error.desconegut",
-            new I18NArgumentString("Error no controlat generant justificant: " + e.getMessage()));
+          throw new I18NException(e, "justificante.error", new I18NArgumentString(e.getMessage()));
       } finally {
           if (error) {
               if (documentCustodyPlugin != null && custodyID != null) {
-
                   try {
                       documentCustodyPlugin.deleteCustody(custodyID);
                   } catch (Throwable th) {

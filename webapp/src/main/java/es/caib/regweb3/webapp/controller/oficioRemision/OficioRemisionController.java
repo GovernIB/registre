@@ -460,10 +460,10 @@ public class OficioRemisionController extends BaseController {
                 // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
                 try{
                     oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
-                }catch (Exception e){
-                    log.info("Error generando los Justificantes del Oficio Remision");
+                }catch (I18NException e){
+                    log.error(I18NUtils.getMessage(e), e);
                     e.printStackTrace();
-                    Mensaje.saveMessageError(request, getMessage("justificante.generando.error"));
+                    Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
                     return ("redirect:/oficioRemision/entradasPendientesRemision");
                 }
 
@@ -515,13 +515,12 @@ public class OficioRemisionController extends BaseController {
                 }
 
                 // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
-
                 try{
                     oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
-                }catch (Exception e){
-                    log.info("Error generando los Justificantes del Oficio Remision");
+                }catch (I18NException e){
+                    log.error(I18NUtils.getMessage(e), e);
                     e.printStackTrace();
-                    Mensaje.saveMessageError(request, getMessage("justificante.generando.error"));
+                    Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
                     return ("redirect:/oficioRemision/salidasPendientesRemision");
                 }
 
