@@ -219,12 +219,21 @@
                     url:'<c:url value="/entidad/${entidad.id}/sincronizar"/>',
                     type:'GET',
                     beforeSend: function(objeto){
-                        $('#modalSincro').modal('show');
+                        waitingDialog.show('<spring:message code="organismo.organigrama.sincronizando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
                     },
-                    complete:function(){
-                        $('#modalSincro').modal('hide');
-                        goTo('<c:url value="/organismo/list"/>');
+                    success:function(respuesta){
+
+                        if(respuesta.status == 'SUCCESS'){
+                            goTo('<c:url value="/organismo/list"/>');
+                        }else{
+                            if(respuesta.status=='FAIL') {
+                                mostrarMensajeError('#mensajes', respuesta.error);
+                                waitingDialog.hide();
+                            }
+                        }
+
                     }
+
                 });
 
             });
@@ -240,7 +249,7 @@
                     url:'<c:url value="/entidad/${entidad.id}/actualizar"/>',
                     type:'GET',
                     beforeSend: function(objeto){
-                        $('#modalSincro').modal('show');
+                        waitingDialog.show('<spring:message code="organismo.organigrama.sincronizando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
                     },
                     success:function(respuesta){
 
@@ -248,12 +257,12 @@
                             goTo('<c:url value="/entidad/pendientesprocesar"/>');
                         }else{
                             if(respuesta.status=='NOTALLOWED'){
-                                $('#modalSincro').modal('hide');
-                                mostrarMensajeError('#mensajes', trads['actualizacion.nopermitido']);
+                                mostrarMensajeError('#mensajes', respuesta.error);
+                                waitingDialog.hide();
                             }
                             if(respuesta.status=='FAIL') {
-                                $('#modalSincro').modal('hide');
-                                mostrarMensajeError('#mensajes', trads['actualizacion.nook']);
+                                mostrarMensajeError('#mensajes', respuesta.error);
+                                waitingDialog.hide();
                             }
                         }
 

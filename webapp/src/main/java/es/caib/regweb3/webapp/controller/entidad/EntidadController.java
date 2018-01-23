@@ -511,64 +511,81 @@ public class EntidadController extends BaseController {
     */
     @RequestMapping(value = "/{entidadId}/actualizar")
     @ResponseBody
-    public /*Boolean*/ JsonResponse actualizar(@PathVariable Long entidadId, HttpServletRequest request) {
+    public /*Boolean*/ JsonResponse actualizar(@PathVariable Long entidadId, HttpServletRequest request) throws Exception {
+
         JsonResponse jsonResponse = new JsonResponse();
+
         try{
 
-          Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD,entidadId);
-          Timestamp fechaUltimaActualizacion = null;
-          if (ultimaDescarga.getFechaImportacion() != null) {
-            fechaUltimaActualizacion = new Timestamp(ultimaDescarga.getFechaImportacion().getTime());
-          }
+              Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD,entidadId);
+              Timestamp fechaUltimaActualizacion = null;
+              if (ultimaDescarga.getFechaImportacion() != null) {
+                  fechaUltimaActualizacion = new Timestamp(ultimaDescarga.getFechaImportacion().getTime());
+              }
 
-          // Establecemos la fecha de la primera sincronizacion
-          Descarga primeraDescarga = descargaEjb.findByTipoEntidadInverse(RegwebConstantes.UNIDAD, entidadId);
-          Timestamp fechaSincronizacion = null;
-          if (primeraDescarga.getFechaImportacion() != null) {
-            fechaSincronizacion = new Timestamp(primeraDescarga.getFechaImportacion().getTime());
-          }
+              // Establecemos la fecha de la primera sincronizacion
+              Descarga primeraDescarga = descargaEjb.findByTipoEntidadInverse(RegwebConstantes.UNIDAD, entidadId);
+              Timestamp fechaSincronizacion = null;
+              if (primeraDescarga.getFechaImportacion() != null) {
+                  fechaSincronizacion = new Timestamp(primeraDescarga.getFechaImportacion().getTime());
+              }
 
+              int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
+              if(actualizados == -1){
+                  log.info("No se puede actualizar regweb hasta que no se haya actualizado dir3caib previamente");
+                  jsonResponse.setError(getMessage("regweb.actualizacion.imposible"));
+                  jsonResponse.setStatus("NOTALLOWED");
+                  return jsonResponse;
+              }
 
-           int actualizados= sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
-           if(actualizados == -1){
-               log.info("No se puede actualizar regweb hasta que no se haya actualizado dir3caib préviamente");
-              // Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nopermitido"));
-               //return false;
-               jsonResponse.setStatus("NOTALLOWED");
-               return jsonResponse;
-           }
-            // actualizamos nombre y codigo de la entidad, si la unidad raiz a la que representa se ha extinguido.
-            actualizarEntidadExtincionUnidadRaiz(entidadId, request);
-            // via ajax s'en va a "entidad/pendientesprocesar"
-       }catch(Exception e){
+              // actualizamos nombre y codigo de la entidad, si la unidad raiz a la que representa se ha extinguido.
+              actualizarEntidadExtincionUnidadRaiz(entidadId, request);
+              // via ajax s'en va a "entidad/pendientesprocesar"
+
+              jsonResponse.setStatus("SUCCESS");
+
+        } catch(Exception e){
            log.error("Error actualizacion", e);
-           Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nook"));
+           jsonResponse.setError(getMessage("regweb.actualizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
            jsonResponse.setStatus("FAIL");
-            return jsonResponse;
-       }
+        }
 
-        jsonResponse.setStatus("SUCCESS");
         return jsonResponse;
     }
 
     /**
     * Sincronizamos una {@link es.caib.regweb3.model.Entidad} de dir3caib
+     * param entidadId
+     * @return
+     * @throws Exception
     */
+    @ResponseBody
     @RequestMapping(value = "/{entidadId}/sincronizar")
-    public String sincronizar(@PathVariable Long entidadId, Model model,  HttpServletRequest request) {
+    public JsonResponse sincronizar(@PathVariable Long entidadId, HttpServletRequest request)
+            throws Exception{
 
-          try{
+        JsonResponse jsonResponse = new JsonResponse();
+
+        try{
+
             int sincronizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, null, null);
             if(sincronizados == -1){
-                  log.info("No se puede sincronizar regweb hasta que no se haya actualizado dir3caib préviamente");
-                  Mensaje.saveMessageError(request, getMessage("regweb.actualizacion.nopermitido"));
+                log.info("No se puede sincronizar regweb hasta que no se haya actualizado dir3caib previamente");
+                jsonResponse.setStatus("FAIL");
+                jsonResponse.setError(getMessage("regweb.actualizacion.nopermitido"));
+            }else {
+                jsonResponse.setError(getMessage("regweb.sincronizados.numero") + sincronizados);
+                jsonResponse.setStatus("SUCCESS");
             }
-            Mensaje.saveMessageInfo(request, getMessage("regweb.sincronizados.numero") + sincronizados);
-          }catch(Exception e){
-             log.error("Error sincro", e);
-             Mensaje.saveMessageError(request, getMessage("regweb.sincronizacion.nook"));
-          }
-          return  "redirect:/organismo/list";
+
+        } catch (Exception e) {
+              e.printStackTrace();
+              jsonResponse.setStatus("FAIL");
+              jsonResponse.setError(getMessage("regweb.sincronizacion.nook") + ": " + e.getMessage() + " " + getMessage("regweb.actualizacion.revisar"));
+        }
+
+        return jsonResponse;
+
     }
 
 
