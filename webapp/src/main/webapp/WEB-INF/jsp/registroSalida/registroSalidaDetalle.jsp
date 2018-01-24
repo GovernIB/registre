@@ -292,6 +292,7 @@
     // Descarga el justificante si se ha generado manualmente
     window.onload = function descargaJustificante(){
         <c:if test="${param.justificante==true}">
+            mensajeSuccess('#mensajes', '<spring:message code="justificante.generando.success" javaScriptEscape='true'/>');
             goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>');
         </c:if>
     };
