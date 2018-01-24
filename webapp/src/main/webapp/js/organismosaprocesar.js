@@ -60,7 +60,11 @@ function mostrarMensaje(idPanel, mensaje){
  * @param mensaje
  */
 function mostrarMensajeError(idPanel, mensaje){
-    $(idPanel).append('<div class="alert alert-danger alert-dismissable"><strong>'+mensaje+'</strong><br></div>');
+    $(idPanel).html('');
+    var error = "<div class=\"alert alert-danger alert-dismissable\">"+
+        "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"+
+        "<strong>"+mensaje+"</strong> </div>";
+    $(idPanel).append(error);
 
 }
 
