@@ -62,6 +62,7 @@
                                        <col>
                                        <col>
                                        <col>
+                                       <col width="200">
                                        <col width="100">
                                    </colgroup>
                                    <thead>
@@ -69,6 +70,7 @@
                                            <th><spring:message code="regweb.nombre"/></th>
                                            <th><spring:message code="codigoAsunto.codigo"/></th>
                                            <th><spring:message code="regweb.activo"/></th>
+                                           <th class="center"><spring:message code="codigoAsunto.codigoAsuntos"/></th>
                                            <th class="center"><spring:message code="regweb.acciones"/></th>
                                        </tr>
                                    </thead>
@@ -80,6 +82,7 @@
                                                <td>${tipoAsunto.codigo}</td>
                                                <c:if test="${tipoAsunto.activo}"><td><span class="label label-success"><spring:message code="regweb.si"/></span></td></c:if>
                                                <c:if test="${not tipoAsunto.activo}"><td><span class="label label-danger"><spring:message code="regweb.no"/></span></td></c:if>
+                                               <td class="center">${fn:length(tipoAsunto.codigosAsunto)}</td>
                                                <td class="center">
                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/tipoAsunto/${tipoAsunto.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                    <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/tipoAsunto/${tipoAsunto.id}/delete"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
