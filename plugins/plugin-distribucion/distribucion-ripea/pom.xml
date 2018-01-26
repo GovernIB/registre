@@ -74,25 +74,6 @@
             <artifactId>ripea-ws-client</artifactId>
             <version>0.1</version>
         </dependency>
-        <dependency>
-            <groupId>es.caib.ripea</groupId>
-            <artifactId>ripea-ws-client</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <!-- XYZ ZZZ
-                <dependency>
-                    <groupId>org.fundaciobit.genapp</groupId>
-                    <artifactId>genapp-core</artifactId>
-                    <version>1.0</version>
-                    <scope>provided</scope>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.fundaciobit.genapp</groupId>
-                    <artifactId>genapp-web</artifactId>
-                    <version>1.0</version>
-                </dependency>
-        -->
     </dependencies>
 
 
