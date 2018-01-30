@@ -617,7 +617,15 @@ public class EntidadController extends BaseController {
             PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
 
-            permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros));
+            List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros);
+
+            // Comprobamos si tiene los permisos creados, si no, lo creamos
+            if(permisos.size() == 0){
+                permisoLibroUsuarioEjb.crearPermisosUsuarioNuevo(usuarioEntidad, usuarioEntidad.getEntidad().getId());
+                permisos = permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros);
+            }
+
+            permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisos);
 
             model.addAttribute(permisoLibroUsuarioForm);
             model.addAttribute("entidad", entidad);
