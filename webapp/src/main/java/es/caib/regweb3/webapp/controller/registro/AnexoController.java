@@ -30,8 +30,9 @@ import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.net.URL;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +75,6 @@ public class AnexoController extends BaseController {
     private ScanWebModuleLocal scanWebModuleEjb;
 
 
-
-
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
     public String crearAnexoGet2(HttpServletRequest request,
                                  HttpServletResponse response, Model model) throws I18NException, Exception {
@@ -91,8 +90,6 @@ public class AnexoController extends BaseController {
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
         return "registro/formularioAnexo";
     }
-
-
 
 
     @RequestMapping(value = "/nou", method = RequestMethod.POST)
@@ -140,9 +137,9 @@ public class AnexoController extends BaseController {
     }
 
 
-     /*
-      Prepara los datos de un anexo para su edición
-      */
+    /*
+     Prepara los datos de un anexo para su edición
+     */
     @RequestMapping(value = "/editar/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}/{isOficioRemisionSir}",
             method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
@@ -213,7 +210,7 @@ public class AnexoController extends BaseController {
 
             try {
                 anexoEjb.actualizarAnexo(anexoForm, getUsuarioEntidadActivo(request),
-                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(),false);
+                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), anexoForm.getAnexo().isJustificante(), false);
 
                 model.addAttribute("closeAndReload", "true");
                 return "registro/formularioAnexo";
@@ -250,10 +247,10 @@ public class AnexoController extends BaseController {
 
         try {
             registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID);
-        } catch(I18NException i18ne) {
-          String msg = I18NUtils.getMessage(i18ne);
-          log.error(msg, i18ne);
-          Mensaje.saveMessageError(request, msg);
+        } catch (I18NException i18ne) {
+            String msg = I18NUtils.getMessage(i18ne);
+            log.error(msg, i18ne);
+            Mensaje.saveMessageError(request, msg);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             Mensaje.saveMessageError(request, e.getMessage());
@@ -289,7 +286,6 @@ public class AnexoController extends BaseController {
         return "registro" + Character.toUpperCase(tipoRegistro.charAt(0))
                 + tipoRegistro.substring(1);
     }
-
 
 
     /**
@@ -358,59 +354,9 @@ public class AnexoController extends BaseController {
                     data = dc.getData();
 
                 } else {   // Si Ã©s firma d'un arxiu
-
-                    data = null;
-                    // Si Ã©s justificant
-                    if(isJustificante){
-
-                        String url = null;
-
-                        try {
-
-                            url = anexoEjb.getUrlValidation(custodiaID, isJustificante);
-
-                            // Si soporta url, davalla arxiu de la url
-                            if (url != null) {
-
-                                BufferedInputStream in = null;
-                                ByteArrayOutputStream fout = null;
-                                try {
-                                    in = new BufferedInputStream(new URL(url).openStream());
-                                    fout = new ByteArrayOutputStream();
-
-                                    final byte buffer[] = new byte[1024];
-                                    int count;
-                                    while ((count = in.read(buffer, 0, 1024)) != -1) {
-                                        fout.write(buffer, 0, count);
-                                    }
-                                    data = fout.toByteArray();
-                                } finally {
-                                    if (in != null) {
-                                        in.close();
-                                    }
-                                    if (fout != null) {
-                                        fout.close();
-                                    }
-                                }
-
-                                SignatureCustody sc = anexoEjb.getSignatureInfoOnly(custodiaID, isJustificante);
-                                filename = sc.getName();
-                            }
-
-                        }catch(Exception e){
-                            log.error("Error descarregant justificant des de url de validaciÃ³ (" + url + ")", e);
-                            data = null;
-                        }
-
-                    }
-
-                    // Si no ha soportat url, davalla l'arxiu original
-                    if(data==null){
-                        SignatureCustody sc = anexoEjb.getFirma(custodiaID, isJustificante);
-                        filename = sc.getName();
-                        data = sc.getData();
-                    }
-
+                    SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante);
+                    data = sc.getData();
+                    filename = sc.getName();
                 }
 
                 if (contentType == null) {
@@ -438,7 +384,7 @@ public class AnexoController extends BaseController {
 
                 output.flush();
             }
-        } catch(I18NException i18ne) {
+        } catch (I18NException i18ne) {
             log.error(I18NUtils.getMessage(i18ne), i18ne);
         } catch (NumberFormatException e) {
             // TODO QUE FER
@@ -447,6 +393,7 @@ public class AnexoController extends BaseController {
             e.printStackTrace();
         }
     }
+
 
     /**
      * Función que nos permite mostrar el contenido de un documentCustody en session

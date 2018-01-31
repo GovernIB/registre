@@ -35,6 +35,9 @@ import javax.persistence.Query;
 import java.beans.Encoder;
 import java.beans.Expression;
 import java.beans.PersistenceDelegate;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.util.*;
 
 
@@ -150,7 +153,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Los justificantes y los anexos se guardan en plugins diferentes,
             // por eso se carga el plugin en función de si es justificante o no
             IDocumentCustodyPlugin custody;
-            if(anexo.isJustificante()){ // Si es justificante cargamos el plugin de custodia del justificante
+            final boolean isJustificante = anexo.isJustificante();
+            if(isJustificante){ // Si es justificante cargamos el plugin de custodia del justificante
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
             }else{//si no, cargamos el plugin de anexos que no son justificantes
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA);
@@ -159,7 +163,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             //Obtenemos la información(con el contenido físico en bytes[]) del anexo guardados en custodia
             anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
             anexoFull.setDocumentoFileDelete(false);
-            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
+
+            anexoFull.setSignatureCustody(descargarFirmaDesdeUrlValidacion(custodyID, isJustificante));//Firma asociada al anexo
             anexoFull.setSignatureFileDelete(false);
 
             return anexoFull;
@@ -1420,6 +1425,69 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
 
         return custody.getValidationUrl(custodiaID,new HashMap<String, Object>());
+    }
+
+
+    /**
+     * Obtiene el SignatureCustody de un Anexo
+     *
+     * @param custodiaID
+     * @param isJustificante
+     * @return SignatureCustody
+     */
+    public SignatureCustody descargarFirmaDesdeUrlValidacion(String custodiaID, boolean isJustificante) throws I18NException, Exception {
+
+        // Si es justificante
+        byte[] data = null;
+
+        if(isJustificante){
+
+            String url = null;
+
+            try {
+
+                url = getUrlValidation(custodiaID, isJustificante);
+
+                // Si soporta url, davalla arxiu de la url
+                if (url != null) {
+
+                    BufferedInputStream in = null;
+                    ByteArrayOutputStream fout = null;
+                    try {
+                        in = new BufferedInputStream(new URL(url).openStream());
+                        fout = new ByteArrayOutputStream();
+
+                        final byte buffer[] = new byte[1024];
+                        int count;
+                        while ((count = in.read(buffer, 0, 1024)) != -1) {
+                            fout.write(buffer, 0, count);
+                        }
+                        data = fout.toByteArray();
+                    } finally {
+                        if (in != null) {
+                            in.close();
+                        }
+                        if (fout != null) {
+                            fout.close();
+                        }
+                    }
+
+                    SignatureCustody sc = getSignatureInfoOnly(custodiaID, isJustificante);
+                    sc.setData(data);
+                    return sc;
+                }
+
+            } catch (Exception e) {
+                log.error("Error descarregant justificant des de url de validaciÃ³ (" + url + ")", e);
+                data = null;
+            }
+
+        }
+
+        // Si no ha soportat url, davalla l'arxiu original
+        SignatureCustody sc = getFirma(custodiaID, isJustificante);
+
+        return sc;
     }
 
 

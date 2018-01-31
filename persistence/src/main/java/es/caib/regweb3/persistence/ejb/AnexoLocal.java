@@ -192,4 +192,12 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      */
     String getUrlValidation(String custodiaID, boolean isJustificante) throws I18NException, Exception;
 
+  /**
+   * Obtiene el SignatureCustody de un Anexo
+   * @param custodiaID
+   * @param isJustificante
+   * @return SignatureCustody
+   */
+    SignatureCustody descargarFirmaDesdeUrlValidacion(String custodiaID, boolean isJustificante) throws I18NException, Exception;
+
 }
