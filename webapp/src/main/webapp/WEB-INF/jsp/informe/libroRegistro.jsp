@@ -260,7 +260,7 @@
                                                 <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
                                                 <form:hidden path="organDestinatariNom"/>
                                             </div>
-                                            <div class="col-xs-2 boto-panel">
+                                            <div class="col-xs-2 boto-informe">
                                                 <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
                                                    onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
                                                    class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
@@ -308,7 +308,7 @@
                                     </div>
 
                                 </div>
-                                <div class="row pad-bottom15 pad-right-75">
+                                <div class="row pad-bottom15 pad-right-60">
                                     <a class="btn btn-warning btn-xs pull-right masOpciones-success" data-toggle="collapse" data-target="#demo">
                                             <%--Comprueba si debe mostrar mas opciones o menos--%>
                                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos}">
@@ -322,7 +322,7 @@
 
 
                                 <div class="form-group col-xs-12">
-                                    <button type="submit" class="btn btn-warning  btn-sm"><spring:message code="regweb.buscar"/></button>
+                                    <button type="submit" class="btn btn-warning btn-sm boto-informe"><spring:message code="regweb.buscar"/></button>
                                 </div>
 
                                 <c:set var="errorInicio"><spring:message code="error.fechaInicio.posterior"/></c:set>

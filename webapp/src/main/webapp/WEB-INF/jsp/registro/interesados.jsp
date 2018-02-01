@@ -80,7 +80,7 @@
 
                 </div>
                 <%--Botones búsqueda--%>
-                <div class="col-xs-2 pull-right boto-panel">
+                <div class="col-xs-2 pull-right boto-panel center">
                     <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
                        onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoInteresado' );"
                        class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
@@ -88,7 +88,7 @@
                     <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
                 <%--Botones nueva persona--%>
-                <div class="col-xs-2 pull-right boto-panel">
+                <div class="col-xs-2 pull-right boto-panel center">
                     <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                     <a id="nuevaPersonaJuridica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.juridica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                 </div>

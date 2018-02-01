@@ -193,7 +193,7 @@
                                         <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
                                         <form:hidden path="organDestinatariNom"/>
                                     </div>
-                                    <div class="col-xs-2 boto-panel">
+                                    <div class="col-xs-2 boto-mesOpcions">
                                         <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
                                            onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
                                            class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
@@ -248,7 +248,7 @@
 					 	<div class="row">
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 boto-panel">
+                                <div class="col-xs-1 boto-panel center">
                                     <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
                                         <spring:message code="regweb.buscar"/>
                                     </button>

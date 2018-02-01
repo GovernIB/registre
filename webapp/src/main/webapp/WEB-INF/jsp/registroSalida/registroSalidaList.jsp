@@ -241,7 +241,7 @@
                 <div class="row">
 
                     <div class="form-group col-xs-12">
-                        <div class="col-xs-1 boto-panel">
+                        <div class="col-xs-1 boto-panel center">
                             <button type="submit" class="btn btn-warning btn-sm" style="margin-left: 15px;">
                                 <spring:message code="regweb.buscar"/>
                             </button>

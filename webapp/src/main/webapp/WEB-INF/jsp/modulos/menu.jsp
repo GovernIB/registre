@@ -197,7 +197,7 @@
                                     <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSir.recibidos"/></a></li>
                                     <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-search"></i> <spring:message code="registroSir.enviados"/></a></li>
                                     <li class="divider"></li>
-                                    <li><a href="<c:url value="/registroSir/pendientesProcesar/list/1"/>"><i class="fa fa-refresh fa-spin fa-1x fa-fw"></i> <spring:message code="registroSir.pendientesProcesar"/></a></li>
+                                    <li><a href="<c:url value="/registroSir/pendientesProcesar/list/1"/>"><i class="fa fa-refresh fa-spin"></i> <spring:message code="registroSir.pendientesProcesar"/></a></li>
                                     <li><a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroEntrada.pendientesSir"/></a></li>
                                     <li><a href="<c:url value="/registroSalida/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroSalida.pendientesSir"/></a></li>
                                 </ul>

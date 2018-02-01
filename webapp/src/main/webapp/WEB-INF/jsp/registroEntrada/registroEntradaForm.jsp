@@ -300,19 +300,17 @@
                                <!-- Fin gestión de oficina origen(se prepara en función de si es interno o externo )-->
                            </div>
 
-                           <div class="form-group col-xs-6">
-                               <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                           <div class="form-group col-xs-12">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                                    <label for="registroDetalle.numeroRegistroOrigen" rel="ayuda" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
                                </div>
-                               <div class="col-xs-8">
+                               <div class="col-xs-4">
                                    <form:input path="registroDetalle.numeroRegistroOrigen" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.numeroRegistroOrigen" cssClass="help-block" element="span"/>
                                </div>
-                           </div>
-                           <div class="form-group col-xs-6 no-pad-right">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-1 pull-left etiqueta_regweb control-label">
                                    <label for="registroDetalle.fechaOrigen" rel="ayuda" data-content="<spring:message code="registro.ayuda.fecha"/>" data-toggle="popover"><spring:message code="registroEntrada.fecha"/></label>
                                </div>
-                               <div class="col-xs-10 no-pad-right" id="fechaOrigen">
+                               <div class="col-xs-5 pad-right-15" id="fechaOrigen">
                                    <div class="input-group date no-pad-right">
                                        <form:input type="text" cssClass="form-control" path="registroDetalle.fechaOrigen" maxlength="19" placeholder="dd/mm/yyyy HH:mm:ss" name="fechaOrigen"/>
                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>

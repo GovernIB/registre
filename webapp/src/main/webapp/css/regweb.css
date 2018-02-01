@@ -125,7 +125,13 @@ textarea{
 }
 .boto-panel{
 	padding: 0px;
-	text-align: center;
+	/*text-align: center;*/
+}
+.boto-informe{
+    padding-left: 22px;
+}
+.boto-mesOpcions{
+    padding-left: 10px;
 }
 .input-group[class*="col-"] {
 	float: none;
@@ -226,6 +232,9 @@ textarea{
 }
 .no-bold{
     font-weight: normal;
+}
+.pad-right-15{
+    padding-right: 15px;
 }
 /* FI Canvis estils generals */
 
@@ -750,6 +759,9 @@ a.text-gris:focus {
 /*BUSQUEDA AVANZADA*/
 .pad-right-75 {
     padding-right: 75px;
+}
+.pad-right-60 {
+    padding-right: 60px;
 }
 
 /* DUAL LIST BOX MARILEN */
