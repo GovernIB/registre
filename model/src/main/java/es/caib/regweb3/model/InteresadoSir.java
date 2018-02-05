@@ -358,7 +358,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @Transient
-    private Long getTipoInteresado(){
+    public Long getTipoInteresado(){
 
         if(StringUtils.isNotEmpty(getNombreInteresado()) && StringUtils.isNotEmpty(getPrimerApellidoInteresado())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
@@ -371,7 +371,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @Transient
-    private Long getTipoRepresentante(){
+    public Long getTipoRepresentante(){
 
         if(StringUtils.isNotEmpty(getNombreRepresentante()) && StringUtils.isNotEmpty(getPrimerApellidoRepresentante())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA;
@@ -417,7 +417,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @Transient
-    private String getNombrePersonaFisica(){
+    public String getNombrePersonaFisica(){
 
         String personaFisica = "" ;
 
@@ -438,7 +438,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @Transient
-    private String getNombrePersonaJuridica(){
+    public String getNombrePersonaJuridica(){
 
         String personaJuridica = "";
 
@@ -455,7 +455,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @Transient
-    private String getNombrePersonaFisicaRepresentante(){
+    public String getNombrePersonaFisicaRepresentante(){
 
         String personaFisica = "" ;
 
@@ -476,7 +476,7 @@ public class InteresadoSir implements Serializable {
     }
 
     @Transient
-    private String getNombrePersonaJuridicaRepresentante(){
+    public String getNombrePersonaJuridicaRepresentante(){
 
         String personaJuridica = "";
 
