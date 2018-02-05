@@ -194,7 +194,12 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     TipoAsunto tipoAsunto = CommonConverter.getTipoAsunto(codigoTipoAsunto, entidad.getId(), tipoAsuntoEjb);
 
-    // 4. Comprobación TipoAsunto Activo
+    // 4. Comprobación existencia TipoAsunto
+    if(tipoAsunto == null){
+      throw new I18NException("error.tipoAsunto.noExiste", codigoTipoAsunto);
+    }
+
+    // 5. Comprobación TipoAsunto Activo
     if(!tipoAsunto.getActivo()){
       throw new I18NException("error.tipoAsunto.inactivo", codigoTipoAsunto);
     }
