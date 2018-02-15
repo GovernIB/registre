@@ -11,6 +11,7 @@ import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -450,13 +451,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
+    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception {
 
         Query q = em.createQuery("Select re from RegistroEntrada as re where re.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and re.usuario.entidad.codigoDir3 = :codigoEntidad");
+                "and re.usuario.entidad.codigoDir3 = :codigoEntidad and re.libro.codigo=:codigoLibro");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
         q.setParameter("codigoEntidad", codigoEntidad);
+        q.setParameter("codigoLibro", codigoLibro);
 
         List<RegistroEntrada> registro = q.getResultList();
 
@@ -832,6 +834,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
+        long start = System.currentTimeMillis();
+        log.info("------------------------------------------------------------");
+        log.info("Distribuyendo el registro: " + re.getNumeroRegistroFormateado());
+        log.info("");
+
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
         respuestaDistribucion.setDestinatarios(null);
@@ -848,8 +855,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
 
 
+            // Miramos si debemos generar el justificante
+            AnexoFull justificante = null;
+            if(!re.getRegistroDetalle().getTieneJustificante()) {
+                justificante = anexoEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), "ca");
+                re.getRegistroDetalle().getAnexosFull().add(justificante);
+            }
+
             //Obtenemos los anexos en función de la configuración establecida
-            re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
+            //re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
+
 
             if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
                 respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
@@ -861,12 +876,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 // Si ya ha sido enviado, lo marcamos como tramitado.
                 if(respuestaDistribucion.getEnviado()){
                     tramitarRegistroEntrada(re,usuarioEntidad);
+                    //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
                 }
             }
 
         }else{ //No hay plugin, marcamos el Registro como Tramitado
             tramitarRegistroEntrada(re,usuarioEntidad);
+            //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
         }
+
+        log.info("");
+        log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+        log.info("------------------------------------------------------------");
 
         return respuestaDistribucion;
     }
@@ -1016,7 +1037,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         switch (confAnexos) {
             case 1: {//1.  Fitxer + firma + metadades + custodiaId
-
                 cargarAnexosFull(original);
                 if(justificante!= null){
                     original.getRegistroDetalle().getAnexosFull().add(justificante);
@@ -1053,7 +1073,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     original.getRegistroDetalle().getAnexos().add(justificante.getAnexo());
                 }
             }
-
 
         }
         return original;

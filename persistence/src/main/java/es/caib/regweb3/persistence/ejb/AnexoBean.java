@@ -8,10 +8,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.*;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -1278,7 +1275,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
       String custodyID = null;
       boolean error = false;
       IDocumentCustodyPlugin documentCustodyPlugin = null;
-
+      long start = System.currentTimeMillis();
       try {
           // Comprobamos si ya se ha generado el Justificante
           if(registro.getRegistroDetalle().getTieneJustificante()){
@@ -1375,7 +1372,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
           anexoFull = crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro,custodyID);
 
           log.info("");
-          log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+          log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
           log.info("------------------------------------------------------------");
 
           return anexoFull;
