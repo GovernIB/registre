@@ -43,6 +43,7 @@
         </div><!-- Fin miga de pan -->
 
         <c:import url="../modulos/mensajes.jsp"/>
+        <div id="mensajes"></div>
 
         <div class="row">
 
@@ -110,7 +111,7 @@
                             </div>
 
                             <div class="form-actions col-xs-12">
-                                <input type="submit" value="<spring:message code="regweb.enviar"/>" class="btn btn-${color} btn-sm"/>
+                                <input type="button" id="enviar" value="<spring:message code="regweb.enviar"/>" class="btn btn-${color} btn-sm"/>
 
                                 <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
                                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
@@ -143,6 +144,51 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript" src="<c:url value="/js/organismosaprocesar.js"/>"></script>
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('#enviar').click(function(){
+
+            var url;
+            var urlDetalle;
+
+            if(${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}){
+                url = '<c:url value="/registroEntrada/${registro.id}/enviarSir"/>';
+                urlDetalle ='<c:url value="/registroEntrada/${registro.id}/detalle"/>';
+            }
+            if(${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}){
+                url = '<c:url value="/registroSalida/${registro.id}/enviarSir"/>';
+                urlDetalle ='<c:url value="/registroSalida/${registro.id}/detalle"/>';
+            }
+            
+            $.ajax({
+                url: url,
+                type:'POST',
+                data: {oficinaSIRCodigo: $("#oficinaSIRCodigo").val()},
+                beforeSend: function(objeto){
+                    waitingDialog.show('<spring:message code="registroSir.enviando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
+                },
+                success:function(respuesta){
+
+                    if(respuesta.status == 'SUCCESS'){
+                        goTo(urlDetalle);
+
+                    }else{
+                        if(respuesta.status=='FAIL') {
+                            mostrarMensajeError('#mensajes', respuesta.error);
+                            waitingDialog.hide();
+                        }
+                    }
+
+                }
+            });
+
+        });
+    });
+</script>
 
 
 </body>

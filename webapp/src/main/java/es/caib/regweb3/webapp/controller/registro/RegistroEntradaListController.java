@@ -321,27 +321,43 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Enviar a SIR un Registro de Entrada
      */
     @RequestMapping(value = "/{idRegistro}/enviarSir", method = RequestMethod.POST)
-    public ModelAndView enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
+    @ResponseBody
+    public JsonResponse enviarSir(@ModelAttribute EnvioSirForm envioSirForm, @PathVariable Long idRegistro, String oficinaSIRCodigo,
+                                  HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        try{
+        JsonResponse jsonResponse = new JsonResponse();
 
-            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,idRegistro, getOficinaActiva(request), usuarioEntidad,envioSirForm.getOficinaSIRCodigo());
+        try {
+
+            sirEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO, idRegistro, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
+            jsonResponse.setStatus("SUCCESS");
 
-        }catch (SIRException e){
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+        } catch (SIRException se){
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + se.getMessage());
+            se.printStackTrace();
+        } catch (Exception e) {
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + e.getMessage());
             e.printStackTrace();
         } catch (I18NException e) {
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + I18NUtils.getMessage(e));
             e.printStackTrace();
         }  catch (I18NValidationException ve) {
-            Mensaje.saveMessageError(request, I18NUtils.getMessage(ve));
+            log.info(getMessage("registroSir.error.envio"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("registroSir.error.envio") + ": " + I18NUtils.getMessage(ve));
             ve.printStackTrace();
         }
 
-        return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
+        return jsonResponse;
     }
 
     @RequestMapping(value = "/{idRegistro}/reenviar", method = RequestMethod.GET)
