@@ -5,6 +5,7 @@ import es.caib.regweb3.model.utils.AnexoSirFull;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -177,7 +178,10 @@ public class RegistroSirController extends BaseController {
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(),busqueda.getFechaFin(),null, oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
+        // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
+        Date dataFi = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), dataFi,null, oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
