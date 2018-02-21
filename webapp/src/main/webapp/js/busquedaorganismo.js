@@ -428,6 +428,13 @@ function organismoBusqueda(tipoOrganismo, urlServidor, idRegistroDetalle) {
 
 
             }
+        },
+        error : function(request) {
+
+            $('#reloadorg' + tipoOrganismo).hide();
+            var mensajeError = tradorganismo['organismo.buscador.error'] + request.status ;
+            $('#resultadosbusqueda' + tipoOrganismo).html('<br/><div class="alert alert-danger" style="text-align:left;">' + mensajeError + '</div>');
+
         }
 
     });
@@ -608,7 +615,12 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
                 html += '</ul>';
                 $('#arbol' + tipoOrganismo).html(html);
             }
+        },
+        error : function(request){
+            var mensajeError = tradorganismo['organismo.buscador.error'] + request.status ;
+            $('#organigrama' + tipoOrganismo).html('<br/><div class="alert alert-danger" style="text-align:left;">'+mensajeError+'</div>');
         }
+
     });
     $('#tab' + tipoOrganismo + ' a:last').show();
     $('#tab' + tipoOrganismo + ' a:last').tab('show');
