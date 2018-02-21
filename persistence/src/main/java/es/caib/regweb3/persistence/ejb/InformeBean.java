@@ -611,11 +611,13 @@ public class InformeBean implements InformeLocal {
         Query q;
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.oficina.organismoResponsable.id = :conselleria and registroSalida.estado != 8 and registroSalida.estado != 2");
+                "and registroSalida.fecha <= :fechaFin and registroSalida.oficina.organismoResponsable.id = :conselleria and registroSalida.estado != :anulado and registroSalida.estado != :reserva");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("conselleria", conselleria);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
 
         return (Long) q.getSingleResult();
     }
@@ -775,11 +777,13 @@ public class InformeBean implements InformeLocal {
         Query q;
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
-                "and registroSalida.fecha <= :fechaFin and registroSalida.libro.id = :libro and registroSalida.estado != 8 and registroSalida.estado != 2");
+                "and registroSalida.fecha <= :fechaFin and registroSalida.libro.id = :libro and registroSalida.estado != :anulado and registroSalida.estado != :reserva");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("libro", libro);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
 
         return (Long) q.getSingleResult();
     }
