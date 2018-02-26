@@ -233,7 +233,7 @@
                                                 <c:if test="${oficiosRemisionOrganismo.sir}">
                                                     <div class="">
                                                         <div class="form-group col-xs-12">
-                                                            <div class="col-xs-2 pull-left align-right">
+                                                            <div class="col-xs-2 pull-left etiqueta-sir">
                                                                 <spring:message code="oficioRemision.oficinaSir"/></div>
                                                             <div class="col-xs-10">
                                                                 <form:select path="oficinaSIRCodigo" items="${oficiosRemisionOrganismo.oficinasSIR}"
