@@ -321,7 +321,7 @@ public class InteresadoController extends BaseController{
                 personaJson.setId(interesado.getId().toString());
 
                 // Generamos el nombre a mostrar según el tipo de persona
-                personaJson.setNombre(interesado.getNombreCompleto());
+                personaJson.setNombre(interesado.getNombreCompletoInforme());
 
                 jsonResponse.setResult(personaJson);
 
