@@ -628,10 +628,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             return true;
 
         }else{
-            isEdpConLibro(organismo.getOrganismoSuperior().getId());
+            return isEdpConLibro(organismo.getOrganismoSuperior().getId());
         }
 
-       return false;
     }
 
 
