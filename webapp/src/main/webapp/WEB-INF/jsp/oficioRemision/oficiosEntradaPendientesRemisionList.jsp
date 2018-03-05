@@ -274,7 +274,7 @@
                                             <c:if test="${oficiosRemisionOrganismo.externo == false}">
                                                 <div class="btn-group">
                                                     <c:if test="${oficiosRemisionOrganismo.vigente && oficiosRemisionOrganismo.oficinas}">
-                                                        <button type="button" onclick="crearOficioRemision()" class="btn btn-sm btn-success dropdown-toggle">
+                                                        <button type="button" onclick="crearOficioRemision('<spring:message code="oficioRemision.generando.interno" javaScriptEscape='true'/>')" class="btn btn-sm btn-success dropdown-toggle">
                                                     </c:if>
 
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false || oficiosRemisionOrganismo.oficinas == false}">
@@ -290,7 +290,7 @@
                                             <c:if test="${oficiosRemisionOrganismo.externo == true}">
                                                 <div class="btn-group">
                                                     <c:if test="${oficiosRemisionOrganismo.vigente}">
-                                                        <button type="button" onclick="crearOficioRemision()" class="btn btn-sm btn-success dropdown-toggle">
+                                                        <button type="button" onclick="crearOficioRemision('<spring:message code="oficioRemision.generando.externo" javaScriptEscape='true'/>')" class="btn btn-sm btn-success dropdown-toggle">
                                                     </c:if>
 
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false}">
@@ -331,8 +331,8 @@
     /**
      * Genera el Oficio de Remisón
      */
-    function crearOficioRemision(){
-        waitingDialog.show('<spring:message code="oficioRemision.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'success'});
+    function crearOficioRemision(mensaje){
+        waitingDialog.show(mensaje, {dialogSize: 'm', progressType: 'success'});
         doForm('#oficio');
 
     }
