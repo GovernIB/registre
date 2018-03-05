@@ -207,14 +207,17 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
-        Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
 
-        if(organismo != null){ // Destinatario organismo interno
+        Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
+
+        if(oficio.getInterno()){ // Destinatario organismo interno
+
+            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
             oficios.setOrganismo(organismo);
             oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
-        }else{ // Destinatario organismo externo
+        }else if (oficio.getExterno() || oficio.getEdpExterno()){ // Destinatario organismo externo
 
             oficios.setExterno(true);
 
@@ -534,22 +537,16 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
             if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
                 oficio.setOficioRemision(true);
-                //oficio.setInterno(false);
 
                 List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismos);
 
                 if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
                     oficio.setSir(true);
-                    //oficio.setExterno(false);
                 }else{
-                    oficio.setSir(false);
                     oficio.setExterno(true);
                 }
 
             }else{
-                oficio.setExterno(false);
-                //oficio.setSir(false);
-
                 Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
 
                 oficio.setOficioRemision(interno);

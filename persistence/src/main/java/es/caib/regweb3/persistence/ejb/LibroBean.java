@@ -150,6 +150,18 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         }
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean tieneLibro(Long idOrganismo) throws Exception{
+
+        Query q = em.createQuery("Select libro.id from Libro as libro where " +
+                "libro.organismo.id = :idOrganismo and libro.activo = true");
+
+        q.setParameter("idOrganismo",idOrganismo);
+
+        return q.getResultList().size() > 0;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")

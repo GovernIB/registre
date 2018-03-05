@@ -7,6 +7,7 @@ public class Oficio {
 
     private Boolean isOficioRemision = false;
     private Boolean isInterno = false;
+    private Boolean isEdpExterno = false;
     private Boolean isExterno = false;
     private Boolean isSir = false;
 
@@ -34,6 +35,14 @@ public class Oficio {
 
     public void setInterno(Boolean interno) {
         isInterno = interno;
+    }
+
+    public Boolean getEdpExterno() {
+        return isEdpExterno;
+    }
+
+    public void setEdpExterno(Boolean edpExterno) {
+        isEdpExterno = edpExterno;
     }
 
     public Boolean getExterno() {

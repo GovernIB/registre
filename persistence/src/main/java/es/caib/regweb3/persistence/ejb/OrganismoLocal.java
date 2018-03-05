@@ -195,4 +195,12 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     void obtenerHistoricosFinales(Long id, Set<Organismo> historicosFinales) throws Exception;
+
+    /**
+     * Comprueba si un Organismo EDP tiene algún libro que le pueda registrar, comprobando sus organismos superiores
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    Boolean isEdpConLibro(Long idOrganismo) throws Exception;
 }

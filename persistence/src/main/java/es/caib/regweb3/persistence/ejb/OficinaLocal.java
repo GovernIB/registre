@@ -133,7 +133,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * Retorna las Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
      * teniendo en cuenta las oficinas que dan servicio a sus Organismos superiores en el Organigrama.
      * @param idOrganismo
-     * @param oficinaVirtual
+     * @param oficinaVirtual Boolean para tener en cuenta o no las REGISTRO_VIRTUAL_NO_PRESENCIAL
      * @return
      * @throws Exception
      */

@@ -223,7 +223,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidadSinEstadoLigero(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado, organismo.edp from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad ");
 
         q.setParameter("codigo", codigo);
@@ -234,6 +234,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado((CatEstadoEntidad) result.get(0)[4]);
+            organismo.setEdp((Boolean) result.get(0)[5]);
             return organismo;
         } else {
             return null;
@@ -596,7 +597,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     }
 
-
+    @Override
     public void obtenerHistoricosFinales(Long id, Set<Organismo> historicosFinales) throws Exception {
         Organismo org = em.find(Organismo.class, id);
         Hibernate.initialize(org.getHistoricoUO());
@@ -613,6 +614,25 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     }
 
+    @Override
+    public Boolean isEdpConLibro(Long idOrganismo) throws Exception{
+
+        Organismo organismo = findByIdCompleto(idOrganismo);
+
+        if(organismo.getEdpPrincipal() == null){
+
+            return libroEjb.tieneLibro(organismo.getId());
+
+        }else if(libroEjb.tieneLibro(idOrganismo)){
+
+            return true;
+
+        }else{
+            isEdpConLibro(organismo.getOrganismoSuperior().getId());
+        }
+
+       return false;
+    }
 
 
 }

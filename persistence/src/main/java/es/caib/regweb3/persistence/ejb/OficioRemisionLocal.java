@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -169,6 +170,15 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     List<String> getNumerosRegistroSalidaFormateadoByOficioRemision(Long idOficioRemision) throws Exception;
+
+    /**
+     *
+     * @param codigoOrganismo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Oficio obtenerTipoOficio (String codigoOrganismo, Long idEntidad) throws Exception;
 
     /**
      * Elimina los Oficios de remisión de una Entidad

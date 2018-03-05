@@ -386,7 +386,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         oficinas.addAll(oficinasFuncionales(idOrganismo, oficinaVirtual));
         oficinas.addAll(oficinasOrganizativas(idOrganismo, oficinaVirtual));
 
-        if (organismo.getOrganismoSuperior() != null && !organismo.getEdp()) {
+        if (organismo.getOrganismoSuperior() != null /*&& !organismo.getEdp()*/) {
             oficinas.addAll(oficinasServicio(organismo.getOrganismoSuperior().getId(), oficinaVirtual));
         }
 

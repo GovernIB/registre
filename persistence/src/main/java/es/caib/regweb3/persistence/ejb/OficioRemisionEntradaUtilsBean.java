@@ -175,15 +175,19 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         return total;
     }
 
+
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
 
-        Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
+        Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
 
-        if(organismo != null) { // Destinatario organismo interno
+        if(oficio.getInterno()) { // Destinatario organismo interno
+
+            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
             oficios.setOrganismo(organismo);
             oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
@@ -191,7 +195,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             //Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
             oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, oficinaActiva.getId(), idLibro));
 
-        }else { // Destinatario organismo externo
+        }else if (oficio.getExterno() || oficio.getEdpExterno()) { // Destinatario organismo externo
 
             oficios.setExterno(true);
 
@@ -233,7 +237,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             }
 
             //Buscamos los Registros de Entrada externos, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro));
+            if (oficio.getExterno()) {
+                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro));
+            }else if(oficio.getEdpExterno()){
+                oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
+            }
+
         }
 
         return oficios;
@@ -316,21 +325,17 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         if(isOficioRemisionExterno(idRegistro)){ // Externo
 
             oficio.setOficioRemision(true);
-            //oficio.setInterno(false);
 
             List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
 
             if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
                 oficio.setSir(true);
-                //oficio.setExterno(false);
+
             }else{
-                oficio.setSir(false);
                 oficio.setExterno(true);
             }
 
         }else{
-            oficio.setExterno(false);
-            //oficio.setSir(false);
 
             Boolean interno = isOficioRemisionInterno(idRegistro, organismos);
 

@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class OficiosRemisionOrganismo {
 
-    Organismo organismo;
-    Boolean externo = false;
-    Boolean oficinas = false;
-    Boolean vigente = false;
-    Paginacion paginacion;
-    Boolean sir = false;
-    List<OficinaTF> oficinasSIR;
+    private Organismo organismo;
+    private Boolean externo = false;
+    private Boolean oficinas = false;
+    private Boolean vigente = false;
+    private Paginacion paginacion;
+    private Boolean sir = false;
+    private List<OficinaTF> oficinasSIR;
 
     public OficiosRemisionOrganismo() {
     }

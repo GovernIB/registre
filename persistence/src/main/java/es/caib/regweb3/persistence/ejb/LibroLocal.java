@@ -53,6 +53,14 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     Libro findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
+     * Comprueba si un Organimo tiene un Libro activo
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    public Boolean tieneLibro(Long idOrganismo) throws Exception;
+
+    /**
      * Lista los Libros activos de un Organismo
      * @param idOrganismo
      * @return

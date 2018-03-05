@@ -1,10 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.utils.DataBaseUtils;
-import es.caib.regweb3.persistence.utils.NumeroRegistro;
-import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,6 +42,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private ContadorLocal contadorEjb;
+    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -701,6 +699,38 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         }
 
         return numeros;
+    }
+
+    @Override
+    public Oficio obtenerTipoOficio(String codigoOrganismo, Long idEntidad) throws Exception{
+
+        Oficio oficio = new Oficio();
+        oficio.setOficioRemision(true);
+
+        Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, idEntidad);
+
+        if(organismo != null){
+
+            if(!organismo.getEdp()){
+                log.info("Es un oficio interno");
+                oficio.setInterno(true);
+            }else{
+                // Comprobamos si el organismo edp tiene algún libro que le registre
+                Boolean oficioEdpInterno = organismoEjb.isEdpConLibro(organismo.getId());
+
+                if(oficioEdpInterno){
+                    oficio.setInterno(true);
+                }else{
+                    oficio.setEdpExterno(true);
+                }
+                log.info("Es un oficio edp interno?: " + oficioEdpInterno);
+            }
+        }else{
+            oficio.setExterno(true);
+            log.info("Es un oficio externo");
+        }
+
+        return oficio;
     }
 
     @Override
