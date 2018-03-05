@@ -112,36 +112,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
 
                 }
-            }else{ // Si la sesion ya existe y el usuario está autenticado
-               /* if(request.getRequestURI().equals("/regweb3/aviso")||
-                   *//*request.getRequestURI().equals("/regweb3/entidad/pendientesprocesar") ||*//*
-                   request.getRequestURI().equals("/regweb3/rol/1") ||
-                   request.getRequestURI().equals("/regweb3/rol/2") ||
-                   request.getRequestURI().equals("/regweb3/rol/3") *//*||*//*
-                   *//*request.getRequestURI().equals("/regweb3/error/404")*//*) {
-                   return true;
-                }*/
-
-                //Comprobamos que no haya cambios de organigrama pendientes de procesar
-               /* List<Pendiente> orgPendientesProcesar = pendienteEjb.findPendientesProcesar();
-                if(orgPendientesProcesar.size()>0){
-                  *//* Si tienen los roles RWE_USUARI o RWE_SUPERADMIN no puede gestionar los cambios de estructura *//*
-                  if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI) || rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
-                    log.info("Es operador o superadmin y quedan pendientes de procesar" );
-                   *//* response.sendRedirect("/regweb3/accesodenedado.html");
-                    return false;*//*
-                    Mensaje.saveMessageAviso(request, getMessage("aviso.pendientes.noautorizado"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                  }
-                  // Si es administrador de Entidad
-                  if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN) && entidadEjb.esAutorizado(entidadActiva.getId(), usuarioAutenticado.getId())){
-                      log.info("usuario es propietario");
-                      response.sendRedirect("/regweb3/entidad/pendientesprocesar");
-                      return false;
-                  }
-                }*/
-
             }
 
             // Validamos las propiedades de dir3 para poder atacar a dir3caib
