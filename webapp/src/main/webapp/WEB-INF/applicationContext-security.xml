@@ -77,9 +77,9 @@
         <sec:authentication-provider ref="preAuthenticatedAuthenticationProvider"/>
     </sec:authentication-manager>
 
-    <!--Una vez autenticado el usuario, creamos en la sesion la Persona correspondiente
-     <bean id="authenticationSuccessListener" class="es.caib.avacat.back.filter.AuthenticationSuccessListener"/>
-     -->
+    <!--Una vez autenticado el usuario, ejecutamos los procesos pertinentes-->
+     <!--<bean id="authenticationSuccessListener" class="es.caib.regweb3.webapp.security.AuthenticationSuccessListener"/>-->
+
 
       <bean id="preAuthenticatedProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.Http403ForbiddenEntryPoint" />
 
@@ -121,8 +121,5 @@
           </property>
           <property name="authenticationManager" ref="authenticationManager"/>
       </bean>
-<!-- 
-      <bean class="es.caib.regweb3.webapp.security.AuthenticationSuccessListener" />
- -->
 
 </beans>
