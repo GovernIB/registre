@@ -175,9 +175,9 @@
                                                     <th><spring:message code="oficioRemision.fecha"/></th>
                                                     <th><spring:message code="oficioRemision.oficina"/></th>
                                                     <th><spring:message code="oficioRemision.organismoDestino"/></th>
-                                                    <th><spring:message code="oficioRemision.estado"/></th>
-                                                    <th><spring:message code="oficioRemision.tipo"/></th>
                                                     <th><spring:message code="oficioRemision.destino"/></th>
+                                                    <th><spring:message code="oficioRemision.tipo"/></th>
+                                                    <th><spring:message code="oficioRemision.estado"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                             </thead>
@@ -189,6 +189,25 @@
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                                         <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                         <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
+                                                        <td>
+                                                            <span class="label label-default">
+                                                                <c:if test="${not empty oficioRemision.organismoDestinatario}">
+                                                                    <spring:message code="oficioRemision.interno"/>
+                                                                </c:if>
+                                                                <c:if test="${empty oficioRemision.organismoDestinatario}">
+                                                                    <spring:message code="oficioRemision.externo"/>
+                                                                </c:if>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
+                                                            </c:if>
+
+                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
+                                                            </c:if>
+                                                        </td>
                                                         <td>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}"><span class="label label-warning"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO}"><span class="label label-warning"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
@@ -203,26 +222,6 @@
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}"><span class="label label-danger"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}"><span class="label label-danger"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
                                                         </td>
-                                                        <td>
-                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
-                                                            </c:if>
-
-                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
-                                                            </c:if>
-                                                        </td>
-                                                        <td>
-                                                            <span class="label label-default">
-                                                                <c:if test="${not empty oficioRemision.organismoDestinatario}">
-                                                                    <spring:message code="oficioRemision.interno"/>
-                                                                </c:if>
-                                                                <c:if test="${empty oficioRemision.organismoDestinatario}">
-                                                                    <spring:message code="oficioRemision.externo"/>
-                                                                </c:if>
-                                                            </span>
-                                                        </td>
-
                                                         <td class="center">
                                                             <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/detalle"/>" title="Detalle"><span class="fa fa-eye"></span></a>
                                                         </td>
