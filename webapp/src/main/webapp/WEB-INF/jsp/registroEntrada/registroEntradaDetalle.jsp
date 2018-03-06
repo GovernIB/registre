@@ -108,9 +108,11 @@
 
                                     <c:if test="${oficio.oficioRemision}">
 
-                                        <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                            <spring:message code="oficioRemision.boton.crear"/>
-                                        </button>
+                                        <c:if test="${oficio.interno || oficio.externo}">
+                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                                <spring:message code="oficioRemision.boton.crear"/>
+                                            </button>
+                                        </c:if>
 
                                         <%--<c:if test="${oficio.interno}">
                                             <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">

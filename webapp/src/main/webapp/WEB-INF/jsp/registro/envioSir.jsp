@@ -53,10 +53,10 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
-                                <strong>Enviar <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino}, mediante SIR</strong>
+                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino}<spring:message code="registroSir.mediante"/></strong>
                             </c:if>
                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
-                                <strong>Enviar <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino}, mediante SIR</strong>
+                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino}<spring:message code="registroSir.mediante"/></strong>
                             </c:if>
 
                         </h3>
@@ -81,7 +81,7 @@
                             <div class="col-lg-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        <strong>Oficina destino</strong>
+                                        <strong><spring:message code="oficina.destino"/></strong>
                                     </div>
                                     <div class="panel-body">
                                         <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino}</p>
