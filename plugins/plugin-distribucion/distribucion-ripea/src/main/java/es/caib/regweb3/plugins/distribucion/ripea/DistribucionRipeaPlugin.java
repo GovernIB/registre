@@ -394,7 +394,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         if( anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
 
             registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
-            registreAnnex.setFitxerTamany((int)anexoFull.getDocSize());
+            registreAnnex.setFitxerTamany((int)anexoFull.getDocumentoCustody().getLength());
             registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
             registreAnnex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
 
@@ -403,7 +403,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         //El anexo está en signature custody
         if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
             registreAnnex.setFitxerNom(anexoFull.getSignatureCustody().getName());
-            registreAnnex.setFitxerTamany((int)anexoFull.getSignSize());
+            registreAnnex.setFitxerTamany((int)anexoFull.getSignatureCustody().getLength());
             registreAnnex.setFitxerTipusMime(anexoFull.getSignatureCustody().getMime());
             registreAnnex.setFitxerContingut(anexoFull.getSignatureCustody().getData());
 
@@ -413,7 +413,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
             //DOCUMENTO
             registreAnnex.setFitxerNom(anexoFull.getDocumentoCustody().getName());
-            registreAnnex.setFitxerTamany((int)anexoFull.getDocSize());
+            registreAnnex.setFitxerTamany((int)anexoFull.getDocumentoCustody().getLength());
             registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
             registreAnnex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
 
