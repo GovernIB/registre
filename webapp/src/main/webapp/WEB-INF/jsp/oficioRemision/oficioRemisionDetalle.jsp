@@ -255,7 +255,7 @@
 
                                 <%--OFICIO DE REMISION ENTRADA--%>
                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                    <table class="table table-bordered table-hover table-striped tablesorter llistaReg">
                                         <colgroup>
                                             <col width="80">
                                             <col>

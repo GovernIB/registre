@@ -37,12 +37,13 @@
                     </div>
                     <div class="panel-body">
                         <form:form modelAttribute="informeIndicadoresBusquedaForm" method="post" cssClass="form-horizontal" name="informeIndicadoresBusquedaForm" onsubmit="return validaFormulario(this)">
-                            <div class="row">
-                                <div class="form-group col-xs-6 pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="tipo" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoLibro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right">
+                                    <div class="col-xs-8 no-pad-right">
                                         <form:select path="tipo" cssClass="chosen-select">
                                             <form:option value="0" default="default"><spring:message code="informe.ambosTipos"/></form:option>
                                             <form:option value="1"><spring:message code="informe.entrada"/></form:option>
@@ -50,11 +51,11 @@
                                         </form:select>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6  pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="formato"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></form:label>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="formato" rel="ayuda" data-content="<spring:message code="registro.ayuda.formato"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right">
+                                    <div class="col-xs-8 no-pad-right">
                                         <form:select path="formato" cssClass="chosen-select">
                                             <form:option value="pdf" default="default"><spring:message code="regweb.formato.pdf" /></form:option>
                                             <form:option value="excel"><spring:message code="regweb.formato.excel"/></form:option>
@@ -62,12 +63,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-xs-6  pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="fechaInicio"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></form:label>
+
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicioInforme"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right" id="fechaInicio">
+                                    <div class="col-xs-8 no-pad-right" id="fechaInicio">
                                         <div class="input-group date no-pad-right">
                                             <form:input type="text" cssClass="form-control" path="fechaInicio" maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -75,11 +77,11 @@
                                         <span class="errors"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6  pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="fechaFin"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></form:label>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.finInforme"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right" id="fechaFin">
+                                    <div class="col-xs-8 no-pad-right" id="fechaFin">
                                         <div class="input-group date no-pad-right">
                                             <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -88,12 +90,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-xs-6  pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="campoCalendario"><span class="text-danger">*</span> <spring:message code="informe.mostrar"/></form:label>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="campoCalendario" rel="ayuda" data-content="<spring:message code="registro.ayuda.anyoMes"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.mostrar"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right">
+                                    <div class="col-xs-8 no-pad-right">
                                         <form:select path="campoCalendario" cssClass="chosen-select">
                                             <form:option value="0" default="default"><spring:message code="informe.ambosCalendario"/></form:option>
                                             <form:option value="1"><spring:message code="informe.anys"/></form:option>

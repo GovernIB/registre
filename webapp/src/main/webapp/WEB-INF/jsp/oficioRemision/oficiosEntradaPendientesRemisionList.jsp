@@ -59,34 +59,43 @@
                             <form:form modelAttribute="registroEntradaBusqueda" method="post" cssClass="form-horizontal">
                                 <form:hidden path="pageNumber"/>
 
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message
-                                            code="registroEntrada.libro"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="registroEntrada.libro.id" items="${librosRegistro}"
-                                                     itemValue="id" itemLabel="nombreCompleto"
-                                                     cssClass="chosen-select"/>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-6 espaiLinies">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
+                                            <label for="registroEntrada.libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.libro"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="registroEntrada.libro.id" items="${librosRegistro}"
+                                                         itemValue="id" itemLabel="nombreCompleto"
+                                                         cssClass="chosen-select"/>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message
-                                            code="registroEntrada.anyRegistro"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="anyo" cssClass="chosen-select">
-                                            <form:option value="" label="..."/>
-                                            <c:forEach items="${anys}" var="anyo">
-                                                <form:option value="${anyo}">${anyo}</form:option>
-                                            </c:forEach>
-                                        </form:select>
+                                    <div class="col-xs-6 espaiLinies">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
+                                            <label for="anyo" rel="ayuda" data-content="<spring:message code="registro.ayuda.anyoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anyRegistro"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="anyo" cssClass="chosen-select">
+                                                <form:option value="" label="..."/>
+                                                <c:forEach items="${anys}" var="anyo">
+                                                    <form:option value="${anyo}">${anyo}</form:option>
+                                                </c:forEach>
+                                            </form:select>
+                                        </div>
                                     </div>
+
                                 </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message
-                                            code="registroEntrada.organDestinatari"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="registroEntrada.destino.codigo" items="${organismosDestino}"
-                                                     itemValue="codigo" itemLabel="denominacion"
-                                                     cssClass="chosen-select"/>
+
+                                <div class="col-xs-12">
+                                    <div class="col-xs-6 espaiLinies">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
+                                            <label for="registroEntrada.destino.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="registroEntrada.destino.codigo" items="${organismosDestino}"
+                                                         itemValue="codigo" itemLabel="denominacion"
+                                                         cssClass="chosen-select"/>
+                                        </div>
                                     </div>
                                 </div>
 

@@ -34,8 +34,8 @@ textarea{
 	width: 100%;
 }
 .etiqueta_regweb{
-	padding: 0px;
-	font-size: 13px;
+    padding: 3px 0px 0px;
+    font-size: 13px;
 }
 .etiqueta_regweb12{
     padding: 0px;
@@ -179,6 +179,9 @@ textarea{
 .boto-nou{
 	margin-bottom: 5px;
 }
+.llistaReg{
+    margin-bottom: 5px;
+}
 .container-fluid > .navbar-header {
 	margin-right: 0px;
 	margin-left: 0px;
@@ -235,6 +238,16 @@ textarea{
 }
 .pad-right-15{
     padding-right: 15px;
+}
+.pad-top-0{
+    padding-top: 0px !important;
+}
+.textEsq{
+    text-align: left !important;
+}
+.senseMargeLat{
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }
 /* FI Canvis estils generals */
 
@@ -757,11 +770,14 @@ a.text-gris:focus {
 }
 
 /*BUSQUEDA AVANZADA*/
-.pad-right-75 {
-    padding-right: 75px;
+.mesOpcions {
+    padding-right: 45px;
 }
 .pad-right-60 {
     padding-right: 60px;
+}
+.espaiLinies{
+    margin-bottom: 15px;
 }
 
 /* DUAL LIST BOX MARILEN */

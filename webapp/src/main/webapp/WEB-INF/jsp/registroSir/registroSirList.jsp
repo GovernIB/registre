@@ -46,41 +46,53 @@
 
                         <div class="panel-body">
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.identificadorIntercambio"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroSir.identificadorIntercambio" cssClass="form-control"/>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.identificadorIntercambio" rel="ayuda" data-content="<spring:message code="registro.ayuda.idSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.identificadorIntercambio"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroSir.identificadorIntercambio" cssClass="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="estado" rel="ayuda" data-content="<spring:message code="registro.ayuda.estadoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.estado"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="estado" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="estado" items="${estados}">
+                                                <form:option value="${estado.value}"><spring:message code="registroSir.estado.${estado.value}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.estado"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="estado" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="estado" items="${estados}">
-                                            <form:option value="${estado.value}"><spring:message code="registroSir.estado.${estado.value}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.resumen" rel="ayuda" data-content="<spring:message code="registro.ayuda.extractoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.extracto"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroSir.resumen" cssClass="form-control"/>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.extracto"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="registroSir.resumen" cssClass="form-control"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="registroSir.anyRegistro"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="anyo" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach items="${anys}" var="anyo">
-                                            <form:option value="${anyo}">${anyo}</form:option>
-                                        </c:forEach>
-                                    </form:select>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="anyo" rel="ayuda" data-content="<spring:message code="registro.ayuda.anyoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.anyRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="anyo" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach items="${anys}" var="anyo">
+                                                <form:option value="${anyo}">${anyo}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
                                 </div>
                             </div>
 

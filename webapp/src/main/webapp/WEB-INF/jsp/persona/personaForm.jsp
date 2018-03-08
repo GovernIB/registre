@@ -48,178 +48,194 @@
                         <form:form modelAttribute="persona" method="post" cssClass="form-horizontal">
                             <form:hidden path="entidad.id"/>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="persona.tipoPersona"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                  <form:select path="tipo" cssClass="chosen-select">
-                                    <c:forEach items="${tiposPersona}" var="tmp">
-                                      <form:option value="${tmp}" > <spring:message code="persona.tipo.${tmp}"/></form:option>
-                                    </c:forEach>
-                                  </form:select>
-                                  <form:errors path="tipo" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="nombre"><span id="nombreLabel" class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="nombre" cssClass="form-control" autofocus="autofocus" disabled="true" maxlength="30"/> <form:errors path="nombre" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="apellido1"><span id="apellido1Label" class="text-danger">*</span> <spring:message code="persona.apellido1"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="apellido1" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="apellido1" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="apellido2"><spring:message code="persona.apellido2"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="apellido2" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="apellido2" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="tipoDocumentoIdentificacion"><spring:message code="persona.tipoDocumentoIdentificacion"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:select path="tipoDocumentoIdentificacion" cssClass="chosen-select">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="tipoDocumento" items="${tiposDocumento}">
-                                            <form:option value="${tipoDocumento}"><spring:message code="tipoDocumentoIdentificacion.${tipoDocumento}"/></form:option>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="tipo" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoPersona"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.tipoPersona"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                      <form:select path="tipo" cssClass="chosen-select">
+                                        <c:forEach items="${tiposPersona}" var="tmp">
+                                          <form:option value="${tmp}" > <spring:message code="persona.tipo.${tmp}"/></form:option>
                                         </c:forEach>
-                                    </form:select>
-                                    <form:errors path="tipoDocumentoIdentificacion" cssClass="help-block" element="span"/>
+                                      </form:select>
+                                      <form:errors path="tipo" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="nombre" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombre"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="nombre" cssClass="form-control" autofocus="autofocus" disabled="true" maxlength="30"/> <form:errors path="nombre" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="documento"><spring:message code="persona.documento"/></label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="apellido1" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido1"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.apellido1"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="apellido1" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="apellido1" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8" id="doc">
-                                    <form:input path="documento" cssClass="form-control" disabled="true" maxlength="17" cssStyle="text-transform:uppercase"/> <form:errors path="documento" cssClass="help-block" element="span"/>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="apellido2" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido2"/>" data-toggle="popover"><spring:message code="persona.apellido2"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="apellido2" cssClass="form-control" disabled="true" maxlength="30"/> <form:errors path="apellido2" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="email"><spring:message code="persona.email"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="tipoDocumentoIdentificacion" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoDocIdent"/>" data-toggle="popover"><spring:message code="persona.tipoDocumentoIdentificacion"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="tipoDocumentoIdentificacion" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="tipoDocumento" items="${tiposDocumento}">
+                                                <form:option value="${tipoDocumento}"><spring:message code="tipoDocumentoIdentificacion.${tipoDocumento}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                        <form:errors path="tipoDocumentoIdentificacion" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:input path="email" cssClass="form-control" maxlength="160"/> <form:errors path="email" cssClass="help-block" element="span"/>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="documento" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroDocumento"/>" data-toggle="popover"><spring:message code="persona.documento"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="doc">
+                                        <form:input path="documento" cssClass="form-control" disabled="true" maxlength="17" cssStyle="text-transform:uppercase"/> <form:errors path="documento" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="telefono"><spring:message code="persona.telefono"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="email" rel="ayuda" data-content="<spring:message code="registro.ayuda.email"/>" data-toggle="popover"><spring:message code="persona.email"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="email" cssClass="form-control" maxlength="160"/> <form:errors path="email" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:input path="telefono" cssClass="form-control" maxlength="20"/> <form:errors path="telefono" cssClass="help-block" element="span"/>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="telefono" rel="ayuda" data-content="<spring:message code="registro.ayuda.telefono"/>" data-toggle="popover"><spring:message code="persona.telefono"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="telefono" cssClass="form-control" maxlength="20"/> <form:errors path="telefono" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="canal"><spring:message code="persona.canal"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="canal" rel="ayuda" data-content="<spring:message code="registro.ayuda.canal"/>" data-toggle="popover"><spring:message code="persona.canal"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="canal" cssClass="chosen-select">
+                                            <form:option value="-1" label="..."/>
+                                            <c:forEach var="canal" items="${canales}">
+                                                <form:option value="${canal}"><spring:message code="canalNotificacion.${canal}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                        <form:errors path="canal" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:select path="canal" cssClass="chosen-select">
-                                        <form:option value="-1" label="..."/>
-                                        <c:forEach var="canal" items="${canales}">
-                                            <form:option value="${canal}"><spring:message code="canalNotificacion.${canal}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="canal" cssClass="help-block" element="span"/>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="pais.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.pais"/>" data-toggle="popover"><spring:message code="interesado.pais"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="pais.id" class="chosen-select" disabled="true">
+                                            <form:option value="-1" label="..."/>
+                                            <c:forEach var="pais" items="${paises}">
+                                                <form:option value="${pais.id}" label="${pais.descripcionPais}" />
+                                            </c:forEach>
+                                        </form:select>
+                                        <form:errors path="pais.id" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="pais.id"><spring:message code="interesado.pais"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="provincia.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.provincia"/>" data-toggle="popover"><spring:message code="interesado.provincia"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+
+                                        <form:select path="provincia.id" class="chosen-select" disabled="true" onchange="actualizarLocalidad(this)">
+                                            <form:option value="-1" label="..."/>
+                                            <c:forEach var="provincia" items="${provincias}">
+                                                <form:option value="${provincia.id}" label="${provincia.descripcionProvincia}" />
+                                            </c:forEach>
+                                        </form:select>
+                                        <form:errors path="provincia.id" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:select path="pais.id" class="chosen-select" disabled="true">
-                                        <form:option value="-1" label="..."/>
-                                        <c:forEach var="pais" items="${paises}">
-                                            <form:option value="${pais.id}" label="${pais.descripcionPais}" />
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="pais.id" cssClass="help-block" element="span"/>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="localidad.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.localidad"/>" data-toggle="popover"><spring:message code="interesado.localidad"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="localidad.id" cssClass="chosen-select" disabled="true"/>
+                                        <form:errors path="localidad.id" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="provincia.id"><spring:message code="interesado.provincia"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="direccion" rel="ayuda" data-content="<spring:message code="registro.ayuda.direccion"/>" data-toggle="popover"><spring:message code="persona.direccion"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:textarea path="direccion" cssClass="form-control" cols="3" maxlength="160" disabled="true"/> <form:errors path="direccion" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
 
-                                    <form:select path="provincia.id" class="chosen-select" disabled="true" onchange="actualizarLocalidad(this)">
-                                        <form:option value="-1" label="..."/>
-                                        <c:forEach var="provincia" items="${provincias}">
-                                            <form:option value="${provincia.id}" label="${provincia.descripcionProvincia}" />
-                                        </c:forEach>
-                                    </form:select>
-                                    <form:errors path="provincia.id" cssClass="help-block" element="span"/>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="cp" rel="ayuda" data-content="<spring:message code="registro.ayuda.cp"/>" data-toggle="popover"><spring:message code="persona.cp"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="cp" cssClass="form-control" maxlength="5" disabled="true"/> <form:errors path="cp" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                    <form:label path="localidad.id"><spring:message code="interesado.localidad"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="razonSocial" rel="ayuda" data-content="<spring:message code="registro.ayuda.razon"/>" data-toggle="popover"><span id="razonSocialLabel" class="text-danger">*</span> <spring:message code="persona.razonSocial"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:textarea path="razonSocial" cssClass="form-control" cols="3" disabled="true" maxlength="80"/> <form:errors path="razonSocial" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:select path="localidad.id" cssClass="chosen-select" disabled="true"/>
-                                    <form:errors path="localidad.id" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="direccion"><spring:message code="persona.direccion"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:textarea path="direccion" cssClass="form-control" cols="3" maxlength="160" disabled="true"/> <form:errors path="direccion" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="cp"><spring:message code="persona.cp"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:input path="cp" cssClass="form-control" maxlength="5" disabled="true"/> <form:errors path="cp" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="razonSocial"><span id="razonSocialLabel" class="text-danger">*</span> <spring:message code="persona.razonSocial"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:textarea path="razonSocial" cssClass="form-control" cols="3" disabled="true" maxlength="80"/> <form:errors path="razonSocial" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="direccionElectronica"><spring:message code="persona.direccionElectronica"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:textarea path="direccionElectronica" cssClass="form-control" cols="3" maxlength="160" disabled="true"/> <form:errors path="direccionElectronica" cssClass="help-block" element="span"/>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="direccionElectronica" rel="ayuda" data-content="<spring:message code="registro.ayuda.direccionElectronica"/>" data-toggle="popover"><spring:message code="persona.direccionElectronica"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:textarea path="direccionElectronica" cssClass="form-control" cols="3" maxlength="160" disabled="true"/> <form:errors path="direccionElectronica" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 

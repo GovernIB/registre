@@ -39,41 +39,59 @@
                     <div class="panel-body">
                         <form:form modelAttribute="personaBusqueda" method="post" cssClass="form-horizontal">
                             <form:hidden path="pageNumber"/>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.nombre"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="persona.nombre" cssClass="form-control"/>
+
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="persona.nombre" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombrePersona.busqueda"/>" data-toggle="popover"><spring:message code="regweb.nombre"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="persona.nombre" cssClass="form-control"/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="persona.apellido1"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="persona.apellido1" cssClass="form-control"/>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="persona.apellido1" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido1Persona.busqueda"/>" data-toggle="popover"><spring:message code="persona.apellido1"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="persona.apellido1" cssClass="form-control"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="persona.apellido2"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="persona.apellido2" cssClass="form-control"/>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="persona.apellido2" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido2Persona.busqueda"/>" data-toggle="popover"><spring:message code="persona.apellido2"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="persona.apellido2" cssClass="form-control"/>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="persona.documento"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="persona.documento" cssClass="form-control"/>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="persona.documento" rel="ayuda" data-content="<spring:message code="registro.ayuda.documentoPersona.busqueda"/>" data-toggle="popover"><spring:message code="persona.documento"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="persona.documento" cssClass="form-control"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="persona.tipoPersona"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="persona.tipo" cssClass="chosen-select">
-                                        <form:option value="-1" default="default">...</form:option>
-                                        <c:forEach items="${tiposPersona}" var="tmp">
-                                            <form:option value="${tmp}" > <spring:message code="persona.tipo.${tmp}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="persona.tipo" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoPersona.busqueda"/>" data-toggle="popover"><spring:message code="persona.tipoPersona"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="persona.tipo" cssClass="chosen-select">
+                                            <form:option value="-1" default="default">...</form:option>
+                                            <c:forEach items="${tiposPersona}" var="tmp">
+                                                <form:option value="${tmp}" > <spring:message code="persona.tipo.${tmp}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
                                 </div>
                             </div>
 

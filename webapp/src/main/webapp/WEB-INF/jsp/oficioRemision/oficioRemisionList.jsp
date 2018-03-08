@@ -47,79 +47,106 @@
                         <form:hidden path="pageNumber"/>
 
                         <div class="panel-body">
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.tipo"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="tipoOficioRemision" cssClass="chosen-select">
-                                        <form:option value="0">...</form:option>
-                                        <c:forEach items="${tiposOficioRemision}" var="tipo">
-                                            <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
-                                        </c:forEach>
-                                    </form:select>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="tipoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="tipoOficioRemision" cssClass="chosen-select">
+                                            <form:option value="0">...</form:option>
+                                            <c:forEach items="${tiposOficioRemision}" var="tipo">
+                                                <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.destino"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="destinoOficioRemision" cssClass="chosen-select">
-                                        <form:option value="">...</form:option>
-                                        <c:forEach items="${destinosOficioRemision}" var="destino">
-                                            <form:option value="${destino}"><spring:message code="oficioRemision.destino.${destino}" /></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"> <spring:message code="oficioRemision.libro"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message
-                                        code="oficioRemision.estado"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="estadoOficioRemision" cssClass="chosen-select">
-                                        <form:option value="">...</form:option>
-                                        <c:forEach items="${estadosOficioRemision}" var="estado">
-                                            <form:option value="${estado}"><spring:message code="oficioRemision.estado.${estado}" /></form:option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.numeroOficio"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.usuario"/></div>
-                                <div class="col-xs-8">
-                                    <form:select path="usuario" class="chosen-select">
-                                        <form:option value="">...</form:option>
-                                        <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
-                                            <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${oficioRemisionBusqueda.usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
-                                        </c:forEach>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.fechainicio"/></div>
-                                <div class="col-xs-8" id="fechaInicio">
-                                    <div class="input-group date no-pad-right">
-                                        <form:input path="fechaInicio" cssClass="form-control" maxlength="10"/>
-                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="destinoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.destino"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="destinoOficioRemision" cssClass="chosen-select">
+                                            <form:option value="">...</form:option>
+                                            <c:forEach items="${destinosOficioRemision}" var="destino">
+                                                <form:option value="${destino}"><spring:message code="oficioRemision.destino.${destino}" /></form:option>
+                                            </c:forEach>
+                                        </form:select>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.fechafin"/></div>
-                                <div class="col-xs-8" id="fechaFin">
-                                    <div class="input-group date no-pad-right">
-                                        <form:input path="fechaFin" cssClass="form-control" maxlength="10"/>
-                                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="oficioRemision.libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.libro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="estadoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.estadoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.estado"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="estadoOficioRemision" cssClass="chosen-select">
+                                            <form:option value="">...</form:option>
+                                            <c:forEach items="${estadosOficioRemision}" var="estado">
+                                                <form:option value="${estado}"><spring:message code="oficioRemision.estado.${estado}" /></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="oficioRemision.numeroOficio" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="usuario" rel="ayuda" data-content="<spring:message code="registro.ayuda.usuarioOficio.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="usuario" class="chosen-select">
+                                            <form:option value="">...</form:option>
+                                            <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
+                                                <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${oficioRemisionBusqueda.usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicioOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechainicio"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="fechaInicio">
+                                        <div class="input-group date no-pad-right">
+                                            <form:input path="fechaInicio" cssClass="form-control" maxlength="10"/>
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.finOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechafin"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="fechaFin">
+                                        <div class="input-group date no-pad-right">
+                                            <form:input path="fechaFin" cssClass="form-control" maxlength="10"/>
+                                            <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

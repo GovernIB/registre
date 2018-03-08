@@ -45,31 +45,38 @@
                             <form:hidden path="pageNumber"/>
 
                             <div class="panel-body">
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.tipo"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="tipoOficioRemision" cssClass="chosen-select">
-                                            <c:forEach items="${tiposOficioRemision}" var="tipo">
-                                                <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
-                                            </c:forEach>
-                                        </form:select>
-                                    </div>
-                                </div>
 
-                               <%-- <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="oficioRemision.libro"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="oficioRemision.libro.id" cssClass="chosen-select">
-                                            <form:option value="">...</form:option>
-                                            <form:options items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto"/>
-                                        </form:select>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-6 espaiLinies">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
+                                            <label for="tipoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="tipoOficioRemision" cssClass="chosen-select">
+                                                <c:forEach items="${tiposOficioRemision}" var="tipo">
+                                                    <form:option value="${tipo}"><spring:message code="oficioRemision.tipo.${tipo}" /></form:option>
+                                                </c:forEach>
+                                            </form:select>
+                                        </div>
                                     </div>
-                                </div>--%>
 
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="oficioRemision.numeroOficio"/></div>
-                                    <div class="col-xs-8">
-                                        <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
+                                   <%-- <div class="form-group col-xs-6">
+                                        <div class="col-xs-4 pull-left align-right"><span class="text-danger">*</span> <spring:message code="oficioRemision.libro"/></div>
+                                        <div class="col-xs-8">
+                                            <form:select path="oficioRemision.libro.id" cssClass="chosen-select">
+                                                <form:option value="">...</form:option>
+                                                <form:options items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto"/>
+                                            </form:select>
+                                        </div>
+                                    </div>--%>
+
+                                    <div class="col-xs-6 espaiLinies">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
+                                            <label for="oficioRemision.numeroOficio" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
+                                        </div>
                                     </div>
                                 </div>
 

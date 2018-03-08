@@ -80,7 +80,7 @@
                        <div class="panel-body">
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                                </div>
                                <div class="col-xs-10">
@@ -100,7 +100,7 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.entrada"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
                                </div>
                                <div class="col-xs-10">
@@ -112,7 +112,7 @@
 
                            <div class="form-group col-xs-12">
 
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="destino.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.destino"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino"/></label>
                                </div>
                                <div class="col-xs-8">
@@ -143,7 +143,7 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.tipoAsunto.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
                                </div>
                                <div class="col-xs-10">
@@ -159,7 +159,7 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.idioma" rel="ayuda" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
                                </div>
                                <div class="col-xs-10">
@@ -173,7 +173,7 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.tipoDocumentacionFisica" rel="ayuda" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.documentacionFisica"/></label>
                                </div>
                                <div class="col-xs-10 radioButton">
@@ -212,7 +212,7 @@
                        <div class="panel-body">
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.codigoAsunto.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.codigoAsunto"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoAsunto"/></label>
                                </div>
                                <div class="col-xs-10">
@@ -221,14 +221,14 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.referenciaExterna" rel="ayuda" data-content="<spring:message code="registro.ayuda.refExterna"/>" data-toggle="popover"><spring:message code="registroEntrada.referenciaExterna"/></label>
                                </div>
                                <div class="col-xs-4">
                                    <form:input path="registroDetalle.referenciaExterna" maxlength="16" cssClass="form-control"/> <form:errors path="registroDetalle.referenciaExterna" cssClass="help-block" element="span"/>
                                </div>
 
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.expediente" rel="ayuda" data-content="<spring:message code="registro.ayuda.expediente"/>" data-toggle="popover"><spring:message code="registroEntrada.expediente"/></label>
                                </div>
                                <div class="col-xs-4">
@@ -237,7 +237,7 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.transporte" rel="ayuda" data-content="<spring:message code="registro.ayuda.transporte"/>" data-toggle="popover"><spring:message code="registroEntrada.transporte"/></label>
                                </div>
                                <div class="col-xs-5">
@@ -250,7 +250,7 @@
                                    <form:errors path="registroDetalle.transporte" cssClass="help-block" element="span"/>
 
                                </div>
-                               <div class="col-xs-1 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.numeroTransporte" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroTransporte"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroTransporte"/></label>
                                </div>
                                <div class="col-xs-4">
@@ -259,7 +259,7 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb12 control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
                                </div>
                                <div class="col-xs-10">
@@ -269,7 +269,7 @@
 
                            <div class="form-group col-xs-12">
 
-                                   <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                                   <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                        <label for="registroDetalle.oficinaOrigen.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><spring:message code="registroEntrada.oficinaOrigen"/></label>
                                    </div>
                                    <div class="col-xs-8">
@@ -301,13 +301,13 @@
                            </div>
 
                            <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.numeroRegistroOrigen" rel="ayuda" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
                                </div>
                                <div class="col-xs-4">
                                    <form:input path="registroDetalle.numeroRegistroOrigen" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.numeroRegistroOrigen" cssClass="help-block" element="span"/>
                                </div>
-                               <div class="col-xs-1 pull-left etiqueta_regweb control-label">
+                               <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.fechaOrigen" rel="ayuda" data-content="<spring:message code="registro.ayuda.fecha"/>" data-toggle="popover"><spring:message code="registroEntrada.fecha"/></label>
                                </div>
                                <div class="col-xs-5 pad-right-15" id="fechaOrigen">
