@@ -40,12 +40,12 @@
 
                             <form:hidden path="pageNumber"/>
 
-                            <div class="row">
-                                <div class="form-group col-xs-6  pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="fechaInicio"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicio.usuarioLopd"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right" id="fechaInicio">
+                                    <div class="col-xs-8" id="fechaInicio">
                                         <div class="input-group date no-pad-right">
                                             <form:input type="text" cssClass="form-control" path="fechaInicio" maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -53,11 +53,11 @@
                                         <span class="errors"></span>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6 pad-left">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <form:label path="fechaFin"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></form:label>
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.fin.usuarioLopd"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
                                     </div>
-                                    <div class="col-xs-9 no-pad-right" id="fechaFin">
+                                    <div class="col-xs-8" id="fechaFin">
                                         <div class="input-group date no-pad-right">
                                             <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
                                             <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -66,64 +66,67 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                            <div class="form-group col-xs-6 pad-left">
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <form:label path="libro"><spring:message code="libro.libro"/></form:label>
-                                </div>
-                                <div class="col-xs-9 no-pad-right">
-                                    <form:select path="libro"  cssClass="chosen-select" onchange="actualizarUsuarios(this)">
-                                        <form:option path="libro" value="-1" selected="selected">...</form:option>
-                                        <form:options path="libro" items="${libros}" itemValue="id" itemLabel="libroOrganismo"/>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6 pad-left">
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <form:label path="usuario"><span class="text-danger">*</span> <spring:message code="usuario.usuario"/></form:label>
-                                </div>
-                                <div class="col-xs-9 no-pad-right" id="user">
-                                    <div>
-                                        <form:select path="usuario" cssClass="chosen-select" multiple="false">
-                                            <form:option path="usuario" value="-1" selected="selected">...</form:option>
-                                            <form:options path="usuario" items="${usuarios}" itemValue="id" itemLabel="nombreCompleto"/>
+
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="libro" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro.usuarioLopd"/>" data-toggle="popover"><spring:message code="libro.libro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="libro"  cssClass="chosen-select" onchange="actualizarUsuarios(this)">
+                                            <form:option path="libro" value="-1" selected="selected">...</form:option>
+                                            <form:options path="libro" items="${libros}" itemValue="id" itemLabel="libroOrganismo"/>
                                         </form:select>
                                     </div>
-                                    <span class="errors"></span>
+                                </div>
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="usuario" rel="ayuda" data-content="<spring:message code="registro.ayuda.usuario.usuarioLopd"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="usuario.usuario"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="user">
+                                        <div>
+                                            <form:select path="usuario" cssClass="chosen-select" multiple="false">
+                                                <form:option path="usuario" value="-1" selected="selected">...</form:option>
+                                                <form:options path="usuario" items="${usuarios}" itemValue="id" itemLabel="nombreCompleto"/>
+                                            </form:select>
+                                        </div>
+                                        <span class="errors"></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="form-group col-xs-6 pad-left">
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
-                                </div>
-                                <div class="col-xs-9 no-pad-right" id="tip">
-                                    <form:select path="tipo" cssClass="chosen-select" multiple="false">
-                                        <form:option value="1" default="default"><spring:message code="informe.entrada"/></form:option>
-                                        <form:option value="2"><spring:message code="informe.salida"/></form:option>
-                                        <form:option value="3"><spring:message code="registroMigrado.migrado"/></form:option>
-                                    </form:select>
-                                </div>
-                            </div>
-                            <div class="form-group col-xs-6 pad-left">
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <form:label path="accion"><span class="text-danger">*</span> <spring:message code="regweb.accion"/></form:label>
-                                </div>
-                                <div class="col-xs-9 no-pad-right" id="acci">
-                                    <div>
-                                        <form:select path="accion" cssClass="chosen-select" multiple="false">
-                                            <form:option value="3" default="default"><spring:message code="informe.lopd.creacion"/></form:option>
-                                            <form:option value="4"><spring:message code="informe.lopd.modificacion"/></form:option>
-                                            <form:option value="1"><spring:message code="informe.lopd.listado"/></form:option>
-                                            <form:option value="2"><spring:message code="informe.lopd.consultado"/></form:option>
-                                            <form:option value="5"><spring:message code="informe.lopd.justificante"/></form:option>
+
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="tipo" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoLibro.usuarioLopd"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="tip">
+                                        <form:select path="tipo" cssClass="chosen-select" multiple="false">
+                                            <form:option value="1" default="default"><spring:message code="informe.entrada"/></form:option>
+                                            <form:option value="2"><spring:message code="informe.salida"/></form:option>
+                                            <form:option value="3"><spring:message code="registroMigrado.migrado"/></form:option>
                                         </form:select>
                                     </div>
-                                    <span class="errors"></span>
+                                </div>
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="accion" rel="ayuda" data-content="<spring:message code="registro.ayuda.accion.usuarioLopd"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.accion"/></label>
+                                    </div>
+                                    <div class="col-xs-8" id="acci">
+                                        <div>
+                                            <form:select path="accion" cssClass="chosen-select" multiple="false">
+                                                <form:option value="3" default="default"><spring:message code="informe.lopd.creacion"/></form:option>
+                                                <form:option value="4"><spring:message code="informe.lopd.modificacion"/></form:option>
+                                                <form:option value="1"><spring:message code="informe.lopd.listado"/></form:option>
+                                                <form:option value="2"><spring:message code="informe.lopd.consultado"/></form:option>
+                                                <form:option value="5"><spring:message code="informe.lopd.justificante"/></form:option>
+                                            </form:select>
+                                        </div>
+                                        <span class="errors"></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+
                             <div class="form-group col-xs-12">
                                 <button type="submit" class="btn btn-warning  btn-sm"><spring:message code="regweb.buscar"/></button>
                             </div>

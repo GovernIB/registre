@@ -55,24 +55,29 @@
                             <form:errors path="entidad.posYsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionY.obligatorio"/></span></form:errors>
                             <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
                                 <sec:authorize access="hasRole('RWE_SUPERADMIN')">
-                                    <div class="form-group col-xs-6">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                             <form:label path="entidad.nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:input path="entidad.nombre" cssClass="form-control"/> <form:errors path="entidad.nombre" cssClass="help-block" element="span"/>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                             <form:label path="entidad.descripcion"><span class="text-danger">*</span> <spring:message code="regweb.descripcion"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:textarea path="entidad.descripcion" rows="3" cssClass="form-control"/> <form:errors path="entidad.descripcion" cssClass="help-block" element="span"/>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                </div>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                             <form:label path="entidad.codigoDir3"><span class="text-danger">*</span> <spring:message code="entidad.codigoDir3"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
@@ -84,14 +89,16 @@
                                             </c:if>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                             <form:label path="entidad.propietario.id"><span class="text-danger">*</span> <spring:message code="entidad.propietario"/></form:label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:select path="entidad.propietario.id" items="${propietarios}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/> <form:errors path="entidad.propietario.id" cssClass="help-block" element="span"/>
                                         </div>
                                     </div>
+                                </div>
+
                                 </sec:authorize>
                             </c:if>
 

@@ -49,10 +49,9 @@
                     <!-- Formulario -->
                     <div class="panel-body">
 
-                        
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                        <div class="col-xs-12">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="tipoUsuario"><span class="text-danger">*</span> <spring:message code="usuario.tipoUsuario"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -65,8 +64,8 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="idioma"><span class="text-danger">*</span> <spring:message code="usuario.idioma"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -78,9 +77,11 @@
                                     
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                        <div class="col-xs-12">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -88,17 +89,19 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="documento"><span class="text-danger">*</span> <spring:message code="usuario.documento"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="documento" cssClass="form-control"/> <form:errors path="documento" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                        <div class="col-xs-12">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="apellido1"><span class="text-danger">*</span> <spring:message code="usuario.apellido1"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -106,17 +109,19 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="apellido2"><spring:message code="usuario.apellido2"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="apellido2" cssClass="form-control"/> <form:errors path="apellido2" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                        <div class="col-xs-12">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="identificador"><span class="text-danger">*</span> <spring:message code="usuario.identificador"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
@@ -124,14 +129,15 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="email"><span class="text-danger">*</span> <spring:message code="usuario.email"/></form:label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="email" cssClass="form-control"/> <form:errors path="email" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
+                        </div>
 
                     </div>
 

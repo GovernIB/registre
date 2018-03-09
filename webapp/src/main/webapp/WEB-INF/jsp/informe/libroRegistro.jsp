@@ -38,23 +38,24 @@
                         </div>
                         <div class="panel-body">
                             <form:form modelAttribute="informeLibroBusquedaForm" method="post" cssClass="form-horizontal" name="informeLibroBusquedaForm" onsubmit="return validaFormulario(this)">
-                                <div class="row">
-                                    <div class="form-group col-xs-6 pad-left">
-                                        <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="tipo"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></form:label>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="tipo" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoLibro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right">
+                                        <div class="col-xs-8">
                                             <form:select path="tipo" cssClass="chosen-select" onchange="actualizarLibros(this.selectedIndex)">
                                                 <form:option value="1" default="default"><spring:message code="informe.entrada"/></form:option>
                                                 <form:option value="2"><spring:message code="informe.salida"/></form:option>
                                             </form:select>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6  pad-left">
-                                        <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="formato"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></form:label>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="formato" rel="ayuda" data-content="<spring:message code="registro.ayuda.formato.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right">
+                                        <div class="col-xs-8">
                                             <form:select path="formato" cssClass="chosen-select">
                                                 <form:option value="pdf" default="default"><spring:message code="regweb.formato.pdf" /></form:option>
                                                 <form:option value="excel"><spring:message code="regweb.formato.excel"/></form:option>
@@ -62,12 +63,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-xs-6 pad-left libros1">
-                                        <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="libros"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></form:label>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat libros1">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="libros" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right" id="libr">
+                                        <div class="col-xs-8" id="libr">
                                             <c:if test="${fn:length(libros) eq 1}">
                                                 <form:select path="libros" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select" multiple="false"/>
                                             </c:if>
@@ -78,11 +80,11 @@
                                             <span id="librosErrors"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6 pad-left campos1">
-                                        <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="campos"><span class="text-danger">*</span> <spring:message code="regweb.campos"/></form:label>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat campos1">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="campos" rel="ayuda" data-content="<spring:message code="registro.ayuda.campos.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.campos"/></label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right" id="campos">
+                                        <div class="col-xs-8" id="campos">
                                             <spring:message code="informe.campos" var="varCampos"/>
                                             <form:select data-placeholder="${varCampos}" multiple="true" cssClass="chosen-select" id="campos" path="campos" name="campos">
                                                 <form:option value="llibr" selected="selected"><spring:message code="registroEntrada.libro"/></form:option>
@@ -111,12 +113,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="form-group col-xs-6 pad-left">
-                                        <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="fechaInicio"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></form:label>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicio.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right" id="fechaInicio">
+                                        <div class="col-xs-8" id="fechaInicio">
                                             <div class="input-group date no-pad-right">
                                                 <form:input type="text" cssClass="form-control" path="fechaInicio" maxlength="10" placeholder="dd/mm/yyyy" name="fechaInicio"/>
                                                 <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -124,11 +127,11 @@
                                             <span class="errors"></span>
                                         </div>
                                     </div>
-                                    <div class="form-group col-xs-6  pad-left">
-                                        <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                            <form:label path="fechaFin"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></form:label>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.fin.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
                                         </div>
-                                        <div class="col-xs-9 no-pad-right" id="fechaFin">
+                                        <div class="col-xs-8" id="fechaFin">
                                             <div class="input-group date no-pad-right">
                                                 <form:input type="text" cssClass="form-control" path="fechaFin" maxlength="10" placeholder="dd/mm/yyyy" name="fechaFin"/>
                                                 <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
@@ -139,80 +142,88 @@
                                 </div>
 
                                 <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
-                                <c:if test="${empty informeLibroBusquedaForm.interessatDoc && empty informeLibroBusquedaForm.interessatNom && empty informeLibroBusquedaForm.organDestinatari && empty informeLibroBusquedaForm.observaciones && empty informeLibroBusquedaForm.usuario && !informeLibroBusquedaForm.anexos}">
+                                <c:if test="${empty informeLibroBusquedaForm.interessatDoc &&
+                                empty informeLibroBusquedaForm.interessatNom &&
+                                empty informeLibroBusquedaForm.organDestinatari &&
+                                empty informeLibroBusquedaForm.observaciones &&
+                                empty informeLibroBusquedaForm.usuario && !informeLibroBusquedaForm.anexos}">
                                   <div id="demo" class="collapse">
                                 </c:if>
-                                <c:if test="${not empty informeLibroBusquedaForm.interessatDoc || not empty informeLibroBusquedaForm.interessatNom || not empty informeLibroBusquedaForm.organDestinatari || not empty informeLibroBusquedaForm.observaciones || not empty informeLibroBusquedaForm.usuario || informeLibroBusquedaForm.anexos}">
+                                <c:if test="${not empty informeLibroBusquedaForm.interessatDoc ||
+                                not empty informeLibroBusquedaForm.interessatNom ||
+                                not empty informeLibroBusquedaForm.organDestinatari ||
+                                not empty informeLibroBusquedaForm.observaciones ||
+                                not empty informeLibroBusquedaForm.usuario || informeLibroBusquedaForm.anexos}">
                                   <div id="demo" class="collapse in">
                                 </c:if>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.numeroRegistro"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="numeroRegistroFormateado" rel="ayuda" data-content="<spring:message code="registro.ayuda.numero.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input path="numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="numeroRegistroFormateado" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.extracto"/>
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input path="extracto" cssClass="form-control" maxlength="200" /> <form:errors path="extracto" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.nombreInteresado"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="interessatNom" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombreInteresado.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.nombreInteresado"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/>
                                                 <form:errors path="interessatNom" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="interesado.apellido1"/>
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="interessatLli1" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido1.libroRegistro"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input path="interessatLli1" cssClass="form-control" maxlength="255"/>
                                                 <form:errors path="interessatLli1" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="interesado.apellido2"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="interessatLli2" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido2.libroRegistro"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input path="interessatLli2" cssClass="form-control" maxlength="255"/>
                                                 <form:errors path="interessatLli2" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.docInteresado"/>
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="interessatDoc" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.docInteresado"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
                                                 <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.estado"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="estado" rel="ayuda" data-content="<spring:message code="registro.ayuda.estado.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:select path="estado" cssClass="chosen-select">
                                                     <form:option value="-1" label="..."/>
                                                     <c:forEach var="estado" items="${estados}">
@@ -222,22 +233,22 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.anexos"/>
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="anexos" rel="ayuda" data-content="<spring:message code="registro.ayuda.anexos.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:checkbox path="anexos"/>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registro.oficinaRegistro"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="idOficina" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.libroRegistro"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:select path="idOficina" cssClass="chosen-select">
                                                     <form:option value="-1" label="..."/>
                                                     <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
@@ -247,10 +258,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label" id="orgDest"><spring:message code="registroEntrada.organDestinatari"/></div>
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label hidden"  id="orgOrig"><spring:message code="registroEntrada.organismoOrigen"/></div>
-                                            <div class="col-xs-7 no-pad-right">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="organDestinatari" rel="ayuda" data-content="<spring:message code="registro.ayuda.destino.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
+                                            </div>
+                                            <div class="col-xs-2 pull-left etiqueta_regweb control-label hidden"  id="orgOrig"><spring:message code="registroEntrada.organismoOrigen"/></div>
+                                            <div class="col-xs-6">
                                                 <form:select path="organDestinatari" cssClass="chosen-select" onchange="actualizarOrganDestinatariNom(${organismo.denominacion})">
                                                     <form:option value="" label="..."/>
                                                     <c:forEach items="${organosDestino}" var="organismo">
@@ -268,20 +281,20 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.observaciones"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:input path="observaciones" class="form-control" type="text" value=""/>
                                             </div>
                                         </div>
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="usuario.usuario"/>
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="usuario" rel="ayuda" data-content="<spring:message code="registro.ayuda.usuario.libroRegistro"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:select path="usuario" class="chosen-select">
                                                     <form:option value="">...</form:option>
                                                     <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
@@ -292,12 +305,12 @@
                                         </div>
                                     </div>
 
-                                    <div class="row">
-                                        <div class="form-group col-xs-6 pad-left">
-                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                                <spring:message code="registroEntrada.tipoAsunto"/>
+                                    <div class="col-xs-12">
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <label for="idTipoAsunto" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoAsunto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.tipoAsunto"/></label>
                                             </div>
-                                            <div class="col-xs-9 no-pad-right">
+                                            <div class="col-xs-8">
                                                 <form:select path="idTipoAsunto" cssClass="chosen-select">
                                                     <form:option value="-1" label="..."/>
                                                     <form:options items="${tiposAsunto}" itemValue="id"
@@ -308,7 +321,7 @@
                                     </div>
 
                                 </div>
-                                <div class="row pad-bottom15 pad-right-60">
+                                <div class="col-xs-12 pad-bottom15 mesOpcions">
                                     <a class="btn btn-warning btn-xs pull-right masOpciones-success" data-toggle="collapse" data-target="#demo">
                                             <%--Comprueba si debe mostrar mas opciones o menos--%>
                                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos}">
