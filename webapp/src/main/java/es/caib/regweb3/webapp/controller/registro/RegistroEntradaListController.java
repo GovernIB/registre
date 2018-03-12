@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -657,6 +658,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         //Obtenemos los destinatarios a través del plugin de distribución
         try {
+            // Miramos si debemos generar el justificante
+            AnexoFull justificante = null;
+            if(!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                justificante = anexoEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
+            }
             respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
 
             //Definimos los distintos estados de la respuesta para enviar al distribuir.js
@@ -686,10 +693,16 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             respuesta.setError(I18NUtils.getMessage(e));
             respuesta.setResult(respuestaDistribucion);
             return respuesta;
-        } catch (I18NException ie){
+        } catch (I18NException ie) {
             ie.printStackTrace();
             respuesta.setStatus("FAIL");
             respuesta.setError(I18NUtils.getMessage(ie));
+            respuesta.setResult(respuestaDistribucion);
+            return respuesta;
+        } catch(SocketTimeoutException ste){
+            ste.printStackTrace();
+            respuesta.setStatus("FAIL");
+            respuesta.setError(ste.getMessage());
             respuesta.setResult(respuestaDistribucion);
             return respuesta;
         } catch (Exception iie){
