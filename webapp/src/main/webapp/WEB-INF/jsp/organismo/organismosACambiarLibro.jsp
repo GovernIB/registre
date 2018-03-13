@@ -92,13 +92,13 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
                                                                         </c:if>
                                                                         <c:forEach var="libroorganismoAProcesar" items="${organismoAProcesar.libros}" varStatus="contador">
 
-                                                                            <div class="form-group col-xs-8">
-                                                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                                            <div class="form-group col-xs-12">
+                                                                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                                                                     <label for="libro${contador.count}-${organismoAProcesar.id}"><spring:message code="libro.libro"/> <em>${libroorganismoAProcesar.nombre}</em></label>
                                                                                     <input id="libro${contador.count}-${organismoAProcesar.id}" type="hidden" class="form-control" value="${libroorganismoAProcesar.id}"/>
                                                                                     <span id="libro${contador.count}-${organismoAProcesar.id}Error"></span>
                                                                                 </div>
-                                                                                <div class="col-xs-8">
+                                                                                <div class="col-xs-6">
                                                                                     <select id="organismoSustituye${contador.count}-${organismoAProcesar.id}" name="organismoSustituye${contador.count}-${organismoAProcesar.id}" class="chosen-select">
                                                                                         <option value="-1">...</option>
                                                                                         <c:if test="${esPendiente}">

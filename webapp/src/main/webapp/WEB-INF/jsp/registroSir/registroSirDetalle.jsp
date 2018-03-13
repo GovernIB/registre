@@ -319,9 +319,8 @@
 
                                 <%--Idioma--%>
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                        <label for="idIdioma"><span class="text-danger">*</span> <spring:message
-                                                code="registroEntrada.idioma"/></label>
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="idIdioma" rel="ayuda" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
                                     </div>
                                     <div class="col-xs-7 no-pad-right" id="idioma">
                                         <form:select path="idIdioma" cssClass="chosen-select">
@@ -343,9 +342,8 @@
                                 <%--TipoAsunto--%>
 
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                        <label for="idTipoAsunto"><span class="text-danger">*</span> <spring:message
-                                                code="registroEntrada.tipoAsunto"/></label>
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="idTipoAsunto" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
                                     </div>
                                     <div class="col-xs-7 no-pad-right" id="tipoAsunto">
                                         <form:select path="idTipoAsunto" cssClass="chosen-select">

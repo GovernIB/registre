@@ -45,32 +45,39 @@
                         <form:form modelAttribute="organismoBusqueda" method="post" cssClass="form-horizontal">
                             <form:hidden path="pageNumber" value="1"/>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.nombre"/></div>
-                                <div class="col-xs-8">
-                                    <form:input path="organismo.denominacion" cssClass="form-control"/>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="organismo.denominacion"><spring:message code="regweb.nombre"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="organismo.denominacion" cssClass="form-control"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="organismo.estado.id"><span class="text-danger">*</span> <spring:message code="organismo.estado"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+
+                                        <form:select path="organismo.estado.id"  cssClass="chosen-select">
+                                            <%--<form:option value="-1">...</form:option>--%>
+                                            <form:options items="${estados}" itemValue="id" itemLabel="descripcionEstadoEntidad"/>
+                                        </form:select>
+                                        <form:errors path="organismo.estado.id" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="organismo.estado.id"><span class="text-danger">*</span> <spring:message code="organismo.estado"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-
-                                    <form:select path="organismo.estado.id"  cssClass="chosen-select">
-                                        <%--<form:option value="-1">...</form:option>--%>
-                                        <form:options items="${estados}" itemValue="id" itemLabel="descripcionEstadoEntidad"/>
-                                    </form:select>
-                                    <form:errors path="organismo.estado.id" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left align-right"><spring:message
-                                        code="organismo.buscador.libros"/></div>
-                                <div class="col-xs-8">
-                                    <form:checkbox path="libros"/>
+                            <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="libros"><spring:message code="organismo.buscador.libros"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:checkbox path="libros"/>
+                                    </div>
                                 </div>
                             </div>
 

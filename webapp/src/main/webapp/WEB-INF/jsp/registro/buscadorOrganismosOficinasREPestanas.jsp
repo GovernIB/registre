@@ -32,106 +32,107 @@ que se le indica -->
                             <input id="comunidadAutonoma" type="hidden"
                                    value="${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}"/>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="denominacion${param.tipo}"><spring:message
-                                            code="organismo.buscador.denominacion"/></label>
+                            <div class="form-group col-xs-12 senseMargeLat">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="denominacion${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.denominacion"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <input id="denominacion${param.tipo}" name="denominacion" class="form-control"
+                                               type="text" value=""/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <input id="denominacion${param.tipo}" name="denominacion" class="form-control"
-                                           type="text" value=""/>
-                                </div>
-                            </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="codigoOrganismo${param.tipo}"><spring:message
-                                            code="organismo.buscador.codigo"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
-                                           type="text" value="" />
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="codigoOrganismo${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.codigo.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.codigo"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
+                                               type="text" value="" />
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Nivel Administracion -->
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="codNivelAdministracion${param.tipo}"><spring:message
-                                            code="organismo.buscador.nivelAdministracion"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <select id="codNivelAdministracion${param.tipo}" name="codNivelAdministracion"
-                                            class="chosen-select">
-                                        <option value="-1">...</option>
-                                        <c:forEach items="${nivelesAdministracion}" var="nivelAdministracion">
-                                            <option value="${nivelAdministracion.codigoNivelAdministracion}">${nivelAdministracion.descripcionNivelAdministracion}</option>
-                                        </c:forEach>
+                            <div class="form-group col-xs-12 senseMargeLat">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="codNivelAdministracion${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.nivel.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.nivelAdministracion"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <select id="codNivelAdministracion${param.tipo}" name="codNivelAdministracion"
+                                                class="chosen-select">
+                                            <option value="-1">...</option>
+                                            <c:forEach items="${nivelesAdministracion}" var="nivelAdministracion">
+                                                <option value="${nivelAdministracion.codigoNivelAdministracion}">${nivelAdministracion.descripcionNivelAdministracion}</option>
+                                            </c:forEach>
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <!-- Comunidad Autonoma -->
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="codComunidadAutonoma${param.tipo}"><spring:message
-                                            code="organismo.buscador.comunidadAutonoma"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <select id="codComunidadAutonoma${param.tipo}" name="codComunidadAutonoma"
-                                            class="chosen-select"
-                                            onchange="actualizarProvinciaDestinatarios('${param.tipo}')">
-                                        <option value="-1">...</option>
-                                        <c:forEach items="${comunidadesAutonomas}" var="codComunidadAutonoma">
-                                            <option value="${codComunidadAutonoma.codigoComunidad}">${codComunidadAutonoma.descripcionComunidad}</option>
-                                        </c:forEach>
+                                <!-- Comunidad Autonoma -->
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="codComunidadAutonoma${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.comunidad.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.comunidadAutonoma"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <select id="codComunidadAutonoma${param.tipo}" name="codComunidadAutonoma"
+                                                class="chosen-select"
+                                                onchange="actualizarProvinciaDestinatarios('${param.tipo}')">
+                                            <option value="-1">...</option>
+                                            <c:forEach items="${comunidadesAutonomas}" var="codComunidadAutonoma">
+                                                <option value="${codComunidadAutonoma.codigoComunidad}">${codComunidadAutonoma.descripcionComunidad}</option>
+                                            </c:forEach>
 
-                                    </select>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Provincias -->
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="provincia${param.tipo}"><spring:message
-                                            code="interesado.provincia"/></label>
+                            <div class="form-group col-xs-12 senseMargeLat">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="provincia${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.provincia.organismo"/>" data-toggle="popover"><spring:message code="interesado.provincia"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <select id="provincia${param.tipo}" name="provincia" class="chosen-select"
+                                                onchange="actualizarLocalidadDestinatarios('${param.tipo}')">
+                                            <option value="-1">...</option>
+                                            <c:forEach items="${provinciasComunidad}" var="codProvincia">
+                                                <option value="${codProvincia.codigoProvincia}">${codProvincia.descripcionProvincia}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <select id="provincia${param.tipo}" name="provincia" class="chosen-select"
-                                            onchange="actualizarLocalidadDestinatarios('${param.tipo}')">
-                                        <option value="-1">...</option>
-                                        <c:forEach items="${provinciasComunidad}" var="codProvincia">
-                                            <option value="${codProvincia.codigoProvincia}">${codProvincia.descripcionProvincia}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <label for="localidad${param.tipo}"><spring:message
-                                            code="interesado.localidad"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <select id="localidad${param.tipo}" name="localidad" class="chosen-select">
-                                        <option value="-1">...</option>
-                                        <c:forEach items="${localidadesProvincia}" var="codLocalidad">
-                                            <option value="${codLocalidad.codigoLocalidad}">${codLocalidad.nombre}</option>
-                                        </c:forEach>
-                                    </select>
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="localidad${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.localidad.organismo"/>" data-toggle="popover"><spring:message code="interesado.localidad"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <select id="localidad${param.tipo}" name="localidad" class="chosen-select">
+                                            <option value="-1">...</option>
+                                            <c:forEach items="${localidadesProvincia}" var="codLocalidad">
+                                                <option value="${codLocalidad.codigoLocalidad}">${codLocalidad.nombre}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
 
                             <c:if test="${param.tipo == 'OrganismoInteresado'}">
                                 <!-- Unidad Raiz -->
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                        <label for="unidadRaiz${param.tipo}"><spring:message
-                                                code="organismo.buscador.unidadRaiz"/></label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <input type="checkbox" id="unidadRaiz${param.tipo}"/>
+                                <div class="form-group col-xs-12 senseMargeLat">
+                                    <div class="col-xs-6">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="unidadRaiz${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.raiz.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.unidadRaiz"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <input type="checkbox" id="unidadRaiz${param.tipo}"/>
+                                        </div>
                                     </div>
                                 </div>
                             </c:if>

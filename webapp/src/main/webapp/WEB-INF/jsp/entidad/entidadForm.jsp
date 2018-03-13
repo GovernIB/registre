@@ -112,189 +112,214 @@
                                     <div id='content' class="tab-content">
 
                                         <div class="tab-pane" id="Datos">
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:input path="entidad.nombre" cssClass="form-control"/> <form:errors path="entidad.nombre" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-8">
-                                                    <form:input path="entidad.nombre" cssClass="form-control"/> <form:errors path="entidad.nombre" cssClass="help-block" element="span"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.descripcion"><span class="text-danger">*</span> <spring:message code="regweb.descripcion"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:textarea path="entidad.descripcion" rows="3" cssClass="form-control"/> <form:errors path="entidad.descripcion" cssClass="help-block" element="span"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.codigoDir3"><span class="text-danger">*</span> <spring:message code="entidad.codigoDir3"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <c:if test="${tieneOrganismos}">
-                                                        <form:input path="entidad.codigoDir3" cssClass="form-control" readonly="true"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
-                                                    </c:if>
-                                                    <c:if test="${!tieneOrganismos}">
-                                                        <form:input path="entidad.codigoDir3" cssClass="form-control"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
-                                                    </c:if>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.descripcion"><span class="text-danger">*</span> <spring:message code="regweb.descripcion"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:textarea path="entidad.descripcion" rows="3" cssClass="form-control"/> <form:errors path="entidad.descripcion" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.administradores"><spring:message code="entidad.administradores"/></form:label>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.codigoDir3"><span class="text-danger">*</span> <spring:message code="entidad.codigoDir3"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <c:if test="${tieneOrganismos}">
+                                                            <form:input path="entidad.codigoDir3" cssClass="form-control" readonly="true"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
+                                                        </c:if>
+                                                        <c:if test="${!tieneOrganismos}">
+                                                            <form:input path="entidad.codigoDir3" cssClass="form-control"/> <form:errors path="entidad.codigoDir3" cssClass="help-block" element="span"/>
+                                                        </c:if>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-8">
-                                                    <form:select path="entidad.administradores" items="${administradoresEntidad}" itemValue="id" itemLabel="nombreCompleto" multiple="true" cssClass="chosen-select"/> <form:errors path="entidad.administradores" cssClass="help-block" element="span"/>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.administradores"><spring:message code="entidad.administradores"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:select path="entidad.administradores" items="${administradoresEntidad}" itemValue="id" itemLabel="nombreCompleto" multiple="true" cssClass="chosen-select"/> <form:errors path="entidad.administradores" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.oficioRemision"><spring:message code="oficioRemision.oficioRemision"/></form:label>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.oficioRemision"><spring:message code="oficioRemision.oficioRemision"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.oficioRemision"/>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-8">
-                                                    <form:checkbox path="entidad.oficioRemision"/>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.sir"><spring:message code="regweb.sir"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.sir"/>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.sir"><spring:message code="regweb.sir"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:checkbox path="entidad.sir"/>
-                                                </div>
-                                            </div>
+
                                         </div>
                                         <!-- Fi datos -->
 
                                         <div class="tab-pane" id="Formatos">
-                                            <div class="form-group col-xs-12">
-                                                <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.sello"><span class="text-danger">*</span> <spring:message code="entidad.sello"/></form:label>
-                                                </div>
-                                                <div class="col-xs-10">
-                                                    <form:textarea path="entidad.sello" rows="5" cssClass="form-control"/> <form:errors path="entidad.sello" cssClass="help-block" element="span"/>
-                                                    <a data-toggle="modal" href="#myModalSello" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-xs-12">
-                                                <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                                                    <label> <spring:message code="entidad.sello.posicion"/></label>
-                                                </div>
-                                                <div class="col-xs-5">
-                                                    <div class="col-xs-1 pull-left etiqueta_regweb control-label">
-                                                        <form:label path="entidad.posXsello"> <spring:message code="entidad.sello.posicionX"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-2">
-                                                        <form:input path="entidad.posXsello" maxlength="3" cssClass="form-control"/> <form:errors path="entidad.posXsello" cssClass="help-block" element="span"/>
-                                                    </div>
-                                                    <div class="col-xs-1 pull-left etiqueta_regweb control-label">
-                                                        <form:label path="entidad.posYsello"> <spring:message code="entidad.sello.posicionY"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-2">
-                                                        <form:input path="entidad.posYsello" maxlength="3" cssClass="form-control"/> <form:errors path="entidad.posYsello" cssClass="help-block" element="span"/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-xs-12">
-                                                <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.numRegistro"><span class="text-danger">*</span> <spring:message code="entidad.numRegistro"/></form:label>
-                                                </div>
-                                                <div class="col-xs-10">
-                                                    <form:input path="entidad.numRegistro" cssClass="form-control"/> <form:errors path="entidad.numRegistro" cssClass="help-block" element="span"/>
-                                                    <a data-toggle="modal" href="#myModalNumRegistro" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
-                                                </div>
-                                            </div>
 
-                                            <!--  logo sello -->
-                                            <div class="col-xs-12 no-pad-left">
-                                                <div class="form-group col-xs-6">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                        <form:label path="logoSello"><spring:message code="entidad.logoSello"/></form:label>
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-12 senseMargeLat">
+                                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.sello"><span class="text-danger">*</span> <spring:message code="entidad.sello"/></form:label>
                                                     </div>
-                                                    <div class="col-xs-8">
-                                                        <div class="input-group">
-                                                        <span class="input-group-btn">
-                                                            <span class="btn btn-success btn-sm btn-file">
-                                                                Explorar&hellip; <input id="logoSello" name="logoSello" type="file" multiple>
-                                                            </span>
-                                                        </span>
-                                                            <input type="text" class="form-control" readonly>
-                                                        </div>
-                                                        <form:errors path="logoSello" cssClass="help-block" element="span"/>
+                                                    <div class="col-xs-10">
+                                                        <form:textarea path="entidad.sello" rows="5" cssClass="form-control"/> <form:errors path="entidad.sello" cssClass="help-block" element="span"/>
+                                                        <a data-toggle="modal" href="#myModalSello" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
                                                     </div>
                                                 </div>
-                                                <c:if test="${not empty entidadForm.entidad.logoSello}">
-                                                    <div class="form-group col-xs-6">
-                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                            <form:label path="logoSello"><spring:message
-                                                                    code="entidad.logoSello.existente"/></form:label>
-                                                            <form:hidden path="entidad.logoSello.id"/>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-12 senseMargeLat">
+                                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label> <spring:message code="entidad.sello.posicion"/></label>
+                                                    </div>
+                                                    <div class="col-xs-5">
+                                                        <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                                            <form:label path="entidad.posXsello"> <spring:message code="entidad.sello.posicionX"/></form:label>
                                                         </div>
-                                                        <div class="col-xs-8 arxiu_actual">
-                                                            <a href="<c:url value="/archivo/${entidadForm.entidad.logoSello.id}"/>" target="_blank">${entidadForm.entidad.logoSello.nombre}</a>  <br>
-                                                            <form:checkbox path="borrarLogoSello"></form:checkbox><spring:message code="regweb.eliminar"/>
+                                                        <div class="col-xs-2">
+                                                            <form:input path="entidad.posXsello" maxlength="3" cssClass="form-control"/> <form:errors path="entidad.posXsello" cssClass="help-block" element="span"/>
+                                                        </div>
+                                                        <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                                            <form:label path="entidad.posYsello"> <spring:message code="entidad.sello.posicionY"/></form:label>
+                                                        </div>
+                                                        <div class="col-xs-2">
+                                                            <form:input path="entidad.posYsello" maxlength="3" cssClass="form-control"/> <form:errors path="entidad.posYsello" cssClass="help-block" element="span"/>
                                                         </div>
                                                     </div>
-                                                </c:if>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-12 senseMargeLat">
+                                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.numRegistro"><span class="text-danger">*</span> <spring:message code="entidad.numRegistro"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <form:input path="entidad.numRegistro" cssClass="form-control"/> <form:errors path="entidad.numRegistro" cssClass="help-block" element="span"/>
+                                                        <a data-toggle="modal" href="#myModalNumRegistro" class="btn btn-warning btn-xs button-right"><spring:message code="regweb.ayuda"/></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--  logo sello -->
+                                            <div class="col-xs-12">
+                                                <div class="col-xs-12 senseMargeLat">
+                                                    <div class="form-group col-xs-6">
+                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                            <form:label path="logoSello"><spring:message code="entidad.logoSello"/></form:label>
+                                                        </div>
+                                                        <div class="col-xs-8">
+                                                            <div class="input-group">
+                                                            <span class="input-group-btn">
+                                                                <span class="btn btn-success btn-sm btn-file">
+                                                                    Explorar&hellip; <input id="logoSello" name="logoSello" type="file" multiple>
+                                                                </span>
+                                                            </span>
+                                                                <input type="text" class="form-control" readonly>
+                                                            </div>
+                                                            <form:errors path="logoSello" cssClass="help-block" element="span"/>
+                                                        </div>
+                                                    </div>
+                                                    <c:if test="${not empty entidadForm.entidad.logoSello}">
+                                                        <div class="form-group col-xs-6">
+                                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                                <form:label path="logoSello"><spring:message
+                                                                        code="entidad.logoSello.existente"/></form:label>
+                                                                <form:hidden path="entidad.logoSello.id"/>
+                                                            </div>
+                                                            <div class="col-xs-8 arxiu_actual">
+                                                                <a href="<c:url value="/archivo/${entidadForm.entidad.logoSello.id}"/>" target="_blank">${entidadForm.entidad.logoSello.nombre}</a>  <br>
+                                                                <form:checkbox path="borrarLogoSello"></form:checkbox><spring:message code="regweb.eliminar"/>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
+                                                </div>
                                             </div>
 
                                         </div>
                                         <!-- Fi formatos -->
 
                                         <div class="tab-pane" id="Configuracion">
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.colorMenu"><spring:message code="entidad.colorMenu"/></form:label>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.colorMenu"><spring:message code="entidad.colorMenu"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:input path="entidad.colorMenu" cssClass="form-control pick-a-color"/> <form:errors path="entidad.colorMenu" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-8">
-                                                    <form:input path="entidad.colorMenu" cssClass="form-control pick-a-color"/> <form:errors path="entidad.colorMenu" cssClass="help-block" element="span"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.configuracionPersona"><spring:message code="entidad.configuracionPersona"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:select path="entidad.configuracionPersona" cssClass="chosen-select">
-                                                        <c:forEach items="${configuraciones}" var="configuracion">
-                                                            <form:option value="${configuracion}"><spring:message code="configuracionPersona.${configuracion}" /></form:option>
-                                                        </c:forEach>
-                                                    </form:select>
-                                                    <form:errors path="entidad.configuracionPersona" cssClass="help-block" element="span"/>
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.textoPie"><spring:message code="entidad.textoPie"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:textarea path="entidad.textoPie" rows="5" cssClass="form-control"/> <form:errors path="entidad.textoPie" cssClass="help-block" element="span"/>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.configuracionPersona"><spring:message code="entidad.configuracionPersona"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:select path="entidad.configuracionPersona" cssClass="chosen-select">
+                                                            <c:forEach items="${configuraciones}" var="configuracion">
+                                                                <form:option value="${configuracion}"><spring:message code="configuracionPersona.${configuracion}" /></form:option>
+                                                            </c:forEach>
+                                                        </form:select>
+                                                        <form:errors path="entidad.configuracionPersona" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                                    <form:label path="entidad.diasVisado"><span class="text-danger">*</span> <spring:message code="entidad.diasVisado"/></form:label>
+
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.textoPie"><spring:message code="entidad.textoPie"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:textarea path="entidad.textoPie" rows="5" cssClass="form-control"/> <form:errors path="entidad.textoPie" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-8">
-                                                    <form:select id="entidad.diasVisado" path="entidad.diasVisado" class="chosen-select">
-                                                        <c:forEach begin="1" end="10" var="rangoDiasVisado">
-                                                            <c:if test="${entidad.diasVisado == rangoDiasVisado}">
-                                                                <form:option value="${rangoDiasVisado}" selected="true">${rangoDiasVisado}</form:option>
-                                                            </c:if>
-                                                            <c:if test="${!(entidad.diasVisado == rangoDiasVisado)}">
-                                                                <form:option value="${rangoDiasVisado}">${rangoDiasVisado}</form:option>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                    </form:select>
-                                                    <form:errors path="entidad.diasVisado" cssClass="help-block" element="span"/>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.diasVisado"><span class="text-danger">*</span> <spring:message code="entidad.diasVisado"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:select id="entidad.diasVisado" path="entidad.diasVisado" class="chosen-select">
+                                                            <c:forEach begin="1" end="10" var="rangoDiasVisado">
+                                                                <c:if test="${entidad.diasVisado == rangoDiasVisado}">
+                                                                    <form:option value="${rangoDiasVisado}" selected="true">${rangoDiasVisado}</form:option>
+                                                                </c:if>
+                                                                <c:if test="${!(entidad.diasVisado == rangoDiasVisado)}">
+                                                                    <form:option value="${rangoDiasVisado}">${rangoDiasVisado}</form:option>
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </form:select>
+                                                        <form:errors path="entidad.diasVisado" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
                                             </div>
+
                                             <!--  logo menu -->
-                                            <div class="col-xs-12 no-pad-left">
-                                                <div class="form-group col-xs-6">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                                         <form:label path="logoMenu"><spring:message code="entidad.logoMenu"/></form:label>
                                                     </div>
                                                     <div class="col-xs-8">
@@ -311,8 +336,8 @@
                                                     </div>
                                                 </div>
                                                 <c:if test="${not empty entidadForm.entidad.logoMenu}">
-                                                    <div class="form-group col-xs-6">
-                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                                             <form:label path="logoMenu"><spring:message code="entidad.logoMenu.existente"/></form:label>
                                                             <form:hidden path="entidad.logoMenu.id"/>
                                                         </div>
@@ -325,9 +350,9 @@
                                             </div>
                                             <!-- Fi logo menu -->
                                             <!--  logo pie -->
-                                            <div class="col-xs-12 no-pad-left">
-                                                <div class="form-group col-xs-6">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                                         <form:label path="logoPie"><spring:message code="entidad.logoPie"/></form:label>
                                                     </div>
                                                     <div class="col-xs-8">
@@ -343,8 +368,8 @@
                                                     </div>
                                                 </div>
                                                 <c:if test="${not empty entidadForm.entidad.logoPie}">
-                                                    <div class="form-group col-xs-6">
-                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                                             <form:label path="logoPie"><spring:message code="entidad.logoPie.existente"/></form:label>
                                                             <form:hidden path="entidad.logoPie.id"/>
                                                         </div>

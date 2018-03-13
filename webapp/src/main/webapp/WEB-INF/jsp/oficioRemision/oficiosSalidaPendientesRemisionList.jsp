@@ -241,9 +241,12 @@
                                                 <c:if test="${oficiosRemisionOrganismo.sir}">
                                                     <div class="">
                                                         <div class="form-group col-xs-12">
-                                                            <div class="col-xs-2 pull-left etiqueta-sir">
-                                                                <spring:message code="oficioRemision.oficinaSir"/></div>
-                                                            <div class="col-xs-10">
+                                                            <%--<div class="col-xs-3 pull-left">--%>
+                                                                <%--<spring:message code="oficioRemision.oficinaSir"/></div>--%>
+                                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
+                                                                <label for="oficinaSIRCodigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficinaSir"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="oficioRemision.oficinaSir"/></label>
+                                                            </div>
+                                                            <div class="col-xs-9">
                                                                 <form:select path="oficinaSIRCodigo" items="${oficiosRemisionOrganismo.oficinasSIR}"
                                                                              itemLabel="denominacion"
                                                                              itemValue="codigo"
