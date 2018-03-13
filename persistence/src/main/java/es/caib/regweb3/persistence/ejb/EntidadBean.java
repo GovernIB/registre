@@ -139,8 +139,13 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"maxuploadsizeinbytes","10485760","Tamaño máximo permitido por anexo en bytes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"sir.reintentos","10","Número máximo de reintentos para los envios SIR", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
 
-
         // Creamos los Plugins
+        pluginEjb.persist(new Plugin("Custodia","Custodia de anexos","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
+                "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/"));
+
+        pluginEjb.persist(new Plugin("Custodia-Justificante","Custodia de justificantes","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_\n" +
+                "es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Justificantes/"));
+
         pluginEjb.persist(new Plugin("Justificante","Genera el justificante SIR de los registros","es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_JUSTIFICANTE,null,"" +
                 "# Mensaje para la declaración en el justificante\n" +
                 "es.caib.regweb3.plugins.justificante.mock.declaracion.es=declara que las imágenes electrónicas adjuntas son imagen fiel e íntegra de los documentos en soporte físico origen, en el marco de la normativa vigente.\n" +
@@ -332,9 +337,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         log.info("RegistrosSalida eliminados: " +registroSalidaEjb.eliminarByEntidad(idEntidad));
 
 
-        // REGISTROS DETALLE 
-
-        log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle));
+        // REGISTROS DETALLE
+        log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle, idEntidad));
 
         // REPRO 
         log.info("Repros eliminados: " +reproEjb.eliminarByEntidad(idEntidad));
@@ -362,7 +366,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     public void eliminarEntidad(Long idEntidad)throws Exception , I18NException{
-        //todo: Añadir pre-registros cuando se active SIR
 
         log.info("Dentro eliminar Entidad");
 
