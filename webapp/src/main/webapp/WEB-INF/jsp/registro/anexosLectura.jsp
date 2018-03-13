@@ -94,10 +94,10 @@
                                             <!-- TODO mostrar el tamanyo desde custodia -->
                                             <td>
                                                 <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                                    <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID,idEntidad)}" />
+                                                    <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID,param.idEntidad)}" />
                                                 </c:if>
                                                 <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                                    <c:set var="tamanyAnexo" value="${reg:getSizeOfSignatureCustody(anexo.custodiaID,idEntidad)}" />
+                                                    <c:set var="tamanyAnexo" value="${reg:getSizeOfSignatureCustody(anexo.custodiaID,param.idEntidad)}" />
                                                 </c:if>
                                                 ${tamanyAnexo } KB
                                             </td>
