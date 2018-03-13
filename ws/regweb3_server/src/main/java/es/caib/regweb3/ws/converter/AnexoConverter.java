@@ -139,15 +139,15 @@ public class AnexoConverter extends CommonConverter {
    * @throws Exception
    * @throws I18NException
    */
-   public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb) 
+   public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
        throws Exception, I18NException {
 
         if (anexoFull == null || anexoFull.getAnexo() == null){
             return  null;
         }
 
-       AnexoWs anexoWs = procesarAnexoWs(anexoFull, anexoEjb);
-        return anexoWs;
+       return procesarAnexoWs(anexoFull, anexoEjb, idEntidad);
+
     }
 
 
@@ -203,7 +203,7 @@ public class AnexoConverter extends CommonConverter {
    * @return
    * @throws Exception
    */
-  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb)
+  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
       throws Exception, I18NException {
 
        AnexoWs anexoWs = new AnexoWs();
@@ -239,7 +239,7 @@ public class AnexoConverter extends CommonConverter {
            SignatureCustody sign = anexoFull.getSignatureCustody();
            anexoWs.setNombreFirmaAnexada(sign.getName());
            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-           anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante()));
+           anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
          }
          
          
@@ -249,7 +249,7 @@ public class AnexoConverter extends CommonConverter {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
             anexoWs.setNombreFicheroAnexado(doc.getName());
             anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
-            anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID, anexoFull.getAnexo().isJustificante()));
+            anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
          }
        }
        

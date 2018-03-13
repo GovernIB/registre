@@ -39,16 +39,17 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return
      * @throws I18NException
      */
-    AnexoFull getAnexoFullLigero(Long anexoID) throws I18NException;
+    AnexoFull getAnexoFullLigero(Long anexoID, Long idEntidad) throws I18NException;
 
   /**
    * Método que levanta toda la información de los anexos incluidos los archivos físicos
    *
    * @param anexoID
+   * @param idEntidad
    * @return
    * @throws I18NException
    */
-  AnexoFull getAnexoFull(Long anexoID) throws I18NException;
+  AnexoFull getAnexoFull(Long anexoID, Long idEntidad) throws I18NException;
 
   
   
@@ -113,7 +114,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param custodiaID
      * @return
      */
-    byte[] getArchivoContent(String custodiaID, boolean isJustificante) throws I18NException, Exception;
+    byte[] getArchivoContent(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
 
 
     /**
@@ -122,7 +123,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param custodiaID
      * @return
      */
-    byte[] getFirmaContent(String custodiaID, boolean isJustificante) throws Exception, I18NException;
+    byte[] getFirmaContent(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
 
 
     /**
@@ -131,7 +132,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param custodiaID
      * @return
      */
-    DocumentCustody getArchivo(String custodiaID, boolean isJustificante) throws I18NException, Exception;
+    DocumentCustody getArchivo(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
 
 
     /**
@@ -141,7 +142,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      * @throws I18NException
      */
-    DocumentCustody getDocumentInfoOnly(String custodiaID) throws Exception, I18NException;
+    DocumentCustody getDocumentInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException;
 
 
     /**
@@ -151,9 +152,18 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @throws Exception
      * @throws I18NException
      */
-    SignatureCustody getSignatureInfoOnly(String custodiaID) throws Exception, I18NException;
+    SignatureCustody getSignatureInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException;
 
-    SignatureCustody getSignatureInfoOnly(String custodiaID, boolean isJustificante) throws Exception, I18NException;
+  /**
+   *
+   * @param custodiaID
+   * @param isJustificante
+   * @param idEntidad
+   * @return
+   * @throws Exception
+   * @throws I18NException
+   */
+    SignatureCustody getSignatureInfoOnly(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
 
     /**
      * Obtiene la firma existente en el sistema de archivos
@@ -161,7 +171,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param isJustificante
      * @return
      */
-    SignatureCustody getFirma(String custodiaID, boolean isJustificante) throws I18NException, Exception;
+    SignatureCustody getFirma(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
 
     /**
      * Elimina completamente una custodia ( = elimicion completa de Anexo)
@@ -171,7 +181,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
      * casos.
      */
-    boolean eliminarCustodia(String custodiaID, boolean isJustificante) throws Exception, I18NException;
+    boolean eliminarCustodia(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
 
 
     /**
@@ -190,7 +200,7 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * @param isJustificante
      * @return
      */
-    String getUrlValidation(String custodiaID, boolean isJustificante) throws I18NException, Exception;
+    String getUrlValidation(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
 
   /**
    * Obtiene el SignatureCustody de un Anexo
@@ -198,6 +208,6 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
    * @param isJustificante
    * @return SignatureCustody
    */
-    SignatureCustody descargarFirmaDesdeUrlValidacion(String custodiaID, boolean isJustificante) throws I18NException, Exception;
+    SignatureCustody descargarFirmaDesdeUrlValidacion(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
 
 }

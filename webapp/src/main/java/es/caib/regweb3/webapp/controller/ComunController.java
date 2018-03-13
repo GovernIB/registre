@@ -196,14 +196,14 @@ public class ComunController extends BaseController {
                     return "redirect:/aviso";
                 }
                 //Plugin Custodia Justificante
-                if (!pluginEjb.existPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+                if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
                     log.info("No existe el plugin de custodia del justificante");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
                     return "redirect:/aviso";
 
                 }
                 // Plugin Custodia
-                if (!pluginEjb.existPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA)) {
+                if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
                     log.info("No existe el plugin de custodia");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
                     return "redirect:/aviso";

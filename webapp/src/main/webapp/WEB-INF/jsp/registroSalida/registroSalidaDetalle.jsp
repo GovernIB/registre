@@ -225,6 +225,7 @@
                             <c:if test="${not anexosCompleto}">
                                 <c:import url="../registro/anexosLectura.jsp">
                                     <c:param name="tipoRegistro" value="salida"/>
+                                    <c:param name="idEntidad" value="${registro.oficina.organismoResponsable.entidad.id}"/>
                                 </c:import>
                             </c:if>
                         </c:if>

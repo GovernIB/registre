@@ -157,7 +157,7 @@ public class AnexoController extends BaseController {
                     + " | anexoID = " + anexoID + ")");
         }
 
-        AnexoFull anexoFull2 = anexoEjb.getAnexoFullLigero(anexoID);
+        AnexoFull anexoFull2 = anexoEjb.getAnexoFullLigero(anexoID, getEntidadActiva(request).getId());
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, anexoID, isOficioRemisionSir);
 
         //Preparamos el formulario con los datos a mostrar
@@ -246,7 +246,7 @@ public class AnexoController extends BaseController {
                                 @PathVariable Long anexoID, HttpServletRequest request) {
 
         try {
-            registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID);
+            registroDetalleEjb.eliminarAnexoRegistroDetalle(anexoID, registroDetalleID, getEntidadActiva(request).getId());
         } catch (I18NException i18ne) {
             String msg = I18NUtils.getMessage(i18ne);
             log.error(msg, i18ne);
@@ -296,9 +296,10 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/descargarDocumento/{anexoId}", method = RequestMethod.GET)
     public void anexo(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
                       HttpServletResponse response) throws Exception, I18NException {
-        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId);
+
+        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getMime(),
-                anexoFull.getAnexo().isJustificante(), false, response);
+                anexoFull.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId());
     }
 
     /**
@@ -309,14 +310,15 @@ public class AnexoController extends BaseController {
     @RequestMapping(value = "/descargarFirma/{anexoId}", method = RequestMethod.GET)
     public void firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
                       HttpServletResponse response) throws Exception, I18NException {
-        AnexoFull anexo = anexoEjb.getAnexoFullLigero(anexoId);
+
+        AnexoFull anexo = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), false, response);
+                    anexo.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId());
         } else {
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), true, response);
+                    anexo.getAnexo().isJustificante(), true, response, getEntidadActiva(request).getId());
         }
 
     }
@@ -335,7 +337,7 @@ public class AnexoController extends BaseController {
      * Por tanto cuando vaya a recuperar un documento con firma antiguo, mirarà en SignatureCustody y no lo encontrará, por tanto controlamos ese caso y devolvemos false.
      * para poder ir a buscarlo a DocumentCustody, que es donde estará. (todo esto se hace en el método firma)
      */
-    private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response) {
+    private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response, Long idEntidad) {
 
         String filename = null;
         OutputStream output;
@@ -349,12 +351,12 @@ public class AnexoController extends BaseController {
 
                 // Si Ã©s un arxiu sense firma
                 if (!firma) {
-                    DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante);
+                    DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante, idEntidad);
                     filename = dc.getName();
                     data = dc.getData();
 
                 } else {   // Si Ã©s firma d'un arxiu
-                    SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante);
+                    SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante, idEntidad);
                     data = sc.getData();
                     filename = sc.getName();
                 }
@@ -618,9 +620,9 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static long getDocSize(String custodiaID) throws Exception, I18NException {
+    public static long getDocSize(String custodiaID, Long idEntidad) throws Exception, I18NException {
 
-        DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID);
+        DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID, idEntidad);
         if (dc == null) {
             return -1;
         }
@@ -635,9 +637,9 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static long getSignSize(String custodiaID) throws Exception, I18NException {
+    public static long getSignSize(String custodiaID, Long idEntidad) throws Exception, I18NException {
 
-        SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID);
+        SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID, idEntidad);
         if (sc == null) {
             return -1;
         }
@@ -659,9 +661,9 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static String getDocName(String custodiaID) throws Exception, I18NException {
+    public static String getDocName(String custodiaID, Long idEntidad) throws Exception, I18NException {
 
-        DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID);
+        DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID, idEntidad);
         if (dc == null) {
             return "";
         }
@@ -674,9 +676,9 @@ public class AnexoController extends BaseController {
      * @param custodiaID
      * @return
      */
-    public static String getSignName(String custodiaID) throws Exception, I18NException {
+    public static String getSignName(String custodiaID, Long idEntidad) throws Exception, I18NException {
 
-        SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID);
+        SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID, idEntidad);
         if (sc == null) {
             return "";
         }

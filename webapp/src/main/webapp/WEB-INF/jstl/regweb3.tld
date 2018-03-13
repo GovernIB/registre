@@ -1,48 +1,40 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<!DOCTYPE taglib
-        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
-        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
-<taglib
-        xmlns="http://java.sun.com/xml/ns/j2ee"
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
-        http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
-        version="2.0"
-        >
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
 <tlib-version>1.0</tlib-version>
 
 <short-name>RegWeb3</short-name>
 
 <function>
         <name>getSizeOfDocumentCustody</name>
-        <description>Retorna el tamany d'un DocumentCustody </description>
         <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
-        <function-signature>long getDocSize(java.lang.String) throws Exception
-        </function-signature>
+        <function-signature>long getDocSize(java.lang.String,java.lang.Long) throws Exception</function-signature>
+
 </function>
 
 <function>
         <name>getSizeOfSignatureCustody</name>
-        <description>Retorna el tamany d'un SignatureCustody </description>
+
         <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
-        <function-signature>long getSignSize(java.lang.String) throws Exception
+        <function-signature>long getSignSize(java.lang.String,java.lang.Long) throws Exception
         </function-signature>
 </function>
 
 <function>
         <name>getNameOfDocumentCustody</name>
-        <description>Retorna el nom d'un DocumentCustody </description>
+
         <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
-        <function-signature>String getDocName(java.lang.String) throws Exception
-        </function-signature>
+        <function-signature>java.lang.String getDocName(java.lang.String,java.lang.Long)</function-signature>
 </function>
 
 <function>
         <name>getNameOfSignatureCustody</name>
-        <description>Retorna el nom d'un SignatureCustody </description>
+
         <function-class>es.caib.regweb3.webapp.controller.registro.AnexoController</function-class>
-        <function-signature>String getSignName(java.lang.String) throws Exception
-        </function-signature>
+        <function-signature>java.lang.String getSignName(java.lang.String,java.lang.Long)</function-signature>
 </function>
 
 </taglib>

@@ -96,7 +96,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
             //Plugin Custodia Justificante
-            if (!pluginEjb.existPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
                 log.info("No existe el plugin de custodia del justificante");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
                 response.sendRedirect("/regweb3/aviso");
@@ -104,7 +104,7 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             }
             //Plugin Custodia
-            if (!pluginEjb.existPlugin(null, RegwebConstantes.PLUGIN_CUSTODIA)) {
+            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
                 log.info("No existe el plugin de custodia");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
                 response.sendRedirect("/regweb3/aviso");

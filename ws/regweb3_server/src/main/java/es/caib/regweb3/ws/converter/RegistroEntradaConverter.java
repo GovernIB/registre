@@ -92,12 +92,14 @@ public class RegistroEntradaConverter extends CommonConverter {
             return null;
         }
 
+        Entidad entidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
+
         // Creamos los datos comunes mediante RegistroWs
         RegistroEntradaResponseWs registroWs = new RegistroEntradaResponseWs();
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
-        registroWs.setEntidadCodigo(registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3());
-        registroWs.setEntidadDenominacion(registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNombre());
+        registroWs.setEntidadCodigo(entidad.getCodigoDir3());
+        registroWs.setEntidadDenominacion(entidad.getNombre());
 
         registroWs.setNumeroRegistro(registroEntrada.getNumeroRegistro());
         registroWs.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
@@ -161,7 +163,7 @@ public class RegistroEntradaConverter extends CommonConverter {
         }
 
         if(registroDetalle.getAnexos() != null){
-            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb);
+            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb, entidad.getId());
 
             registroWs.setAnexos(anexosWs);
         }

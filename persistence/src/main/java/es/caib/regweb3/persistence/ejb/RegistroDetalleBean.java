@@ -84,7 +84,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     }
 
     @Override
-    public Integer eliminar(Set<Long> ids) throws Exception, I18NException{
+    public Integer eliminar(Set<Long> ids, Long idEntidad) throws Exception, I18NException{
 
         for (Object id : ids) {
 
@@ -92,7 +92,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
             //Elimina los anexos
             for(Anexo anexo: registroDetalle.getAnexos()){
-                anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante());
+                anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante(), idEntidad);
             }
             remove(registroDetalle);
 
@@ -116,7 +116,7 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle) throws Exception, I18NException {
+    public boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException {
 
         Anexo anexo = anexoEjb.findById(idAnexo);
         RegistroDetalle registroDetalle = findById(idRegistroDetalle);
@@ -127,6 +127,6 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
             merge(registroDetalle);
             anexoEjb.remove(anexo);
         }
-        return anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante());
+        return anexoEjb.eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante(), idEntidad);
     }
 }

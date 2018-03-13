@@ -311,8 +311,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                 throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
             }
 
-            justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()));
-            sc = anexoEjb.getFirma(justificante.getAnexo().getCustodiaID(), true);
+            justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
+            sc = anexoEjb.getFirma(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
         }

@@ -298,7 +298,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException;
+    RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException;
 
     /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio

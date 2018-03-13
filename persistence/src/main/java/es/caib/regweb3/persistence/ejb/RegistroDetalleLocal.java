@@ -31,7 +31,7 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    Integer eliminar(Set<Long> ids) throws Exception, I18NException;
+    Integer eliminar(Set<Long> ids, Long idEntidad) throws Exception, I18NException;
 
     /**
      * Obtiene todos los RegistroDetalle de una Entidad
@@ -49,6 +49,5 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @return
      * @throws Exception
      */
-    boolean eliminarAnexoRegistroDetalle(Long idAnexo,
-                                         Long idRegistroDetalle) throws Exception, I18NException;
+    boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException;
 }

@@ -263,15 +263,15 @@ public class CommonConverter {
      * @return
      * @throws Exception
      */
-    public static List<AnexoWs> procesarAnexosWs(List<Anexo> anexos, AnexoLocal anexoEjb) throws Exception, I18NException {
+    public static List<AnexoWs> procesarAnexosWs(List<Anexo> anexos, AnexoLocal anexoEjb, Long idEntidad) throws Exception, I18NException {
 
         List<AnexoWs> anexosWs = new ArrayList<AnexoWs>();
 
         for (Anexo anexo : anexos) {
 
-            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId());
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);
 
-            AnexoWs anexoWs = AnexoConverter.getAnexoWs(anexoFull, anexoEjb);
+            AnexoWs anexoWs = AnexoConverter.getAnexoWs(anexoFull, anexoEjb, idEntidad);
 
             anexosWs.add(anexoWs);
         }
