@@ -41,45 +41,65 @@
                     <div class="panel-body">
                         <form:form modelAttribute="usuarioEntidadBusqueda" method="post" cssClass="form-horizontal">
                             <form:hidden path="pageNumber"/>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.identificador"/></div>
-                                    <div class="col-xs-8">
-                                        <form:input path="usuarioEntidad.usuario.identificador" cssClass="form-control"/>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="usuarioEntidad.usuario.identificador"><spring:message code="usuario.identificador"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="usuarioEntidad.usuario.identificador" cssClass="form-control"/>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="regweb.nombre"/></div>
-                                    <div class="col-xs-8">
-                                        <form:input path="usuarioEntidad.usuario.nombre" cssClass="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.apellido1"/></div>
-                                    <div class="col-xs-8">
-                                        <form:input path="usuarioEntidad.usuario.apellido1" cssClass="form-control"/>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="usuarioEntidad.usuario.nombre"><spring:message code="regweb.nombre"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="usuarioEntidad.usuario.nombre" cssClass="form-control"/>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.apellido2"/></div>
-                                    <div class="col-xs-8">
-                                        <form:input path="usuarioEntidad.usuario.apellido2" cssClass="form-control"/>
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="usuarioEntidad.usuario.apellido1"><spring:message code="usuario.apellido1"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="usuarioEntidad.usuario.apellido1" cssClass="form-control"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="usuarioEntidad.usuario.apellido2"><spring:message code="usuario.apellido2"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="usuarioEntidad.usuario.apellido2" cssClass="form-control"/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.documento"/></div>
-                                    <div class="col-xs-8">
-                                        <form:input path="usuarioEntidad.usuario.documento" cssClass="form-control"/>
+
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="usuarioEntidad.usuario.documento"><spring:message code="usuario.documento"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:input path="usuarioEntidad.usuario.documento" cssClass="form-control"/>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left align-right"><spring:message code="usuario.tipoUsuario"/></div>
-                                    <div class="col-xs-8">
-                                        <form:select path="usuarioEntidad.usuario.tipoUsuario" cssClass="chosen-select">
-                                            <form:option value="0" default="default">...</form:option>
-                                            <form:option value="1"><spring:message code="usuario.tipo.1"/></form:option>
-                                            <form:option value="2"><spring:message code="usuario.tipo.2"/></form:option>
-                                        </form:select>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <form:label path="usuarioEntidad.usuario.tipoUsuario"><spring:message code="usuario.tipoUsuario"/></form:label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="usuarioEntidad.usuario.tipoUsuario" cssClass="chosen-select">
+                                                <form:option value="0" default="default">...</form:option>
+                                                <form:option value="1"><spring:message code="usuario.tipo.1"/></form:option>
+                                                <form:option value="2"><spring:message code="usuario.tipo.2"/></form:option>
+                                            </form:select>
+                                        </div>
                                     </div>
                                 </div>
 

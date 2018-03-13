@@ -49,14 +49,17 @@
                             <form:hidden path="entidad.id"/>
                             <form:errors path="traducciones['es'].nombre" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="regweb.traduccion.obligatorio"/></span></form:errors>
 
-                            <div class="form-group col-xs-6">
-                               <div class="col-xs-2 pull-left etiqueta_regweb_left control-label">
-                                   <form:label path="codigoNTI"><span class="text-danger">*</span> <spring:message code="tipoDocumental.codigoNTI"/></form:label>
-                               </div>
-                               <div class="col-xs-10">
-                                   <form:input path="codigoNTI" cssClass="form-control"/> <form:errors path="codigoNTI" cssClass="help-block" element="span"/>
-                               </div>
+                            <div class="form-group col-xs-12 senseMargeLat">
+                                <div class="form-group col-xs-6">
+                                   <div class="col-xs-4 pull-left etiqueta_regweb_left control-label textEsq">
+                                       <form:label path="codigoNTI"><span class="text-danger">*</span> <spring:message code="tipoDocumental.codigoNTI"/></form:label>
+                                   </div>
+                                   <div class="col-xs-8">
+                                       <form:input path="codigoNTI" cssClass="form-control"/> <form:errors path="codigoNTI" cssClass="help-block" element="span"/>
+                                   </div>
+                                </div>
                             </div>
+
                             <div class="form-group col-xs-12">
                                 <ul class="nav nav-tabs" id="myTab">
                                     <c:forEach var="idioma" items="${idiomas}" varStatus="index">
@@ -70,13 +73,15 @@
                                         <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
                                         <div class="tab-pane" id="${idioma_lang}">
 
-                                            <div class="form-group col-xs-6">
-                                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                    <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
-                                                    <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
+                                            <div class="form-group col-xs-12">
+                                                <div class="form-group col-xs-6 senseMargeLat">
+                                                    <div class="col-xs-4 pull-lef etiqueta_regweb control-label textEsq">
+                                                        <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
+                                                        <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

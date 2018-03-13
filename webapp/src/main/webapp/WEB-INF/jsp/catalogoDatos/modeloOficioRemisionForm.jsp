@@ -47,9 +47,9 @@
                     <div class="panel-body">
                         <form:form modelAttribute="modeloOficioRemisionForm" method="post" cssClass="form-horizontal" enctype="multipart/form-data">
                             <form:hidden path="modeloOficioRemision.id"/>
-                            <div class="col-xs-12 no-pad-left">
+                            <div class="col-xs-12">
                                 <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="modeloOficioRemision.nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
@@ -57,9 +57,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 no-pad-left">
+                            <div class="col-xs-12">
                                 <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="modelo"><span class="text-danger">*</span> <spring:message code="modeloOficioRemision.archivo"/></form:label>
                                     </div>
                                     <div class="col-xs-8">

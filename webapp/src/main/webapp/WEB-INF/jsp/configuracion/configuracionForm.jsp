@@ -46,43 +46,47 @@
                     <div class="panel-body">
                         <form:form modelAttribute="configuracionForm" method="post" cssClass="form-horizontal" enctype="multipart/form-data">
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="configuracion.colorMenu"><spring:message code="configuracion.colorMenu"/></form:label>
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <form:label path="configuracion.colorMenu"><spring:message code="configuracion.colorMenu"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="configuracion.colorMenu" cssClass="form-control pick-a-color"/> <form:errors path="configuracion.colorMenu" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:input path="configuracion.colorMenu" cssClass="form-control pick-a-color"/> <form:errors path="configuracion.colorMenu" cssClass="help-block" element="span"/>
+                                <div class="col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <form:label path="configuracion.textoPie"><spring:message code="configuracion.textoPie"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:textarea path="configuracion.textoPie" rows="5" cssClass="form-control"/> <form:errors path="configuracion.textoPie" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="configuracion.textoPie"><spring:message code="configuracion.textoPie"/></form:label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:textarea path="configuracion.textoPie" rows="5" cssClass="form-control"/> <form:errors path="configuracion.textoPie" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
+
                             <!--  logo menu -->
-                            <div class="col-xs-12 no-pad-left">
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <form:label path="logoMenu"><spring:message code="configuracion.logoMenu"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
                                         <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <span class="btn btn-success btn-sm btn-file">
-                                                Explorar&hellip; <input id="logoMenu" name="logoMenu" type="file" multiple>
+                                            <span class="input-group-btn">
+                                                <span class="btn btn-success btn-sm btn-file">
+                                                    Explorar&hellip; <input id="logoMenu" name="logoMenu" type="file" multiple>
+                                                </span>
                                             </span>
-                                        </span>
                                             <input type="text" class="form-control" readonly>
                                         </div>
                                         <form:errors path="logoMenu" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
+
                                 <c:if test="${not empty configuracionForm.configuracion.logoMenu}">
-                                    <div class="form-group col-xs-6">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                    <div class="col-xs-6 espaiLinies">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
                                             <form:label path="logoMenu"><spring:message code="configuracion.logoMenu.existente"/></form:label>
                                             <form:hidden path="configuracion.logoMenu.id"/>
                                         </div>
@@ -92,12 +96,14 @@
                                         </div>
                                     </div>
                                 </c:if>
+
                             </div>
                             <!-- Fi logo menu -->
+
                             <!--  logo pie -->
-                            <div class="col-xs-12 no-pad-left">
-                                <div class="form-group col-xs-6">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                            <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <form:label path="logoPie"><spring:message code="configuracion.logoPie"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
@@ -112,9 +118,10 @@
                                         <form:errors path="logoPie" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
+
                                 <c:if test="${not empty configuracionForm.configuracion.logoPie}">
                                     <div class="form-group col-xs-6">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb">
                                             <form:label path="logoPie"><spring:message code="configuracion.logoPie.existente"/></form:label>
                                             <form:hidden path="configuracion.logoPie.id"/>
                                         </div>

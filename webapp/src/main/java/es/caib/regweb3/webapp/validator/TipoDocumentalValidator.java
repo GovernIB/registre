@@ -57,6 +57,8 @@ public class TipoDocumentalValidator implements Validator {
             }
           }
 
+        } else{
+            errors.rejectValue("codigoNTI", "error.codigo.obligatorio", "El codi NTI és obligatori");
         }
 
       }catch(Exception e){

@@ -46,21 +46,23 @@
                             <form:hidden path="entidad.id"/>
                             <form:errors path="traducciones['es'].nombre" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="regweb.traduccion.obligatorio"/></span></form:errors>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                    <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="codigoAsunto.codigo"/></form:label>
+                            <div class="form-group col-xs-12 senseMargeLat">
+                                <div class="form-group col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="codigoAsunto.codigo"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="codigo" cssClass="form-control"/> <form:errors path="codigo" cssClass="help-block" element="span"/>
+                                    </div>
                                 </div>
-                                <div class="col-xs-8">
-                                    <form:input path="codigo" cssClass="form-control"/> <form:errors path="codigo" cssClass="help-block" element="span"/>
-                                </div>
-                            </div>
 
-                            <div class="form-group col-xs-6">
-                                <div class="col-xs-2 pull-left etiqueta_regweb_left control-label">
-                                 <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
-                                </div>
-                                <div class="col-xs-10">
-                                 <form:checkbox path="activo"/>
+                                <div class="form-group col-xs-6">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
+                                     <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                     <form:checkbox path="activo"/>
+                                    </div>
                                 </div>
                             </div>
 
@@ -74,17 +76,20 @@
                                 <c:forEach items="${idiomas}" var="idioma" varStatus="index">
                                     <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
                                     <div class="tab-pane" id="${idioma_lang}">
-                                        <div class="form-group col-xs-6">
-                                            <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span>
-                                                 <spring:message code="regweb.nombre"/></form:label>
+
+                                        <div class="form-group col-xs-12">
+                                            <div class="form-group col-xs-6 senseMargeLat">
+                                                <div class="col-xs-4 pull-lef etiqueta_regweb control-label textEsq">
+                                                    <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span>
+                                                     <spring:message code="regweb.nombre"/></form:label>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
+                                                    <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
+                                                </div>
                                             </div>
-                                            <div class="col-xs-8">
-                                                <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control"/>
-                                                <form:errors path="traducciones['${idioma_lang}'].nombre" cssClass="help-block" element="span"/>
-                                            </div>
-                                        </div>
-                                     </div>
+                                         </div>
+                                    </div>
                                 </c:forEach>
                             </div>
 
@@ -180,21 +185,23 @@
 
                                                                 <div class="panel-body">
 
-                                                                    <div class="form-group col-xs-6">
-                                                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
-                                                                            <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="codigoAsunto.codigo"/></form:label>
+                                                                    <div class="form-group col-xs-12 senseMargeLat">
+                                                                        <div class="form-group col-xs-6">
+                                                                            <div class="col-xs-4 pull-left etiqueta_regweb_left control-label textEsq">
+                                                                                <form:label path="codigo"><span class="text-danger">*</span> <spring:message code="codigoAsunto.codigo"/></form:label>
+                                                                            </div>
+                                                                            <div class="col-xs-8" id="cod_${codigoAsunto.id}">
+                                                                                <form:input path="codigo" cssClass="form-control" maxlength="16" value="${codAsunto.codigo}"/><span class="errors"></span>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="col-xs-8" id="cod_${codigoAsunto.id}">
-                                                                            <form:input path="codigo" cssClass="form-control" maxlength="16" value="${codAsunto.codigo}"/><span class="errors"></span>
-                                                                        </div>
-                                                                    </div>
 
-                                                                    <div class="form-group col-xs-6">
-                                                                        <div class="col-xs-2 pull-left etiqueta_regweb_left control-label">
-                                                                            <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
-                                                                        </div>
-                                                                        <div class="col-xs-10">
-                                                                            <form:checkbox path="activo" id="check_${codigoAsunto.id}_${codigoAsunto.activo}"/>
+                                                                        <div class="form-group col-xs-6">
+                                                                            <div class="col-xs-4 pull-left etiqueta_regweb_left control-label textEsq">
+                                                                                <form:label path="activo"><spring:message code="regweb.activo"/></form:label>
+                                                                            </div>
+                                                                            <div class="col-xs-8">
+                                                                                <form:checkbox path="activo" id="check_${codigoAsunto.id}_${codigoAsunto.activo}"/>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
 
@@ -210,13 +217,15 @@
                                                                             <c:forEach items="${idiomas}" var="idioma" varStatus="index">
                                                                                 <c:set var="idioma_lang" value="${RegwebConstantes.CODIGO_BY_IDIOMA_ID[idioma]}" />
                                                                                 <div class="tab-pane" id="${idioma_lang}_modal_${codigoAsunto.id}">
-                                                                                    <br>
-                                                                                    <div class="form-group col-xs-8">
-                                                                                        <div class="col-xs-4 pull-lef etiqueta_regweb control-label">
-                                                                                            <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
-                                                                                        </div>
-                                                                                        <div class="col-xs-8" id="nom_${idioma_lang}${codigoAsunto.id}">
-                                                                                            <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control" value="${fn:escapeXml(codAsunto.traducciones[idioma_lang].nombre)}"/><span class="errors"></span>
+
+                                                                                    <div class="form-group col-xs-12">
+                                                                                        <div class="form-group col-xs-6 senseMargeLat">
+                                                                                            <div class="col-xs-4 pull-lef etiqueta_regweb control-label textEsq">
+                                                                                                <form:label path="traducciones['${idioma_lang}'].nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                                                            </div>
+                                                                                            <div class="col-xs-8" id="nom_${idioma_lang}${codigoAsunto.id}">
+                                                                                                <form:input path="traducciones['${idioma_lang}'].nombre" cssClass="form-control" value="${fn:escapeXml(codAsunto.traducciones[idioma_lang].nombre)}"/><span class="errors"></span>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
 
