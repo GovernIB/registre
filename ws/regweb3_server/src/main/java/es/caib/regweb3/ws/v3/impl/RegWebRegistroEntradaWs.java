@@ -56,7 +56,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
-    public JustificanteWs obtenerJustificante(@WebParam(name = "entidad")String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
+    public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      * Anula un {@link es.caib.regweb3.model.RegistroEntrada}
@@ -70,11 +70,11 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      */
     @WebMethod
     public void anularRegistroEntrada(
-        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
-        @WebParam(name = "usuario")String usuario,
-        @WebParam(name = "entidad")String entidad,
-        @WebParam(name = "anular") boolean anular)
-        throws Throwable, WsI18NException, WsValidationException;
+            @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
+            @WebParam(name = "usuario") String usuario,
+            @WebParam(name = "entidad") String entidad,
+            @WebParam(name = "anular") boolean anular)
+            throws Throwable, WsI18NException, WsValidationException;
 
     /**
      * Tramita un {@link es.caib.regweb3.model.RegistroEntrada}
@@ -86,8 +86,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
-    public void tramitarRegistroEntrada(@WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado, @WebParam(name = "usuario")String usuario, @WebParam(name = "entidad")String entidad) throws Throwable, WsI18NException, WsValidationException;
-
+    public void tramitarRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      *
@@ -98,7 +97,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
-    public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
+    public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException ;
 
     /**
      * Obtiene un {@link es.caib.regweb3.model.RegistroEntrada}
@@ -110,10 +109,13 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsI18NException
      * @throws WsValidationException
      */
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
     @WebMethod
-    public RegistroEntradaResponseWs obtenerRegistroEntrada(@WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado, @WebParam(name = "usuario")String usuario, @WebParam(name = "entidad")String entidad) throws Throwable, WsI18NException, WsValidationException;
-    
+    public RegistroEntradaResponseWs obtenerRegistroEntrada(
+            @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
+            @WebParam(name = "usuario") String usuario,
+            @WebParam(name = "entidad") String entidad)
+            throws Throwable, WsI18NException, WsValidationException;
+
     /**
      * 
      * @param any

@@ -174,16 +174,13 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      * @param entidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
-    protected void validarObligatorios(String numeroRegistro, String libro, String entidad) throws  I18NException, Exception{
+    protected void validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
 
         // 1.- Comprobaciones de parámetros obligatórios
         if(StringUtils.isEmpty(numeroRegistro)){
             throw new I18NException("error.valor.requerido.ws", "identificador");
         }
 
-        if(StringUtils.isEmpty(libro)){
-            throw new I18NException("error.valor.requerido.ws", "libro");
-        }
 
         if(StringUtils.isEmpty(entidad)){
             throw new I18NException("error.valor.requerido.ws", "entidad");

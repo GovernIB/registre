@@ -339,13 +339,23 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
+    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception {
+
+        String conLibroWhere="";
+        if(codigoLibro != null){
+            conLibroWhere = "and rs.libro.codigo=:codigoLibro";
+        }
+
 
         Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad");
+                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad "+conLibroWhere);
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
         q.setParameter("codigoEntidad", codigoEntidad);
+
+        if(codigoLibro != null){
+            q.setParameter("codigoLibro", codigoLibro);
+        }
 
         List<RegistroSalida> registro = q.getResultList();
 
@@ -355,6 +365,19 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             return null;
         }
     }
+
+    @Override
+    public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException {
+
+        RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado,codigoLibro);
+        if(registroSalida!= null){
+            return cargarAnexosFull(registroSalida);
+        }else{
+            return null;
+        }
+    }
+
+
 
     @Override
     @SuppressWarnings("unchecked")

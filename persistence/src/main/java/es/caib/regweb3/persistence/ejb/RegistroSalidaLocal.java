@@ -65,12 +65,24 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     RegistroSalida findByNumeroAnyoLibro(int numero, int anyo, String libro) throws Exception;
 
     /**
-     * Obtiene el RegistroSalida a partir de su numero de registro formateado
+     * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro.
      * @param numeroRegistroFormateado
      * @return
      * @throws Exception
      */
-    RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
+    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception;
+
+
+    /**
+     * Obtiene el RegistroSalida a partir de su numero de registro formateado, la entidad y el libro y carga los anexos
+     * @param codigoEntidad
+     * @param numeroRegistroFormateado
+     * @param codigoLibro
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException;
 
 
     /**

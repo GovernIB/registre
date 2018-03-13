@@ -122,14 +122,25 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
 
     /**
-     * Obtiene el RegistroEntrada a partir de su numero de registro formateado y entidad
-     *
+     * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro
      * @param codigoEntidad
      * @param numeroRegistroFormateado
+     * @param codigoLibro
      * @return
      * @throws Exception
      */
-    RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
+    RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception;
+
+    /**
+     * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro cargando sus anexos.
+     * @param codigoEntidad
+     * @param numeroRegistroFormateado
+     * @param codigoLibro
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException;
 
     /**
      * Obtiene el numero de registro formateado de un RegistroEntrada
@@ -278,6 +289,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws I18NException
      */
     RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+
+
+    /**
+     * Cargamos los anexos del registro de entrada que nos pasan.
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    public RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException;
 
     /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio
