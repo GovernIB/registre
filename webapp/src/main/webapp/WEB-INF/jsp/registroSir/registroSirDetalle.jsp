@@ -289,7 +289,7 @@
                         <%--Formulari per completar dades del registre--%>
                         <div class="panel-footer">
 
-                            <div class="panel-heading">
+                            <div class="panel-heading senseMargesLaterals">
                                 <h3 class="panel-title">
                                     <strong><spring:message code="registro.completar"/></strong>
                                 </h3>
@@ -483,7 +483,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                        <h3>Rechazar Registro Sir ${registroSir.numeroRegistro}</h3>
+                        <h3><spring:message code="registroSir.rechazar"/> ${registroSir.numeroRegistro}</h3>
                     </div>
 
                     <div class="modal-body">
@@ -493,14 +493,13 @@
 
                                 <div class="panel-heading">
                                     <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
-                                        <strong>Introduzca el motivo del rechazo</strong></h3>
+                                        <strong><spring:message code="registroSir.rechazo.motivo"/></strong></h3>
                                 </div>
 
                                 <div class="panel-body">
-
                                     <div class="form-group col-xs-12">
-                                        <div class="col-xs-4 pull-left etiqueta_regweb_left control-label">
-                                            <form:label for="observacionesRechazo" path="observacionesRechazo"> Observaciones</form:label>
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="observacionesRechazoSir" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.rechazo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
                                         </div>
                                         <div class="col-xs-8" id="observacionesRechazoSir">
                                             <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
@@ -575,7 +574,7 @@
 
         if(observaciones == ""){
             var variable = "#observacionesRechazoSir span.errors";
-            var formatoHtml = "<span id='observaciones.errors' class='help-block'>El campo es obligatorio</span>";
+            var formatoHtml = "<span id='observaciones.errors' class='help-block'><spring:message code="error.valor.requerido"/></span>";
             $(variable).html(formatoHtml);
             $(variable).parents(".form-group").addClass("has-error");
             return false;

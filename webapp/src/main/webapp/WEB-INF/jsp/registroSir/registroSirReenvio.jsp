@@ -49,32 +49,29 @@
                             <form:hidden path="denominacionOrganismoResponsable" value=""/>
 
                             <!-- Buscador Oficina Destino -->
-                            <div class="row">
+                            <div class="col-xs-12">
                                 <div class="form-group col-xs-8">
-
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
-                                        <label><span class="text-danger">*</span> <spring:message code="registroSir.oficinaReenvio"/></label>
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="idDatosOficinaReenvio" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSir.oficinaReenvio"/></label>
                                     </div>
                                     <div class="col-xs-6" id="idDatosOficinaReenvio">
                                         <form:textarea path="datosOficinaReenvio" class="form-control" rows="3" disabled="true"/> <span class="errors"></span>
 
                                     </div>
-
                                     <div class="col-xs-3 boto-panel">
                                         <a data-toggle="modal" role="button" href="#modalBuscadorOficinaSir"
                                            onclick="inicializarBuscador('#codNivelAdministracionOficinaSir','#codComunidadAutonomaOficinaSir','#provinciaOficinaSir','#localidadOficinaSir','${oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}','OficinaSir' );"
                                            class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                                     </div>
-
                                     <!-- Fin de gestión de organismo destino -->
                                 </div>
                             </div> <!--./row-->
 
                             <!--Observaciones -->
-                            <div class="row">
+                            <div class="col-xs-12">
                                 <div class="form-group col-xs-8">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label text-right">
-                                        <label><span class="text-danger"> * </span><spring:message code="registroEntrada.observaciones"/></label>
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
                                     </div>
                                     <div class="col-xs-9" id="idObservaciones">
                                         <form:textarea path="observaciones" rows="3" class="form-control"/>
@@ -82,7 +79,6 @@
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="row">
                                 <div class="form-group col-xs-12">
