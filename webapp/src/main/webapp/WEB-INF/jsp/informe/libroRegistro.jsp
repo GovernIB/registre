@@ -273,7 +273,7 @@
                                                 <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
                                                 <form:hidden path="organDestinatariNom"/>
                                             </div>
-                                            <div class="col-xs-2 boto-informe">
+                                            <div class="col-xs-2 padLateral5">
                                                 <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
                                                    onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
                                                    class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
