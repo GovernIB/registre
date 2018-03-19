@@ -5,11 +5,11 @@
 
     <artifactId>plugin-distribucion-ripea</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.9</version>
+    <version>3.1</version>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.0.9</version>
+        <version>3.1</version>
         <artifactId>plugin-distribucion</artifactId>
     </parent>
 

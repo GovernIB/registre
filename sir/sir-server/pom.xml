@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>regweb3-sir-ws-server</artifactId>
-    <version>3.0.9</version>
+    <version>3.1</version>
     <packaging>ejb</packaging>
 
     <parent>
         <groupId>es.caib.regweb3</groupId>
         <artifactId>regweb3-sir</artifactId>
-        <version>3.0.9</version>
+        <version>3.1</version>
     </parent>
 
     <name>RegWeb3 - SIR - Server</name>
@@ -50,11 +50,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>axistools-maven-plugin</artifactId>
                 <version>1.4</version>
-                <!-- <configuration>
-                     <sourceDirectory>src/main/resources/wsdl/axis</sourceDirectory>
-                     <testCases>false</testCases>
-                     <serverSide>false</serverSide>
-                 </configuration>-->
                 <executions>
 
                     <execution>
