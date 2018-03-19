@@ -31,12 +31,12 @@ es.caib.regweb3.plugins.userinformation.database.userroles_rolename_column=UGR_C
 es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
 
 --Plugin Custodia
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_
-es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/');
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD, entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_
+es.caib.regweb3.plugins.documentcustody.filesystem.basedir=C:/xxxx/Anexos/',id FROM rwe_entidad;
 
 --Plugin Custodia-Justificante
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_
-es.caib.regweb3.plugins.documentcustody.filesystem.basedir=D:/xxxx/Justificantes/');
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDADES_ENTIDAD, entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de justificantes','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',7,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=JUST_
+es.caib.regweb3.plugins.documentcustody.filesystem.basedir=D:/xxxx/Justificantes/',id FROM rwe_entidad;
 
 --Plugin JustificanteMock
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Justificante','Genera el justificante SIR de los registros','es.caib.regweb3.plugins.justificante.mock.JustificanteMockPlugin',1,'# Mensaje para la declaración en el justificante

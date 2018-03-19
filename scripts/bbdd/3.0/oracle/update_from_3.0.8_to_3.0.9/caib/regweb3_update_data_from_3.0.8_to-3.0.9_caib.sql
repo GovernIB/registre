@@ -31,9 +31,9 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad,PROPIEDAD
 'es.caib.regweb3.plugins.userinformation.database.userroles_username_column=UGR_CODUSU');
 
 --Plugin Custodia Annexos
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_' ||
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo, PROPIEDADES_ENTIDAD, entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Custodia','Custodia de documentos','org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin',0,null,'es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_' ||
 'es.caib.regweb3.plugins.documentcustody.filesystem.basedir=/app/caib/regweb/archivos' ||
-'#es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}');
+'#es.caib.regweb3.plugins.documentcustody.filesystem.baseurl=http://localhost:8080/annexos/index.jsp?custodyID={1}',id FROM rwe_entidad;
 
 --Plugin Justificante CAIB
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo, PROPIEDADES_ENTIDAD, entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Justificante','Genera el justificante SIR-CAIB de los registros','es.caib.regweb3.plugins.justificante.caib.JustificanteCaibPlugin',1,'# Mensaje para estampación del CVS en el justificante' ||
@@ -86,7 +86,7 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTID
 'es.caib.regweb3.plugins.signatureserver.afirmaserver.authorization.ks.cert.password=<<PASSWORD>>',id FROM rwe_entidad;
 
 --Plugin Custodia-Justificants
-INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDADES_ADMIN) values (RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de Justificants emprant Arxiu Digital CAIB','org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin',7,null,'# Específiques' ||
+INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo, PROPIEDADES_ENTIDAD, entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Custodia-Justificante','Custodia de Justificants emprant Arxiu Digital CAIB','org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIBDocumentCustodyPlugin',7,null,'# Específiques' ||
 '' ||
 '# Requerit. Nom de l´expedient. Important: Ha de ser únic' ||
 'es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.nom_expedient_EL=Registre_JUST_<#if (registro.origen)?? >S<#else>E</#if>_${(registro.libro.codigo)}_${.now?string[\"yyyy\"]}_${registro.numeroRegistro?string[\"0000000\"]}' ||
@@ -201,7 +201,7 @@ INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,entidad, PROPIEDA
 '#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.2.valueEL=${registro.origen}' ||
 '' ||
 '#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.3.name=eni:codigo_oficina_registro' ||
-'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.3.valueEL=${registro.???????????????}');
+'#es.caib.regweb3.plugins.documentcustody.arxiudigitalcaib.document.automatic_metadata.3.valueEL=${registro.???????????????}',id FROM rwe_entidad;
 
 --Plugin Scan
 INSERT INTO RWE_PLUGIN(id,activo,nombre,descripcion,clase,tipo,PROPIEDADES_ENTIDAD,entidad) SELECT RWE_ALL_SEQ.nextVal,1, 'Applet/JNLP Scan','Scan emprant Applet/JNLP','org.fundaciobit.plugins.scanweb.iecisa.IECISAScanWebPlugin',6,'es.caib.regweb3.plugins.scanweb.iecisa.debug=false' ||
