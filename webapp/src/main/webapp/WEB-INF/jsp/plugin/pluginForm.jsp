@@ -50,10 +50,10 @@
                         <div class="panel-body">
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="tipo"><spring:message code="plugin.tipo"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:select path="tipo" cssClass="chosen-select">
                                         <c:forEach items="${tipos}" var="tipo">
                                             <form:option value="${tipo}"><spring:message code="plugin.tipo.${tipo}" /></form:option>
@@ -63,10 +63,10 @@
                             </div>
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="nombre"><span class="text-danger">*</span> <spring:message code="plugin.nombre"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:input path="nombre" cssClass="form-control"/> <form:errors path="nombre"
                                                                                                     cssClass="help-block"
                                                                                                     element="span"/>
@@ -74,19 +74,19 @@
                             </div>
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="descripcion"><span class="text-danger">*</span> <spring:message code="plugin.descripcion"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:textarea path="descripcion" rows="3" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                 </div>
                             </div>
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="clase"><span class="text-danger">*</span> <spring:message code="plugin.clase"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:input path="clase" cssClass="form-control"/> <form:errors path="clase"
                                                                                                     cssClass="help-block"
                                                                                                     element="span"/>
@@ -94,10 +94,10 @@
                             </div>
                             <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="propiedadesAdmin"><span class="text-danger">*</span> <spring:message code="plugin.propiedadesAdmin"/></form:label>
                                     </div>
-                                    <div class="col-xs-11">
+                                    <div class="col-xs-10">
                                         <form:textarea path="propiedadesAdmin" rows="10" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
@@ -105,10 +105,10 @@
 
                             <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="propiedadesEntidad"><span class="text-danger">*</span> <spring:message code="plugin.propiedadesEntidad"/></form:label>
                                     </div>
-                                    <div class="col-xs-11">
+                                    <div class="col-xs-10">
                                         <form:textarea path="propiedadesEntidad" rows="10" cssClass="form-control"/> <form:errors path="descripcion" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
