@@ -54,10 +54,10 @@
                         <div class="panel-body">
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="tipo"><spring:message code="propiedadGlobal.tipo"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:select path="tipo" cssClass="chosen-select">
                                         <c:forEach items="${tipos}" var="tipo">
                                             <form:option value="${tipo}"><spring:message code="propiedadGlobal.tipo.${tipo}" /></form:option>
@@ -67,31 +67,31 @@
                             </div>
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="clave"><span class="text-danger">*</span> <spring:message
                                             code="propiedadGlobal.clave"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:input path="clave" cssClass="form-control"/> <form:errors path="clave"
                                                                                                     cssClass="help-block"
                                                                                                     element="span"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="valor"><spring:message code="propiedadGlobal.valor"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:input path="valor" cssClass="form-control"/> <form:errors path="valor"
                                                                                                     cssClass="help-block"
                                                                                                     element="span"/>
                                 </div>
                             </div>
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
+                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                     <form:label path="descripcion"><spring:message code="propiedadGlobal.descripcion"/></form:label>
                                 </div>
-                                <div class="col-xs-11">
+                                <div class="col-xs-10">
                                     <form:textarea path="descripcion" rows="3" cssClass="form-control"/> <form:errors
                                         path="descripcion" cssClass="help-block" element="span"/>
                                 </div>
