@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
@@ -47,6 +48,9 @@ public class AnexoScanController extends AnexoController {
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
 
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
+
 
     @RequestMapping(value = "/new/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String crearAnexoGet(HttpServletRequest request,
@@ -85,6 +89,18 @@ public class AnexoScanController extends AnexoController {
         try {
             //Preparamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
             manageDocumentCustodySignatureCustody(request, anexoForm);
+
+            //Validamos el anexo contra afirma
+            //TODO PENDIENTE DE PROVAR
+           /* Entidad entidad = getEntidadActiva(request);
+            final boolean force = false; //Indica si queremos forzar la excepción.
+            I18NTranslation i18n;
+            i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
+                    I18NUtils.getLocale(), force);
+            if (i18n != null) {
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
+                Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
+            }*/
             
             if (isSIR) {
                 String docExtension="";

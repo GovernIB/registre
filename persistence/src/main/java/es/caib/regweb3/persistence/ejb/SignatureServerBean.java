@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.*;
@@ -12,7 +13,7 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signature.api.*;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
-import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
+import org.fundaciobit.plugins.validatesignature.api.*;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -204,6 +205,61 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
 
     /**
+     * Valida un document mitjancant el plugin de validar Firma
+     * @param input
+     * @param idEntidad
+     * @param locale
+     * @param force
+     * @return
+     * @throws I18NException
+     */
+    public I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException {
+
+        boolean error = false;
+
+        SignatureCustody sign = input.getSignatureCustody();
+        DocumentCustody doc = input.getDocumentoCustody();
+
+        log.info("checkDocument::Document = " + doc);
+        log.info("checkDocument::Signature = " + sign);
+
+        if (sign == null && doc == null) {
+            throw new I18NException("error.checkanexosir.nifirmanidoc");
+        }
+
+        if (sign != null) {
+            // VALIDAR FIRMA
+            ValidateSignatureResponse resp;
+            try {
+                resp = callToValidaFirma(locale, sign, doc,idEntidad);
+            } catch(I18NException i18ne) {
+                // Cas (2.4) Error Comunicació/greu: casos (2.4.1) i (2.4.2)
+                error = true;
+                return processError(i18ne, force);
+            }
+
+            final String perfil = resp.getSignProfile();
+            final String tipo = resp.getSignType();
+            final String formato = resp.getSignFormat();
+
+            log.info("XYZ ZZZ tipo = " + tipo);
+            log.info("XYZ ZZZ perfil = " + perfil);
+            log.info("XYZ ZZZ formato = " + formato);
+
+
+
+            // Ficar dins Anexo tipo, formato i perfil
+            Anexo anexo = input.getAnexo();
+            anexo.setSignType(tipo);
+            anexo.setSignFormat(formato);
+            anexo.setSignProfile(perfil);
+
+        }
+        return null;
+    }
+
+
+    /**
      * @param idEntidad
      * @return
      * @throws I18NException
@@ -239,16 +295,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     }
 
 
-    //No s'utilitza
-    /*
     protected ValidateSignatureResponse callToValidaFirma(Locale locale, SignatureCustody sign,
-        DocumentCustody doc) throws I18NException {
+        DocumentCustody doc,Long idEntidad) throws I18NException {
       ValidateSignatureResponse resp;
-      
-        // TODO CACHE DE PLUGIN!!!!!
+
+      long start = System.currentTimeMillis();
+
+      // TODO CACHE DE PLUGIN!!!!!
       IValidateSignaturePlugin validatePlugin;
-      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(null,
-          RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
+      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
+                 RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
       if (validatePlugin == null) {
         // El plugin de Validació de Firmes no s'ha definit. Consulti amb l'Administrador
         throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
@@ -278,26 +334,15 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       try {
         resp = validatePlugin.validateSignature(validationRequest);
       } catch (Exception e) {
-        throw new I18NException(e, "error.checkanexosir.validantfirma",
+          e.printStackTrace();
+          throw new I18NException(e, "error.checkanexosir.validantfirma",
             new I18NArgumentString(e.getMessage()));
-      }
 
+      }
+      log.info("Total validacion Firma: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
       return resp;
     }
-    */
 
-    // No s'utilitza
-    /*
-    protected String addInFileName(String fileName, final String add) {
-      int index = fileName.lastIndexOf('.');
-      if (index == -1) {
-        fileName = fileName + add;
-      } else {
-        fileName = fileName.substring(0,index) + add + fileName.substring(index);
-      }
-      return fileName;
-    }
-    */
 
     /**
      * @param input

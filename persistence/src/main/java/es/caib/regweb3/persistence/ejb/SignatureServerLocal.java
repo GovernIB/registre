@@ -48,6 +48,18 @@ public interface SignatureServerLocal {
 
 
     /**
+     *  mitjancant el plugin de validar Firma
+     * @param input
+     * @param idEntidad
+     * @param locale
+     * @param force
+     * @return
+     * @throws I18NException
+     */
+    I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException;
+
+
+    /**
      * 
      * @param input Parametre d'entrada sortida. Si tot al final aquest
      *  objecte contindrà la signatura. 

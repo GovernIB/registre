@@ -74,6 +74,18 @@
             <artifactId>ripea-ws-client</artifactId>
             <version>0.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugin-validatesignature-api</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.fundaciobit.genapp</groupId>
+            <artifactId>genapp-web</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 

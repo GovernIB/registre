@@ -5,11 +5,13 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -48,6 +50,8 @@ public class AnexoFicheroController extends AnexoController {
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
 
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
 
 
     /**
@@ -145,6 +149,20 @@ public class AnexoFicheroController extends AnexoController {
             try {
                 //Preparamos los documentcustody, signaturecustody en el anexoForm para pasarlos a la siguiente pantalla
                 manageDocumentCustodySignatureCustody(request, anexoForm);
+
+
+                //Validamos el anexo contra afirma
+                Entidad entidad = getEntidadActiva(request);
+                final boolean force = false; //Indica si queremos forzar la excepción.
+                I18NTranslation i18n;
+                if(anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
+                    i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
+                            I18NUtils.getLocale(), force);
+                    if (i18n != null) {
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
+                        Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
+                    }
+                }
 
                 request.getSession().setAttribute("anexoForm", anexoForm);
 
