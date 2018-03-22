@@ -60,6 +60,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     RegistroSalidaValidator<RegistroSalida> validator = new RegistroSalidaValidator<RegistroSalida>();
 
+    private StringBuilder peticion = new StringBuilder();
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
@@ -106,6 +107,12 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     private EntidadLocal entidadEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
+
 
     @Override
     @RolesAllowed({ROL_USUARI})
@@ -141,6 +148,9 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
+        long tiempo = System.currentTimeMillis();
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
 
         // 1.- Validar campo obligatorio entidad
         if(StringUtils.isEmpty(entidad)){
@@ -239,12 +249,22 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 7.- Creamos el Registro de Salida
-        registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull);
+        try{
+            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull);
+
+        }catch (Exception e){
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId());
+            throw new I18NException("registro.nuevo.error");
+        }
+
 
         if (registroSalida.getId() != null) {
             // Componemos la respuesta
             identificadorWs = new IdentificadorWs(registroSalida.getNumeroRegistroFormateado(), registroSalida.getNumeroRegistro(), registroSalida.getFecha());
         }
+
+        // Integracion
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId());
 
         return identificadorWs;
     }
@@ -296,7 +316,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
             // Solo se puede generar si el registro es Válido
             if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
-                justificante = anexoEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),"ca");
+                justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),"ca");
                 sc = justificante.getSignatureCustody();
                 // Alta en la tabla de LOPD
                 lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);

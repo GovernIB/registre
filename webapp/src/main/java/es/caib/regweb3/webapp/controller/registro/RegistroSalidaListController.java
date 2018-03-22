@@ -67,6 +67,9 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
 
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
+
 
     /**
      * Listado de todos los Registros de Salida
@@ -603,7 +606,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                     // Creamos el anexo justificante y lo firmamos
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
 
                     // Alta en tabla LOPD
                     if (anexoFull != null) {

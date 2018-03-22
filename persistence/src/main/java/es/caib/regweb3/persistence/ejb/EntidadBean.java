@@ -60,6 +60,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private PluginLocal pluginEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
+    @EJB private IntegracionLocal integracionEjb;
 
 
     @Override
@@ -359,6 +360,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         // SIR: PONER CONTADOR ID INTERCAMBIO A 0  
         Entidad entidad = findById(idEntidad);
         contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
+
+        // Integraciones
+        integracionEjb.eliminarByEntidad(idEntidad);
 
         em.flush();
 

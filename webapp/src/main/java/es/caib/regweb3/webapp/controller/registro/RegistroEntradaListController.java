@@ -66,6 +66,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
 
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
+
 
     /**
     * Listado de todos los Registros de Entrada
@@ -661,7 +664,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             // Miramos si debemos generar el justificante
             AnexoFull justificante = null;
             if(!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                justificante = anexoEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                 registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
             }
             respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
@@ -824,7 +827,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                     // Creamos el anexo justificante y lo firmamos
-                    AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), idioma);
 
                     // Alta en tabla LOPD
                     if (anexoFull != null) {

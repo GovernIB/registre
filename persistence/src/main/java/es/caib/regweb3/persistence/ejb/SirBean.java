@@ -51,7 +51,7 @@ public class SirBean implements SirLocal {
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
-    @EJB private AnexoLocal anexoEjb;
+    @EJB private JustificanteLocal justificanteEjb;
     @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
@@ -622,7 +622,7 @@ public class SirBean implements SirLocal {
             if (!registroDetalle.getTieneJustificante()) {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
                 registroDetalle.getAnexosFull().add(anexoFull);
             }
 
@@ -669,7 +669,7 @@ public class SirBean implements SirLocal {
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
 
                 registroDetalle.getAnexosFull().add(anexoFull);
             }

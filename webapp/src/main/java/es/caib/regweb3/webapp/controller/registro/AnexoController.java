@@ -74,6 +74,9 @@ public class AnexoController extends BaseController {
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     private ScanWebModuleLocal scanWebModuleEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
 
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
     public String crearAnexoGet2(HttpServletRequest request,
@@ -346,16 +349,16 @@ public class AnexoController extends BaseController {
 
         try {
 
-            // Si l'arxiu tÃ© identificador, entram
+            // Si l'arxiu té identificador, entram
             if (custodiaID != null) {
 
-                // Si Ã©s un arxiu sense firma
+                // Si és un arxiu sense firma
                 if (!firma) {
                     DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante, idEntidad);
                     filename = dc.getName();
                     data = dc.getData();
 
-                } else {   // Si Ã©s firma d'un arxiu
+                } else {   // Si és firma d'un arxiu
                     SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante, idEntidad);
                     data = sc.getData();
                     filename = sc.getName();

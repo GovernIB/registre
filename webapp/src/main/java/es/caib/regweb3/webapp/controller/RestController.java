@@ -60,6 +60,9 @@ public class RestController {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
     public @ResponseBody List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
@@ -222,6 +225,16 @@ public class RestController {
     Interesado obtenerInteresado(@RequestParam Long idInteresado) throws Exception {
 
         return interesadoEjb.findById(idInteresado);
+    }
+
+    /**
+     * Obtiene un {@link es.caib.regweb3.model.Integracion}
+     */
+    @RequestMapping(value = "/obtenerIntegracion", method = RequestMethod.GET)
+    public @ResponseBody
+    Integracion obtenerIntegraciono(@RequestParam Long idIntegracion) throws Exception {
+
+        return integracionEjb.findById(idIntegracion);
     }
 
     /**

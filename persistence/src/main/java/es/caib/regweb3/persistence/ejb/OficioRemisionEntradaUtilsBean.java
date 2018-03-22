@@ -68,7 +68,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @EJB(name = "CatEstadoEntidadEJB")
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
-    @EJB private AnexoLocal anexoEjb;
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
 
 
     @Override
@@ -571,7 +572,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
 
                 // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = anexoEjb.crearJustificante(usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                 registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
             }
 

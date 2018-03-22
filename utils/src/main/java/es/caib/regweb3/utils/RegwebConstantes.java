@@ -657,4 +657,29 @@ public interface RegwebConstantes {
             PLUGIN_CUSTODIA_JUSTIFICANTE,
             PLUGIN_VALIDACION_FIRMAS
     };
+
+    /* -------------- TIPO INTEGRACION --------------*/
+    Long INTEGRACION_CUSTODIA = 0L;
+    Long INTEGRACION_FIRMA = 1L;
+    Long INTEGRACION_DISTRIBUCION = 2L;
+    Long INTEGRACION_WS = 3L;
+    Long INTEGRACION_SIR = 4L;
+
+    Long[] INTEGRACION_TIPOS = {
+            INTEGRACION_CUSTODIA,
+            INTEGRACION_FIRMA,
+            INTEGRACION_DISTRIBUCION,
+            INTEGRACION_WS,
+            INTEGRACION_SIR
+
+    };
+
+    /* -------------- ESTADO INTEGRACION --------------*/
+    Long INTEGRACION_ESTADO_OK = 0L;
+    Long INTEGRACION_ESTADO_ERROR = 1L;
+
+    Long[] INTEGRACION_ESTADOS = {
+            INTEGRACION_ESTADO_OK,
+            INTEGRACION_ESTADO_ERROR
+    };
 }

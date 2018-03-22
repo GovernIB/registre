@@ -7,6 +7,7 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +27,16 @@ public class UsuarioInfo {
   
   final List<String> entidadesCodigoDir3 = new ArrayList<String>();
 
+  final Method method;
+
   /**
    * @param usuario
    * @param entidades
    */
-  public UsuarioInfo(Usuario usuario, List<UsuarioEntidad> entidades) {
+  public UsuarioInfo(Usuario usuario, List<UsuarioEntidad> entidades, Method method) {
     super();
     this.usuario = usuario;
+    this.method = method;
 
     for (UsuarioEntidad entidad : entidades) {
       this.entidades.add(entidad.getEntidad());
@@ -57,6 +61,10 @@ public class UsuarioInfo {
   
   public List<String> getEntidadesCodigoDir3() {
     return entidadesCodigoDir3;
+  }
+
+  public Method getMethod() {
+    return method;
   }
 
   public void checkPerteneceAEntidad(String entidadCodigoDir3) throws I18NException {

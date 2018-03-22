@@ -31,10 +31,22 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
-
     @EJB(mappedName = "regweb3/ContadorEJB/local")
     private ContadorLocal contadorEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
+
+    @Override
+    public void purgarIntegraciones() throws Exception{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for(Entidad entidad: entidades) {
+            integracionEjb.purgarIntegraciones(entidad.getId());
+        }
+    }
 
     @Override
     public void reintentarEnviosSinConfirmacion() throws Exception {

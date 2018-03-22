@@ -35,6 +35,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     protected final Logger log = Logger.getLogger(getClass());
 
     @EJB private PluginLocal pluginEjb;
+    @EJB private IntegracionLocal integracionEjb;
 
     /**
      * Método que genera la Firma de un File para una Entidad en concreto
@@ -550,6 +551,13 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         File source = null;
         File destination = null;
         final String username = CONFIG_USERNAME;
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+
+        // Integración
+        peticion.append("clase: ").append(plugin.getClass().getName()).append(System.getProperty("line.separator"));
+        peticion.append("signType: ").append(signType).append(System.getProperty("line.separator"));
+        peticion.append("signMode: ").append(signMode).append(System.getProperty("line.separator"));
 
         try {
             // String pdfsource, String mime, String pdfdest,
@@ -651,16 +659,27 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     sc.setSignatureType(custSignType);
                     sc.setAttachedDocument(attachedDocument);
 
+                    // Integracion
+                    integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva);
+
                     return sc;
 
                 }
             }
 
         } catch (I18NException i18ne) {
-
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, idEntidadActiva);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             throw i18ne;
         } catch (Exception e) {
-
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), e, System.currentTimeMillis() - tiempo, idEntidadActiva);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new I18NException(e, "error.realitzantfirma", new I18NArgumentString(e.getMessage()));
         } finally {
             if (source != null) {

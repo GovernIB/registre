@@ -44,13 +44,14 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
   public void handleMessage(Message message) throws Fault {
 
     boolean logEnable = true; // log.isDebugEnabled();
+    Method method = null;
 
     if (logEnable) {
       log.info(" ------------------ RegWebWSInInterceptor  --------------");
 
       try {
 
-        Method method = getTargetMethod(message);
+        method = getTargetMethod(message);
 
         log.info("  + Method NAME = " + method.getName());
         log.info("  + Method CLASS = " + method.getDeclaringClass());
@@ -132,7 +133,7 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
               + " no està relacionat amb cap entitat.");
     }
 
-    UsuarioAplicacionCache.put(new UsuarioInfo(usuariAplicacio, entitats));
+    UsuarioAplicacionCache.put(new UsuarioInfo(usuariAplicacio, entitats, method));
 
   }
 

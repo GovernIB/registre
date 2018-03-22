@@ -74,6 +74,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
 
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -586,7 +589,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
              registroEntrada = cargarAnexosFull(registroEntrada);
             // Creamos el anexo del justificante y se lo añadimos al registro
-            AnexoFull anexoFull = anexoEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
             registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
 
         }
@@ -1054,7 +1057,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Miramos si debemos generar el justificante
         AnexoFull justificante = null;
         if(!original.getRegistroDetalle().getTieneJustificante()) {
-            justificante = anexoEjb.crearJustificante(original.getUsuario(), original, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+            justificante = justificanteEjb.crearJustificante(original.getUsuario(), original, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
         }
 
         switch (confAnexos) {

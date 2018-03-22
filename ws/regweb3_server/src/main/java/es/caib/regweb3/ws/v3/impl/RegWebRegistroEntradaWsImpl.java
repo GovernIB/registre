@@ -67,6 +67,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
+    private StringBuilder peticion = new StringBuilder();
+
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
@@ -116,6 +118,12 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
+
 
     @Override
     @RolesAllowed({ROL_USUARI})
@@ -156,6 +164,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
+        long tiempo = System.currentTimeMillis();
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
 
         // 1.- Validar campo obligatorio entidad
         if(StringUtils.isEmpty(entidad)){
@@ -267,13 +278,22 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 12.- Creamos el Registro de Entrada
-        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
+        try{
+            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
+
+        }catch (Exception e){
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId());
+            throw new I18NException("registro.nuevo.error");
+        }
 
         if (registroEntrada.getId() != null) {
 
             // Componemos la respuesta
             identificadorWs = new IdentificadorWs(registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getNumeroRegistro(), registroEntrada.getFecha());
         }
+
+        // Integracion
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId());
 
         return identificadorWs;
     }
@@ -329,7 +349,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
             // Solo se puede generar si el registro es Válido
             if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
-                justificante = anexoEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),"ca");
+                justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),"ca");
                 sc = justificante.getSignatureCustody();
                 // Alta en la tabla de LOPD
                 lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
@@ -498,7 +518,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             // 7.- Distribuimos el registro de entrada
             AnexoFull justificante = null;
             if(!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                justificante = anexoEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                 registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
             }
             RespuestaDistribucion respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuario);

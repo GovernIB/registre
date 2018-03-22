@@ -29,6 +29,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.Entidad</class>
         <class>es.caib.regweb3.model.HistoricoRegistroEntrada</class>
         <class>es.caib.regweb3.model.HistoricoRegistroSalida</class>
+        <class>es.caib.regweb3.model.Integracion</class>
         <class>es.caib.regweb3.model.Interesado</class>
         <class>es.caib.regweb3.model.Libro</class>
         <class>es.caib.regweb3.model.Lopd</class>
@@ -67,9 +68,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
 
         <properties>
-            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>-->
-            <!--<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>-->
-            <!--<property name="hibernate.hbm2ddl.auto" value="update"/>-->
+            <!--<property name="jboss.as.jpa.providerModule"  value="${jboss.as.jpa.providerModule}" />-->
             <property name="hibernate.show_sql" value="false"/>
         </properties>
 
