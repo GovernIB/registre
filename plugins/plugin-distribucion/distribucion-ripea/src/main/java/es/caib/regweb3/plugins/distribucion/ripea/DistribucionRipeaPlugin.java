@@ -530,7 +530,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         }
 
         if(firma.getTipus() == null || firma.getPerfil() == null){
-            throw new Exception("Error: Tipus Firma i Perfil Firma no poden ser buits");
+            throw new Exception("Error: Tipus Firma o Perfil Firma no poden ser buits");
         }
 
         log.info("Firma Perfil " + firma.getPerfil());
