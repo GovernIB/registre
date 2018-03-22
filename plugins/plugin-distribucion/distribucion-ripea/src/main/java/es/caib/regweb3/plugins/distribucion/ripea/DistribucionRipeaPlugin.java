@@ -529,7 +529,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
         }
 
-        if(firma.getTipus() == null && firma.getPerfil() == null){
+        if(firma.getTipus() == null || firma.getPerfil() == null){
             throw new Exception("Error: Tipus Firma i Perfil Firma no poden ser buits");
         }
 
