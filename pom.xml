@@ -23,7 +23,7 @@
   </properties>
 
   <modules>
-    <module>scripts</module>
+   <!-- <module>scripts</module>-->
     <module>utils</module>
     <module>model</module>
     <module>persistence</module>
@@ -72,7 +72,7 @@
     <repository>
       <id>maven-repos</id>
       <name>GitHub GovernIB Maven Repository</name>
-      <url>http://GovernIB.github.io/maven/maven/</url>
+      <url>https://GovernIB.github.io/maven/maven/</url>
     </repository>
 
   </repositories>

@@ -466,36 +466,23 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         // La transformación al tipo de Firma que espera RIPEA se obtiene de la combinación de los siguientes campos de anexo
         //anexoFull.getAnexo().getSignType() y anexoFull.getAnexo().getSignFormat();
 
-        //TF02
         if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexoFull.getAnexo().getSignType()) &&
-                (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexoFull.getAnexo().getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexoFull.getAnexo().getSignFormat()))) {
+                (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexoFull.getAnexo().getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexoFull.getAnexo().getSignFormat()))) {//TF02
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_XADES_DETACHED_SIGNATURE));
-        }
-        //TF03
-        if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexoFull.getAnexo().getSignType()) &&
-                ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexoFull.getAnexo().getSignFormat())) {
+        }else if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexoFull.getAnexo().getSignType()) &&
+                ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexoFull.getAnexo().getSignFormat())) { //TF03
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE));
-        }
-        //TF04
-        if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexoFull.getAnexo().getSignType()) &&
-                (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexoFull.getAnexo().getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexoFull.getAnexo().getSignFormat()))) {
+        }else if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexoFull.getAnexo().getSignType()) &&
+                (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexoFull.getAnexo().getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexoFull.getAnexo().getSignFormat()))) {//TF04
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE));
-        }
-        //TF05
-        if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexoFull.getAnexo().getSignType()) &&
-                ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexoFull.getAnexo().getSignFormat())) {
+        } else if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexoFull.getAnexo().getSignType()) &&
+                ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexoFull.getAnexo().getSignFormat())) { //TF05
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE));
-        }
-        //TF06
-        if (ValidateSignatureConstants.SIGNTYPE_PAdES.equals(anexoFull.getAnexo().getSignType())) {
+        } else if (ValidateSignatureConstants.SIGNTYPE_PAdES.equals(anexoFull.getAnexo().getSignType())) {//TF06
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_PADES));
-        }
-        //TF08
-        if (ValidateSignatureConstants.SIGNTYPE_ODF.equals(anexoFull.getAnexo().getSignType())) {
+        } else  if (ValidateSignatureConstants.SIGNTYPE_ODF.equals(anexoFull.getAnexo().getSignType())) { //TF08
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_ODF));
-        }
-        //TF09
-        if (ValidateSignatureConstants.SIGNTYPE_OOXML.equals(anexoFull.getAnexo().getSignType())) {
+        }else  if (ValidateSignatureConstants.SIGNTYPE_OOXML.equals(anexoFull.getAnexo().getSignType())) { //TF09
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_OOXML));
         }
 
@@ -504,30 +491,31 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         //Perfil de firma
         // La transformación al tipo de Firma de RIPEA es un mapeo directo del campo anexoFull.getAnexo().getSignProfile()
 
-        if(ValidateSignatureConstants.SIGNPROFILE_BES.equals(anexoFull.getAnexo().getSignProfile())){
+        if(ValidateSignatureConstants.SIGNPROFILE_BES.equals(anexoFull.getAnexo().getSignProfile()) ||
+           ValidateSignatureConstants.SIGNPROFILE_X1.equals(anexoFull.getAnexo().getSignProfile()) ||
+           ValidateSignatureConstants.SIGNPROFILE_X2.equals(anexoFull.getAnexo().getSignProfile()) ||
+           ValidateSignatureConstants.SIGNPROFILE_XL1.equals(anexoFull.getAnexo().getSignProfile()) ||
+           ValidateSignatureConstants.SIGNPROFILE_XL2.equals(anexoFull.getAnexo().getSignProfile()) ||
+           ValidateSignatureConstants.SIGNPROFILE_PADES_BASIC.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_BES);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_EPES.equals(anexoFull.getAnexo().getSignProfile())){
+        }else if(ValidateSignatureConstants.SIGNPROFILE_EPES.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_EPES);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_PADES_LTV.equals(anexoFull.getAnexo().getSignProfile())){
+        }else  if(ValidateSignatureConstants.SIGNPROFILE_PADES_LTV.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_LTV);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_T.equals(anexoFull.getAnexo().getSignProfile())){
+        }else if(ValidateSignatureConstants.SIGNPROFILE_T.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_T);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_C.equals(anexoFull.getAnexo().getSignProfile())){
+        }else  if(ValidateSignatureConstants.SIGNPROFILE_C.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_C);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_X.equals(anexoFull.getAnexo().getSignProfile())){
+        }else if(ValidateSignatureConstants.SIGNPROFILE_X.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_X);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_XL.equals(anexoFull.getAnexo().getSignProfile())){
+        }else if(ValidateSignatureConstants.SIGNPROFILE_XL.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_XL);
-        }
-        if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexoFull.getAnexo().getSignProfile())){
+        }else  if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexoFull.getAnexo().getSignProfile())){
+            firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
+        }else  if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
         }
+
 
         if(firma.getTipus() == null || firma.getPerfil() == null){
             throw new Exception("Error: Tipus Firma o Perfil Firma no poden ser buits");
