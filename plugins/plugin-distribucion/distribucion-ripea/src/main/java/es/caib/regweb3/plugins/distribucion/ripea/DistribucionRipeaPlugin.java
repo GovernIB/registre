@@ -91,65 +91,69 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         Locale locale) throws Exception {
 
 
-        //Transformamos a registreAnotació. TODO VER QUE CAMPOS DE REGISTRO ENVIAMOS A RIPEA
-        RegistreAnotacio registreAnotacio = transformarARegistreAnotacio(registro, locale);
+        try {
+            //Transformamos a registreAnotació. TODO VER QUE CAMPOS DE REGISTRO ENVIAMOS A RIPEA
+            RegistreAnotacio registreAnotacio = transformarARegistreAnotacio(registro, locale);
 
-        //Parte de interesados
-        for (Interesado interesado : registro.getRegistroDetalle().getInteresados()) {
-            //log.info("interesado nombre " + interesado.getNombre());
-            if(!interesado.getIsRepresentante()) {
-                //log.info("Interesado no es representante");
-                RegistreInteressat registreInteressat = transformarARegistreInteressat(interesado, locale);
-                if (interesado.getRepresentante() != null) {
-                    RegistreInteressat representant = transformarARegistreInteressat(interesado.getRepresentante(), locale);
-                    registreInteressat.setRepresentant(representant);
-                    //log.info("Interesado representante nombre " + registreInteressat.getRepresentant().getNom());
-                    //log.info("Interesado representante apellido "+ registreInteressat.getRepresentant().getLlinatge1());
+            //Parte de interesados
+            for (Interesado interesado : registro.getRegistroDetalle().getInteresados()) {
+                //log.info("interesado nombre " + interesado.getNombre());
+                if(!interesado.getIsRepresentante()) {
+                    //log.info("Interesado no es representante");
+                    RegistreInteressat registreInteressat = transformarARegistreInteressat(interesado, locale);
+                    if (interesado.getRepresentante() != null) {
+                        RegistreInteressat representant = transformarARegistreInteressat(interesado.getRepresentante(), locale);
+                        registreInteressat.setRepresentant(representant);
+                        //log.info("Interesado representante nombre " + registreInteressat.getRepresentant().getNom());
+                        //log.info("Interesado representante apellido "+ registreInteressat.getRepresentant().getLlinatge1());
+                    }
+                    registreAnotacio.getInteressats().add(registreInteressat);
                 }
-                registreAnotacio.getInteressats().add(registreInteressat);
             }
-        }
 
-        //Parte de anexos
+            //Parte de anexos
         /*En el caso de Ripea no se tiene en cuenta la configuración de los Anexos.
          Siempre se envia el identificador de custodia del Justificante +  el contenido completo de los anexos.*/
-        for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
-            //Transformar a RegistreAnnex
-            RegistreAnnex registreAnnex;
-            Anexo anexo = anexoFull.getAnexo();
-            if (anexo.isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
-                registreAnnex = transformarARegistreAnnex(anexo);
-                registreAnotacio.setJustificant(registreAnnex);
-            } else {
-                registreAnnex = transformarARegistreAnnex(anexoFull); //Montamos contenido completo
-                registreAnotacio.getAnnexos().add(registreAnnex);
+            for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
+                //Transformar a RegistreAnnex
+                RegistreAnnex registreAnnex;
+                Anexo anexo = anexoFull.getAnexo();
+                if (anexo.isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
+                    registreAnnex = transformarARegistreAnnex(anexo);
+                    registreAnotacio.setJustificant(registreAnnex);
+                } else {
+                    registreAnnex = transformarARegistreAnnex(anexoFull); //Montamos contenido completo
+                    registreAnotacio.getAnnexos().add(registreAnnex);
+                }
             }
+
+            //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
+            //TODO Definir bien los criterios de distribución (organismo destinatario, codigoasunto, tipoasunto
+            String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
+            log.info("entidadCodigo " + entidadCodigo);
+            String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
+            log.info("unidadAdminitrativaCodigo "  + unidadAdministrativaCodigo);
+
+            //Método donde se invoca al ws de RIPEA para enviar el registro a los destinatarios(busties en este caso)
+
+            //Propietats per atacar els WS de RIPEA
+            String endpoint = getPropertyEndPoint();
+            String usuario = getPropertyUsuario();
+            String password = getPropertyPassword();
+
+            BustiaV1 client = es.caib.ripea.ws.client.BustiaV1WsClientFactory.getWsClient(
+                    endpoint,
+                    usuario,
+                    password);
+
+            long start = System.currentTimeMillis();
+            client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
+            log.info("Total enviarAnotacioRegistreEntrada: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+
+            return true;
+        } catch (Exception e) {
+            throw new Exception(e);
         }
-
-        //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
-        //TODO Definir bien los criterios de distribución (organismo destinatario, codigoasunto, tipoasunto
-        String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
-        log.info("entidadCodigo " + entidadCodigo);
-        String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
-        log.info("unidadAdminitrativaCodigo "  + unidadAdministrativaCodigo);
-
-        //Método donde se invoca al ws de RIPEA para enviar el registro a los destinatarios(busties en este caso)
-
-        //Propietats per atacar els WS de RIPEA
-        String endpoint = getPropertyEndPoint();
-        String usuario = getPropertyUsuario();
-        String password = getPropertyPassword();
-
-        BustiaV1 client = es.caib.ripea.ws.client.BustiaV1WsClientFactory.getWsClient(
-                endpoint,
-                usuario,
-                password);
-
-        long start = System.currentTimeMillis();
-        client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
-        log.info("Total enviarAnotacioRegistreEntrada: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
-
-        return true;
 
     }
 

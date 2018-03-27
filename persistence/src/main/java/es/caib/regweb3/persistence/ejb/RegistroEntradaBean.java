@@ -77,6 +77,9 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -862,13 +865,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return rectificado;
     }
 
+
     @Override
     public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
-        long start = System.currentTimeMillis();
         log.info("------------------------------------------------------------");
         log.info("Distribuyendo el registro: " + re.getNumeroRegistroFormateado());
         log.info("");
+
+        //Información a guardar de la integración
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Distribución Registro";
 
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         respuestaDistribucion.setHayPlugin(false);
@@ -876,41 +884,70 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         respuestaDistribucion.setEnviado(false);
 
         //Obtenemos plugin
-        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-        //Si han especificado plug-in
-        if (distribucionPlugin != null) {
-            respuestaDistribucion.setHayPlugin(true);
+        try {
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
 
-            //Obtenemos la configuración de la distribución
-            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-            respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
+            peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
+            peticion.append("numeroRegistro: ").append(re.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
-            //Obtenemos los anexos en función de la configuración establecida
-            //re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
+            //Si han especificado plug-in
+            if (distribucionPlugin != null) {
+                respuestaDistribucion.setHayPlugin(true);
 
+                //Obtenemos la configuración de la distribución
+                ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
+                respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
+                //Obtenemos los anexos en función de la configuración establecida
+                //re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
 
-            if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
-                respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
+                if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
+                    respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
 
-            } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
-                Locale locale = new Locale("ca");
-                respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, "", locale));
+                } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
+                    Locale locale = new Locale("ca");
+                    respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, "", locale));
 
-                // Si ya ha sido enviado, lo marcamos como tramitado.
-                if(respuestaDistribucion.getEnviado()){
-                    tramitarRegistroEntrada(re,usuarioEntidad);
-                    //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
+                    // Si ya ha sido enviado, lo marcamos como tramitado.
+                    if(respuestaDistribucion.getEnviado()){
+                        tramitarRegistroEntrada(re,usuarioEntidad);
+                        //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
+                    }
                 }
+
+            }else{ //No hay plugin, marcamos el Registro como Tramitado
+                tramitarRegistroEntrada(re,usuarioEntidad);
+                //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
             }
 
-        }else{ //No hay plugin, marcamos el Registro como Tramitado
-            tramitarRegistroEntrada(re,usuarioEntidad);
-            //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
-        }
+            log.info("");
+            log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
+            log.info("------------------------------------------------------------");
 
-        log.info("");
-        log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
-        log.info("------------------------------------------------------------");
+            // Integración
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+
+        } catch (I18NException i18ne) {
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            throw i18ne;
+        } catch (Exception e) {
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), e, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw e;
+        } catch (I18NValidationException i18vn) {
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18vn, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw i18vn;
+        }
 
         return respuestaDistribucion;
     }
@@ -919,15 +956,49 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
         Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException {
 
+        // Información de la integración
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Distribución Registro Modificable";
+        Boolean distribucionOk = false; //Estado de la distribución
+
         //Obtenemos plugin
-        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
-        if (distribucionPlugin != null) {
-            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-            re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
-            Locale locale = new Locale(idioma);
-            return distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
+        try {
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
+            if (distribucionPlugin != null) {
+                ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
+                re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+                Locale locale = new Locale(idioma);
+
+                distribucionOk = distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
+                //Integración
+                if(distribucionOk){
+                    integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidadId);
+                }
+            }
+            return distribucionOk;
+        } catch (I18NException i18ne) {
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, entidadId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            throw i18ne;
+        } catch (Exception e) {
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadId);
+            } catch (Exception ex) {
+                e.printStackTrace();
+            }
+            throw e;
+        } catch (I18NValidationException i18vn) {
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18vn, System.currentTimeMillis() - tiempo, entidadId);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            throw i18vn;
         }
-        return false;
 
     }
 
@@ -1117,7 +1188,5 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             postProcesoPlugin.nuevoRegistroEntrada(re);
         }
     }
-
-
 
 }
