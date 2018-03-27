@@ -67,8 +67,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
-    private StringBuilder peticion = new StringBuilder();
-
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
@@ -124,7 +122,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
-
     @Override
     @RolesAllowed({ROL_USUARI})
     @WebMethod
@@ -164,6 +161,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
+        StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
@@ -627,35 +625,68 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             @WebParam(name = "entidad") String entidad)
             throws Throwable, WsI18NException, WsValidationException {
 
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
+
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistroFormateado,entidad);
 
-        // 2.- Comprobar que el usuario existe en la Entidad proporcionada
+        peticion.append("numeroRegistro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
+
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        // 2.- Comprobar que la entidad existe y está activa
+        if(entidadActiva == null){
+            log.info("La entidad "+entidad+" no existe.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }else if(!entidadActiva.getActivo()){
+            throw new I18NException("registro.entidad.inactiva", entidad);
+        }
+
+        // 3.- Comprobar que el usuario existe en la Entidad proporcionada
+        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
+            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad " + entidadActiva.getNombre());
+            throw new I18NException("registroEntrada.usuario.noExiste", entidad);
+        }
+
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad( UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
 
         if(usuarioEntidad == null){//No existe
             throw new I18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
         }
 
-        // 3.- Obtenemos el RegistroEntrada
+        // 4.- Obtenemos el RegistroEntrada
         RegistroEntrada registro = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado,null);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
-        // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
+        // 5.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
         if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA)) {
             throw new I18NException("registroEntrada.usuario.permisos", usuarioEntidad.getUsuario().getNombreCompleto());
         }
 
+        // Retornamos el RegistroEntradaResponseWs
+        RegistroEntradaResponseWs responseWs = null;
+        try{
+            responseWs = RegistroEntradaConverter.getRegistroEntradaResponseWs(registro,
+                    UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+        }catch (Exception e){
+
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId());
+            throw new I18NException("registro.obtener.error");
+        }
+
+
         // LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
-        // Retornamos el RegistroEntradaResponseWs
-        return RegistroEntradaConverter.getRegistroEntradaResponseWs(registro,
-                UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+        // Integracion
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId());
 
+        return responseWs;
 
 
     }

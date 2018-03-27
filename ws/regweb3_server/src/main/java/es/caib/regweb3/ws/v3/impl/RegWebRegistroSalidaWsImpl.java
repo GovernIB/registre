@@ -60,8 +60,6 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     RegistroSalidaValidator<RegistroSalida> validator = new RegistroSalidaValidator<RegistroSalida>();
 
-    private StringBuilder peticion = new StringBuilder();
-
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
 
@@ -148,6 +146,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
+        StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
@@ -409,9 +408,14 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             @WebParam(name = "usuario") String usuario,
             @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
 
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
+
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistro,entidad);
 
+        peticion.append("numeroRegistro: ").append(numeroRegistro).append(System.getProperty("line.separator"));
 
         Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
 
@@ -426,10 +430,14 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
         if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
             log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad " + entidadActiva.getNombre());
-            throw new I18NException("registro.entidad.noExiste", entidad);
+            throw new I18NException("registroEntrada.usuario.noExiste", entidad);
         }
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
+
+        if(usuarioEntidad == null){//No existe
+            throw new I18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
+        }
 
         // 4.- Obtenemos el RegistroSalida
         RegistroSalida registro = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro,null);
@@ -443,13 +451,24 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("registroSalida.usuario.permisos", usuarioEntidad.getUsuario().getNombreCompleto());
         }
 
+        // Retornamos el RegistroSalidaResponseWs
+        RegistroSalidaResponseWs responseWs = null;
+        try{
+            responseWs = RegistroSalidaConverter.getRegistroSalidaResponseWs(registro,
+                    UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+        }catch (Exception e){
+
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId());
+            throw new I18NException("registro.obtener.error");
+        }
+
         // LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
 
-        // Retornamos el RegistroSalidaWs
-        return RegistroSalidaConverter.getRegistroSalidaResponseWs(registro,
-                UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+        // Integracion
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId());
 
+        return responseWs;
 
     }
 
