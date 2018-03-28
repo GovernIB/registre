@@ -275,7 +275,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     trazabilidadEjb.persist(trazabilidad);
 
                     // Modificamos el estado del Registro de Entrada
-                    registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,estado, oficioRemision.getUsuarioResponsable());
+                    registroEntradaEjb.cambiarEstadoHistorico(registroEntrada,estado, oficioRemision.getUsuarioResponsable());
                 }
             }
 
@@ -302,7 +302,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     trazabilidadEjb.persist(trazabilidad);
 
                     // Modificamos el estado del Registro de Salida
-                    registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,estado, oficioRemision.getUsuarioResponsable());
+                    registroSalidaEjb.cambiarEstadoHistorico(registroSalida,estado, oficioRemision.getUsuarioResponsable());
                 }
 
             }
@@ -330,12 +330,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
             // Modificamos el estado de cada RE a Válido
             for(RegistroEntrada registroEntrada:registrosEntrada){
-                registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+                registroEntradaEjb.cambiarEstadoHistorico(registroEntrada,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
             }
 
             // Anulamos los Registros de Salida generado por el Oficio
             for(RegistroSalida registroSalida:trazabilidadEjb.obtenerRegistrosSalida(idOficioRemision)){
-                registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+                registroSalidaEjb.cambiarEstadoHistorico(registroSalida,RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
             }
 
         }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
@@ -343,7 +343,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             List<RegistroSalida> registrosSalida = getSalidasByOficioRemision(oficioRemision.getId());
             // Modificamos el estado de cada RS a Válido
             for(RegistroSalida registroSalida:registrosSalida){
-                registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+                registroSalidaEjb.cambiarEstadoHistorico(registroSalida,RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
             }
 
         }

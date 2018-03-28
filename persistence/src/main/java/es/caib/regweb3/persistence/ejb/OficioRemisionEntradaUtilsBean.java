@@ -645,7 +645,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             trazabilidadEjb.merge(trazabilidad);
 
             // Marcamos el RegistroEntrada original como ACEPTADO
-            registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
+            registroEntradaEjb.cambiarEstadoHistorico(registroEntrada,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
 
         }
 

@@ -562,7 +562,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Si era una reserva de número no lo activamos, lo volvemos a poner Pendiente
             if(registroEntrada.getDestino() == null && registroEntrada.getDestinoExternoCodigo() == null){
-                registroEntradaEjb.cambiarEstadoTrazabilidad(registroEntrada,RegwebConstantes.REGISTRO_RESERVA,usuarioEntidad);
+                registroEntradaEjb.cambiarEstadoHistorico(registroEntrada,RegwebConstantes.REGISTRO_RESERVA,usuarioEntidad);
             }else{
                 // Activamos el RegistroEntrada
                 registroEntradaEjb.activarRegistroEntrada(registroEntrada, usuarioEntidad);

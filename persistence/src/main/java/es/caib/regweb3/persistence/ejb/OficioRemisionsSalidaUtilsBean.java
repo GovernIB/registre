@@ -511,7 +511,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             trazabilidadEjb.merge(trazabilidad);
 
             // Marcamos el RegistroSalida original como ACEPTADO
-            registroSalidaEjb.cambiarEstadoTrazabilidad(registroSalida,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
+            registroSalidaEjb.cambiarEstadoHistorico(registroSalida,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
 
         }
 

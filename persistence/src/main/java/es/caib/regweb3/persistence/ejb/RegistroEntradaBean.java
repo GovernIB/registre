@@ -443,7 +443,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void cambiarEstadoTrazabilidad(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
 
         Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
         q.setParameter("idEstado", idEstado);
@@ -551,7 +551,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                                       UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Estado anulado
-        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
 
     }
 
@@ -560,7 +560,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                                        UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Actualizamos el estado del RegistroEntrada
-        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
+        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
 
     }
 
@@ -569,7 +569,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                                      UsuarioEntidad usuarioEntidad) throws Exception {
 
         // Modificamos el estado del RegistroEntrada
-        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
+        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
 
     }
 
@@ -587,7 +587,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         trazabilidad.setRegistroEntradaDestino(null);
         trazabilidadEjb.persist(trazabilidad);
 
-        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, usuarioEntidad);
+        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, usuarioEntidad);
 
 
     }
