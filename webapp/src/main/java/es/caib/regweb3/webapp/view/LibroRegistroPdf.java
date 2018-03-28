@@ -94,7 +94,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
             estadoRegistro = getMessage("registro.estado.4");
         }else if(estado.equals(RegwebConstantes.REGISTRO_OFICIO_INTERNO)){
             estadoRegistro = getMessage("registro.estado.5");
-        }else if(estado.equals(RegwebConstantes.REGISTRO_TRAMITADO)){
+        }else if(estado.equals(RegwebConstantes.REGISTRO_DISTRIBUIDO)){
             estadoRegistro = getMessage("registro.estado.7");
         }else if(estado.equals(RegwebConstantes.REGISTRO_ANULADO)){
             estadoRegistro = getMessage("registro.estado.8");

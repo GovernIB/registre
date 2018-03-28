@@ -255,7 +255,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     registroSalida.setOficina(oficioRemision.getOficina());
                     registroSalida.setOrigen(libro.getOrganismo());
                     registroSalida.setLibro(oficioRemision.getLibro());
-                    registroSalida.setEstado(RegwebConstantes.REGISTRO_TRAMITADO);
+                    registroSalida.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
 
                     // Registramos la Salida
                     registroSalida = registroSalidaEjb.registrarSalida(registroSalida, oficioRemision.getUsuarioResponsable(), destinatarios, null);
@@ -298,7 +298,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     }
                     trazabilidad.setRegistroEntradaOrigen(null);
                     trazabilidad.setRegistroSalida(registroSalida);
-                    trazabilidad.setRegistroEntradaOrigen(null);
                     trazabilidad.setRegistroEntradaDestino(null);
                     trazabilidadEjb.persist(trazabilidad);
 

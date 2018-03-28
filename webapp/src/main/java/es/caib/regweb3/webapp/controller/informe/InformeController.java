@@ -1131,7 +1131,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
             if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
                 valorRegistro.add("VÀLID");
-            } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_TRAMITADO)) {
+            } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_DISTRIBUIDO)) {
                     valorRegistro.add("TRAMITAT");
                 } else if(registro.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
                         valorRegistro.add("ANUL·LAT");
@@ -1165,7 +1165,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
                 if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
                     registros.get(i).add("VÀLID");
-                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_TRAMITADO)) {
+                } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_DISTRIBUIDO)) {
                         registros.get(i).add("TRAMITAT");
                     } else if(historicoRegistroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
                             registros.get(i).add("ANUL·LAT");

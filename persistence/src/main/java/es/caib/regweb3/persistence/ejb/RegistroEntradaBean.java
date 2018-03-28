@@ -577,7 +577,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
                                         UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
 
-        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_TRAMITADO, usuarioEntidad);
+        // CREAMOS LA TRAZABILIDAD
+        Trazabilidad trazabilidad = new Trazabilidad();
+        trazabilidad.setOficioRemision(null);
+        trazabilidad.setFecha(new Date());
+        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
+        trazabilidad.setRegistroSalida(null);
+        trazabilidad.setRegistroEntradaDestino(null);
+        trazabilidadEjb.persist(trazabilidad);
+
+        cambiarEstadoTrazabilidad(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, usuarioEntidad);
+
 
     }
 

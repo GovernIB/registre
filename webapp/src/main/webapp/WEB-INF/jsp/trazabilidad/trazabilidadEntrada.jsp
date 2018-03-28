@@ -178,6 +178,36 @@
 
             </c:if>
 
+            <%-- DISTRIBUCIÓN --%>
+            <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_DISTRIBUCION}">
+
+                <c:if test="${registro.id == trazabilidad.registroEntradaOrigen.id}">
+                    <li>
+                        <div class="timeline-badge primary"><i class="fa fa-sign-out"></i></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">
+                                    <a href="<c:url value="/registroEntrada/${trazabilidad.registroEntradaOrigen.id}/detalle"/>"><spring:message code="registroEntrada.distribuido"/></a>
+                                </h4>
+                                <p>
+                                    <small class="text-muted"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroEntrada.distribuir.fecha"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small><br>
+                                    <small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroEntrada.numeroRegistro"/>:</strong> ${trazabilidad.registroEntradaOrigen.numeroRegistroFormateado}</small>
+                                </p>
+                            </div>
+                            <div class="timeline-body">
+                                <p><small><i class="fa fa-home"></i> <strong><spring:message code="registroEntrada.oficina"/>:</strong> ${trazabilidad.registroEntradaOrigen.oficina.denominacion}</small></p>
+                                <p><small><i class="fa fa-bookmark"></i> <strong><spring:message code="registroEntrada.estado"/>:</strong>
+                                    <c:import url="../registro/estadosRegistro.jsp">
+                                        <c:param name="estado" value="${trazabilidad.registroEntradaOrigen.estado}"/>
+                                    </c:import>
+                                </small></p>
+                            </div>
+                        </div>
+                    </li>
+                </c:if>
+
+            </c:if>
+
         </c:forEach>
 
     </ul>
