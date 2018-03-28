@@ -304,9 +304,15 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
 
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistroFormateado,entidad);
+
+        peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
+        peticion.append("tipoRegistro: ").append("entrada").append(System.getProperty("line.separator"));
 
         // 2.- Comprobar que la entidad existe y está activa
         Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
@@ -349,7 +355,14 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
             // Solo se puede generar si el registro es Válido
             if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
-                justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),"ca");
+
+                try{
+                    justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),"ca");
+                }catch (Exception e){
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId());
+                    throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
+                }
+
                 sc = justificante.getSignatureCustody();
                 // Alta en la tabla de LOPD
                 lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
@@ -370,6 +383,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
         }
+
+        // Integracion
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId());
 
         return new JustificanteWs(sc.getData());
     }
@@ -634,7 +650,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistroFormateado,entidad);
 
-        peticion.append("numeroRegistro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
+        peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
         Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
 

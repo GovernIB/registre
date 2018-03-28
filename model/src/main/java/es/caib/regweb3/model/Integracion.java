@@ -191,7 +191,7 @@ public class Integracion implements Serializable {
 
     @Transient
     public String getTiempoFormateado() {
-        return TimeUtils.formatElapsedTime(tiempo);
+        return TimeUtils.formatElapsedTimeShort(tiempo);
     }
 
     @Transient

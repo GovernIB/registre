@@ -291,6 +291,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             // Integración
             peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
             peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
