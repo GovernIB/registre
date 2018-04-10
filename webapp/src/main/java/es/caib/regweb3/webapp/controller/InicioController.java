@@ -40,6 +40,9 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
+    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    private TrazabilidadLocal trazabilidadBean;
+
 
     @RequestMapping(value = "/inici")
     public ModelAndView principal(HttpServletRequest request, Model model) throws Exception{
@@ -80,11 +83,13 @@ public class InicioController extends BaseController{
                 }
             }
 
-            /* Obtenemos los Registros Sir pendientes de procesar */
+            /* REGISTROS SIR */
             if(entidadActiva.getSir() && oficinaActiva.getSirRecepcion()) {
                 mav.addObject("registrosSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("entradasRechazadosReenviados", registroEntradaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+
+                mav.addObject("pendientesDistribuir", trazabilidadBean.getPendientesDistribuir(entidadActiva.getId()));
             }
 
         }

@@ -49,7 +49,7 @@
                                 <div class="col-xs-6 centrat">
                                     <div id="reserves" class="panel panel-info">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.reservas"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroEntrada.reservas"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -96,6 +96,59 @@
                                     </div>
                                 </div>
                             </c:if>
+
+                                <%--REGISTROS DE ENTRADA PENDIENTES DE DISTRIBUIR--%>
+                                <c:if test="${not empty pendientesDistribuir}">
+                                    <div class="col-xs-6 centrat">
+                                        <div id="pendientesDistribuir" class="panel panel-info">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-sign-out"></i> <strong><spring:message code="registroEntrada.pendientesDistribuir"/></strong> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                        <colgroup>
+                                                            <col width="80">
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col>
+                                                            <col width="51">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                            <th><spring:message code="registroEntrada.fecha"/></th>
+                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
+                                                            <th><spring:message code="registroEntrada.usuario"/></th>
+                                                            <th><spring:message code="registroEntrada.extracto"/></th>
+                                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <c:forEach var="registroEntrada" items="${pendientesDistribuir}" varStatus="status">
+                                                            <tr>
+                                                                <td>${registroEntrada.numeroRegistroFormateado}</td>
+                                                                <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                                <td>${registroEntrada.libro}</td>
+                                                                <td>${registroEntrada.usuario}</td>
+                                                                <td>${registroEntrada.registroDetalle.extracto}</td>
+                                                                <td class="center">
+                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
 
                             <%--REGISTROS DE ENTRADA PENDIENTES DE VISAR--%>
                             <%--<c:set var="avisos" value="${avisos+1}"/>
@@ -157,7 +210,7 @@
 
                                     <div id="pendientesLleg" class="panel panel-success">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-mail-reply"></i> <strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -208,7 +261,7 @@
 
                                     <div id="pendientesRemEnt" class="panel panel-success">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.oficiosRemision"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <strong><spring:message code="registroEntrada.oficiosRemision"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -254,7 +307,7 @@
 
                                     <div id="pendientesRemSal" class="panel panel-success">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSalida.oficiosRemision"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <strong><spring:message code="registroSalida.oficiosRemision"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -300,7 +353,7 @@
 
                                     <div id="pendientesProc" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-refresh fa-spin"></i> <strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -361,7 +414,7 @@
 
                                     <div id="entradasRechazadosReenviados" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -416,7 +469,7 @@
 
                                     <div id="salidasRechazadosReenviados" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroSalida.rechazados.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <strong><spring:message code="registroSalida.rechazados.inicio"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -472,7 +525,7 @@
 
                                     <div id="rechazados" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
