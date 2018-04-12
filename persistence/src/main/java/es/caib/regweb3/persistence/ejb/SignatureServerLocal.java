@@ -58,6 +58,17 @@ public interface SignatureServerLocal {
      */
     I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException;
 
+    /**
+     *
+     * @param input
+     * @param idEntidad
+     * @param locale
+     * @param force
+     * @return
+     * @throws I18NException
+     */
+     AnexoFull obtenerPropiedadesFirma(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException;
+
 
     /**
      * 
