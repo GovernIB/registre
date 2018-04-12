@@ -112,8 +112,8 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             }
 
             //Parte de anexos
-        /*En el caso de Ripea no se tiene en cuenta la configuración de los Anexos.
-         Siempre se envia el identificador de custodia del Justificante +  el contenido completo de los anexos.*/
+            /*En el caso de Ripea no se tiene en cuenta la configuración de los Anexos.
+            Siempre se envia el identificador de custodia del Justificante +  el contenido completo de los anexos.*/
             for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
                 //Transformar a RegistreAnnex
                 RegistreAnnex registreAnnex;
@@ -135,7 +135,6 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             log.info("unidadAdminitrativaCodigo "  + unidadAdministrativaCodigo);
 
             //Método donde se invoca al ws de RIPEA para enviar el registro a los destinatarios(busties en este caso)
-
             //Propietats per atacar els WS de RIPEA
             String endpoint = getPropertyEndPoint();
             String usuario = getPropertyUsuario();
@@ -174,7 +173,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     /**
      * Método que transforma de RegistroEntrada a RegistreAnotacio de Ripea.
      *
-     * @param re
+     * @param re RegistroEntrada
      * @return
      * @throws Exception
      */
@@ -231,8 +230,10 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         registreAnotacio.setObservacions(re.getRegistroDetalle().getObservaciones());
 
         //Oficina Origen
-        registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigen().getCodigo());
-        registreAnotacio.setOficinaDescripcio(re.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+        if(re.getRegistroDetalle().getOficinaOrigen()!=null) {
+            registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigen().getCodigo());
+            registreAnotacio.setOficinaDescripcio(re.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+        }
 
         //Numero Registro Origen y Fecha Registro Origen
         //TODO NUMERO Registro Origen
