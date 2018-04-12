@@ -492,6 +492,8 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_ODF));
         }else  if (ValidateSignatureConstants.SIGNTYPE_OOXML.equals(anexoFull.getAnexo().getSignType())) { //TF09
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_OOXML));
+        }else{
+            firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE));
         }
 
 
@@ -522,6 +524,8 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
         }else  if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexoFull.getAnexo().getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
+        }else{
+            firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_BES);
         }
 
 
