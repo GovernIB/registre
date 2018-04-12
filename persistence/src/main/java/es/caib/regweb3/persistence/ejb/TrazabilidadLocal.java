@@ -7,6 +7,7 @@ import es.caib.regweb3.model.Trazabilidad;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -85,10 +86,13 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
      * Obtiene los RegistroEntrada validos que han sido creados a partir de una recepción SIR
+     * @param idOficina
      * @param idEntidad
+     * @param organismos
+     * @param total
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> getPendientesDistribuir(Long idEntidad) throws Exception;
+    List<RegistroEntrada> getPendientesDistribuir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception;
 
 }

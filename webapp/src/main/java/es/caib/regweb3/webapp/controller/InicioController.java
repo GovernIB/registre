@@ -89,7 +89,7 @@ public class InicioController extends BaseController{
                 mav.addObject("entradasRechazadosReenviados", registroEntradaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
-                mav.addObject("pendientesDistribuir", trazabilidadBean.getPendientesDistribuir(entidadActiva.getId()));
+                mav.addObject("pendientesDistribuir", trazabilidadBean.getPendientesDistribuir(oficinaActiva.getId(),entidadActiva.getId(),getOrganismosOficioRemision(request,organismosOficinaActiva),5));
             }
 
         }
