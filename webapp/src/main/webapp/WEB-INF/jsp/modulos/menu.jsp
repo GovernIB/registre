@@ -194,8 +194,8 @@
                                     <spring:message code="menu.sir"/> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSir.recibidos"/></a></li>
-                                    <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-search"></i> <spring:message code="registroSir.enviados"/></a></li>
+                                    <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos"/></a></li>
+                                    <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados"/></a></li>
                                     <li class="divider"></li>
                                     <li><a href="<c:url value="/registroSir/pendientesProcesar/list/1"/>"><i class="fa fa-refresh fa-spin"></i> <spring:message code="registroSir.pendientesProcesar"/></a></li>
                                     <li><a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroEntrada.pendientesSir"/></a></li>

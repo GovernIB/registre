@@ -62,7 +62,6 @@
                                                         <col>
                                                         <col>
                                                         <col>
-                                                        <col>
                                                         <col width="51">
                                                     </colgroup>
                                                     <thead>
@@ -70,7 +69,6 @@
                                                         <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                                        <th><spring:message code="registroEntrada.usuario"/></th>
                                                         <th><spring:message code="registroEntrada.reserva"/></th>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                     </tr>
@@ -82,7 +80,6 @@
                                                             <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                             <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                             <td>${registroEntrada.libro}</td>
-                                                            <td>${registroEntrada.usuario}</td>
                                                             <td>${registroEntrada.extracto}</td>
                                                             <td class="center">
                                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
@@ -115,7 +112,6 @@
                                                             <col>
                                                             <col>
                                                             <col>
-                                                            <col>
                                                             <col width="51">
                                                         </colgroup>
                                                         <thead>
@@ -123,7 +119,6 @@
                                                             <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                                             <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                                            <th><spring:message code="registroEntrada.usuario"/></th>
                                                             <th><spring:message code="registroEntrada.extracto"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
@@ -135,7 +130,6 @@
                                                                 <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                                 <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <td>${registroEntrada.libro}</td>
-                                                                <td>${registroEntrada.usuario}</td>
                                                                 <td>${registroEntrada.registroDetalle.extracto}</td>
                                                                 <td class="center">
                                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
@@ -227,8 +221,8 @@
                                                     <thead>
                                                         <tr>
                                                             <th><spring:message code="oficioRemision.fecha"/></th>
-                                                            <th><spring:message code="oficioRemision.oficina"/></th>
-                                                            <th><spring:message code="organismo.destino"/></th>
+                                                            <th><spring:message code="oficioRemision.origen"/></th>
+                                                            <th><spring:message code="oficioRemision.destino"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -369,7 +363,7 @@
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th><spring:message code="registroSir.oficinaOrigen"/></th>
+                                                        <th><spring:message code="oficioRemision.origen"/></th>
                                                         <th><spring:message code="registroSir.fechaRegistro"/></th>
                                                         <th><spring:message code="registroSir.extracto"/></th>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>

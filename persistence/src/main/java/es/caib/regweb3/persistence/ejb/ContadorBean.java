@@ -110,8 +110,6 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
             throw new Exception("El valor de la secuencia obtenido del Contador no puede ser superior a 8");
         }
 
-        log.info("secuencia : " + secuencia);
-
         return secuencia;
 
     }

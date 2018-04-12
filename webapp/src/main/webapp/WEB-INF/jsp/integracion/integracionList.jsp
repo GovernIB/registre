@@ -74,8 +74,8 @@
                                     <table class="table table-bordered table-hover table-striped tablesorter">
                                         <colgroup>
                                             <col width="140">
-                                            <col width="150">
-                                            <col width="110">
+                                            <col width="200">
+                                            <col width="80">
                                             <col width="70">
                                             <col>
                                             <col width="60">

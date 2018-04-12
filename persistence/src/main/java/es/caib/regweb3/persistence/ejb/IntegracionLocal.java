@@ -23,7 +23,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @return
      * @throws Exception
      */
-    public List<Integracion> getByEntidad(Long idEntidad) throws Exception;
+    List<Integracion> getByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Búsqueda de integraciones
@@ -33,7 +33,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, Long tipo) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, Long tipo) throws Exception;
 
     /**
      *
@@ -44,7 +44,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    public void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad) throws Exception;
+    void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad) throws Exception;
 
     /**
      *
@@ -56,7 +56,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param idEntidad
      * @throws Exception
      */
-    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad) throws Exception;
+    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad) throws Exception;
 
     /**
      * Elimina las Integraciones con una antigüedad de 7 días
@@ -64,7 +64,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @return
      * @throws Exception
      */
-    public Integer purgarIntegraciones(Long idEntidad) throws Exception;
+    Integer purgarIntegraciones(Long idEntidad) throws Exception;
 
     /**
      * Elimina las integraciones de una Entidad
@@ -72,6 +72,6 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @return
      * @throws Exception
      */
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception;
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }
