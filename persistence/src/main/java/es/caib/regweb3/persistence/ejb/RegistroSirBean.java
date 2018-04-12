@@ -1489,8 +1489,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         registroDetalle.setOficinaOrigen(null);
-        registroDetalle.setOficinaOrigenExternoCodigo(registroSir.getCodigoEntidadRegistralOrigen());
-        registroDetalle.setOficinaOrigenExternoDenominacion(registroSir.getDecodificacionEntidadRegistralOrigen());
+        registroDetalle.setOficinaOrigenExternoCodigo(registroSir.getCodigoEntidadRegistralInicio());
+        registroDetalle.setOficinaOrigenExternoDenominacion(registroSir.getDecodificacionEntidadRegistralInicio());
 
         registroDetalle.setNumeroRegistroOrigen(registroSir.getNumeroRegistro());
         registroDetalle.setFechaOrigen(registroSir.getFechaRegistro());
