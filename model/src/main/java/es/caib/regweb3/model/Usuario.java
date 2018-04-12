@@ -1,7 +1,7 @@
 package es.caib.regweb3.model;
 
-import es.caib.regweb3.utils.RegwebConstantes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import es.caib.regweb3.utils.RegwebConstantes;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
@@ -218,6 +218,12 @@ public class Usuario implements Serializable {
         }
 
         return nombreCompleto;
+    }
+
+    @Transient
+    public String getNombreIdentificador(){
+
+        return getNombreCompleto() + " ("+getIdentificador()+")";
     }
 
     @Override

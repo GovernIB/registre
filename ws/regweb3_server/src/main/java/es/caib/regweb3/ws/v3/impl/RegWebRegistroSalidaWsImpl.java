@@ -149,7 +149,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
 
-        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         // 1.- Validar campo obligatorio entidad
         if(StringUtils.isEmpty(entidad)){
@@ -277,7 +277,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistroFormateado,entidad);
@@ -429,7 +429,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()).append(System.getProperty("line.separator"));
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistro,entidad);
