@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -165,6 +166,20 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         }
 
         return registros;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroEntrada> getPendientesDistribuir(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select t.registroEntradaDestino from Trazabilidad as t " +
+                "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and t.registroEntradaDestino.estado = :registro_valido order by t.fecha");
+
+        q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        return q.getResultList();
     }
 
     @Override

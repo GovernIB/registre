@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
 
@@ -81,5 +82,13 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      */
     List<RegistroSalida> obtenerRegistrosSalida(Long idOficioRemision) throws Exception;
+
+    /**
+     * Obtiene los RegistroEntrada validos que han sido creados a partir de una recepción SIR
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<RegistroEntrada> getPendientesDistribuir(Long idEntidad) throws Exception;
 
 }
