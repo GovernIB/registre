@@ -230,9 +230,12 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         registreAnotacio.setObservacions(re.getRegistroDetalle().getObservaciones());
 
         //Oficina Origen
-        if(re.getRegistroDetalle().getOficinaOrigen()!=null) {
+        if(re.getRegistroDetalle().getOficinaOrigen() != null) {
             registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigen().getCodigo());
             registreAnotacio.setOficinaDescripcio(re.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+        }else{
+            registreAnotacio.setOficinaOrigenCodi(re.getRegistroDetalle().getOficinaOrigenExternoCodigo());
+            registreAnotacio.setOficinaDescripcio(re.getRegistroDetalle().getOficinaOrigenExternoDenominacion());
         }
 
         //Numero Registro Origen y Fecha Registro Origen
