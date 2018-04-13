@@ -138,9 +138,9 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            int inicio = (pageNumber - 1) * Integracion.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
-            q.setMaxResults(RESULTADOS_PAGINACION);
+            q.setMaxResults(Integracion.RESULTADOS_PAGINACION);
         } else {
             paginacion = new Paginacion(0, 0);
         }

@@ -36,6 +36,8 @@ public class Integracion implements Serializable {
     private String error;
     private String excepcion;
 
+    public static final int RESULTADOS_PAGINACION = 50;
+
     public Integracion() { }
 
     public Integracion(Long tipo) {

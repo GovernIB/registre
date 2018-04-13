@@ -73,8 +73,14 @@ public class IntegracionController extends BaseController {
 
     @ModelAttribute("tipos")
     public
-    Long[] configuraciones() {
+    Long[] tipos() {
         return RegwebConstantes.INTEGRACION_TIPOS;
+    }
+
+    @ModelAttribute("estados")
+    public
+    Long[] estados() {
+        return RegwebConstantes.INTEGRACION_ESTADOS;
     }
     
 }

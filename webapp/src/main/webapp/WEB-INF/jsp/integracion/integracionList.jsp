@@ -53,6 +53,21 @@
                                 <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
 
                                     <form:hidden path="pageNumber"/>
+                                    <div class="col-xs-12">
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="usuarioEntidad.usuario.tipoUsuario"><spring:message code="usuario.tipoUsuario"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:select path="estado" cssClass="chosen-select">
+                                                    <form:option value="" label="..."/>
+                                                    <c:forEach var="estado" items="${estados}">
+                                                        <form:option value="${estado}"><spring:message code="intqegracion.estado.${estado}"/></form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </form:form>
 
