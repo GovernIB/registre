@@ -45,26 +45,24 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group col-xs-12">
-
-                                    <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
-                                        <form:hidden path="pageNumber"/>
-                                        <div class="col-xs-12">
-                                            <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                    <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
+                                        <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
+                                            <form:hidden path="pageNumber"/>
+                                                <div class="col-xs-12">
+                                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                            <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
+                                                        </div>
+                                                        <div class="col-xs-8">
+                                                            <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
+                                                                <form:option value="" label="..."/>
+                                                                <c:forEach var="estado" items="${estados}">
+                                                                    <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
+                                                                </c:forEach>
+                                                            </form:select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-8">
-                                                    <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
-                                                        <form:option value="" label="..."/>
-                                                        <c:forEach var="estado" items="${estados}">
-                                                            <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
-                                                        </c:forEach>
-                                                    </form:select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </form:form>
+                                        </form:form>
                                     </div>
                                 </div>
                             </div>

@@ -32,7 +32,7 @@ function infoIntegracion(idIntegracion){
             $('#peticion').html(peticion.replace(/\n/g, "<br />"));
 
             if(result.error != null){
-                $('#error').html(result.error);
+                $('#error').text(result.error);
                 $('#errorBox').show();
             }else{
                 $('#errorBox').hide();
