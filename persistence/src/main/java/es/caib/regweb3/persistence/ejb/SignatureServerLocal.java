@@ -31,7 +31,7 @@ public interface SignatureServerLocal {
      * @throws Exception
      */
     SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                      Long idEntidadActiva) throws Exception, I18NException;
+                                      Long idEntidadActiva, StringBuilder peticion) throws Exception, I18NException;
     
     
     /**

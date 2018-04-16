@@ -145,7 +145,7 @@ public class JustificanteBean implements JustificanteLocal {
 
             // Cream l'annex justificant i el firmam
             // Firma el justificant
-            SignatureCustody sign = signatureServerEjb.signJustificante(pdfSignat, idioma, idEntidad);
+            SignatureCustody sign = signatureServerEjb.signJustificante(pdfSignat, idioma, idEntidad, peticion);
             sign.setName(nombreFichero);
 
             anexoFull.setSignatureCustody(sign);

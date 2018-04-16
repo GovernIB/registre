@@ -48,7 +48,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      */
     @Override
     public SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                             Long idEntidadActiva) throws Exception, I18NException {
+                                             Long idEntidadActiva, StringBuilder peticion) throws Exception, I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
@@ -71,7 +71,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         doc.setMime(FileInfoSignature.PDF_MIME_TYPE);
         doc.setName("justificante.pdf");
 
-        return signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI), reason, idEntidadActiva);
+        return signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
+                reason, idEntidadActiva, peticion);
 
     }
 
@@ -465,7 +466,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
         SignatureCustody sc = signFile(docToSign, signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad);
+                signaturePlugin, locale, reason, idEntidad, new StringBuilder());
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -563,7 +564,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
         SignatureCustody sc = signFile(documentToSign, signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad);
+                signaturePlugin, locale, reason, idEntidad, new StringBuilder());
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -593,13 +594,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected SignatureCustody signFile(AnnexCustody doc, String signType,
-                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva)
+                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, StringBuilder peticion)
             throws I18NException {
 
         File source = null;
         File destination = null;
         final String username = CONFIG_USERNAME;
-        StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
 
         // Integración
