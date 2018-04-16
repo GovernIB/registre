@@ -43,6 +43,7 @@ public class JustificanteBean implements JustificanteLocal {
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private AnexoLocal anexoEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB private IntegracionLocal integracionEjb;
 
 
     @Override
@@ -52,12 +53,19 @@ public class JustificanteBean implements JustificanteLocal {
         boolean error = false;
         IDocumentCustodyPlugin documentCustodyPlugin = null;
         long tiempo = System.currentTimeMillis();
+        StringBuilder peticion = new StringBuilder();
 
         try {
             // Comprobamos si ya se ha generado el Justificante
             if (registro.getRegistroDetalle().getTieneJustificante()) {
                 throw new I18NException("aviso.justificante.existe");
             }
+
+            // Integración
+            peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+            peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
 
             log.info("------------------------------------------------------------");
             log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
@@ -81,6 +89,8 @@ public class JustificanteBean implements JustificanteLocal {
                 // No s´ha definit cap plugin de Custòdia-Justificant. Consulti amb el seu Administrador.
                 throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.7"));
             }
+
+            peticion.append("clase: ").append(documentCustodyPlugin.getClass().getName()).append(System.getProperty("line.separator"));
 
             // Cerca el Plugin de Justificant definit a les Propietats Globals
             ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
@@ -114,6 +124,8 @@ public class JustificanteBean implements JustificanteLocal {
             Map<String, Object> custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
             custodyID = documentCustodyPlugin.reserveCustodyID(custodyParameters);
             Metadata mcsv = documentCustodyPlugin.getOnlyOneMetadata(custodyID, MetadataConstants.ENI_CSV);
+
+            peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
 
             String csv = null;
             if (mcsv != null) {
@@ -150,16 +162,34 @@ public class JustificanteBean implements JustificanteLocal {
             log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(tiempo));
             log.info("------------------------------------------------------------");
 
+            // Integracion
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+
             return anexoFull;
 
         } catch (I18NValidationException i18nve) {
             error = true;
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), i18nve, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw i18nve;
         } catch (I18NException i18ne) {
             error = true;
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante",peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw i18ne;
         } catch (Exception e) {
             error = true;
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), e, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             throw new I18NException(e, "justificante.error", new I18NArgumentString(e.getMessage()));
         } finally {
             if (error) {

@@ -190,7 +190,7 @@
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                             <label><spring:message code="integracion.estado"/>:</label>
                         </div>
-                        <div class="col-xs-10" id="estado"></div>
+                        <div class="col-xs-10" id="estadoIntegracion"></div>
                     </div>
 
                     <div class="form-group col-xs-12">
