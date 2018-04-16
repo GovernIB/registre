@@ -87,7 +87,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad,  Long tipo) throws Exception {
+    public Paginacion busqueda(Integracion integracion, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -97,9 +97,15 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         StringBuilder query = new StringBuilder("Select integracion from Integracion as integracion ");
 
         // Tipo integración
-        if (tipo != -1) {
+        if (integracion.getTipo() != -1) {
             where.add("integracion.tipo = :tipo ");
-            parametros.put("tipo", tipo);
+            parametros.put("tipo", integracion.getTipo());
+        }
+
+        // Estado
+        if (integracion.getEstado() != null) {
+            where.add("integracion.estado = :estado ");
+            parametros.put("estado", integracion.getEstado());
         }
 
         // Entidad
@@ -135,10 +141,10 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         Paginacion paginacion;
 
-        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+        if (integracion.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), pageNumber);
-            int inicio = (pageNumber - 1) * Integracion.RESULTADOS_PAGINACION;
+            paginacion = new Paginacion(total.intValue(), integracion.getPageNumber());
+            int inicio = (integracion.getPageNumber() - 1) * Integracion.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(Integracion.RESULTADOS_PAGINACION);
         } else {

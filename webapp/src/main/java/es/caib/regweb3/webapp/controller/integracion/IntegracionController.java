@@ -39,10 +39,11 @@ public class IntegracionController extends BaseController {
     public String listado(@PathVariable("tipo") Long tipo, Model model, HttpServletRequest request) throws Exception{
 
         Integracion busqueda = new Integracion(tipo);
+        busqueda.setEstado(RegwebConstantes.INTEGRACION_ESTADO_ERROR);
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        Paginacion paginacion = integracionEjb.busqueda(busqueda.getPageNumber(), entidadActiva.getId(), busqueda.getTipo());
+        Paginacion paginacion = integracionEjb.busqueda(busqueda, entidadActiva.getId());
 
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("integracionBusqueda", busqueda);
@@ -61,7 +62,7 @@ public class IntegracionController extends BaseController {
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        Paginacion paginacion = integracionEjb.busqueda(busqueda.getPageNumber(), entidadActiva.getId(), busqueda.getTipo());
+        Paginacion paginacion = integracionEjb.busqueda(busqueda, entidadActiva.getId());
 
         mav.addObject("paginacion", paginacion);
         mav.addObject("integracionBusqueda", busqueda);

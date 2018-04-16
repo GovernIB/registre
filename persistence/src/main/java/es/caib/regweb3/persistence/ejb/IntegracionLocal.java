@@ -27,13 +27,13 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
 
     /**
      * Búsqueda de integraciones
-     * @param pageNumber
+     * @param integracion
      * @param idEntidad
      * @param tipo
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Long idEntidad, Long tipo) throws Exception;
+    Paginacion busqueda(Integracion integracion, Long idEntidad) throws Exception;
 
     /**
      *
