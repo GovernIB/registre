@@ -245,6 +245,7 @@
     tradsIntegracion['integracion.tipo.2'] = "<spring:message code='integracion.tipo.2' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.3'] = "<spring:message code='integracion.tipo.3' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.4'] = "<spring:message code='integracion.tipo.4' javaScriptEscape='true' />";
+    tradsIntegracion['integracion.tipo.5'] = "<spring:message code='integracion.tipo.5' javaScriptEscape='true' />";
 
 </script>
 
