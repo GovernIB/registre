@@ -58,7 +58,7 @@ function limpiarIntegracion(){
     $('#descripcion').html('');
     $('#tiempo').html('');
     $('#tipo').html('');
-    $('#estado').html('');
+    $('#estadoIntegracion').html('');
     $('#peticion').html('');
     $('#error').html('');
     $('#excepcion').html('');
