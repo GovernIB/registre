@@ -29,7 +29,6 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * Búsqueda de integraciones
      * @param integracion
      * @param idEntidad
-     * @param tipo
      * @return
      * @throws Exception
      */
