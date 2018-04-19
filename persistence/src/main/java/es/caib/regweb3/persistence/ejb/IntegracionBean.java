@@ -143,7 +143,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         if (integracion.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
             Long total = (Long) q2.getSingleResult();
-            paginacion = new Paginacion(total.intValue(), integracion.getPageNumber());
+            paginacion = new Paginacion(total.intValue(), integracion.getPageNumber(), Integracion.RESULTADOS_PAGINACION);
             int inicio = (integracion.getPageNumber() - 1) * Integracion.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(Integracion.RESULTADOS_PAGINACION);
@@ -176,7 +176,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             exception = exception.substring(0,4000);
         }
 
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, th.getLocalizedMessage(), exception,tiempo, idEntidad));
+        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, th.getMessage(), exception,tiempo, idEntidad));
     }
 
     @Override
