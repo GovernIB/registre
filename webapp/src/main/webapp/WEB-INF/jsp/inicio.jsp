@@ -50,7 +50,7 @@
 
                                     <div id="pendientesProc" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-refresh fa-spin"></i> <strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-refresh"></i> <strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong> </h3>
                                         </div>
 
                                         <div class="panel-body">
