@@ -160,9 +160,9 @@
                                         <%--Resultados--%>
                                         <div class="table-responsive">
 
-                                                <%--Url Formulario--%>
+                                            <%--Url Formulario--%>
                                             <c:if test="${oficiosRemisionOrganismo.sir == false}">
-                                                <c:url value="/oficioRemision/new" var="urlFormulario"/>
+                                                <c:url value="/oficioRemision/newSalida" var="urlFormulario"/>
                                             </c:if>
                                             <c:if test="${oficiosRemisionOrganismo.sir == true}">
                                                 <c:url value="/oficioRemision/sir" var="urlFormulario"/>

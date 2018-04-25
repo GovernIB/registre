@@ -136,7 +136,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    void crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
+    List<RegistroEntrada> crearJustificantesRegistros(List<RegistroEntrada> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
 
 
     /**

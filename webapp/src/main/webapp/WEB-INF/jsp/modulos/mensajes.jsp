@@ -1,6 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<c:if test="${not empty infos}">
+    <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <c:forEach var="info" items="${infos}">
+            <strong>${info}</strong><br>
+        </c:forEach>
+        <c:remove var="infos" scope="session"/>
+    </div>
+</c:if>
+
 <c:if test="${not empty error}">
 
     <div id="mensajeError" class="alert alert-danger alert-dismissable">
@@ -19,14 +29,4 @@
         <c:remove var="aviso" scope="session"/>
     </div>
 
-</c:if>
-
-<c:if test="${not empty infos}">
-    <div class="alert alert-success alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <c:forEach var="info" items="${infos}">
-            <strong>${info}</strong><br>
-        </c:forEach>
-        <c:remove var="infos" scope="session"/>
-    </div>
 </c:if>

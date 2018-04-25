@@ -169,8 +169,9 @@
 
                                             <%--Url Formulario--%>
                                             <c:if test="${oficiosRemisionOrganismo.sir == false}">
-                                                <c:url value="/oficioRemision/new" var="urlFormulario"/>
+                                                <c:url value="/oficioRemision/newEntrada" var="urlFormulario"/>
                                             </c:if>
+
                                             <c:if test="${oficiosRemisionOrganismo.sir == true}">
                                                 <c:url value="/oficioRemision/sir" var="urlFormulario"/>
                                             </c:if>

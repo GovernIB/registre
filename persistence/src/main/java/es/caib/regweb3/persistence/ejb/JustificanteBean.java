@@ -21,6 +21,8 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +37,7 @@ import java.util.Map;
 
 @Stateless(name = "JustificanteEJB")
 @SecurityDomain("seycon")
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class JustificanteBean implements JustificanteLocal {
 
     protected final Logger log = Logger.getLogger(getClass());

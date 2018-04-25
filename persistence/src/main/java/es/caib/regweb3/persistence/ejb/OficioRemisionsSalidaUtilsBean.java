@@ -427,23 +427,35 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     }
 
     @Override
-    public void crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+    public List<RegistroSalida> crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException {
+
+        List<RegistroSalida> correctos = new ArrayList<RegistroSalida>();
 
         for (RegistroSalida registro : registros) {
 
             RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registro.getId());
 
             //Justificante, Si no tiene generado el Justificante, lo hacemos
-            //No entra cuando es SIR porque ya ha generado el justificante previamente
             if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
 
-                // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
-                registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
+                try{
+                    // Creamos el anexo del justificante y se lo añadimos al registro
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                    registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
+                    // Añadimos el Correcto
+                    correctos.add(registro);
+                }catch (I18NException e){
+                    log.info("Error generando justificante: " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+            }else{
+                // Añadimos el Correcto
+                correctos.add(registro);
             }
 
-
         }
+        return correctos;
     }
 
     /**

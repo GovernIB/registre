@@ -251,6 +251,345 @@ public class OficioRemisionController extends BaseController {
     }
 
     /**
+     * Crea un nuevo {@link es.caib.regweb3.model.OficioRemision} a partir de los Registros seleccionados.
+     */
+    @RequestMapping(value = "/newEntrada", method = RequestMethod.POST)
+    public String oficioRemisionEntrada(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request)
+            throws Exception, I18NException, I18NValidationException {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Boolean interno = oficioRemisionForm.getIdOrganismo() != null;
+        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+        OficioRemision oficioRemision = null;
+        List<RegistroEntrada> correctos;
+
+        log.info(" ");
+        log.info("-------------------------------------------");
+        log.info("Registrando Oficio Remision de Entrada");
+        log.info(" ");
+
+        try{
+            // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
+                Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+                return "redirect:/oficioRemision/entradasPendientesRemision";
+            }
+
+            // Buscamos los registros de entrada seleccionados para crear un Oficio de Remisión
+            for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
+                RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
+
+                if (registro.getId() != null) { //Si se ha seleccionado
+                    registrosEntrada.add(new RegistroEntrada(registro.getId()));
+                }
+            }
+
+            // Comprobamos que al menos haya seleccionado algún RegistroEntrada
+            if (registrosEntrada.size() == 0) {
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
+                return "redirect:/oficioRemision/entradasPendientesRemision";
+            }
+
+            // Generamos los Justificantes de todos los Registros seleccionados
+            correctos = oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
+
+            // Creamos el OficioRemisión con los registros que se ha generado su Justificante
+            if(correctos.size() > 0){
+                if (interno) { //Oficio interno
+                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(correctos,
+                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
+                            oficioRemisionForm.getIdLibro());
+
+                } else {//Oficio externo
+                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionExterno(correctos,
+                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
+                            oficioRemisionForm.getOrganismoExternoDenominacion(), oficioRemisionForm.getIdLibro());
+                }
+
+            }else{
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                return ("redirect:/oficioRemision/entradasPendientesRemision");
+            }
+
+
+        }  catch (I18NException e) {
+            log.error(I18NUtils.getMessage(e), e);
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
+            return ("redirect:/oficioRemision/entradasPendientesRemision");
+        } catch (I18NValidationException ve) {
+            log.error(I18NUtils.getMessage(ve), ve);
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
+            return ("redirect:/oficioRemision/entradasPendientesRemision");
+        }
+
+        log.info("");
+        log.info("Fin Registrando Oficio Remision de Entrada: " + oficioRemision.getNumeroOficio());
+        log.info("-------------------------------------------");
+        log.info(" ");
+
+        Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
+
+        if(correctos.size() != registrosEntrada.size()) {
+            Mensaje.saveMessageAviso(request, getMessage("oficioRemision.generar.incompleto"));
+        }
+
+        return "redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle";
+    }
+
+    /**
+     * Crea un nuevo {@link es.caib.regweb3.model.OficioRemision} a partir de los Registros seleccionados.
+     */
+    @RequestMapping(value = "/newSalida", method = RequestMethod.POST)
+    public String oficioRemisionSalida(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request)
+            throws Exception, I18NException, I18NValidationException {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Boolean interno = oficioRemisionForm.getIdOrganismo() != null;
+        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+        OficioRemision oficioRemision = null;
+        List<RegistroSalida> correctos;
+
+        log.info(" ");
+        log.info("-------------------------------------------");
+        log.info("Registrando Oficio Remision de Salida");
+        log.info(" ");
+
+
+        try{
+            // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+                Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+                return "redirect:/oficioRemision/salidasPendientesRemision";
+            }
+
+            // Buscamos los registros de salida seleccionados para crear un Oficio de Remisión
+            for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
+                RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
+
+                if (registro.getId() != null) { //Si se ha seleccionado
+                    registrosSalida.add(new RegistroSalida(registro.getId()));
+                }
+            }
+
+            // Comprobamos que al menos haya seleccionado algún RegistroSalida
+            if (registrosSalida.size() == 0) {
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
+                return "redirect:/oficioRemision/salidasPendientesRemision";
+            }
+
+            // Generamos los Justificantes de todos los Registros seleccionados
+            correctos = oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
+
+            // Creamos el OficioRemisión con los registros que se ha generado su Justificante
+            if(correctos.size() > 0){
+                if (interno) { //Oficio interno
+                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(correctos,
+                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
+                            oficioRemisionForm.getIdLibro());
+
+                } else {//Oficio externo
+                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionExterno(correctos,
+                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
+                            oficioRemisionForm.getOrganismoExternoDenominacion(), oficioRemisionForm.getIdLibro());
+                }
+
+            }else{
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                return ("redirect:/oficioRemision/salidasPendientesRemision");
+            }
+
+
+        }  catch (I18NException e) {
+            log.error(I18NUtils.getMessage(e), e);
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
+            return ("redirect:/oficioRemision/salidasPendientesRemision");
+        } catch (I18NValidationException ve) {
+            log.error(I18NUtils.getMessage(ve), ve);
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
+            return ("redirect:/oficioRemision/salidasPendientesRemision");
+        }
+
+        log.info("");
+        log.info("Fin Registrando Oficio Remision de Salida: " + oficioRemision.getNumeroOficio());
+        log.info("-------------------------------------------");
+        log.info(" ");
+
+        Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
+
+        if(correctos.size() != registrosSalida.size()) {
+            Mensaje.saveMessageAviso(request, getMessage("oficioRemision.generar.incompleto"));
+        }
+
+        return "redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle";
+    }
+
+
+    /**
+     * Crea un nuevo {@link es.caib.regweb3.model.OficioRemision} hacia SIR a partir de los Registros seleccionados.
+     */
+    @RequestMapping(value = "/sir", method = RequestMethod.POST)
+    public ModelAndView oficioRemisionSir(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request, Model model) throws Exception {
+
+        List<OficioRemision> oficioRemisionList = new ArrayList<OficioRemision>();
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        // Comprobamos que la Entidad que envía está en SIR
+        Entidad entidadActual = getEntidadActiva(request);
+        if (!entidadActual.getSir()) {
+            log.error("Aviso: La entidad no está en SIR");
+            Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+        }
+
+        // OFICIO DE REMISION ENTRADA
+        if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
+
+            log.debug("Entra Dins oficioRemisionSir ENTRADA");
+
+            try {
+
+                // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
+                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
+                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
+                    log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de entrada");
+                    Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+                }
+
+                // Buscamos todos los registros de entrada seleccionados para crear un Oficio de Remisión
+                List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
+                for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
+                    RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
+
+                    if (registro.getId() != null) { // Si se ha seleccionado
+                        registrosEntrada.add(new RegistroEntrada(registro.getId()));
+                    }
+                }
+
+                // Comprobamos que al menos haya seleccionado algún RegistroEntrada
+                if (registrosEntrada.size() == 0) {
+                    Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
+                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+
+                } else { // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
+
+                    // Para cada Registro de Entrada generamos un oficio de remision SIR.
+                    for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
+
+                        // Enviamos el Fichero de datos de intercambio al nodo SIR
+                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
+                                RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
+                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
+
+                        oficioRemisionList.add(oficioRemision);
+                    }
+                }
+
+            } catch (SIRException s) {
+                log.error(" Error enviant a SIR: " + s.getMessage(), s);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+
+            } catch (I18NException e) {
+                log.error(I18NUtils.getMessage(e), e);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+            } catch (I18NValidationException ve) {
+                log.error(I18NUtils.getMessage(ve), ve);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+            }
+
+            // OFICIO DE REMISION SALIDA
+        } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemisionForm.getTipoOficioRemision())) {
+
+            log.debug("Entra Dins oficioRemisionSir SALIDA");
+
+            try {
+
+                // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
+                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
+                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+                    log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de salida");
+                    Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
+                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+                }
+
+                // Buscamos todos los registros de salida seleccionados para crear un Oficio de Remisión
+                List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
+                for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
+                    RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
+
+                    if (registro.getId() != null) { // Si se ha seleccionado
+                        registrosSalida.add(new RegistroSalida(registro.getId()));
+                    }
+                }
+
+                // Comprobamos que al menos haya seleccionado algún RegistroSalida
+                if (registrosSalida.size() == 0) {
+                    Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
+                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+
+                } else { // Creamos el OficioRemisión a partir de los registros de salida seleccionados.
+
+                    // Para cada Registro de Salida generamos un oficio de remision SIR.
+                    for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
+
+                        // Enviamos el Fichero de datos de intercambio al nodo SIR
+                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
+                                RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
+                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
+
+                        oficioRemisionList.add(oficioRemision);
+                    }
+                }
+
+
+            } catch (SIRException s) {
+                log.error(" Error enviant a SIR: " + s.getMessage(), s);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+            } catch (I18NException e) {
+                log.error(I18NUtils.getMessage(e), e);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+            } catch (I18NValidationException ve) {
+                log.error(I18NUtils.getMessage(ve), ve);
+                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
+                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+            }
+        }
+
+        log.debug("Final de oficioRemisionSir");
+
+        // TODO Missatge
+        if (oficioRemisionList.size() == 0) {
+            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+        } else {
+
+            if (oficioRemisionList.size() == 1) {
+                String redirect = "redirect:/oficioRemision/" + oficioRemisionList.get(0).getId() + "/detalle";
+                log.info("Redirecting to: " + redirect);
+                return new ModelAndView(redirect);
+            } else {
+                //Model model, HttpServletRequest request)throws Exception {
+
+                ModelAndView mav = new ModelAndView("oficioRemision/oficioRemisionListSir");
+
+                Paginacion paginacion = new Paginacion(oficioRemisionList.size(), 1);
+
+                paginacion.setListado(new ArrayList<Object>(oficioRemisionList));
+
+                mav.addObject("paginacion", paginacion);
+                model.addAttribute("paginacion", paginacion);
+                //model.addAttribute("oficioRemisionBusqueda", new OficioRemisionBusquedaForm());
+
+                return mav;
+            }
+        }
+    }
+
+    /**
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.OficioRemision}
      */
     @RequestMapping(value = "/{idOficioRemision}/detalle", method = RequestMethod.GET)
@@ -413,319 +752,6 @@ public class OficioRemisionController extends BaseController {
         return mav;
     }
 
-
-    /**
-     * Crea un nuevo {@link es.caib.regweb3.model.OficioRemision} a partir de los Registros seleccionados.
-     */
-    @RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String oficioRemision(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request)
-            throws Exception, I18NException, I18NValidationException {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Boolean interno = oficioRemisionForm.getIdOrganismo() != null;
-        List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
-        List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
-        OficioRemision oficioRemision = null;
-
-        log.info(" ");
-        log.info("-------------------------------------------");
-        log.info("Registrando Oficio Remision");
-        log.info(" ");
-
-        // OFICIO DE REMISION ENTRADA
-        if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
-
-            try{
-                // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
-                    Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-                    return "redirect:/oficioRemision/entradasPendientesRemision";
-                }
-
-                // Buscamos los registros de entrada seleccionados para crear un Oficio de Remisión
-                for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
-                    RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
-
-                    if (registro.getId() != null) { //Si se ha seleccionado
-                        registrosEntrada.add(new RegistroEntrada(registro.getId()));
-                    }
-                }
-
-                // Comprobamos que al menos haya seleccionado algún RegistroEntrada
-                if (registrosEntrada.size() == 0) {
-                    Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                    return "redirect:/oficioRemision/entradasPendientesRemision";
-                }
-
-                // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
-                try{
-                    oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
-                }catch (I18NException e){
-                    log.error(I18NUtils.getMessage(e), e);
-                    e.printStackTrace();
-                    Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
-                    return ("redirect:/oficioRemision/entradasPendientesRemision");
-                }
-
-                if (interno) { //Oficio interno
-                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(registrosEntrada,
-                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
-                            oficioRemisionForm.getIdLibro());
-
-                } else {//Oficio externo
-
-                    oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionExterno(registrosEntrada,
-                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
-                            oficioRemisionForm.getOrganismoExternoDenominacion(), oficioRemisionForm.getIdLibro());
-                }
-
-            }  catch (I18NException e) {
-                log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-                return ("redirect:/oficioRemision/entradasPendientesRemision");
-            } catch (I18NValidationException ve) {
-                log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-                return ("redirect:/oficioRemision/entradasPendientesRemision");
-            }
-
-            // OFICIO DE REMISION SALIDA
-        } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemisionForm.getTipoOficioRemision())) {
-
-            try{
-                // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
-                    Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-                    return "redirect:/oficioRemision/salidasPendientesRemision";
-                }
-
-                // Buscamos los registros de salida seleccionados para crear un Oficio de Remisión
-                for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
-                    RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
-
-                    if (registro.getId() != null) { //Si se ha seleccionado
-                        registrosSalida.add(new RegistroSalida(registro.getId()));
-                    }
-                }
-
-                // Comprobamos que al menos haya seleccionado algún RegistroSalida
-                if (registrosSalida.size() == 0) {
-                    Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                    return "redirect:/oficioRemision/salidasPendientesRemision";
-                }
-
-                // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
-                try{
-                    oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
-                }catch (I18NException e){
-                    log.error(I18NUtils.getMessage(e), e);
-                    e.printStackTrace();
-                    Mensaje.saveMessageError(request, I18NUtils.getMessage(e));
-                    return ("redirect:/oficioRemision/salidasPendientesRemision");
-                }
-
-                if (interno) { //Oficio interno
-                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(registrosSalida,
-                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
-                            oficioRemisionForm.getIdLibro());
-
-                } else {//Oficio externo
-
-                    oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionExterno(registrosSalida,
-                            getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOrganismoExternoCodigo(),
-                            oficioRemisionForm.getOrganismoExternoDenominacion(), oficioRemisionForm.getIdLibro());
-                }
-
-            }  catch (I18NException e) {
-                log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-                return ("redirect:/oficioRemision/salidasPendientesRemision");
-            } catch (I18NValidationException ve) {
-                log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-                return ("redirect:/oficioRemision/salidasPendientesRemision");
-            }
-
-        }
-
-        log.info("");
-        log.info("Fin Registrando Oficio Remision " + oficioRemision.getNumeroOficio());
-        log.info("-------------------------------------------");
-        log.info(" ");
-
-        return "redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle";
-    }
-
-
-    /**
-     * Crea un nuevo {@link es.caib.regweb3.model.OficioRemision} hacia SIR a partir de los Registros seleccionados.
-     */
-    @RequestMapping(value = "/sir", method = RequestMethod.POST)
-    public ModelAndView oficioRemisionSir(@ModelAttribute OficioRemisionForm oficioRemisionForm, HttpServletRequest request, Model model) throws Exception {
-
-        List<OficioRemision> oficioRemisionList = new ArrayList<OficioRemision>();
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        // Comprobamos que la Entidad que envía está en SIR
-        Entidad entidadActual = getEntidadActiva(request);
-        if (!entidadActual.getSir()) {
-            log.error("Aviso: La entidad no está en SIR");
-            Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-        }
-
-        // OFICIO DE REMISION ENTRADA
-        if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
-
-            log.debug("Entra Dins oficioRemisionSir ENTRADA");
-
-            try {
-
-                // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
-                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
-                    log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de entrada");
-                    Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-                }
-
-                // Buscamos todos los registros de entrada seleccionados para crear un Oficio de Remisión
-                List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
-                for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
-                    RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
-
-                    if (registro.getId() != null) { // Si se ha seleccionado
-                        registrosEntrada.add(new RegistroEntrada(registro.getId()));
-                    }
-                }
-
-                // Comprobamos que al menos haya seleccionado algún RegistroEntrada
-                if (registrosEntrada.size() == 0) {
-                    Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-
-                } else { // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
-
-                    // Para cada Registro de Entrada generamos un oficio de remision SIR.
-                    for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
-
-                        // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
-                                RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
-                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
-
-                        oficioRemisionList.add(oficioRemision);
-                    }
-                }
-
-            } catch (SIRException s) {
-                log.error(" Error enviant a SIR: " + s.getMessage(), s);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-
-            } catch (I18NException e) {
-                log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-            } catch (I18NValidationException ve) {
-              log.error(I18NUtils.getMessage(ve), ve);
-              Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-              return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-            }
-
-            // OFICIO DE REMISION SALIDA
-        } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemisionForm.getTipoOficioRemision())) {
-
-            log.debug("Entra Dins oficioRemisionSir SALIDA");
-
-            try {
-
-                // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
-                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
-                    log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de salida");
-                    Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-                }
-
-                // Buscamos todos los registros de salida seleccionados para crear un Oficio de Remisión
-                List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
-                for (int i = 0; i < oficioRemisionForm.getRegistros().size(); i++) {
-                    RegistroBasico registro = oficioRemisionForm.getRegistros().get(i);
-
-                    if (registro.getId() != null) { // Si se ha seleccionado
-                        registrosSalida.add(new RegistroSalida(registro.getId()));
-                    }
-                }
-
-                // Comprobamos que al menos haya seleccionado algún RegistroSalida
-                if (registrosSalida.size() == 0) {
-                    Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-
-                } else { // Creamos el OficioRemisión a partir de los registros de salida seleccionados.
-
-
-                    // Para cada Registro de Salida generamos un oficio de remision SIR.
-                    for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
-
-                        // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
-                                RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
-                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
-
-                        oficioRemisionList.add(oficioRemision);
-                    }
-                }
-
-
-            } catch (SIRException s) {
-                log.error(" Error enviant a SIR: " + s.getMessage(), s);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-            } catch (I18NException e) {
-                log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-            } catch (I18NValidationException ve) {
-                log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-            }
-        }
-
-
-        log.debug("Final de oficioRemisionSir.");
-        // TODO Missatge
-        if (oficioRemisionList.size() == 0) {
-            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-        } else {
-
-            if (oficioRemisionList.size() == 1) {
-                String redirect = "redirect:/oficioRemision/" + oficioRemisionList.get(0).getId() + "/detalle";
-                log.info("Redirecting to: " + redirect);
-                return new ModelAndView(redirect);
-            } else {
-                //Model model, HttpServletRequest request)throws Exception {
-
-                ModelAndView mav = new ModelAndView("oficioRemision/oficioRemisionListSir");
-
-                Paginacion paginacion = new Paginacion(oficioRemisionList.size(), 1);
-
-                paginacion.setListado(new ArrayList<Object>(oficioRemisionList));
-
-                mav.addObject("paginacion", paginacion);
-                model.addAttribute("paginacion", paginacion);
-                //model.addAttribute("oficioRemisionBusqueda", new OficioRemisionBusquedaForm());
-
-
-                return mav;
-            }
-
-
-        }
-
-    }
 
     @RequestMapping(value = "/rechazados/list/{pageNumber}")
     public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{

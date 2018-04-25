@@ -88,7 +88,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    void crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
+    public List<RegistroSalida> crearJustificantesRegistros(List<RegistroSalida> registros, UsuarioEntidad usuario) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param oficioRemision
