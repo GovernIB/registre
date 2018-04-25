@@ -330,7 +330,7 @@ public class OficioRemisionController extends BaseController {
         Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
 
         if(correctos.size() != registrosEntrada.size()) {
-            Mensaje.saveMessageAviso(request, getMessage("oficioRemision.generar.incompleto"));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.generar.incompleto"));
         }
 
         return "redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle";
@@ -417,7 +417,7 @@ public class OficioRemisionController extends BaseController {
         Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
 
         if(correctos.size() != registrosSalida.size()) {
-            Mensaje.saveMessageAviso(request, getMessage("oficioRemision.generar.incompleto"));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.generar.incompleto"));
         }
 
         return "redirect:/oficioRemision/" + oficioRemision.getId() + "/detalle";
