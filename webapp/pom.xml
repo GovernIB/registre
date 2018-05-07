@@ -148,6 +148,13 @@
 
     <dependency>
       <groupId>org.fundaciobit.plugins</groupId>
+      <artifactId>plugin-documentcustody-arxiudigitalcaib</artifactId>
+      <version>3.0.10</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.fundaciobit.plugins</groupId>
       <artifactId>plugins-api</artifactId>
       <version>1.0.0</version>
       <type>jar</type>
