@@ -235,7 +235,14 @@ function mensajeError(id,texto){
     $(id).html('');
  var mensaje = "<div class=\"alert alert-danger alert-dismissable\">"+
     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"+
-    "<strong>"+texto+"</strong> </div>";
+     "<div class=\"row vertical-align\">" +
+     "            <div class=\"col-xs-1 text-center\">" +
+     "                <i class=\"fa fa-times-circle fa-2x\"></i>" +
+     "            </div>" +
+     "            <div class=\"col-xs-11\">" +
+     "                <strong>"+texto+"</strong>" +
+     "            </div>" +
+     "        </div></div>";
 
     $(id).append(mensaje);
 }
@@ -249,7 +256,16 @@ function mensajeSuccess(id,texto){
     $(id).html('');
     var mensaje = "<div class=\"alert alert-success alert-dismissable\">"+
         "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-hidden=\"true\">&times;</button>"+
-        "<strong>"+texto+"</strong> </div>";
+        "<div class=\"row vertical-align\">" +
+        "            <div class=\"col-xs-1 text-center\">" +
+        "                <i class=\"fa fa-info-circle fa-2x\"></i>" +
+        "            </div>" +
+        "            <div class=\"col-xs-11\">" +
+        "                <c:forEach var=\"info\" items=\"${infos}\">" +
+        "                    <strong>"+texto+"</strong><br>" +
+        "                </c:forEach>" +
+        "            </div>\n" +
+        "        </div></div>";
 
     $(id).append(mensaje);
 }

@@ -33,6 +33,10 @@ body { background-image:url(../img/background-pattern.png); color:#666666; paddi
 textarea{
 	width: 100%;
 }
+.vertical-align {
+    display: flex;
+    align-items: center;
+}
 .etiqueta_regweb{
     padding: 3px 0px 0px;
     font-size: 13px;
