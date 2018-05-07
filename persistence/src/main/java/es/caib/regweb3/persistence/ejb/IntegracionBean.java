@@ -176,7 +176,13 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             exception = exception.substring(0,4000);
         }
 
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, th.getMessage(), exception,tiempo, idEntidad));
+        //Reducimos el tamaño del error si es mayor de 2000 caracteres
+        String error = th.getMessage();
+        if(error.length() > 2000){
+            error = error.substring(0,2000);
+        }
+
+        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad));
     }
 
     @Override
