@@ -348,7 +348,7 @@ public class ArxiuController extends BaseController {
         String tipoRegistro = getTipoRegistro(expediente.getName());
         String numeroRegistro = getNumeroRegistro(expediente);
 
-        return codigoLibro +"-" + tipoRegistro.substring(0, 1)+"-" + numeroRegistro+"/"+expediente.getName().substring(expediente.getName().length() - 4);
+        return codigoLibro + tipoRegistro.substring(0, 1) + numeroRegistro+"/"+expediente.getName().substring(expediente.getName().length() - 4);
     }
 
 
