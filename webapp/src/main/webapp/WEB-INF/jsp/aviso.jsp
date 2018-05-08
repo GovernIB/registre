@@ -25,9 +25,17 @@
                     </ol>
 
                     <div class="alert alert-danger">
-                        <strong><spring:message code="regweb.aviso"/>: </strong> ${aviso}
+                        <div class="row vertical-align">
+                            <div class="col-xs-1 text-center">
+                                <i class="fa fa-times-circle fa-2x"></i>
+                            </div>
+                            <div class="col-xs-11">
+                                <strong><spring:message code="regweb.aviso"/>: </strong> ${aviso}
+                                <c:remove var="aviso" scope="session"/>
+                            </div>
+                        </div>
                     </div>
-                    <c:remove var="aviso" scope="session"/>
+
                 </div>
 
             </div><!-- /.row -->

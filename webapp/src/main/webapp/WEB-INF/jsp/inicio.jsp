@@ -16,8 +16,6 @@
 
             <div class="well well-white">
 
-            <c:import url="modulos/mensajes.jsp"/>
-
                 <div id="mensajes"></div>
 
                 <div class="row">
@@ -30,20 +28,36 @@
                             </c:import>
                         </ol>
 
+                        <c:import url="modulos/mensajes.jsp"/>
+
                         <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN' || rolAutenticado.nombre == 'RWE_ADMIN'}">
                             <c:if test="${catalogo == null}">
                                 <div class="alert alert-danger">
-                                    <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="catalogoDir3.catalogo.vacio"/>
+                                    <div class="row vertical-align">
+                                        <div class="col-xs-1 text-center">
+                                            <i class="fa fa-times-circle fa-2x"></i>
+                                        </div>
+                                        <div class="col-xs-11">
+                                            <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="catalogoDir3.catalogo.vacio"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </c:if>
                         </c:if>
 
-                        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
-                            <c:if test="${entidadActiva == null}">
-                                <div class="alert alert-danger">
-                                    <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="aviso.entidadActiva"/>
+                        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN' && entidadActiva == null}">
+
+                            <div class="alert alert-danger">
+                                <div class="row vertical-align">
+                                    <div class="col-xs-1 text-center">
+                                        <i class="fa fa-times-circle fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="aviso.entidadActiva"/>
+                                    </div>
                                 </div>
-                            </c:if>
+                            </div>
+
                         </c:if>
 
                     </div><!-- /.col-xs-12 -->
