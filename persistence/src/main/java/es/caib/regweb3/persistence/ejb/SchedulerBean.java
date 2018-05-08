@@ -44,6 +44,9 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getAll();
 
         for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- Purgando integraciones de " + entidad.getNombre() + " -------------");
+            log.info(" ");
             integracionEjb.purgarIntegraciones(entidad.getId());
         }
     }
