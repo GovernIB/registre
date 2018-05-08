@@ -44,15 +44,16 @@
                                 <div class="row">
                                     <div class="col-xs-12">
 
-                                        <c:if test="${fn:length(expedientes) == 0}">
+                                        <c:if test="${total == 0}">
                                             <div class="alert alert-grey ">
                                                 No se ha encontrado ningún expediente
                                             </div>
                                         </c:if>
 
-                                        <c:if test="${fn:length(expedientes) > 0}">
+                                        <c:if test="${total > 0}">
 
                                             <div class="col-xs-12">
+                                                <strong>App:</strong> ${app}<br>
                                                 <strong>Serie:</strong> ${serie}<br>
                                                 <strong>initialDate:</strong> ${initialDate}<br>
                                                 <strong>endDate:</strong> ${endDate}<br>
@@ -60,7 +61,7 @@
                                                 <strong>expedientPattern:</strong> ${expedientPattern}
 
                                                 <div class="alert-grey">
-                                                    Se han encontrado <strong>${fn:length(expedientes)}</strong> expedientes
+                                                    Se han encontrado <strong>${total}</strong> expedientes
                                                 </div>
 
                                                 <c:if test="${onlyCount == false}">

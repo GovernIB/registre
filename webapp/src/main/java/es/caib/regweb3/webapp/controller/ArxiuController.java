@@ -184,8 +184,8 @@ public class ArxiuController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/arxiu/{serie}/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
-    public ModelAndView expedientes(@PathVariable String serie, @PathVariable String initialDate,
+    @RequestMapping(value = "/arxiu/{app}/{serie}/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
+    public ModelAndView expedientes(@PathVariable String app, @PathVariable String serie, @PathVariable String initialDate,
                                     @PathVariable String endDate,@PathVariable Boolean onlyCount,@PathVariable String expedientPattern,HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("arxiu");
@@ -197,6 +197,7 @@ public class ArxiuController extends BaseController {
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 
+            mav.addObject("app",app);
             mav.addObject("serie",serie);
             mav.addObject("initialDate",initialDate);
             mav.addObject("endDate",endDate);
@@ -209,72 +210,87 @@ public class ArxiuController extends BaseController {
             //boolean onlyCount = false;
             //String expedientPattern = "INNOE33*";
 
-            ResultadoBusqueda<Expediente> result = busquedaEdu(custody,apiArxiu, serie, initialDate, endDate, expedientPattern, onlyCount);
-
             List<ExpedienteArxiu> expedientes = new ArrayList<ExpedienteArxiu>();
+            int pagina = 0;
+            int paginaresultat = 1;
 
-            for (Expediente exp : result.getListaResultado()) {
+            do{
 
-                log.info("Expediente: " + exp.getName());
+                ResultadoBusqueda<Expediente> result = busquedaEdu(app, apiArxiu, serie, initialDate, endDate, expedientPattern, onlyCount, pagina);
 
-                ExpedienteArxiu expedienteArxiu = new ExpedienteArxiu();
+                pagina++;
 
-                Resultado<Expediente> expediente = apiArxiu.obtenerExpediente(exp.getId());
+                log.info("Total resultados: " + result.getNumeroTotalResultados());
 
-                List<Nodo> nodos = expediente.getElementoDevuelto().getChilds();
+                mav.addObject("total",result.getNumeroTotalResultados());
 
-                if(nodos != null){
+                if(onlyCount){
 
-                    for (Nodo nodo : nodos) {
-                        System.out.println("       >> NODO: " + nodo.getName() + " (" + nodo.getId() + ")");
-                        if (nodo.getName().toLowerCase().endsWith(".pdf")) {
+                    return mav;
+                }
 
-                            String custodyId = exp.getId() + "#" + nodo.getId();
+                paginaresultat = result.getNumeroPagina();
 
-                            System.err.println("       >> ID CUST: " + custodyId);
 
-                            Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
+                for (Expediente exp : result.getListaResultado()) {
 
-                            /*String csv = null;
-                            if (mcsv != null) {
-                                csv = mcsv.getValue();
-                            }*/
+                    log.info("Expediente: " + exp.getName());
 
-                            String tipoRegistro = getTipoRegistro(exp.getName());
-                            String codigoLibro = getCodigoLibro(exp.getName());
+                    ExpedienteArxiu expedienteArxiu = new ExpedienteArxiu();
 
-                            expedienteArxiu.setId(exp.getId());
-                            expedienteArxiu.setName(exp.getName());
-                            expedienteArxiu.setCustodyId(custodyId);
-                            expedienteArxiu.setTipoRegistro(tipoRegistro);
-                            expedienteArxiu.setCodigoLibro(codigoLibro);
-                            expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
+                    Resultado<Expediente> expediente = apiArxiu.obtenerExpediente(exp.getId());
 
-                            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+                    List<Nodo> nodos = expediente.getElementoDevuelto().getChilds();
 
-                                if(registroEntrada != null){
-                                    expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
+                    if(nodos != null){
+
+                        for (Nodo nodo : nodos) {
+                            if (nodo.getName().toLowerCase().endsWith(".pdf")) {
+
+                                String custodyId = exp.getId() + "#" + nodo.getId();
+
+                                /*Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
+
+                                String csv = null;
+                                if (mcsv != null) {
+                                    csv = mcsv.getValue();
+                                }*/
+
+                                String tipoRegistro = getTipoRegistro(exp.getName());
+                                String codigoLibro = getCodigoLibro(exp.getName());
+
+                                expedienteArxiu.setId(exp.getId());
+                                expedienteArxiu.setName(exp.getName());
+                                expedienteArxiu.setCustodyId(custodyId);
+                                expedienteArxiu.setTipoRegistro(tipoRegistro);
+                                expedienteArxiu.setCodigoLibro(codigoLibro);
+                                expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
+
+                                if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+                                    RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+
+                                    if(registroEntrada != null){
+                                        expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
+                                    }
+
+                                }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+                                    RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+
+                                    if(registroSalida != null){
+                                        expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
+                                    }
                                 }
 
-                            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
-                                RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+                                //expedienteArxiu.setCsv(csv);
 
-                                if(registroSalida != null){
-                                    expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
-                                }
+                                expedientes.add(expedienteArxiu);
+
                             }
-
-
-
-                            //expedienteArxiu.setCsv(csv);
-
-                            expedientes.add(expedienteArxiu);
-
                         }
                     }
                 }
-            }
+
+            } while (pagina < paginaresultat);
 
             mav.addObject("expedientes",expedientes);
 
@@ -369,14 +385,14 @@ public class ArxiuController extends BaseController {
         busquedaFacilExpedientes(documentCustodyPlugin,apiArxiu, serie, initialDate, endDate, expedientPattern, onlyCount);
     }
 
-    private static ResultadoBusqueda<Expediente> busquedaEdu(IDocumentCustodyPlugin documentCustodyPlugin,
+    private static ResultadoBusqueda<Expediente> busquedaEdu(String app,
                                                              ApiArchivoDigital api, String serie,
-                                                             String initialDate, String endDate, String expedientPattern, boolean onlyCount) throws Exception{
+                                                             String initialDate, String endDate, String expedientPattern, boolean onlyCount, int pageNumber) throws Exception{
 
         FiltroBusquedaFacilExpedientes filtrosRequeridos = new FiltroBusquedaFacilExpedientes();
 
         filtrosRequeridos.setName(expedientPattern);
-        filtrosRequeridos.setAppName("REGWEB3");
+        filtrosRequeridos.setAppName(app);
         filtrosRequeridos.setDocSeries(serie);
         IntervaloFechas ife = new IntervaloFechas();
         // yyyy-MM-dd'T'HH:mm:ss.sss'Z'
@@ -385,7 +401,7 @@ public class ArxiuController extends BaseController {
         filtrosRequeridos.setClosingDate(ife);
 
         ResultadoBusqueda<Expediente> res = api.busquedaFacilExpedientes(filtrosRequeridos,
-                null, 0);
+                null, pageNumber);
 
         return res;
 
@@ -416,7 +432,7 @@ public class ArxiuController extends BaseController {
         //String expdientPattern = null; // "INNOE33*"
 
         filtrosRequeridos.setName(expedientPattern);
-        filtrosRequeridos.setAppName("REGWEB3");
+        filtrosRequeridos.setAppName("REGWEB");
         filtrosRequeridos.setDocSeries(serie);
         IntervaloFechas ife = new IntervaloFechas();
         // yyyy-MM-dd'T'HH:mm:ss.sss'Z'
