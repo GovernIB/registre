@@ -188,6 +188,13 @@ public class ComunController extends BaseController {
         if(rol.getNombre().equals(RegwebConstantes.ROL_USUARI)) {
             //Comprobamos la existencia de plugins necesarios para el funcionamiento de la aplicación
             Entidad entidadActiva = getEntidadActiva(request);
+
+            if(entidadActiva == null){
+                log.info("No existe ninguna entidad activa para el usuario");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidadActiva"));
+                return "redirect:/aviso";
+            }
+
             try {
                 //Plugin Generación Justificante
                 if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {

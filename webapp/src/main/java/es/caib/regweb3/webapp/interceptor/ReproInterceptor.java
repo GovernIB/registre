@@ -46,6 +46,14 @@ public class ReproInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
             Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
 
+            // Entidad Activa
+            if(entidadActiva == null){
+                log.info("No existe ninguna entidad activa para el usuario");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidadActiva"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             // Cualquier accion con Repro
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
                 log.info("Error de rol");

@@ -144,8 +144,10 @@ public class UsuarioService {
             //Asignamos las Entidades donde tiene acceso el usuario operador
             UsuarioEntidad usuarioEntidadActivo = asignarEntidadesOperador(usuarioAutenticado, entidadActiva, session);
 
-            //Asignamos las oficinas donde tiene acceso el usuario operador
-            asignarOficinasRegistro(usuarioEntidadActivo, session);
+            if(usuarioEntidadActivo != null){
+                //Asignamos las oficinas donde tiene acceso el usuario operador
+                asignarOficinasRegistro(usuarioEntidadActivo, session);
+            }
 
         // Asigna la Configuración del SuperAdministrador
         }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
