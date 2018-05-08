@@ -17,6 +17,7 @@
             <div class="well well-white">
 
             <c:import url="modulos/mensajes.jsp"/>
+
                 <div id="mensajes"></div>
 
                 <div class="row">
@@ -33,6 +34,14 @@
                             <c:if test="${catalogo == null}">
                                 <div class="alert alert-danger">
                                     <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="catalogoDir3.catalogo.vacio"/>
+                                </div>
+                            </c:if>
+                        </c:if>
+
+                        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                            <c:if test="${entidadActiva == null}">
+                                <div class="alert alert-danger">
+                                    <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="aviso.entidadActiva"/>
                                 </div>
                             </c:if>
                         </c:if>
