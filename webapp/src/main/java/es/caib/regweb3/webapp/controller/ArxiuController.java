@@ -102,8 +102,8 @@ public class ArxiuController extends BaseController {
 
                         // Obtenemos el codigoLibro y el tipoRegistro
                         String tipoRegistro = getTipoRegistro(expediente.getName());
-                        String codigoLibro = getCodigoLibroLocal(expediente.getName());
-                        String numeroRegistroFormateado = getNumeroRegistroFormateadoLocal(expediente);
+                        String codigoLibro = getCodigoLibro(expediente.getName());
+                        String numeroRegistroFormateado = getNumeroRegistroFormateado(expediente);
 
                         log.info("numeroRegistroFormateado: " + numeroRegistroFormateado);
 
@@ -397,14 +397,14 @@ public class ArxiuController extends BaseController {
                                 }*/
 
                                 String tipoRegistro = getTipoRegistro(exp.getName());
-                                String codigoLibro = getCodigoLibroLocal(exp.getName());
+                                String codigoLibro = getCodigoLibro(exp.getName());
 
                                 expedienteArxiu.setId(exp.getId());
                                 expedienteArxiu.setName(exp.getName());
                                 expedienteArxiu.setCustodyId(custodyId);
                                 expedienteArxiu.setTipoRegistro(tipoRegistro);
                                 expedienteArxiu.setCodigoLibro(codigoLibro);
-                                expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateadoLocal(exp));
+                                expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
 
                                 if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
                                     RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
