@@ -177,6 +177,7 @@ public class JustificanteBean implements JustificanteLocal {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            log.error(i18nve.getMessage(), i18nve);
             throw i18nve;
         } catch (I18NException i18ne) {
             error = true;
@@ -185,6 +186,7 @@ public class JustificanteBean implements JustificanteLocal {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            log.error(i18ne.getMessage(), i18ne);
             throw i18ne;
         } catch (Exception e) {
             error = true;
@@ -193,6 +195,7 @@ public class JustificanteBean implements JustificanteLocal {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
+            log.error(e.getMessage(), e);
             throw new I18NException(e, "justificante.error", new I18NArgumentString(e.getMessage()));
         } finally {
             if (error) {
