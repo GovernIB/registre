@@ -16,8 +16,6 @@
 
             <div class="well well-white">
 
-            <c:import url="modulos/mensajes.jsp"/>
-
                 <div id="mensajes"></div>
 
                 <div class="row">
@@ -33,6 +31,8 @@
                     </div><!-- /.col-xs-12 -->
 
                     <div class="col-xs-12">
+
+                        <c:import url="modulos/mensajes.jsp"/>
 
                         <div class="panel panel-warning">
                             <div class="panel-heading">
