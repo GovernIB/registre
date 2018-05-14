@@ -20,18 +20,20 @@
                     <input type="hidden" id="isRepresentante" name="isRepresentante" value="false"/>
                     <input type="hidden" id="representado.id" name="representado.id" value=""/>
 
-                    <div id="tipoInteresadoSelect" class="form-group col-xs-6">
-                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                            <label for="tipo"><spring:message code="persona.tipoPersona"/></label>
-                        </div>
-                        <div class="col-xs-8">
-                            <select id="tipo" name="tipo" class="chosen-select" onchange="tipoInteresadoRepresentante()">
-                                <c:forEach items="${tiposInteresado}" var="tipoInteresado">
-                                    <c:if test="${tipoInteresado != RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">
-                                        <option value="${tipoInteresado}"><spring:message code="interesado.tipo.${tipoInteresado}"/></option>
-                                    </c:if>
-                                </c:forEach>
-                            </select>
+                    <div class="col-xs-12">
+                        <div id="tipoInteresadoSelect" class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="tipo"><spring:message code="persona.tipoPersona"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <select id="tipo" name="tipo" class="chosen-select" onchange="tipoInteresadoRepresentante()">
+                                    <c:forEach items="${tiposInteresado}" var="tipoInteresado">
+                                        <c:if test="${tipoInteresado != RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">
+                                            <option value="${tipoInteresado}"><spring:message code="interesado.tipo.${tipoInteresado}"/></option>
+                                        </c:if>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
