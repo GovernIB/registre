@@ -80,10 +80,10 @@
                                                             </colgroup>
                                                             <thead>
                                                             <tr>
-                                                                <th>Id</th>
                                                                 <th>Nombre</th>
                                                                 <th>custodyId</th>
                                                                 <th>Tipo</th>
+                                                                <th>Fecha</th>
                                                                 <th>Libro</th>
                                                                 <th>Registro</th>
                                                                 <th>Justificante</th>
@@ -94,7 +94,6 @@
                                                             <tbody>
                                                             <c:forEach var="expediente" items="${expedientes}">
                                                                 <tr>
-                                                                    <td>${expediente.id}</td>
                                                                     <td>${expediente.name}</td>
                                                                     <td>${expediente.custodyId}</td>
                                                                     <td>
@@ -102,10 +101,11 @@
                                                                             <span class="label label-info">Entrada</span>
                                                                         </c:if>
 
-                                                                        <c:if test="${expediente.tipoRegistro == 'Salida'}">
+                                                                        <c:if test="${expediente.tipoRegistro == 'Sortida'}">
                                                                             <span class="label label-danger">Salida</span>
                                                                         </c:if>
                                                                     </td>
+                                                                    <td><fmt:formatDate value="${expediente.fecha}" pattern="dd/MM/yyyy HH:mm"/></td>
                                                                     <td>${expediente.codigoLibro}</td>
                                                                     <td>${expediente.numeroRegistroFormateado}</td>
                                                                     <td>

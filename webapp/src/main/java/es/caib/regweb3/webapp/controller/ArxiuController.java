@@ -389,13 +389,6 @@ public class ArxiuController extends BaseController {
 
                                 String custodyId = exp.getId() + "#" + nodo.getId();
 
-                                /*Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
-
-                                String csv = null;
-                                if (mcsv != null) {
-                                    csv = mcsv.getValue();
-                                }*/
-
                                 String tipoRegistro = getTipoRegistro(exp.getName());
                                 String codigoLibro = getCodigoLibro(exp.getName());
 
@@ -421,7 +414,8 @@ public class ArxiuController extends BaseController {
                                     }
                                 }
 
-                                //expedienteArxiu.setCsv(csv);
+                                String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
+                                expedienteArxiu.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
 
                                 expedientes.add(expedienteArxiu);
 
@@ -548,7 +542,7 @@ public class ArxiuController extends BaseController {
         String codigoLibro = getCodigoLibroLocal(expediente.getName());
         String numeroRegistro = getNumeroRegistroLocal(expediente);
 
-        return codigoLibro + tipoRegistro.substring(0, 1) + numeroRegistro+"/"+expediente.getName().substring(expediente.getName().length() - 4);
+        return codigoLibro +"-"+ tipoRegistro.substring(0, 1) +"-"+ numeroRegistro+"/"+expediente.getName().substring(expediente.getName().length() - 4);
     }
 
 
@@ -581,7 +575,7 @@ public class ArxiuController extends BaseController {
         IntervaloFechas ife = new IntervaloFechas();
         // yyyy-MM-dd'T'HH:mm:ss.sss'Z'
         ife.setInitialDate(initialDate);
-        ife.setEndDate(endDate);
+        ife.setFinalDate(endDate);
         filtrosRequeridos.setClosingDate(ife);
 
         ResultadoBusqueda<Expediente> res = api.busquedaFacilExpedientes(filtrosRequeridos,
@@ -621,7 +615,7 @@ public class ArxiuController extends BaseController {
         IntervaloFechas ife = new IntervaloFechas();
         // yyyy-MM-dd'T'HH:mm:ss.sss'Z'
         ife.setInitialDate(initialDate);
-        ife.setEndDate(endDate);
+        ife.setFinalDate(endDate);
         filtrosRequeridos.setClosingDate(ife);
 
         int total = 0;

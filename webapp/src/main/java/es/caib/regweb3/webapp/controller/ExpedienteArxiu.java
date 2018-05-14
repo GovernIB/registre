@@ -1,10 +1,13 @@
 package es.caib.regweb3.webapp.controller;
 
+import java.util.Date;
+
 public class ExpedienteArxiu {
 
     private String id;
     private String name;
     private String custodyId;
+    private Date fecha;
     private String tipoRegistro;
     private String numeroRegistroFormateado;
     private String codigoLibro;
@@ -36,6 +39,14 @@ public class ExpedienteArxiu {
 
     public void setCustodyId(String custodyId) {
         this.custodyId = custodyId;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public String getTipoRegistro() {
