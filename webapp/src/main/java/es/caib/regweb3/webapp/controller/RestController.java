@@ -63,6 +63,8 @@ public class RestController {
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
+    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    private NotificacionLocal notificacionEjb;
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
     public @ResponseBody List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
@@ -232,9 +234,19 @@ public class RestController {
      */
     @RequestMapping(value = "/obtenerIntegracion", method = RequestMethod.GET)
     public @ResponseBody
-    Integracion obtenerIntegraciono(@RequestParam Long idIntegracion) throws Exception {
+    Integracion obtenerIntegracion(@RequestParam Long idIntegracion) throws Exception {
 
         return integracionEjb.findById(idIntegracion);
+    }
+
+    /**
+     * Obtiene un {@link es.caib.regweb3.model.Notificacion}
+     */
+    @RequestMapping(value = "/obtenerNotificacion", method = RequestMethod.GET)
+    public @ResponseBody
+    Notificacion obtenerNotificacion(@RequestParam Long idNotificacion) throws Exception {
+
+        return notificacionEjb.findById(idNotificacion);
     }
 
     /**

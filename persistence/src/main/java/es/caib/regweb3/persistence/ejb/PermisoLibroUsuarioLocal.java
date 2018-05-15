@@ -125,6 +125,22 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     List<Libro> getLibrosOrganismoPermiso(Set<Long> organismos, Long idUsuarioEntidad, Long idPermiso) throws Exception;
 
     /**
+     * Obtiene los UsuarioEntidad que pueden registrar en los libros de los Organismos seleccionados
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    List<UsuarioEntidad> getUsuariosRegistroOrganismo(List<Long> organismos) throws Exception;
+
+    /**
+     * Obtiene los UsuarioEntidad que pueden registrar en los libros de los Organismos seleccionados
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<UsuarioEntidad> getUsuariosRegistroEntidad(Long idEntidad) throws Exception;
+
+    /**
      * Comprueba si un Usuario es Administrador de un determinado Libro.
      * @param idUsuarioEntidad
      * @param idLibro

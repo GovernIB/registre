@@ -32,16 +32,16 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     private EntityManager em;
 
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
-    public CatEstadoEntidadLocal catEstadoEntidadEjb;
+    private CatEstadoEntidadLocal catEstadoEntidadEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    public UsuarioEntidadLocal usuarioEntidadEjb;
+    private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
 
     @Override
@@ -334,6 +334,33 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         }
 
         return libros;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<UsuarioEntidad> getUsuariosRegistroOrganismo(List<Long> organismos) throws Exception{
+
+        Query q = em.createQuery("Select distinct(plu.usuario) from PermisoLibroUsuario as plu where " +
+                "plu.libro.organismo.id in (:organismos) and plu.usuario.usuario.tipoUsuario = 1 and " +
+                "plu.libro.activo = true and plu.activo = true and (plu.permiso = :registro_entrada or plu.permiso = :registro_salida)");
+
+        q.setParameter("organismos",organismos);
+        q.setParameter("registro_entrada",PERMISO_REGISTRO_ENTRADA);
+        q.setParameter("registro_salida",PERMISO_REGISTRO_SALIDA);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<UsuarioEntidad> getUsuariosRegistroEntidad(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select distinct(plu.usuario) from PermisoLibroUsuario as plu where " +
+                "plu.usuario.entidad.id = :idEntidad and plu.usuario.activo = true and plu.usuario.usuario.tipoUsuario = 1");
+
+        q.setParameter("idEntidad",idEntidad);
+
+        return q.getResultList();
     }
 
     @Override

@@ -55,6 +55,14 @@
                         <c:if test="${pageContext.response.locale == 'es'}">
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
+                        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN' || rolAutenticado.nombre == 'RWE_USUARI'}">
+                            <li>
+                                <a href="<c:url value="/notificacion/list"/>">
+                                    <i class="fa fa-envelope"></i> <spring:message code="notificacion.notificaciones"/> (${notificacionesPendientes})
+                                </a>
+                            </li>
+                        </c:if>
+
                         <li>
                             <a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>">
                                 <i class="fa fa-gear"></i> <spring:message code="menu.configuracion"/>

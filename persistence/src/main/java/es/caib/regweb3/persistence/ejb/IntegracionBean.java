@@ -170,17 +170,18 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         PrintWriter pw = new PrintWriter(sw, true);
         th.printStackTrace(pw);
         String exception = sw.getBuffer().toString();
+        String error = th.getMessage();
 
-        //Reducimos el tamaño de la excepción si es mayor de 4000 caracteres
+        /*//Reducimos el tamaño de la excepción si es mayor de 4000 caracteres
         if(exception.length() > 4000){
             exception = exception.substring(0,4000);
         }
 
         //Reducimos el tamaño del error si es mayor de 2000 caracteres
-        String error = th.getMessage();
+
         if(error.length() > 2000){
             error = error.substring(0,2000);
-        }
+        }*/
 
         persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad));
     }

@@ -8,6 +8,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
@@ -53,6 +54,21 @@ public class BaseController {
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    private NotificacionLocal notificacionBean;
+
+
+    @ModelAttribute("notificacionesPendientes")
+    public Long notificacionesPendientes(HttpServletRequest request) throws Exception {
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        if (usuarioEntidad != null && (isAdminEntidad(request) || isOperador(request))) {
+
+            return notificacionBean.notificacionesPendientes(usuarioEntidad.getId());
+        }
+
+        return 0L;
+    }
 
     /**
      * Retorna el mensaje traducido según el idioma del usuario

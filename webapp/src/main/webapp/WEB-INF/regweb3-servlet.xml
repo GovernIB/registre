@@ -160,6 +160,13 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.IntegracionInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para las Notificaciones-->
+        <mvc:interceptor>
+            <mvc:mapping path="/notificacion/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.NotificacionInterceptor"/>
+        </mvc:interceptor>
+
+
         <!-- Configuración de Idioma -->
         <bean id="localeChangeInterceptor" class="es.caib.regweb3.webapp.interceptor.RegWebLocaleChangeInterceptor">
             <property name="paramName" value="lang" />

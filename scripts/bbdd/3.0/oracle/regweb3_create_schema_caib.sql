@@ -194,6 +194,19 @@ create table RWE_HISTORICO_REGISTRO_SALIDA (
     USUARIO number(19,0)
 ) TABLESPACE REGWEB_DADES;
 
+create table RWE_INTEGRACION (
+    ID number(19,0) not null,
+    DESCRIPCION varchar2(400 char),
+    ERROR clob,
+    ESTADO number(19,0) not null,
+    EXCEPCION clob,
+    FECHA timestamp,
+    PETICION varchar2(2000 char),
+    TIEMPO number(19,0) not null,
+    TIPO number(19,0) not null,
+    ENTIDAD number(19,0)
+) TABLESPACE REGWEB_DADES;
+
 create table RWE_INTERESADO (
     ID number(19,0) not null,
     APELLIDO1 varchar2(255 char),
@@ -308,6 +321,18 @@ create table RWE_MODIFICACIONLOPD_MIGRADO (
     USUARIO varchar2(255 char) not null,
     REGMIG number(19,0)
 ) TABLESPACE REGWEB_HIST;
+
+create table RWE_NOTIFICACION (
+    ID number(19,0) not null,
+    ASUNTO varchar2(200 char),
+    ESTADO number(19,0) not null,
+    FECHA_ENVIADO timestamp,
+    FECHA_LEIDO timestamp,
+    MENSAJE varchar2(4000 char),
+    TIPO number(19,0) not null,
+    DESTINATARIO number(19,0) not null,
+    REMITENTE number(19,0)
+);
 
 create table RWE_OFICINA (
     ID number(19,0) not null,
@@ -739,6 +764,7 @@ create index RWE_DESCAR_ENTIDA_FK_I on RWE_DESCARGA (ENTIDAD) TABLESPACE REGWEB_
 create index RWE_ENTIDA_PRO_FK_I on RWE_ENTIDAD (PROPIETARIO) TABLESPACE REGWEB_INDEX;
 create index RWE_HRE_REGENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (REGISTRO_ENTRADA) TABLESPACE REGWEB_INDEX;
 create index RWE_HRE_USUENT_FK_I on RWE_HISTORICO_REGISTRO_ENTRADA (USUARIO) TABLESPACE REGWEB_INDEX;
+create index RWE_INT_ENTIDAD_FK_I on RWE_INTEGRACION (ENTIDAD) TABLESPACE REGWEB_INDEX;
 create index RWE_INTERES_CATPAI_FK_I on RWE_INTERESADO (PAIS) TABLESPACE REGWEB_INDEX;
 create index RWE_INTERES_CATLOC_FK_I on RWE_INTERESADO (LOCALIDAD) TABLESPACE REGWEB_INDEX;
 create index RWE_INTERES_REPADO_FK_I on RWE_INTERESADO (REPRESENTADO) TABLESPACE REGWEB_INDEX;
@@ -753,6 +779,8 @@ create index RWE_MODOFI_ENTIDA_FK_I on RWE_MODELO_OFICIO_REMISION (ENTIDAD) TABL
 create index RWE_MODOFI_ARCHIV_FK_I on RWE_MODELO_OFICIO_REMISION (MODELO) TABLESPACE REGWEB_INDEX;
 create index RWE_MODREB_ENTIDA_FK_I on RWE_MODELO_RECIBO (ENTIDAD) TABLESPACE REGWEB_INDEX;
 create index RWE_MODREB_ARCHIV_FK_I on RWE_MODELO_RECIBO (MODELO) TABLESPACE REGWEB_INDEX;
+create index RWE_NOTIF_DEST_FK_I on RWE_NOTIFICACION (DESTINATARIO) TABLESPACE REGWEB_INDEX;
+create index RWE_NOTIF_REMIT_FK_I on RWE_NOTIFICACION (REMITENTE) TABLESPACE REGWEB_INDEX;
 create index RWE_OFICIN_PAIS_FK_I on RWE_OFICINA (PAIS) TABLESPACE REGWEB_INDEX;
 create index RWE_OFICIN_ESTENT_FK_I on RWE_OFICINA (ESTADO) TABLESPACE REGWEB_INDEX;
 create index RWE_OFICIN_COMUNI_FK_I on RWE_OFICINA (COMUNIDAD) TABLESPACE REGWEB_INDEX;
@@ -831,6 +859,8 @@ alter table RWE_HISTORICO_REGISTRO_ENTRADA add constraint RWE_HIST_REGISTRO_ENTR
 
 alter table RWE_HISTORICO_REGISTRO_SALIDA add constraint RWE_HIST_REGISTRO_SALIDA_PK primary key (ID);
 
+alter table RWE_INTEGRACION add constraint RWE_INTEGRACION_pk primary key (ID);
+
 alter table RWE_INTERESADO add constraint RWE_INTERESADO_pk primary key (ID);
 
 alter table RWE_INTERESADO_SIR add constraint RWE_INTERESADO_SIR_pk primary key (ID);
@@ -844,6 +874,8 @@ alter table RWE_MODELO_OFICIO_REMISION add constraint RWE_MODELO_OFICIO_REMISION
 alter table RWE_MODELO_RECIBO add constraint RWE_MODELO_RECIBO_pk primary key (ID);
 
 alter table RWE_MODIFICACIONLOPD_MIGRADO add constraint RWE_MODIFLOPD_MIGRADO_PK primary key (ID);
+
+alter table RWE_NOTIFICACION add constraint RWE_NOTIFICACION_pk primary key (ID);
 
 alter table RWE_OFICINA add constraint RWE_OFICINA_pk primary key (ID);
 
@@ -1030,6 +1062,11 @@ alter table RWE_HISTORICO_REGISTRO_SALIDA
 foreign key (USUARIO)
 references RWE_USUARIO_ENTIDAD;
 
+alter table RWE_INTEGRACION
+    add constraint RWE_INT_ENTIDAD_FK
+foreign key (ENTIDAD)
+references RWE_ENTIDAD;
+
 alter table RWE_INTERESADO
     add constraint RWE_INTERESADO_REPREANTE_FK
 foreign key (REPRESENTANTE)
@@ -1119,6 +1156,16 @@ alter table RWE_MODIFICACIONLOPD_MIGRADO
     add constraint RWE_MODLOPDMIG_REGMIG_FK
 foreign key (REGMIG)
 references RWE_REGISTRO_MIGRADO;
+
+alter table RWE_NOTIFICACION
+    add constraint RWE_NOTIF_DEST_FK
+foreign key (DESTINATARIO)
+references RWE_USUARIO_ENTIDAD;
+
+alter table RWE_NOTIFICACION
+    add constraint RWE_NOTIF_REMIT_FK
+foreign key (REMITENTE)
+references RWE_USUARIO_ENTIDAD;
 
 alter table RWE_OFICINA
     add constraint RWE_OFICINA_TIPOVIA_FK
@@ -1518,6 +1565,7 @@ grant select,insert,delete,update on RWE_ENTIDAD_USUENT to www_regweb;
 grant select,insert,delete,update on RWE_HISTORICOUO to www_regweb;
 grant select,insert,delete,update on RWE_HISTORICO_REGISTRO_ENTRADA to www_regweb;
 grant select,insert,delete,update on RWE_HISTORICO_REGISTRO_SALIDA to www_regweb;
+grant select,insert,delete,update on RWE_INTEGRACION to www_regweb;
 grant select,insert,delete,update on RWE_INTERESADO to www_regweb;
 grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb;
 grant select,insert,delete,update on RWE_LIBRO to www_regweb;
@@ -1525,6 +1573,7 @@ grant select,insert,delete,update on RWE_LOPD to www_regweb;
 grant select,insert,delete,update on RWE_MODELO_OFICIO_REMISION to www_regweb;
 grant select,insert,delete,update on RWE_MODELO_RECIBO to www_regweb;
 grant select,insert,delete,update on RWE_MODIFICACIONLOPD_MIGRADO to www_regweb;
+grant select,insert,delete,update on RWE_NOTIFICACION to www_regweb;
 grant select,insert,delete,update on RWE_OFICINA to www_regweb;
 grant select,insert,delete,update on RWE_OFICINA_SERVICIO to www_regweb;
 grant select,insert,delete,update on RWE_OFICIO_REMISION to www_regweb;
@@ -1566,6 +1615,8 @@ alter table RWE_ANEXO_SIR move lob (TIMESTAMP) store as RWE_ANX_SIR_TMST_lob (ta
 alter table RWE_ANEXO_SIR move lob (VAL_OCSP_CE) store as RWE_ANX_SIR_VALOCSP_lob (tablespace regweb_lob index RWE_ANX_SIR_VALOCSP_lob_i);
 alter table RWE_HISTORICO_REGISTRO_ENTRADA move lob (RE_ORIGINAL) store as RWE_HIST_REG_ENT_RE_ORI_LOB (tablespace regweb_lob index RWE_HIST_REG_ENT_RE_ORI_LOB_i);
 alter table RWE_HISTORICO_REGISTRO_SALIDA move lob (RS_ORIGINAL) store as RWE_HIST_REG_SAL_LOB (tablespace regweb_lob index RWE_HIST_REG_SAL_LOB_i);
+alter table RWE_INTEGRACION move lob (ERROR) store as RWE_INTEGR_ERROR_lob (tablespace regweb_lob index RWE_INTEGR_ERROR_lob_i);
+alter table RWE_INTEGRACION move lob (EXCEPCION) store as RWE_INTEGR_EXCP_lob (tablespace regweb_lob index RWE_INTEGR_EXCP_lob_i);
 alter table RWE_PLUGIN move lob (PROPIEDADES_ADMIN) store as RWE_PLUGIN_PROP_ADM_lob (tablespace regweb_lob index RWE_PLUGIN_PROP_ADM_lob_i);
 alter table RWE_PLUGIN move lob (PROPIEDADES_ENTIDAD) store as RWE_PLUGIN_PROP_ENT_lob (tablespace regweb_lob index RWE_PLUGIN_PROP_ENT_lob_i);
 alter table RWE_REGISTRO_SIR move lob (TIMESTAMP) store as RWE_REG_SIR_TMST_lob (tablespace regweb_lob index RWE_REG_SIR_TMST_lob_i);

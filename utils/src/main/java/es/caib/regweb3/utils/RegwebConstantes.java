@@ -20,6 +20,7 @@ public interface RegwebConstantes {
 
     /*-------------------GENERAL-------------------*/
     String CODIGO_APLICACION = "RWE3";
+    String APLICACION_NOMBRE = "REGWEB3";
     int REGISTROS_PANTALLA_INICIO = 5;
 
     /*-------------- VARIABLES DE SESION --------------*/
@@ -684,5 +685,23 @@ public interface RegwebConstantes {
     Long[] INTEGRACION_ESTADOS = {
             INTEGRACION_ESTADO_OK,
             INTEGRACION_ESTADO_ERROR
+    };
+
+    /* -------------- NOTIFICACIONES --------------*/
+
+    Long NOTIFICACION_TIPO_COMUNICADO = 0L; // Enviado por el Administrador de entidad
+    Long NOTIFICACION_TIPO_INFORMATIVO = 1L; // Enviado autoáticamente por el sistema
+    Long NOTIFICACION_TIPO_ERROR = 2L; // Error
+
+    Long[] NOTIFICACION_TIPOS = {
+            NOTIFICACION_TIPO_COMUNICADO
+    };
+
+    Long NOTIFICACION_ESTADO_NUEVA = 0L;
+    Long NOTIFICACION_ESTADO_LEIDA = 1L;
+
+    Long[] NOTIFICACION_ESTADOS = {
+            NOTIFICACION_ESTADO_NUEVA,
+            NOTIFICACION_ESTADO_LEIDA
     };
 }

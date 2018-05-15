@@ -151,7 +151,8 @@ public class Integracion implements Serializable {
         this.peticion = peticion;
     }
 
-    @Column(name = "ERROR", length = 2000)
+    @Lob
+    @Column(name = "ERROR", length = 2147483647)
     public String getError() {
         return error;
     }
@@ -160,7 +161,8 @@ public class Integracion implements Serializable {
         this.error = error;
     }
 
-    @Column(name = "EXCEPCION", length = 4000)
+    @Lob
+    @Column(name = "EXCEPCION", length = 2147483647)
     public String getExcepcion() {
         return excepcion;
     }

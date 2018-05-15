@@ -30,6 +30,20 @@
 
                         <c:import url="modulos/mensajes.jsp"/>
 
+                        <c:if test="${notificacionesPendientes > 0}">
+                            <div class="alert alert-danger">
+                                <div class="row vertical-align">
+                                    <div class="col-xs-1 text-center">
+                                        <i class="fa fa-envelope fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-11">
+                                        <spring:message code="notificacion.tiene"/> <a class="alert-link" href="<c:url value="/notificacion/list"/>"><strong>${notificacionesPendientes} <spring:message code="notificacion.notificaciones"/></strong></a> <spring:message code="notificacion.pendientes"/>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </c:if>
+
                         <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN' || rolAutenticado.nombre == 'RWE_ADMIN'}">
                             <c:if test="${catalogo == null}">
                                 <div class="alert alert-danger">
