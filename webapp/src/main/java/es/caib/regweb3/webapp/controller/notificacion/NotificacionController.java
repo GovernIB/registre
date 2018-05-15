@@ -157,16 +157,12 @@ public class NotificacionController extends BaseController {
 
             if(notificacion.getDestinatarios() != null){
                 for (Long destinatario : notificacion.getDestinatarios()) {
-                    log.info("Destinatario: " + destinatario);
 
                     if(destinatario.equals((long) -1)){ // Se ha seleccionado todos los usuarios
-                        log.info("Dentro todos");
                         usuarios.addAll(permisoLibroUsuarioEjb.getUsuariosRegistroEntidad(usuarioActivo.getEntidad().getId()));
                     }else{
-                        log.info("Dentro otros");
                         usuarios.addAll(permisoLibroUsuarioEjb.getUsuariosRegistroOrganismo(notificacion.getDestinatarios()));
                     }
-
                 }
             }
 
