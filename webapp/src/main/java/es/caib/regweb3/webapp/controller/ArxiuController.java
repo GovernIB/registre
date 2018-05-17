@@ -93,87 +93,85 @@ public class ArxiuController extends BaseController {
 
                     log.info("Documento: " + nodo.getName().toLowerCase());
 
-                    if (nodo.getName().toLowerCase().endsWith(".pdf")) {
+                    RegistroEntrada registroEntrada = null;
+                    RegistroSalida registroSalida = null;
+                    RegistroDetalle registroDetalle = null;
+                    String redirect;
 
-                        RegistroEntrada registroEntrada = null;
-                        RegistroSalida registroSalida = null;
-                        RegistroDetalle registroDetalle = null;
-                        String redirect;
+                    // Obtenemos el codigoLibro y el tipoRegistro
+                    String tipoRegistro = getTipoRegistro(expediente.getName());
+                    String codigoLibro = getCodigoLibro(expediente.getName());
+                    String numeroRegistroFormateado = getNumeroRegistroFormateado(expediente);
 
-                        // Obtenemos el codigoLibro y el tipoRegistro
-                        String tipoRegistro = getTipoRegistro(expediente.getName());
-                        String codigoLibro = getCodigoLibro(expediente.getName());
-                        String numeroRegistroFormateado = getNumeroRegistroFormateado(expediente);
+                    log.info("numeroRegistroFormateado: " + numeroRegistroFormateado);
 
-                        log.info("numeroRegistroFormateado: " + numeroRegistroFormateado);
+                    String custodyId = idExpediente + "#" + nodo.getId();
+                    Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
+                    log.info("custodyId: " + custodyId);
+                    String csv = null;
+                    if (mcsv != null) {
+                        csv = mcsv.getValue();
+                    }
 
-                        String custodyId = idExpediente + "#" + nodo.getId();
-                        Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
-                        log.info("custodyId: " + custodyId);
-                        String csv = null;
-                        if (mcsv != null) {
-                            csv = mcsv.getValue();
-                        }
+                    if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(codigoLibro)){
 
-                        if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(codigoLibro)){
+                        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+                            registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado, codigoLibro);
 
-                            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado, codigoLibro);
-
-                                if(registroEntrada != null){
-                                    registroDetalle = registroEntrada.getRegistroDetalle();
-                                    redirect = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
-                                }else{
-                                    Mensaje.saveMessageError(request,"No se ha encontrado el registro de entrada: " + numeroRegistroFormateado);
-                                    return  "redirect:/inici";
-                                }
-
+                            if(registroEntrada != null){
+                                registroDetalle = registroEntrada.getRegistroDetalle();
+                                redirect = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
                             }else{
-                                registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado, codigoLibro);
-
-                                if(registroSalida != null){
-                                    registroDetalle = registroSalida.getRegistroDetalle();
-                                    redirect= "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
-                                }else {
-                                    Mensaje.saveMessageError(request,"No se ha encontrado el registro de salida: " + numeroRegistroFormateado);
-                                    return  "redirect:/inici";
-                                }
+                                Mensaje.saveMessageError(request,"No se ha encontrado el registro de entrada: " + numeroRegistroFormateado);
+                                return  "redirect:/inici";
                             }
 
-                            // Crea el anexo del justificante firmado
-                            AnexoFull anexoFull = new AnexoFull();
-                            Anexo anexo = anexoFull.getAnexo();
-                            anexo.setTitulo(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.titulo"));
-                            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-                            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
-                            anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-                            anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-                            anexo.setObservaciones(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.observaciones"));
-                            anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-                            anexo.setJustificante(true);
-                            anexo.setSignType("PAdES");
-                            anexo.setSignFormat("implicit_enveloped/attached");
-                            anexo.setSignProfile("AdES-EPES");
-                            anexo.setCustodiaID(custodyId);
-                            anexo.setCsv(csv);
-
-                            String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
-                            anexo.setFechaCaptura(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
-
-                            anexo.setHash(RegwebUtils.obtenerHash(custody.getSignatureInfo(custodyId).getData()));
-                            anexo.setRegistroDetalle(registroDetalle);
-                            anexo.setFirmaValida(false);
-
-                            anexoEjb.persist(anexo);
-
-                            Mensaje.saveMessageInfo(request,"Se ha asociado el justificante correctamente");
-
-                            return redirect;
-
                         }else{
-                            Mensaje.saveMessageError(request,"Faltan datos para obtener el numero de registro");
+                            registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado, codigoLibro);
+
+                            if(registroSalida != null){
+                                registroDetalle = registroSalida.getRegistroDetalle();
+                                redirect= "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
+                            }else {
+                                Mensaje.saveMessageError(request,"No se ha encontrado el registro de salida: " + numeroRegistroFormateado);
+                                return  "redirect:/inici";
+                            }
                         }
+
+                        // Crea el anexo del justificante firmado
+                        AnexoFull anexoFull = new AnexoFull();
+                        Anexo anexo = anexoFull.getAnexo();
+                        anexo.setTitulo(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.titulo"));
+                        anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+                        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
+                        anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+                        anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+                        anexo.setObservaciones(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.observaciones"));
+                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+                        anexo.setJustificante(true);
+                        anexo.setSignType("PAdES");
+                        anexo.setSignFormat("implicit_enveloped/attached");
+                        anexo.setSignProfile("AdES-EPES");
+                        anexo.setCustodiaID(custodyId);
+                        anexo.setCsv(csv);
+
+                        String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
+                        anexo.setFechaCaptura(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
+
+                        anexo.setHash(RegwebUtils.obtenerHash(custody.getSignatureInfo(custodyId).getData()));
+                        anexo.setRegistroDetalle(registroDetalle);
+                        anexo.setFirmaValida(false);
+
+                        anexoEjb.persist(anexo);
+
+                        Mensaje.saveMessageInfo(request,"Se ha asociado el justificante correctamente");
+
+                        return redirect;
+
+                    }else{
+                        Mensaje.saveMessageError(request,"Faltan datos para obtener el numero de registro");
                     }
+
                 }
             }
 
@@ -223,83 +221,79 @@ public class ArxiuController extends BaseController {
 
                     log.info("Documento: " + nodo.getName().toLowerCase());
 
-                    if (nodo.getName().toLowerCase().endsWith(".pdf")) {
+                    RegistroEntrada registroEntrada = null;
+                    RegistroSalida registroSalida = null;
+                    RegistroDetalle registroDetalle = null;
+                    String redirect;
 
-                        RegistroEntrada registroEntrada = null;
-                        RegistroSalida registroSalida = null;
-                        RegistroDetalle registroDetalle = null;
-                        String redirect;
+                    // Obtenemos el codigoLibro y el tipoRegistro
+                    String tipoRegistro = getTipoRegistro(expediente.getName());
 
-                        // Obtenemos el codigoLibro y el tipoRegistro
-                        String tipoRegistro = getTipoRegistro(expediente.getName());
+                    String custodyId = idExpediente + "#" + nodo.getId();
+                    Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
+                    log.info("custodyId: " + custodyId);
+                    String csv = null;
+                    if (mcsv != null) {
+                        csv = mcsv.getValue();
+                    }
 
+                    if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(numeroRegistro)){
 
-                        String custodyId = idExpediente + "#" + nodo.getId();
-                        Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
-                        log.info("custodyId: " + custodyId);
-                        String csv = null;
-                        if (mcsv != null) {
-                            csv = mcsv.getValue();
-                        }
+                        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+                            registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistro, null);
 
-                        if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(numeroRegistro)){
-
-                            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistro, null);
-
-                                if(registroEntrada != null){
-                                    registroDetalle = registroEntrada.getRegistroDetalle();
-                                    redirect = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
-                                }else{
-                                    Mensaje.saveMessageError(request,"No se ha encontrado el registro de entrada: " + numeroRegistro);
-                                    return  "redirect:/inici";
-                                }
-
+                            if(registroEntrada != null){
+                                registroDetalle = registroEntrada.getRegistroDetalle();
+                                redirect = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
                             }else{
-                                registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistro, null);
-
-                                if(registroSalida != null){
-                                    registroDetalle = registroSalida.getRegistroDetalle();
-                                    redirect= "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
-                                }else {
-                                    Mensaje.saveMessageError(request,"No se ha encontrado el registro de salida: " + numeroRegistro);
-                                    return  "redirect:/inici";
-                                }
+                                Mensaje.saveMessageError(request,"No se ha encontrado el registro de entrada: " + numeroRegistro);
+                                return  "redirect:/inici";
                             }
 
-                            // Crea el anexo del justificante firmado
-                            AnexoFull anexoFull = new AnexoFull();
-                            Anexo anexo = anexoFull.getAnexo();
-                            anexo.setTitulo(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.titulo"));
-                            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-                            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
-                            anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-                            anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-                            anexo.setObservaciones(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.observaciones"));
-                            anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-                            anexo.setJustificante(true);
-                            anexo.setSignType("PAdES");
-                            anexo.setSignFormat("implicit_enveloped/attached");
-                            anexo.setSignProfile("AdES-EPES");
-                            anexo.setCustodiaID(custodyId);
-                            anexo.setCsv(csv);
-
-                            String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
-                            anexo.setFechaCaptura(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
-
-                            anexo.setHash(RegwebUtils.obtenerHash(custody.getSignatureInfo(custodyId).getData()));
-                            anexo.setRegistroDetalle(registroDetalle);
-                            anexo.setFirmaValida(false);
-
-                            anexoEjb.persist(anexo);
-
-                            Mensaje.saveMessageInfo(request,"Se ha asociado el justificante correctamente");
-
-                            return redirect;
-
                         }else{
-                            Mensaje.saveMessageError(request,"Faltan datos para obtener el numero de registro");
+                            registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistro, null);
+
+                            if(registroSalida != null){
+                                registroDetalle = registroSalida.getRegistroDetalle();
+                                redirect= "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
+                            }else {
+                                Mensaje.saveMessageError(request,"No se ha encontrado el registro de salida: " + numeroRegistro);
+                                return  "redirect:/inici";
+                            }
                         }
+
+                        // Crea el anexo del justificante firmado
+                        AnexoFull anexoFull = new AnexoFull();
+                        Anexo anexo = anexoFull.getAnexo();
+                        anexo.setTitulo(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.titulo"));
+                        anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+                        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
+                        anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+                        anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+                        anexo.setObservaciones(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.observaciones"));
+                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+                        anexo.setJustificante(true);
+                        anexo.setSignType("PAdES");
+                        anexo.setSignFormat("implicit_enveloped/attached");
+                        anexo.setSignProfile("AdES-EPES");
+                        anexo.setCustodiaID(custodyId);
+                        anexo.setCsv(csv);
+
+                        String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
+                        anexo.setFechaCaptura(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
+
+                        anexo.setHash(RegwebUtils.obtenerHash(custody.getSignatureInfo(custodyId).getData()));
+                        anexo.setRegistroDetalle(registroDetalle);
+                        anexo.setFirmaValida(false);
+
+                        anexoEjb.persist(anexo);
+
+                        Mensaje.saveMessageInfo(request,"Se ha asociado el justificante correctamente");
+
+                        return redirect;
+
+                    }else{
+                        Mensaje.saveMessageError(request,"Faltan datos para obtener el numero de registro");
                     }
                 }
             }
@@ -386,41 +380,39 @@ public class ArxiuController extends BaseController {
                     if(nodos != null){
 
                         for (Nodo nodo : nodos) {
-                            if (nodo.getName().toLowerCase().endsWith(".pdf")) {
 
-                                String custodyId = exp.getId() + "#" + nodo.getId();
+                            String custodyId = exp.getId() + "#" + nodo.getId();
 
-                                String tipoRegistro = getTipoRegistro(exp.getName());
-                                String codigoLibro = getCodigoLibro(exp.getName());
+                            String tipoRegistro = getTipoRegistro(exp.getName());
+                            String codigoLibro = getCodigoLibro(exp.getName());
 
-                                expedienteArxiu.setId(exp.getId());
-                                expedienteArxiu.setName(exp.getName());
-                                expedienteArxiu.setCustodyId(custodyId);
-                                expedienteArxiu.setTipoRegistro(tipoRegistro);
-                                expedienteArxiu.setCodigoLibro(codigoLibro);
-                                expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
+                            expedienteArxiu.setId(exp.getId());
+                            expedienteArxiu.setName(exp.getName());
+                            expedienteArxiu.setCustodyId(custodyId);
+                            expedienteArxiu.setTipoRegistro(tipoRegistro);
+                            expedienteArxiu.setCodigoLibro(codigoLibro);
+                            expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
 
-                                if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                    RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+                            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
 
-                                    if(registroEntrada != null){
-                                        expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
-                                    }
-
-                                }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
-                                    RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
-
-                                    if(registroSalida != null){
-                                        expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
-                                    }
+                                if(registroEntrada != null){
+                                    expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
                                 }
 
-                                String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
-                                expedienteArxiu.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
+                            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+                                RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
 
-                                expedientes.add(expedienteArxiu);
-
+                                if(registroSalida != null){
+                                    expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
+                                }
                             }
+
+                            String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
+                            expedienteArxiu.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
+
+                            expedientes.add(expedienteArxiu);
+
                         }
                     }
                 }

@@ -70,7 +70,7 @@
                                                 <c:if test="${onlyCount == false}">
 
                                                     <div class="alert-grey">
-                                                        Se han encontrado <strong>${total}</strong> expedientes, de los cuales solo <strong>${fn:length(expedientes)}</strong> contienen pdf
+                                                        Se han encontrado <strong>${total}</strong> expedientes
                                                     </div>
 
                                                     <c:if test="${not empty expedientes}">
