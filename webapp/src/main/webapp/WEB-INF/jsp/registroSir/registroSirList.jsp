@@ -159,7 +159,7 @@
                                                 <tr>
                                                     <td> ${registroSir.identificadorIntercambio}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy hh:mm:ss"/></td>
-                                                    <td>
+                                                    <td class="center">
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
                                                             <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
                                                         </c:if>
@@ -170,7 +170,7 @@
                                                     </td>
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
-                                                    <td>
+                                                    <td class="center">
                                                         <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
                                                             <span class="label label-warning"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
                                                         </c:if>
