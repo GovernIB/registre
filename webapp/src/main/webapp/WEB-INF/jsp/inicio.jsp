@@ -177,7 +177,7 @@
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                        <th><spring:message code="regweb.numero"/></th>
                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                         <th><spring:message code="registroEntrada.extracto"/></th>
@@ -339,7 +339,7 @@
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                        <th><spring:message code="regweb.numero"/></th>
                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                         <th><spring:message code="registroEntrada.usuario"/></th>
@@ -535,7 +535,7 @@
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                        <th><spring:message code="regweb.numero"/></th>
                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                         <th><spring:message code="registroEntrada.reserva"/></th>
