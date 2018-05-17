@@ -360,6 +360,8 @@ public class ArxiuController extends BaseController {
                             + result.getCodigoResultado() + "-" + result.getMsjResultado());
                 }
 
+                List<Expediente> lista = result.getListaResultado();
+
                 log.info("Total resultados: " + result.getNumeroTotalResultados());
 
                 mav.addObject("total",result.getNumeroTotalResultados());
@@ -369,10 +371,9 @@ public class ArxiuController extends BaseController {
                     return mav;
                 }
 
-                paginaresultat = result.getNumeroPagina();
+                paginaresultat = result.getNumeroTotalResultados()/50;
 
-
-                for (Expediente exp : result.getListaResultado()) {
+                for (Expediente exp : lista) {
 
                     log.info("Expediente: " + exp.getName());
 
@@ -424,9 +425,10 @@ public class ArxiuController extends BaseController {
                     }
                 }
 
-            } while (pagina < paginaresultat);
+            } while (pagina <= paginaresultat);
 
             mav.addObject("expedientes",expedientes);
+            log.info("Total expedientes: " + expedientes.size());
 
         } catch (I18NException e) {
             e.printStackTrace();
