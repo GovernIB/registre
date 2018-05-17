@@ -330,7 +330,7 @@
                                                     </colgroup>
                                                     <thead>
                                                         <tr>
-                                                            <th class="center"><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                                            <th class="center"><spring:message code="regweb.numero"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.fecha"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.usuario"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.oficina"/></th>

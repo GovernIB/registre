@@ -81,7 +81,7 @@
                                             <thead>
                                             <tr>
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                                <th><spring:message code="registroSir.fechaRegistro"/></th>
+                                                <th><spring:message code="regweb.fecha"/></th>
                                                 <th><spring:message code="regweb.tipo"/></th>
                                                 <th><spring:message code="registroSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="registroSir.oficinaDestino"/></th>

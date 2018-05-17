@@ -94,7 +94,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -105,10 +105,10 @@
                                                     <thead>
                                                     <tr>
                                                         <th><spring:message code="oficioRemision.origen"/></th>
-                                                        <th><spring:message code="registroSir.fechaRegistro"/></th>
+                                                        <th><spring:message code="regweb.fecha"/></th>
                                                         <th><spring:message code="registroSir.extracto"/></th>
                                                         <th>Doc</th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -167,7 +167,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col width="80">
                                                         <col>
@@ -181,7 +181,7 @@
                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                         <th><spring:message code="registroEntrada.extracto"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -218,7 +218,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -230,7 +230,7 @@
                                                         <th><spring:message code="registroEntrada.fechaRegistro"/></th>
                                                         <th><spring:message code="registroSir.oficinaDestino"/></th>
                                                         <th><spring:message code="registroEntrada.estado"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -273,7 +273,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -285,7 +285,7 @@
                                                         <th><spring:message code="registroSalida.fechaRegistro"/></th>
                                                         <th><spring:message code="registroSir.oficinaDestino"/></th>
                                                         <th><spring:message code="registroSalida.estado"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -328,7 +328,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col width="80">
                                                         <col>
@@ -383,7 +383,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -392,10 +392,10 @@
                                                     </colgroup>
                                                     <thead>
                                                         <tr>
-                                                            <th><spring:message code="oficioRemision.fecha"/></th>
+                                                            <th><spring:message code="regweb.fecha"/></th>
                                                             <th><spring:message code="oficioRemision.origen"/></th>
                                                             <th><spring:message code="oficioRemision.destino"/></th>
-                                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                            <th class="center"></th>
                                                         </tr>
                                                     </thead>
 
@@ -434,7 +434,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col width="51">
@@ -442,7 +442,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th><spring:message code="organismo.destino"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -480,7 +480,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col width="51">
@@ -488,7 +488,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th><spring:message code="organismo.destino"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -525,7 +525,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col width="80">
                                                         <col>
@@ -539,7 +539,7 @@
                                                         <th><spring:message code="registroEntrada.fecha"/></th>
                                                         <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                         <th><spring:message code="registroEntrada.reserva"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
@@ -577,7 +577,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -591,7 +591,7 @@
                                                             <th><spring:message code="oficioRemision.oficina"/></th>
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                             <th><spring:message code="oficioRemision.tipo"/></th>
-                                                            <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                            <th class="center"></th>
                                                         </tr>
                                                     </thead>
 
@@ -643,7 +643,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table1 table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped tablesorter">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -657,7 +657,7 @@
                                                         <th><spring:message code="oficioRemision.oficina"/></th>
                                                         <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                         <th><spring:message code="oficioRemision.tipo"/></th>
-                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
+                                                        <th class="center"></th>
                                                     </tr>
                                                     </thead>
 
