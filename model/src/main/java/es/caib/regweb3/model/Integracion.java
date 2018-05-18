@@ -1,7 +1,6 @@
 package es.caib.regweb3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import es.caib.regweb3.utils.TimeUtils;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
 
@@ -195,7 +194,11 @@ public class Integracion implements Serializable {
 
     @Transient
     public String getTiempoFormateado() {
-        return TimeUtils.formatElapsedTimeShort(tiempo);
+
+        Date date = new Date(tiempo);
+        return new SimpleDateFormat("mm:ss:SSS").format(date);
+
+        //return TimeUtils.formatElapsedTimeShort(tiempo);
     }
 
     @Transient
