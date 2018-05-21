@@ -164,8 +164,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull = anexoEjb.crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID);
 
             log.info("");
-            tiempo = System.currentTimeMillis() - tiempo;
-            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(tiempo));
+            log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
             log.info("------------------------------------------------------------");
 
             // Integracion
@@ -227,7 +226,7 @@ public class JustificanteBean implements JustificanteLocal {
     private Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo,
                                                        AnexoFull anexoFull, UsuarioEntidad usuarioEntidad)  {
 
-long inicio = System.currentTimeMillis();
+
         Map<String,Object> custodyParameters = new HashMap<String, Object>();
 
         custodyParameters.put("registro", registro);
