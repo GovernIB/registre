@@ -43,28 +43,42 @@
                         <div class="panel-body">
 
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group col-xs-12">
-                                        <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
-                                            <form:hidden path="pageNumber"/>
-                                                <div class="col-xs-12">
-                                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
-                                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                            <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
-                                                        </div>
-                                                        <div class="col-xs-8">
-                                                            <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
-                                                                <form:option value="" label="..."/>
-                                                                <c:forEach var="estado" items="${estados}">
-                                                                    <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
-                                                                </c:forEach>
-                                                            </form:select>
-                                                        </div>
+                                <div class="form-group col-xs-12">
+                                    <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
+                                        <form:hidden path="pageNumber"/>
+
+                                                <div class="form-group col-xs-3 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
+                                                            <form:option value="" label="..."/>
+                                                            <c:forEach var="estado" items="${estados}">
+                                                                <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
+                                                            </c:forEach>
+                                                        </form:select>
                                                     </div>
                                                 </div>
-                                        </form:form>
-                                    </div>
+
+                                                <div class="form-group col-xs-4 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="numRegFormat"><spring:message code="registroEntrada.numeroRegistro"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:input path="numRegFormat" cssClass="form-control" maxlength="255" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group col-xs-1 espaiLinies senseMargeLat">
+                                                    <button type="button" onclick="doForm('#integracionBusqueda')" class="btn btn-warning btn-sm btn-block">
+                                                        <spring:message code="regweb.buscar"/>
+                                                    </button>
+                                                </div>
+
+                                    </form:form>
                                 </div>
+
                             </div>
 
                             <c:if test="${empty paginacion.listado}">
@@ -93,6 +107,7 @@
                                     <table class="table table-bordered table-hover table-striped tablesorter">
                                         <colgroup>
                                             <col width="140">
+                                            <col width="140">
                                             <col width="200">
                                             <col width="80">
                                             <col width="70">
@@ -102,6 +117,7 @@
                                         <thead>
                                         <tr>
                                             <th><spring:message code="integracion.fecha"/></th>
+                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
                                             <th><spring:message code="integracion.descripcion"/></th>
                                             <th><spring:message code="integracion.tiempo"/></th>
                                             <th><spring:message code="integracion.estado"/></th>
@@ -114,6 +130,7 @@
                                         <c:forEach var="integracion" items="${paginacion.listado}">
                                             <tr>
                                                 <td><fmt:formatDate value="${integracion.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                <td>${integracion.numRegFormat}</td>
                                                 <td>${integracion.descripcion}</td>
                                                 <td>${integracion.tiempoFormateado}</td>
                                                 <td>

@@ -756,7 +756,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         // Firmar anexos
         Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroEntrada.getUsuario().getUsuario().getIdioma()));
 
-        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroEntrada.getUsuario().getEntidad().getId(),locale,true);
+        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroEntrada.getUsuario().getEntidad().getId(),locale,true, registroEntrada.getNumeroRegistroFormateado());
 
         registroSir.setAnexos(transformarAnexosSir(anexosfirmados, registroSir.getIdentificadorIntercambio()));
 
@@ -832,7 +832,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         // Firmar anexos
         Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroSalida.getUsuario().getUsuario().getIdioma()));
 
-        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroSalida.getUsuario().getEntidad().getId(),locale,true);
+        List<AnexoFull> anexosfirmados = signatureServerEjb.firmarAnexosEnvioSir(registroDetalle.getAnexosFull(),registroSalida.getUsuario().getEntidad().getId(),locale,true, registroSalida.getNumeroRegistroFormateado());
 
         registroSir.setAnexos(transformarAnexosSir(anexosfirmados, registroSir.getIdentificadorIntercambio()));
 

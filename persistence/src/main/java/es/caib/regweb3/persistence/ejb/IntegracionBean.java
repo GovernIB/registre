@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Integracion;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -112,6 +113,13 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         where.add("integracion.entidad.id = :idEntidad ");
         parametros.put("idEntidad", idEntidad);
 
+        // Numero Registro
+        if (StringUtils.isNotEmpty(integracion.getNumRegFormat())) {
+            where.add(" (UPPER(integracion.numRegFormat) LIKE UPPER(:numRegFormat)) ");
+            parametros.put("numRegFormat", "%" + integracion.getNumRegFormat() + "%");
+        }
+
+
         // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
             query.append("where ");
@@ -138,6 +146,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             q = em.createQuery(query.toString());
         }
 
+        log.info("Query: " + query.toString());
 
         Paginacion paginacion;
 
@@ -158,13 +167,13 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad) throws Exception{
+    public void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
 
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad));
+        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad, numRegFormat));
     }
 
     @Override
-    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad) throws Exception{
+    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw, true);
@@ -183,7 +192,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             error = error.substring(0,2000);
         }*/
 
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad));
+        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad, numRegFormat));
     }
 
     @Override

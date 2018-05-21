@@ -40,6 +40,7 @@ public class IntegracionController extends BaseController {
 
         Integracion busqueda = new Integracion(tipo);
         busqueda.setEstado(RegwebConstantes.INTEGRACION_ESTADO_ERROR);
+        busqueda.setNumRegFormat("");
 
         Entidad entidadActiva = getEntidadActiva(request);
 
