@@ -65,6 +65,7 @@ public class IntegracionController extends BaseController {
 
         Paginacion paginacion = integracionEjb.busqueda(busqueda, entidadActiva.getId());
 
+        busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
         mav.addObject("integracionBusqueda", busqueda);
         mav.addObject("tipo", busqueda.getTipo());

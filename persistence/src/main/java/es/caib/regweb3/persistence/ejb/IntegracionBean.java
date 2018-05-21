@@ -146,7 +146,6 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             q = em.createQuery(query.toString());
         }
 
-        log.info("Query: " + query.toString());
 
         Paginacion paginacion;
 
