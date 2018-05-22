@@ -14,10 +14,10 @@ function nuevaNotificacion(){
             url: urlNuevaNotificacion,
             data: JSON.stringify(notificacion),
             type: "POST",
-
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("Accept", "application/json");
                 xhr.setRequestHeader("Content-Type", "application/json");
+                waitingDialog.show(tradsNotificacion['notificacion.generando'], {dialogSize: 'm', progressType: 'warning'});
             },
             success: function(respuesta) {
 
@@ -30,6 +30,7 @@ function nuevaNotificacion(){
                 }
 
                 $("#modalCompose").modal('hide');
+                waitingDialog.hide();
             }
         });
     }

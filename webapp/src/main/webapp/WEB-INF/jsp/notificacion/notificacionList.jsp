@@ -279,6 +279,7 @@
             tradsNotificacion['notificacion.campos.obligatorios'] = "<spring:message code="notificacion.campos.obligatorios" htmlEscape="true"/>";
             tradsNotificacion['notificacion.nueva.ok'] = "<spring:message code="notificacion.nueva.ok" htmlEscape="true"/>";
             tradsNotificacion['notificacion.nueva.error'] = "<spring:message code="notificacion.nueva.error" htmlEscape="true"/>";
+            tradsNotificacion['notificacion.generando'] = "<spring:message code="notificacion.generando" htmlEscape="true"/>";
 
         </script>
 
