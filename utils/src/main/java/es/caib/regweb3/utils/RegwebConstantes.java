@@ -231,6 +231,8 @@ public interface RegwebConstantes {
     Long REGISTRO_RECTIFICADO = 9L;
     Long REGISTRO_RECHAZADO = 10L;
     Long REGISTRO_REENVIADO = 11L;
+    Long REGISTRO_DISTRIBUYENDO = 12L;
+    //en la cola de distribución
 
     Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
@@ -243,7 +245,8 @@ public interface RegwebConstantes {
             REGISTRO_ANULADO,
             REGISTRO_RECTIFICADO,
             REGISTRO_RECHAZADO,
-            REGISTRO_REENVIADO};
+            REGISTRO_REENVIADO,
+            REGISTRO_DISTRIBUYENDO};
 
     /* -------- TIPOS DE OFICIO DE REMISION ---------- */
     Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
@@ -703,5 +706,24 @@ public interface RegwebConstantes {
     Long[] NOTIFICACION_ESTADOS = {
             NOTIFICACION_ESTADO_NUEVA,
             NOTIFICACION_ESTADO_LEIDA
+    };
+
+    /* ------------ COLA -------------------------*/
+
+    Long COLA_DISTRIBUCION = 0L;
+
+    Long[] COLA_TIPOS = {
+            COLA_DISTRIBUCION
+    };
+
+    int    NUMELEMENTOSDISTRIBUIR = 20; // se distribuyen 20 elementos por entidad en cada iteración del scheduler
+
+    /* -------------- ESTADO INTEGRACION --------------*/
+    Long COLA_ESTADO_ERROR = 1L;
+    Long  COLA_ESTADO_WARNING = 2L;
+
+    Long[] COLA_ESTADOS = {
+            COLA_ESTADO_ERROR,
+            COLA_ESTADO_WARNING
     };
 }

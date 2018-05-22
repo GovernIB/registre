@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.UsuarioEntidad;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -34,8 +37,14 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/ContadorEJB/local")
     private ContadorLocal contadorEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    private RegistroEntradaLocal registroEntradaEjb;
+
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    private UsuarioEntidadLocal usuarioEntidadEjb;
 
 
     @Override
@@ -91,6 +100,29 @@ public class SchedulerBean implements SchedulerLocal{
 
         } catch (Throwable e) {
             log.error("Error Inicializando contadores entidad ...", e);
+        }
+
+    }
+
+
+    /**
+     * Inicia la distribución de los registros en cola de cada entidad.
+     * @throws Exception
+     */
+    @Override
+    public void distribuirRegistros() throws Exception{
+
+        try {
+            List<Entidad> entidades = entidadEjb.getAll();
+
+            for(Entidad entidad: entidades) {
+                List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(entidad.getId());
+                registroEntradaEjb.iniciarDistribucionEntidad(entidad.getId(),administradores);
+            }
+        } catch (I18NException e) {
+            log.error("Error Distribuyendo los registros de la entidad ...", e);
+        }catch (I18NValidationException e) {
+            log.error("Error Distribuyendo los registros de la entidad ...", e);
         }
 
     }

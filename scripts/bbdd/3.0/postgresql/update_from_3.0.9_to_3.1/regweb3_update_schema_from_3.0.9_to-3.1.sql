@@ -32,3 +32,24 @@ create index RWE_NOTIF_DEST_FK_I on RWE_NOTIFICACION (DESTINATARIO);
 create index RWE_NOTIF_REMIT_FK_I on RWE_NOTIFICACION (REMITENTE);
 alter table RWE_NOTIFICACION add constraint RWE_NOTIF_DEST_FK foreign key (DESTINATARIO) references RWE_USUARIO_ENTIDAD;
 alter table RWE_NOTIFICACION add constraint RWE_NOTIF_REMIT_FK foreign key (REMITENTE) references RWE_USUARIO_ENTIDAD;
+
+--Nueva Tabla RWE_COLA
+ create table RWE_COLA (
+        ID int8 not null,
+        DENOMINACIONOFICINA varchar(255),
+        DESCRIPCIONOBJETO varchar(255),
+        ERROR text,
+        ESTADO int8,
+        FECHA timestamp,
+        IDOBJETO int8,
+        NUMMAXREINTENTOS int4,
+        NUMREINTENTOS int4,
+        TIPO int8,
+        USUARIOENTIDAD int8 not null,
+        primary key (ID)
+    );
+
+alter table RWE_COLA
+        add constraint RWE_COLA_USUENTI_FK
+        foreign key (USUARIOENTIDAD)
+        references RWE_USUARIO_ENTIDAD;

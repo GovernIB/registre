@@ -261,54 +261,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
     }
 
 
-    public AnexoFull obtenerPropiedadesFirma(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException {
-
-        boolean error = false;
-
-        SignatureCustody sign = input.getSignatureCustody();
-        DocumentCustody doc = input.getDocumentoCustody();
-
-        log.info("checkDocument::Document = " + doc);
-        log.info("checkDocument::Signature = " + sign);
-
-        if (sign == null && doc == null) {
-            throw new I18NException("error.checkanexosir.nifirmanidoc");
-        }
-
-        if (sign != null) {
-            // VALIDAR FIRMA
-            ValidateSignatureResponse resp;
-            try {
-                resp = callToValidaFirma(locale, sign, doc,idEntidad);
-            } catch(I18NException i18ne) {
-                // Cas (2.4) Error Comunicació/greu: casos (2.4.1) i (2.4.2)
-                error = true;
-                throw new I18NException("error.checkanexosir.comunicacio");
-
-            }
-
-            final String perfil = resp.getSignProfile();
-            final String tipo = resp.getSignType();
-            final String formato = resp.getSignFormat();
-
-            log.info("XYZ ZZZ tipo = " + tipo);
-            log.info("XYZ ZZZ perfil = " + perfil);
-            log.info("XYZ ZZZ formato = " + formato);
-
-
-
-            // Ficar dins Anexo tipo, formato i perfil
-            Anexo anexo = input.getAnexo();
-            anexo.setSignType(tipo);
-            anexo.setSignFormat(formato);
-            anexo.setSignProfile(perfil);
-
-        }
-        return input;
-    }
-
-
-
     /**
      * @param idEntidad
      * @return

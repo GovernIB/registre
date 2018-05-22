@@ -23,6 +23,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.CatServicio</class>
         <class>es.caib.regweb3.model.CatTipoVia</class>
         <class>es.caib.regweb3.model.CodigoAsunto</class>
+        <class>es.caib.regweb3.model.Cola</class>
         <class>es.caib.regweb3.model.Configuracion</class>
         <class>es.caib.regweb3.model.Contador</class>
         <class>es.caib.regweb3.model.Descarga</class>

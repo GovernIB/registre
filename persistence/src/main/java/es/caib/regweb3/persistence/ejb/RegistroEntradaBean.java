@@ -24,6 +24,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -79,6 +80,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/ColaEJB/local")
+    private ColaLocal colaEjb;
+
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
+
 
 
     @SuppressWarnings("unchecked")
@@ -597,7 +605,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public RegistroEntrada generarJustificanteRegistroEntrada(RegistroEntrada registroEntrada,
-                                        UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
+                                                              UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
+
+        //Validamos las firmas de los anexos
+        if(PropiedadGlobalUtil.validarFirmas()) {
+            for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
+                signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(), new Locale("ca"), false);
+            }
+        }
 
         // Justificante: Si no tiene generado, lo hacemos
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
@@ -877,6 +892,151 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
 
+
+
+    @Override
+    public void enviarAColaDistribucion(RegistroEntrada re, int maxReintentos) throws Exception, I18NException, I18NValidationException {
+
+        try {
+            Cola cola = new Cola();
+            cola.setNumeroMaximoReintentos(maxReintentos);
+            cola.setNumeroReintentos(0);
+            cola.setIdObjeto(re.getId());
+            cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
+            cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
+            cola.setUsuarioEntidad(re.getUsuario());
+            cola.setDenominacionOficina(re.getOficina().getDenominacion());
+
+            colaEjb.persist(cola);
+
+            log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
+            cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    /**
+     * Inicia la distribución de X elementos de la cola
+     * @param entidadId
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    @Override
+    public void iniciarDistribucionEntidad(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException{
+        List<Cola> pendientesDistribuirEntidad = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION,entidadId,RegwebConstantes.NUMELEMENTOSDISTRIBUIR);
+
+        iniciarDistribucionLista(pendientesDistribuirEntidad,entidadId, administradores);
+    }
+
+
+    public void iniciarDistribucionLista(List<Cola> elementosADistribuir, Long entidadId, List<UsuarioEntidad> administradores ) throws Exception, I18NException, I18NValidationException {
+        Cola elementoADistribuir1 = new Cola();
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "";
+        String hora =  "<b>"+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()) + "</b>&nbsp;&nbsp;&nbsp;";
+
+
+
+        try {
+        if (elementosADistribuir.size() > 0) {
+
+            //Obtenemos plugin
+            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
+            log.info(distribucionPlugin.getClass());
+            if (distribucionPlugin != null) {
+                for (Cola elementoADistribuir : elementosADistribuir) {
+
+                    try {
+
+                        elementoADistribuir1 = elementoADistribuir;
+                        RegistroEntrada registroEntrada = getConAnexosFull(elementoADistribuir1.getIdObjeto());
+
+
+                        //if(PropiedadGlobalUtil.validarFirmas()) {
+                            for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
+                                signatureServerEjb.checkDocument(anexoFull, entidadId, new Locale("ca"), false);
+                            }
+                        //}
+
+                        log.info("DISTRIBUYENDO REGISTRO  " + registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
+                        descripcion = "Distribución Registro: " + registroEntrada.getNumeroRegistroFormateado();
+                        //Si no tiene justificante lo generamos
+                        AnexoFull justificante = null;
+                        if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                            justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                            registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
+                        }
+
+                        Boolean distribuidoOK = distribucionPlugin.enviarDestinatarios(registroEntrada, null, "", new Locale("ca"));
+
+                        if (distribuidoOK) {
+                            log.info("distribucion OK REGISTRO " + registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
+                            tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
+                            colaEjb.remove(elementoADistribuir1);
+
+                        } else { //No ha ido bien, el plugin nos dice que no ha ido bien
+                            log.info( "Distribucion Error REGISTRO "+ registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
+                            try {
+                                colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",null,administradores);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (Exception e) {
+                        log.info("Primer Exception ");
+                        try {
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores);
+                        } catch (Exception ee) {
+                            ee.printStackTrace();
+                        }
+                        e.printStackTrace();
+                    } catch (I18NException e) {
+                        log.info("Primer I18NException ");
+                        try {
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores );
+                        } catch (Exception ee) {
+                            ee.printStackTrace();
+                        }
+                        e.printStackTrace();
+                    } catch (I18NValidationException e) {
+                        log.info("Primer I18NValidationException");
+                        try {
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores);
+                        } catch (Exception ee) {
+                            ee.printStackTrace();
+                        }
+                        e.printStackTrace();
+                    }catch(Throwable t){
+                        log.info("Primer Throwable");
+                        try {
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",t ,administradores);
+                        } catch (Exception ee) {
+                            ee.printStackTrace();
+                        }
+                        t.printStackTrace();
+                    }
+                }
+            }
+        }
+    } catch (Exception e) {
+        log.info("Error distribuyendo el registro Exception");
+        try {
+            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e,administradores );
+        } catch (Exception ee) {
+            ee.printStackTrace();
+        }
+        e.printStackTrace();
+    }
+}
+
     @Override
     public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
@@ -894,18 +1054,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         respuestaDistribucion.setHayPlugin(false);
         respuestaDistribucion.setDestinatarios(null);
         respuestaDistribucion.setEnviado(false);
+        respuestaDistribucion.setEnviadoCola(false);
 
         //Obtenemos plugin
         try {
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
 
-            peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
-            peticion.append("numeroRegistro: ").append(re.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-
-            numRegFormat = re.getNumeroRegistroFormateado();
-
             //Si han especificado plug-in
             if (distribucionPlugin != null) {
+                peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
+                peticion.append("numeroRegistro: ").append(re.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+                numRegFormat = re.getNumeroRegistroFormateado();
+
                 respuestaDistribucion.setHayPlugin(true);
 
                 //Obtenemos la configuración de la distribución
@@ -916,29 +1076,69 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
                 if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
                     respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
-
                 } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
-                    Locale locale = new Locale("ca");
-                    respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, "", locale));
 
-                    // Si ya ha sido enviado, lo marcamos como tramitado.
-                    if(respuestaDistribucion.getEnviado()){
-                        tramitarRegistroEntrada(re,usuarioEntidad);
-                        //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
+                    if(configuracionDistribucion.isEnvioCola()){ //Si esta configurado para enviarlo a la cola
+                        enviarAColaDistribucion(re,configuracionDistribucion.getMaxReintentos());
+                        respuestaDistribucion.setEnviadoCola(true);
+                    }else {
+                        //Validamos las firmas de los anexos
+                        if(PropiedadGlobalUtil.validarFirmas()) {
+                            for (AnexoFull anexoFull : re.getRegistroDetalle().getAnexosFull()) {
+                                signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(), new Locale("ca"), false);
+                            }
+                        }
+                        //Generamos Justificante
+                        AnexoFull justificante = null;
+                        if(!re.getRegistroDetalle().getTieneJustificante()) {
+                            justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                            re.getRegistroDetalle().getAnexosFull().add(justificante);
+                        }
+
+                        //Distribuimos directamente
+                        Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                        respuestaDistribucion.setEnviado(distribucionPlugin.enviarDestinatarios(re, null, "", locale));
+
+                        // Si ya ha sido enviado, lo marcamos como tramitado.
+                        if(respuestaDistribucion.getEnviado()){
+                            tramitarRegistroEntrada(re,usuarioEntidad);
+
+                            // Integración
+                            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(),numRegFormat);
+                            log.info("");
+                            log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
+                            log.info("------------------------------------------------------------");
+                            //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
+                        }
+
                     }
+
                 }
 
-            }else{ //No hay plugin, marcamos el Registro como Tramitado
+
+            }else{ //No hay plugin, generamos justificante y marcamos el Registro como Tramitado
+                //Validamos las firmas de los anexos
+                // TODO (No se si hay que validar, porque aquí no distribuimos a ningun lado
+               /* if(PropiedadGlobalUtil.validarFirmas()) {
+                    for (AnexoFull anexoFull : re.getRegistroDetalle().getAnexosFull()) {
+                        signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(), new Locale("ca"), false);
+                    }
+                }*/
+
+                AnexoFull justificante = null;
+                if(!re.getRegistroDetalle().getTieneJustificante()) {
+                    justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                    re.getRegistroDetalle().getAnexosFull().add(justificante);
+                }
                 tramitarRegistroEntrada(re,usuarioEntidad);
+                //Integración
+                integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
                 //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
+
+                log.info("");
+                log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
+                log.info("------------------------------------------------------------");
             }
-
-            log.info("");
-            log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
-            log.info("------------------------------------------------------------");
-
-            // Integración
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
 
         } catch (I18NException i18ne) {
             try {
@@ -981,13 +1181,30 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
             if (distribucionPlugin != null) {
                 ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-                re = obtenerAnexosDistribucion(re, configuracionDistribucion.configuracionAnexos);
+                re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
                 Locale locale = new Locale(idioma);
+
+                //Validamos las firmas de los anexos
+                if(PropiedadGlobalUtil.validarFirmas()) {
+                    for (AnexoFull anexoFull : re.getRegistroDetalle().getAnexosFull()) {
+                        signatureServerEjb.checkDocument(anexoFull, entidadId, new Locale("ca"), false);
+                    }
+                }
+
+                //Generamos el justificante porque antes no lo hemos hecho
+                AnexoFull justificante = null;
+                if(!re.getRegistroDetalle().getTieneJustificante()) {
+                    justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                    re.getRegistroDetalle().getAnexosFull().add(justificante);
+                }
 
                 distribucionOk = distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
                 //Integración
                 if(distribucionOk){
                     integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidadId, re.getNumeroRegistroFormateado());
+                    log.info("");
+                    log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
+                    log.info("------------------------------------------------------------");
                 }
             }
             return distribucionOk;
@@ -1139,6 +1356,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
      */
     private RegistroEntrada obtenerAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException, I18NValidationException {
 
+
+        //Validamos las firmas de los anexos
+        if (PropiedadGlobalUtil.validarFirmas()){
+            for (AnexoFull anexoFull : original.getRegistroDetalle().getAnexosFull()) {
+                signatureServerEjb.checkDocument(anexoFull, original.getUsuario().getEntidad().getId(), new Locale("ca"), false);
+            }
+        }
         // Miramos si debemos generar el justificante
         AnexoFull justificante = null;
         if(!original.getRegistroDetalle().getTieneJustificante()) {

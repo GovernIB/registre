@@ -36,6 +36,10 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     public static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
     public static final String PROPERTY_PASSWORD = basePluginRipea + "password";
     public static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
+    public static final String PROPERTY_MAXREINTENTOS = basePluginRipea + "maxreintentos";
+    public static final String PROPERTY_ENVIOCOLA = basePluginRipea + "enviocola";
+    public static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginRipea + "listadodestinatariosmodificable";
+    public static final String PROPERTY_CONFIGURACIONANEXOS = basePluginRipea + "configuracionanexos";
 
 
     public String getPropertyUsuario() throws Exception {
@@ -53,6 +57,23 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
         return getPropertyRequired(PROPERTY_ENDPOINT);
     }
+
+    public String getPropertyMaxReintentos() throws Exception {
+        return getPropertyRequired(PROPERTY_MAXREINTENTOS);
+    }
+
+    public  String getPropertyEnvioCola()  throws Exception{
+        return getPropertyRequired(PROPERTY_ENVIOCOLA);
+    }
+
+    public  String getPropertyDestinatariosModificable()  throws Exception{
+        return getPropertyRequired(PROPERTY_LISTADODESTINATARIOSMODIFICABLE);
+    }
+
+    public  String getPropertyConfiguracionAnexos()  throws Exception{
+        return getPropertyRequired(PROPERTY_CONFIGURACIONANEXOS);
+    }
+
 
     /**
      *
@@ -89,7 +110,6 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     public Boolean enviarDestinatarios(RegistroEntrada registro,
         List<Destinatario> destinatariosDefinitivos, String observaciones,
         Locale locale) throws Exception {
-
 
         try {
             //Transformamos a registreAnotació. TODO VER QUE CAMPOS DE REGISTRO ENVIAMOS A RIPEA
@@ -164,7 +184,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         *  3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
         * */
         /* EN ESTA IMPLEMENTACION NO SE EMPLEA */
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 1);
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(Boolean.valueOf(getPropertyDestinatariosModificable()), Integer.valueOf(getPropertyConfiguracionAnexos()),Integer.valueOf(getPropertyMaxReintentos()),Boolean.valueOf(getPropertyEnvioCola()));
         return cd;
 
     }
@@ -396,8 +416,9 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         registreAnnex.setEniDataCaptura(fechaCaptura);
 
 
-        //TODO METADADES
-       // registreAnnex.setMetadades(anexoFull.getMetadatas());
+        //TODO METADADES(han eliminat el mètode)
+        //registreAnnex.setMetadades(anexoFull.getMetadatas());
+
 
 
         //Caso Anexo SIN FIRMA se obtiene de DocumentCustody
@@ -491,8 +512,6 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_ODF));
         }else  if (ValidateSignatureConstants.SIGNTYPE_OOXML.equals(anexo.getSignType())) { //TF09
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_OOXML));
-        }else{
-            firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE));
         }
 
 
@@ -521,10 +540,6 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_XL);
         }else  if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexo.getSignProfile())){
             firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
-        }else  if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexo.getSignProfile())){
-            firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_A);
-        }else{
-            firma.setPerfil(RegwebConstantes.PERFIL_FIRMA_BES);
         }
 
         log.info("Firma Perfil " + firma.getPerfil());

@@ -63,6 +63,9 @@ public class RestController {
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
+    @EJB(mappedName = "regweb3/ColaEJB/local")
+    private ColaLocal colaEjb;
+
     @EJB(mappedName = "regweb3/NotificacionEJB/local")
     private NotificacionLocal notificacionEjb;
 
@@ -285,5 +288,15 @@ public class RestController {
     @ResponseBody
     public void extenderSesion() throws Exception {
 
+    }
+
+    /**
+     * Obtiene un {@link es.caib.regweb3.model.Cola}
+     */
+    @RequestMapping(value = "/obtenerCola", method = RequestMethod.GET)
+    public @ResponseBody
+    Cola obtenerCola(@RequestParam Long idCola) throws Exception {
+
+        return colaEjb.findById(idCola);
     }
 }

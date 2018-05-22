@@ -20,6 +20,9 @@
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_DISTRIBUIDO}">
         <span class="label label-primary"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
+    <c:when test="${param.estado == RegwebConstantes.REGISTRO_DISTRIBUYENDO}">
+        <span class="label label-warning"><spring:message code="registro.estado.${param.estado}" /></span>
+    </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_ANULADO}">
         <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>

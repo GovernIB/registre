@@ -69,4 +69,22 @@ public class Regweb3Scheduler {
         }
 
     }
+
+
+    /**
+     * Qué hace: Distribuye los registros que hay en la cola
+     * Cuando lo hace: cada 5 minutos
+     */
+    @Scheduled(cron = "0 0/5 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+    public void distribuirRegistrosEnCola(){
+
+        try {
+
+            schedulerEjb.distribuirRegistros();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }

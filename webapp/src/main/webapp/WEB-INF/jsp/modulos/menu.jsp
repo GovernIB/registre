@@ -274,6 +274,7 @@
                                     <li class="submenu-complet"><a href="<c:url value="/plugin/list"/>"><i class="fa fa-plug"></i> <spring:message code="plugin.plugins"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/integracion/list/0"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-ellipsis-h"></i> <spring:message code="cola.colas"/></a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="organismo.organismos"/></a>

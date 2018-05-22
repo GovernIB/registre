@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="libro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,12 +30,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "distribuirRegistroEntrada", propOrder = {
     "numeroRegistroFormateado",
-    "entidad"
+    "entidad",
+    "libro"
 })
 public class DistribuirRegistroEntrada {
 
     protected String numeroRegistroFormateado;
     protected String entidad;
+    protected String libro;
 
     /**
      * Gets the value of the numeroRegistroFormateado property.
@@ -82,6 +85,30 @@ public class DistribuirRegistroEntrada {
      */
     public void setEntidad(String value) {
         this.entidad = value;
+    }
+
+    /**
+     * Gets the value of the libro property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLibro() {
+        return libro;
+    }
+
+    /**
+     * Sets the value of the libro property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLibro(String value) {
+        this.libro = value;
     }
 
 }

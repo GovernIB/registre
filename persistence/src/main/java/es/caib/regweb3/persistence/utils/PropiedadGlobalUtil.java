@@ -139,6 +139,17 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Indicam si volem validar firmes dels annexes introduïts
+     * @return
+     */
+    public static Boolean validarFirmas() {
+        final String partialPropertyName = "validarfirmas";
+
+        return getBoolean(partialPropertyName);
+
+    }
+
+    /**
      * Retorna el valor de la propiedad del tamaño máximo en bytes permitido al subir un anexo a regweb.
      * @return
      */
@@ -152,6 +163,26 @@ public class PropiedadGlobalUtil {
         }
 
         return valor;
+    }
+
+    /**
+     * Retorna el valor de la propiedad del valor del remitente para el envio de mails
+     * @return
+     */
+    public static String getRemitente(Long idEntidad) {
+        final String partialPropertyName = "mail.remitente";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad del valor del nombre del remitente para el envio de mails
+     * @return
+     */
+    public static String getRemitenteNombre(Long idEntidad) {
+        final String partialPropertyName = "mail.remitente.nombre";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
 

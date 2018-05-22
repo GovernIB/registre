@@ -38,3 +38,27 @@ alter table RWE_NOTIFICACION add constraint RWE_NOTIFICACION_pk primary key (ID)
 alter table RWE_NOTIFICACION add constraint RWE_NOTIF_DEST_FK foreign key (DESTINATARIO) references RWE_USUARIO_ENTIDAD;
 alter table RWE_NOTIFICACION add constraint RWE_NOTIF_REMIT_FK foreign key (REMITENTE) references RWE_USUARIO_ENTIDAD;
 grant select,insert,delete,update on RWE_NOTIFICACION to www_regweb;
+
+
+-- Nueva Tabla RWE_COLA
+create table RWE_COLA (
+        ID number(19,0) not null,
+        DENOMINACIONOFICINA varchar2(255 char),
+        DESCRIPCIONOBJETO varchar2(255 char),
+        ERROR CLOB,
+        ESTADO number(19,0),
+        FECHA timestamp,
+        IDOBJETO number(19,0),
+        NUMMAXREINTENTOS number(10,0),
+        NUMREINTENTOS number(10,0),
+        TIPO number(19,0),
+        USUARIOENTIDAD number(19,0) not null
+) TABLESPACE REGWEB_DADES;;
+
+alter table RWE_COLA add constraint RWE_COLA_pk primary key (ID);
+alter table RWE_COLA
+        add constraint RWE_COLA_USUENTI_FK
+        foreign key (USUARIOENTIDAD)
+        references RWE_USUARIO_ENTIDAD;
+
+grant select,insert,delete,update on RWE_COLA to www_regweb3;

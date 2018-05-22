@@ -20,7 +20,28 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
 
     protected final Logger log = Logger.getLogger(getClass());
 
+    public static final String basePluginMock = DISTRIBUCION_BASE_PROPERTY + "distribucionmock.";
 
+    public static final String PROPERTY_MAXREINTENTOS = basePluginMock + "maxreintentos";
+    public static final String PROPERTY_ENVIOCOLA = basePluginMock + "enviocola";
+    public static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginMock + "listadodestinatariosmodificable";
+    public static final String PROPERTY_CONFIGURACIONANEXOS = basePluginMock + "configuracionanexos";
+
+    public String getPropertyMaxReintentos() throws Exception {
+        return getPropertyRequired(PROPERTY_MAXREINTENTOS);
+    }
+
+    public  String getPropertyEnvioCola()  throws Exception{
+        return getPropertyRequired(PROPERTY_ENVIOCOLA);
+    }
+
+    public  String getPropertyDestinatariosModificable()  throws Exception{
+        return getPropertyRequired(PROPERTY_LISTADODESTINATARIOSMODIFICABLE);
+    }
+
+    public  String getPropertyConfiguracionAnexos()  throws Exception{
+        return getPropertyRequired(PROPERTY_CONFIGURACIONANEXOS);
+    }
 
     /**
      *
@@ -120,14 +141,15 @@ public class DistribucionMockPlugin extends AbstractPluginProperties implements 
         return true;*/
 
         //La implementación Mock devuelve que ha ido bien el envio del registro
+        log.info("Distribucion Mock ");
         return true;
 
     }
 
     @Override
     public ConfiguracionDistribucion configurarDistribucion() throws Exception {
-        //Configuración por defecto de la implementación Mock
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(false, 2);
+        //Configuración por defecto de la implementación Mocks
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(Boolean.valueOf(getPropertyDestinatariosModificable()), Integer.valueOf(getPropertyConfiguracionAnexos()),Integer.valueOf(getPropertyMaxReintentos()),Boolean.valueOf(getPropertyEnvioCola()));
         return cd;
 
     }

@@ -27,18 +27,12 @@ function distribuir() {
         },
         success:function(respuesta){
 
-            if(respuesta.status =='NO_HAY_PLUGIN' || respuesta.status == 'ENVIADO'  || respuesta.status == 'SUCCESS'){
+            //if(respuesta.status =='NO_HAY_PLUGIN' || respuesta.status == 'ENVIADO'  || respuesta.status == 'SUCCESS' || respuesta.status == 'ENVIADO_COLA'){
+            if( respuesta.status == 'SUCCESS' || respuesta.status == 'ENVIADO_COLA'){
                 goTo(urlDetalle);
             }else{
                 //Si ha ocurrido un fallo en el envio
                 if(respuesta.status == 'FAIL'){
-                    mensajeError('#mensajes', respuesta.error);
-                    waitingDialog.hide();
-                    return false;
-                }
-
-                //Si la lista no es modificable y no se ha enviado, se lanza un error.
-                if(respuesta.status == 'DESTIN_NO_MODIFICABLE' && respuesta.status == 'NO_ENVIADO') {
                     mensajeError('#mensajes', respuesta.error);
                     waitingDialog.hide();
                     return false;

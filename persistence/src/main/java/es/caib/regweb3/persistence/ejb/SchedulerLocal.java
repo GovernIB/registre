@@ -36,5 +36,11 @@ public interface SchedulerLocal {
      */
     void reiniciarContadoresEntidad() throws Exception;
 
+    /**
+     *
+     * @throws Exception
+     */
+    void distribuirRegistros() throws Exception;
+
 }
 

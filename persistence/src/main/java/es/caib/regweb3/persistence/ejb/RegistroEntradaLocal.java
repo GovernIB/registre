@@ -318,6 +318,34 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     RegistroEntrada rectificar(Long idRegistro, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
+
+    /**
+     * Método que realiza la distribución de los elementos de la cola pendientes de distribuir de una entidad
+     * @param entidadId
+     * @throws Exception
+     * @throws I18NException
+     */
+     void iniciarDistribucionEntidad(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     *
+     * Inicia la distribución de los que han alcanzado el máximo de Reintentos de la entidad
+     * @param entidadId
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    // int iniciarDistribucionMaxReintentos(Long entidadId) throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Método que envia un registro a la cola de Distribución
+     * @param re
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+     void enviarAColaDistribucion(RegistroEntrada re, int maxReintentos) throws Exception, I18NException, I18NValidationException;
+
     /**
      * Método que obtiene los destinatarios a los que distribuir el registro
      *
