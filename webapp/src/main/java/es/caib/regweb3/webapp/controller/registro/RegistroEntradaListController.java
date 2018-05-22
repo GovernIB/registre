@@ -32,10 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -68,6 +65,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
+
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
 
 
     /**
@@ -659,35 +659,28 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             respuesta.setResult(respuestaDistribucion);
         }
 
-        //Obtenemos los destinatarios a través del plugin de distribución
         try {
-            // Miramos si debemos generar el justificante
-            AnexoFull justificante = null;
-            if(!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
-                registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
-            }
+            //Distribuimos el registro
             respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
 
-            //Definimos los distintos estados de la respuesta para enviar al distribuir.js
-            //No hay plugin configurado
-            if(!respuestaDistribucion.getHayPlugin()){
-                respuesta.setStatus("NO_HAY_PLUGIN");
+            if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
+                if(respuestaDistribucion.getEnviadoCola()){ //Si se ha enviado a la cola
+                    respuesta.setStatus("ENVIADO_COLA");
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
+                }else if ((respuestaDistribucion.getHayPlugin() && respuestaDistribucion.getEnviado())){ //Cuando hay plugin y ha llegado a destino
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+                    respuesta.setStatus("SUCCESS");
+                }else if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
+                    respuesta.setStatus("FAIL");
+                    respuesta.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
+                }
+            }else {
+                if(!respuestaDistribucion.getHayPlugin()){ //Si no ha plugin se cambia estado a tramitado.
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+                    respuesta.setStatus("SUCCESS");
+                }
             }
-            //Miramos si se ha enviado
-            if(respuestaDistribucion.getEnviado()){
-                respuesta.setStatus("ENVIADO");
-            }
-            //Miramos si la lista de destinatarios es modificable
-            if(!respuestaDistribucion.getListadoDestinatariosModificable()){
-                respuesta.setStatus("DESTIN_NO_MODIFICABLE");
-                respuesta.setError(getMessage("registroEntrada.distribuir.error.noModificable"));
-            }
-            //Miramos si no se ha enviado
-            if(!respuestaDistribucion.getEnviado()){
-                respuesta.setStatus("NO_ENVIADO");
-                respuesta.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
-            }
+
             respuesta.setResult(respuestaDistribucion);
 
         } catch (I18NValidationException e) {
@@ -714,12 +707,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             respuesta.setError(iie.getMessage());
             respuesta.setResult(respuestaDistribucion);
             return respuesta;
-        }
-
-        //Si ha ido bien, marcamos como SUCCESS
-        if(!respuestaDistribucion.getHayPlugin() || respuestaDistribucion.getEnviado()){
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-            respuesta.setStatus("SUCCESS");
         }
 
         // TODO eliminar referencia de custodia en los anexos si plugin arxiu digital
@@ -750,24 +737,40 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         log.info("Destinatarios obtenidos: " + wrapper.getDestinatarios().size());
         log.info(" Observaciones obtenidas:" + wrapper.getObservaciones());
+        Boolean enviado = false;
 
         // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
-        Boolean enviado = registroEntradaEjb.enviar(registroEntrada, wrapper,
-            usuarioEntidad.getEntidad().getId(), 
-            RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuarioEntidad.getUsuario().getIdioma()));
+        try {
+             enviado = registroEntradaEjb.enviar(registroEntrada, wrapper,
+                    usuarioEntidad.getEntidad().getId(),
+                    RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuarioEntidad.getUsuario().getIdioma()));
 
-        if (enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
-            // Marcamos el registro como tramitado, solo si se ha enviado bien
-            try {
-                registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-            } catch (I18NValidationException e) {
-                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.error.noEnviado")+": "+I18NUtils.getMessage(e));
-            }
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+             if(enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
+                // Marcamos el registro como tramitado, solo si se ha enviado bien
+                try {
+                    registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+                } catch (I18NValidationException e) {
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.error.noEnviado")+": "+I18NUtils.getMessage(e));
+                }
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
 
-        } else {
-            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
+             } else {
+                Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
+             }
+
+        } catch (I18NValidationException e) {
+            Mensaje.saveMessageError(request, e.getMessage());
+            e.printStackTrace();
+
+        } catch (I18NException ie) {
+            Mensaje.saveMessageError(request, ie.getMessage());
+            ie.printStackTrace();
+
+        } catch (Exception iie){
+            Mensaje.saveMessageError(request,  iie.getMessage());
+            iie.printStackTrace();
         }
+
         return enviado;
 
     }
@@ -822,6 +825,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+                //Validamos las firmas de los anexos
+                if(PropiedadGlobalUtil.validarFirmas()) {
+                    for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
+                        signatureServerEjb.checkDocument(anexoFull, registroEntrada.getUsuario().getEntidad().getId(), new Locale("ca"), false);
+                    }
+                }
 
                 // Dispone de permisos para Editar el registro
                 if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {

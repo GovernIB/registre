@@ -267,10 +267,10 @@
 
 
      <dependency>
-            <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugin-distribucion-ripea</artifactId>
-            <version>${project.version}</version>
-    </dependency>
+      <groupId>es.caib.regweb3</groupId>
+      <artifactId>plugin-distribucion-ripea</artifactId>
+      <version>${project.version}</version>
+     </dependency>
 
     <!-- ============================================ -->
     <!-- ======== PLUGINS DE POSTPROCES =========== -->

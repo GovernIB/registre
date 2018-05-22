@@ -27,10 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -75,6 +72,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
+
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
 
 
     @Override
@@ -439,6 +439,12 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
 
                 try{
+                    //Validamos las firmas de los anexos
+                    if(PropiedadGlobalUtil.validarFirmas()) {
+                        for (AnexoFull anexoFull : registroSalida.getRegistroDetalle().getAnexosFull()) {
+                            signatureServerEjb.checkDocument(anexoFull, usuario.getEntidad().getId(), new Locale("ca"), false);
+                        }
+                    }
                     // Creamos el anexo del justificante y se lo añadimos al registro
                     AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                     registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
