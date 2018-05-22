@@ -51,21 +51,27 @@
                         <c:if test="${(fn:length(registro.registroDetalle.anexos) == 1 && !registro.registroDetalle.tieneJustificante) ||
                             fn:length(registro.registroDetalle.anexos) > 1 }">
 
-                            <table id="interesados" class="table table-bordered table-hover table-striped">
+                            <table id="anexos" class="table table-bordered table-hover table-striped">
                                 <colgroup>
                                     <col>
                                     <col>
+                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                    <col>
+                            </c:if>
                                     <col>
                                     <col>
-                                    <col>
+
                                 </colgroup>
                                 <thead>
                                 <tr>
                                     <th><spring:message code="anexo.titulo"/></th>
                                     <th><spring:message code="anexo.tipoDocumento"/></th>
+                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
                                     <th><spring:message code="anexo.tamano"/></th>
+                            </c:if>
                                     <th class="center"><spring:message code="anexo.anexo"/></th>
                                     <th class="center">Firma</th>
+
                                 </tr>
                                 </thead>
 
@@ -91,7 +97,7 @@
                                             <td>
                                                 <spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/>
                                             </td>
-                                            <!-- TODO mostrar el tamanyo desde custodia -->
+                                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
                                             <td>
                                                 <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                                     <c:set var="tamanyAnexo" value="${reg:getSizeOfDocumentCustody(anexo.custodiaID,param.idEntidad)}" />
@@ -101,32 +107,78 @@
                                                 </c:if>
                                                 ${tamanyAnexo } KB
                                             </td>
-
+                                            </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED}">
-                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
-                                                       href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
-                                                       target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                        class="fa fa-download"></span></a></td>
-                                                <td class="center"><a class="btn btn-info btn-default btn-sm"
-                                                       href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
-                                                       target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>"><span
-                                                        class="fa fa-key"></span></a></td>
+                                                <td class="center">
+                                                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-success btn-default btn-sm"
+                                                           href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.descargar"/>">
+                                                           <span class="fa fa-download"></span>
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-success btn-default btn-sm disabled"
+                                                           href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.eliminado"/>">
+                                                           <span class="fa fa-download"></span>
+                                                        </a>
+                                                    </c:if>
+                                                </td>
+                                                <td class="center">
+                                                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-info btn-default btn-sm"
+                                                           href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.tipofirma.detached"/>">
+                                                           <span class="fa fa-key"></span>
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-info btn-default btn-sm disabled"
+                                                           href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.eliminado"/>">
+                                                            <span class="fa fa-key"></span>
+                                                        </a>
+                                                    </c:if>
+                                                </td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
-                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
-                                                       href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
-                                                       target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                        class="fa fa-download"></span></a></td>
+                                                <td class="center">
+                                                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-success btn-default btn-sm"
+                                                           href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.descargar"/>">
+                                                           <span class="fa fa-download"></span>
+                                                        </a>
+                                                    </c:if>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-success btn-default btn-sm disabled"
+                                                           href="<c:url value="/anexo/descargarDocumento/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.eliminado"/>">
+                                                           <span class="fa fa-download"></span>
+                                                        </a>
+                                                    </c:if>
+                                                </td>
                                                 <td class="center"><span class="label label-danger">No</span></td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-
-                                                <td class="center"><a class="btn btn-success btn-default btn-sm"
-                                                       href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
-                                                       target="_blank" title="<spring:message code="anexo.descargar"/>"><span
-                                                        class="fa fa-download"></span></a></td>
+                                                <td class="center">
+                                                   <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-success btn-default btn-sm"
+                                                           href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.descargar"/>">
+                                                           <span class="fa fa-download"></span></a>
+                                                    </c:if>
+                                                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                        <a class="btn btn-success btn-default btn-sm disabled"
+                                                           href="<c:url value="/anexo/descargarFirma/${anexo.id}"/>"
+                                                           target="_blank" title="<spring:message code="anexo.eliminado"/>">
+                                                           <span class="fa fa-download"></span></a>
+                                                    </c:if>
+                                                </td>
                                                 <td class="center"><p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p></td>
                                             </c:if>
+
                                         </tr>
                                     </c:if>
                                 </c:forEach>
