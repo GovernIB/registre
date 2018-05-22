@@ -272,8 +272,8 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo",administradores.get(0).getEntidad().getNombre() );
         }
 
-        if(PropiedadGlobalUtil.getRemitente(idEntidad)!=null && PropiedadGlobalUtil.getRemitenteNombre(idEntidad)!=null){
-            InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(idEntidad),PropiedadGlobalUtil.getRemitenteNombre(idEntidad));
+        if(PropiedadGlobalUtil.getRemitente()!=null && PropiedadGlobalUtil.getRemitenteNombre()!=null){
+            InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(),PropiedadGlobalUtil.getRemitenteNombre());
             for(UsuarioEntidad usuarioEntidad: administradores){
                 String mailAdminEntidad = usuarioEntidad.getUsuario().getEmail();
                 if(!mailAdminEntidad.isEmpty()) {

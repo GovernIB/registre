@@ -169,20 +169,20 @@ public class PropiedadGlobalUtil {
      * Retorna el valor de la propiedad del valor del remitente para el envio de mails
      * @return
      */
-    public static String getRemitente(Long idEntidad) {
+    public static String getRemitente() {
         final String partialPropertyName = "mail.remitente";
 
-        return getStringByEntidad(idEntidad, partialPropertyName);
+        return getString(partialPropertyName);
     }
 
     /**
      * Retorna el valor de la propiedad del valor del nombre del remitente para el envio de mails
      * @return
      */
-    public static String getRemitenteNombre(Long idEntidad) {
+    public static String getRemitenteNombre() {
         final String partialPropertyName = "mail.remitente.nombre";
 
-        return getStringByEntidad(idEntidad, partialPropertyName);
+        return getString(partialPropertyName);
     }
 
 
