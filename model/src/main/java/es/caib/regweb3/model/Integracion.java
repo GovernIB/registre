@@ -34,6 +34,7 @@ public class Integracion implements Serializable {
     private String peticion;
     private String error;
     private String excepcion;
+    private String numRegFormat;
 
     public static final int RESULTADOS_PAGINACION = 50;
 
@@ -50,7 +51,7 @@ public class Integracion implements Serializable {
         this.fecha = new Date();
     }
 
-    public Integracion(Long tipo, Long estado, String descripcion, String peticion, Long tiempo,Long idEntidad) {
+    public Integracion(Long tipo, Long estado, String descripcion, String peticion, Long tiempo,Long idEntidad, String numRegFormat) {
         this.tipo = tipo;
         this.estado = estado;
         this.descripcion = descripcion;
@@ -58,9 +59,10 @@ public class Integracion implements Serializable {
         this.peticion = peticion;
         this.tiempo = tiempo;
         this.fecha = new Date();
+        this.numRegFormat = numRegFormat;
     }
 
-    public Integracion(Long tipo, Long estado, String descripcion, String peticion, String error, String excepcion, Long tiempo, Long idEntidad) {
+    public Integracion(Long tipo, Long estado, String descripcion, String peticion, String error, String excepcion, Long tiempo, Long idEntidad, String numRegFormat) {
         this.tipo = tipo;
         this.estado = estado;
         this.descripcion = descripcion;
@@ -70,6 +72,7 @@ public class Integracion implements Serializable {
         this.error = error;
         this.excepcion = excepcion;
         this.fecha = new Date();
+        this.numRegFormat = numRegFormat;
     }
 
     @Id
@@ -169,6 +172,16 @@ public class Integracion implements Serializable {
     public void setExcepcion(String excepcion) {
         this.excepcion = excepcion;
     }
+
+    @Column(name = "NUMREGFORMAT", length = 255)
+    public String getNumRegFormat() {
+        return numRegFormat;
+    }
+
+    public void setNumRegFormat(String numRegFormat) {
+        this.numRegFormat = numRegFormat;
+    }
+
 
     @XmlElement(name="fechaFormateada")
     public String fechaFormateada(){

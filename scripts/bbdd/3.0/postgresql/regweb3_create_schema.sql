@@ -223,6 +223,7 @@
         ESTADO int8 not null,
         EXCEPCION text,
         FECHA timestamp,
+        NUMREGFORMAT varchar(255),
         PETICION varchar(2000),
         TIEMPO int8 not null,
         TIPO int8 not null,

@@ -6,6 +6,7 @@ create table RWE_INTEGRACION (
   ESTADO number(19,0) not null,
   EXCEPCION clob,
   FECHA timestamp,
+  NUMREGFORMAT varchar2(255 char),
   PETICION varchar2(2000 char),
   TIEMPO number(19,0) not null,
   TIPO number(19,0) not null,

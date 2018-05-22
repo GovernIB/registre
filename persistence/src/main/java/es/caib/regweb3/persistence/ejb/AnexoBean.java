@@ -147,7 +147,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
 
             // Integracion
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad);
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, "");
 
             return anexoFull;
 
@@ -155,7 +155,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.error(e.getMessage(), e);
 
             try{
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion,peticion.toString(), e,System.currentTimeMillis() - tiempo, idEntidad);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion,peticion.toString(), e,System.currentTimeMillis() - tiempo, idEntidad, "");
             }catch (Exception ex){
                 ex.printStackTrace();
             }
@@ -238,6 +238,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         StringBuilder peticion = new StringBuilder();
         Long tiempo = System.currentTimeMillis();
         String descripcion = "Nuevo anexo";
+        String numRegFormat = "";
 
         try {
 
@@ -305,6 +306,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
             peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
 
+            numRegFormat = registro.getNumeroRegistroFormateado();
+
             //Guardamos los documentos asociados al anexo en custodia
             updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
                     registro, isNew);
@@ -324,7 +327,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setAnexo(anexo);
 
             // Integracion
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
 
             return anexoFull;
 
@@ -332,7 +335,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             error = true;
             log.info("Error creant un anexe: " + i18n.getMessage(), i18n);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion,peticion.toString(), i18n, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), i18n, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -342,7 +345,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             error = true;
             log.info("Error creant un anexe: " + e.getMessage(), e);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 e.printStackTrace();
             }

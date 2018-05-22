@@ -48,7 +48,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      */
     @Override
     public SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                             Long idEntidadActiva, StringBuilder peticion) throws Exception, I18NException {
+                                             Long idEntidadActiva, StringBuilder peticion, String numeroRegistro) throws Exception, I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
@@ -72,7 +72,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         doc.setName("justificante.pdf");
 
         return signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
-                reason, idEntidadActiva, peticion);
+                reason, idEntidadActiva, peticion, numeroRegistro);
 
     }
 
@@ -110,7 +110,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      */
     @Override
     public I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
-                                                     boolean sir, Locale locale, boolean force) throws I18NException {
+                                                     boolean sir, Locale locale, boolean force, String numeroRegistro) throws I18NException {
 
         boolean error = false;
 
@@ -141,7 +141,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
                     // És un document PLA: Firmar emprant CAdES-EPES
 
-                    firmaCAdESEPESDetached(input, doc, locale, signaturePlugin, idEntidad);
+                    firmaCAdESEPESDetached(input, doc, locale, signaturePlugin, idEntidad, numeroRegistro);
 
                     input.getSignatureCustody().setName("signature_CAdES_EPES.csig");
 
@@ -165,10 +165,10 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
                 if (input.getDocumentoCustody() == null) {
                     // CheckFirma amb document attached
-                    signAttachedSignature(input, locale, signaturePlugin, idEntidad);
+                    signAttachedSignature(input, locale, signaturePlugin, idEntidad, numeroRegistro);
                 } else {
                     // CheckFirma amb document detached
-                    signDetachedSignature(input, locale, signaturePlugin, idEntidad);
+                    signDetachedSignature(input, locale, signaturePlugin, idEntidad, numeroRegistro);
                 }
 
                 // CAS (2.1.2.1) ReFirma OK => OK
@@ -402,7 +402,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected void signAttachedSignature(AnexoFull input, Locale locale,
-                                         ISignatureServerPlugin signaturePlugin, Long idEntidad) throws I18NException {
+                                         ISignatureServerPlugin signaturePlugin, Long idEntidad, String numeroRegistro) throws I18NException {
 
 
         if (log.isDebugEnabled()) {
@@ -424,7 +424,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         input.setDocumentoCustody(doc);
 
         // (2) Enviam a firmar
-        firmaCAdESEPESDetached(input, doc, locale, signaturePlugin, idEntidad);
+        firmaCAdESEPESDetached(input, doc, locale, signaturePlugin, idEntidad, numeroRegistro);
 
         input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
 
@@ -438,12 +438,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected void signDetachedSignature(AnexoFull input,
-                                         Locale locale, ISignatureServerPlugin signaturePlugin, Long idEntidad)
+                                         Locale locale, ISignatureServerPlugin signaturePlugin, Long idEntidad, String numeroRegistro)
             throws I18NException {
 
         // ELIMINAM LA FIRMA i FIRMAM AMB CADES-EPES
         // (1) Enviam a firmar
-        firmaCAdESEPESDetached(input, input.getDocumentoCustody(), locale, signaturePlugin, idEntidad);
+        firmaCAdESEPESDetached(input, input.getDocumentoCustody(), locale, signaturePlugin, idEntidad, numeroRegistro);
 
         input.getSignatureCustody().setName("signature_CAdES_EPES.csig");
 
@@ -458,7 +458,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected void firmaCAdESEPESDetached(AnexoFull input, AnnexCustody docToSign, Locale locale,
-                                          ISignatureServerPlugin signaturePlugin, Long idEntidad) throws I18NException {
+                                          ISignatureServerPlugin signaturePlugin, Long idEntidad, String numeroRegistro) throws I18NException {
 
         final String signType = FileInfoSignature.SIGN_TYPE_CADES;
         final int signMode = FileInfoSignature.SIGN_MODE_EXPLICIT;
@@ -466,7 +466,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
         SignatureCustody sc = signFile(docToSign, signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad, new StringBuilder());
+                signaturePlugin, locale, reason, idEntidad, new StringBuilder(), numeroRegistro);
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -486,14 +486,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     @Override
-    public void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException {
+    public void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale, String numeroRegistro) throws I18NException {
 
         DocumentCustody doc = input.getDocumentoCustody();
         ISignatureServerPlugin signaturePlugin = getInstanceSignatureServerPlugin(idEntidad);
 
         AnnexCustody documentToSign = input.getDocumentoCustody();
 
-        firmaPAdESEPES(input, documentToSign, locale, signaturePlugin, idEntidad);
+        firmaPAdESEPES(input, documentToSign, locale, signaturePlugin, idEntidad, numeroRegistro);
 
     }
 
@@ -507,7 +507,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @param force
      * @throws I18NException
      */
-    public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException {
+    public List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force, String numeroRegistro) throws I18NException {
 
         List<AnexoFull> anexosADevolver = new ArrayList<AnexoFull>();
 
@@ -520,7 +520,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
             if ((dc != null && sc == null) || (dc == null && sc != null)) {// Document pla o attached
 
-                checkDocumentAndSignature(anexo, idEntidad, true, locale, force);
+                checkDocumentAndSignature(anexo, idEntidad, true, locale, force, numeroRegistro);
                 anexosADevolver.add(anexo);
 
             } else { //Detached
@@ -529,13 +529,13 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                 AnexoFull firma = new AnexoFull(anexo);
 
                 firma.setDocumentoCustody(null);
-                checkDocumentAndSignature(firma, idEntidad, true, locale, force);
+                checkDocumentAndSignature(firma, idEntidad, true, locale, force, numeroRegistro);
 
                 anexosADevolver.add(firma);
 
                 // Firmamos el documento
                 anexo.setSignatureCustody(null);
-                checkDocumentAndSignature(anexo, idEntidad, true, locale, force);
+                checkDocumentAndSignature(anexo, idEntidad, true, locale, force, numeroRegistro);
 
                 anexosADevolver.add(anexo);
 
@@ -556,7 +556,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected void firmaPAdESEPES(AnexoFull input, AnnexCustody documentToSign, Locale locale,
-                                  ISignatureServerPlugin signaturePlugin, Long idEntidad) throws I18NException {
+                                  ISignatureServerPlugin signaturePlugin, Long idEntidad, String numeroRegistro) throws I18NException {
 
         final String signType = FileInfoSignature.SIGN_TYPE_PADES;
         final int signMode = FileInfoSignature.SIGN_MODE_IMPLICIT;
@@ -564,7 +564,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
         SignatureCustody sc = signFile(documentToSign, signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad, new StringBuilder());
+                signaturePlugin, locale, reason, idEntidad, new StringBuilder(), numeroRegistro);
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -594,7 +594,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected SignatureCustody signFile(AnnexCustody doc, String signType,
-                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, StringBuilder peticion)
+                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro)
             throws I18NException {
 
         File source = null;
@@ -708,7 +708,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     sc.setAttachedDocument(attachedDocument);
 
                     // Integracion
-                    integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva);
+                    integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
 
                     return sc;
 
@@ -717,14 +717,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, idEntidadActiva);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), e, System.currentTimeMillis() - tiempo, idEntidadActiva);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), e, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

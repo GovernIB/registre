@@ -31,7 +31,7 @@ public interface SignatureServerLocal {
      * @throws Exception
      */
     SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                      Long idEntidadActiva, StringBuilder peticion) throws Exception, I18NException;
+                                      Long idEntidadActiva, StringBuilder peticion, String numeroRegistro) throws Exception, I18NException;
     
     
     /**
@@ -44,7 +44,7 @@ public interface SignatureServerLocal {
      * @throws I18NException
      */
     I18NTranslation checkDocumentAndSignature(AnexoFull input, long idEntidad,
-                                              boolean sir, Locale locale, boolean force) throws I18NException;
+                                              boolean sir, Locale locale, boolean force, String numeroRegistro) throws I18NException;
 
 
     /**
@@ -78,7 +78,7 @@ public interface SignatureServerLocal {
      * @param locale
      * @throws I18NException
      */
-    void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale) throws I18NException;
+    void firmaPAdESEPES(AnexoFull input, long idEntidad, Locale locale, String numeroRegistro) throws I18NException;
 
     /**
      *
@@ -88,6 +88,6 @@ public interface SignatureServerLocal {
      * @param force
      * @throws I18NException
      */
-    List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force) throws I18NException;
+    List<AnexoFull> firmarAnexosEnvioSir(List<AnexoFull> anexosEnviarASir, Long idEntidad, Locale locale, boolean force, String numeroRegistro) throws I18NException;
     
 }

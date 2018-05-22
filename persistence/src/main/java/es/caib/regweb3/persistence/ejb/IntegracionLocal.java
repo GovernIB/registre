@@ -41,9 +41,10 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param peticion
      * @param tiempo
      * @param idEntidad
+     * @param numregformat
      * @throws Exception
      */
-    void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad) throws Exception;
+    void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 
     /**
      *
@@ -53,9 +54,10 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param th
      * @param tiempo
      * @param idEntidad
+     * @param numregformat
      * @throws Exception
      */
-    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad) throws Exception;
+    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 
     /**
      * Elimina las Integraciones con una antigüedad de 7 días
