@@ -45,7 +45,7 @@ create table RWE_COLA (
         ID number(19,0) not null,
         DENOMINACIONOFICINA varchar2(255 char),
         DESCRIPCIONOBJETO varchar2(255 char),
-        ERROR CLOB,
+        ERROR clob,
         ESTADO number(19,0),
         FECHA timestamp,
         IDOBJETO number(19,0),
@@ -53,7 +53,7 @@ create table RWE_COLA (
         NUMREINTENTOS number(10,0),
         TIPO number(19,0),
         USUARIOENTIDAD number(19,0) not null
-) TABLESPACE REGWEB_DADES;;
+    ) TABLESPACE REGWEB_DADES;
 
 alter table RWE_COLA add constraint RWE_COLA_pk primary key (ID);
 alter table RWE_COLA
@@ -62,3 +62,4 @@ alter table RWE_COLA
         references RWE_USUARIO_ENTIDAD;
 
 grant select,insert,delete,update on RWE_COLA to www_regweb3;
+alter table RWE_COLA move lob (ERROR) store as RWE_COLA_ERROR_lob (tablespace regweb3_lob index RWE_COLA_ERROR_lob_i);
