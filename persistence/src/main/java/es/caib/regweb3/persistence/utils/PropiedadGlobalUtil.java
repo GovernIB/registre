@@ -552,4 +552,24 @@ public class PropiedadGlobalUtil {
         }
     }
 
+    /**
+     * Retorna el valor de la propiedad del Username de la Url de Validación
+     * @return
+     */
+    public static String getUrlValidationUsername(Long idEntidad) {
+        final String partialPropertyName = "urlvalidation.username";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad del Username de la Url de Validación
+     * @return
+     */
+    public static String getUrlValidationPassword(Long idEntidad) {
+        final String partialPropertyName = "urlvalidation.password";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
 }
