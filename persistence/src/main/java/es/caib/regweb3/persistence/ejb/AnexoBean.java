@@ -10,6 +10,7 @@ import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
@@ -1372,16 +1373,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 url = getUrlValidation(custodiaID, isJustificante, idEntidad);
 
                 // Si soporta url, davalla arxiu de la url
-                if (url != null) {
+                if (StringUtils.isNotEmpty(url)) {
 
                     BufferedInputStream in = null;
                     ByteArrayOutputStream fout = null;
                     try {
 
-                        String username = Configuracio.getConsvUsername();
-                        String password = Configuracio.getConsvPassword();
+                        String username = PropiedadGlobalUtil.getUrlValidationUsername(idEntidad);
+                        String password = PropiedadGlobalUtil.getUrlValidationPassword(idEntidad);
 
-                        if(username!=null && password!=null){
+                        if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)){
 
                             ClientResponse cr = commonCall(url, username, password);
 
