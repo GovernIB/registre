@@ -94,7 +94,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -167,7 +167,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col width="80">
                                                         <col>
@@ -218,7 +218,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -273,7 +273,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -328,7 +328,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col width="80">
                                                         <col>
@@ -383,7 +383,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -434,7 +434,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col width="51">
@@ -480,7 +480,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col width="51">
@@ -525,7 +525,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-bordered table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col width="80">
                                                         <col>
@@ -577,7 +577,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col>
@@ -643,7 +643,7 @@
 
                                             <div class="table-responsive-inici">
 
-                                                <table class="table table-hover table-striped tablesorter">
+                                                <table class="table table-hover table-striped">
                                                     <colgroup>
                                                         <col>
                                                         <col>
