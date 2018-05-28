@@ -187,10 +187,11 @@
                         <div class="panel panel-${color}">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-home"></i>
-                                    <strong><spring:message code="oficina.origen"/></strong>
+                                    <strong><spring:message code="oficioRemision.origen"/></strong>
                                 </h3>
                             </div>
                             <div class="panel-body">
+                                <p><strong><i class="fa fa-institution"></i> <spring:message code="organismo.organismo"/>:</strong> ${oficioRemision.oficina.organismoResponsable.denominacion}</p>
                                 <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.oficina"/>:</strong> ${oficioRemision.oficina.denominacion}</p>
                                 <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha"/>:</strong> <fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
                             </div>
@@ -203,19 +204,29 @@
                         <div class="panel panel-${color}">
                             <div class="panel-heading">
                                 <h3 class="panel-title"><i class="fa fa-institution"></i>
-                                    <strong><spring:message code="organismo.destino"/></strong>
+                                    <strong><spring:message code="oficioRemision.destino"/></strong>
                                 </h3>
                             </div>
                             <div class="panel-body">
-                                <p>
-                                    <strong><i class="fa fa-institution"></i> <spring:message code="organismo.organismo"/>:</strong>
-                                    <c:if test="${not oficioRemision.sir}">
-                                        ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}
+
+                                <strong><i class="fa fa-institution"></i> <spring:message code="organismo.organismo"/>:</strong>
+                                <c:if test="${not oficioRemision.sir}">
+                                    ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}
+                                </c:if>
+                                <c:if test="${oficioRemision.sir}">
+                                     ${oficioRemision.destinoExternoDenominacion}
+
+                                    <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
+
+                                        <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</p>
+                                        <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
+                                            <div class="alert alert-grey"><small>${oficioRemision.contactosEntidadRegistralDestino}</small></div>
+                                        </c:if>
+
                                     </c:if>
-                                    <c:if test="${oficioRemision.sir}">
-                                         ${oficioRemision.destinoExternoDenominacion}
-                                    </c:if>
-                                </p>
+
+                                </c:if>
+
                                 <c:if test="${not empty oficioRemision.fechaEstado && oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
                                     <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
                                     <c:if test="${oficioRemision.sir}">
