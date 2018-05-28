@@ -27,7 +27,10 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -633,12 +636,6 @@ public class SirBean implements SirLocal {
             log.info("Enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSir.getDenominacion());
             log.info("");
 
-            //Validamos las firmas de los anexos
-            if(PropiedadGlobalUtil.validarFirmas()) {
-                for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
-                    signatureServerEjb.checkDocument(anexoFull, usuario.getEntidad().getId(), new Locale("ca"), false);
-                }
-            }
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {
@@ -691,13 +688,6 @@ public class SirBean implements SirLocal {
             log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSir.getDenominacion());
             log.info("");
 
-
-            //Validamos las firmas de los anexos
-            if(PropiedadGlobalUtil.validarFirmas()) {
-                for (AnexoFull anexoFull : registroSalida.getRegistroDetalle().getAnexosFull()) {
-                    signatureServerEjb.checkDocument(anexoFull, usuario.getEntidad().getId(), new Locale("ca"), false);
-                }
-            }
 
             // Si no tiene generado el Justificante, lo hacemos
             if (!registroDetalle.getTieneJustificante()) {

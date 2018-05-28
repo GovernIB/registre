@@ -56,3 +56,9 @@ alter table RWE_COLA
         add constraint RWE_COLA_USUENTI_FK
         foreign key (USUARIOENTIDAD)
         references RWE_USUARIO_ENTIDAD;
+
+
+--Nuevos campos Validacion firma Anexo
+alter table rwe_anexo add FECHAVALIDACION timestamp;
+alter table rwe_anexo add MOTIVONOVALID varchar2(2000 char);
+alter table rwe_anexo add (ESTADOFIRMA number(19,0) DEFAULT 0);

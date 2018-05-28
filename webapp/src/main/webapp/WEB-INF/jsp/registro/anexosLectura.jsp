@@ -159,7 +159,7 @@
                                                         </a>
                                                     </c:if>
                                                 </td>
-                                                <td class="center"><span class="label label-danger">No</span></td>
+                                                <td class="center"><span class="label label-default">No</span></td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                                 <td class="center">
@@ -176,9 +176,15 @@
                                                            <span class="fa fa-download"></span></a>
                                                     </c:if>
                                                 </td>
-                                                <td class="center"><p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p></td>
+                                                <td class="center">
+                                                    <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">
+                                                        <p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
+                                                    </c:if>
+                                                    <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_INVALIDA}">
+                                                        <p rel="firma" data-content="${anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
+                                                    </c:if>
+                                                </td>
                                             </c:if>
-
                                         </tr>
                                     </c:if>
                                 </c:forEach>

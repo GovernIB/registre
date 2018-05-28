@@ -245,6 +245,13 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             Anexo anexo = anexoFull.getAnexo();
 
+
+            final boolean force = false; //Indica si queremos forzar la excepción.
+            if(anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
+                signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(),
+                        new Locale("es"), force);
+            }
+
             // Validador
             validateAnexo(anexo, isNew);
 

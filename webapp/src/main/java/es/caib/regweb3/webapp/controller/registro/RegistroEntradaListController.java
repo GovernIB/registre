@@ -32,7 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -825,13 +828,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-                //Validamos las firmas de los anexos
-                if(PropiedadGlobalUtil.validarFirmas()) {
-                    for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
-                        signatureServerEjb.checkDocument(anexoFull, registroEntrada.getUsuario().getEntidad().getId(), new Locale("ca"), false);
-                    }
-                }
 
                 // Dispone de permisos para Editar el registro
                 if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {

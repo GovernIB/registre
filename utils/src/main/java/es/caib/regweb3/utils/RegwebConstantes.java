@@ -553,6 +553,13 @@ public interface RegwebConstantes {
     Long   ANEXO_TAMANOMAX_SIR = 10485760L;
     Long   ANEXO_TAMANOMAXTOTAL_SIR = 15728640L;
 
+    /* ---------------ANEXO ESTADOS FIRMA -------*/
+
+    int ANEXO_FIRMA_VALIDA = 1;
+    int ANEXO_FIRMA_ERROR = -1;
+    int ANEXO_FIRMA_INVALIDA = -2;
+    int ANEXO_FIRMA_NOINFO = 0;
+
 
     /* -------- TIPO DOCUMENTO ---------- */
     Long TIPO_DOCUMENTO_FORMULARIO = 1L;

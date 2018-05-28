@@ -607,13 +607,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public RegistroEntrada generarJustificanteRegistroEntrada(RegistroEntrada registroEntrada,
                                                               UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
 
-        //Validamos las firmas de los anexos
-        if(PropiedadGlobalUtil.validarFirmas()) {
-            for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
-                signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(), new Locale("ca"), false);
-            }
-        }
-
         // Justificante: Si no tiene generado, lo hacemos
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
              registroEntrada = cargarAnexosFull(registroEntrada);
@@ -959,12 +952,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         elementoADistribuir1 = elementoADistribuir;
                         RegistroEntrada registroEntrada = getConAnexosFull(elementoADistribuir1.getIdObjeto());
 
-
-                        //if(PropiedadGlobalUtil.validarFirmas()) {
+                        /*if (distribucionPlugin instanceof DistribucionRipeaPlugin){
                             for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
                                 signatureServerEjb.checkDocument(anexoFull, entidadId, new Locale("ca"), false);
                             }
-                        //}
+                        }*/
+
 
                         log.info("DISTRIBUYENDO REGISTRO  " + registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
                         descripcion = "Distribución Registro: " + registroEntrada.getNumeroRegistroFormateado();
@@ -1082,12 +1075,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         enviarAColaDistribucion(re,configuracionDistribucion.getMaxReintentos());
                         respuestaDistribucion.setEnviadoCola(true);
                     }else {
-                        //Validamos las firmas de los anexos
-                        if(PropiedadGlobalUtil.validarFirmas()) {
-                            for (AnexoFull anexoFull : re.getRegistroDetalle().getAnexosFull()) {
-                                signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(), new Locale("ca"), false);
-                            }
-                        }
                         //Generamos Justificante
                         AnexoFull justificante = null;
                         if(!re.getRegistroDetalle().getTieneJustificante()) {
@@ -1183,13 +1170,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
                 re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
                 Locale locale = new Locale(idioma);
-
-                //Validamos las firmas de los anexos
-                if(PropiedadGlobalUtil.validarFirmas()) {
-                    for (AnexoFull anexoFull : re.getRegistroDetalle().getAnexosFull()) {
-                        signatureServerEjb.checkDocument(anexoFull, entidadId, new Locale("ca"), false);
-                    }
-                }
 
                 //Generamos el justificante porque antes no lo hemos hecho
                 AnexoFull justificante = null;
@@ -1357,12 +1337,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     private RegistroEntrada obtenerAnexosDistribucion(RegistroEntrada original, int confAnexos) throws Exception, I18NException, I18NValidationException {
 
 
-        //Validamos las firmas de los anexos
-        if (PropiedadGlobalUtil.validarFirmas()){
-            for (AnexoFull anexoFull : original.getRegistroDetalle().getAnexosFull()) {
-                signatureServerEjb.checkDocument(anexoFull, original.getUsuario().getEntidad().getId(), new Locale("ca"), false);
-            }
-        }
         // Miramos si debemos generar el justificante
         AnexoFull justificante = null;
         if(!original.getRegistroDetalle().getTieneJustificante()) {

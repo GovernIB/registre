@@ -153,7 +153,7 @@
                                                           target="_blank"
                                                           title="<spring:message code="anexo.descargar"/>"><span
                                             class="fa fa-download"></span></a></td>
-                                    <td class="center"><span class="label label-danger">No</span></td>
+                                    <td class="center"><span class="label label-default">No</span></td>
                                 </c:if>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
@@ -162,7 +162,14 @@
                                                           target="_blank"
                                                           title="<spring:message code="anexo.descargar"/>"><span
                                             class="fa fa-download"></span></a></td>
-                                    <td class="center"><p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p></td>
+                                    <td class="center">
+                                        <c:if test="${anexoFull.anexo.estadoFirma==RegwebConstantes.ANEXO_FIRMA_VALIDA}">
+                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
+                                        </c:if>
+                                        <c:if test="${anexoFull.anexo.estadoFirma==RegwebConstantes.ANEXO_FIRMA_INVALIDA}">
+                                            <p rel="ayuda" data-content="${anexoFull.anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
+                                        </c:if>
+                                    </td>
                                 </c:if>
 
                                 <td class="center">

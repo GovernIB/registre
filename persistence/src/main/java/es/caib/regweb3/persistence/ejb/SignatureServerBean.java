@@ -20,6 +20,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -250,11 +251,18 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
 
 
-            // Ficar dins Anexo tipo, formato i perfil
+            //Guardamos el resultado de la validación de la firma
             Anexo anexo = input.getAnexo();
             anexo.setSignType(tipo);
             anexo.setSignFormat(formato);
             anexo.setSignProfile(perfil);
+            anexo.setEstadoFirma(resp.getValidationStatus().getStatus());
+            anexo.setFechaValidacion(new Date());
+            if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA){//Indica que no es valida la firma
+                anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorMsg());
+            }else if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR){//Indica que ha habido una excepción en el proceso de validación
+                anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorException().getCause().toString());
+            }
 
         }
         return null;
@@ -332,7 +340,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         validationRequest.setSignedDocumentData(doc.getData());
       }
 
-      
       try {
         resp = validatePlugin.validateSignature(validationRequest);
       } catch (Exception e) {

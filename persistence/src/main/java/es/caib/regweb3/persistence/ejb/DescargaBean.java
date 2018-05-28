@@ -23,7 +23,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @PersistenceContext
+    @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
 

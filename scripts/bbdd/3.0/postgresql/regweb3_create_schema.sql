@@ -1,15 +1,18 @@
 
-    create table RWE_ANEXO (
+      create table RWE_ANEXO (
         ID int8 not null,
         CERTIFICADO bytea,
         CSV varchar(255),
         CUSTODIAID varchar(256),
+        ESTADOFIRMA int4,
         FECHACAPTURA timestamp not null,
+        FECHAVALIDACION timestamp,
         FIRMA bytea,
         FIRMAVALIDA bool,
         HASH bytea,
         JUSTIFICANTE bool not null,
         MODOFIRMA int4,
+        MOTIVONOVALID varchar(255),
         OBSERVACIONES varchar(50),
         ORIGEN int4,
         SIGNFORMAT varchar(255),

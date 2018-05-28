@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
 import es.caib.regweb3.persistence.validator.InteresadoBeanValidator;
@@ -37,6 +38,9 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     public AnexoLocal anexoEjb;
 
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    public SignatureServerLocal signatureServerEjb;
+
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
     InteresadoValidator<Interesado> interesadoValidator = new InteresadoValidator<Interesado>();
@@ -59,21 +63,31 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
             AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, entidadID, tipoDocumentalEjb);
 
-            validateAnexo(anexoFull.getAnexo(), true);
+            switch (anexoWs.getModoFirma()){
+                case 0: //SIN FIRMA
+                case 1:{ //ATTACHED
+                    if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes()) {
 
-/*
-         anexo = anexoEjb.actualizarAnexoConArchivos(anexo.getId(),,
-             ,
-             ,
-             anexoWs.getTamanoFicheroAnexado(), , ,
-             
-            ,
-             anexoWs.getTamanoFirmaAnexada(), anexoWs.getModoFirma(), 
-             anexoWs.getFechaCaptura().getTime());
-         */
+                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes()/(1024*1024)));
+                    }
+                    break;
+                }
+                case 2: { //FIRMA DETACHED
 
-            // Actualizamos el anexo y le asociamos los archivos
-            //anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro);
+                    if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes()) {
+
+                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes()/(1024*1024)));
+                    }
+
+                    if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes()) {
+
+                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes()/(1024*1024)));
+                    }
+                }
+
+            }
+
+            validateAnexo(anexoFull, true,entidadID);
 
             anexos.add(anexoFull);
         }
@@ -84,15 +98,18 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
 
     /**
-     * @param anexo
+     * @param anexoFull
      * @throws org.fundaciobit.genapp.common.i18n.I18NValidationException
      */
-    protected void validateAnexo(Anexo anexo, boolean isNou) throws I18NValidationException, I18NException {
+    protected void validateAnexo(AnexoFull anexoFull, boolean isNou, Long entidadId) throws I18NValidationException, I18NException {
+
+        //Validamos el anexo contra afirma
+
         //anexoValidator.validateStandalone(anexo);
         AnexoBeanValidator pfbv = new AnexoBeanValidator(anexoValidator);
 
         //final boolean isNou = true;
-        pfbv.throwValidationExceptionIfErrors(anexo, isNou);
+        pfbv.throwValidationExceptionIfErrors(anexoFull.getAnexo(), isNou);
     }
 
     /**
@@ -174,13 +191,16 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      * @param entidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
-    protected void validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
+    protected void validarObligatorios(String numeroRegistro, String entidad, String libro) throws  I18NException, Exception{
 
         // 1.- Comprobaciones de parámetros obligatórios
         if(StringUtils.isEmpty(numeroRegistro)){
             throw new I18NException("error.valor.requerido.ws", "identificador");
         }
 
+        if(StringUtils.isEmpty(libro)){
+            throw new I18NException("error.valor.requerido.ws", "libro");
+        }
 
         if(StringUtils.isEmpty(entidad)){
             throw new I18NException("error.valor.requerido.ws", "entidad");

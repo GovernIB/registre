@@ -32,7 +32,10 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -601,13 +604,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-                //Validamos las firmas de los anexos
-                if(PropiedadGlobalUtil.validarFirmas()) {
-                    for (AnexoFull anexoFull : registroSalida.getRegistroDetalle().getAnexosFull()) {
-                        signatureServerEjb.checkDocument(anexoFull, registroSalida.getUsuario().getEntidad().getId(), new Locale("ca"), false);
-                    }
-                }
 
                 // Dispone de permisos para Editar el registro
                 if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {

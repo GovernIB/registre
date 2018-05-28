@@ -74,12 +74,18 @@ public class Anexo implements Serializable {
     private boolean justificante = false; // Indica si el anexo es justificante.
 
 
-    //SCAN
+    //Validacion Firma
     private String signType;
 
     private String signFormat;
 
     private String signProfile;
+
+    private String motivoNoValidacion;
+
+    private Date fechaValidacion;
+
+    private int estadoFirma;
 
     
     public Anexo() {
@@ -344,6 +350,33 @@ public class Anexo implements Serializable {
 
     public void setSignProfile(String signProfile) {
         this.signProfile = signProfile;
+    }
+
+    @Column(name = "MOTIVONOVALID")
+    public String getMotivoNoValidacion() {
+        return motivoNoValidacion;
+    }
+
+    public void setMotivoNoValidacion(String motivoNoValidacion) {
+        this.motivoNoValidacion = motivoNoValidacion;
+    }
+
+    @Column(name = "FECHAVALIDACION")
+    public Date getFechaValidacion() {
+        return fechaValidacion;
+    }
+
+    public void setFechaValidacion(Date fechaValidacion) {
+        this.fechaValidacion = fechaValidacion;
+    }
+
+    @Column(name = "ESTADOFIRMA")
+    public int getEstadoFirma() {
+        return estadoFirma;
+    }
+
+    public void setEstadoFirma(int estadoFirma) {
+        this.estadoFirma = estadoFirma;
     }
 
     @Transient

@@ -162,6 +162,9 @@ public class AnexoFicheroController extends AnexoController {
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
                         Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
                     }
+                    if(anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_INVALIDA ||anexoForm.getAnexo().getEstadoFirma()==RegwebConstantes.ANEXO_FIRMA_ERROR){
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("error.firmanovalida") +anexoForm.getAnexo().getMotivoNoValidacion());
+                    }
                 }
 
                 request.getSession().setAttribute("anexoForm", anexoForm);
