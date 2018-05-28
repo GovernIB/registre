@@ -169,7 +169,7 @@
                                         <c:if test="${anexoFull.anexo.estadoFirma==RegwebConstantes.ANEXO_FIRMA_INVALIDA}">
                                             <p rel="ayuda" data-content="${anexoFull.anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
                                         </c:if>
-                                        <c:if test="${empty anexoFull.anexo.estadoFirma}">
+                                        <c:if test="${empty anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_NOINFO}">
                                             <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                         </c:if>
                                     </td>
