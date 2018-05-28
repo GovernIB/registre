@@ -1287,3 +1287,13 @@ a.text-gris:focus {
     color: #000000;
 }
 /* FI OPCIONS PEL BOTÓ DE NOU ANNEXE */
+
+/* Canvis a l'etiqueta PRE per justificar linies i que no talli paraules */
+pre {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+    word-break: normal;
+}
+/* FI Canvis a l'etiqueta PRE */
