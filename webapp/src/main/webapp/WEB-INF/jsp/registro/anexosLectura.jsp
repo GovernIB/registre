@@ -178,10 +178,13 @@
                                                 </td>
                                                 <td class="center">
                                                     <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">
-                                                        <p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
+                                                        <p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>(<fmt:formatDate value="${anexo.fechaValidacion}" pattern="dd/MM/yyyy"/>)" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
                                                     </c:if>
-                                                    <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_INVALIDA}">
+                                                    <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_ERROR}">
                                                         <p rel="firma" data-content="${anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
+                                                    </c:if>
+                                                    <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_NOINFO}">
+                                                        <p rel="firma" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                                     </c:if>
                                                 </td>
                                             </c:if>

@@ -163,14 +163,14 @@
                                                           title="<spring:message code="anexo.descargar"/>"><span
                                             class="fa fa-download"></span></a></td>
                                     <td class="center">
-                                        <c:if test="${anexoFull.anexo.estadoFirma==RegwebConstantes.ANEXO_FIRMA_VALIDA}">
-                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
+                                        <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">
+                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>(<fmt:formatDate value="${anexoFull.anexo.fechaValidacion}" pattern="dd/MM/yyyy"/>)" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
                                         </c:if>
-                                        <c:if test="${anexoFull.anexo.estadoFirma==RegwebConstantes.ANEXO_FIRMA_INVALIDA}">
+                                        <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_ERROR}">
                                             <p rel="ayuda" data-content="${anexoFull.anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_NOINFO}">
-                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
+                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                         </c:if>
                                     </td>
                                 </c:if>
