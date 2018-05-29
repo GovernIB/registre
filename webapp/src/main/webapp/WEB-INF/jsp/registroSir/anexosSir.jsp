@@ -54,8 +54,8 @@
                                     <th><spring:message code="anexo.origen"/></th>
                                     <th><spring:message code="anexo.tipoDocumental"/></th>
                                 </c:if>
-                                <th>Doc</th>
-                                <th>Firma</th>
+                                <th class="center">Doc</th>
+                                <th class="center">Firma</th>
                             </tr>
                             </thead>
 
