@@ -77,6 +77,15 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception;
 
     /**
+     * Lista los Libros activos de un Organismo de otra entidad
+     * @param codigoOrganismo
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws Exception;
+
+    /**
      * Lista los Libros de un Organismo
      * @param idOrganismo
      * @return

@@ -512,11 +512,22 @@ public class EntidadController extends BaseController {
         try {
 
             Entidad entidad = entidadEjb.findById(entidadId);
-            entidad.setActivo(true);
 
-            entidadEjb.merge(entidad);
+            // Comprova que l'entitat no existeixi com organisme dins la BBDD i tengui llibres (per les EDP externes)
+            Organismo organismo = organismoEjb.findByCodigoOtraEntidadConLibros(entidad.getCodigoDir3(),entidadId);
 
-            Mensaje.saveMessageInfo(request, getMessage("entidad.activar.ok"));
+            if(organismo != null && libroEjb.getLibrosActivosOrganismoDiferente(organismo.getCodigo(), entidadId).size()>0) {  // Ja existeix un organisme amb el codi dir3 i llibres
+
+                Mensaje.saveMessageError(request, getMessage("entidad.activar.nok"));
+
+            } else{  // Si no existeix ja l'organisme i té llibres
+
+                entidad.setActivo(true);
+
+                entidadEjb.merge(entidad);
+
+                Mensaje.saveMessageInfo(request, getMessage("entidad.activar.ok"));
+            }
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("entidad.activar.error"));

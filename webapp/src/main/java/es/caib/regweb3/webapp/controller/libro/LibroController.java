@@ -131,6 +131,16 @@ public class LibroController extends BaseController {
             return "redirect:/organismo/list";
         }
 
+        // Comprueba que no existe otro organismo ya creado con el mismo código Dir3 y que tenga libros activos
+        Organismo orgExistenteConLibros = organismoEjb.findByCodigoOtraEntidadConLibros(organismo.getCodigo(), organismo.getEntidad().getId());
+        if(orgExistenteConLibros != null) {
+            if(libroEjb.getLibrosActivosOrganismo(orgExistenteConLibros.getId()).size() > 0) {
+                log.info("Existe un organismo con el mismo código Dir3 " + organismo.getCodigo() + " con algún libro creado en la instalación");
+                Mensaje.saveMessageError(request, getMessage("aviso.organismo.existe"));
+                return "redirect:/organismo/list";
+            }
+        }
+
         libro.setOrganismo(organismo);
 
         model.addAttribute(libro);
@@ -218,24 +228,44 @@ public class LibroController extends BaseController {
     public String editarLibro(@ModelAttribute @Valid Libro libro, BindingResult result,
                               SessionStatus status, HttpServletRequest request) {
 
-        libroValidator.validate(libro, result);
-
-        if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
-            return "libro/libroForm";
-        }else { // Si no hay errores actualizamos el registro
-
-            try {
-                libroEjb.merge(libro);
-                Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
-
-            }catch (Exception e) {
-                e.printStackTrace();
-                Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+        // Comprueba que no existe otro organismo ya creado con el mismo código Dir3 y que tenga libros activos
+        try {
+            if(libro.getActivo()) {
+                Organismo orgExistenteConLibros;
+                orgExistenteConLibros = organismoEjb.findByCodigoOtraEntidadConLibros(libro.getOrganismo().getCodigo(), libro.getOrganismo().getEntidad().getId());
+                if (orgExistenteConLibros != null) {
+                    if (libroEjb.getLibrosActivosOrganismo(orgExistenteConLibros.getId()).size() > 0) {
+                        log.info("Existe un organismo con el mismo código Dir3 " + libro.getOrganismo().getCodigo() + " con algún libro creado en la instalación");
+                        Mensaje.saveMessageError(request, getMessage("aviso.organismo.existe"));
+                        return "redirect:/libro/"+libro.getOrganismo().getId()+"/libros";
+                    }
+                }
             }
 
-            status.setComplete();
-            return "redirect:/libro/"+libro.getOrganismo().getId()+"/libros";
+            libroValidator.validate(libro, result);
+
+            if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
+                return "libro/libroForm";
+            }else { // Si no hay errores actualizamos el registro
+
+                try {
+                    libroEjb.merge(libro);
+                    Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
+
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        status.setComplete();
+        return "redirect:/libro/"+libro.getOrganismo().getId()+"/libros";
+
     }
 
     /**
