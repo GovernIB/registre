@@ -7,7 +7,7 @@
 </c:if>
 
 <%--Modal distribuir--%>
-<div id="distribuirModal" class="modal fade bs-example-modal-lg">
+<div id="distribuirModal" class="modal fade">
     <spring:message code="registro.destinatarios.vacio"/>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -65,7 +65,7 @@
 
 
 
-<div id="modalDistribDestinatarios" class="modal fade bs-example-modal-lg">
+<div id="modalDistribDestinatarios" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

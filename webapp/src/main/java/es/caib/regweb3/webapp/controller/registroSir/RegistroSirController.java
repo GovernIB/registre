@@ -120,10 +120,19 @@ public class RegistroSirController extends BaseController {
     }
 
     /**
-     * Listado de RegistroSir Recibidos
+     * Listado de RegistroSir pendientes de procesar
+     */
+    @RequestMapping(value = "/pendientesProcesar/list", method = RequestMethod.GET)
+    public String pendientesProcesar() {
+
+        return "redirect:/registroSir/pendientesProcesar/list/1";
+    }
+
+    /**
+     * Listado de RegistroSir pendientes de procesar
      */
     @RequestMapping(value = "/pendientesProcesar/list/{pageNumber}", method = RequestMethod.GET)
-    public ModelAndView recibidos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
+    public ModelAndView pendientesProcesar(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("registroSir/registrosSirEstado");
 

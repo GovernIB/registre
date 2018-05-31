@@ -87,7 +87,7 @@
 
                                     <div id="pendientesProc" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-refresh"></i> <strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-refresh"></i> <a href="<c:url value="/registroSir/pendientesProcesar/list"/>" class="primary"><strong><spring:message code="registroSir.pendientesProcesar.inicio"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -211,7 +211,7 @@
 
                                     <div id="entradasRechazadosReenviados" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <strong><spring:message code="registroEntrada.rechazados.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>" class="primary"><strong><spring:message code="registroEntrada.rechazados.inicio"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -266,7 +266,7 @@
 
                                     <div id="salidasRechazadosReenviados" class="panel panel-primary">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <strong><spring:message code="registroSalida.rechazados.inicio"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-warning"></i> <a href="<c:url value="/registroSalida/pendientesSir/list/1"/>" class="primary"><strong><spring:message code="registroSalida.rechazados.inicio"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -376,7 +376,7 @@
 
                                     <div id="pendientesLleg" class="panel panel-success">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-mail-reply"></i> <strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-mail-reply"></i> <a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>" class="success"><strong><spring:message code="oficioRemision.pendientesLlegada.ultimos"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -427,7 +427,7 @@
 
                                     <div id="pendientesRemEnt" class="panel panel-success">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <strong><spring:message code="registroEntrada.oficiosRemision"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -473,7 +473,7 @@
 
                                     <div id="pendientesRemSal" class="panel panel-success">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <strong><spring:message code="registroSalida.oficiosRemision"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>" class="success"><strong><spring:message code="registroSalida.oficiosRemision"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
@@ -518,7 +518,7 @@
                                 <div class="col-xs-6 centrat">
                                     <div id="reserves" class="panel panel-info">
                                         <div class="panel-heading">
-                                            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <strong><spring:message code="registroEntrada.reservas"/></strong> </h3>
+                                            <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <a href="<c:url value="/registroEntrada/reservas/list/1"/>" class="info"><strong><spring:message code="registroEntrada.reservas"/></strong></a> </h3>
                                         </div>
 
                                         <div class="panel-body">
