@@ -61,10 +61,10 @@ alter table RWE_COLA
         foreign key (USUARIOENTIDAD)
         references RWE_USUARIO_ENTIDAD;
 
-grant select,insert,delete,update on RWE_COLA to www_regweb3;
-alter table RWE_COLA move lob (ERROR) store as RWE_COLA_ERROR_lob (tablespace regweb3_lob index RWE_COLA_ERROR_lob_i);
+grant select,insert,delete,update on RWE_COLA to www_regweb;
+alter table RWE_COLA move lob (ERROR) store as RWE_COLA_ERROR_lob (tablespace regweb_lob index RWE_COLA_ERROR_lob_i);
 
 --Nuevos campos Validacion firma Anexo
 alter table rwe_anexo add FECHAVALIDACION timestamp;
 alter table rwe_anexo add MOTIVONOVALID varchar2(2000 char);
-alter table rwe_anexo add ESTADOFIRMA number(19,0);
+alter table rwe_anexo add (ESTADOFIRMA number(19,0) DEFAULT 0);
