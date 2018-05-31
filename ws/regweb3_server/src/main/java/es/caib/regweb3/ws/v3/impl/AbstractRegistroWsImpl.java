@@ -66,9 +66,8 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             switch (anexoWs.getModoFirma()){
                 case 0: //SIN FIRMA
                 case 1:{ //ATTACHED
-                    if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes()) {
-
-                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes()/(1024*1024)));
+                    if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID))) {
+                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
                     }
                     break;
                 }
