@@ -207,6 +207,28 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
+                "libro.organismo.codigo = :codigoOrganismo and libro.activo = true and organismo.entidad.id != :idEntidad");
+
+        q.setParameter("codigoOrganismo",codigoOrganismo);
+        q.setParameter("idEntidad",idEntidad);
+
+        List<Object[]> result = q.getResultList();
+        List<Libro> libros = new ArrayList<Libro>();
+
+        for (Object[] object : result) {
+            Libro libro = new Libro((Long) object[0], (String) object[1], (String) object[2]);
+
+            libros.add(libro);
+        }
+
+        return libros;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception{
 
         Query q = em.createQuery("Select libro from Libro as libro where " +
