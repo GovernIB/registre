@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div id="detalleInteresado" class="modal fade bs-example-modal-lg">
+<div id="detalleInteresado" class="modal fade">
 
     <div class="modal-dialog modal-lg" id="formularioInteresado">
         <div class="modal-content">

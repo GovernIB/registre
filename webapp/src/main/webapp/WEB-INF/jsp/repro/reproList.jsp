@@ -136,7 +136,7 @@
         </div>
 
         <!-- MODAL ENVIAR REPRO -->
-        <div id="modalEnviarRepro" class="modal fade bs-example-modal-lg" >
+        <div id="modalEnviarRepro" class="modal fade" >
             <div class="modal-dialog modal-medio">
                 <div class="modal-content">
                     <div class="modal-header">

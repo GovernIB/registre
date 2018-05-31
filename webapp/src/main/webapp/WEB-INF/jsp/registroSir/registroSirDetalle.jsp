@@ -478,7 +478,7 @@
 
 
         <%--Modal Rechazo--%>
-        <div id="rechazoModal" class="modal fade bs-example-modal-lg">
+        <div id="rechazoModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">

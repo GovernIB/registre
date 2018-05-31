@@ -209,13 +209,15 @@
                             </div>
                             <div class="panel-body">
 
-                                <strong><i class="fa fa-institution"></i> <spring:message code="organismo.organismo"/>:</strong>
+                                <%--Oficio normal--%>
                                 <c:if test="${not oficioRemision.sir}">
-                                    ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}
+                                    <p><i class="fa fa-institution"></i> <strong><spring:message code="organismo.organismo"/>:</strong> ${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</p>
                                 </c:if>
-                                <c:if test="${oficioRemision.sir}">
-                                     ${oficioRemision.destinoExternoDenominacion}
 
+                                <%--Oficio SIR--%>
+                                <c:if test="${oficioRemision.sir}">
+
+                                    <i class="fa fa-institution"></i> <strong><spring:message code="organismo.organismo"/>:</strong> ${oficioRemision.destinoExternoDenominacion}
                                     <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
 
                                         <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</p>

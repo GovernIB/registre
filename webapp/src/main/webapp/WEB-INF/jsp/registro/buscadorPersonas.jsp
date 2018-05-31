@@ -2,7 +2,7 @@
 
 <!-- Formulario de búsqueda de Personas Físicas y Jurídicas -->
 
-<div id="modalBuscadorPersonas${param.tipoPersona}" class="modal fade bs-example-modal-lg">
+<div id="modalBuscadorPersonas${param.tipoPersona}" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

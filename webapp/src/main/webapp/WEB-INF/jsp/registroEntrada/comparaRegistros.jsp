@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div id="modalCompararRegistros" class="modal fade bs-example-modal-lg" >
+<div id="modalCompararRegistros" class="modal fade" >
 
     <div class="modal-dialog modal-lg">
             <div class="modal-content">

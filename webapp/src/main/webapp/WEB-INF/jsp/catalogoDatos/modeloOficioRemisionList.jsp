@@ -107,7 +107,7 @@
 </div> <!-- /container -->
 
 <!-- ************* <spring:message code="regweb.inicio"/> Modal Ayuda Modelo Oficio Remisión ************************** -->
-<div class="modal fade bs-example-modal-lg" id="myModalModeloOficioRemision">
+<div class="modal fade" id="myModalModeloOficioRemision">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

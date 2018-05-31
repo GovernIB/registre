@@ -4,7 +4,7 @@
 <!-- Formulario de busqueda compartido. Se usa tanto para buscar organismos como oficinas, en función del parámetro
 que se le indica -->
 
-<div id="modalBuscador${param.tipo}" class="modal fade bs-example-modal-lg">
+<div id="modalBuscador${param.tipo}" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 

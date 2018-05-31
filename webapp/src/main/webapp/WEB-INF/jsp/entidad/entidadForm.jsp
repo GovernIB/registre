@@ -423,7 +423,7 @@
 </div> <!-- /container -->
 
 <!-- ************* <spring:message code="regweb.inicio"/> Modal Oficina ************************** -->
-<div class="modal fade bs-example-modal-lg" id="myModalSello">
+<div class="modal fade" id="myModalSello">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -452,7 +452,7 @@
 <!-- *************Fi Modal Segell************************** -->
 
 <!-- ************* <spring:message code="regweb.inicio"/> Modal NumRegistre ************************** -->
-<div class="modal fade bs-example-modal-lg" id="myModalNumRegistro">
+<div class="modal fade" id="myModalNumRegistro">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

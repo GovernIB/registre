@@ -52,10 +52,10 @@
             <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
                 <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
                     <p id="contactosOficina" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover" style="cursor:help" rel="contactesOficina">
-                    <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
+                    <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
                 </c:if>
                 <c:if test="${empty oficioRemision.contactosEntidadRegistralDestino}">
-                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
+                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
                 </c:if>
             </c:if>
 

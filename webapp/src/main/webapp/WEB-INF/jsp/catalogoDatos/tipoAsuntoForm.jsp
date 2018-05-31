@@ -163,7 +163,7 @@
                                         </tr>
 
                                         <%--Creo el modal para la edición de los codigos Asunto--%>
-                                        <div id="myModal_${codigoAsunto.id}" class="modal fade bs-example-modal-lg" >
+                                        <div id="myModal_${codigoAsunto.id}" class="modal fade" >
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -264,7 +264,7 @@
              </div><!--row-->
 
             <%--Modal añadir CodigoAsunto--%>
-            <div id="myModal" class="modal fade bs-example-modal-lg" >
+            <div id="myModal" class="modal fade" >
                 <div class="modal-dialog">
                    <div class="modal-content">
                         <div class="modal-header">

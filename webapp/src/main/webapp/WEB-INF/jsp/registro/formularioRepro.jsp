@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <!-- MODAL GUADAR REPRO -->
-<div id="modalNewRepro" class="modal fade bs-example-modal-lg" >
+<div id="modalNewRepro" class="modal fade" >
     <div class="modal-dialog modal-medio">
         <div class="modal-content">
             <div class="modal-header">
@@ -32,7 +32,7 @@
 </div>
 
 <!-- MODAL CARREGAR REPRO -->
-<div id="modalSelectRepro" class="modal fade bs-example-modal-lg" >
+<div id="modalSelectRepro" class="modal fade" >
     <div class="modal-dialog modal-medio">
         <div class="modal-content">
             <div class="modal-header">

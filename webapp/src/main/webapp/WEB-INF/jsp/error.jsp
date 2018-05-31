@@ -45,20 +45,20 @@
                                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                                     <h4 class="alert-heading"><spring:message code="error.exception"/></h4>
                                     <br>
-                                    <p>Excepcion:  ${exception}</p>
-                                    <p>URL: ${url}</p>
+                                    <p><strong>Excepcion:</strong>  ${exception}</p>
+                                    <p><strong>URL:</strong> ${url}</p>
                                     <p>
                                         <a class="btn btn-danger  btn-sm" href="#myModal" role="button" class="btn" data-toggle="modal">Ver error</a>
                                     </p>
 
                                 </div>
 
-                                <div id="myModal" class="modal fade bs-example-modal-lg">
-                                    <div class="modal-dialog">
+                                <div id="myModal" class="modal fade">
+                                    <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-                                                <h3 id="myModalLabel">Excepcion:  ${exception}</h3>
+                                                <h3 id="myModalLabel"><strong>Excepcion:</strong>  ${exception}</h3>
                                             </div>
                                             <div class="modal-body">
                                                 <p>${trazaError}</p>
