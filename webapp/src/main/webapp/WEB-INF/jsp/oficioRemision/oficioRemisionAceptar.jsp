@@ -148,7 +148,7 @@
                                         </colgroup>
                                         <thead>
                                         <tr>
-                                            <th><spring:message code="registroEntrada.numeroRegistro"/></th>
+                                            <th><spring:message code="regweb.numero"/></th>
                                             <th><spring:message code="registroEntrada.fecha"/></th>
                                             <c:if test="${fn:length(libros) > 1}">
                                                 <th><spring:message code="registroEntrada.libro.corto"/></th>
