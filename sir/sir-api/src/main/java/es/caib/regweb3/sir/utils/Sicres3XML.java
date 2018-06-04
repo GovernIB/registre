@@ -660,7 +660,7 @@ public class Sicres3XML {
      * @param registroSir
      * @return
      */
-    public String crearXMLFicheroIntercambioSICRES3(RegistroSir registroSir) throws Exception   {
+    public Document crearXMLFicheroIntercambioSICRES3(RegistroSir registroSir) throws Exception   {
 
         Assert.notNull(registroSir, "El registroSir no puede ser null");
 
@@ -691,7 +691,7 @@ public class Sicres3XML {
         /* Segmento DeFormularioGenerico */
         addDatosformularioGenerico(rootNode, registroSir);
 
-        return doc.asXML();
+        return doc;
     }
 
 

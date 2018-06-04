@@ -9,6 +9,7 @@ import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_B_PortType;
 import es.caib.regweb3.utils.Configuracio;
 import org.apache.log4j.Logger;
+import org.dom4j.Document;
 
 import javax.ejb.Stateless;
 import java.net.URL;
@@ -82,15 +83,15 @@ public class EmisionBean implements EmisionLocal{
 
         try{
         // Creamos el xml de intercambio
-        String xml = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
-        log.info("-----------------------------------------------------------------------------------------");
-        log.info("");
-        log.info("Xml Fichero Intercambio generado: " + xml);
-        log.info("");
-        log.info("-----------------------------------------------------------------------------------------");
+        Document doc = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
+        log.debug("-----------------------------------------------------------------------------------------");
+        log.debug("");
+        log.debug("Xml Fichero Intercambio generado: " + doc.asXML());
+        log.debug("");
+        log.debug("-----------------------------------------------------------------------------------------");
 
         // Enviamos el Fichero de intercambio
-        RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(xml);
+        RespuestaWS respuesta = ws_sir6_b_recepcionFicheroDeAplicacion(doc.asXML());
 
         if (respuesta != null) {
 
