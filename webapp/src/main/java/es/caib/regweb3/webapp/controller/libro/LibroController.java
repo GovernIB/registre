@@ -98,6 +98,26 @@ public class LibroController extends BaseController {
     }
 
     /**
+     * Listado de libros de una Entidad
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    public String listado(Model model, HttpServletRequest request)throws Exception {
+
+        HttpSession session = request.getSession();
+        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
+        List<Libro> librosList = libroEjb.getTodosLibrosEntidad(entidadActiva.getId());
+
+        model.addAttribute("librosList", librosList);
+        model.addAttribute("entidad", entidadActiva);
+
+        return "libro/librosEntidadList";
+
+    }
+
+    /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.Libro}
      */
     @RequestMapping(value = "/{idOrganismo}/new", method = RequestMethod.GET)
