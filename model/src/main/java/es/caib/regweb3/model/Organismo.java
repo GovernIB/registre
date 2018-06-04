@@ -396,7 +396,7 @@ public class Organismo implements Serializable {
 
     @Transient
     public String getNombreCompleto(){
-        return  getCodigo() +" "+ getDenominacion();
+        return  getDenominacion() +" - "+ getCodigo();
     }
 
     @Override
