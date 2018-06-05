@@ -11,10 +11,7 @@ import es.caib.arxiudigital.apirest.facade.resultados.Resultado;
 import es.caib.arxiudigital.apirest.facade.resultados.ResultadoBusqueda;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
@@ -44,6 +41,7 @@ import java.util.*;
  * Date: 16/01/14
  */
 @Controller
+@RequestMapping(value = "/arxiu")
 public class ArxiuController extends BaseController {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -59,6 +57,9 @@ public class ArxiuController extends BaseController {
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
+
+    @EJB(mappedName = "regweb3/ArxiuEJB/local")
+    private ArxiuLocal arxiuEjb;
 
 
     @RequestMapping(value = "/asociarJustificante/{idExpediente}")
@@ -171,7 +172,6 @@ public class ArxiuController extends BaseController {
                     }else{
                         Mensaje.saveMessageError(request,"Faltan datos para obtener el numero de registro");
                     }
-
                 }
             }
 
@@ -185,19 +185,63 @@ public class ArxiuController extends BaseController {
         }
 
 
-
         return "redirect:/inici";
 
     }
 
-    @RequestMapping(value = "/asociarJustificante/{idExpediente}/{numeroRegistro}")
-    public String asociarJustificante(@PathVariable String idExpediente,@PathVariable String numeroRegistro,HttpServletRequest request) {
+    @RequestMapping(value = "/expedientesAbiertos/{pageNumber}")
+    public ModelAndView expedientesAbiertos(@PathVariable Integer pageNumber, HttpServletRequest request) {
+
+        ModelAndView mav = new ModelAndView("arxiu/expedientesAbiertos");
+
+        Entidad entidad = getEntidadActiva(request);
+
+        try {
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+            ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
+
+            log.info("SERIE: " + custody.getPropertySerieDocumentalEL());
+
+            String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\")";
+
+            ResultadoBusqueda<Expediente> result = apiArxiu.busquedaExpedientes(queryDM,pageNumber);
+
+            if (hiHaErrorEnCerca(result.getCodigoResultado())) {
+                Mensaje.saveMessageError(request, result.getCodigoResultado() + "-" + result.getMsjResultado());
+                throw new Exception("Error en la búsqueda de espedientes: "
+                        + result.getCodigoResultado() + "-" + result.getMsjResultado());
+            }
+
+            List<Expediente> lista = result.getListaResultado();
+
+            log.info("Total resultados: " + result.getNumeroTotalResultados());
+            log.info("Total lista: " + lista.size());
+
+            mav.addObject("total",result.getNumeroTotalResultados());
+            mav.addObject("lista",lista);
+
+
+        }catch (I18NException e) {
+            e.printStackTrace();
+        } catch (CustodyException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mav;
+
+    }
+
+    @RequestMapping(value = "/cerrarExpediente/{idExpediente}")
+    public String cerrarExpediente(@PathVariable String idExpediente,HttpServletRequest request) {
 
         Entidad entidad = getEntidadActiva(request);
 
         try {
 
-            log.info("Asociando Justificante del expediente: " + idExpediente);
+            log.info("Cerrando el expediente: " + idExpediente);
 
             ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
 
@@ -211,112 +255,29 @@ public class ArxiuController extends BaseController {
                         + expedientes.getCodigoResultado() + "-" + expedientes.getMsjResultado());
             }
 
+            //Cerrar expediente
             Expediente expediente = expedientes.getElementoDevuelto();
 
-            List<Nodo> nodos = expediente.getChilds();
-
-            if(nodos != null) {
-
-                for (Nodo nodo : nodos) {
-
-                    log.info("Documento: " + nodo.getName().toLowerCase());
-
-                    RegistroEntrada registroEntrada = null;
-                    RegistroSalida registroSalida = null;
-                    RegistroDetalle registroDetalle = null;
-                    String redirect;
-
-                    // Obtenemos el codigoLibro y el tipoRegistro
-                    String tipoRegistro = getTipoRegistro(expediente.getName());
-
-                    String custodyId = idExpediente + "#" + nodo.getId();
-                    Metadata mcsv = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_CSV);
-                    log.info("custodyId: " + custodyId);
-                    String csv = null;
-                    if (mcsv != null) {
-                        csv = mcsv.getValue();
-                    }
-
-                    if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(numeroRegistro)){
-
-                        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                            registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistro, null);
-
-                            if(registroEntrada != null){
-                                registroDetalle = registroEntrada.getRegistroDetalle();
-                                redirect = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
-                            }else{
-                                Mensaje.saveMessageError(request,"No se ha encontrado el registro de entrada: " + numeroRegistro);
-                                return  "redirect:/inici";
-                            }
-
-                        }else{
-                            registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistro, null);
-
-                            if(registroSalida != null){
-                                registroDetalle = registroSalida.getRegistroDetalle();
-                                redirect= "redirect:/registroSalida/" + registroSalida.getId() + "/detalle";
-                            }else {
-                                Mensaje.saveMessageError(request,"No se ha encontrado el registro de salida: " + numeroRegistro);
-                                return  "redirect:/inici";
-                            }
-                        }
-
-                        // Crea el anexo del justificante firmado
-                        AnexoFull anexoFull = new AnexoFull();
-                        Anexo anexo = anexoFull.getAnexo();
-                        anexo.setTitulo(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.titulo"));
-                        anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-                        anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
-                        anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-                        anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-                        anexo.setObservaciones(I18NLogicUtils.tradueix(new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO), "justificante.anexo.observaciones"));
-                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-                        anexo.setJustificante(true);
-                        anexo.setSignType("PAdES");
-                        anexo.setSignFormat("implicit_enveloped/attached");
-                        anexo.setSignProfile("AdES-EPES");
-                        anexo.setCustodiaID(custodyId);
-                        anexo.setCsv(csv);
-
-                        String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
-                        anexo.setFechaCaptura(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
-
-                        anexo.setHash(RegwebUtils.obtenerHash(custody.getSignatureInfo(custodyId).getData()));
-                        anexo.setRegistroDetalle(registroDetalle);
-                        anexo.setFirmaValida(false);
-
-                        anexoEjb.persist(anexo);
-
-                        Mensaje.saveMessageInfo(request,"Se ha asociado el justificante correctamente");
-
-                        return redirect;
-
-                    }else{
-                        Mensaje.saveMessageError(request,"Faltan datos para obtener el numero de registro");
-                    }
-                }
-            }
+            arxiuEjb.cerrarExpediente(expediente, apiArxiu, entidad.getId());
 
 
-        } catch (I18NException e) {
+        }catch (I18NException e) {
             e.printStackTrace();
-            Mensaje.saveMessageError(request,"Error asociando justificante: " + e.getMessage());
+            Mensaje.saveMessageError(request,"Error cerrando expediente: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            Mensaje.saveMessageError(request,"Error asociando justificante: " + e.getMessage());
+            Mensaje.saveMessageError(request,"Error cerrando expediente: " + e.getMessage());
         }
 
-
         return "redirect:/inici";
-
     }
 
-    @RequestMapping(value = "/arxiu/{app}/{serie}/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
+
+    @RequestMapping(value = "/{app}/{serie}/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
     public ModelAndView expedientes(@PathVariable String app, @PathVariable String serie, @PathVariable String initialDate,
                                     @PathVariable String endDate,@PathVariable Boolean onlyCount,@PathVariable String expedientPattern,HttpServletRequest request) {
 
-        ModelAndView mav = new ModelAndView("arxiu");
+        ModelAndView mav = new ModelAndView("arxiu/asociarJustificante");
 
         Entidad entidad = getEntidadActiva(request);
 
@@ -743,9 +704,13 @@ public class ArxiuController extends BaseController {
 
     }
 
-    public static boolean hiHaErrorEnCerca(String code) {
+    private static boolean hiHaErrorEnCerca(String code) {
         return !CodigosResultadoPeticion.PETICION_CORRECTA.equals(code)
                 && !CodigosResultadoPeticion.LISTA_VACIA.equals(code);
+    }
+
+    private boolean hiHaError(String code) {
+        return !"COD_000".equals(code);
     }
 
 

@@ -76,7 +76,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.fundaciobit.plugins</groupId>
             <artifactId>plugins-api</artifactId>
@@ -88,6 +87,13 @@
             <groupId>org.fundaciobit.plugins</groupId>
             <artifactId>plugin-documentcustody-api</artifactId>
             <version>${documentcustody.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugin-documentcustody-arxiudigitalcaib</artifactId>
+            <version>3.0.13</version>
             <scope>provided</scope>
         </dependency>
         

@@ -547,9 +547,11 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
                 throw new I18NException("registroEntrada.distribuir.destinatarios");
             }
 
-            // Si no se ha enviado, es porque algo ha fallado
-            if(!respuestaDistribucion.getEnviado()){
-                throw new I18NException("registroEntrada.distribuir.error");
+            if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
+                if(!respuestaDistribucion.getEnviadoCola()  && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
+
+                    throw new I18NException(("registroEntrada.distribuir.error.noEnviado"));
+                }
             }
 
         }catch (Exception e){

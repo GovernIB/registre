@@ -42,5 +42,11 @@ public interface SchedulerLocal {
      */
     void distribuirRegistros() throws Exception;
 
+    /**
+     *
+     * @throws Exception
+     */
+    void cerrarExpedientes() throws Exception;
+
 }
 
