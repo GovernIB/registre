@@ -349,6 +349,16 @@ public class PropiedadGlobalUtil {
 
     }
 
+    /**
+     * Devuelve el valor de la propiedad que indica si se han de cerrar los expedientes de DM
+     *
+     * @return
+     */
+    public static Boolean getCerrarExpedientes(Long idEntidad) {
+        final String partialPropertyName = "arxiu.cerrarExpedientes";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
 
 
     /**

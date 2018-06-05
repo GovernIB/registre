@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -45,6 +46,9 @@ public class SchedulerBean implements SchedulerLocal{
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     private UsuarioEntidadLocal usuarioEntidadEjb;
+
+    @EJB(mappedName = "regweb3/ArxiuEJB/local")
+    private ArxiuLocal arxiuEjb;
 
 
     @Override
@@ -125,5 +129,33 @@ public class SchedulerBean implements SchedulerLocal{
             log.error("Error Distribuyendo los registros de la entidad ...", e);
         }
 
+    }
+
+    /**
+     * Cierra los expedientes que están en DM del Arxiu Digital del GOIB
+     */
+    @Override
+    public void cerrarExpedientes(){
+
+        try {
+            List<Entidad> entidades = entidadEjb.getAll();
+
+            for(Entidad entidad: entidades) {
+
+                if(PropiedadGlobalUtil.getCerrarExpedientes(entidad.getId())){
+                    log.info(" ");
+                    log.info("------------- Cerrando expedientes en DM de la entidad: " + entidad.getNombre() + " -------------");
+                    log.info(" ");
+
+                    arxiuEjb.cerrarExpedientesScheduler(entidad.getId());
+
+                    log.info(" ");
+                    log.info("------------- FIN expedientes en DM de la entidad: " + entidad.getNombre() + " -------------");
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

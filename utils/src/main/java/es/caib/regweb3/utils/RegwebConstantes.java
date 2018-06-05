@@ -677,6 +677,7 @@ public interface RegwebConstantes {
     Long INTEGRACION_WS = 3L;
     Long INTEGRACION_SIR = 4L;
     Long INTEGRACION_JUSTIFICANTE = 5L;
+    Long INTEGRACION_CERRAR_EXPEDIENTE = 6L;
 
     Long[] INTEGRACION_TIPOS = {
             INTEGRACION_CUSTODIA,
@@ -684,6 +685,7 @@ public interface RegwebConstantes {
             INTEGRACION_FIRMA,
             INTEGRACION_DISTRIBUCION,
             INTEGRACION_WS,
+            INTEGRACION_CERRAR_EXPEDIENTE,
             INTEGRACION_SIR
 
     };

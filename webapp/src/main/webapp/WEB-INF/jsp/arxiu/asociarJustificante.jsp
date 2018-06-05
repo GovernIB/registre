@@ -5,12 +5,12 @@
 <html lang="ca">
 <head>
     <title><spring:message code="regweb.titulo"/></title>
-    <c:import url="modulos/imports.jsp"/>
+    <c:import url="../modulos/imports.jsp"/>
 </head>
 
     <body>
 
-        <c:import url="modulos/menu.jsp"/>
+        <c:import url="../modulos/menu.jsp"/>
 
         <div class="row-fluid container main">
 
@@ -23,7 +23,7 @@
                     <div class="col-xs-12">
 
                         <ol class="breadcrumb">
-                            <c:import url="modulos/migadepan.jsp">
+                            <c:import url="../modulos/migadepan.jsp">
                                 <c:param name="avisos" value="false"/>
                             </c:import>
                         </ol>
@@ -32,7 +32,7 @@
 
                     <div class="col-xs-12">
 
-                        <c:import url="modulos/mensajes.jsp"/>
+                        <c:import url="../modulos/mensajes.jsp"/>
 
                         <div class="panel panel-warning">
                             <div class="panel-heading">
@@ -128,7 +128,7 @@
 
                                                                         <td class="center">
                                                                             <c:if test="${not expediente.justificante}">
-                                                                                <a class="btn btn-warning btn-sm" target="_blank" href="<c:url value="/asociarJustificante/${expediente.id}"/>" title="Asociar Justificante"><span class="fa fa-pencil"></span></a>
+                                                                                <a class="btn btn-warning btn-sm" target="_blank" href="<c:url value="/arxiu/asociarJustificante/${expediente.id}"/>" title="Asociar Justificante"><span class="fa fa-pencil"></span></a>
                                                                             </c:if>
                                                                         </td>
                                                                     </tr>
@@ -159,7 +159,7 @@
             </div><!-- /.well-white -->
         </div> <!-- /container -->
 
-        <c:import url="modulos/pie.jsp"/>
+        <c:import url="../modulos/pie.jsp"/>
 
     </body>
 </html>

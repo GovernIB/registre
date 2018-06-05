@@ -87,4 +87,18 @@ public class Regweb3Scheduler {
         }
 
     }
+
+    /**
+     * Qué hace: Cierra los expedientes que están en DM del Arxiu del GOIB
+     * Cuando lo hace: Cada 30 minutos
+     */
+    @Scheduled(cron = "0 0/30 * * * *")
+    public void cerrarExpedientes(){
+        try {
+            schedulerEjb.cerrarExpedientes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
