@@ -23,6 +23,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -159,6 +160,8 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull.getAnexo().setSignType("PAdES");
             anexoFull.getAnexo().setSignFormat("implicit_enveloped/attached");
             anexoFull.getAnexo().setSignProfile("AdES-EPES");
+            anexoFull.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_VALIDA);
+            anexoFull.getAnexo().setFechaValidacion(new Date());
 
             // Cream l'annex justificant
             anexoFull = anexoEjb.crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID);

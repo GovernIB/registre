@@ -30,7 +30,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @return
      * @throws Exception
      */
-    List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total) throws Exception;
+    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
 
 
 
@@ -42,7 +42,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @return
      * @throws Exception
      */
-    List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total) throws Exception;
+    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
 
     /**
      * Realiza la busqueda de los elementos de la cola por entidad
@@ -77,6 +77,14 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param th
      * @throws Exception
      */
-    public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores ) throws Exception;
+    void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores, int maxReintentos) throws Exception;
+
+    /**
+     * Elimina los elementos de la cola de distribución de la entidad indicada
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
 }

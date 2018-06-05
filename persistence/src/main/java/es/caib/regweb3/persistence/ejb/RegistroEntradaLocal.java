@@ -325,17 +325,8 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-     void iniciarDistribucionEntidad(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException;
+    public void iniciarDistribucionLista(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException;
 
-    /**
-     *
-     * Inicia la distribución de los que han alcanzado el máximo de Reintentos de la entidad
-     * @param entidadId
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    // int iniciarDistribucionMaxReintentos(Long entidadId) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Método que envia un registro a la cola de Distribución

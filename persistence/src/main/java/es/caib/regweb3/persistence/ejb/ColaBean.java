@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -42,6 +43,8 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @EJB public IntegracionLocal integracionEjb;
 
+    @EJB public PluginLocal pluginEjb;
+
 
     @Override
     public Cola getReference(Long id) throws Exception {
@@ -57,10 +60,11 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total) throws Exception {
-        Query query = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < cola.numeroMaximoReintentos order by cola.numeroReintentos asc");
+    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
+        Query query = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.numeroReintentos asc");
         query.setParameter("tipo", tipo);
         query.setParameter("idEntidad", idEntidad);
+        query.setParameter("maxReintentos", maxReintentos);
 
         if(total != null) {
             query.setMaxResults(total);
@@ -73,10 +77,11 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total) throws Exception {
-        Query query = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos = cola.numeroMaximoReintentos order by cola.usuarioEntidad.entidad.id asc");
+    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
+        Query query = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos = :maxReintentos order by cola.usuarioEntidad.entidad.id asc");
         query.setParameter("tipo", tipo);
         query.setParameter("idEntidad", idEntidad);
+        query.setParameter("maxReintentos", maxReintentos);
 
         if(total != null) {
             query.setMaxResults(total);
@@ -203,8 +208,8 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @Override
     public Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException, I18NValidationException {
 
-
-        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null);
+        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
+        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null,distribucionPlugin.configurarDistribucion().getMaxReintentos());
         //Ponemos el contador a 0 de los que han llegado al máximo de reintentos así vuelven a entrar en la cola.
         for(Cola pendiente: pendientesDistribuir){
             pendiente.setNumeroReintentos(0);
@@ -224,7 +229,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores ) throws Exception{
+    public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores, int maxReintentos) throws Exception{
 
         //Montamos el string de la causa del error
         String causa = "";
@@ -234,10 +239,10 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             causa = " El plugin de distribución ha devuelto false <br>";
         }
         //Incrementar numeroreintentos si no hemos llegado al máximo
-        if (elemento.getNumeroReintentos() < elemento.getNumeroMaximoReintentos()) {
+        if (elemento.getNumeroReintentos() < maxReintentos) {
             elemento.setNumeroReintentos(elemento.getNumeroReintentos() + 1);
             //Si hemos alcanzado el máximo de reintentos marcamos estado a error
-            if(elemento.getNumeroReintentos() == elemento.getNumeroMaximoReintentos()) {
+            if(elemento.getNumeroReintentos() == maxReintentos) {
                 elemento.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
                 //Enviamos email a administradores entidad cuando se ha alcanzado el máximo de reintentos
                 enviarEmailAdminEntidad(idioma,administradores);
@@ -250,6 +255,30 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, System.currentTimeMillis() - tiempo, entidadId,elemento.getDescripcionObjeto());
         elemento.setError(elemento.getError()  + hora + causa);
         merge(elemento);
+    }
+
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> colas = em.createQuery("Select distinct(id) from Cola where usuarioEntidad.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = colas.size();
+
+
+        if(colas.size() > 0){
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (colas.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = colas.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Cola where id in (:colas) ").setParameter("colas", subList).executeUpdate();
+                colas.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from Cola where id in (:colas) ").setParameter("colas", colas).executeUpdate();
+        }
+
+        return total;
     }
 
 

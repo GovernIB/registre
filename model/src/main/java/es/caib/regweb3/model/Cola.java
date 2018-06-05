@@ -21,7 +21,7 @@ public class Cola implements Serializable{
 
     private Long id;
     private Long tipo; //de que tipo es el elemento de la cola(por el momento solo seran distribuciones)
-    private int numeroMaximoReintentos;
+    private Integer numeroMaximoReintentos;
     private int numeroReintentos;
     private Long idObjeto; // Identificador del objeto en cola(Ex: registro pendiente de distribuir)
     private String descripcionObjeto; // Descripción del objeto en cola(Ex: registro pendiente de distribuir)
@@ -59,11 +59,11 @@ public class Cola implements Serializable{
     }
 
     @Column(name="NUMMAXREINTENTOS")
-    public int getNumeroMaximoReintentos() {
+    public Integer getNumeroMaximoReintentos() {
         return numeroMaximoReintentos;
     }
 
-    public void setNumeroMaximoReintentos(int numeroMaximoReintentos) {
+    public void setNumeroMaximoReintentos(Integer numeroMaximoReintentos) {
         this.numeroMaximoReintentos = numeroMaximoReintentos;
     }
 

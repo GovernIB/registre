@@ -84,9 +84,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB(mappedName = "regweb3/ColaEJB/local")
     private ColaLocal colaEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
-
 
 
     @SuppressWarnings("unchecked")
@@ -892,7 +889,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         try {
             Cola cola = new Cola();
-            cola.setNumeroMaximoReintentos(maxReintentos);
+           // cola.setNumeroMaximoReintentos(maxReintentos);
             cola.setNumeroReintentos(0);
             cola.setIdObjeto(re.getId());
             cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
@@ -921,37 +918,36 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
      * @throws I18NValidationException
      */
     @Override
-    public void iniciarDistribucionEntidad(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException{
-        List<Cola> pendientesDistribuirEntidad = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION,entidadId,RegwebConstantes.NUMELEMENTOSDISTRIBUIR);
+    public void iniciarDistribucionLista(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException{
+        //Obtenemos plugin
+        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
+        int maxReintentos = distribucionPlugin.configurarDistribucion().getMaxReintentos();
+        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION,entidadId,RegwebConstantes.NUMELEMENTOSDISTRIBUIR,maxReintentos);
 
-        iniciarDistribucionLista(pendientesDistribuirEntidad,entidadId, administradores);
-    }
-
-
-    public void iniciarDistribucionLista(List<Cola> elementosADistribuir, Long entidadId, List<UsuarioEntidad> administradores ) throws Exception, I18NException, I18NValidationException {
         Cola elementoADistribuir1 = new Cola();
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "";
+        String descripcion = "Distribución desde Cola";
         String hora =  "<b>"+ new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()) + "</b>&nbsp;&nbsp;&nbsp;";
-
 
 
         try {
         if (elementosADistribuir.size() > 0) {
 
-            //Obtenemos plugin
-            IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
+
             log.info(distribucionPlugin.getClass());
             if (distribucionPlugin != null) {
                 for (Cola elementoADistribuir : elementosADistribuir) {
-
+                    peticion= new StringBuilder();
                     try {
 
                         elementoADistribuir1 = elementoADistribuir;
                         RegistroEntrada registroEntrada = getConAnexosFull(elementoADistribuir1.getIdObjeto());
-
+                        peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+                        peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+                        peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+                        peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
                         /*if (distribucionPlugin instanceof DistribucionRipeaPlugin){
                             for (AnexoFull anexoFull : registroEntrada.getRegistroDetalle().getAnexosFull()) {
                                 signatureServerEjb.checkDocument(anexoFull, entidadId, new Locale("ca"), false);
@@ -960,7 +956,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
                         log.info("DISTRIBUYENDO REGISTRO  " + registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
-                        descripcion = "Distribución Registro: " + registroEntrada.getNumeroRegistroFormateado();
                         //Si no tiene justificante lo generamos
                         AnexoFull justificante = null;
                         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
@@ -973,12 +968,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         if (distribuidoOK) {
                             log.info("distribucion OK REGISTRO " + registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
                             tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
+                            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION,descripcion,peticion.toString(),null,System.currentTimeMillis() - tiempo,registroEntrada.getNumeroRegistroFormateado());
                             colaEjb.remove(elementoADistribuir1);
 
                         } else { //No ha ido bien, el plugin nos dice que no ha ido bien
                             log.info( "Distribucion Error REGISTRO "+ registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
                             try {
-                                colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",null,administradores);
+                                colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",null,administradores,maxReintentos);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -986,7 +982,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     } catch (Exception e) {
                         log.info("Primer Exception ");
                         try {
-                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores);
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores,maxReintentos);
                         } catch (Exception ee) {
                             ee.printStackTrace();
                         }
@@ -994,7 +990,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     } catch (I18NException e) {
                         log.info("Primer I18NException ");
                         try {
-                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores );
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores,maxReintentos );
                         } catch (Exception ee) {
                             ee.printStackTrace();
                         }
@@ -1002,7 +998,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     } catch (I18NValidationException e) {
                         log.info("Primer I18NValidationException");
                         try {
-                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores);
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e, administradores,maxReintentos);
                         } catch (Exception ee) {
                             ee.printStackTrace();
                         }
@@ -1010,7 +1006,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     }catch(Throwable t){
                         log.info("Primer Throwable");
                         try {
-                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",t ,administradores);
+                            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",t ,administradores,maxReintentos);
                         } catch (Exception ee) {
                             ee.printStackTrace();
                         }
@@ -1022,7 +1018,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     } catch (Exception e) {
         log.info("Error distribuyendo el registro Exception");
         try {
-            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e,administradores );
+            colaEjb.actualizarElementoCola(elementoADistribuir1,descripcion,  peticion,tiempo,entidadId, hora,"ca",e,administradores,maxReintentos );
         } catch (Exception ee) {
             ee.printStackTrace();
         }
@@ -1181,6 +1177,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 distribucionOk = distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
                 //Integración
                 if(distribucionOk){
+                    peticion.append("registro: ").append(re.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+                    peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
                     integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidadId, re.getNumeroRegistroFormateado());
                     log.info("");
                     log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));

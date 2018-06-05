@@ -159,7 +159,7 @@
                                                         </a>
                                                     </c:if>
                                                 </td>
-                                                <td class="center"><span class="label label-default">No</span></td>
+                                                <td class="center"><p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.sinfirma"/>" data-toggle="popover"><span class="label label-default">No</span></p></td>
                                             </c:if>
                                             <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                                 <td class="center">

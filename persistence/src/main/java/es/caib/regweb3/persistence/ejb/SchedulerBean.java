@@ -117,7 +117,7 @@ public class SchedulerBean implements SchedulerLocal{
 
             for(Entidad entidad: entidades) {
                 List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(entidad.getId());
-                registroEntradaEjb.iniciarDistribucionEntidad(entidad.getId(),administradores);
+                registroEntradaEjb.iniciarDistribucionLista(entidad.getId(),administradores);
             }
         } catch (I18NException e) {
             log.error("Error Distribuyendo los registros de la entidad ...", e);

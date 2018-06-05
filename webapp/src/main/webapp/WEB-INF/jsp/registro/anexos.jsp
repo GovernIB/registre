@@ -153,7 +153,7 @@
                                                           target="_blank"
                                                           title="<spring:message code="anexo.descargar"/>"><span
                                             class="fa fa-download"></span></a></td>
-                                    <td class="center"><span class="label label-default">No</span></td>
+                                    <td class="center"><p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.sinfirma"/>" data-toggle="popover"><span class="label label-default">No</span></p></td>
                                 </c:if>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
