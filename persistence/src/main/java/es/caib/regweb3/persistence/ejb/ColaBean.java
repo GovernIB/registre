@@ -261,24 +261,13 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception{
 
-        List<?> colas = em.createQuery("Select distinct(id) from Cola where usuarioEntidad.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
-        Integer total = colas.size();
+        List<?> colas = em.createQuery("Select distinct(id) from Cola as cola where cola.usuarioEntidad.entidad.id =:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
 
-
-        if(colas.size() > 0){
-
-            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
-            while (colas.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
-
-                List<?> subList = colas.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-                em.createQuery("delete from Cola where id in (:colas) ").setParameter("colas", subList).executeUpdate();
-                colas.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
-            }
-
-            em.createQuery("delete from Cola where id in (:colas) ").setParameter("colas", colas).executeUpdate();
+        for (Object id : colas) {
+            remove(findById((Long) id));
         }
 
-        return total;
+        return colas.size();
     }
 
 

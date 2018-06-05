@@ -61,6 +61,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
+    @EJB private ColaLocal colaEjb;
 
 
     @Override
@@ -387,6 +388,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         // RelacionSirOfi 
         log.info("RelacionOrganizativaOfi eliminadas: " + relacionSirOfiEjb.eliminarByEntidad(idEntidad));
+
+        //Cola Distribucion
+        log.info("Cola Distribución: " + colaEjb.eliminarByEntidad(idEntidad));
 
         // USUARIOS ENTIDAD 
         log.info("UsuariosEntidad eliminados: " + usuarioEntidadEjb.eliminarByEntidad(idEntidad));
