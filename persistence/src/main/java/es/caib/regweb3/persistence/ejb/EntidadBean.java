@@ -249,6 +249,12 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
+    public List<Entidad> getEntidadesActivas() throws Exception{
+
+        return  em.createQuery("Select entidad from Entidad as entidad where entidad.activo = true order by entidad.id").getResultList();
+    }
+
+    @Override
     public Boolean existeCodigoDir3Edit(String codigo, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.id from Entidad as entidad where " +

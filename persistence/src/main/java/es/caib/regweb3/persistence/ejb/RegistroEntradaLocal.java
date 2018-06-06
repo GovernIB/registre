@@ -9,6 +9,7 @@ import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -325,7 +326,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      * @throws I18NException
      */
-    public void iniciarDistribucionLista(Long entidadId, List<UsuarioEntidad> administradores) throws Exception, I18NException, I18NValidationException;
+    public void iniciarDistribucionLista(Long entidadId, List<UsuarioEntidad> administradores, IDistribucionPlugin plugin) throws Exception, I18NException, I18NValidationException;
 
 
     /**

@@ -65,6 +65,13 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
     List<Entidad> getEntidadesPropietario(Long idUsuario) throws Exception;
 
     /**
+     * Obtiene las entidades activas.
+     * @return
+     * @throws Exception
+     */
+    public List<Entidad> getEntidadesActivas() throws Exception;
+
+    /**
      * Comprueba si el codigoDir3 dado existe en alguna entidad excepto la selccionado.
      *
      * @param codigo
