@@ -61,10 +61,6 @@ public class JustificanteBean implements JustificanteLocal {
         String numRegFormat = "";
 
         try {
-            // Comprobamos si ya se ha generado el Justificante
-            if (registro.getRegistroDetalle().getTieneJustificante()) {
-                throw new I18NException("aviso.justificante.existe");
-            }
 
             // Integración
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -73,6 +69,11 @@ public class JustificanteBean implements JustificanteLocal {
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
 
             numRegFormat = registro.getNumeroRegistroFormateado();
+
+            // Comprobamos si ya se ha generado el Justificante
+            if (registro.getRegistroDetalle().getTieneJustificante()) {
+                throw new I18NException("aviso.justificante.existe");
+            }
 
             log.info("------------------------------------------------------------");
             log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
