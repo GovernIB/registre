@@ -278,6 +278,12 @@ public class LibroRegistroExcel extends AbstractExcelView {
                 }else if (valorCamp.equals("nomIn")) {
                     columnas[h] = getMessage("informe.interesados");
                     h = h + 1;
+                }else if (valorCamp.equals("intMa")) {
+                    columnas[h] = getMessage("informe.interesadoMail");
+                    h = h + 1;
+                }else if (valorCamp.equals("aplic")) {
+                    columnas[h] = getMessage("informe.aplicacion");
+                    h = h + 1;
                 }
             }
         }
