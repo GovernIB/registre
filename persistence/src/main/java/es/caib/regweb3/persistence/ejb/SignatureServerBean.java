@@ -223,6 +223,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         SignatureCustody sign = input.getSignatureCustody();
         DocumentCustody doc = input.getDocumentoCustody();
 
+        log.info("XYZ Anexo ID" + input.getAnexo().getId());
+        log.info("XYZ Anexo ID" + input.getAnexo().getModoFirma());
         log.info("checkDocument::Document = " + doc);
         log.info("checkDocument::Signature = " + sign);
 
@@ -238,11 +240,16 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             } catch(I18NException i18ne) {
                 log.info("Entro I18N");
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_ERROR);
-                input.getAnexo().setMotivoNoValidacion(i18ne.getCause().toString());
+                if(i18ne.getCause()!=null) {
+                    input.getAnexo().setMotivoNoValidacion(i18ne.getCause().toString());
+                }
                 return processError(i18ne, force);
             }catch (WebServiceException we){
+                log.info("XYZ DESPUES VALIDA " + input.getAnexo().getModoFirma());
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_NOINFO);
-                input.getAnexo().setMotivoNoValidacion(we.getCause().toString());
+                if(we.getCause()!=null) {
+                    input.getAnexo().setMotivoNoValidacion(we.getCause().toString());
+                }
                 log.info("WebServiceException CheckDocument");
                 throw we;
             }
@@ -268,7 +275,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_INVALIDA){//Indica que no es valida la firma
                 anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorMsg());
             }else if(resp.getValidationStatus().getStatus() == RegwebConstantes.ANEXO_FIRMA_ERROR){//Indica que ha habido una excepción en el proceso de validación
-                anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorException().getCause().toString());
+                if(resp.getValidationStatus().getErrorException().getCause()!=null) {
+                    anexo.setMotivoNoValidacion(resp.getValidationStatus().getErrorException().getCause().toString());
+                }
             }
 
         }
