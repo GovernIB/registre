@@ -238,14 +238,34 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         StringBuilder peticion = new StringBuilder();
         Long tiempo = System.currentTimeMillis();
-        String descripcion = "Nuevo anexo";
+        String descripcion = "Nuevo anexo ";
         String numRegFormat = "";
 
         try {
 
             Anexo anexo = anexoFull.getAnexo();
 
+            //Obtenemos el registro con sus anexos, interesados y tipo Asunto
+            IRegistro registro = getIRegistro(registroID, tipoRegistro);
+            anexo.setRegistroDetalle(registro.getRegistroDetalle());
 
+            // Obtenemos el Plugin de Custodia correspondiente
+            if (anexo.isJustificante()) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                descripcion = "Nuevo justificante";
+            }else{
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+
+            // Integración
+            peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+            peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
+            peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
+
+
+            // Validar firma del Anexo
             if (!anexo.isJustificante()) { //Solo validamos si no es justificante
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
@@ -280,17 +300,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 anexo.setTipoDocumental(td);
             }
 
-            if (anexo.isJustificante()) {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                descripcion = "Nuevo justificante";
-            }else{
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA);
-            }
-
-
-            //Obtenemos el registro con sus anexos, interesados y tipo Asunto
-            IRegistro registro = getIRegistro(registroID, tipoRegistro);
-            anexo.setRegistroDetalle(registro.getRegistroDetalle());
             
             // ---------- BBDD -------------
             // Guardamos el anexo per a que tengui ID
@@ -308,13 +317,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 log.info("reserveCustodyID=" + custodyID);
             }
             anexo.setCustodiaID(custodyID);
-
-            // Integración
-            peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
-            peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
-            peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
-            peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
 
             numRegFormat = registro.getNumeroRegistroFormateado();
 
