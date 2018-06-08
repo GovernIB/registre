@@ -102,7 +102,7 @@ public class Interesado implements Serializable {
      * Constructor para Informe LibroRegistro
      */
     public Interesado(Long id, String nombre, String apellido1, String apellido2, Boolean isRepresentante, String razonSocial,
-                      String documento, Long tipo) {
+                      String documento, Long tipo, String email) {
 
         this.id = id;
         this.nombre = nombre;
@@ -112,6 +112,7 @@ public class Interesado implements Serializable {
         this.documento = documento;
         this.tipo = tipo;
         this.razonSocial = razonSocial;
+        this.email = email;
     }
 
 

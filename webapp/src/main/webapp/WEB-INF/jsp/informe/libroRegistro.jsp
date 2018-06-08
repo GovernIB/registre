@@ -108,6 +108,8 @@
                                                 <form:option value="refEx"><spring:message code="registroEntrada.referenciaExterna"/></form:option>
                                                 <form:option value="trans"><spring:message code="registroEntrada.transporte"/></form:option>
                                                 <form:option value="numTr"><spring:message code="registroEntrada.numTransporte"/></form:option>
+                                                <form:option value="intMa"><spring:message code="interesado.email"/></form:option>
+                                                <form:option value="aplic"><spring:message code="registroEntrada.aplicacion"/></form:option>
                                             </form:select>
                                             <span id="camposErrors"></span>
                                         </div>

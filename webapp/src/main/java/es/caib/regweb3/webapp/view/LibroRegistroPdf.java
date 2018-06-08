@@ -281,6 +281,16 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
                         cell21.setBackgroundColor(BaseColor.LIGHT_GRAY);
                         cell21.setHorizontalAlignment(Element.ALIGN_CENTER);
                         table.addCell(cell21);
+                    }else if (valorCamp.equals("intMa")) {
+                        PdfPCell cell22 = new PdfPCell(new Paragraph(getMessage("informe.interesadoMail"), font10Bold));
+                        cell22.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        cell22.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(cell22);
+                    }else if (valorCamp.equals("aplic")) {
+                        PdfPCell cell23 = new PdfPCell(new Paragraph(getMessage("informe.aplicacion"), font10Bold));
+                        cell23.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                        cell23.setHorizontalAlignment(Element.ALIGN_CENTER);
+                        table.addCell(cell23);
                     }
                 }
             }

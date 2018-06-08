@@ -174,7 +174,6 @@ public class InformeBean implements InformeLocal {
         // Executa la query
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
         List<Object[]> result = q.getResultList();
-        log.info("Resultats obtinguts: " + result.size());
 
         // Recorr tots els resultats trobats
         for (Object[] object : result) {
@@ -198,7 +197,8 @@ public class InformeBean implements InformeLocal {
                         "interessat.isRepresentante, " +
                         "interessat.razonSocial, " +
                         "interessat.documento," +
-                        "interessat.tipo " +
+                        "interessat.tipo," +
+                        "interessat.email " +
                         "from Interesado as interessat ");
 
                 // Afegim condició necessària per la query
@@ -251,7 +251,7 @@ public class InformeBean implements InformeLocal {
                 for (Object[] object2 : result2) {
 
                     Interesado interesado = new Interesado((Long) object2[0], (String) object2[1], (String) object2[2],
-                            (String) object2[3], (Boolean) object2[4], (String) object2[5], (String) object2[6], (Long) object2[7]);
+                            (String) object2[3], (Boolean) object2[4], (String) object2[5], (String) object2[6], (Long) object2[7], (String) object2[8]);
 
                     interesados.add(interesado);
                 }
@@ -412,7 +412,6 @@ public class InformeBean implements InformeLocal {
         // Executa la query
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
         List<Object[]> result = q.getResultList();
-        log.info("Resultats: " + result.size());
 
         // Recorr tots els resultats trobats
         for (Object[] object : result) {
@@ -436,7 +435,8 @@ public class InformeBean implements InformeLocal {
                         "interessat.isRepresentante, " +
                         "interessat.razonSocial, " +
                         "interessat.documento," +
-                        "interessat.tipo " +
+                        "interessat.tipo," +
+                        "interessat.email " +
                         "from Interesado as interessat ");
 
                 // Afegim condició necessària per la query
@@ -490,7 +490,7 @@ public class InformeBean implements InformeLocal {
                 for (Object[] object2 : result2) {
 
                     Interesado interesado = new Interesado((Long) object2[0], (String) object2[1], (String) object2[2],
-                            (String) object2[3], (Boolean) object2[4], (String) object2[5], (String) object2[6], (Long) object2[7]);
+                            (String) object2[3], (Boolean) object2[4], (String) object2[5], (String) object2[6], (Long) object2[7], (String) object2[8]);
 
                     interesados.add(interesado);
                 }

@@ -329,6 +329,31 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         } else {
                             registrosLibro.get(i).add("");
                         }
+                    } else if (valorCamp.equals("intMa")) {
+                        if (registroEntrada.getRegistroDetalle().getInteresados() != null) {
+                            String mailInteressats = "";
+
+                            for (int k = 0; k < registroEntrada.getRegistroDetalle().getInteresados().size(); k++) {
+                                Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
+
+                                if(interesado.getEmail()!=null) {
+                                    mailInteressats = mailInteressats + interesado.getEmail();
+
+                                    if (k < registroEntrada.getRegistroDetalle().getInteresados().size() - 1) {
+                                        mailInteressats = mailInteressats + ", ";
+                                    }
+                                }
+                            }
+                            registrosLibro.get(i).add(mailInteressats);
+                        } else {
+                            registrosLibro.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("aplic")) {
+                        if (registroEntrada.getRegistroDetalle().getAplicacion() != null) {
+                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getAplicacion());
+                        } else {
+                            registrosLibro.get(i).add("");
+                        }
                     }
                 }
             }
@@ -505,6 +530,31 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                 }
                             }
                             registrosLibro.get(i).add(interessats);
+                        } else {
+                            registrosLibro.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("intMa")) {
+                        if (registroSalida.getRegistroDetalle().getInteresados() != null) {
+                            String mailInteressats = "";
+
+                            for (int k = 0; k < registroSalida.getRegistroDetalle().getInteresados().size(); k++) {
+                                Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
+
+                                if(interesado.getEmail()!=null) {
+                                    mailInteressats = mailInteressats + interesado.getEmail();
+
+                                    if (k < registroSalida.getRegistroDetalle().getInteresados().size() - 1) {
+                                        mailInteressats = mailInteressats + ", ";
+                                    }
+                                }
+                            }
+                            registrosLibro.get(i).add(mailInteressats);
+                        } else {
+                            registrosLibro.get(i).add("");
+                        }
+                    } else if (valorCamp.equals("aplic")) {
+                        if (registroSalida.getRegistroDetalle().getAplicacion() != null) {
+                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getAplicacion());
                         } else {
                             registrosLibro.get(i).add("");
                         }
