@@ -73,14 +73,14 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                 }
                 case 2: { //FIRMA DETACHED
 
-                    if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes()) {
+                    if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
 
-                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes()/(1024*1024)));
+                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
                     }
 
-                    if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes()) {
+                    if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
 
-                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes()/(1024*1024)));
+                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
                     }
                 }
 
@@ -186,14 +186,19 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     /**
      * Valida la obligatoriedad de los campos
      * @param numeroRegistro
+     * @param libro
      * @param entidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
-    protected void validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
+    protected void validarObligatorios(String numeroRegistro, String entidad, String libro) throws  I18NException, Exception{
 
         // 1.- Comprobaciones de parámetros obligatórios
         if(StringUtils.isEmpty(numeroRegistro)){
             throw new I18NException("error.valor.requerido.ws", "identificador");
+        }
+
+        if(StringUtils.isEmpty(libro)){
+            throw new I18NException("error.valor.requerido.ws", "libro");
         }
 
         if(StringUtils.isEmpty(entidad)){
@@ -201,6 +206,8 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         }
 
     }
+
+
 
 
     /**
