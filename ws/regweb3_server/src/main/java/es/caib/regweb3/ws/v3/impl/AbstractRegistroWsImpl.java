@@ -69,21 +69,21 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                 switch (anexoWs.getModoFirma()){
                     case 0: //SIN FIRMA
                     case 1:{ //ATTACHED
-                        if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID))) {
-                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+                        if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes)) {
+                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
                         }
                         break;
                     }
                     case 2: { //FIRMA DETACHED
 
-                        if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
+                        if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes) {
 
-                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
                         }
 
-                        if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
+                        if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > maxUploadSizeInBytes) {
 
-                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
                         }
                     }
 
