@@ -63,27 +63,31 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
             AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, entidadID, tipoDocumentalEjb);
 
-            switch (anexoWs.getModoFirma()){
-                case 0: //SIN FIRMA
-                case 1:{ //ATTACHED
-                    if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID))) {
-                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+            Long maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
+
+            if(maxUploadSizeInBytes!= null){ // Si no está especificada, se permite cualquier tamaño
+                switch (anexoWs.getModoFirma()){
+                    case 0: //SIN FIRMA
+                    case 1:{ //ATTACHED
+                        if(anexoWs.getFicheroAnexado()!= null && (anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID))) {
+                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+                        }
+                        break;
                     }
-                    break;
+                    case 2: { //FIRMA DETACHED
+
+                        if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
+
+                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+                        }
+
+                        if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
+
+                            throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
+                        }
+                    }
+
                 }
-                case 2: { //FIRMA DETACHED
-
-                    if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
-
-                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
-                    }
-
-                    if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)) {
-
-                        throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID)/(1024*1024)));
-                    }
-                }
-
             }
 
             validateAnexo(anexoFull, true,entidadID);
@@ -190,17 +194,12 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      * @param entidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
-    protected void validarObligatorios(String numeroRegistro, String entidad, String libro) throws  I18NException, Exception{
+    protected void validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
 
         // 1.- Comprobaciones de parámetros obligatórios
         if(StringUtils.isEmpty(numeroRegistro)){
             throw new I18NException("error.valor.requerido.ws", "identificador");
         }
-
-        if(StringUtils.isEmpty(libro)){
-            throw new I18NException("error.valor.requerido.ws", "libro");
-        }
-
         if(StringUtils.isEmpty(entidad)){
             throw new I18NException("error.valor.requerido.ws", "entidad");
         }
