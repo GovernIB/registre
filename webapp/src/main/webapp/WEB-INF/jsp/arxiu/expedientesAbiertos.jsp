@@ -36,7 +36,7 @@
 
                         <div class="panel panel-warning">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-search"></i><strong> Búsqueda de expedientes en DM</strong> </h3>
+                                <h3 class="panel-title"><i class="fa fa-search"></i><strong> Búsqueda de expedientes en DM: </strong> ${resultado}</h3>
                             </div>
 
                             <div class="panel-body">
@@ -44,12 +44,8 @@
                                 <div class="row">
                                     <div class="col-xs-12">
 
-                                        <strong>App:</strong> ${app}<br>
-                                        <strong>Serie:</strong> ${serie}<br>
-                                        <strong>initialDate:</strong> ${initialDate}<br>
-                                        <strong>endDate:</strong> ${endDate}<br>
-                                        <strong>onlyCount:</strong> ${onlyCount}<br>
-                                        <strong>expedientPattern:</strong> ${expedientPattern}
+                                        <strong>queryDM:</strong> ${queryDM}<br>
+                                        <strong>Serie:</strong> ${serie}<br><br>
 
                                         <c:if test="${total == 0}">
                                             <div class="alert alert-grey ">

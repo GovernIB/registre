@@ -207,9 +207,13 @@ public class ArxiuController extends BaseController {
 
             ResultadoBusqueda<Expediente> result = apiArxiu.busquedaExpedientes(queryDM,pageNumber);
 
+            log.info("getCodigoResultado: " + result.getCodigoResultado());
+            mav.addObject("resultado",result.getCodigoResultado() + " - " + result.getMsjResultado());
+
             if (hiHaErrorEnCerca(result.getCodigoResultado())) {
+                log.info("Error: " + result.getCodigoResultado() + " - " + result.getMsjResultado());
                 Mensaje.saveMessageError(request, result.getCodigoResultado() + "-" + result.getMsjResultado());
-                throw new Exception("Error en la búsqueda de espedientes: "
+                throw new Exception("Error en la búsqueda de expedientes: "
                         + result.getCodigoResultado() + "-" + result.getMsjResultado());
             }
 
@@ -220,6 +224,9 @@ public class ArxiuController extends BaseController {
 
             mav.addObject("total",result.getNumeroTotalResultados());
             mav.addObject("lista",lista);
+
+            mav.addObject("serie",custody.getPropertySerieDocumentalEL());
+            mav.addObject("queryDM",queryDM);
 
 
         }catch (I18NException e) {
