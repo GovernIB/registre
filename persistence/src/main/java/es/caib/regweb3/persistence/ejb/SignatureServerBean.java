@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import org.apache.commons.io.FileUtils;
@@ -328,18 +329,26 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
       IValidateSignaturePlugin validatePlugin;
       validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
                  RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
-      if (validatePlugin == null) {
-        // El plugin de Validació de Firmes no s'ha definit. Consulti amb l'Administrador
-        throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
+
+      if (validatePlugin == null) {// El plugin de Validació de Firmes no s'ha definit.
+
+          // Creamos una respuesta de "No validación"
+          resp = new ValidateSignatureResponse();
+          ValidationStatus validationStatus = new ValidationStatus();
+          validationStatus.setStatus(-2);
+          validationStatus.setErrorMsg(I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "error.plugin.validasign.noDefinido"));
+          resp.setValidationStatus(validationStatus);
+
+          return resp;
+        //throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.8"));
       }
 
       // Verificar que ofereix servei de informació de firmes
-      SignatureRequestedInformation sri = validatePlugin
-          .getSupportedSignatureRequestedInformation();
+      SignatureRequestedInformation sri = validatePlugin.getSupportedSignatureRequestedInformation();
+
       if (!Boolean.TRUE.equals(sri.getReturnSignatureTypeFormatProfile())) {
         // El plugin de Validació/Informació de Firmes no proveeix informació de firmes.
         throw new I18NException("error.plugin.validasign.noinfo");
-            
       }
 
       sri = new SignatureRequestedInformation();
