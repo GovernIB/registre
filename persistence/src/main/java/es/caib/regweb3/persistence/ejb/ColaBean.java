@@ -209,21 +209,21 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     public Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException, I18NValidationException {
 
         IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
+        //Obtenemos todos los que han alcanzado el máximo de reintentos.
         List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null,distribucionPlugin.configurarDistribucion().getMaxReintentos());
-        //Ponemos el contador a 0 de los que han llegado al máximo de reintentos así vuelven a entrar en la cola.
+        //Reseteamos los valores de los pendientes para que vuelvan a entrar en la cola.
         for(Cola pendiente: pendientesDistribuir){
-            pendiente.setNumeroReintentos(0);
-            pendiente.setError("");
+            pendiente.setNumeroReintentos(0); //Contador a 0
+            pendiente.setError("&nbsp;");
             pendiente.setEstado(null);
             merge(pendiente);
         }
 
-
+        //Gestionamos la paginación
         int total = pendientesDistribuir.size();
         Paginacion paginacion = new Paginacion(total, cola.getPageNumber(),Cola.RESULTADOS_PAGINACION);
         int inicio = (cola.getPageNumber() - 1) * Cola.RESULTADOS_PAGINACION;
         int fin = pendientesDistribuir.size()<Cola.RESULTADOS_PAGINACION ? pendientesDistribuir.size():Cola.RESULTADOS_PAGINACION;
-
         paginacion.setListado(pendientesDistribuir.subList(inicio,fin));
         return paginacion;
     }
@@ -238,23 +238,36 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         }else{//En este caso el plugin no lanza excepción, simplemente devuelve false
             causa = " El plugin de distribución ha devuelto false <br>";
         }
-        //Incrementar numeroreintentos si no hemos llegado al máximo
-        if (elemento.getNumeroReintentos() < maxReintentos) {
-            elemento.setNumeroReintentos(elemento.getNumeroReintentos() + 1);
-            //Si hemos alcanzado el máximo de reintentos marcamos estado a error
-            if(elemento.getNumeroReintentos() == maxReintentos) {
-                elemento.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
-                //Enviamos email a administradores entidad cuando se ha alcanzado el máximo de reintentos
-                enviarEmailAdminEntidad(idioma,administradores);
 
-            }else{
-                elemento.setEstado(RegwebConstantes.COLA_ESTADO_WARNING);
+        try {
+            //Incrementar numeroreintentos si no hemos llegado al máximo
+            if (elemento.getNumeroReintentos() < maxReintentos) {
+                elemento.setNumeroReintentos(elemento.getNumeroReintentos() + 1);
+                //Si hemos alcanzado el máximo de reintentos marcamos estado a error
+                if (elemento.getNumeroReintentos() == maxReintentos) {
+                    elemento.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
+                    //Enviamos email a administradores entidad cuando se ha alcanzado el máximo de reintentos
+                    enviarEmailAdminEntidad(idioma, administradores);
+
+                } else {
+                    elemento.setEstado(RegwebConstantes.COLA_ESTADO_WARNING);
+                }
             }
+            //Guardamos que ha ocurrido un error en integraciones
+            elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
+            merge(elemento);
+            try {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, System.currentTimeMillis() - tiempo, entidadId, elemento.getDescripcionObjeto());
+            }catch(Exception ee){
+                elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
+                merge(elemento);
+                ee.printStackTrace();
+            }
+        }catch (Exception e){
+            elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
+            merge(elemento);
+            log.error(e.getCause());
         }
-        //Guardamos que ha ocurrido un error en integraciones
-        integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, System.currentTimeMillis() - tiempo, entidadId,elemento.getDescripcionObjeto());
-        elemento.setError(elemento.getError()  + hora + causa);
-        merge(elemento);
     }
 
 
@@ -282,26 +295,34 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         //Datos comunes Mail
         Locale locale = new Locale(idioma);
 
-        String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
-        String mensajeTexto = "";
-        Long idEntidad = null;
-        if(administradores.size()>0) {
-            idEntidad = administradores.get(0).getEntidad().getId();
-            mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo",administradores.get(0).getEntidad().getNombre() );
-        }
-
-        if(PropiedadGlobalUtil.getRemitente()!=null && PropiedadGlobalUtil.getRemitenteNombre()!=null){
-            InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(),PropiedadGlobalUtil.getRemitenteNombre());
-            for(UsuarioEntidad usuarioEntidad: administradores){
-                String mailAdminEntidad = usuarioEntidad.getUsuario().getEmail();
-                if(!mailAdminEntidad.isEmpty()) {
-                    MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, mailAdminEntidad);
-                }else{
-                    log.error("Existen problemas de distribución en los registros. Por favor avise al Administrador : "+ usuarioEntidad.getNombreCompleto()+ " de la entidad: " +usuarioEntidad.getEntidad().getNombre());
-                }
+        try {
+            String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
+            String mensajeTexto = "";
+            //Montamos el mensaje del mail con el nombre de la Entidad
+            if (administradores.size() > 0) {
+                //Montamos el mensaje del mail con el nombre de la Entidad
+                mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo", administradores.get(0).getEntidad().getNombre());
             }
-        }else{
-            log.error("No está definida la propiedad global <es.caib.regweb3.mail.remitente> o la propiedad <es.caib.regweb3.mail.remitente.nombre>  para la entidad.  ");
+
+            //Miramos que estén definidos el remitente y el nombre del remitente
+            if (PropiedadGlobalUtil.getRemitente() != null && PropiedadGlobalUtil.getRemitenteNombre() != null) {
+                InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(), PropiedadGlobalUtil.getRemitenteNombre());
+                //Enviamos email a todos los administradores de la entidad
+                for (UsuarioEntidad usuarioEntidad : administradores) {
+                    String mailAdminEntidad = usuarioEntidad.getUsuario().getEmail();
+                    if (!mailAdminEntidad.isEmpty()) {
+                        MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, mailAdminEntidad);
+                    } else {
+                        log.error("Existen problemas de distribución en los registros. Por favor avise al Administrador : " + usuarioEntidad.getNombreCompleto() + " de la entidad: " + usuarioEntidad.getEntidad().getNombre());
+                    }
+                }
+            } else {
+                log.error("No está definida la propiedad global <es.caib.regweb3.mail.remitente> o la propiedad <es.caib.regweb3.mail.remitente.nombre>  para la entidad.  ");
+            }
+        }catch(Exception e){
+            //Si se produce una excepción continuamos con el proceso.
+            log.error("Se ha producido un excepcion enviando mail");
+            e.printStackTrace();
         }
 
     }
