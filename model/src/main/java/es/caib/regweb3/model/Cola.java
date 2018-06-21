@@ -35,7 +35,7 @@ public class Cola implements Serializable{
 
     public Cola() {
         this.fecha= new Date();
-        this.error= "";
+        this.error= "&nbsp;";
     }
 
     @Id
