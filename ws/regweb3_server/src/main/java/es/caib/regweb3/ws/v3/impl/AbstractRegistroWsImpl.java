@@ -63,8 +63,8 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
             AnexoFull anexoFull = AnexoConverter.getAnexoFull(anexoWs, entidadID, tipoDocumentalEjb);
 
+            //Controlamos el tamanyo de los ficheros que nos adjuntan.
             Long maxUploadSizeInBytes = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidadID);
-
             if(maxUploadSizeInBytes!= null){ // Si no está especificada, se permite cualquier tamaño
                 switch (anexoWs.getModoFirma()){
                     case 0: //SIN FIRMA
@@ -75,14 +75,10 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                         break;
                     }
                     case 2: { //FIRMA DETACHED
-
                         if(anexoWs.getFicheroAnexado()!= null && anexoWs.getFicheroAnexado().length > maxUploadSizeInBytes) {
-
                             throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
                         }
-
                         if(anexoWs.getFirmaAnexada()!= null && anexoWs.getFirmaAnexada().length > maxUploadSizeInBytes) {
-
                             throw new I18NException("tamanyfitxerpujatsuperat", Long.toString(anexoWs.getFicheroAnexado().length/(1024*1024)),Long.toString(maxUploadSizeInBytes/(1024*1024)));
                         }
                     }
@@ -190,7 +186,6 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     /**
      * Valida la obligatoriedad de los campos
      * @param numeroRegistro
-     * @param libro
      * @param entidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
@@ -205,7 +200,6 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         }
 
     }
-
 
 
 
