@@ -43,7 +43,6 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
 
 
     public String getPropertyUsuario() throws Exception {
-        log.info("PROPERTY_USUARIO : " + PROPERTY_USUARIO);
 
         return getPropertyRequired(PROPERTY_USUARIO);
     }
@@ -459,7 +458,6 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             registreAnnex.setFitxerTamany((int)anexoFull.getDocumentoCustody().getLength());
             registreAnnex.setFitxerTipusMime(anexoFull.getDocumentoCustody().getMime());
             registreAnnex.setFitxerContingut(anexoFull.getDocumentoCustody().getData());
-
             //FIRMA ANTIGUA
             // TODO FALTA ESTO EN LA NUEVA VERSION registreAnnex.setFirmaFitxerTamany((int)anexoFull.getSignSize());
 
