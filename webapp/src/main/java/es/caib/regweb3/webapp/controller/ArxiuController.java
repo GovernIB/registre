@@ -229,12 +229,15 @@ public class ArxiuController extends BaseController {
             mav.addObject("queryDM",queryDM);
 
 
-        }catch (I18NException e) {
-            e.printStackTrace();
-        } catch (CustodyException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (I18NException e1) {
+            log.info("Error 1 en la busqueda de expedientesAbiertos", e1);
+            e1.printStackTrace();
+        } catch (CustodyException e2) {
+            log.info("Error 2 en la busqueda de expedientesAbiertos", e2);
+            e2.printStackTrace();
+        } catch (Exception e3) {
+            log.info("Error 3 en la busqueda de expedientesAbiertos", e3);
+            e3.printStackTrace();
         }
 
         return mav;
