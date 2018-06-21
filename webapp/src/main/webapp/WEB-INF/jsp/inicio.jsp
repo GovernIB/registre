@@ -83,7 +83,7 @@
 
                             <%--REGISTROS SIR PENDIENTES DE PROCESAR--%>
                             <c:if test="${not empty registrosSir}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
 
                                     <div id="pendientesProc" class="panel panel-primary">
                                         <div class="panel-heading">
@@ -157,7 +157,7 @@
 
                             <%--REGISTROS DE ENTRADA PENDIENTES DE DISTRIBUIR--%>
                             <c:if test="${not empty pendientesDistribuir}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
                                     <div id="pendientesDistribuir" class="panel panel-info">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-sign-out"></i> <strong><spring:message code="registroEntrada.pendientesDistribuir"/></strong> </h3>
@@ -207,7 +207,7 @@
 
                             <%--Registros de Entrada Rechazados o Reenviados--%>
                             <c:if test="${not empty entradasRechazadosReenviados}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
 
                                     <div id="entradasRechazadosReenviados" class="panel panel-primary">
                                         <div class="panel-heading">
@@ -262,7 +262,7 @@
 
                             <%--Registros de Salida Rechazados o Reenviados--%>
                             <c:if test="${not empty salidasRechazadasReenviadas}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
 
                                     <div id="salidasRechazadosReenviados" class="panel panel-primary">
                                         <div class="panel-heading">
@@ -372,7 +372,7 @@
 
                             <%--OFICIOS PENDIENTES DE LLEGADA--%>
                             <c:if test="${not empty oficiosPendientesLlegada}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
 
                                     <div id="pendientesLleg" class="panel panel-success">
                                         <div class="panel-heading">
@@ -423,7 +423,7 @@
 
                             <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN--%>
                             <c:if test="${not empty organismosOficioRemisionEntrada}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
 
                                     <div id="pendientesRemEnt" class="panel panel-success">
                                         <div class="panel-heading">
@@ -469,7 +469,7 @@
 
                             <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN--%>
                             <c:if test="${not empty organismosOficioRemisionSalida}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
 
                                     <div id="pendientesRemSal" class="panel panel-success">
                                         <div class="panel-heading">
@@ -515,7 +515,7 @@
 
                             <%--REGISTROS DE ENTRADA PENDIENTES (RESERVA)--%>
                             <c:if test="${not empty reservas}">
-                                <div class="col-xs-6 centrat">
+                                <div class="col-xs-6 filas">
                                     <div id="reserves" class="panel panel-info">
                                         <div class="panel-heading">
                                             <h3 class="panel-title"><i class="fa fa-file-text-o"></i> <a href="<c:url value="/registroEntrada/reservas/list/1"/>" class="info"><strong><spring:message code="registroEntrada.reservas"/></strong></a> </h3>
@@ -712,11 +712,11 @@
             $("[rel='resumen']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
         </script>
 
-        <!-- Lleva la classe centrat al darrer panell dibuixat. Així funciona si només hi ha 2 panells -->
+        <!-- Lleva la classe filas al darrer panell dibuixat. Així funciona si només hi ha 2 panells -->
         <script type="text/javascript">
-            var numItems = $('.centrat').length;
+            var numItems = $('.filas').length;
             if (numItems == '2') {
-                $(".centrat").last().removeClass("centrat");
+                $(".filas").last().removeClass("filas");
             }
         </script>
 

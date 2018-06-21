@@ -225,6 +225,12 @@ textarea{
 .centrat-float-left{
     float: left;
 }
+@-moz-document url-prefix() {
+    .filas {
+        float: none;
+        margin: 0 auto;
+    }
+}
 .pad-bottom5 {
     padding-bottom: 5px;
 }
