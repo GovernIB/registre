@@ -37,11 +37,11 @@ public class Pendiente implements Serializable {
     return id;
   }
 
-  @Column(name="IDORGANISMO")
   public void setId(Long id) {
     this.id = id;
   }
 
+  @Column(name="IDORGANISMO")
   public Long getIdOrganismo() {
     return idOrganismo;
   }
