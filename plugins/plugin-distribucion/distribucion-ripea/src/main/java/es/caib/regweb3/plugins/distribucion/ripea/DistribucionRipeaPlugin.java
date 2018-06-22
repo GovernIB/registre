@@ -258,10 +258,10 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
         }
 
         //Numero Registro Origen y Fecha Registro Origen
-        //TODO NUMERO Registro Origen
         c.setTime(re.getRegistroDetalle().getFechaOrigen());
         XMLGregorianCalendar dateOri = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
         registreAnotacio.setDataOrigen(dateOri);
+        registreAnotacio.setNumeroOrigen(re.getRegistroDetalle().getNumeroRegistroOrigen());
 
         //Identificador
         registreAnotacio.setIdentificador(re.getId().toString());
