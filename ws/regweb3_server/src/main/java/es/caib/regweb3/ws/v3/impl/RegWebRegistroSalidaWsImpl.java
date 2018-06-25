@@ -335,7 +335,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
-                sc = justificante.getSignatureCustody();
+                sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
                 // Alta en la tabla de LOPD
                 lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
             }else{
@@ -350,7 +350,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             }
 
             justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
-            sc = anexoEjb.getFirma(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
+            sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
         }
