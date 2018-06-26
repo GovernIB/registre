@@ -535,11 +535,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // 7.- Distribuimos el registro de entrada
-            AnexoFull justificante = null;
-            if(!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
-                registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
-            }
             RespuestaDistribucion respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuario);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
