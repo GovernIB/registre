@@ -107,7 +107,7 @@ public class ColaController extends BaseController {
 
         }
 
-        return "cola/colaList";
+        return "redirect:/cola/list/"+tipo;
     }
 
 
