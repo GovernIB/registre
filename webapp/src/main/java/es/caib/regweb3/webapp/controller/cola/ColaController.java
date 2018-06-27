@@ -110,6 +110,29 @@ public class ColaController extends BaseController {
         return "redirect:/cola/list/"+tipo;
     }
 
+    /**
+     * Eliminar una {@link Cola} y le cambia el estado al registro de entrada asociado
+     */
+    @RequestMapping(value = "/{colaId}/delete/{tipo}/{estado}")
+    public String eliminarElementoCola(@PathVariable Long colaId, @PathVariable Long tipo, @PathVariable Long estado,  HttpServletRequest request) {
+
+        try {
+
+            Cola cola = colaEjb.findById(colaId);
+            colaEjb.remove(cola);
+            //Actualizamos el registro de entrada al estado indicado(valido o distribuido)
+            registroEntradaEjb.cambiarEstado(cola.getIdObjeto(), estado);
+
+            Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/cola/list/"+tipo;
+    }
+
 
 
 
