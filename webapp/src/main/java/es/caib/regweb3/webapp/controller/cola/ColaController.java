@@ -126,7 +126,29 @@ public class ColaController extends BaseController {
             Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
 
         } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("regweb.relaciones.registro"));
+            Mensaje.saveMessageError(request, getMessage("cola.error.eliminar"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/cola/list/"+tipo;
+    }
+
+
+    /**
+     * Reiniciar un {@link Cola} y le pone el contador a 0.
+     */
+    @RequestMapping(value = "/{colaId}/reiniciar/{tipo}")
+    public String reiniciarElementoCola(@PathVariable Long colaId, @PathVariable Long tipo,  HttpServletRequest request) {
+
+        try {
+
+            Cola cola = colaEjb.findById(colaId);
+            colaEjb.reiniciarElementoCola(cola);
+
+            Mensaje.saveMessageInfo(request, getMessage("cola.reiniciado"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("cola.reiniciar.elemento.error"));
             e.printStackTrace();
         }
 

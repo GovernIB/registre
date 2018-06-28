@@ -213,10 +213,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null,distribucionPlugin.configurarDistribucion().getMaxReintentos());
         //Reseteamos los valores de los pendientes para que vuelvan a entrar en la cola.
         for(Cola pendiente: pendientesDistribuir){
-            pendiente.setNumeroReintentos(0); //Contador a 0
-            pendiente.setError("&nbsp;");
-            pendiente.setEstado(null);
-            merge(pendiente);
+            reiniciarElementoCola(pendiente);
         }
 
         //Gestionamos la paginación
@@ -324,6 +321,17 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             log.error("Se ha producido un excepcion enviando mail");
             e.printStackTrace();
         }
+
+    }
+
+
+    @Override
+    public void reiniciarElementoCola(Cola cola) throws Exception {
+
+           cola.setNumeroReintentos(0); //Contador a 0
+           cola.setError("&nbsp;");
+           cola.setEstado(null);
+           merge(cola);
 
     }
 

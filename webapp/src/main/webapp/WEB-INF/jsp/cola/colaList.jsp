@@ -93,31 +93,31 @@
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped tablesorter">
                                         <colgroup>
-                                            <col width="120">
-                                            <col width="120">
-                                            <col width="170">
-                                            <col width="60">
-                                            <col width="60">
-                                            <col width="60">
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col width="140">
                                         </colgroup>
                                         <thead>
                                         <tr>
-                                            <th><spring:message code="cola.fecha"/></th>
-                                            <th><spring:message code="cola.descripcion.${tipo}"/></th>
-                                            <th><spring:message code="oficina.oficina"/></th>
-                                            <th><spring:message code="cola.numeroreintentos"/></th>
-                                            <th><spring:message code="regweb.errores"/></th>
-                                            <th><spring:message code="regweb.acciones"/></th>
+                                            <th class="center"><spring:message code="cola.fecha"/></th>
+                                            <th class="center"><spring:message code="cola.descripcion.${tipo}"/></th>
+                                            <th class="center"><spring:message code="oficina.oficina"/></th>
+                                            <th class="center" ><spring:message code="cola.numeroreintentos"/></th>
+                                            <th class="center"><spring:message code="regweb.errores"/></th>
+                                            <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
                                         </thead>
 
                                         <tbody>
                                         <c:forEach var="cola" items="${paginacion.listado}">
                                             <tr>
-                                                <td><fmt:formatDate value="${cola.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                <td>${cola.descripcionObjeto}</td>
-                                                <td>${cola.denominacionOficina}</td>
-                                                <td>
+                                                <td class="center"><fmt:formatDate value="${cola.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                <td class="center">${cola.descripcionObjeto}</td>
+                                                <td class="center">${cola.denominacionOficina}</td>
+                                                <td class="center">
                                                     <c:if test="${empty cola.estado}"><span class="label label-info"><span class="fa fa-repeat"></span> ${cola.numeroReintentos}</span></c:if>
                                                     <c:if test="${cola.estado == 1}"><span class="label label-danger"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></c:if>
                                                     <c:if test="${cola.estado == 2}"><span class="label label-warning"><span class="fa fa-warning"></span> ${cola.numeroReintentos}</span></c:if>
@@ -126,9 +126,9 @@
                                                     <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoCola" onclick="infoCola('${cola.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
                                                 </td>
                                                 <td class="center">
-                                                    <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_VALIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa fa-eraser"></span></a>
-
+                                                    <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_VALIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                                     <a class="btn btn-info btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_DISTRIBUIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.marcardistribuido"/>"><span class="fa fa-share-square-o"></span></a>
+                                                    <a class="btn btn-success btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.reiniciar"/>"><span class="fa fa-repeat"></span></a>
                                                 </td>
 
 

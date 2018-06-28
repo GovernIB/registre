@@ -87,4 +87,11 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Reiniciamos un elemento de la cola para que vuelva a relanzarse
+     * @param cola
+     * @throws Exception
+     */
+    void reiniciarElementoCola(Cola cola) throws Exception;
+
 }
