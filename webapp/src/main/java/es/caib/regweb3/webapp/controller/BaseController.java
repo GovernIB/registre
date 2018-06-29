@@ -307,6 +307,24 @@ public class BaseController {
         return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
     }
 
+    /**
+     * Obtenemos los Libros de los Organismos a los que la OficinaActiva da servicio
+     * y en los que el UsuarioEntidad actual tiene permisos para administrar
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected List<Libro> getLibrosAdministradosOficina(HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        // Obtenemos los Organismos a los que da servicio una Oficina
+        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
+
+        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_ADMINISTRACION_LIBRO);
+    }
+
 
 
     /**

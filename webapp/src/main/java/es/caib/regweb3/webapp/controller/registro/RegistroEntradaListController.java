@@ -476,7 +476,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         ModelAndView mav = new ModelAndView("registro/pendientesVisarList");
 
-        List<Libro> librosAdministrados = getLibrosAdministrados(request);
+        List<Libro> librosAdministrados = getLibrosAdministradosOficina(request);
 
         if((librosAdministrados!= null && librosAdministrados.size() > 0)) {
 

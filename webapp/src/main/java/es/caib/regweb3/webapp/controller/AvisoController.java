@@ -60,7 +60,7 @@ public class AvisoController extends BaseController {
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-            List<Libro> librosAdministrados = getLibrosAdministrados(request);
+            List<Libro> librosAdministrados = getLibrosAdministradosOficina(request);
             List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
             List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request);
 
