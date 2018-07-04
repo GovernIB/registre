@@ -7,7 +7,6 @@ import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -119,7 +118,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                 // Comprobaciones de Configuración obligatoria de la aplicación
                 if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_USUARI)) {
-                    long start = System.currentTimeMillis();
 
                     //Plugin Generación Justificante
                     if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
@@ -181,8 +179,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         response.sendRedirect("/regweb3/aviso");
                         return false;
                     }
-
-                    log.info("Tiempo comprobaciones: " + TimeUtils.formatElapsedTime(System.currentTimeMillis()-start));
 
                 }
 
