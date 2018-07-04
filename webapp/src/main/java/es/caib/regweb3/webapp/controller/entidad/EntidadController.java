@@ -31,7 +31,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -60,7 +59,7 @@ public class EntidadController extends BaseController {
     private EntidadValidator entidadValidator;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private LoginService loginService;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     private DescargaLocal descargaEjb;
@@ -229,8 +228,7 @@ public class EntidadController extends BaseController {
     @RequestMapping(value = "/{entidadId}/edit", method = RequestMethod.GET)
     public String editarEntidad(@PathVariable("entidadId") Long entidadId, Model model, HttpServletRequest request) {
 
-        HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
         EntidadForm entidadForm = new EntidadForm();
 
         try {
@@ -1077,7 +1075,7 @@ public class EntidadController extends BaseController {
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
         List<UsuarioEntidad> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
         for (UsuarioEntidad usuario : usuarios) {
-            usuarioService.actualizarRoles(usuario.getUsuario());
+            loginService.actualizarRoles(usuario.getUsuario());
         }
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN
@@ -1197,7 +1195,7 @@ public class EntidadController extends BaseController {
                 entidad.setCodigoDir3((historicosFinales.iterator().next()).getCodigo());
                 entidad.setNombre((historicosFinales.iterator().next()).getDenominacion());
                 entidadEjb.merge(entidad);
-                usuarioService.cambioEntidad(entidad, request);
+                loginService.cambioEntidad(entidad, getLoginInfo(request));
             } else {
                 throw new Exception("La raiz se ha dividido en más de un organismo, houston tenemos un problema");
             }

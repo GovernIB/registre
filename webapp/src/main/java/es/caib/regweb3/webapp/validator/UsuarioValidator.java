@@ -3,7 +3,7 @@ package es.caib.regweb3.webapp.validator;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.utils.UsuarioService;
+import es.caib.regweb3.webapp.utils.LoginService;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -30,7 +30,7 @@ public class UsuarioValidator implements Validator {
     private UsuarioLocal usuarioEjb;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private LoginService loginService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -87,7 +87,7 @@ public class UsuarioValidator implements Validator {
                 // Identificador único
                 if (usuario.getIdentificador() != null && usuario.getIdentificador().length() > 0) {
 
-                    if(!usuarioService.existeIdentificador(usuario.getIdentificador())){
+                    if(!loginService.existeIdentificador(usuario.getIdentificador())){
                         errors.rejectValue("identificador", "usuario.identificador.no.existe", "L'identificador no existeix al sistema de usuaris");
                     }
 

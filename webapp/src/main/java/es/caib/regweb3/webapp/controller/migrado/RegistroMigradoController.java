@@ -138,7 +138,7 @@ public class RegistroMigradoController extends BaseController {
     public String detalleRegistroMigrado(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
         RegistroMigrado registroMigrado = registroMigradoEjb.findById(idRegistro);
 
         // Comprobamos que el Registro Migrado existe
@@ -173,7 +173,7 @@ public class RegistroMigradoController extends BaseController {
     public String informeRegistroLopd(Model model, @PathVariable Long idRegistroMigrado, HttpServletRequest request)throws Exception {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         // Añade la información del Registro Migrado
         RegistroMigrado registroMigrado = registroMigradoEjb.findById(idRegistroMigrado);

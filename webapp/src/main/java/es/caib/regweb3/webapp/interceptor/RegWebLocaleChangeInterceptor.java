@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -31,7 +32,10 @@ public class RegWebLocaleChangeInterceptor extends LocaleChangeInterceptor{
 
 
         String newLocale = request.getParameter(getParamName());
-        Usuario usuario = (Usuario)request.getSession().getAttribute(RegwebConstantes.SESSION_USUARIO);
+
+        LoginInfo loginInfo = (LoginInfo) request.getSession().getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+        Usuario usuario = loginInfo.getUsuarioAutenticado();
+
 
         if(newLocale != null && usuario != null) {
 

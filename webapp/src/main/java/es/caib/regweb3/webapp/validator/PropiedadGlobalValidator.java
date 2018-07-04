@@ -5,6 +5,7 @@ import es.caib.regweb3.model.PropiedadGlobal;
 import es.caib.regweb3.persistence.ejb.PropiedadGlobalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -49,7 +50,8 @@ public class PropiedadGlobalValidator implements Validator {
 
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             HttpSession session = request.getSession();
-            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+            Entidad entidadActiva = loginInfo.getEntidadActiva();
 
             try {
                 Long idEntidad = null;

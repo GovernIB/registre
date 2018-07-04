@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.PreRegistroLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -42,8 +43,8 @@ public class PreRegistroInterceptor extends HandlerInterceptorAdapter {
         try {
             //String url = request.getServletPath();
             HttpSession session = request.getSession();
-            Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-            //Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+            Rol rolActivo = loginInfo.getRolActivo();
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
             if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){

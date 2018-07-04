@@ -19,7 +19,7 @@
 <div class="row">
     <div class="col-xs-12">
         <ol class="breadcrumb">
-            <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
+            <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
             <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroMigrado.registroMigrados"/></strong></li>
         </ol>
     </div>
@@ -199,10 +199,10 @@
                                         <td>${registroMigrado.extracto}</td>
 
                                         <td class="center">
-                                            <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
+                                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/detalle"/>" title="<spring:message code="registroMigrado.detalle"/>"><span class="fa fa-eye"></span></a>
                                             </c:if>
-                                            <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/registroMigrado/${registroMigrado.id}/lopd"/>" title="<spring:message code="registroMigrado.lopd"/>"><span class="fa fa-lock"></span></a>
                                             </c:if>
                                         </td>

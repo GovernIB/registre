@@ -51,7 +51,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
     public void obtenerRegistroEntrada() {
 
         try {
-            RegistroEntradaResponseWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("SALU-E-12/2016", "earrivi", "A04003003");
+            RegistroEntradaResponseWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("SALU-E-56/2018", "earrivi", "A04019281");
             System.out.printf("Idioma: " + registroEntradaWs.getIdiomaCodigo() + "\n");
             System.out.printf("Idioma: " + registroEntradaWs.getIdiomaDescripcion() + "\n");
             System.out.printf("Libro: " + registroEntradaWs.getLibroCodigo() + "\n");
@@ -124,6 +124,14 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
     }
 
     @Test
+    public void obtenerJustificante() throws Exception{
+
+        JustificanteWs justificanteWs = registroEntradaApi.obtenerJustificante(getTestEntidadCodigoDir3(),"SALU-E-48/2018");
+
+        System.out.println("Justificante: " + justificanteWs.getJustificante().length);
+    }
+
+    //@Test
     public void crearRegistroEntrada() throws Exception {
 
         for (int i = 0; i < 1; i++) {

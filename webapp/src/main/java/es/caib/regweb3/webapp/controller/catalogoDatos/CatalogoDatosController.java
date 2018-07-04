@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -150,8 +149,7 @@ public class CatalogoDatosController extends BaseController {
          TipoAsunto tipoAsunto = null;
          try {
 
-             HttpSession session = request.getSession();
-             Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+             Entidad entidadActiva = getEntidadActiva(request);
              tipoAsunto = tipoAsuntoEjb.findById(tipoAsuntoId);
 
              // Comprueba que el TipoD Asunto existe
@@ -432,8 +430,8 @@ public class CatalogoDatosController extends BaseController {
 
         TipoDocumental tipoDocumental = null;
         try {
-            HttpSession session = request.getSession();
-            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+
+            Entidad entidadActiva = getEntidadActiva(request);
 
             tipoDocumental = tipoDocumentalEjb.findById(tipoDocumentalId);
 

@@ -6,25 +6,25 @@
 
     <div class="navbar-header">
         <%--Si el usuario es SuperAdministrador--%>
-        <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
-            <c:if test="${configuracion.logoMenu != null}">
+        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
+            <c:if test="${loginInfo.configuracion.logoMenu != null}">
                 <div class="govern-logo pull-left">
-                    <img src="<c:url value="/archivo/${configuracion.logoMenu.id}"/>" alt="${configuracion.logoMenu.nombre}"/>
+                    <img src="<c:url value="/archivo/${loginInfo.configuracion.logoMenu.id}"/>" alt="${loginInfo.configuracion.logoMenu.nombre}"/>
                 </div>
             </c:if>
         </c:if>
         <%--Si el usuario no es SuperAdministrador--%>
-        <c:if test="${rolAutenticado.nombre != 'RWE_SUPERADMIN'}">
-            <c:if test="${entidadActiva == null}">
+        <c:if test="${loginInfo.rolActivo.nombre != 'RWE_SUPERADMIN'}">
+            <c:if test="${loginInfo.entidadActiva == null}">
                 <div class="govern-logo pull-left"><img src="<c:url value="/img/govern-logo.png"/>" width="70"
                                                         height="70" alt="Govern de les Illes Balears"/></div>
             </c:if>
-            <c:if test="${entidadActiva != null}">
+            <c:if test="${loginInfo.entidadActiva != null}">
                 <div class="govern-logo pull-left">
-                    <c:if test="${entidadActiva.logoMenu != null}">
-                        <img src="<c:url value="/archivo/${entidadActiva.logoMenu.id}"/>" alt="${entidadActiva.nombre}"/>
+                    <c:if test="${loginInfo.entidadActiva.logoMenu != null}">
+                        <img src="<c:url value="/archivo/${loginInfo.entidadActiva.logoMenu.id}"/>" alt="${loginInfo.entidadActiva.nombre}"/>
                     </c:if>
-                    <c:if test="${entidadActiva.logoMenu == null}">
+                    <c:if test="${loginInfo.entidadActiva.logoMenu == null}">
                         <img src="<c:url value="/img/govern-logo.png"/>" width="70" height="70" alt="Govern de les Illes Balears"/>
                     </c:if>
                 </div>
@@ -45,7 +45,7 @@
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user"></i>
-                        ${usuarioAutenticado.nombreCompleto}
+                        ${loginInfo.usuarioAutenticado.nombreCompleto}
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu">
@@ -55,7 +55,7 @@
                         <c:if test="${pageContext.response.locale == 'es'}">
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
-                        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN' || rolAutenticado.nombre == 'RWE_USUARI'}">
+                        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' || loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                             <li>
                                 <a href="<c:url value="/notificacion/list"/>">
                                     <i class="fa fa-envelope"></i> <spring:message code="notificacion.notificaciones"/> (${notificacionesPendientes})
@@ -64,7 +64,7 @@
                         </c:if>
 
                         <li>
-                            <a href="<c:url value="/usuario/${usuarioAutenticado.id}/edit"/>">
+                            <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>">
                                 <i class="fa fa-gear"></i> <spring:message code="menu.configuracion"/>
                             </a>
                         </li>
@@ -74,15 +74,15 @@
 
 
                 <%--MENÚ ENTIDADES ADMINISTRADOR--%>
-                <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN' || rolAutenticado.nombre == 'RWE_USUARI'}">
+                <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' || loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasAnyRole('RWE_ADMIN','RWE_USUARI')">
                         <c:if test="${fn:length(entidades) > 1}">
 
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-institution"></i> <spring:message code="entidad.entidades"/> <i class="fa fa-caret-down"></i></a>
                                 <ul class="dropdown-menu">
-                                    <c:forEach var="entidad" items="${entidades}">
-                                        <c:if test="${entidad.id != entidadActiva.id}">
+                                    <c:forEach var="entidad" items="${loginInfo.entidades}">
+                                        <c:if test="${entidad.id != loginInfo.entidadActiva.id}">
                                             <li><a href="<c:url value="/cambioEntidad/${entidad.id}"/>"><i class="fa fa-institution"></i> ${entidad.nombre}</a></li>
                                         </c:if>
                                     </c:forEach>
@@ -95,15 +95,15 @@
                 </c:if>
 
                 <%--MENÚ OFICINAS--%>
-                <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
+                <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasRole('RWE_USUARI')">
-                        <c:if test="${fn:length(oficinas) > 1}">
+                        <c:if test="${fn:length(loginInfo.oficinasRegistro) > 1}">
 
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> <spring:message code="regweb.oficinas"/> <i class="fa fa-caret-down"></i></a>
                                 <ul class="dropdown-menu scrollable-menu">
-                                    <c:forEach var="oficina" items="${oficinas}">
-                                        <c:if test="${oficina.id != oficinaActiva.id}">
+                                    <c:forEach var="oficina" items="${loginInfo.oficinasRegistro}">
+                                        <c:if test="${oficina.id != loginInfo.oficinaActiva.id}">
                                             <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}</a></li>
                                         </c:if>
                                     </c:forEach>
@@ -115,19 +115,19 @@
                 </c:if>
 
                 <%--MENÚ ROLES DE USUARIO--%>
-                <c:if test="${fn:length(rolesAutenticado) == 1}">
-                    <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${rolAutenticado.descripcion}</a></li>
+                <c:if test="${fn:length(loginInfo.rolesAutenticado) == 1}">
+                    <li class="dropdown"><a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-lock"></i> ${loginInfo.rolActivo.descripcion}</a></li>
                 </c:if>
 
-                <c:if test="${fn:length(rolesAutenticado) > 1}">
+                <c:if test="${fn:length(loginInfo.rolesAutenticado) > 1}">
 
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i
-                                class="fa fa-lock"></i> ${rolAutenticado.descripcion} <i class="fa fa-caret-down"></i></a>
+                                class="fa fa-lock"></i> ${loginInfo.rolActivo.descripcion} <i class="fa fa-caret-down"></i></a>
                         <ul class="dropdown-menu">
 
-                            <c:forEach var="rol" items="${rolesAutenticado}">
-                                <c:if test="${rol.id != rolAutenticado.id}">
+                            <c:forEach var="rol" items="${loginInfo.rolesAutenticado}">
+                                <c:if test="${rol.id != loginInfo.rolActivo.id}">
                                     <li><a href="<c:url value="/rol/${rol.id}"/>"><i class="fa fa-briefcase"></i> ${rol.descripcion}</a></li>
                                 </c:if>
                             </c:forEach>
@@ -145,7 +145,7 @@
             <div class="user-nav pull-right navbar-right">
 
                 <%--MENÚ REGISTRO ENTRADA Y SALIDA--%>
-                <c:if test="${rolAutenticado.nombre == 'RWE_USUARI'}">
+                <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasRole('RWE_USUARI')">
 
                         <%--Menú REGISTRO ENTRADA--%>
@@ -177,7 +177,7 @@
                         </div>
 
                         <%--Menú OFICIO REMISIÓN--%>
-                        <c:if test="${entidadActiva.oficioRemision}">
+                        <c:if test="${loginInfo.entidadActiva.oficioRemision}">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                                     <spring:message code="menu.oficiosRemision"/> <span class="caret"></span>
@@ -196,7 +196,7 @@
                         </c:if>
 
                         <%--Menú SIR--%>
-                        <c:if test="${entidadActiva.sir && oficinaActiva.sirRecepcion}">
+                        <c:if test="${loginInfo.entidadActiva.sir && loginInfo.oficinaActiva.sirRecepcion}">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                     <spring:message code="menu.sir"/> <span class="caret"></span>
@@ -218,23 +218,23 @@
                                 <spring:message code="menu.administracion"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <c:if test="${entidadActiva != null}">
+                                <c:if test="${loginInfo.entidadActiva != null}">
                                     <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><i class="fa fa-address-book-o"></i> <spring:message code="menu.personas"/></a></li>
                                 </c:if>
                                 <li class="submenu-complet"><a href="<c:url value="/repro/list"/>"><i class="fa fa-briefcase"></i> <spring:message code="menu.repros"/></a></li>
 
-                                <c:if test="${oficinaActiva != null}">
+                                <c:if test="${loginInfo.oficinaActiva != null}">
                                     <li class="divider"></li>
                                     <li class="dropdown-submenu-left toggle-left">
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message
                                                 code="menu.estadisticas"/></a>
                                         <ul class="dropdown-menu">
-                                            <c:if test="${fn:length(librosAdministrados) > 0}">
+                                            <c:if test="${fn:length(loginInfo.librosAdministrados) > 0}">
                                                 <li><a href="<c:url value="/informe/indicadores"/>"><i class="fa fa-bar-chart"></i> <spring:message code="informe.indicadores"/></a></li>
                                                 <li><a href="<c:url value="/informe/indicadoresOficina"/>"><i class="fa fa-bar-chart"></i> <spring:message code="informe.indicadoresOficina"/></a></li>
                                             </c:if>
                                             <li><a href="<c:url value="/informe/libroRegistro"/>"><i class="fa fa-book"></i> <spring:message code="menu.libro"/></a></li>
-                                            <c:if test="${fn:length(librosAdministrados) > 0}">
+                                            <c:if test="${fn:length(loginInfo.librosAdministrados) > 0}">
                                                 <li class="divider"></li>
                                                 <li><a href="<c:url value="/informe/usuarioLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.usuarioLopd"/></a></li>
                                                 <li><a href="<c:url value="/informe/registroLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.registroLopd"/></a></li>
@@ -243,7 +243,7 @@
                                     </li>
                                 </c:if>
 
-                                <c:if test="${registrosMigrados}">
+                                <c:if test="${loginInfo.registrosMigrados}">
                                     <li class="divider"></li>
                                     <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><i class="fa fa-exchange"></i> <spring:message code="registroMigrado.consultaRegistro"/></a></li>
                                 </c:if>
@@ -261,16 +261,16 @@
 
                 <%--MENÚ ADMINISTRACIÓN ENTIDADES--%>
                 <sec:authorize access="hasRole('RWE_ADMIN')">
-                    <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
-                        <c:if test="${entidadActiva != null}">
+                    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                        <c:if test="${loginInfo.entidadActiva != null}">
 
                             <div class="btn-group">
                                 <button type="button" class="btn btn-warning btn-sm dropdown-toggle"
                                         data-toggle="dropdown">
-                                        ${entidadActiva.nombre} <span class="caret"></span>
+                                        ${loginInfo.entidadActiva.nombre} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li class="submenu-complet"><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>"><i class="fa fa-institution"></i> <spring:message code="menu.entidad.editar"/></a></li>
+                                    <li class="submenu-complet"><a href="<c:url value="/entidad/${loginInfo.entidadActiva.id}/edit"/>"><i class="fa fa-institution"></i> <spring:message code="menu.entidad.editar"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/plugin/list"/>"><i class="fa fa-plug"></i> <spring:message code="plugin.plugins"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
                                     <li class="divider"></li>
@@ -290,7 +290,7 @@
                                     <li class="divider"></li>
 
                                     <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
-                                    <c:if test="${entidadActiva.configuracionPersona != 1}">
+                                    <c:if test="${loginInfo.entidadActiva.configuracionPersona != 1}">
                                         <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><i class="fa fa-address-book-o"></i> <spring:message code="menu.personas"/></a></li>
                                         <li class="submenu-complet"><a href="<c:url value="/persona/personasDuplicadas/"/>"><i class="fa fa-eraser"></i> <spring:message code="persona.buscador.duplicadas"/></a></li>
                                     </c:if>
@@ -308,7 +308,7 @@
                                         </ul>
                                     </li>
 
-                                    <c:if test="${registrosMigrados}">
+                                    <c:if test="${loginInfo.registrosMigrados}">
                                         <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><i class="fa fa-exchange"></i> <spring:message code="informe.migradoLopd"/></a></li>
                                     </c:if>
                                     <li class="divider"></li>
@@ -336,7 +336,7 @@
                 </sec:authorize>
 
                 <%--MENÚ ADMINISTRACIÓN--%>
-                <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
+                <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
                     <div class="btn-group">
                         <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
                             <spring:message code="menu.configuracion"/> <span class="caret"></span>

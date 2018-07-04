@@ -168,7 +168,7 @@
 
 
         <%--Botonera--%>
-        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
             <c:if test="${empty descarga}">
                 <button type="button" id="sincro" class="btn btn-success btn-sm"><spring:message code="entidad.sincronizar"/></button>
             </c:if>

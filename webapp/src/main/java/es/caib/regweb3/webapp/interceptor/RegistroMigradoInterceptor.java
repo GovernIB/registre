@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -29,8 +30,9 @@ public class RegistroMigradoInterceptor extends HandlerInterceptorAdapter {
         try {
             String url = request.getServletPath();
             HttpSession session = request.getSession();
-            Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-            Boolean tieneRegistrosMigrados = (Boolean) session.getAttribute(RegwebConstantes.SESSION_MIGRADOS);
+            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+            Rol rolActivo = loginInfo.getRolActivo();
+            Boolean tieneRegistrosMigrados = loginInfo.getRegistrosMigrados();
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI o Rol RWE_ADMIN
             if(!(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)||rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))){

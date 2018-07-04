@@ -148,7 +148,7 @@ public class ModeloReciboController extends BaseController {
         ModeloReciboForm modeloReciboForm= new ModeloReciboForm();
         try {
             HttpSession session = request.getSession();
-            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+            Entidad entidadActiva = getEntidadActiva(request);
 
             ModeloRecibo modeloRecibo = modeloReciboEjb.findById(modeloReciboId);
 

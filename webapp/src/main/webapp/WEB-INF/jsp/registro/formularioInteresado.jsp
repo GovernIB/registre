@@ -229,7 +229,7 @@
                         </div>
                     </div>
 
-                    <c:if test="${entidadActiva.configuracionPersona == 3}">
+                    <c:if test="${loginInfo.entidadActiva.configuracionPersona == 3}">
                         <div class="col-xs-12">
                             <div class="form-group col-xs-6 senseMargeLat">
                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">

@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.validation.FieldError;
@@ -58,16 +59,18 @@ public class BaseController {
     private NotificacionLocal notificacionBean;
 
 
-    @ModelAttribute("notificacionesPendientes")
-    public Long notificacionesPendientes(HttpServletRequest request) throws Exception {
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        if (usuarioEntidad != null && (isAdminEntidad(request) || isOperador(request))) {
+    /**
+     * Retorna la información del UsuarioAutenticado
+     * @param request
+     * @return
+     */
+    protected LoginInfo getLoginInfo(HttpServletRequest request){
 
-            return notificacionBean.notificacionesPendientes(usuarioEntidad.getId());
-        }
+        HttpSession session = request.getSession();
 
-        return 0L;
+        return (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+
     }
 
     /**
@@ -86,9 +89,8 @@ public class BaseController {
      */
     protected Usuario getUsuarioAutenticado(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
+        return getLoginInfo(request).getUsuarioAutenticado();
 
-        return (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
     }
 
     /**
@@ -97,9 +99,8 @@ public class BaseController {
      * @return
      */
     protected UsuarioEntidad getUsuarioEntidadActivo(HttpServletRequest request) throws Exception{
-        //return usuarioEntidadEjb.findByUsuarioEntidad(getUsuarioAutenticado(request).getId(), getEntidadActiva(request).getId());
-        HttpSession session = request.getSession();
-        return (UsuarioEntidad)session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
+
+        return getLoginInfo(request).getUsuarioEntidadActivo();
     }
 
     /**
@@ -110,8 +111,7 @@ public class BaseController {
     @SuppressWarnings(value = "unchecked")
     protected List<Libro> getLibrosAdministrados(HttpServletRequest request) throws Exception{
 
-        HttpSession session = request.getSession();
-        return (List<Libro>) session.getAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS);
+        return getLoginInfo(request).getLibrosAdministrados();
 
     }
 
@@ -122,9 +122,7 @@ public class BaseController {
      */
     protected Rol getRolActivo(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-
-        return (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
+        return getLoginInfo(request).getRolActivo();
     }
 
     /**
@@ -134,10 +132,7 @@ public class BaseController {
      */
     protected Boolean isAdminEntidad(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-
-        return rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN);
+        return getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_ADMIN);
     }
 
     /**
@@ -147,10 +142,7 @@ public class BaseController {
      */
     protected Boolean isSuperAdmin(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-
-        return rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN);
+        return getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_SUPERADMIN);
     }
 
     /**
@@ -160,10 +152,7 @@ public class BaseController {
      */
     protected Boolean isOperador(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-
-        return rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI);
+        return getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_USUARI);
     }
 
 
@@ -175,9 +164,7 @@ public class BaseController {
     @SuppressWarnings(value = "unchecked")
     protected List<Rol> getRolesAutenticado(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-
-        return (List<Rol>) session.getAttribute(RegwebConstantes.SESSION_ROLES);
+        return getLoginInfo(request).getRolesAutenticado();
 
     }
 
@@ -188,9 +175,7 @@ public class BaseController {
      */
     protected Entidad getEntidadActiva(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-
-        return (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        return getLoginInfo(request).getEntidadActiva();
 
     }
 
@@ -201,8 +186,7 @@ public class BaseController {
      */
     protected void setEntidadActiva(Entidad entidad, HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-        session.setAttribute(RegwebConstantes.SESSION_ENTIDAD,entidad);
+        getLoginInfo(request).setEntidadActiva(entidad);
 
     }
 
@@ -225,9 +209,7 @@ public class BaseController {
     @SuppressWarnings(value = "unchecked")
     protected List<Entidad> getEntidadesAutenticado(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-
-        return (List<Entidad>) session.getAttribute(RegwebConstantes.SESSION_ENTIDADES);
+        return getLoginInfo(request).getEntidades();
     }
 
     /**
@@ -237,9 +219,7 @@ public class BaseController {
      */
     protected Oficina getOficinaActiva(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-
-        return (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        return getLoginInfo(request).getOficinaActiva();
     }
 
     /**
@@ -250,9 +230,7 @@ public class BaseController {
     @SuppressWarnings(value = "unchecked")
     protected LinkedHashSet<Oficina> getOficinasAutenticado(HttpServletRequest request){
 
-        HttpSession session = request.getSession();
-
-        return (LinkedHashSet<Oficina>) session.getAttribute(RegwebConstantes.SESSION_OFICINAS);
+        return getLoginInfo(request).getOficinasRegistro();
 
     }
     
@@ -349,9 +327,8 @@ public class BaseController {
      */
     @SuppressWarnings("unchecked")
     public LinkedHashSet<Organismo> getOrganismosOficinaActiva(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
 
-        return (LinkedHashSet<Organismo>) session.getAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
+        return getLoginInfo(request).getOrganismosOficinaActiva();
     }
 
     /**
@@ -620,5 +597,17 @@ public class BaseController {
 
         return stb.toString();
 
+    }
+
+    @ModelAttribute("notificacionesPendientes")
+    public Long notificacionesPendientes(HttpServletRequest request) throws Exception {
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        if (usuarioEntidad != null && (isAdminEntidad(request) || isOperador(request))) {
+
+            return notificacionBean.notificacionesPendientes(usuarioEntidad.getId());
+        }
+
+        return 0L;
     }
 }

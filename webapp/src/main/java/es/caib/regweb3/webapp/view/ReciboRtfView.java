@@ -6,6 +6,7 @@ import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.CombineStream;
 import es.caib.regweb3.webapp.utils.ConvertirTexto;
 import es.caib.regweb3.webapp.utils.DatosRecibo;
@@ -160,7 +161,8 @@ public class ReciboRtfView extends AbstractView {
         }
 
         HttpSession session = request.getSession();
-        Usuario usuario = (Usuario) session.getAttribute(RegwebConstantes.SESSION_USUARIO);
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+        Usuario usuario = loginInfo.getUsuarioAutenticado();
 
         // Mapeamos los campos del rtf con los del registro
         if (datosRecibo.getCodigoOficina()!=null) ht.put("(codiOficina)", ConvertirTexto.toCp1252(datosRecibo.getCodigoOficina()));

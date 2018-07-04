@@ -57,8 +57,7 @@ public class LibroController extends BaseController {
     @RequestMapping(value = "/{idOrganismo}/libros", method = RequestMethod.GET)
     public String libros(Model model, @PathVariable Long idOrganismo, HttpServletRequest request)throws Exception {
 
-        HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
 
@@ -106,7 +105,7 @@ public class LibroController extends BaseController {
     public String listado(Model model, HttpServletRequest request)throws Exception {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         List<Libro> librosList = libroEjb.getTodosLibrosEntidad(entidadActiva.getId());
 
@@ -124,7 +123,7 @@ public class LibroController extends BaseController {
     public String nuevoLibro(Model model, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         Libro libro = new Libro();
         Organismo organismo = organismoEjb.findById(idOrganismo);
@@ -205,7 +204,7 @@ public class LibroController extends BaseController {
     public String editarLibro(@PathVariable("idOrganismo") Long idOrganismo,@PathVariable("idLibro") Long idLibro,  Model model, HttpServletRequest request) {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
         Libro libro = null;
         Organismo organismo=null;
         try {
@@ -328,7 +327,7 @@ public class LibroController extends BaseController {
     public String  inicializarLibro(@PathVariable("libroId") Long libroId, HttpServletRequest request) throws Exception {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         Libro libro = libroEjb.findById(libroId);
 
@@ -364,7 +363,7 @@ public class LibroController extends BaseController {
     public String usuariosLibro(Model model, @PathVariable Long idLibro, HttpServletRequest request)throws Exception {
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
 //        ModelAndView mav = new ModelAndView("libro/usuariosLibroList");
 

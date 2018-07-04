@@ -20,11 +20,11 @@
        <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
-                    <c:if test="${oficioRemision.oficina == oficinaActiva}">
+                    <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
+                    <c:if test="${oficioRemision.oficina == loginInfo.oficinaActiva}">
                         <li><a href="<c:url value="/oficioRemision/list"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.listado"/></a></li>
                     </c:if>
-                    <c:if test="${oficioRemision.oficina != oficinaActiva}">
+                    <c:if test="${oficioRemision.oficina != loginInfo.oficinaActiva}">
                         <li><a href="<c:url value="/oficioRemision/aceptados/list"/>" ><i class="fa fa-list"></i> <spring:message code="oficioRemision.aceptados"/></a></li>
                     </c:if>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="oficioRemision.oficioRemision"/> <fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</li>
@@ -163,7 +163,7 @@
                     </c:if>
 
                     <%--Botón anular oficio--%>
-                    <c:if test="${(oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO) && isAdministradorLibro && oficioRemision.oficina == oficinaActiva}">
+                    <c:if test="${(oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO) && isAdministradorLibro && oficioRemision.oficina == loginInfo.oficinaActiva}">
                         <div class="panel-footer">
                             <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
                         </div>

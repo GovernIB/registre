@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -145,9 +144,9 @@ public class ModeloOficioRemisionController extends BaseController {
     public String editarModeloOficioRemision(@PathVariable("modeloOficioRemisionId") Long modeloOficioRemisionId, Model model, HttpServletRequest request) {
 
         ModeloOficioRemisionForm modeloOficioRemisionForm= new ModeloOficioRemisionForm();
+
         try {
-            HttpSession session = request.getSession();
-            Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+            Entidad entidadActiva = getEntidadActiva(request);
 
             ModeloOficioRemision modeloOficioRemision = modeloOficioRemisionEjb.findById(modeloOficioRemisionId);
 

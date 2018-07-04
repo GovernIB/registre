@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -47,10 +48,12 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
         String url = request.getServletPath();
         HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-        UsuarioEntidad usuarioEntidad = (UsuarioEntidad) session.getAttribute(RegwebConstantes.SESSION_USUARIO_ENTIDAD);
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
-        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+        Rol rolActivo = loginInfo.getRolActivo();
+        UsuarioEntidad usuarioEntidad = loginInfo.getUsuarioEntidadActivo();
+        Oficina oficinaActiva = loginInfo.getOficinaActiva();
+        Entidad entidadActiva = loginInfo.getEntidadActiva();
 
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
         if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){

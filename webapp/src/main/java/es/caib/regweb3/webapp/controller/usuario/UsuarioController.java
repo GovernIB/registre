@@ -7,8 +7,8 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.UsuarioBusquedaForm;
+import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.utils.UsuarioService;
 import es.caib.regweb3.webapp.validator.UsuarioValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -42,7 +42,7 @@ public class UsuarioController extends BaseController {
     private UsuarioValidator usuarioValidator;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private LoginService loginService;
        
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
@@ -111,7 +111,7 @@ public class UsuarioController extends BaseController {
                  usuario = usuarioEjb.persist(usuario);
 
                  // Obtiene los Roles del Usuario desde el sistema externo
-                 usuarioService.actualizarRoles(usuario);
+                 loginService.actualizarRoles(usuario);
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
 
@@ -173,11 +173,11 @@ public class UsuarioController extends BaseController {
                  usuario = usuarioEjb.merge(usuario);
 
                  // Actualizamos los Roles del Usuario desde el sistema externo y en la sesion
-                 usuarioService.actualizarRoles(usuario);
+                 loginService.actualizarRoles(usuario);
 
                  //Si el usuario modificado es el mismo que el UsuarioAutenticado, lo actualizamos en la sesión
                  if(usuario.getId().equals(usuarioAutenticado.getId())){
-                     usuarioService.setUsuarioAutenticado(usuario,request);
+                     loginService.setUsuarioAutenticado(usuario, getLoginInfo(request));
                  }
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));

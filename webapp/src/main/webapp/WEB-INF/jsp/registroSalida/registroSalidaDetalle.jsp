@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
+                    <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}</li>
                     <%--Importamos el menú de avisos--%>
                     <c:import url="/avisos"/>
@@ -113,7 +113,7 @@
                                     </button>
                                 </c:if>--%>
 
-                                <c:if test="${oficio.sir && oficinaActiva.sirEnvio}">
+                                <c:if test="${oficio.sir && loginInfo.oficinaActiva.sirEnvio}">
 
                                     <c:if test="${empty erroresAnexosSir}">
 
@@ -175,7 +175,7 @@
                                     </c:if>
                                 </c:if>
                                 <c:if test="${oficio.sir && !oficinaActiva.sirEnvio}">
-                                    <p class="text-danger">El <strong>destinatario</strong> dispone de una Oficina integrada en SIR, pero la ${oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
+                                    <p class="text-danger">El <strong>destinatario</strong> dispone de una Oficina integrada en SIR, pero la ${loginInfo.oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
                                     <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>

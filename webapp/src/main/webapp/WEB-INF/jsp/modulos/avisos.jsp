@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<c:if test="${rolAutenticado.nombre == 'RWE_USUARI' && oficinaActiva != null}">
+<c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI' && loginInfo.oficinaActiva != null}">
 
-    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + entradasRechazadosReenviados + salidasRechazadasReenviadas}"/>
+    <c:set var="total" value="${pendientesVisarEntrada + pendientesVisarSalida + reservas + oficiosEntradaPendientesRemision + oficiosPendientesLlegada + oficiosSalidaPendientesRemision + entradasRechazadosReenviados + salidasRechazadasReenviadas + validos}"/>
 
     <c:if test="${total > 0}">
 
@@ -14,6 +14,17 @@
                 </a>
 
                 <ul class="dropdown-menu pull-right">
+                    <c:if test="${validos > 0}">
+                        <li>
+                            <a href="<c:url value="/registroEntrada/validos/list/1"/>">
+                                <div>
+                                    <i class="fa fa-file-o"></i> <spring:message code="registroEntrada.pendientesDistribuir"/> (${validos})
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    </c:if>
+
                     <c:if test="${pendientesVisarEntrada > 0}">
                         <li>
                             <a href="<c:url value="/registroEntrada/pendientesVisar/list/1"/>">

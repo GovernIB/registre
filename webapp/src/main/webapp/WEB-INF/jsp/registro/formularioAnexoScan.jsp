@@ -103,9 +103,9 @@
 <script>
     $(document).ready(function() {
         $(function () {
-            if(${entidadActiva != null}){
-                $('.navbar-header').css('background-color','#${entidadActiva.colorMenu}');
-                $('.navbar-nav > li > a').css('background-color','#${entidadActiva.colorMenu}');
+            if(${loginInfo.entidadActiva != null}){
+                $('.navbar-header').css('background-color','#${loginInfo.entidadActiva.colorMenu}');
+                $('.navbar-nav > li > a').css('background-color','#${loginInfo.entidadActiva.colorMenu}');
             }
         });
     });

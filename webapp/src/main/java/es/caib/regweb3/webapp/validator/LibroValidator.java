@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
 import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -47,7 +48,8 @@ public class LibroValidator implements Validator {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+        Entidad entidadActiva = loginInfo.getEntidadActiva();
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "nombre", "error.valor.requerido", "El camp és obligatori");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "codigo", "error.valor.requerido", "El camp és obligatori");

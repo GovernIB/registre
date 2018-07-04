@@ -1,31 +1,15 @@
 package es.caib.regweb3.webapp.utils;
 
-import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
-import org.fundaciobit.plugins.userinformation.RolesInfo;
-import org.fundaciobit.plugins.userinformation.UserInfo;
-import org.springframework.stereotype.Component;
-
-import javax.ejb.EJB;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.*;
-
 /**
  * Created by Fundació BIT.
  * Clase para gestionar los Roles, Entidades, Oficinas del Usuario autenticado
  * @author earrivi
  * Date: 27/03/14
  */
-@Component
+//@Component
 public class UsuarioService {
 
-    public final Logger log = Logger.getLogger(getClass());
+    /*public final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
@@ -58,13 +42,13 @@ public class UsuarioService {
     private PluginLocal pluginEjb;
 
 
-    /**
+    *//**
      * Dado un usuario autenticado, realiza todas las configuraciones necesarias para su funcionamiento en REGWEB3.
      * Lo guarda en la sesion, obtiene sus roles y sus autorizaciones.
      * @param usuario
      * @param request
      * @throws Exception
-     */
+     *//*
     public void configurarUsuario(Usuario usuario, HttpServletRequest request) throws Exception {
 
         // Obtenemos y asignamos los Roles del Usuario y el Usuario a la sesión
@@ -75,7 +59,7 @@ public class UsuarioService {
     }
 
 
-    /**
+    *//**
      * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
      * Almacenanos los Roles del usuario en la sesión
      * Almacenanos el usuario en la sesión
@@ -84,7 +68,7 @@ public class UsuarioService {
      * @param usuario
      * @param request
      * @throws Exception
-     */
+     *//*
     private Rol obtenerCredenciales(Usuario usuario, HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
@@ -117,12 +101,12 @@ public class UsuarioService {
 
 
 
-    /**
+    *//**
      * Según el RolActivo del Usuario autenticado, obtiene sus entidades y oficinas de registro.
      * @param rolActivo
      * @param request
      * @throws Exception
-     */
+     *//*
     private void autorizarRol(Rol rolActivo,Entidad entidadActiva, HttpServletRequest request) throws Exception{
 
         HttpSession session = request.getSession();
@@ -161,12 +145,12 @@ public class UsuarioService {
     }
 
 
-    /**
+    *//**
      * Asigna las Entidades de las que el Usuario AdministradorEntidad es propietario o administrador.
      * @param usuario
      * @param session
      * @throws Exception
-     */
+     *//*
     private void asignarEntidadesAdministradas(Usuario usuario,Entidad entidadActiva, HttpSession session) throws Exception{
 
         ArrayList<Entidad> entidades = new ArrayList<Entidad>();
@@ -206,11 +190,11 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      * Obtiene las Entidades a las que el Usuario pertenece y las guarda en la sesion
      * @param session
      * @throws Exception
-     */
+     *//*
     private UsuarioEntidad asignarEntidadesOperador(Usuario usuarioAutenticado,Entidad entidadActiva, HttpSession session) throws Exception{
 
         // Obtenemos las entidades a las que el Usuario está asociado
@@ -240,12 +224,12 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      *  Asigna las Oficinas a las cuales el UsuarioEntidad puede Registrar y puede Administrar
      * @param usuarioEntidad
      * @param session
      * @throws Exception
-     */
+     *//*
     private void asignarOficinasRegistro(UsuarioEntidad usuarioEntidad, HttpSession session) throws Exception{
 
         // Antes de nada, eliminamos las variables de sesión que continen información de las oficinas
@@ -305,12 +289,12 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      *
      * @param oficinaNueva
      * @param session
      * @throws Exception
-     */
+     *//*
     public void asignarOficinaActiva(Oficina oficinaNueva, HttpSession session) throws Exception{
 
         if(oficinaNueva != null){
@@ -339,22 +323,22 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      * Actualiza la variable de sesion de Registros Migrados, según la entidad Activa
      * @param entidadActiva
      * @param session
      * @throws Exception
-     */
+     *//*
     private void tieneMigrados(Entidad entidadActiva, HttpSession session) throws Exception{
         session.setAttribute(RegwebConstantes.SESSION_MIGRADOS, registroMigradoEjb.tieneRegistrosMigrados(entidadActiva.getId()));
     }
 
-    /**
+    *//**
      *
      * @param entidadNueva
      * @param request
      * @throws Exception
-     */
+     *//*
     public void cambioEntidad(Entidad entidadNueva, HttpServletRequest request) throws Exception{
         log.info("Cambiando Entidad activa a: " + entidadNueva.getNombre());
 
@@ -377,12 +361,12 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      * Realiza el cambio de Rol para un usuario autenticado
      * @param rolNuevo
      * @param request
      * @throws Exception
-     */
+     *//*
     @SuppressWarnings("unchecked")
     public Boolean cambioRol(Rol rolNuevo, HttpServletRequest request) throws Exception{
         log.info("Cambiando el rol a: " + rolNuevo.getNombre());
@@ -401,12 +385,12 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      * Obtiene los Roles del usuario autenticado
      * @param request
      * @return
      * @throws Exception
-     */
+     *//*
     private List<Rol> obtenerRolesUsuarioAutenticado(HttpServletRequest request) throws Exception{
 
         List<Rol> rolesUsuario = null;
@@ -424,12 +408,12 @@ public class UsuarioService {
         return rolesUsuario;
     }
 
-    /**
+    *//**
      * Obtiene los Roles del usuario mediante el plugin de Login.
      * @param identificador
      * @return
      * @throws Exception
-     */
+     *//*
     private List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
@@ -451,12 +435,12 @@ public class UsuarioService {
         return rolesUsuario;
     }
 
-    /**
+    *//**
      * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
      * Actualiza los Roles del usuario en la bbdd de REGWEB3
      * @param usuario
      * @throws Exception
-     */
+     *//*
     public void actualizarRoles(Usuario usuario) throws Exception, I18NException {
 
         List<Rol> rolesUsuario = obtenerRolesUserPlugin(usuario.getIdentificador());
@@ -471,13 +455,13 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
      * datos personales de la bbdd de Seycon.
      * @param identificador
      * @return
      * @throws Exception
-     */
+     *//*
     public Usuario crearUsuario(String identificador) throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
@@ -541,21 +525,21 @@ public class UsuarioService {
 
     }
 
-    /**
+    *//**
      * Guardamos en la sesión el Usuario autenticado
      * @param usuario
      * @param request
-     */
+     *//*
     public void setUsuarioAutenticado(Usuario usuario, HttpServletRequest request) throws Exception{
         HttpSession session = request.getSession();
         session.setAttribute(RegwebConstantes.SESSION_USUARIO, usuario);
     }
 
-    /**
+    *//**
      * Guardamos en la sesión el Usuario autenticado
      * @param usuario
      * @param session
-     */
+     *//*
     private UsuarioEntidad setUsuarioEntidadActivo(Usuario usuario, Entidad entidad, HttpSession session) throws Exception{
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByUsuarioEntidadActivo(usuario.getId(), entidad.getId());
@@ -567,12 +551,12 @@ public class UsuarioService {
         return usuarioEntidad;
     }
 
-    /**
+    *//**
      * Comprueba si un usuario existe en el sistema de usuarios, mediante su identificador
      * @param identificador
      * @return
      * @throws Exception
-     */
+     *//*
     public Boolean existeIdentificador(String identificador) throws  Exception, I18NException {
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
         UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
@@ -580,11 +564,11 @@ public class UsuarioService {
         return regwebUserInfo != null;
     }
 
-    /**
+    *//**
      * Limpia de la {@link javax.servlet.http.HttpSession} las variables utilizadas
      * @param session
      * @throws Exception
-     */
+     *//*
     private void eliminarVariablesSesion(HttpSession session) throws Exception{
 
         session.removeAttribute(RegwebConstantes.SESSION_ENTIDADES);
@@ -594,25 +578,24 @@ public class UsuarioService {
         eliminarVariablesSesionOficina(session);
     }
 
-    /**
+    *//**
      * Limpia de la {@link javax.servlet.http.HttpSession} las variables referentes a las Oficinas
      * @param session
      * @throws Exception
-     */
+     *//*
     private void eliminarVariablesSesionOficina(HttpSession session) throws Exception{
 
         session.removeAttribute(RegwebConstantes.SESSION_OFICINAS);
         session.removeAttribute(RegwebConstantes.SESSION_OFICINA);
-        session.removeAttribute(RegwebConstantes.SESSION_OFICINAS_ADMINISTRADAS);
         session.removeAttribute(RegwebConstantes.SESSION_LIBROSADMINISTRADOS);
         session.removeAttribute(RegwebConstantes.SESSION_ORGANISMOS_OFICINA);
     }
 
-    /**
+    *//**
      * Limpia de la {@link javax.servlet.http.HttpSession} las variables referentes a las Oficinas
      * @param session
      * @throws Exception
-     */
+     *//*
     private void eliminarVariablesSesionCredenciales(HttpSession session) throws Exception{
 
         session.removeAttribute(RegwebConstantes.SESSION_USUARIO);
@@ -621,15 +604,15 @@ public class UsuarioService {
         session.removeAttribute(RegwebConstantes.SESSION_ROL);
     }
 
-    /**
+    *//**
      * Guardamos en la sesión la Configuracion del SuperAdministrador
      * @param configuracion
      * @param request
-     */
+     *//*
     private void asignarConfiguracionAdministrador(Configuracion configuracion, HttpServletRequest request) throws Exception{
         HttpSession session = request.getSession();
         session.setAttribute(RegwebConstantes.SESSION_CONFIGURACION, configuracion);
     }
 
-
+*/
 }

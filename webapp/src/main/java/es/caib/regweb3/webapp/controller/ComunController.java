@@ -9,8 +9,8 @@ import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
-import es.caib.regweb3.webapp.utils.UsuarioService;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -39,7 +39,7 @@ public class ComunController extends BaseController {
     protected final Logger log = Logger.getLogger(getClass());
 
     @Autowired
-    private UsuarioService usuarioService;
+    private LoginService loginService;
     
     @EJB(mappedName = "regweb3/RolEJB/local")
     private RolLocal rolEjb;
@@ -67,7 +67,7 @@ public class ComunController extends BaseController {
         try {
             Rol rolNuevo = rolEjb.findById(rolId);
 
-            if(!usuarioService.cambioRol(rolNuevo, request)){
+            if(!loginService.cambioRol(rolNuevo, getLoginInfo(request))){
                 Mensaje.saveMessageError(request, getMessage("error.rol.autorizacion"));
             }
             return comprobarConfiguracionPluginsPropiedadesGlobalesByRol(request,rolNuevo);
@@ -90,7 +90,7 @@ public class ComunController extends BaseController {
 
             if(entidadesAutenticado.contains(entidadNueva)){
 
-                usuarioService.cambioEntidad(entidadNueva, request);
+                loginService.cambioEntidad(entidadNueva, getLoginInfo(request));
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.entidad.autorizacion"));
             }
@@ -113,7 +113,7 @@ public class ComunController extends BaseController {
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);
             if(oficinasAutenticado.contains(new Oficina(oficinaNueva.getId()))){
-                usuarioService.asignarOficinaActiva(oficinaNueva,session);
+                loginService.asignarOficinaActiva(oficinaNueva, getLoginInfo(request));
                 log.info("Cambio Oficina activa: " + oficinaNueva.getDenominacion() + " - " + oficinaNueva.getCodigo());
             }else{
                 Mensaje.saveMessageError(request, getMessage("error.oficina.autorizacion"));

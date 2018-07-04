@@ -595,8 +595,7 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/{idOficioRemision}/detalle", method = RequestMethod.GET)
     public String detalleOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
-        HttpSession session = request.getSession();
-        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        Oficina oficinaActiva = getOficinaActiva(request);
         Entidad entidadActiva =  getEntidadActiva(request);
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
@@ -645,7 +644,7 @@ public class OficioRemisionController extends BaseController {
         HttpSession session = request.getSession();
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Oficina oficinaActiva = (Oficina) session.getAttribute(RegwebConstantes.SESSION_OFICINA);
+        Oficina oficinaActiva = getOficinaActiva(request);
 
         // Si no es la Oficina Activa no se puede consultar
         if(!oficioRemision.getOficina().equals(oficinaActiva)){

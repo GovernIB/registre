@@ -4,7 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.registro.ScanRequestServlet;
-
+import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -69,7 +69,8 @@ public class CommonsMultipartResolver extends
   }
 
   private Long getMaxUploadSize(HttpServletRequest request) {
-    Entidad entidad = (Entidad)request.getSession().getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+    LoginInfo loginInfo = (LoginInfo) request.getSession().getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+    Entidad entidad = loginInfo.getEntidadActiva();
     Long maxUploadSizeGlobal;
     if(entidad != null) {
        maxUploadSizeGlobal = PropiedadGlobalUtil.getMaxUploadSizeInBytes(entidad.getId());

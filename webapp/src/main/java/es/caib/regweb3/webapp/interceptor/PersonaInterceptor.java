@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -16,10 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-
 /**
  * Created by Fundació BIT.
- *
+ * <p>
  * Interceptor para la gestión de Personas
  *
  * @author earrivi
@@ -38,36 +38,36 @@ public class PersonaInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-     //long start = System.currentTimeMillis();
-      try {
-        //String url = request.getServletPath();
+        //long start = System.currentTimeMillis();
+        try {
+            //String url = request.getServletPath();
 
-        HttpSession session = request.getSession();
-        Rol rolActivo = (Rol) session.getAttribute(RegwebConstantes.SESSION_ROL);
-        //Usuario usuarioAutenticado = (Usuario)session.getAttribute(RegwebConstantes.SESSION_USUARIO);
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+            HttpSession session = request.getSession();
+            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+            Rol rolActivo = loginInfo.getRolActivo();
+            Entidad entidadActiva = loginInfo.getEntidadActiva();
 
-        // Comprobamos que el usuario dispone del Rol RWE_USUARI
-        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
-            log.info("Error de rol");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
-            response.sendRedirect("/regweb3/aviso");
-            return false;
+            // Comprobamos que el usuario dispone del Rol RWE_USUARI
+            if (rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)) {
+                log.info("Error de rol");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
+            // Comprobamos que el usuario dispone del una EntidadActiva
+            if (entidadActiva == null) {
+                log.info("No existe una EntidadActiva");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidadActiva"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
+
+            return true;
+        } finally {
+            //log.info("Interceptor Persona: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         }
-
-        // Comprobamos que el usuario dispone del una EntidadActiva
-        if(entidadActiva == null){
-            log.info("No existe una EntidadActiva");
-            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidadActiva"));
-            response.sendRedirect("/regweb3/aviso");
-            return false;
-        }
-
-
-        return true;
-    } finally {
-      //log.info("Interceptor Persona: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
-    }
     }
 
 }

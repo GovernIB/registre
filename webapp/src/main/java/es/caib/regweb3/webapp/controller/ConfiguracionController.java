@@ -19,7 +19,6 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -197,8 +196,7 @@ public class ConfiguracionController extends BaseController {
 
             // Asigna la Configuración del SuperAdministrador
             if(getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
-                HttpSession session = request.getSession();
-                session.setAttribute(RegwebConstantes.SESSION_CONFIGURACION, configuracion);
+                getLoginInfo(request).setConfiguracion(configuracion);
             }
 
             destino = "redirect:/inici";

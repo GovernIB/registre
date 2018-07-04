@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1041,8 +1040,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
     @RequestMapping(value = "/{idRegistro}/{idTipoRegistro}/informeRegistroLopd", method = RequestMethod.GET)
     public String informeRegistroLopd(Model model,@PathVariable Long idRegistro, @PathVariable Long idTipoRegistro, HttpServletRequest request)throws Exception {
 
-        HttpSession session = request.getSession();
-        Entidad entidadActiva = (Entidad) session.getAttribute(RegwebConstantes.SESSION_ENTIDAD);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         Integer numRegistro = null;

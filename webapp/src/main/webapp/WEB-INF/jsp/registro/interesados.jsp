@@ -69,7 +69,7 @@
 
                    <select id="organismoInteresado" name="organismoInteresado" class="chosen-select" style="width:100%;">
                        <option value="-1">...</option>
-                        <c:forEach items="${organismosOficinaActiva}" var="organismoInteresado">
+                        <c:forEach items="${loginInfo.organismosOficinaActiva}" var="organismoInteresado">
                             <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
                         </c:forEach>
                     </select>

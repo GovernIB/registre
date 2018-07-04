@@ -20,7 +20,7 @@
                 <div class="col-xs-12">
                     <ol class="breadcrumb">
                         <c:import url="../modulos/migadepan.jsp"/>
-                        <li class="active"><i class="fa fa-envelope"></i> <spring:message code="notificacion.notificaciones"/> de ${usuarioAutenticado.nombreCompleto}</li>
+                        <li class="active"><i class="fa fa-envelope"></i> <spring:message code="notificacion.notificaciones"/> de ${loginInfo.usuarioAutenticado.nombreCompleto}</li>
                     </ol>
                 </div>
             </div><!-- /.row -->
@@ -45,7 +45,7 @@
                         <div class="col-md-10">
 
                             <%--Nueva Notificación--%>
-                            <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                                 <div class="row">
                                     <div class="col-xs-12">
                                         <button class="btn btn-warning btn-sm" title="<spring:message code="notificacion.nueva"/>" data-toggle="modal" data-target="#modalCompose" onclick="limpiarNuevaNotificacion();">
@@ -199,7 +199,7 @@
                             </c:if>
 
                             <%--Nueva Notificación--%>
-                            <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                                 <%--Nueva notificación--%>
                                 <div class="modal fade" id="modalCompose">
                                     <div class="modal-dialog">

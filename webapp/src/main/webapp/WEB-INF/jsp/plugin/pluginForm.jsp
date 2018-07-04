@@ -92,7 +92,7 @@
                                                                                                     element="span"/>
                                 </div>
                             </div>
-                            <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="propiedadesAdmin"><span class="text-danger">*</span> <spring:message code="plugin.propiedadesAdmin"/></form:label>
@@ -103,7 +103,7 @@
                                 </div>
                             </c:if>
 
-                            <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="propiedadesEntidad"><span class="text-danger">*</span> <spring:message code="plugin.propiedadesEntidad"/></form:label>

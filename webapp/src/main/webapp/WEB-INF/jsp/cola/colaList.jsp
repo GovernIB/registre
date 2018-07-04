@@ -141,7 +141,7 @@
                                     <c:import url="../modulos/paginacionBusqueda.jsp">
                                         <c:param name="entidad" value="cola"/>
                                     </c:import>
-                                    <button type="button" onclick="goTo('<c:url value="/cola/${entidadActiva.id}/reiniciarCola/${tipo}"/>')" class="btn btn-warning btn-sm"><spring:message code="cola.reiniciar"/></button>
+                                    <button type="button" onclick="goTo('<c:url value="/cola/${loginInfo.entidadActiva.id}/reiniciarCola/${tipo}"/>')" class="btn btn-warning btn-sm"><spring:message code="cola.reiniciar"/></button>
                                 </div>
                             </c:if>
                         </div>

@@ -38,11 +38,11 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         Assert.assertEquals(3, registroSalidaApi.getVersionWs());
     }
 
-    //@Test
+    @Test
     public void obtenerRegistroSalida() {
 
         try {
-            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("PRES-S-2/2015", "mgonzalez","EA0004518");
+            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("SALU-S-20/2018", "earrivi","A04019281");
             System.out.printf("Idioma: " + registroSalidaWs.getIdiomaCodigo() + "\n");
             System.out.printf("Idioma: " + registroSalidaWs.getIdiomaDescripcion() + "\n");
             System.out.printf("TipoAsunto: " + registroSalidaWs.getTipoAsuntoCodigo() + "\n");
@@ -83,6 +83,14 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         } catch (WsValidationException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void obtenerJustificante() throws Exception{
+
+        JustificanteWs justificanteWs = registroSalidaApi.obtenerJustificante(getTestEntidadCodigoDir3(),"SALU-S-16/2018");
+
+        System.out.println("Justificante: " + justificanteWs.getJustificante().length);
     }
 
     @Test

@@ -24,7 +24,7 @@
            <div class="row">
                 <div class="col-xs-12">
                     <ol class="breadcrumb">
-                        <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
+                        <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
                         <li class="active"><i class="fa fa-pencil-square-o"></i>
                             <c:if test="${not empty registroEntrada.id}"><spring:message code="registroEntrada.editar"/> ${registroEntrada.numeroRegistroFormateado}</c:if>
                             <c:if test="${empty registroEntrada.id}"><spring:message code="registroEntrada.nuevo"/></c:if>
@@ -40,7 +40,7 @@
 
                     <div class="panel panel-info">
                         <div class="panel-heading">
-                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/rest/obtenerRepros"/>','${usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
+                            <c:if test="${empty registroEntrada.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-info btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/rest/obtenerRepros"/>','${loginInfo.usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
                             <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-info btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_ENTRADA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
                             <h3 class="panel-title"><i class="fa fa-file-o"></i>
                                 <strong>

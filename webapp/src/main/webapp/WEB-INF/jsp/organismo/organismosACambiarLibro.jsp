@@ -24,7 +24,7 @@ de un proceso de sincronización/actualización de una entidad desde dir3caib --
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
-                    <li><a href="<c:url value="/entidad/${entidadActiva.id}/edit"/>" ><i class="fa fa-institution"></i> ${entidadActiva.nombre}</a></li>
+                    <li><a href="<c:url value="/entidad/${loginInfo.entidadActiva.id}/edit"/>" ><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="organismo.cambiar.libros"/></li>
                 </ol>
             </div>

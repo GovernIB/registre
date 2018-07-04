@@ -53,7 +53,7 @@
                             <form:errors path="entidad.numRegistro" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.numRegistro.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.posXsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionX.obligatorio"/></span></form:errors>
                             <form:errors path="entidad.posYsello" cssClass="has-error help-block" element="span"><span class="help-block-red"><spring:message code="entidad.sello.posicionY.obligatorio"/></span></form:errors>
-                            <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
                                 <sec:authorize access="hasRole('RWE_SUPERADMIN')">
 
                                 <div class="col-xs-12">
@@ -102,7 +102,7 @@
                                 </sec:authorize>
                             </c:if>
 
-                            <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                            <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                                 <sec:authorize access="hasRole('RWE_ADMIN')">
                                     <ul class="nav nav-tabs" id="myTab">
                                         <li><a href="#Datos" data-toggle="tab"><spring:message code="entidad.datos"/></a></li>
@@ -405,10 +405,10 @@
 
                     <input type="submit" value="<spring:message code="regweb.guardar"/>" onclick="" class="btn btn-warning btn-sm"/>
 
-                    <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN'}">
+                    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN'}">
                         <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/entidad/list"/>')" class="btn btn-sm">
                     </c:if>
-                    <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN'}">
+                    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                         <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/inici"/>')" class="btn btn-sm">
                     </c:if>
 

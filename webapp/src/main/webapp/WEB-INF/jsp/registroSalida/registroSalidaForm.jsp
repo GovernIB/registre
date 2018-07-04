@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${oficinaActiva.sirEnvio || oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${oficinaActiva.denominacion}</a></li>
+                    <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
                         <c:if test="${empty registroSalida.id}"><spring:message code="registroSalida.nuevo"/></c:if>
@@ -41,7 +41,7 @@
 
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        <c:if test="${empty registroSalida.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/rest/obtenerRepros"/>','${usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
+                        <c:if test="${empty registroSalida.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/rest/obtenerRepros"/>','${loginInfo.usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
                         <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-danger btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>

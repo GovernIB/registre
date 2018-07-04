@@ -44,7 +44,7 @@
                             </div>
                         </c:if>
 
-                        <c:if test="${rolAutenticado.nombre == 'RWE_SUPERADMIN' || rolAutenticado.nombre == 'RWE_ADMIN'}">
+                        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN' || loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
                             <c:if test="${catalogo == null}">
                                 <div class="alert alert-danger">
                                     <div class="row vertical-align">
@@ -59,7 +59,7 @@
                             </c:if>
                         </c:if>
 
-                        <c:if test="${rolAutenticado.nombre == 'RWE_ADMIN' && entidadActiva == null}">
+                        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' && loginInfo.entidadActiva == null}">
 
                             <div class="alert alert-danger">
                                 <div class="row vertical-align">
