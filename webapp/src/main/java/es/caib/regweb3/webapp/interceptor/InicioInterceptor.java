@@ -1,10 +1,13 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -39,6 +42,9 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     @Override
@@ -106,11 +112,83 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
                 }
 
+                // Rutas que se saltarán las comprobaciones
+                if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")) {
+                    return true;
+                }
+
+                // Comprobaciones de Configuración obligatoria de la aplicación
                 if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_USUARI)) {
+                    long start = System.currentTimeMillis();
+
+                    //Plugin Generación Justificante
+                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
+                        log.info("No existe el plugin de generación del justificante");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+                    //Plugin Custodia Justificante
+                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+                        log.info("No existe el plugin de custodia del justificante");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+
+                    }
+                    // Plugin Custodia
+                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
+                        log.info("No existe el plugin de custodia");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+
+                    }
+                    //Plugin Firma en Servidor
+                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
+                        log.info("No existe el plugin de firma en servidor");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+
+                    }
+                    // Sir ServerBAse
+                    if (loginInfo.getEntidadActiva().getSir() && Configuracio.getSirServerBase() == null) {
+                        log.info("Error, falta propiedad sirserverbase");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+
+                    // Dir3Caib Server
+                    if(PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()){
+                        log.info("La propiedad Dir3CaibServer no está definida");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+                    // Dir3Caib Username
+                    if(PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()){
+                        log.info("La propiedad Dir3CaibUsername no está definida");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+                    // Dir3Caib Password
+                    if(PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()){
+                        log.info("La propiedad Dir3CaibPassword no está definida");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+
+                    log.info("Tiempo comprobaciones: " + TimeUtils.formatElapsedTime(System.currentTimeMillis()-start));
 
                 }
 
                 if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+
+
 
                 }
 

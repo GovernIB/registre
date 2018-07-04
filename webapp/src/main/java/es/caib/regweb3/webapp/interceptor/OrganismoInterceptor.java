@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Descarga;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.DescargaLocal;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -48,24 +47,6 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
                 Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
                 if (catalogo == null) {
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-                if(PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()){
-                    log.info("La propiedad Dir3CaibServer no está definida");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-                if(PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()){
-                    log.info("La propiedad Dir3CaibUsername no está definida");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-                if(PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()){
-                    log.info("La propiedad Dir3CaibPassword no está definida");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }

@@ -8,7 +8,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
-import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -87,42 +86,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.modeloOficioRemision"));
             response.sendRedirect("/regweb3/aviso");
             return false;
-        }
-
-        //Comprobamos la existencia de plugins necesarios para el funcionamiento de la aplicación
-        try {
-            //Plugin Generación Justificante
-            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)){
-                log.info("No existe el plugin de generación del justificante");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-            //Plugin Custodia Justificante
-            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
-                log.info("No existe el plugin de custodia del justificante");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-
-            }
-            //Plugin Custodia
-            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
-                log.info("No existe el plugin de custodia");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-
-            }
-            //Plugin Firma en servidor
-            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
-                log.info("No existe el plugin de firma en servidor");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-        }  catch (I18NException i18ne) {
-            throw new Exception(i18ne);
         }
 
         // Comprobaciones previas al listado de OficioRemision

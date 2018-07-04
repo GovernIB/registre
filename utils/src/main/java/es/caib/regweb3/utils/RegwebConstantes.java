@@ -25,18 +25,6 @@ public interface RegwebConstantes {
 
     /*-------------- VARIABLES DE SESION --------------*/
     String SESSION_LOGIN_INFO = "loginInfo";
-    /*String SESSION_USUARIO = "usuarioAutenticado";
-    String SESSION_USUARIO_ENTIDAD = "usuarioEntidadActivo";
-    String SESSION_ROLES = "rolesAutenticado";
-    String SESSION_ROL = "rolAutenticado";
-    String SESSION_ENTIDADES = "entidades";
-    String SESSION_ENTIDAD = "entidadActiva";
-    String SESSION_OFICINAS = "oficinas";
-    String SESSION_OFICINA = "oficinaActiva";
-    String SESSION_ORGANISMOS_OFICINA = "organismosOficinaActiva";
-    String SESSION_LIBROSADMINISTRADOS = "librosAdministrados";
-    String SESSION_MIGRADOS = "registrosMigrados";
-    String SESSION_CONFIGURACION = "configuracion";*/
     String SESSION_INTERESADOS_ENTRADA = "interesadosEntrada";
     String SESSION_INTERESADOS_SALIDA = "interesadosSalida";
 
