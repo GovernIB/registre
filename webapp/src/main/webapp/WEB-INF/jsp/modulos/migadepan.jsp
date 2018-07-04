@@ -21,10 +21,10 @@
     </c:if>
 
 
-    <c:if test="${fn:length(loginInfo.oficinas) >= 1}">
+    <c:if test="${fn:length(loginInfo.oficinasRegistro) >= 1}">
         <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
     </c:if>
-    <c:if test="${fn:length(loginInfo.oficinas) == 0}">
+    <c:if test="${fn:length(loginInfo.oficinasRegistro) == 0}">
         <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
         <li><i class="fa fa-home"></i> <spring:message code="error.oficina.ninguna"/></li>
     </c:if>
