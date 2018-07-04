@@ -214,7 +214,7 @@ public class LoginService {
             }
 
             //UsuarioEntidadActivo
-            return setUsuarioEntidadActivo(loginInfo, entidadActiva);
+            return setUsuarioEntidadActivo(loginInfo, loginInfo.getEntidadActiva());
         }
 
         return null;
