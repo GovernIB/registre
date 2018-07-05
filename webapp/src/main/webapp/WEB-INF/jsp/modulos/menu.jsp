@@ -76,7 +76,7 @@
                 <%--MENÚ ENTIDADES ADMINISTRADOR--%>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' || loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasAnyRole('RWE_ADMIN','RWE_USUARI')">
-                        <c:if test="${fn:length(entidades) > 1}">
+                        <c:if test="${fn:length(loginInfo.entidades) > 1}">
 
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-institution"></i> <spring:message code="entidad.entidades"/> <i class="fa fa-caret-down"></i></a>
