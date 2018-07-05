@@ -237,6 +237,20 @@ public class LoginInfo {
         }
     }
 
+    /**
+     * Resetea los datos para del usuario autenticado
+     */
+    public void resetDatos(){
+        this.entidades = new ArrayList<Entidad>();
+        this.entidadActiva = null;
+        this.registrosMigrados = null;
+        this.librosAdministrados = null;
+        this.oficinasRegistro = new LinkedHashSet<Oficina>();
+        this.oficinaActiva = null;
+        this.organismosOficinaActiva = null;
+        this.configuracion = null;
+    }
+
     @Override
     public String toString() {
         return "LoginInfo{" +

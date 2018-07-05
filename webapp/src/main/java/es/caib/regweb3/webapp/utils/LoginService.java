@@ -130,6 +130,9 @@ public class LoginService {
 
         log.info("Autorizando: " + loginInfo.getUsuarioAutenticado().getNombreCompleto() +" como "+ rolActivo.getNombre());
 
+        // Reset de las variables
+        loginInfo.resetDatos();
+
         // Si el RolActivo del usuario autenticado es Administrador de Entidad
         if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
 
