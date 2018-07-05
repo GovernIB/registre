@@ -327,6 +327,12 @@ public class LoginService {
     public void cambioEntidad(Entidad entidadNueva, LoginInfo loginInfo) throws Exception{
         log.info("Cambiando Entidad activa a: " + entidadNueva.getNombre());
 
+        // Asociamos la nueva EntidadActiva
+        loginInfo.setEntidadActiva(entidadNueva);
+
+        // Asociamos lel nuevo UsuarioEntidadActivo
+        setUsuarioEntidadActivo(loginInfo, entidadNueva);
+
         if(loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_USUARI)){ // Solo si es Operador
             asignarOficinasRegistro(loginInfo);
 
