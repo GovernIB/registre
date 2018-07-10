@@ -93,14 +93,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     * @throws Exception
     */
     List<Anexo> getByRegistroDetalleLectura(Long idRegistroDetalle) throws Exception;
+
   /**
    * Elimina los anexos de custodia del registro detalle indicado menos el justificante
+   * Se utiliza para eliminar los documentos fisicos cuando el registro se ha enviado via sir y ha sido aceptado
    * @param idRegistroDetalle
    * @return
    * @throws Exception
    */
-    //TODO PENDIENTE CERRAR CON FELIP
-   // void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle) throws Exception, I18NException;
+    void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException;
 
 
     /**

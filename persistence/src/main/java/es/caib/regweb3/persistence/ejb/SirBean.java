@@ -59,6 +59,7 @@ public class SirBean implements SirLocal {
     @EJB private OficinaLocal oficinaEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB private AnexoLocal anexoEjb;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
@@ -484,25 +485,24 @@ public class SirBean implements SirLocal {
                 if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
                     registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
 
-
-                    // TODO 31/07/2017 (pendiente de reunión despues de vacaciones para definir que hacer con los anexos en este caso.
                     //Borrar Anexos de Custodia
-                   /* try {
-                        anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosEntrada().get(0).getRegistroDetalle().getId());
+                    //TODO PENDIENTE DE PROBAR
+                    try {
+                        anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosEntrada().get(0).getRegistroDetalle().getId(),oficioRemision.getRegistrosEntrada().get(0).getUsuario().getEntidad().getId());
                     }catch(I18NException e){
-                        throw new Exception("Error al borrar los anexos de custodia del registro de Entrada: " + oficioRemision.getRegistrosEntrada().get(0).getId() );
-                    }*/
+                        e.printStackTrace();
+                    }
 
 
                 }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
                     registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
                     // TODO PENDIENTE DE PROBAR EN PROVES
                     //Borrar Anexos de Custodia
-                    /*try {
-                        anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosSalida().get(0).getRegistroDetalle().getId());
+                    try {
+                        anexoEjb.eliminarAnexosCustodiaRegistroDetalle(oficioRemision.getRegistrosSalida().get(0).getRegistroDetalle().getId(),oficioRemision.getRegistrosSalida().get(0).getUsuario().getEntidad().getId());
                     }catch (I18NException e){
-                        throw new Exception("Error al borrar los anexos de custodia del registro de Salida: "+ oficioRemision.getRegistrosSalida().get(0).getId());
-                    }*/
+                        e.printStackTrace();
+                    }
                 }
 
                 break;
