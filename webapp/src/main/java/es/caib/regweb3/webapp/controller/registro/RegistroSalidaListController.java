@@ -10,6 +10,8 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
@@ -32,10 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -113,6 +112,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Obtenemos los usuarios de la Entidad
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
 
+        model.addAttribute("anularForm", new AnularForm());
+
         return "registroSalida/registroSalidaList";
 
     }
@@ -146,6 +147,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             mav.addObject("registroSalidaBusqueda", busqueda);
             mav.addObject("oficinasRegistro",  oficinasRegistro);
             mav.addObject("organOrigen", busqueda.getOrganOrigen());
+            mav.addObject("anularForm", new AnularForm());
 
             return mav;
         }else { // Si no hay errores realizamos la búsqueda
@@ -177,6 +179,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
         mav.addObject("organOrigen", busqueda.getOrganOrigen());
+        mav.addObject("anularForm", new AnularForm());
 
           /* Solucion a los problemas de encoding del formulario GET */
         busqueda.getRegistroSalida().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroSalida().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
@@ -204,6 +207,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
         model.addAttribute("entidadActiva", entidadActiva);
+        model.addAttribute("anularForm", new AnularForm());
 
         // Modelo Recibo
         //model.addAttribute("modeloRecibo", new ModeloForm());
@@ -442,16 +446,20 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     /**
      * Anular un {@link es.caib.regweb3.model.RegistroSalida}
      */
-    @RequestMapping(value = "/{idRegistro}/anular")
-    public String anularRegistroSalida(@PathVariable Long idRegistro, HttpServletRequest request) {
+    @RequestMapping(value = "/anular", method= RequestMethod.POST)
+    public String anularRegistroSalida(@ModelAttribute AnularForm anularForm, HttpServletRequest request) {
 
         try {
 
-            RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
+            RegistroSalida registroSalida = registroSalidaEjb.findById(anularForm.getIdAnular());
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
+            final List<Long> estados = new ArrayList<Long>();
+            estados.add(RegwebConstantes.REGISTRO_VALIDO);
+            estados.add(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+
             // Comprobamos si el RegistroSalida se puede anular según su estado.
-            if(!registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+            if(!estados.contains(registroSalida.getEstado())){
                 Mensaje.saveMessageError(request, getMessage("registroSalida.anulado"));
                 return "redirect:/registroSalida/list";
             }
@@ -465,7 +473,13 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
 
             // Anulamos el RegistroSalida
-            registroSalidaEjb.anularRegistroSalida(registroSalida,usuarioEntidad);
+            String motivoAnulacion;
+            if(StringUtils.isEmpty(anularForm.getObservacionesAnulacion())){
+                motivoAnulacion = getMessage("registro.modificacion.anulacion");
+            }else{
+                motivoAnulacion = getMessage("registro.modificacion.anulacion") + ": " + anularForm.getObservacionesAnulacion();
+            }
+            registroSalidaEjb.anularRegistroSalida(registroSalida,usuarioEntidad, motivoAnulacion);
 
             Mensaje.saveMessageInfo(request, getMessage("registroSalida.anular"));
 
@@ -474,7 +488,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             e.printStackTrace();
         }
 
-        return "redirect:/registroSalida/"+idRegistro+"/detalle";
+        return "redirect:/registroSalida/"+anularForm.getIdAnular()+"/detalle";
     }
 
     /**

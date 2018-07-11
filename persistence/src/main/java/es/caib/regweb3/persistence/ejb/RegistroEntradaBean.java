@@ -461,6 +461,18 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
+    public void cambiarEstadoAnuladoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
+
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idRegistro", registroEntrada.getId());
+        q.executeUpdate();
+
+        // Creamos el HistoricoRegistroEntrada para la modificación de estado
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, observacionesAnulacion, false);
+    }
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception {
 
@@ -552,11 +564,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public void anularRegistroEntrada(RegistroEntrada registroEntrada,
-                                      UsuarioEntidad usuarioEntidad) throws Exception {
+    public void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad,
+                                      String observacionesAnulacion) throws Exception {
 
         // Estado anulado
-        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstadoAnuladoHistorico(registroEntrada, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad, observacionesAnulacion);
 
     }
 

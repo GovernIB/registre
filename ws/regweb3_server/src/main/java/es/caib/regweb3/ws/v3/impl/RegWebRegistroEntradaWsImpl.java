@@ -438,7 +438,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 6.- Anulamos el RegistroEntrada
         // TODO Falta enviar boolean anular
-        registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad);
+        registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad, "");
     }
 
 

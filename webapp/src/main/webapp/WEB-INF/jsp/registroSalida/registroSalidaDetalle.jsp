@@ -213,7 +213,9 @@
 
                             <%--Botón Anular--%>
                             <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
-                                <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></button></div>
+                                <div class="btn-group">
+                                    <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></a>
+                                </div>
                             </c:if>
 
                             <%--Botón reenviar--%>
@@ -322,6 +324,11 @@
         </div>
     
     </div>
+
+    <%--Modal ANULAR--%>
+    <c:import url="../registro/anular.jsp">
+        <c:param name="tipoRegistro" value="salida"/>
+    </c:import>
 
     <%--SELLO --%>
     <c:import url="../registro/sello.jsp">

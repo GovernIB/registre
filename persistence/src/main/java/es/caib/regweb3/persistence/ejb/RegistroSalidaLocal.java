@@ -98,9 +98,10 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * Anula un RegistroSalida, cambiandole el estado a anulado.
      * @param registroSalida
      * @param usuarioEntidad
+     * @param observacionesAnulacion
      * @throws Exception
      */
-    void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
+    void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
 
     /**
      * Activa un RegistroSalida, cambiandole el estado a anulado.
@@ -178,6 +179,17 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     void cambiarEstadoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
+
+    /**
+     * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
+     *
+     * @param registroSalida
+     * @param idEstado
+     * @param observacionesAnulacion
+     * @throws Exception
+     */
+    void cambiarEstadoAnuladoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
+
 
     /**
      * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.

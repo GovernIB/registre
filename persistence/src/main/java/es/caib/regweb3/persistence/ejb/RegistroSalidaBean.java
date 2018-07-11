@@ -401,10 +401,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception {
+    public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
 
         // Modificamos el estado del RegistroSalida
-        cambiarEstadoHistorico(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad);
+        cambiarEstadoAnuladoHistorico(registroSalida, RegwebConstantes.REGISTRO_ANULADO, usuarioEntidad, observacionesAnulacion);
     }
 
     @Override
@@ -545,6 +545,18 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Creamos el HistoricoRegistroSalida para la modificación de estado
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida,
                 usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.estado" ), false);
+    }
+
+    @Override
+    public void cambiarEstadoAnuladoHistorico(RegistroSalida registroSalida, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
+
+        Query q = em.createQuery("update RegistroSalida set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", idEstado);
+        q.setParameter("idRegistro", registroSalida.getId());
+        q.executeUpdate();
+
+        // Creamos el HistoricoRegistroSalida para la modificación de estado
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, observacionesAnulacion, false);
     }
 
 
@@ -718,7 +730,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);
             anexosFull.add(anexoFull);
         }
-        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        //Asignamos los documentos recuperados de custodia al registro de salida.
         registroSalida.getRegistroDetalle().setAnexosFull(anexosFull);
         return registroSalida;
     }
