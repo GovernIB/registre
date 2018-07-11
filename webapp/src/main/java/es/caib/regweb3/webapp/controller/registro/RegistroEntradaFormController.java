@@ -2,7 +2,6 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.LibroLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
 import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -51,9 +50,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
     @EJB(mappedName = "regweb3/ReproEJB/local")
     private ReproLocal reproEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
 
 
     /**
@@ -486,11 +482,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      */
     private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad) throws Exception{
 
-        // Organismo destinatiario, determinando si es Interno o Externo. Si es organismo interno con una Entidad creada, será externo
+        // Organismo destinatiario, determinando si es Interno o Externo
         Organismo orgDestino = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
 
-        if(orgDestino != null && libroEjb.getLibrosActivosOrganismo(orgDestino.getId()).size()>0){ // es interno
-            log.info("INTERNO");
+        if(orgDestino != null){ // es interno
             registroEntrada.setDestino(orgDestino);
             registroEntrada.setDestinoExternoCodigo(null);
             registroEntrada.setDestinoExternoDenominacion(null);
