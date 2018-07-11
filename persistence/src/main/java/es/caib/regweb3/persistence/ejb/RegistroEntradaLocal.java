@@ -121,6 +121,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception;
 
+    /**
+     * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente
+     *
+     * @param registroEntrada
+     * @param idEstado
+     * @param observacionesAnulacion
+     * @throws Exception
+     */
+    void cambiarEstadoAnuladoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
+
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro
@@ -171,9 +181,10 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      *
      * @param registroEntrada
      * @param usuarioEntidad
+     * @param observacionesAnulacion
      * @throws Exception
      */
-    void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void anularRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception;
 
     /**
      * Activa un RegistroEntrada, cambiandole el estado a anulado.

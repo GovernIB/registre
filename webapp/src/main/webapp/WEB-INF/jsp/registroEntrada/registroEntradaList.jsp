@@ -413,7 +413,7 @@
 
                                                                         <%--Botón anular--%>
                                                                         <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
-                                                                            <a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>
+                                                                            <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><span class="fa fa-thumbs-o-down"></span></a>
                                                                         </c:if>
 
                                                                         <%--Botón activar--%>
@@ -454,8 +454,13 @@
 
         <!-- Importamos el codigo jsp del modal del formulario para realizar la búsqueda de organismos Destino
              Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
-            <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
+        <c:import url="../registro/buscadorOrganismosOficinasREPestanas.jsp">
             <c:param name="tipo" value="listaRegEntrada"/>
+        </c:import>
+
+        <%--Modal ANULAR--%>
+        <c:import url="../registro/anular.jsp">
+            <c:param name="tipoRegistro" value="entrada"/>
         </c:import>
 
 

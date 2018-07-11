@@ -418,7 +418,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 8.- Anulamos el RegistroSalida
         // TODO Falta Afegir paràmetre
-        registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad);
+        registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad, "");
 
     }
 

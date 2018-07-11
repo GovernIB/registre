@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.EnvioSirForm;
 import es.caib.regweb3.webapp.form.ReenviarForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
@@ -112,6 +113,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         // Obtenemos los usuarios de la Entidad
         model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
 
+        model.addAttribute("anularForm", new AnularForm());
+
         return "registroEntrada/registroEntradaList";
     }
 
@@ -142,6 +145,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             mav.addObject("registroEntradaBusqueda", busqueda);
             mav.addObject("organosDestino", organismosOficinaActiva);
             mav.addObject("oficinasRegistro",  oficinasRegistro);
+            mav.addObject("anularForm", new AnularForm());
 
             return mav;
 
@@ -182,6 +186,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         mav.addObject("oficinasRegistro", oficinasRegistro);
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("organDestinatari", busqueda.getOrganDestinatari());
+        mav.addObject("anularForm", new AnularForm());
 
         /* Solucion a los problemas de encoding del formulario GET */
         busqueda.getRegistroEntrada().getRegistroDetalle().setExtracto(new String(busqueda.getRegistroEntrada().getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8"));
@@ -213,6 +218,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
         model.addAttribute("entidadActiva", entidadActiva);
+        model.addAttribute("anularForm", new AnularForm());
 
         // Modelo Recibo
         //model.addAttribute("modeloRecibo", new ModeloForm());
@@ -497,12 +503,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     /**
      * Anular un {@link es.caib.regweb3.model.RegistroEntrada}
      */
-    @RequestMapping(value = "/{idRegistro}/anular")
-    public String anularRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) {
+    @RequestMapping(value = "/anular", method= RequestMethod.POST)
+    public String anularRegistroEntrada(@ModelAttribute AnularForm anularForm, HttpServletRequest request) {
 
         try {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(anularForm.getIdAnular());
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             final List<Long> estados = new ArrayList<Long>();
@@ -525,7 +531,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             }
 
             // Anulamos el RegistroEntrada
-            registroEntradaEjb.anularRegistroEntrada(registroEntrada,usuarioEntidad);
+            String motivoAnulacion;
+            if(StringUtils.isEmpty(anularForm.getObservacionesAnulacion())){
+                motivoAnulacion = getMessage("registro.modificacion.anulacion");
+            }else{
+                motivoAnulacion = getMessage("registro.modificacion.anulacion") + ": " + anularForm.getObservacionesAnulacion();
+            }
+            registroEntradaEjb.anularRegistroEntrada(registroEntrada,usuarioEntidad, motivoAnulacion);
 
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.anular"));
 
@@ -534,7 +546,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             e.printStackTrace();
         }
 
-        return "redirect:/registroEntrada/"+idRegistro+"/detalle";
+        return "redirect:/registroEntrada/"+anularForm.getIdAnular()+"/detalle";
     }
 
     /**
