@@ -561,7 +561,7 @@
         // Mira si todos los campos son correctos
         if ((libro) && (idioma) && (tipoAsunto)) {
 
-            //$( "#registrarForm" ).submit();
+            waitingDialog.show('<spring:message code="registroSir.aceptando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primarycd'});
             doForm('#registrarForm');
             //return true;
         } else {
