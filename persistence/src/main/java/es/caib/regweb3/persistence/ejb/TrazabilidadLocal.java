@@ -93,6 +93,6 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> getPendientesDistribuir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception;
+    List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception;
 
 }

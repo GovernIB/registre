@@ -171,7 +171,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getPendientesDistribuir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception {
+    public List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception {
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
