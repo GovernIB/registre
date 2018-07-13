@@ -283,7 +283,7 @@ public class ArxiuController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/{app}/{serie}/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
+    @RequestMapping(value = "/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
     public ModelAndView expedientes(@PathVariable String app, @PathVariable String serie, @PathVariable String initialDate,
                                     @PathVariable String endDate,@PathVariable Boolean onlyCount,@PathVariable String expedientPattern,HttpServletRequest request) {
 
@@ -296,8 +296,8 @@ public class ArxiuController extends BaseController {
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 
-            mav.addObject("app",app);
-            mav.addObject("serie",serie);
+            mav.addObject("app",custody.getPropertyCodiAplicacio());
+            mav.addObject("serie",custody.getPropertySerieDocumentalEL());
             mav.addObject("initialDate",initialDate);
             mav.addObject("endDate",endDate);
             mav.addObject("onlyCount",onlyCount);
