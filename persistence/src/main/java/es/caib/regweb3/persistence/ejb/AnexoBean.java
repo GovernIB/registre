@@ -195,7 +195,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
             anexoFull.setDocumentoFileDelete(false);
 
-            anexoFull.setSignatureCustody(descargarFirmaDesdeUrlValidacion(custodyID, isJustificante, idEntidad));//Firma asociada al anexo
+            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
+            //anexoFull.setSignatureCustody(descargarFirmaDesdeUrlValidacion(custodyID, isJustificante, idEntidad));//Firma asociada al anexo
             anexoFull.setSignatureFileDelete(false);
 
             return anexoFull;
