@@ -261,11 +261,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
             String urlValidacion = anexoEjb.getUrlValidation(registro.getRegistroDetalle().getJustificante().getCustodiaID(),true,entidadActiva.getId());
-            if(StringUtils.isNotEmpty(urlValidacion)){
-                model.addAttribute("tieneUrlValidacion", Boolean.TRUE);
-            }else {
-                model.addAttribute("tieneUrlValidacion", Boolean.FALSE);
-            }
+            model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
         }
 
         // Historicos
