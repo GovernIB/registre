@@ -503,6 +503,20 @@ public class RegistroDetalle implements Serializable {
     }
 
     /**
+     * devuelve el Justificante generado
+     * @return
+     */
+    @Transient
+    public Anexo getJustificante(){
+        for (Anexo anexo : anexos) {
+            if(anexo.isJustificante()){
+                return anexo;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Devuelve si el registroDetalle tiene anexos
      * @return
      */
