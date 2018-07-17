@@ -43,7 +43,7 @@
                                         <c:if test="${interesado.tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA}"><spring:message
                                                 code="persona.juridica"/></c:if>
                                     </td>
-                                    <td>
+                                    <td class="center">
                                         <c:if test="${interesado.representante}">
                                                         <span data-toggle="modal" href="#detalleInteresadoSir"
                                                               onclick="obtenerInteresadoSir(${interesado.id})"
