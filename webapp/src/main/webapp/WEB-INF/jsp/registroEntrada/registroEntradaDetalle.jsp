@@ -82,12 +82,26 @@
                                     </c:if>
 
                                     <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
-                                    <c:if test="${idJustificante != null}">
-                                        <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                    <c:if test="${tieneJustificante}">
+                                        <%-- Si no tiene urlValidación solo podrá descargar el original --%>
+                                        <c:if test="${!tieneUrlValidacion}">
+                                         <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                        </c:if>
+
+                                        <%-- Si tiene urlValidación se podrá descargar el original o con el csv incrustado --%>
+                                        <c:if test="${tieneUrlValidacion}">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                    <spring:message code="justificante.boton"/> <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.original"/></a></li>
+                                                    <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/false"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.concsv"/></a></li>
+                                                </ul>
+                                            </div>
+                                        </c:if>
                                     </c:if>
-
                                 </c:if>
-
                                 <%-- Botón de sello --%>
                                 <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
 
@@ -379,7 +393,7 @@
     window.onload = function descargaJustificante(){
         <c:if test="${param.justificante==true}">
             mensajeSuccess('#mensajes', '<spring:message code="justificante.generando.success" javaScriptEscape='true'/>');
-            goTo('<c:url value="/anexo/descargarFirma/${idJustificante}"/>');
+            goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/false"/>');
         </c:if>
     };
 

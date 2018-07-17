@@ -302,7 +302,7 @@ public class AnexoController extends BaseController {
 
         AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getMime(),
-                anexoFull.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId());
+                anexoFull.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(),false);
     }
 
     /**
@@ -310,18 +310,18 @@ public class AnexoController extends BaseController {
      *
      * @param anexoId identificador del anexo
      */
-    @RequestMapping(value = "/descargarFirma/{anexoId}", method = RequestMethod.GET)
-    public void firma(@PathVariable("anexoId") Long anexoId, HttpServletRequest request,
+    @RequestMapping(value = "/descargarFirma/{anexoId}/{original}", method = RequestMethod.GET)
+    public void firma(@PathVariable("anexoId") Long anexoId, @PathVariable("original") Boolean original, HttpServletRequest request,
                       HttpServletResponse response) throws Exception, I18NException {
 
         AnexoFull anexo = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId());
+                    anexo.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(),original);
         } else {
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), true, response, getEntidadActiva(request).getId());
+                    anexo.getAnexo().isJustificante(), true, response, getEntidadActiva(request).getId(),original);
         }
 
     }
@@ -340,7 +340,7 @@ public class AnexoController extends BaseController {
      * Por tanto cuando vaya a recuperar un documento con firma antiguo, mirarà en SignatureCustody y no lo encontrará, por tanto controlamos ese caso y devolvemos false.
      * para poder ir a buscarlo a DocumentCustody, que es donde estará. (todo esto se hace en el método firma)
      */
-    private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response, Long idEntidad) {
+    private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response, Long idEntidad, boolean original) {
 
         String filename = null;
         OutputStream output;
@@ -359,9 +359,16 @@ public class AnexoController extends BaseController {
                     data = dc.getData();
 
                 } else {   // Si és firma d'un arxiu
-                    SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante, idEntidad);
-                    data = sc.getData();
-                    filename = sc.getName();
+                    if(original){
+                        SignatureCustody dc = anexoEjb.getFirma(custodiaID, isJustificante, idEntidad);
+                        filename = dc.getName();
+                        data = dc.getData();
+                    }else{
+                        SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante, idEntidad);
+                        data = sc.getData();
+                        filename = sc.getName();
+                    }
+
                 }
 
                 if (contentType == null) {
