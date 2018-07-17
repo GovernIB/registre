@@ -198,7 +198,7 @@
                                             ${anexoForm.signatureCustody.name}</a>
                                 </c:if>
                                 <c:if test="${not empty anexoForm.anexo.id}">
-                                    <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}" />" target="_blank">
+                                    <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">
                                             ${anexoForm.signatureCustody.name}</a>
                                 </c:if>
                                 </div>

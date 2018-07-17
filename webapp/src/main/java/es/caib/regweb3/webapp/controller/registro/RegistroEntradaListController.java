@@ -220,10 +220,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("entidadActiva", entidadActiva);
         model.addAttribute("anularForm", new AnularForm());
 
-        // Modelo Recibo
-        //model.addAttribute("modeloRecibo", new ModeloForm());
-        //model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
-
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
@@ -275,6 +271,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if(tieneJustificante){
 
                 model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
+                String urlValidacion = anexoEjb.getUrlValidation(registro.getRegistroDetalle().getJustificante().getCustodiaID(),true,entidadActiva.getId());
+                if(StringUtils.isNotEmpty(urlValidacion)){
+                    model.addAttribute("tieneUrlValidacion", Boolean.TRUE);
+                }else {
+                    model.addAttribute("tieneUrlValidacion", Boolean.FALSE);
+                }
+
             }
 
             // Historicos
