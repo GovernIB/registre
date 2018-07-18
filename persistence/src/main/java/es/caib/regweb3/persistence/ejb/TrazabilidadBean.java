@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -144,6 +145,19 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q.setParameter("registroSir", idRegistroSir);
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws Exception {
+
+        Query q = em.createQuery("Select tra.registroEntradaDestino from Trazabilidad as tra " +
+                "where tra.registroSir.id = :registroSir and tra.registroSir.estado = :aceptado");
+
+        q.setParameter("registroSir", idRegistroSir);
+        q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
+
+        return (RegistroEntrada) q.getSingleResult();
     }
 
     @Override

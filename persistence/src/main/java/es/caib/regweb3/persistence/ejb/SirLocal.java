@@ -27,7 +27,7 @@ public interface SirLocal {
      * @param ficheroIntercambio
      * @throws Exception
      */
-    void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control

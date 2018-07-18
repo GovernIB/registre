@@ -31,8 +31,8 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     }
 
     @Override
-    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
-        sirEjb.recibirFicheroIntercambio(ficheroIntercambio);
+    public Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
+        return  sirEjb.recibirFicheroIntercambio(ficheroIntercambio);
     }
 
     @Override

@@ -68,10 +68,11 @@ public class RecepcionBean implements RecepcionLocal{
             }
 
             // Creamos el RegistroSir a partir del xml recibido y validado
-            webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
+            Boolean ack = webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
 
-            // Si ha ido bien, enviamos el ACK
-            mensajeEjb.enviarACK(ficheroIntercambio);
+            if (ack){ // Enviamos el ack si así lo hemos marcado
+                mensajeEjb.enviarACK(ficheroIntercambio);
+            }
 
         }catch (ValidacionException e) {
             log.info("Error de validacion: " + e.getMensajeError());
@@ -92,8 +93,7 @@ public class RecepcionBean implements RecepcionLocal{
             throw e;
 
         } catch (RuntimeException e) {
-            //Error inesperado, intentamos enviar el mensaje de error
-            //NO ENVIAMOS UN MENSAJE DE ERROR DE CONTROL, PORQUÉ NO SE DEBE A LAS VALIDACIONES
+            //Error inesperado, NO ENVIAMOS UN MENSAJE DE ERROR DE CONTROL, PORQUÉ NO SE DEBE A LAS VALIDACIONES
             log.info("Error inesperado recibiendo el Fichero de Intercambio, no enviamos un mensaje de control de error", e);
 
             //enviarMensajeError(xmlFicheroIntercambio, errorGenerico, e.getMessage());

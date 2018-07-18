@@ -27,7 +27,7 @@ public interface WebServicesMethodsLocal {
      * @param ficheroIntercambio
      * @throws Exception
      */
-    void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      *

@@ -66,8 +66,9 @@ public class SirBean implements SirLocal {
      * @throws Exception
      */
     @Override
-    public void recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
+    public Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
 
+        Boolean ack = true; // Indica si enviaremos un ack o no
         RegistroSir registroSir = null;
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
@@ -95,8 +96,12 @@ public class SirBean implements SirLocal {
 
                 } else if (EstadoRegistroSir.ACEPTADO.equals(registroSir.getEstado())) {
 
-                    log.info("Se ha recibido un ENVIO que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+                    log.info("Se ha recibido un ENVIO que ya ha sido aceptado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", enviamos un mensaje de Confirmacion");
 
+                    // Enviamos el Mensaje de Confirmación
+                    RegistroEntrada registroEntrada = trazabilidadEjb.getRegistroAceptado(registroSir.getId());
+                    mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
+                    ack = false;
                 } else {
                     log.info("Se ha recibido un ENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
@@ -320,6 +325,7 @@ public class SirBean implements SirLocal {
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
         }
 
+        return ack;
     }
 
     /**

@@ -70,6 +70,14 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
     List<Trazabilidad> getByRegistroSir(Long idRegistroSir) throws Exception;
 
     /**
+     * Obtiene el Registro de Entrada generado a partir de la aceptación de un Registro Sir
+     * @param idRegistroSir
+     * @return
+     * @throws Exception
+     */
+    RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws Exception;
+
+    /**
      * Elimina las Trazabilidades de una Entidad
      * @param idEntidad
      * @return
