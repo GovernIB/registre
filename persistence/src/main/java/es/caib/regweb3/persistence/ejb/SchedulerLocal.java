@@ -13,37 +13,33 @@ import javax.ejb.Local;
 public interface SchedulerLocal {
 
     /**
-     *
      * @throws Exception
      */
     void purgarIntegraciones() throws Exception;
 
     /**
-     *
      * @throws Exception
      */
     void reintentarEnviosSinConfirmacion() throws Exception;
 
     /**
-     *
      * @throws Exception
      */
     void reintentarEnviosConError() throws Exception;
 
     /**
-     *
      * @throws Exception
      */
     void reiniciarContadoresEntidad() throws Exception;
 
     /**
+     * Inicia la distribución de los registros en cola de cada entidad.
      *
      * @throws Exception
      */
-    void distribuirRegistros() throws Exception;
+    void distribuirRegistrosEnCola() throws Exception;
 
     /**
-     *
      * @throws Exception
      */
     void cerrarExpedientes() throws Exception;

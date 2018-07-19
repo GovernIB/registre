@@ -1,10 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
-import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -47,14 +44,11 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    private UsuarioEntidadLocal usuarioEntidadEjb;
-
     @EJB(mappedName = "regweb3/ArxiuEJB/local")
     private ArxiuLocal arxiuEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    private AnexoLocal anexoEjb;
 
 
     @Override
@@ -120,17 +114,17 @@ public class SchedulerBean implements SchedulerLocal{
      * @throws Exception
      */
     @Override
-    public void distribuirRegistros() throws Exception{
+    public void distribuirRegistrosEnCola() throws Exception{
 
         try {
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
 
             for(Entidad entidad: entidades) {
-                List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(entidad.getId());
-                IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
-                if(distribucionPlugin != null) {
-                    registroEntradaEjb.iniciarDistribucionLista(entidad.getId(), administradores,distribucionPlugin);
-                }
+                log.info(" ");
+                log.info("------------- Distribucion: Procesando registros En Cola " + entidad.getNombre() + " -------------");
+                log.info(" ");
+
+                registroEntradaEjb.distribuirRegistrosEnCola(entidad.getId());
             }
         } catch (I18NException e) {
             log.error("Error Distribuyendo los registros de la entidad ...", e);

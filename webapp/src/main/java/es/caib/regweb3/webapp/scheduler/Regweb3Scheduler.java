@@ -75,12 +75,12 @@ public class Regweb3Scheduler {
      * Qué hace: Distribuye los registros que hay en la cola
      * Cuando lo hace: cada 5 minutos
      */
-    @Scheduled(cron = "0 0/5 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+    @Scheduled(cron = "0 0/3 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void distribuirRegistrosEnCola(){
 
         try {
 
-            schedulerEjb.distribuirRegistros();
+            schedulerEjb.distribuirRegistrosEnCola();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,6 +96,21 @@ public class Regweb3Scheduler {
     public void cerrarExpedientes(){
         try {
             schedulerEjb.cerrarExpedientes();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Qué hace: Elimina los anexos que hace xmeses que se distribuyeron
+     * Cuando lo hace: todos los dias a las 02:00 h
+     */
+    @Scheduled(cron = "0 0 2 * * *")
+    public void purgarAnexosDistribuidos(){
+        try {
+            schedulerEjb.purgarAnexosDistribuidos();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -372,6 +372,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
                    Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException;
 
+
+    /**
+     * Método que agrupa la distribución de los registros en cola.
+     * @param entidadId
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+     void distribuirRegistrosEnCola(Long entidadId) throws Exception, I18NException, I18NValidationException;
+
     /**
      *
      * @param pageNumber
