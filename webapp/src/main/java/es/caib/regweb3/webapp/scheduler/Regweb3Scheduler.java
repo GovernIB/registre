@@ -103,17 +103,5 @@ public class Regweb3Scheduler {
     }
 
 
-    /**
-     * Qué hace: Elimina los anexos que hace xmeses que se distribuyeron
-     * Cuando lo hace: todos los dias a las 02:00 h
-     */
-    @Scheduled(cron = "0 0 2 * * *")
-    public void purgarAnexosDistribuidos(){
-        try {
-            schedulerEjb.purgarAnexosDistribuidos();
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

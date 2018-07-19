@@ -991,7 +991,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                             //Tramitamos el registro de entrada
                             tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
                             //Marcamos los anexos como distribuidos para la futura purga
-                            anexoEjb.marcarAnexosDistribuidos(registroEntrada.getRegistroDetalle().getAnexos());
+                          //  anexoEjb.marcarAnexosDistribuidos(registroEntrada.getRegistroDetalle().getAnexos());
                             //Añadimos la integración correcta.
                             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION,descripcion,peticion.toString(),System.currentTimeMillis() - tiempo,entidadId,registroEntrada.getNumeroRegistroFormateado());
 
