@@ -8,6 +8,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -22,7 +23,7 @@ import java.util.List;
  */
 
 @Stateless(name = "SchedulerEJB")
-/*@SecurityDomain("seycon")*/
+@SecurityDomain("seycon")
 @RunAs("RWE_USUARI")
 public class SchedulerBean implements SchedulerLocal{
 
