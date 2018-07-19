@@ -1110,7 +1110,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         // Si ya ha sido enviado, lo marcamos como tramitado.
                         if(respuestaDistribucion.getEnviado()){
                             tramitarRegistroEntrada(re,usuarioEntidad);
-                            anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
+                          //  anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
 
                             // Integración
                             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(),numRegFormat);
@@ -1140,7 +1140,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     re.getRegistroDetalle().getAnexosFull().add(justificante);
                 }
                 tramitarRegistroEntrada(re,usuarioEntidad);
-                anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
+              //  anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
                 //Integración
                 integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
                 //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
@@ -1210,7 +1210,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     //Tramitamos el registro de entrada
                     tramitarRegistroEntrada(re, re.getUsuario());
                     //Marcamos los anexos como distribuidos para la posterior purga
-                    anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
+                //    anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
                     integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidadId, re.getNumeroRegistroFormateado());
                     log.info("");
                     log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
