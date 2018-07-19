@@ -172,24 +172,16 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
+    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numRegFormat) throws Exception {
 
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw, true);
         th.printStackTrace(pw);
         String exception = sw.getBuffer().toString();
-        String error = th.getMessage();
 
-        /*//Reducimos el tamaño de la excepción si es mayor de 4000 caracteres
-        if(exception.length() > 4000){
-            exception = exception.substring(0,4000);
+        if (StringUtils.isEmpty(error)){
+            error = th.getMessage();
         }
-
-        //Reducimos el tamaño del error si es mayor de 2000 caracteres
-
-        if(error.length() > 2000){
-            error = error.substring(0,2000);
-        }*/
 
         persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_ERROR, descripcion, peticion, error, exception,tiempo, idEntidad, numRegFormat));
     }

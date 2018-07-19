@@ -700,14 +700,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason,peticion.toString(), e, System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

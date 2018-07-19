@@ -254,7 +254,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
             merge(elemento);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, System.currentTimeMillis() - tiempo, entidadId, elemento.getDescripcionObjeto());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, null,System.currentTimeMillis() - tiempo, entidadId, elemento.getDescripcionObjeto());
             }catch(Exception ee){
                 elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
                 merge(elemento);

@@ -1152,21 +1152,21 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), e, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), e, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
             throw e;
         } catch (I18NValidationException i18vn) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18vn, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18vn, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -1220,21 +1220,21 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             return distribucionOk;
         } catch (I18NException i18ne) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, entidadId,re.getNumeroRegistroFormateado());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, entidadId,re.getNumeroRegistroFormateado());
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
         } catch (Exception e) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadId,re.getNumeroRegistroFormateado());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadId,re.getNumeroRegistroFormateado());
             } catch (Exception ex) {
                 e.printStackTrace();
             }
             throw e;
         } catch (I18NValidationException i18vn) {
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18vn, System.currentTimeMillis() - tiempo, entidadId,re.getNumeroRegistroFormateado());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(), i18vn, null,System.currentTimeMillis() - tiempo, entidadId,re.getNumeroRegistroFormateado());
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

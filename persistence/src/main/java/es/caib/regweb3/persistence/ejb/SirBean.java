@@ -75,7 +75,7 @@ public class SirBean implements SirLocal {
         String descripcion = "Recepción FicheroIntercambio: " + TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName();
 
         // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
-        comprobarEntidad(ficheroIntercambio.getCodigoEntidadRegistralDestino());
+        //comprobarEntidad(ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
         peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
         peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
@@ -320,8 +320,8 @@ public class SirBean implements SirLocal {
 
         // Integracion
         if(registroSir != null){
-            peticion.append("origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
-            peticion.append("destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
+            peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(" (").append(registroSir.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
+            peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(" (").append(registroSir.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
         }
 
@@ -1255,16 +1255,16 @@ public class SirBean implements SirLocal {
 
             if(!entidad.getActivo() || !entidad.getSir()){
                 log.info("La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
-                throw new ValidacionException(Errores.ERROR_0037);
+                throw new ValidacionException(Errores.ERROR_0037, "La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
 
             }else if(!oficinaEjb.isSIRRecepcion(oficina.getId())){
                 log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para recibir asientos SIR");
-                throw new ValidacionException(Errores.ERROR_0037);
+                throw new ValidacionException(Errores.ERROR_0037, "La Oficina "+ oficina.getDenominacion() +" no esta habilitada para recibir asientos SIR");
             }
 
         }else{
             log.info("El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
-            throw new ValidacionException(Errores.ERROR_0037);
+            throw new ValidacionException(Errores.ERROR_0037, "El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
         }
     }
 

@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 
@@ -49,4 +50,25 @@ public interface WebServicesMethodsLocal {
      * @throws Exception
      */
     String getFormatosAnexosSir() throws Exception;
+
+    /**
+     *
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Oficina obtenerOficina(String codigo) throws Exception;
+
+    /**
+     *
+     * @param tipo
+     * @param descripcion
+     * @param peticion
+     * @param th
+     * @param tiempo
+     * @param idEntidad
+     * @param numregformat
+     * @throws Exception
+     */
+    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 }

@@ -179,7 +179,7 @@ public class JustificanteBean implements JustificanteLocal {
         } catch (I18NValidationException i18nve) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), i18nve, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), i18nve, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -188,7 +188,7 @@ public class JustificanteBean implements JustificanteLocal {
         } catch (I18NException i18ne) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante",peticion.toString(), i18ne, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante",peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -197,7 +197,7 @@ public class JustificanteBean implements JustificanteLocal {
         } catch (Exception e) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), e, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }

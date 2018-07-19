@@ -57,7 +57,7 @@ public class ArxiuBean implements ArxiuLocal{
                 this.log.error("Error no controlat al cerrarExpediente()[Miram si podem reintentar...]: " + var23.getMessage(), var23);
                 String error = var23.getMessage();
                 if (reintents <= 0 || error == null || !error.contains("Proxy Error") || !error.contains("/services/closeFile")) {
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), var23, System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), var23, null,System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
                     throw var23;
                 }
 
@@ -81,14 +81,14 @@ public class ArxiuBean implements ArxiuLocal{
                     this.log.info("S'ha intentat cerrarExpediente() però aquest ja esta a RM. Es dóna per bó.");
                     break;
                 }
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("No s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("No s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), null,System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
                 throw new CustodyException("No s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado());
             }
 
             this.log.warn("Gestió de reintents de apiArxiu.cerrarExpediente(): reintent compte enrera " + reintents + ". Esperam " + 5000L + " ms");
             Thread.sleep(5000L);
             if (reintents <= 0) {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("S'han esgotat els reintents i no s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(), new CustodyException("S'han esgotat els reintents i no s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado()), null,System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
                 throw new CustodyException("S'han esgotat els reintents i no s'ha pogut tancar l'expedient amb uuid " + expediente.getId() + ": " + res.getCodigoResultado() + " - " + res.getMsjResultado());
             }
 

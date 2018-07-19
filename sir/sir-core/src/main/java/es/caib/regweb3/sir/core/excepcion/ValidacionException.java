@@ -30,6 +30,12 @@ public class ValidacionException extends SIRException {
         setErrorValidacion(error);
     }
 
+    public ValidacionException(Errores error, String mensajeError) {
+        super(error.getName());
+        setErrorValidacion(error);
+        setMensajeError(mensajeError);
+    }
+
     public Errores getErrorValidacion() {
         return errorValidacion;
     }

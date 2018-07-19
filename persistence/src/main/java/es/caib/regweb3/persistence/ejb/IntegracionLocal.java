@@ -57,7 +57,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param numregformat
      * @throws Exception
      */
-    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+    void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 
     /**
      * Elimina las Integraciones con una antigüedad de 7 días

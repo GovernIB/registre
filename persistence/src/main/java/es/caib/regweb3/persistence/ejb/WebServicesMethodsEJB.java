@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
@@ -19,11 +20,18 @@ import javax.ejb.Stateless;
  */
 @Stateless(name = "WebServicesMethodsEJB")
 @SecurityDomain("seycon")
-@RunAs("RWE_USUARI") //todo Revisar si se puede eliminar
+@RunAs("RWE_USUARI")
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
     @EJB(mappedName = "regweb3/SirEJB/local")
     private SirLocal sirEjb;
+
+    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    private OficinaLocal oficinaEjb;
+
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
 
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
@@ -48,5 +56,17 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public String getFormatosAnexosSir() throws Exception {
         return PropiedadGlobalUtil.getFormatosAnexosSir();
+    }
+
+    @Override
+    public Oficina obtenerOficina(String codigo) throws Exception {
+        return oficinaEjb.findByCodigo(codigo);
+    }
+
+    @Override
+    public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception {
+
+        integracionEjb.addIntegracionError(tipo, descripcion, peticion, th, error, tiempo, idEntidad, numregformat);
+
     }
 }

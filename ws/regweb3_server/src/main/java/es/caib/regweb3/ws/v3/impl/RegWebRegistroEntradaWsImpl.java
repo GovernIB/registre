@@ -283,7 +283,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
         }catch (Exception e){
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
             throw new I18NException("registro.nuevo.error");
         }
 
@@ -362,7 +362,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
                 try{
                     justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),"ca");
                 }catch (Exception e){
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
@@ -693,7 +693,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
                     UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
         }catch (Exception e){
 
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
             throw new I18NException("registro.obtener.error");
         }
 

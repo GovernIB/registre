@@ -1,9 +1,12 @@
 package es.caib.regweb3.sir.ws.ejb;
 
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
@@ -11,6 +14,7 @@ import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
@@ -29,8 +33,7 @@ public class RecepcionBean implements RecepcionLocal{
 
     private final Logger log = Logger.getLogger(getClass());
 
-    @EJB(name = "MensajeEJB")
-    private MensajeLocal mensajeEjb;
+    @EJB private MensajeLocal mensajeEjb;
 
     private Sicres3XML sicres3XML = new Sicres3XML();
 
@@ -49,8 +52,12 @@ public class RecepcionBean implements RecepcionLocal{
      */
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception {
 
+        Entidad entidad = null;
         FicheroIntercambio ficheroIntercambio = null;
         Mensaje mensajeError = null;
+        StringBuilder peticion = new StringBuilder();
+        String descripcion = "Recepción FicheroIntercambio: ";
+        long tiempo = System.currentTimeMillis();
 
         try {
 
@@ -61,6 +68,12 @@ public class RecepcionBean implements RecepcionLocal{
 
             // Validamos el Fichero de Intercambio creado a partir del xml recibido
             try {
+                // Comprobamos que la Entidad a la que va dirigida el Asiento existe y está activa
+                entidad = obtenerEntidad(ficheroIntercambio.getCodigoEntidadRegistralDestino(), webServicesMethodsEjb);
+                Assert.notNull(entidad,"No existe ninguna Entidad a la que corresponda este envío");
+                Assert.isTrue(entidad.getActivo(), "La Entidad a la que va dirigida el Asiento Registral no está activa");
+                Assert.isTrue(entidad.getSir(), "La Entidad a la que va dirigida el Asiento Registral no tiene el servicio SIR activo");
+
                 sicres3XML.validarFicheroIntercambio(ficheroIntercambio, webServicesMethodsEjb.getObtenerOficinasService(), webServicesMethodsEjb.getObtenerUnidadesService(), webServicesMethodsEjb.getFormatosAnexosSir());
             } catch (IllegalArgumentException e) {
                 log.info("Se produjo un error de validacion del xml recibido: " + e.getMessage());
@@ -82,6 +95,16 @@ public class RecepcionBean implements RecepcionLocal{
             if(ficheroIntercambio != null && (!descripcionError.contains("CodigoEntidadRegistralOrigen") && !descripcionError.contains("CodigoEntidadRegistralDestino") && !descripcionError.contains("IdentificadorIntercambio"))){
                 mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError);
                 enviarMensajeError(mensajeError);
+
+                // Integración
+                if(entidad != null){
+                    peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
+                    peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+                    peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
+                    peticion.append("Destino: ").append(ficheroIntercambio.getDescripcionEntidadRegistralDestino()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
+
+                    webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e,descripcionError, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
+                }
 
             }else if(ficheroIntercambio == null && !Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())){
                 mensajeError = parserForError(xmlFicheroIntercambio, errorValidacion.getValue(), descripcionError);
@@ -206,6 +229,26 @@ public class RecepcionBean implements RecepcionLocal{
         }
 
         return mensaje;
+    }
+
+    /**
+     * Obtiene la Entidad de REBWEB3 a partir de la Oficina destino
+     * @param codigoEntidadRegistralDestino
+     * @throws Exception
+     */
+    private Entidad obtenerEntidad(String codigoEntidadRegistralDestino, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception{
+
+        if(codigoEntidadRegistralDestino != null){
+
+            Oficina oficina = webServicesMethodsEjb.obtenerOficina(codigoEntidadRegistralDestino);
+
+            if(oficina != null){
+                return oficina.getOrganismoResponsable().getEntidad();
+            }
+        }
+
+        return null;
+
     }
 
 }
