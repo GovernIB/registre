@@ -127,7 +127,7 @@
                                                 </td>
                                                 <td class="center">
                                                     <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_VALIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
-                                                    <a class="btn btn-info btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_DISTRIBUIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.marcardistribuido"/>"><span class="fa fa-share-square-o"></span></a>
+                                                    <a class="btn btn-info btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_DISTRIBUIDO}"/>","<spring:message code="regweb.confirmar.distribuido" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.marcardistribuido"/>"><span class="fa fa-share-square-o"></span></a>
                                                     <a class="btn btn-success btn-sm" onclick='javascript:confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.reiniciar"/>"><span class="fa fa-repeat"></span></a>
                                                 </td>
 
