@@ -95,7 +95,12 @@ public class Interesado implements Serializable {
     }
 
     public Interesado(String id){
-        this.id= Long.valueOf(id);
+
+        if(id != null){
+            this.id = Long.valueOf(id);
+        }else{
+            this.id = null;
+        }
     }
 
     /**
