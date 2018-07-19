@@ -307,6 +307,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         return  em.createQuery("Select entidad from Entidad as entidad where entidad.sir = true order by entidad.id").getResultList();
     }
 
+    @Override
+    public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception {
+
+        return !registroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
+           && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
+           && !reproEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
+    }
+
 
     @Override
     public void eliminarRegistros(Long idEntidad) throws Exception, I18NException {

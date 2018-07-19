@@ -118,6 +118,14 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
     List<Entidad> getEntidadesSir() throws Exception;
 
     /**
+     * Comprueba las diferentes dependencias del UsuarioEntidad para saber si es posible eliminarlo
+     * @param idUsuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception;
+
+    /**
      * Elimina todos los Registros y relaciones de una Entidad.
      *
      * @param idEntidad
