@@ -721,7 +721,7 @@ public class EntidadController extends BaseController {
             permisoLibroUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
 
             // Comprobar si el usuario tiene Registros en la Entidad
-            if (usuarioEntidadEjb.puedoEliminarlo(idUsuarioEntidad)) {
+            if (entidadEjb.puedoEliminarlo(idUsuarioEntidad)) {
                 // Si no tiene registros relacinados, lo eliminamos definitivamente.
                 usuarioEntidadEjb.remove(usuarioEntidad);
 
