@@ -118,10 +118,19 @@
                                             </td>
                                             <td class="center">
                                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
-                                                    <a class="btn btn-info btn-default btn-sm"
+
+                                                    <c:if test="${anexo.firmaValida}">
+                                                        <c:set var="clase" value="btn btn-info btn-default btn-sm"/>
+                                                        <c:set var="etiqueta" value="anexo.tipofirma.detached.valido"/>
+                                                    </c:if>
+                                                    <c:if test="${!anexo.firmaValida}">
+                                                        <c:set var="clase" value="btn btn-danger btn-default btn-sm"/>
+                                                        <c:set var="etiqueta" value="anexo.tipofirma.detached.invalido"/>
+                                                    </c:if>
+                                                    <a class="${clase}"
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}/true"/>"
                                                        target="_blank"
-                                                       title="<spring:message code="anexo.tipofirma.detached"/>">
+                                                       title="<spring:message code="${etiqueta}"/>">
                                                         <span class="fa fa-key"></span>
                                                     </a>
                                                 </c:if>

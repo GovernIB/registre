@@ -112,6 +112,36 @@ function confirmDistribuir(mensaje) {
     confirmModal.modal("show");
 }
 
+// Muestra un popup con un mensaje informativo
+function mensajeInformativo(mensaje) {
+
+    var confirmModal =
+        $("<div class=\"modal fade\">" +
+            "<div class=\"modal-dialog\">" +
+            "<div class=\"modal-content\">" +
+            "<div class=\"modal-header\">" +
+            "<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>" +
+            "<h4 class=\"modal-title\">Info</h4>" +
+            "</div>" +
+
+            "<div class=\"modal-body\">" +
+            "<p>" + mensaje + "</p>" +
+            "</div>" +
+
+            "<div class=\"modal-footer\">" +
+            "<button type=\"button\" id=\"okButton\" class=\"btn btn-danger\">Ok</button>" +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            "</div>");
+
+    confirmModal.find("#okButton").click(function (event) {
+        confirmModal.modal("hide");
+    });
+
+    confirmModal.modal("show");
+}
+
 
 function confirmRW(url, mensaje) {
     confirm(url, mensaje);

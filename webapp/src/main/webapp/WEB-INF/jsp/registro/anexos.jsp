@@ -23,11 +23,6 @@
                         <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos" class="btn btn-${color} btn-xs pull-right margin-left10" role="button"><i class="fa fa-plus"></i> <spring:message code="anexo.nuevo"/></a>
                     </c:if>
 
-                    <%--<c:if test="${teScan}">--%>
-                        <%--<a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"--%>
-                           <%--class="btn btn-${color} btn-xs pull-right " role="button"><i class="fa fa-plus"></i> Scan</a>--%>
-                    <%--</c:if>--%>
-
                     <c:if test="${teScan}">
                         <div class="btn-group pull-right text12">
                             <button type="button" class="btn btn-${color} btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -147,11 +142,18 @@
                                     </td>
                                     <td class="center">
 
-                                            <a class="btn btn-info btn-default btn-sm"
-                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
-                                               target="_blank"
-                                               title="<spring:message code="anexo.tipofirma.detached"/>"><span
-                                                    class="fa fa-key"></span></a>
+                                        <c:if test="${anexoFull.anexo.firmaValida}">
+                                            <c:set var="clase" value="btn btn-info btn-default btn-sm"/>
+                                            <c:set var="etiqueta" value="anexo.tipofirma.detached.valido"/>
+                                        </c:if>
+                                        <c:if test="${!anexoFull.anexo.firmaValida}">
+                                            <c:set var="clase" value="btn btn-danger btn-default btn-sm"/>
+                                            <c:set var="etiqueta" value="anexo.tipofirma.detached.invalido"/>
+                                        </c:if>
+                                        <a class="${clase}"
+                                           href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                           target="_blank"
+                                           title="<spring:message code="${etiqueta}"/>"><span class="fa fa-key"></span></a>
                                     </td>
                                 </c:if>
 
@@ -173,8 +175,7 @@
                                             <a class="btn btn-success btn-default btn-sm"
                                                href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
                                                target="_blank"
-                                               title="<spring:message code="anexo.descargar"/>"><span
-                                                    class="fa fa-download"></span></a>
+                                               title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
                                     </td>
                                     <td class="center">
                                         <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">

@@ -80,6 +80,9 @@ public class AvisoController extends BaseController {
             /*Reserva de número*/
             mav.addObject("reservas", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA));
 
+            /*Pendientes de distribuir*/
+            //mav.addObject("validos", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_VALIDO));
+
             /* OFICIOS DE REMISIÓN */
             if(entidadActiva.getOficioRemision()){
 
