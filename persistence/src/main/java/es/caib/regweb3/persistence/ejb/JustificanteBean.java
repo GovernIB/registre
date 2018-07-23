@@ -165,7 +165,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull.getAnexo().setFechaValidacion(new Date());
 
             // Cream l'annex justificant
-            anexoFull = anexoEjb.crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID);
+            anexoFull = anexoEjb.crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID, false);
 
             log.info("");
             log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));

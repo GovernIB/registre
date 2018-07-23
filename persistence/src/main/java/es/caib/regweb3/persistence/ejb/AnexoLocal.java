@@ -27,13 +27,35 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
-  
+  /**
+   *
+   * @param anexoFull
+   * @param usuarioEntidad
+   * @param registroID
+   * @param tipoRegistro
+   * @param validarAnexo
+   * @return
+   * @throws I18NException
+   * @throws I18NValidationException
+   */
   AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                       Long registroID, String tipoRegistro) throws I18NException, I18NValidationException;
+                       Long registroID, String tipoRegistro, Boolean validarAnexo) throws I18NException, I18NValidationException;
 
 
+  /**
+   *
+   * @param anexoFull
+   * @param usuarioEntidad
+   * @param registroID
+   * @param tipoRegistro
+   * @param custodyID
+   * @param validarAnexo
+   * @return
+   * @throws I18NException
+   * @throws I18NValidationException
+   */
   AnexoFull crearJustificanteAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                   Long registroID, String tipoRegistro, String custodyID) throws I18NException, I18NValidationException;
+                                   Long registroID, String tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException;
 
 
     /**

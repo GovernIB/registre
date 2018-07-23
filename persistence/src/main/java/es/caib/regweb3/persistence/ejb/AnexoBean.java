@@ -217,9 +217,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     @Override
     public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                Long registroID, String tipoRegistro) throws I18NException, I18NValidationException {
+                                Long registroID, String tipoRegistro, Boolean validarAnexo) throws I18NException, I18NValidationException {
 
-        return crearJustificanteAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro, null);
+        return crearJustificanteAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro, null, validarAnexo);
 
     }
 
@@ -227,7 +227,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * Método que crea un anexo o un justificante a partir de lo que le llega en anexoFull
      */
     public AnexoFull crearJustificanteAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                            Long registroID, String tipoRegistro, String custodyID) throws I18NException, I18NValidationException {
+                                            Long registroID, String tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException {
 
         IDocumentCustodyPlugin custody = null;
         boolean error = false;
@@ -263,7 +263,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
             // Validar firma del Anexo
-            if (!anexo.isJustificante()) { //Solo validamos si no es justificante
+            if (!anexo.isJustificante() && validarAnexo) { //Solo validamos si no es justificante
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
                     signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(),

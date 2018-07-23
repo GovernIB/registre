@@ -109,7 +109,7 @@ public class AnexoController extends BaseController {
 
             try {
                 anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
-                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro());
+                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), false);
 
                 model.addAttribute("closeAndReload", "true");
                 return "registro/formularioAnexo";
