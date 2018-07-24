@@ -284,7 +284,7 @@ public class ArxiuController extends BaseController {
 
 
     @RequestMapping(value = "/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
-    public ModelAndView expedientes(@PathVariable String app, @PathVariable String serie, @PathVariable String initialDate,
+    public ModelAndView expedientes(@PathVariable String initialDate,
                                     @PathVariable String endDate,@PathVariable Boolean onlyCount,@PathVariable String expedientPattern,HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("arxiu/asociarJustificante");
@@ -315,7 +315,7 @@ public class ArxiuController extends BaseController {
 
             do{
 
-                ResultadoBusqueda<Expediente> result = busquedaEdu(app, apiArxiu, serie, initialDate, endDate, expedientPattern, onlyCount, pagina);
+                ResultadoBusqueda<Expediente> result = busquedaEdu(custody.getPropertyCodiAplicacio(), apiArxiu, custody.getPropertySerieDocumentalEL(), initialDate, endDate, expedientPattern, onlyCount, pagina);
 
                 pagina++;
 
