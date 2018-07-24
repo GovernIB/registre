@@ -542,6 +542,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("idRegistro", registroSalida.getId());
         q.executeUpdate();
 
+        registroSalida.setEstado(idEstado);
+
         // Creamos el HistoricoRegistroSalida para la modificación de estado
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida,
                 usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()),"registro.modificacion.estado" ), false);
@@ -554,6 +556,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         q.setParameter("idEstado", idEstado);
         q.setParameter("idRegistro", registroSalida.getId());
         q.executeUpdate();
+
+        registroSalida.setEstado(idEstado);
 
         // Creamos el HistoricoRegistroSalida para la modificación de estado
         historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalida, usuarioEntidad, observacionesAnulacion, false);

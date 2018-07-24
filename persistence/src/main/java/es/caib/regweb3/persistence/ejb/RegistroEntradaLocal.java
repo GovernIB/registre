@@ -347,7 +347,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws I18NException
      * @throws I18NValidationException
      */
-     void enviarAColaDistribucion(RegistroEntrada re, int maxReintentos) throws Exception, I18NException, I18NValidationException;
+     void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, int maxReintentos) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Método que obtiene los destinatarios a los que distribuir el registro

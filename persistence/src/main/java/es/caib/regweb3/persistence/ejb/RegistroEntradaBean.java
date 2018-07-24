@@ -458,6 +458,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idRegistro", registroEntrada.getId());
         q.executeUpdate();
 
+        registroEntrada.setEstado(idEstado);
+
         // Creamos el HistoricoRegistroEntrada para la modificación d estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada,
                 usuarioEntidad, I18NLogicUtils.tradueix(new Locale(Configuracio.getDefaultLanguage()), "registro.modificacion.estado"), false);
@@ -470,6 +472,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         q.setParameter("idEstado", idEstado);
         q.setParameter("idRegistro", registroEntrada.getId());
         q.executeUpdate();
+
+        registroEntrada.setEstado(idEstado);
 
         // Creamos el HistoricoRegistroEntrada para la modificación de estado
         historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntrada, usuarioEntidad, observacionesAnulacion, false);
@@ -608,7 +612,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         trazabilidadEjb.persist(trazabilidad);
 
         cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, usuarioEntidad);
-
 
     }
 
@@ -899,7 +902,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public void enviarAColaDistribucion(RegistroEntrada re, int maxReintentos) throws Exception, I18NException, I18NValidationException {
+    public void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, int maxReintentos) throws Exception, I18NException, I18NValidationException {
 
         try {
             //Creamos un elemento nuevo de la cola de distribución
@@ -908,13 +911,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             cola.setIdObjeto(re.getId());
             cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
             cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
-            cola.setUsuarioEntidad(re.getUsuario());
+            cola.setUsuarioEntidad(usuarioEntidad);
             cola.setDenominacionOficina(re.getOficina().getDenominacion());
 
             colaEjb.persist(cola);
 
             log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
-            cambiarEstado(re.getId(), RegwebConstantes.REGISTRO_DISTRIBUYENDO);
+            cambiarEstadoHistorico(re,RegwebConstantes.REGISTRO_DISTRIBUYENDO, usuarioEntidad);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1093,7 +1096,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
 
                     if(configuracionDistribucion.isEnvioCola()){ //Si esta configurado para enviarlo a la cola
-                        enviarAColaDistribucion(re,configuracionDistribucion.getMaxReintentos());
+                        enviarAColaDistribucion(re,usuarioEntidad, configuracionDistribucion.getMaxReintentos());
                         respuestaDistribucion.setEnviadoCola(true);
                     }else {
                         //Generamos Justificante
