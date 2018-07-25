@@ -98,6 +98,7 @@ public class RecepcionBean implements RecepcionLocal{
 
                 // Integración
                 if(entidad != null){
+                    descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
                     peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
                     peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
                     peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));

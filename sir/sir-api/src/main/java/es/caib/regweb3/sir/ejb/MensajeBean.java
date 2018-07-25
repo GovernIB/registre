@@ -117,7 +117,7 @@ public class MensajeBean implements MensajeLocal {
             respuesta = ws_sir7.recepcionMensajeDatosControlDeAplicacion(xml);
 
         } catch (Exception e) {
-            log.info("Error al enviar el mensaje");
+            log.info("Error al enviar el mensaje " + mensaje.getDescripcionMensaje());
             e.printStackTrace();
             throw new SIRException("Error en la llamada al servicio de recepción de mensaje de datos de control (WS_SIR7)");
         }
