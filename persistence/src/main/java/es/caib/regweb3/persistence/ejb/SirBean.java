@@ -619,7 +619,7 @@ public class SirBean implements SirLocal {
         RegistroSir registroSir = null;
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Enviar FicheroIntercambio";
+        String descripcion = "Enviar FicheroIntercambio a " + codigoOficinaSir;
         peticion.append("TipoAnotación: ").append(TipoAnotacion.ENVIO.getName()).append(System.getProperty("line.separator"));
 
         // Creamos el OficioRemision
@@ -630,135 +630,157 @@ public class SirBean implements SirLocal {
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
 
-        // OficinaSir destino
-        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-        OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
+        try{
 
-        //Obtenemos los contactos de la oficina Sir de destino
-        String contactosEntidadRegistralDestino = getContactosOficinaSir(oficinaSirDestino);
+            // OficinaSir destino
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            OficinaTF oficinaSirDestino = oficinasService.obtenerOficina(codigoOficinaSir, null, null);
 
-        if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+            //Obtenemos los contactos de la oficina Sir de destino
+            String contactosEntidadRegistralDestino = getContactosOficinaSir(oficinaSirDestino);
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-            RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
+            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
-            peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+                RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
-            log.info("----------------------------------------------------------------------------------------------");
-            log.info("Enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSirDestino.getDenominacion());
-            log.info("");
+                peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
-            // Si no tiene generado el Justificante, lo hacemos
-            if (!registroDetalle.getTieneJustificante()) {
+                log.info("----------------------------------------------------------------------------------------------");
+                log.info("Enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSirDestino.getDenominacion());
+                log.info("");
 
-                // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
-                registroDetalle.getAnexosFull().add(anexoFull);
+                // Si no tiene generado el Justificante, lo hacemos
+                if (!registroDetalle.getTieneJustificante()) {
+
+                    // Creamos el anexo del justificante y se lo añadimos al registro
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
+                    registroDetalle.getAnexosFull().add(anexoFull);
+                }
+
+                // Actualizamos el Registro con campos SIR
+                registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+                registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo(), usuario.getEntidad()));
+                registroDetalle.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
+                registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
+                registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
+                registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+
+                // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
+                registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
+                registroDetalle.setOficinaOrigenExternoCodigo(null);
+                registroDetalle.setOficinaOrigenExternoDenominacion(null);
+                registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
+                registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+
+                // Actualizamos el registro
+                registroEntrada = registroEntradaEjb.merge(registroEntrada);
+
+                // Datos del Oficio de remisión
+                oficioRemision.setLibro(new Libro(registroEntrada.getLibro().getId()));
+                oficioRemision.setIdentificadorIntercambio(registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
+                oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+                oficioRemision.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
+                oficioRemision.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+                oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
+                oficioRemision.setOrganismoDestinatario(null);
+                oficioRemision.setRegistrosSalida(null);
+                oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
+                oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
+                oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
+
+                //Transformamos el registro de Entrada a RegistroSir
+                registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
+
+            } else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+                RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
+
+                peticion.append("Número registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+
+                log.info("----------------------------------------------------------------------------------------------");
+                log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSirDestino.getDenominacion());
+                log.info("");
+
+
+                // Si no tiene generado el Justificante, lo hacemos
+                if (!registroDetalle.getTieneJustificante()) {
+                    // Creamos el anexo del justificante y se lo añadimos al registro
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
+
+                    registroDetalle.getAnexosFull().add(anexoFull);
+                }
+
+                // Actualizamos el Registro con campos SIR
+                registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
+                registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroSalida.getOficina().getCodigo(), usuario.getEntidad()));
+                registroDetalle.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
+                registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
+                registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
+                registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+
+                // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
+                registroDetalle.setOficinaOrigen(registroSalida.getOficina());
+                registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
+                registroDetalle.setFechaOrigen(registroSalida.getFecha());
+
+                // Actualizamos el registro
+                registroSalida = registroSalidaEjb.merge(registroSalida);
+
+                // Datos del Oficio de remisión
+                oficioRemision.setLibro(new Libro(registroSalida.getLibro().getId()));
+                oficioRemision.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
+                oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+                oficioRemision.setDestinoExternoCodigo(registroSalida.interesadoDestinoCodigo());
+                oficioRemision.setDestinoExternoDenominacion(registroSalida.getInteresadoDestinoDenominacion());
+                oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
+                oficioRemision.setOrganismoDestinatario(null);
+                oficioRemision.setRegistrosEntrada(null);
+
+                // Transformamos el RegistroSalida en un RegistroSir
+                registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+
             }
 
-            // Actualizamos el Registro con campos SIR
-            registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroEntrada.getOficina().getCodigo(), usuario.getEntidad()));
-            registroDetalle.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
-            registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
-            registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
-            registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
+            // Integración
+            peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+            peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
+            peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
-            // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
-            registroDetalle.setOficinaOrigen(registroEntrada.getOficina());
-            registroDetalle.setOficinaOrigenExternoCodigo(null);
-            registroDetalle.setOficinaOrigenExternoDenominacion(null);
-            registroDetalle.setNumeroRegistroOrigen(registroEntrada.getNumeroRegistroFormateado());
-            registroDetalle.setFechaOrigen(registroEntrada.getFecha());
+            // Registramos el Oficio de Remisión SIR
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
 
-            // Actualizamos el registro
-            registroEntrada = registroEntradaEjb.merge(registroEntrada);
+            // Enviamos el Registro al Componente CIR
+            emisionEjb.enviarFicheroIntercambio(registroSir);
 
-            // Datos del Oficio de remisión
-            oficioRemision.setLibro(new Libro(registroEntrada.getLibro().getId()));
-            oficioRemision.setIdentificadorIntercambio(registroEntrada.getRegistroDetalle().getIdentificadorIntercambio());
-            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-            oficioRemision.setDestinoExternoCodigo(registroEntrada.getDestinoExternoCodigo());
-            oficioRemision.setDestinoExternoDenominacion(registroEntrada.getDestinoExternoDenominacion());
-            oficioRemision.setRegistrosEntrada(Collections.singletonList(registroEntrada));
-            oficioRemision.setOrganismoDestinatario(null);
-            oficioRemision.setRegistrosSalida(null);
-            oficioRemision.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
-            oficioRemision.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
-            oficioRemision.setContactosEntidadRegistralDestino(contactosEntidadRegistralDestino);
+            // Modificamos el estado del OficioRemision
+            oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
 
-            //Transformamos el registro de Entrada a RegistroSir
-            registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
+            // Integración
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
-        } else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
-
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
-            RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
-
-            peticion.append("Número registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-
-            log.info("----------------------------------------------------------------------------------------------");
-            log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSirDestino.getDenominacion());
             log.info("");
+            log.info("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
+            log.info("----------------------------------------------------------------------------------------------");
 
 
-            // Si no tiene generado el Justificante, lo hacemos
-            if (!registroDetalle.getTieneJustificante()) {
-                // Creamos el anexo del justificante y se lo añadimos al registro
-                AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
 
-                registroDetalle.getAnexosFull().add(anexoFull);
-            }
+        }catch (I18NException e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
 
-            // Actualizamos el Registro con campos SIR
-            registroDetalle.setIndicadorPrueba(IndicadorPrueba.NORMAL);
-            registroDetalle.setIdentificadorIntercambio(generarIdentificadorIntercambio(registroSalida.getOficina().getCodigo(), usuario.getEntidad()));
-            registroDetalle.setCodigoEntidadRegistralDestino(oficinaSirDestino.getCodigo());
-            registroDetalle.setDecodificacionEntidadRegistralDestino(oficinaSirDestino.getDenominacion());
-            registroDetalle.setTipoAnotacion(TipoAnotacion.ENVIO.getValue());
-            registroDetalle.setDecodificacionTipoAnotacion(TipoAnotacion.ENVIO.getName());
-
-            // Nos aseguramos que los campos origen sean los del registro, sobreescribiendo los posibles valores de un oficio interno
-            registroDetalle.setOficinaOrigen(registroSalida.getOficina());
-            registroDetalle.setNumeroRegistroOrigen(registroSalida.getNumeroRegistroFormateado());
-            registroDetalle.setFechaOrigen(registroSalida.getFecha());
-
-            // Actualizamos el registro
-            registroSalida = registroSalidaEjb.merge(registroSalida);
-
-            // Datos del Oficio de remisión
-            oficioRemision.setLibro(new Libro(registroSalida.getLibro().getId()));
-            oficioRemision.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
-            oficioRemision.setTipoOficioRemision(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
-            oficioRemision.setDestinoExternoCodigo(registroSalida.interesadoDestinoCodigo());
-            oficioRemision.setDestinoExternoDenominacion(registroSalida.getInteresadoDestinoDenominacion());
-            oficioRemision.setRegistrosSalida(Collections.singletonList(registroSalida));
-            oficioRemision.setOrganismoDestinatario(null);
-            oficioRemision.setRegistrosEntrada(null);
-
-            // Transformamos el RegistroSalida en un RegistroSir
-            registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+        }catch (I18NValidationException e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
 
         }
-
-        // Registramos el Oficio de Remisión SIR
-        oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
-
-        // Enviamos el Registro al Componente CIR
-        emisionEjb.enviarFicheroIntercambio(registroSir);
-
-        // Modificamos el estado del OficioRemision
-        oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
-
-        // Integración
-        peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
-        peticion.append("origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
-        peticion.append("destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
-        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
-
-        log.info("");
-        log.info("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
-        log.info("----------------------------------------------------------------------------------------------");
 
         return oficioRemision;
     }
@@ -770,13 +792,21 @@ public class SirBean implements SirLocal {
      */
     @Override
     public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
-            throws Exception {
+            throws Exception, I18NException, I18NValidationException  {
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Aceptando RegistroSir: " + TipoAnotacion.getTipoAnotacion(registroSir.getTipoAnotacion()).getName();
+        peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
         log.info("");
         log.info("Aceptando RegistroSir " + registroSir.getIdentificadorIntercambio());
 
         // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
         RegistroEntrada registroEntrada;
+
         try {
             registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
 
@@ -812,71 +842,99 @@ public class SirBean implements SirLocal {
             // Enviamos el Mensaje de Confirmación
             mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
 
+            // Integracion
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+
             return registroEntrada;
 
         } catch (I18NException e) {
             e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
         } catch (I18NValidationException e) {
             e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
         }
-
-        return null;
 
     }
 
     @Override
     public void reenviarRegistroSir(RegistroSir registroSir, Oficina oficinaReenvio, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Reenviando RegistroSir a " + oficinaReenvio.getDenominacion();
+        peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
+
         log.info("----------------------------------------------------------------------------------------------");
-        log.info("Enviando RegistroSIR: " + registroSir.getNumeroRegistro()+" mediante SIR a: " + oficinaReenvio.getDenominacion());
+        log.info("Reenviando RegistroSIR: " + registroSir.getNumeroRegistro()+" mediante SIR a: " + oficinaReenvio.getDenominacion());
         log.info("");
 
-        // Actualizamos la oficina destino con la escogida por el usuario
-        registroSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
-        registroSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
-        registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
-        registroSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
+        try {
 
-        // Actualizamos la oficina de origen con la oficina activa
-        registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-        registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+            // Actualizamos la oficina destino con la escogida por el usuario
+            registroSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
+            registroSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+            registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
+            registroSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
 
-        // Modificamos usuario, contacto, aplicacion
-        registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        registroSir.setNombreUsuario(usuario.getNombreCompleto());
-        registroSir.setContactoUsuario(usuario.getEmail());
-        registroSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
-        registroSir.setDecodificacionTipoAnotacion(observaciones);
+            // Actualizamos la oficina de origen con la oficina activa
+            registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+            registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
 
-        // Actualizamos el RegistroSir
-        registroSir = registroSirEjb.merge(registroSir);
-        registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
+            // Modificamos usuario, contacto, aplicacion
+            registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+            registroSir.setNombreUsuario(usuario.getNombreCompleto());
+            registroSir.setContactoUsuario(usuario.getEmail());
+            registroSir.setTipoAnotacion(TipoAnotacion.REENVIO.getValue());
+            registroSir.setDecodificacionTipoAnotacion(observaciones);
 
-        // Enviamos el Registro al Componente CIR
-        emisionEjb.reenviarFicheroIntercambio(registroSir);
+            // Actualizamos el RegistroSir
+            registroSir = registroSirEjb.merge(registroSir);
+            registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
 
-        // Creamos la TrazabilidadSir para el Reenvio
-        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
-        trazabilidadSir.setRegistroSir(registroSir);
-        trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
-        trazabilidadSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
-        trazabilidadSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
-        trazabilidadSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
-        trazabilidadSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
-        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
-        trazabilidadSir.setContactoUsuario(usuario.getEmail());
-        trazabilidadSir.setObservaciones(observaciones);
-        trazabilidadSir.setFecha(new Date());
-        trazabilidadSirEjb.persist(trazabilidadSir);
+            // Enviamos el Registro al Componente CIR
+            emisionEjb.reenviarFicheroIntercambio(registroSir);
 
-        // Modificamos el estado del RegistroSir
-        registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO);
+            // Creamos la TrazabilidadSir para el Reenvio
+            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
+            trazabilidadSir.setRegistroSir(registroSir);
+            trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+            trazabilidadSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+            trazabilidadSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
+            trazabilidadSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
+            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+            trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+            trazabilidadSir.setContactoUsuario(usuario.getEmail());
+            trazabilidadSir.setObservaciones(observaciones);
+            trazabilidadSir.setFecha(new Date());
+            trazabilidadSirEjb.persist(trazabilidadSir);
 
-        log.info("");
-        log.info("Fin reenviando RegistroSIR: " + registroSir.getNumeroRegistro());
-        log.info("----------------------------------------------------------------------------------------------");
+            // Modificamos el estado del RegistroSir
+            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO);
+
+            // Integracion
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+
+            log.info("");
+            log.info("Fin reenviando RegistroSIR: " + registroSir.getNumeroRegistro());
+            log.info("----------------------------------------------------------------------------------------------");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
+        }
+
     }
 
     /**
@@ -890,57 +948,76 @@ public class SirBean implements SirLocal {
     @Override
     public void rechazarRegistroSir(RegistroSir registroSir, Oficina oficinaActiva, Usuario usuario, String observaciones) throws Exception {
 
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Rechazando RegistroSir";
+        peticion.append("IdentificadorIntercambio: ").append(registroSir.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
+
         log.info("----------------------------------------------------------------------------------------------");
         log.info("Rechazando RegistroSIR: " + registroSir.getNumeroRegistro()+" mediante SIR a: " + registroSir.getDecodificacionEntidadRegistralInicio());
         log.info("");
 
-        // Modificamos la oficina destino con la de inicio
-        registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
-        registroSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
-        //registroSir.setCodigoUnidadTramitacionDestino("");
-        //registroSir.setDecodificacionUnidadTramitacionDestino("");
+        try{
 
-        // Modificamos la oficina de origen con la oficina activa
-        registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-        registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+            // Modificamos la oficina destino con la de inicio
+            registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
+            registroSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
+            //registroSir.setCodigoUnidadTramitacionDestino("");
+            //registroSir.setDecodificacionUnidadTramitacionDestino("");
 
-        // Modificamos usuario, contacto, aplicacion
-        registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        registroSir.setNombreUsuario(usuario.getNombreCompleto());
-        registroSir.setContactoUsuario(usuario.getEmail());
+            // Modificamos la oficina de origen con la oficina activa
+            registroSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+            registroSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
 
-        registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
-        registroSir.setDecodificacionTipoAnotacion(observaciones);
+            // Modificamos usuario, contacto, aplicacion
+            registroSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+            registroSir.setNombreUsuario(usuario.getNombreCompleto());
+            registroSir.setContactoUsuario(usuario.getEmail());
 
-        registroSir = registroSirEjb.merge(registroSir);
+            registroSir.setTipoAnotacion(TipoAnotacion.RECHAZO.getValue());
+            registroSir.setDecodificacionTipoAnotacion(observaciones);
 
-        registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
+            registroSir = registroSirEjb.merge(registroSir);
 
-        // Rechazamos el RegistroSir
-        emisionEjb.rechazarFicheroIntercambio(registroSir);
+            registroSir = registroSirEjb.getRegistroSirConAnexos(registroSir.getId());
 
-        // Creamos la TrazabilidadSir para el Rechazo
-        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO);
-        trazabilidadSir.setRegistroSir(registroSir);
-        trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
-        trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
-        trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
-        trazabilidadSir.setCodigoUnidadTramitacionDestino(null);
-        trazabilidadSir.setDecodificacionUnidadTramitacionDestino(null);
-        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
-        trazabilidadSir.setContactoUsuario(usuario.getEmail());
-        trazabilidadSir.setObservaciones(observaciones);
-        trazabilidadSir.setFecha(new Date());
-        trazabilidadSirEjb.persist(trazabilidadSir);
+            // Rechazamos el RegistroSir
+            emisionEjb.rechazarFicheroIntercambio(registroSir);
 
-        // Modificamos el estado del RegistroSir
-        registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
+            // Creamos la TrazabilidadSir para el Rechazo
+            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO);
+            trazabilidadSir.setRegistroSir(registroSir);
+            trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralInicio());
+            trazabilidadSir.setCodigoUnidadTramitacionDestino(null);
+            trazabilidadSir.setDecodificacionUnidadTramitacionDestino(null);
+            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+            trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+            trazabilidadSir.setContactoUsuario(usuario.getEmail());
+            trazabilidadSir.setObservaciones(observaciones);
+            trazabilidadSir.setFecha(new Date());
+            trazabilidadSirEjb.persist(trazabilidadSir);
 
-        log.info("");
-        log.info("Fin rechazando RegistroSIR: " + registroSir.getNumeroRegistro());
-        log.info("----------------------------------------------------------------------------------------------");
+            // Modificamos el estado del RegistroSir
+            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
+
+            // Integracion
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+
+            log.info("");
+            log.info("Fin rechazando RegistroSIR: " + registroSir.getNumeroRegistro());
+            log.info("----------------------------------------------------------------------------------------------");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            throw e;
+        }
+
     }
 
     @Override

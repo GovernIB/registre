@@ -38,7 +38,7 @@
                 <div class="panel panel-primary">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroSir.buscador.recibidos"/></strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroSir.buscador.recibidos"/> ${loginInfo.oficinaActiva.denominacion}</strong> </h3>
                     </div>
 
                     <form:form modelAttribute="registroSirBusqueda" method="post" cssClass="form-horizontal">
@@ -144,10 +144,10 @@
                                             <tr>
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                 <th><spring:message code="regweb.fecha"/></th>
-                                                <th><spring:message code="regweb.tipo"/></th>
+                                                <th class="center"><spring:message code="regweb.tipo"/></th>
                                                 <th><spring:message code="registroSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="registroSir.oficinaDestino"/></th>
-                                                <th><spring:message code="registroSir.estado"/></th>
+                                                <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th><spring:message code="registroSir.extracto"/></th>
                                                 <th>Doc</th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
