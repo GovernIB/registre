@@ -277,6 +277,16 @@
                                     <li class="submenu-complet"><a href="<c:url value="/integracion/list/0"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-ellipsis-h"></i> <spring:message code="cola.colas"/></a></li>
                                     <li class="divider"></li>
+                                    <c:if test="${loginInfo.entidadActiva.sir}">
+                                        <li class="dropdown-submenu-left toggle-left">
+                                            <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.sir"/></a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="<c:url value="/integracion/list/4"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.sir"/></a></li>
+                                                <li><a href="<c:url value="/sir/monitorEnviados"/>"><i class="fa fa-refresh"></i> <spring:message code="sir.monitor.envios"/></a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="divider"></li>
+                                    </c:if>
                                     <li class="dropdown-submenu-left toggle-left">
                                         <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="organismo.organismos"/></a>
                                         <ul class="dropdown-menu">
@@ -320,7 +330,6 @@
                                         <ul class="dropdown-menu">
                                             <li><a href="<c:url value="/tipoDocumental/list/"/>"><i class="fa fa-file-text-o"></i> <spring:message code="menu.tipoDocumental"/></a></li>
                                             <li><a href="<c:url value="/tipoAsunto/list/"/>"><i class="fa fa-database"></i> <spring:message code="menu.tipoAsunto"/></a></li>
-                                            <%--<li><a href="<c:url value="/modeloRecibo/list/"/>"><spring:message code="menu.modeloRecibo"/></a></li>--%>
                                             <li><a href="<c:url value="/modeloOficioRemision/list/"/>"><i class="fa fa-file-code-o"></i> <spring:message code="menu.modeloOficioRemision"/></a></li>
                                         </ul>
                                     </li>

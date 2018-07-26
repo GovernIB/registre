@@ -27,6 +27,7 @@ import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
@@ -62,8 +63,129 @@ public class ArxiuController extends BaseController {
     private ArxiuLocal arxiuEjb;
 
 
-    @RequestMapping(value = "/asociarJustificante/{idExpediente}")
-    public String asociarJustificante(@PathVariable String idExpediente,HttpServletRequest request) {
+    @RequestMapping(value = "/buscarExpedientes/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}", method = RequestMethod.GET)
+    public ModelAndView expedientes(@PathVariable String initialDate,
+                                    @PathVariable String endDate,@PathVariable Boolean onlyCount,@PathVariable String expedientPattern,HttpServletRequest request) {
+
+        ModelAndView mav = new ModelAndView("arxiu/asociarJustificante");
+
+        Entidad entidad = getEntidadActiva(request);
+
+        try {
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+            ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
+
+            mav.addObject("app",custody.getPropertyCodiAplicacio());
+            mav.addObject("serie",custody.getPropertySerieDocumentalEL());
+            mav.addObject("initialDate",initialDate);
+            mav.addObject("endDate",endDate);
+            mav.addObject("onlyCount",onlyCount);
+            mav.addObject("expedientPattern",expedientPattern);
+
+            //String serie = "S0002";
+            //String initialDate = "2018-04-19T00:00:00.000Z";
+            //String endDate = "2018-04-25T23:59:59.999Z";
+            //boolean onlyCount = false;
+            //String expedientPattern = "INNOE33*";
+
+            List<ExpedienteArxiu> expedientes = new ArrayList<ExpedienteArxiu>();
+            int pagina = 0;
+            int paginaresultat = 1;
+
+            do{
+
+                ResultadoBusqueda<Expediente> result = busquedaEdu(custody.getPropertyCodiAplicacio(), apiArxiu, custody.getPropertySerieDocumentalEL(), initialDate, endDate, expedientPattern, onlyCount, pagina);
+
+                pagina++;
+
+                if (hiHaErrorEnCerca(result.getCodigoResultado())) {
+                    Mensaje.saveMessageError(request, result.getCodigoResultado() + "-" + result.getMsjResultado());
+                    throw new Exception("Error Consultant si Expedient existeix: "
+                            + result.getCodigoResultado() + "-" + result.getMsjResultado());
+                }
+
+                List<Expediente> lista = result.getListaResultado();
+
+                log.info("Total resultados: " + result.getNumeroTotalResultados());
+
+                mav.addObject("total",result.getNumeroTotalResultados());
+
+                if(onlyCount){
+
+                    return mav;
+                }
+
+                paginaresultat = result.getNumeroTotalResultados()/50;
+
+                for (Expediente exp : lista) {
+
+                    log.info("Expediente: " + exp.getName());
+
+                    ExpedienteArxiu expedienteArxiu = new ExpedienteArxiu();
+
+                    Resultado<Expediente> expediente = apiArxiu.obtenerExpediente(exp.getId());
+
+                    List<Nodo> nodos = expediente.getElementoDevuelto().getChilds();
+
+                    if(nodos != null){
+
+                        for (Nodo nodo : nodos) {
+
+                            String custodyId = exp.getId() + "#" + nodo.getId();
+
+                            String tipoRegistro = getTipoRegistro(exp.getName());
+                            String codigoLibro = getCodigoLibro(exp.getName());
+
+                            expedienteArxiu.setId(exp.getId());
+                            expedienteArxiu.setName(exp.getName());
+                            expedienteArxiu.setCustodyId(custodyId);
+                            expedienteArxiu.setTipoRegistro(tipoRegistro);
+                            expedienteArxiu.setCodigoLibro(codigoLibro);
+                            expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
+
+                            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+
+                                if(registroEntrada != null){
+                                    expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
+                                }
+
+                            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+                                RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+
+                                if(registroSalida != null){
+                                    expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
+                                }
+                            }
+
+                            String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
+                            expedienteArxiu.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
+
+                            expedientes.add(expedienteArxiu);
+
+                        }
+                    }
+                }
+
+            } while (pagina <= paginaresultat);
+
+            mav.addObject("expedientes",expedientes);
+            log.info("Total expedientes: " + expedientes.size());
+
+        } catch (I18NException e) {
+            e.printStackTrace();
+        } catch (CustodyException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/asociarJustificante/{idExpediente}", method = RequestMethod.GET)
+    public String asociarJustificante(@PathVariable String idExpediente, HttpServletRequest request) {
 
         Entidad entidad = getEntidadActiva(request);
 
@@ -189,7 +311,7 @@ public class ArxiuController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/expedientesAbiertos/{pageNumber}")
+    @RequestMapping(value = "/expedientesAbiertos/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView expedientesAbiertos(@PathVariable Integer pageNumber, HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("arxiu/expedientesAbiertos");
@@ -244,7 +366,7 @@ public class ArxiuController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/cerrarExpediente/{idExpediente}")
+    @RequestMapping(value = "/cerrarExpediente/{idExpediente}", method = RequestMethod.GET)
     public String cerrarExpediente(@PathVariable String idExpediente,HttpServletRequest request) {
 
         Entidad entidad = getEntidadActiva(request);
@@ -282,127 +404,6 @@ public class ArxiuController extends BaseController {
         return "redirect:/inici";
     }
 
-
-    @RequestMapping(value = "/{initialDate}/{endDate}/{onlyCount}/{expedientPattern}")
-    public ModelAndView expedientes(@PathVariable String initialDate,
-                                    @PathVariable String endDate,@PathVariable Boolean onlyCount,@PathVariable String expedientPattern,HttpServletRequest request) {
-
-        ModelAndView mav = new ModelAndView("arxiu/asociarJustificante");
-
-        Entidad entidad = getEntidadActiva(request);
-
-        try {
-            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-
-            ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
-
-            mav.addObject("app",custody.getPropertyCodiAplicacio());
-            mav.addObject("serie",custody.getPropertySerieDocumentalEL());
-            mav.addObject("initialDate",initialDate);
-            mav.addObject("endDate",endDate);
-            mav.addObject("onlyCount",onlyCount);
-            mav.addObject("expedientPattern",expedientPattern);
-
-            //String serie = "S0002";
-            //String initialDate = "2018-04-19T00:00:00.000Z";
-            //String endDate = "2018-04-25T23:59:59.999Z";
-            //boolean onlyCount = false;
-            //String expedientPattern = "INNOE33*";
-
-            List<ExpedienteArxiu> expedientes = new ArrayList<ExpedienteArxiu>();
-            int pagina = 0;
-            int paginaresultat = 1;
-
-            do{
-
-                ResultadoBusqueda<Expediente> result = busquedaEdu(custody.getPropertyCodiAplicacio(), apiArxiu, custody.getPropertySerieDocumentalEL(), initialDate, endDate, expedientPattern, onlyCount, pagina);
-
-                pagina++;
-
-                if (hiHaErrorEnCerca(result.getCodigoResultado())) {
-                    Mensaje.saveMessageError(request, result.getCodigoResultado() + "-" + result.getMsjResultado());
-                    throw new Exception("Error Consultant si Expedient existeix: "
-                            + result.getCodigoResultado() + "-" + result.getMsjResultado());
-                }
-
-                List<Expediente> lista = result.getListaResultado();
-
-                log.info("Total resultados: " + result.getNumeroTotalResultados());
-
-                mav.addObject("total",result.getNumeroTotalResultados());
-
-                if(onlyCount){
-
-                    return mav;
-                }
-
-                paginaresultat = result.getNumeroTotalResultados()/50;
-
-                for (Expediente exp : lista) {
-
-                    log.info("Expediente: " + exp.getName());
-
-                    ExpedienteArxiu expedienteArxiu = new ExpedienteArxiu();
-
-                    Resultado<Expediente> expediente = apiArxiu.obtenerExpediente(exp.getId());
-
-                    List<Nodo> nodos = expediente.getElementoDevuelto().getChilds();
-
-                    if(nodos != null){
-
-                        for (Nodo nodo : nodos) {
-
-                            String custodyId = exp.getId() + "#" + nodo.getId();
-
-                            String tipoRegistro = getTipoRegistro(exp.getName());
-                            String codigoLibro = getCodigoLibro(exp.getName());
-
-                            expedienteArxiu.setId(exp.getId());
-                            expedienteArxiu.setName(exp.getName());
-                            expedienteArxiu.setCustodyId(custodyId);
-                            expedienteArxiu.setTipoRegistro(tipoRegistro);
-                            expedienteArxiu.setCodigoLibro(codigoLibro);
-                            expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
-
-                            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
-
-                                if(registroEntrada != null){
-                                    expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
-                                }
-
-                            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
-                                RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
-
-                                if(registroSalida != null){
-                                    expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
-                                }
-                            }
-
-                            String fechaCaptura = custody.getOnlyOneMetadata(custodyId, MetadataConstants.ENI_FECHA_INICIO).getValue();
-                            expedienteArxiu.setFecha(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(fechaCaptura.substring(0, 10) +" "+ fechaCaptura.substring(11,23)));
-
-                            expedientes.add(expedienteArxiu);
-
-                        }
-                    }
-                }
-
-            } while (pagina <= paginaresultat);
-
-            mav.addObject("expedientes",expedientes);
-            log.info("Total expedientes: " + expedientes.size());
-
-        } catch (I18NException e) {
-            e.printStackTrace();
-        } catch (CustodyException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return mav;
-    }
 
     /**
      *

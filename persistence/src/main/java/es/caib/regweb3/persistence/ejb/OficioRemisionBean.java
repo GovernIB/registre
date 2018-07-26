@@ -117,7 +117,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         // Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
         if(oficioRemision.getLibro().getId() != null && oficioRemision.getLibro().getId() > 0){
             where.add(" oficioRemision.libro.id = :idLibro"); parametros.put("idLibro",oficioRemision.getLibro().getId());
-        }else{
+        }else if(libros != null){
             where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
         }
 

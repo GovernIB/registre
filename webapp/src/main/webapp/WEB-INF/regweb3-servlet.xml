@@ -154,6 +154,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.RegistroSirInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para SIR-->
+        <mvc:interceptor>
+            <mvc:mapping path="/sir/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.SirInterceptor"/>
+        </mvc:interceptor>
+
         <!--Interceptor para el Integracion-->
         <mvc:interceptor>
             <mvc:mapping path="/integracion/**"/>

@@ -36,7 +36,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     private EntityManager em;
 
     @EJB
-    public ContadorLocal contadorEjb;
+    private ContadorLocal contadorEjb;
 
 
     @Override

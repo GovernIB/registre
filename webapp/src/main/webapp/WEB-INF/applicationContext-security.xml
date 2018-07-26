@@ -63,6 +63,8 @@
         <sec:intercept-url pattern="/repro/**" access="hasRole('RWE_USUARI')"/>
         <!--Libro-->
         <sec:intercept-url pattern="/libro/**" access="hasRole('RWE_ADMIN')"/>
+        <!--Libro-->
+        <sec:intercept-url pattern="/sir/**" access="hasRole('RWE_ADMIN')"/>
         <!--Configuracion-->
         <sec:intercept-url pattern="/configuracion/**" access="hasRole('RWE_SUPERADMIN')"/>
         <!--PropiedadGlobal-->

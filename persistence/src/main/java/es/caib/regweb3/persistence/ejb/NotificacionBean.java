@@ -6,10 +6,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.annotation.security.RunAs;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -24,8 +21,6 @@ import java.util.*;
 
 @Stateless(name = "NotificacionEJB")
 @SecurityDomain("seycon")
-@RunAs("RWE_SUPERADMIN")
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements NotificacionLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
