@@ -32,7 +32,12 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="panel panel-info">
+                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                    <div class="panel panel-info">
+                </c:if>
+                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                    <div class="panel panel-danger">
+                </c:if>
 
                     <div class="panel-heading">
                         <h3 class="panel-title">
@@ -128,7 +133,7 @@
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </c:if>
                                                     <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
-                                                        <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </c:if>
 
                                                 </td>
