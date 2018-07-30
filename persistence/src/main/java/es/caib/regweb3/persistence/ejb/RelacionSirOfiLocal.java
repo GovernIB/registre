@@ -52,6 +52,14 @@ public interface RelacionSirOfiLocal extends BaseEjb<RelacionSirOfi, RelacionSir
     List<Oficina> oficinasSIR(Long idOrganismo) throws Exception;
 
     /**
+     * Obtiene las Oficinas SIR de una Enitdad
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    public List<Oficina> oficinasSIREntidad(Long idEntidad) throws Exception;
+
+    /**
      * Obtiene los Organismos a los que da Servicio Sir una Oficina  integrada en SIR
      * @param idOficina
      * @return

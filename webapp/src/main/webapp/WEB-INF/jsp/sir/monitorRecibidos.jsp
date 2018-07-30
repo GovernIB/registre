@@ -19,10 +19,8 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroSir.registrosSir"/></strong></li>
-                    <%--Importamos el menú de avisos--%>
-                    <c:import url="/avisos"/>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -49,12 +47,29 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.codigoEntidadRegistral" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroSir.codigoEntidadRegistral" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="oficina" items="${oficinasSir}">
+                                                <form:option value="${oficina.codigo}">${oficina.denominacion}</form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="registroSir.identificadorIntercambio" rel="ayuda" data-content="<spring:message code="registro.ayuda.idSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.identificadorIntercambio"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="registroSir.identificadorIntercambio" cssClass="form-control"/>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="col-xs-12">
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
@@ -67,6 +82,15 @@
                                                 <form:option value="${estado.value}"><spring:message code="registroSir.estado.${estado.value}"/></form:option>
                                             </c:forEach>
                                         </form:select>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.resumen" rel="ayuda" data-content="<spring:message code="registro.ayuda.extractoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.extracto"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroSir.resumen" cssClass="form-control"/>
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +163,6 @@
                                                 <col>
                                                 <col>
                                                 <col>
-                                                <col width="51">
                                             </colgroup>
                                             <thead>
                                             <tr>
@@ -151,7 +174,6 @@
                                                 <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th><spring:message code="registroSir.extracto"/></th>
                                                 <th>Doc</th>
-                                                <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
 
@@ -203,10 +225,6 @@
                                                         <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
                                                             <i class="fa fa-file-text text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
                                                         </c:if>
-                                                    </td>
-
-                                                    <td class="center">
-                                                        <a class="btn btn-primary btn-sm" href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" title="<spring:message code="registroSir.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

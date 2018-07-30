@@ -239,7 +239,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado) throws Exception{
 
         Query q;
         Query q2;
@@ -248,7 +248,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         StringBuilder query = new StringBuilder("Select registroSir from RegistroSir as registroSir ");
 
-        where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        if(es.caib.regweb3.utils.StringUtils.isNotEmpty(oficinaSir)){
+            where.add(" (registroSir.codigoEntidadRegistral = :oficinaSir) "); parametros.put("oficinaSir",oficinaSir);
+        }
 
         if (registroSir.getResumen() != null && registroSir.getResumen().length() > 0) {
             where.add(DataBaseUtils.like("registroSir.resumen", "resumen", parametros, registroSir.getResumen()));
@@ -262,7 +264,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
         }
 
-        if(any!= null){where.add(" year(registroSir.fechaRegistro) = :any "); parametros.put("any",any);}
+        // Intervalo fechas
+        where.add(" (registroSir.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
+        where.add(" registroSir.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
 
         if (parametros.size() != 0) {
             query.append("where ");

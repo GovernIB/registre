@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.form;
 
 import es.caib.regweb3.model.RegistroSir;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * Created by Fundació BIT.
@@ -12,7 +15,10 @@ public class RegistroSirBusquedaForm {
 
     private RegistroSir registroSir;
     private Integer pageNumber;
-    private Integer anyo;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date fechaInicio;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date fechaFin;
     private String estado;
 
 
@@ -21,6 +27,8 @@ public class RegistroSirBusquedaForm {
     public RegistroSirBusquedaForm(RegistroSir registroSir, Integer pageNumber) {
         this.registroSir = registroSir;
         this.pageNumber = pageNumber;
+        this.fechaInicio =  new Date();
+        this.fechaFin =  new Date();
     }
 
     public RegistroSir getRegistroSir() {
@@ -39,12 +47,20 @@ public class RegistroSirBusquedaForm {
         this.pageNumber = pageNumber;
     }
 
-    public Integer getAnyo() {
-        return anyo;
+    public Date getFechaInicio() {
+        return fechaInicio;
     }
 
-    public void setAnyo(Integer anyo) {
-        this.anyo = anyo;
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
     public String getEstado() { return estado; }

@@ -29,6 +29,8 @@ public class OficioRemisionBusquedaForm {
   public OficioRemisionBusquedaForm(OficioRemision oficioRemision, Integer pageNumber) {
     this.oficioRemision = oficioRemision;
     this.pageNumber = pageNumber;
+    this.fechaInicio =  new Date();
+    this.fechaFin =  new Date();
   }
 
     public OficioRemision getOficioRemision() {

@@ -51,6 +51,14 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
             Oficina oficinaActiva = loginInfo.getOficinaActiva();
             Entidad entidadActiva = loginInfo.getEntidadActiva();
 
+            // Comprobamos que el usuario dispone de una OficinaActiva
+            if(oficinaActiva == null){
+                log.info("No existe una OficinaActiva");
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficinaActiva"));
+                response.sendRedirect("/regweb3/aviso");
+                return false;
+            }
+
             // Comprobamos que la oficinaActiva esté integrada en SIR
             if(!oficinaActiva.getSirEnvio() || !oficinaActiva.getSirRecepcion()){
                 log.info("La oficinaActiva no está integrada en SIR");

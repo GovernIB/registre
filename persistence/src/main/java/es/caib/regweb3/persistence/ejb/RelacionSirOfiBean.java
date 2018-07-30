@@ -150,6 +150,30 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<Oficina> oficinasSIREntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select distinct rso.oficina.id, rso.oficina.codigo, rso.oficina.denominacion, oficina.organismoResponsable.id from RelacionSirOfi as rso " +
+                "where rso.organismo.entidad.id = :idEntidad and rso.estado.codigoEstadoEntidad = :vigente and :oficinaSir in elements(rso.oficina.servicios)");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("oficinaSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+
+        List<Oficina> oficinas =  new ArrayList<Oficina>();
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
+
+            oficinas.add(oficina);
+        }
+
+        return oficinas;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> organimosServicioSIR(Long idOficina) throws Exception{
 
         Query q = em.createQuery("Select distinct rso.organismo.id, rso.organismo.codigo, rso.organismo.denominacion from RelacionSirOfi as rso " +

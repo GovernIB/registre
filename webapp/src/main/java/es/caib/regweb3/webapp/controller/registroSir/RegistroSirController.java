@@ -106,7 +106,7 @@ public class RegistroSirController extends BaseController {
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
-        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getAnyo(), registroSir, getOficinaActiva(request).getCodigo(), busqueda.getEstado());
+        Paginacion paginacion = registroSirEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()), registroSir, getOficinaActiva(request).getCodigo(), busqueda.getEstado());
 
         busqueda.setPageNumber(1);
 

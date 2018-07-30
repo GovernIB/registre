@@ -10,6 +10,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,14 +66,15 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     /**
      * Busca los RegistroSir en función de los parámetros, donde sólo mostrará los RegistroSir con codEntidadRegistralDestino = codOficinaActiva
      * @param pageNumber
-     * @param any
+     * @param fechaInicio
+     * @param fechaFin
      * @param registroSir
      * @param oficinaSir
      * @param estado
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Integer any, RegistroSir registroSir, String oficinaSir, String estado) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSir registroSir, String oficinaSir, String estado) throws Exception;
 
     /**
      *

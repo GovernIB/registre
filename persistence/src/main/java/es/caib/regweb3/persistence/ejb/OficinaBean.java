@@ -236,6 +236,11 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
+    public List<Oficina> oficinasSIREntidad(Long idEntidad) throws Exception{
+        return  relacionSirOfiEjb.oficinasSIREntidad(idEntidad);
+    }
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public List<Oficina> findByEntidad(Long idEntidad) throws Exception{
         Query q = em.createQuery("Select oficina from Oficina as oficina where " +

@@ -283,6 +283,7 @@
                                             <ul class="dropdown-menu">
                                                 <li><a href="<c:url value="/integracion/list/4"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.sir"/></a></li>
                                                 <li><a href="<c:url value="/sir/monitorEnviados"/>"><i class="fa fa-refresh"></i> <spring:message code="sir.monitor.envios"/></a></li>
+                                                <li><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-refresh"></i> <spring:message code="sir.monitor.recibidos"/></a></li>
                                             </ul>
                                         </li>
                                         <li class="divider"></li>
