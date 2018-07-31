@@ -191,7 +191,7 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
-                                                    <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
+                                                    <td class="no-bold" rel="ayuda" data-content="${registroSir.decodificacionUnidadTramitacionOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">

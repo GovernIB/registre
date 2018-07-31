@@ -47,9 +47,6 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/ArxiuEJB/local")
     private ArxiuLocal arxiuEjb;
 
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    private AnexoLocal anexoEjb;
-
 
     @Override
     public void purgarIntegraciones() throws Exception{
@@ -71,7 +68,7 @@ public class SchedulerBean implements SchedulerLocal{
 
         for(Entidad entidad: entidades) {
             log.info(" ");
-            log.info("------------- SIR: Reintentado envios sin ack de " + entidad.getNombre() + " -------------");
+            log.info("------------- SIR: Reintentando envios sin ack de " + entidad.getNombre() + " -------------");
             log.info(" ");
             sirEjb.reintentarEnviosSinConfirmacion(entidad.getId());
         }
@@ -84,7 +81,7 @@ public class SchedulerBean implements SchedulerLocal{
 
         for(Entidad entidad: entidades) {
             log.info(" ");
-            log.info("------------- SIR: Reintentado envios con errores de " + entidad.getNombre() + " -------------");
+            log.info("------------- SIR: Reintentando envios con errores de " + entidad.getNombre() + " -------------");
             log.info(" ");
             sirEjb.reintentarEnviosConError(entidad.getId());
         }
