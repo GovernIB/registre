@@ -168,6 +168,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
+                                                        <col>
                                                         <col width="51">
                                                     </colgroup>
                                                     <thead>
@@ -179,6 +180,7 @@
                                                             <th><spring:message code="oficioRemision.estado"/></th>
                                                             <th><spring:message code="oficioRemision.tipo"/></th>
                                                             <th><spring:message code="oficioRemision.reintentos"/></th>
+                                                            <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
 
@@ -215,6 +217,9 @@
 
                                                                 <td class="center">
                                                                     ${oficioRemision.numeroReintentos}
+                                                                </td>
+                                                                <td class="center">
+                                                                    <a class="btn btn-primary btn-sm" href="<c:url value="/sir/${oficioRemision.id}/reiniciar"/>" target="_blank" title="<spring:message code="registroSir.reiniciar"/>"><span class="fa fa-refresh"></span></a>
                                                                 </td>
                                                             </tr>
                                                     </c:forEach>

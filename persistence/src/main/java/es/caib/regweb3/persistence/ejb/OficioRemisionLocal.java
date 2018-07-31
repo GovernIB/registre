@@ -156,6 +156,13 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     void modificarEstado(Long idOficioRemision, int estado) throws Exception;
 
     /**
+     * Reinicia el contador de reintentos SIR
+     * @param idOficioRemision
+     * @throws Exception
+     */
+    void reiniciarIntentos(Long idOficioRemision) throws Exception;
+
+    /**
      * Busca los Números de Registro Formateados de los Registros de Entrada que pertenecen a un OficioRemision
      * @param idOficioRemision
      * @return

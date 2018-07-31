@@ -15,9 +15,11 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.OficioRemisionBusquedaForm;
 import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -140,6 +142,21 @@ public class SirController extends BaseController {
 
         return mav;
 
+    }
+
+    /**
+     * Reinicia el contador de reintentos SIR
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idOficio}/reiniciar", method = RequestMethod.GET)
+    public String reiniciar(@PathVariable Long idOficio, HttpServletRequest request)throws Exception {
+
+        oficioRemisionEjb.reiniciarIntentos(idOficio);
+
+        Mensaje.saveMessageInfo(request, getMessage("registroSir.rechazo.ok"));
+
+        return "redirect:/sir/monitorRecibidos";
     }
 
 }
