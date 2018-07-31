@@ -154,7 +154,7 @@ public class SirController extends BaseController {
 
         oficioRemisionEjb.reiniciarIntentos(idOficio);
 
-        Mensaje.saveMessageInfo(request, getMessage("registroSir.rechazo.ok"));
+        Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
 
         return "redirect:/sir/monitorRecibidos";
     }
