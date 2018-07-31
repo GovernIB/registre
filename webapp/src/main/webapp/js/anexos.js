@@ -2,7 +2,7 @@
  * Carga los datos de un Anexo para mostrarlos en un modal
  * @param idAnexo
  */
-function obtenerAnexo(idAnexo){
+function obtenerAnexo(idAnexo, idEntidad){
 
     // Eliminamos el contenido del formulario y los mensajes de error
     limpiarAnexoDetalle();
@@ -10,22 +10,27 @@ function obtenerAnexo(idAnexo){
     //Obtenemos los datos del Anexo a editar
     $.ajax({
         url: urlCargarAnexo,
-        data: { idAnexo: idAnexo},
+        data: { idAnexo: idAnexo, idEntidad: idEntidad},
         type: "GET",
         dataType: 'json',
         contentType: 'application/json',
 
         success: function(result) {
 
-            $('#anexoTitulo').html(result.titulo);
+            $('#anexoTitulo').html(result.anexo.titulo);
 
-            $('#titulo').html(result.titulo);
-            $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.validezDocumento]);
+            $('#titulo').html(result.anexo.titulo);
+            $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.anexo.validezDocumento]);
 
-            $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.tipoDocumento]);
-            $('#observacionesAnexo').html(result.observaciones);
-            $('#origen').html(tradsanexo['anexo.origen.'+result.origenCiudadanoAdmin]);
-            obtenerElementoTraducido(urlTipoDocumental, result.tipoDocumental.id, 'tipoDocumental');
+            $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.anexo.tipoDocumento]);
+            $('#observacionesAnexo').html(result.anexo.observaciones);
+            $('#origen').html(tradsanexo['anexo.origen.'+result.anexo.origenCiudadanoAdmin]);
+            obtenerElementoTraducido(urlTipoDocumental, result.anexo.tipoDocumental.id, 'tipoDocumental');
+            if(result.anexo.modoFirma == 0 || result.anexo.modoFirma == 2 ){
+                $('#mime').html(result.docMime);
+            }else {
+                $('#mime').html(result.signMime);
+            }
 
         }
     });

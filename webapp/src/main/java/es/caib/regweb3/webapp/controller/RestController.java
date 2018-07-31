@@ -1,12 +1,14 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
@@ -259,9 +261,10 @@ public class RestController {
      */
     @RequestMapping(value = "/obtenerAnexo", method = RequestMethod.GET)
     public @ResponseBody
-    Anexo obtenerAnexo(@RequestParam Long idAnexo) throws Exception {
+    AnexoFull obtenerAnexo(@RequestParam Long idAnexo, @RequestParam Long idEntidad ) throws Exception, I18NException {
 
-        return anexoEjb.findById(idAnexo);
+        AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(idAnexo, idEntidad);
+        return anexoFull;
     }
 
     /**
