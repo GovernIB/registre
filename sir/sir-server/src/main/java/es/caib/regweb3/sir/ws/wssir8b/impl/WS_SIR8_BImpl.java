@@ -94,7 +94,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }
 
         log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
-        log.info("Fichero de intercambio: " + registro);
+        log.info("Fichero de intercambio: " + registro.replace(registro.substring(registro.indexOf("<Anexo>"), registro.lastIndexOf("</Anexo>")), ""));
         log.info("------------------------------------------------------------------------------------------");
 
         RespuestaWS respuestaWS = null;
