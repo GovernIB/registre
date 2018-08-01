@@ -49,30 +49,45 @@ public class AnexoUtils {
             switch (anexoFull.getAnexo().getModoFirma()){
 
                 case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
-
-                    extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
-                        mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
+                    if(anexoFull.getSignatureCustody()!=null) {
+                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
+                        if (!extensionesPermitidas.contains(extension)) {
+                            mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
+                        }
+                    }else{
+                        mensajesError.add(I18NUtils.tradueix("anexo.error.noattached"));
                     }
                     break;
 
                 case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
 
-                    extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
-                        mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
+                    if(anexoFull.getSignatureCustody()!=null) {
+                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
+                        if (!extensionesPermitidas.contains(extension)) {
+                            mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
+                        }
+                    }else{
+                        mensajesError.add(I18NUtils.tradueix("anexo.error.nofirma"));
                     }
-                    extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
-                        mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
+                    if(anexoFull.getDocumentoCustody()!=null) {
+                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
+                        if (!extensionesPermitidas.contains(extension)) {
+                            mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
+                        }
+                    }else{
+                        mensajesError.add(I18NUtils.tradueix("anexo.error.nodoc"));
                     }
                     break;
 
                 case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
 
-                    extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
-                    if(!extensionesPermitidas.contains(extension)){
-                        mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido",extension,anexoFull.getAnexo().getTitulo()));
+                    if(anexoFull.getDocumentoCustody()!=null) {
+                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
+                        if (!extensionesPermitidas.contains(extension)) {
+                            mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
+                        }
+                    }else{
+                        mensajesError.add(I18NUtils.tradueix("anexo.error.nodoc"));
                     }
                     break;
             }
