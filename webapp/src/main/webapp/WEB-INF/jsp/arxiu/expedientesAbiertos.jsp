@@ -23,9 +23,7 @@
                     <div class="col-xs-12">
 
                         <ol class="breadcrumb">
-                            <c:import url="../modulos/migadepan.jsp">
-                                <c:param name="avisos" value="false"/>
-                            </c:import>
+                            <c:import url="../modulos/migadepan.jsp"/>
                         </ol>
 
                     </div><!-- /.col-xs-12 -->

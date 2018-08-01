@@ -19,11 +19,10 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message
-                            code="registroEntrada.reservas"/></strong></li>
-                    <%--Importamos el menú de avisos--%>
-                    <c:import url="/avisos"/>
+                    <c:import url="../modulos/migadepan.jsp">
+                        <c:param name="avisos" value="true"/>
+                    </c:import>
+                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroEntrada.reservas"/></strong></li>
                 </ol>
             </div>
         </div>

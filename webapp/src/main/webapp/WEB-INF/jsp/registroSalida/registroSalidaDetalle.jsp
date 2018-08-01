@@ -20,10 +20,10 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a rel="ayuda" data-content="${loginInfo.oficinaActiva.codigo}" <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
+                    <c:import url="../modulos/migadepan.jsp">
+                        <c:param name="avisos" value="true"/> <%--Importamos el menú de avisos--%>
+                    </c:import>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}</li>
-                    <%--Importamos el menú de avisos--%>
-                    <c:import url="/avisos"/>
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->

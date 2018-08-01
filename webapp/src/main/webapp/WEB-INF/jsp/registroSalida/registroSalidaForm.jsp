@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a rel="ayuda" data-content="${loginInfo.oficinaActiva.codigo}" <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
                         <c:if test="${empty registroSalida.id}"><spring:message code="registroSalida.nuevo"/></c:if>

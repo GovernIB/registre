@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a rel="ayuda" data-content="${loginInfo.oficinaActiva.codigo}" <c:if test="${loginInfo.oficinaActiva.sirEnvio || loginInfo.oficinaActiva.sirRecepcion}">class="azul"</c:if> href="<c:url value="/inici"/>"><i class="fa fa-home"></i> ${loginInfo.oficinaActiva.denominacion}</a></li>
+                    <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
                         <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
                             <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}
