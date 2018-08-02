@@ -235,6 +235,11 @@
                                 <dd> ${registroSir.observacionesApunte}</dd>
                             </c:if>
 
+                            <c:if test="${not empty registroSir.aplicacion}">
+                                <dt><i class="fa fa-gears"></i> <spring:message code="registroSir.aplicacion"/>: </dt>
+                                <dd> ${registroSir.aplicacion}</dd>
+                            </c:if>
+
                             <c:if test="${not empty registroSir.estado}">
                                 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
                                 <dd>
