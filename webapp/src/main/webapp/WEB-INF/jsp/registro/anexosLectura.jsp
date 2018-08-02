@@ -77,7 +77,7 @@
                                     <tr>
                                         <td>
                                             <a data-toggle="modal" href="#detalleAnexo"
-                                               onclick="obtenerAnexo(${anexo.id})">
+                                               onclick="obtenerAnexo(${anexo.id},${param.idEntidad})">
                                                 <c:if test="${anexo.titulo != anexo.tituloCorto}">
                                                     <p rel="ayuda"
                                                        data-content="<c:out value="${anexo.titulo}" escapeXml="true"/>"
