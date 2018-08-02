@@ -93,7 +93,7 @@ public class AvisoController extends BaseController {
                 }
 
                 // OFICIOS PENDIENTES DE REMISIÓN SALIDA
-                if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
+                if(librosRegistroSalida!= null && librosRegistroSalida.size() > 0){
 
                     oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId());
                 }

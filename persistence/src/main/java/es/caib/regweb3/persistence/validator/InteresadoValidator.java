@@ -185,7 +185,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                     try {
 
                         if (interesado.getId() == null) {
-                            log.info("Comprueba la existencia de la persona: " + interesado.getDocumento());
                             existe = personaEjb.existeDocumentoNew(interesado.getDocumento().toUpperCase(), interesado.getEntidad());
                         }
 
@@ -201,7 +200,6 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
             } else {
                 rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
-                log.info("El formato del documento NO es correcto");
             }
 
         }else if(StringUtils.isNotEmpty(interesado.getDocumento())){

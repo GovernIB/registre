@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="true"/> <%--Importamos el menú de avisos--%>
+                        <c:param name="avisos" value="false"/> <%--Importamos el menú de avisos--%>
                     </c:import>
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}</li>
                 </ol>
