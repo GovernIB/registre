@@ -87,7 +87,7 @@ public interface SirLocal {
      * @param observaciones
      * @throws Exception
      */
-    void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException;
+    void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Reenvio de un Registro SIR
