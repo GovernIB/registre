@@ -1926,8 +1926,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
                     || modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                String msg = "L'usuari ens indica que hi ha una firma i no ve (modoFirma = " + modoFirma + ")";
-                log.error(msg, new Exception());
+                String msg = "L'usuari ens indica que hi ha una firma a "+anexoSir.getIdentificadorFichero()+" i no ve (modoFirma = " + modoFirma + ")";
+                log.info(msg, new Exception());
                 throw new Exception(msg);
             }
 
@@ -1935,7 +1935,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
                     && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
-                String msg = "L'usuari ens indica que NO hi ha una firma pero n'envia una"
+                String msg = "L'usuari ens indica que NO hi ha una a "+anexoSir.getIdentificadorFichero()+" firma pero n'envia una"
                         + " (modoFirma = " + modoFirma + ")";
                 log.error(msg, new Exception());
                 throw new Exception(msg);
@@ -1960,7 +1960,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 // Firma en document separat CAS 4
                 if (dc == null) {
-                    throw new Exception("Aquesta firma requereix el document original"
+                    throw new Exception("Aquesta firma requereix el document "+anexoSir.getIdentificadorFichero()+" original"
                             + " i no s'ha enviat");
                 }
 
