@@ -118,24 +118,48 @@ public class AnexoFull {
 
     @Transient
     public long getDocSize(){
-        long size = getDocumentoCustody().getLength();
+        if(getDocumentoCustody()!=null) {
+            long size = getDocumentoCustody().getLength();
 
-        if (size < 1024) {
-            return 1;
-        } else {
-            return size / 1024;
+            if (size < 1024) {
+                return 1;
+            } else {
+                return size / 1024;
+            }
         }
+        return -1;
     }
 
     @Transient
     public long getSignSize(){
-        long size = getSignatureCustody().getLength();
+        if(getSignatureCustody()!=null) {
+            long size = getSignatureCustody().getLength();
 
-        if (size < 1024) {
-            return 1;
-        } else {
-            return size / 1024;
+            if (size < 1024) {
+                return 1;
+            } else {
+                return size / 1024;
+            }
         }
+        return -1;
+    }
+
+    @Transient
+    public String getDocMime(){
+        if(getDocumentoCustody()!= null) {
+            return getDocumentoCustody().getMime();
+        }
+        return "";
+
+    }
+
+    @Transient
+    public String getSignMime(){
+        if(getSignatureCustody()!= null) {
+            return getSignatureCustody().getMime();
+        }
+        return "";
+
     }
 
 }
