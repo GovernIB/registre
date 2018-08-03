@@ -114,7 +114,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RelacionSirOfi> oficinasSirByEntidadEstado(Long idEntidad, String estado) throws Exception{
+    public List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad, String estado) throws Exception{
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.entidad.id =:idEntidad and relacionSirOfi.estado.codigoEstadoEntidad =:estado order by relacionSirOfi.oficina.codigo");
 

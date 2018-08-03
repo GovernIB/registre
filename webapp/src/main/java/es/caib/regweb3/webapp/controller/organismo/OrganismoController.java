@@ -8,7 +8,6 @@ import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEditor;
 import es.caib.regweb3.webapp.form.OrganismoBusquedaForm;
-import es.caib.regweb3.webapp.utils.CodigoValor;
 import es.caib.regweb3.webapp.validator.LibroValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Fundació BIT.
@@ -225,30 +227,14 @@ public class OrganismoController extends BaseController {
         }
 
         // Lista las Oficinas según si son Responsables, Dependientes o Funcionales
-        List<Oficina> oficinasResponsables = oficinaEjb.responsableByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<Oficina> oficinasDependientes = oficinaEjb.dependienteByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Oficina> oficinasPrincipales = oficinaEjb.responsableByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        List<Oficina> oficinasAuxiliares = oficinaEjb.dependienteByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
         // Lista las Oficinas Organizativas
-        List<RelacionOrganizativaOfi> relacionOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<CodigoValor> oficinasOrganizativas = new ArrayList<CodigoValor>();
-        if(!relacionOrganizativaOfi.isEmpty()) {
-            for (RelacionOrganizativaOfi aRelacionOrganizativaOfi : relacionOrganizativaOfi) {
-                CodigoValor codigoValor = new CodigoValor();
-                codigoValor.setId(aRelacionOrganizativaOfi.getOrganismo().getId().toString());
-                codigoValor.setNombre(aRelacionOrganizativaOfi.getOficina().getCodigo() + " - " + aRelacionOrganizativaOfi.getOficina().getDenominacion());
-                oficinasOrganizativas.add(codigoValor);
-            }
-        }
-        // Lista las Oficinas SIR
-        List<RelacionSirOfi> relacionSirOfi = relacionSirOfiEjb.oficinasSirByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        List<CodigoValor> oficinasSir = new ArrayList<CodigoValor>();
-        if(!relacionSirOfi.isEmpty()) {
-            for (RelacionSirOfi aRelacionSirOfi : relacionSirOfi) {
-                CodigoValor codigoValor = new CodigoValor();
-                codigoValor.setId(aRelacionSirOfi.getOrganismo().getId().toString());
-                codigoValor.setNombre(aRelacionSirOfi.getOficina().getCodigo() + " - " + aRelacionSirOfi.getOficina().getDenominacion());
-                oficinasSir.add(codigoValor);
-            }
-        }
+        List<RelacionOrganizativaOfi> relacionesOrganizativaOfi = relacionOrganizativaOfiEjb.organizativaByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+
+        // Lista las Relaciones SirOfi
+        List<RelacionSirOfi> relacionesSirOfi = relacionSirOfiEjb.relacionesSirOfiByEntidadEstado(entidad.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         // Lista los libros de los organismos según el nivel del Organismo al que pertenecen
         Map<String, Long> librosOrganismoPrimerNivel = new HashMap<String, Long>();
@@ -334,10 +320,10 @@ public class OrganismoController extends BaseController {
         mav.addObject("organismosQuintoNivel", organismosQuintoNivel);
         mav.addObject("organismosSextoNivel", organismosSextoNivel);
         mav.addObject("organismosSeptimoNivel", organismosSeptimoNivel);
-        mav.addObject("oficinasResponsables", oficinasResponsables);
-        mav.addObject("oficinasDependientes", oficinasDependientes);
-        mav.addObject("oficinasOrganizativas", oficinasOrganizativas);
-        mav.addObject("oficinasSir", oficinasSir);
+        mav.addObject("oficinasPrincipales", oficinasPrincipales);
+        mav.addObject("oficinasAuxiliares", oficinasAuxiliares);
+        mav.addObject("relacionesOrganizativaOfi", relacionesOrganizativaOfi);
+        mav.addObject("relacionesSirOfi", relacionesSirOfi);
         mav.addObject("librosOrganismoPrimerNivel", librosOrganismoPrimerNivel);
         mav.addObject("librosOrganismoSegundoNivel", librosOrganismoSegundoNivel);
         mav.addObject("librosOrganismoTercerNivel", librosOrganismoTercerNivel);
