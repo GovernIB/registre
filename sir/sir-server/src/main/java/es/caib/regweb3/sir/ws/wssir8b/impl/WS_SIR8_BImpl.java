@@ -7,8 +7,6 @@ import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
-import es.caib.regweb3.utils.PassiveCallbackHandler;
-import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
@@ -20,10 +18,6 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
-import java.security.Principal;
-import java.util.Set;
 
 /**
  * Implementación del servicio (WS_SIR8_B) que recibe en REGWEB3 los ficheros de datos de intercambio
@@ -70,28 +64,6 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
     @Override
     @WebMethod(operationName = "envioFicherosAAplicacion")
     public RespuestaWS envioFicherosAAplicacion(@WebParam(name = "value0") String registro, @WebParam(name = "value1") String firmaRegistro) {
-
-        // Realizamos el login con un usuario existente en Seycon, porque este WS está sin autenticar
-        LoginContext lc = null;
-
-        try {
-            lc = new LoginContext(RegwebConstantes.SECURITY_DOMAIN, new PassiveCallbackHandler("mgonzalez", "mgonzalez"));
-            lc.login();
-
-            Set<Principal> principalsCred = lc.getSubject().getPrincipals();
-            if (principalsCred == null || principalsCred.isEmpty()) {
-                log.info(" getPrincipals() == BUIT");
-            } else {
-                for (Principal object : principalsCred) {
-                    log.info(" getPrincipals() == " + object.getName() + "(" + object.getClass() + ")");
-
-                }
-            }
-
-        } catch (LoginException le) {
-            // Authentication failed.
-            log.error("CAIB Login ERROR" + le.getMessage());
-        }
 
         log.info("-------------------- Recibiendo fichero de intercambio en WS_SIR8_B --------------------");
         if(registro.contains("<Anexo>")){
