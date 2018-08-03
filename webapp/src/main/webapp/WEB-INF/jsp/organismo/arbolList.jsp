@@ -50,7 +50,7 @@
 
                     <!-- LEYENDA -->
                     <div class="col-xs-2 button-right">
-                        <div class="panel panel-warning">
+                        <div class="panel panel-warning leyenda">
                             <div class="panel-heading">
                                 <div class="row">
                                     <div class="col-xs-12">
@@ -64,7 +64,7 @@
                                         <button type="button" class="btn-danger-llegenda btn-xs" style="cursor:default;"><i class="fa fa-globe"></i> <spring:message code="entidad.entidad"/></button>
                                     </div>
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-primary btn-xs" style="cursor:default;"><i class="fa fa-globe"></i> <spring:message code="entidad.unidadOrganica"/></button>
+                                        <button type="button" class="btn-primary-llegenda btn-xs" style="cursor:default;"><i class="fa fa-globe"></i> <spring:message code="entidad.unidadOrganica"/></button>
                                     </div>
                                     <div class="col-xs-12 pad-bottom5">
                                         <button type="button" class="btn-edp btn-xs" style="cursor:default;"><i class="fa fa-globe"></i> <spring:message code="organismo.edp"/></button>
@@ -74,24 +74,24 @@
                                         <button type="button" class="btn-llibre-llegenda btn-xs" style="cursor:default;"><i class="fa fa-book"></i> <spring:message code="libro.libro"/></button>
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty oficinasResponsables}">
+                                <c:if test="${not empty oficinasPrincipales}">
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-warning btn-xs" style="cursor:default;"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.principal"/></button>
+                                        <button type="button" class="btn-warning-llegenda btn-xs" style="cursor:default;"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.principal"/></button>
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty oficinasDependientes}">
+                                <c:if test="${not empty oficinasAuxiliares}">
                                     <div class="col-xs-12 pad-bottom5">
                                         <button type="button" class="btn-ofaux btn-xs col-xs-12" style="cursor:default;"><i class="fa fa-home"></i> <spring:message code="regweb.oficina.auxiliar"/>
                                         </button>
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty oficinasSir}">
+                                <c:if test="${not empty relacionesSirOfi}">
                                     <div class="col-xs-12 pad-bottom5">
-                                        <button type="button" class="btn-ofsir btn-xs col-xs-12" style="cursor:default;"><i class="fa fa-exchange"></i> <spring:message code="regweb.oficina.sir"/>
+                                        <button type="button" class="btn-ofsir btn-xs col-xs-12" style="cursor:default;"><i class="fa fa-exchange"></i> <spring:message code="oficina.oficina"/> <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/>
                                         </button>
                                     </div>
                                 </c:if>
-                                <c:if test="${not empty oficinasOrganizativas}">
+                                <c:if test="${not empty relacionesOrganizativaOfi}">
                                     <div class="col-xs-12 pad-bottom5">
                                         <button type="button" class="btn-success btn-xs" style="cursor:default;"><i class="fa fa-institution"></i> <spring:message code="regweb.oficina.organizativa"/></button>
                                     </div>
@@ -142,29 +142,52 @@
                                                 </c:forEach>
 
                                                 <!-- **** Oficinas ***-->
-                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo1.id}">
+                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo1.id}">
                                                         <li>
                                                             <a href="javascript:void(0);"><span
                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                <c:if test="${relacionSirOfi.organismo.id == organismo1.id}">
+                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                        <a href="javascript:void(0);"><span
+                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                    </c:if>
+                                                                </c:if>
+                                                            </c:forEach>
+
                                                             <ul>
-                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo1.id}">
+                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                        <a href="javascript:void(0);"><span
+                                                                                                class="panel-heading btn-success vuitanta-percent"
+                                                                                                style="cursor:copy"><i
+                                                                                                class="fa fa-institution"></i></span></a>
+                                                                                    </c:if>
+                                                                                </c:if>
+                                                                            </c:forEach>
+
                                                                             <ul>
-                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                <c:forEach var="oficinasAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                    <c:if test="${oficinasAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                    class="fa fa-home"></i> ${oficinasAuxiliar2.codigo} - ${oficinasAuxiliar2.denominacion}</span></a>
                                                                                         </li>
                                                                                     </c:if>
                                                                                 </c:forEach>
@@ -176,26 +199,30 @@
                                                         </li>
                                                     </c:if>
                                                 </c:forEach>
-                                                <!-- **** Oficinas Funcionales ***-->
-                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                    <c:if test="${oficinaOrganizativa.id == organismo1.id}">
-                                                        <li>
-                                                            <a href="javascript:void(0);"><span
-                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                        </li>
+                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo1.id}">
+                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                            <li>
+                                                                <a href="javascript:void(0);"><span
+                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                            </li>
+                                                        </c:if>
                                                     </c:if>
                                                 </c:forEach>
                                                 <!-- **** Oficinas Sir ***-->
-                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                    <c:if test="${oficinaSir.id == organismo1.id}">
-                                                        <li>
-                                                            <a href="javascript:void(0);"><span
-                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                        </li>
+                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                    <c:if test="${relacionSirOfi.organismo.id == organismo1.id}">
+                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo1.id}">
+                                                            <li>
+                                                                <a href="javascript:void(0);"><span
+                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                            </li>
+                                                        </c:if>
                                                     </c:if>
                                                 </c:forEach>
 
@@ -231,29 +258,52 @@
                                                                 </c:forEach>
 
                                                                 <!-- **** Oficinas ***-->
-                                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo2.id}">
+                                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo2.id}">
                                                                         <li>
                                                                             <a href="javascript:void(0);"><span
                                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                <c:if test="${relacionSirOfi.organismo.id == organismo2.id}">
+                                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                                        <a href="javascript:void(0);"><span
+                                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                    </c:if>
+                                                                                </c:if>
+                                                                            </c:forEach>
+
                                                                             <ul>
-                                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo2.id}">
+                                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                                            <a href="javascript:void(0);"><span
+                                                                                                                    class="panel-heading btn-success vuitanta-percent"
+                                                                                                                    style="cursor:copy"><i
+                                                                                                                    class="fa fa-institution"></i></span></a>
+                                                                                                    </c:if>
+                                                                                                </c:if>
+                                                                                            </c:forEach>
+
                                                                                             <ul>
-                                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                                <c:forEach var="oficinaAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                                    <c:if test="${oficinaAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denominacion}</span></a>
                                                                                                         </li>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
@@ -265,26 +315,30 @@
                                                                         </li>
                                                                     </c:if>
                                                                 </c:forEach>
-                                                                <!-- **** Oficinas Funcionales ***-->
-                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                                    <c:if test="${oficinaOrganizativa.id == organismo2.id}">
-                                                                        <li>
-                                                                            <a href="javascript:void(0);"><span
-                                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                                        </li>
+                                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo2.id}">
+                                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                                            <li>
+                                                                                <a href="javascript:void(0);"><span
+                                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                                            </li>
+                                                                        </c:if>
                                                                     </c:if>
                                                                 </c:forEach>
                                                                 <!-- **** Oficinas Sir ***-->
-                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                                    <c:if test="${oficinaSir.id == organismo2.id}">
-                                                                        <li>
-                                                                            <a href="javascript:void(0);"><span
-                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                                        </li>
+                                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                    <c:if test="${relacionSirOfi.organismo.id == organismo2.id}">
+                                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo2.id}">
+                                                                            <li>
+                                                                                <a href="javascript:void(0);"><span
+                                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                            </li>
+                                                                        </c:if>
                                                                     </c:if>
                                                                 </c:forEach>
 
@@ -320,29 +374,52 @@
                                                                                 </c:forEach>
 
                                                                                 <!-- **** Oficinas ***-->
-                                                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo3.id}">
+                                                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo3.id}">
                                                                                         <li>
                                                                                             <a href="javascript:void(0);"><span
                                                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                <c:if test="${relacionSirOfi.organismo.id == organismo3.id}">
+                                                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                    </c:if>
+                                                                                                </c:if>
+                                                                                            </c:forEach>
+
                                                                                             <ul>
-                                                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo3.id}">
+                                                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                style="cursor:copy"><i
+                                                                                                                                class="fa fa-institution"></i></span></a>
+                                                                                                                    </c:if>
+                                                                                                                </c:if>
+                                                                                                            </c:forEach>
+
                                                                                                             <ul>
-                                                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                                                <c:forEach var="oficinaAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                                                    <c:if test="${oficinaAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denominacion}</span></a>
                                                                                                                         </li>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
@@ -354,26 +431,30 @@
                                                                                         </li>
                                                                                     </c:if>
                                                                                 </c:forEach>
-                                                                                <!-- **** Oficinas Funcionales ***-->
-                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                                                    <c:if test="${oficinaOrganizativa.id == organismo3.id}">
-                                                                                        <li>
-                                                                                            <a href="javascript:void(0);"><span
-                                                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                                                        </li>
+                                                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo3.id}">
+                                                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                                                            <li>
+                                                                                                <a href="javascript:void(0);"><span
+                                                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                                                            </li>
+                                                                                        </c:if>
                                                                                     </c:if>
                                                                                 </c:forEach>
                                                                                 <!-- **** Oficinas Sir ***-->
-                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                                                    <c:if test="${oficinaSir.id == organismo3.id}">
-                                                                                        <li>
-                                                                                            <a href="javascript:void(0);"><span
-                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                                                        </li>
+                                                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                    <c:if test="${relacionSirOfi.organismo.id == organismo3.id}">
+                                                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo3.id}">
+                                                                                            <li>
+                                                                                                <a href="javascript:void(0);"><span
+                                                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                            </li>
+                                                                                        </c:if>
                                                                                     </c:if>
                                                                                 </c:forEach>
 
@@ -409,29 +490,52 @@
                                                                                                 </c:forEach>
 
                                                                                                 <!-- **** Oficinas ***-->
-                                                                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo4.id}">
+                                                                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo4.id}">
                                                                                                         <li>
                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                <c:if test="${relacionSirOfi.organismo.id == organismo4.id}">
+                                                                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                    </c:if>
+                                                                                                                </c:if>
+                                                                                                            </c:forEach>
+
                                                                                                             <ul>
-                                                                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo4.id}">
+                                                                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                                style="cursor:copy"><i
+                                                                                                                                                class="fa fa-institution"></i></span></a>
+                                                                                                                                    </c:if>
+                                                                                                                                </c:if>
+                                                                                                                            </c:forEach>
+
                                                                                                                             <ul>
-                                                                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                                                                <c:forEach var="oficinaAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                                                                    <c:if test="${oficinaAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denominacion}</span></a>
                                                                                                                                         </li>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
@@ -443,26 +547,30 @@
                                                                                                         </li>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
-                                                                                                <!-- **** Oficinas Funcionales ***-->
-                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo4.id}">
-                                                                                                        <li>
-                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                                                                        </li>
+                                                                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo4.id}">
+                                                                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                                                                            <li>
+                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                                                                            </li>
+                                                                                                        </c:if>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
                                                                                                 <!-- **** Oficinas Sir ***-->
-                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                                                                    <c:if test="${oficinaSir.id == organismo4.id}">
-                                                                                                        <li>
-                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                                                                        </li>
+                                                                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                    <c:if test="${relacionSirOfi.organismo.id == organismo4.id}">
+                                                                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo4.id}">
+                                                                                                            <li>
+                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                            </li>
+                                                                                                        </c:if>
                                                                                                     </c:if>
                                                                                                 </c:forEach>
 
@@ -498,29 +606,52 @@
                                                                                                                 </c:forEach>
 
                                                                                                                 <!-- **** Oficinas ***-->
-                                                                                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                                                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo5.id}">
+                                                                                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                                                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo5.id}">
                                                                                                                         <li>
                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                                                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                                <c:if test="${relacionSirOfi.organismo.id == organismo5.id}">
+                                                                                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                                    </c:if>
+                                                                                                                                </c:if>
+                                                                                                                            </c:forEach>
+
                                                                                                                             <ul>
-                                                                                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo5.id}">
+                                                                                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                                class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                                                style="cursor:copy"><i
+                                                                                                                                                                class="fa fa-institution"></i></span></a>
+                                                                                                                                                    </c:if>
+                                                                                                                                                </c:if>
+                                                                                                                                            </c:forEach>
+
                                                                                                                                             <ul>
-                                                                                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                                                                                <c:forEach var="oficinaAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                                                                                    <c:if test="${oficinaAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denominacion}</span></a>
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
@@ -532,26 +663,30 @@
                                                                                                                         </li>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
-                                                                                                                <!-- **** Oficinas Funcionales ***-->
-                                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo5.id}">
-                                                                                                                        <li>
-                                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                                                                                        </li>
+                                                                                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                                                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo5.id}">
+                                                                                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                                                                                            <li>
+                                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                                                                                            </li>
+                                                                                                                        </c:if>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
                                                                                                                 <!-- **** Oficinas Sir ***-->
-                                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                                                                                    <c:if test="${oficinaSir.id == organismo5.id}">
-                                                                                                                        <li>
-                                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                                                                                        </li>
+                                                                                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                    <c:if test="${relacionSirOfi.organismo.id == organismo5.id}">
+                                                                                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo5.id}">
+                                                                                                                            <li>
+                                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                            </li>
+                                                                                                                        </c:if>
                                                                                                                     </c:if>
                                                                                                                 </c:forEach>
 
@@ -587,29 +722,52 @@
                                                                                                                                 </c:forEach>
 
                                                                                                                                 <!-- **** Oficinas ***-->
-                                                                                                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                                                                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo6.id}">
+                                                                                                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                                                                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo6.id}">
                                                                                                                                         <li>
                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                                                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                                                                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                                                <c:if test="${relacionSirOfi.organismo.id == organismo6.id}">
+                                                                                                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                                                    </c:if>
+                                                                                                                                                </c:if>
+                                                                                                                                            </c:forEach>
+
                                                                                                                                             <ul>
-                                                                                                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                                                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                                                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                                                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                                                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo6.id}">
+                                                                                                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                                                class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                                                                style="cursor:copy"><i
+                                                                                                                                                                                class="fa fa-institution"></i></span></a>
+                                                                                                                                                                    </c:if>
+                                                                                                                                                                </c:if>
+                                                                                                                                                            </c:forEach>
+
                                                                                                                                                             <ul>
-                                                                                                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                                                                                                <c:forEach var="oficinaAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                                                                                                    <c:if test="${oficinaAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                                                                                                         <li>
                                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denominacion}</span></a>
                                                                                                                                                                         </li>
                                                                                                                                                                     </c:if>
                                                                                                                                                                 </c:forEach>
@@ -621,26 +779,30 @@
                                                                                                                                         </li>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
-                                                                                                                                <!-- **** Oficinas Funcionales ***-->
-                                                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo6.id}">
-                                                                                                                                        <li>
-                                                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                                                                                                        </li>
+                                                                                                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                                                                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo6.id}">
+                                                                                                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                                                                                                            <li>
+                                                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                                                                                                            </li>
+                                                                                                                                        </c:if>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
                                                                                                                                 <!-- **** Oficinas Sir ***-->
-                                                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                                                                                                    <c:if test="${oficinaSir.id == organismo6.id}">
-                                                                                                                                        <li>
-                                                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                                                                                                        </li>
+                                                                                                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                                    <c:if test="${relacionSirOfi.organismo.id == organismo6.id}">
+                                                                                                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo6.id}">
+                                                                                                                                            <li>
+                                                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                                            </li>
+                                                                                                                                        </c:if>
                                                                                                                                     </c:if>
                                                                                                                                 </c:forEach>
 
@@ -676,29 +838,52 @@
                                                                                                                                                 </c:forEach>
 
                                                                                                                                                 <!-- **** Oficinas ***-->
-                                                                                                                                                <c:forEach var="oficinaResponsable" items="${oficinasResponsables}">
-                                                                                                                                                    <c:if test="${oficinaResponsable.organismoResponsable.id == organismo7.id}">
+                                                                                                                                                <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
+                                                                                                                                                    <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo7.id}">
                                                                                                                                                         <li>
                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                     class="panel-heading btn-warning vuitanta-percent"
                                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                    class="fa fa-home"></i> ${oficinaResponsable.codigo} - ${oficinaResponsable.denominacion}</span></a>
+                                                                                                                                                                    class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
+
+                                                                                                                                                            <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                                                                <c:if test="${relacionSirOfi.organismo.id == organismo7.id}">
+                                                                                                                                                                    <c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+                                                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                                                class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                                                style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                                                                    </c:if>
+                                                                                                                                                                </c:if>
+                                                                                                                                                            </c:forEach>
+
                                                                                                                                                             <ul>
-                                                                                                                                                                <c:forEach var="oficinasDependiente" items="${oficinasDependientes}">
-                                                                                                                                                                    <c:if test="${oficinasDependiente.oficinaResponsable.id == oficinaResponsable.id}">
+                                                                                                                                                                <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
+                                                                                                                                                                    <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
                                                                                                                                                                         <li>
                                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente.codigo} - ${oficinasDependiente.denominacion}</span></a>
+                                                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+                                                                                                                                                                            <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                                                                                <c:if test="${relacionOrganizativaOfi.organismo.id == organismo7.id}">
+                                                                                                                                                                                    <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
+                                                                                                                                                                                        <a href="javascript:void(0);"><span
+                                                                                                                                                                                                class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                                                                                style="cursor:copy"><i
+                                                                                                                                                                                                class="fa fa-institution"></i></span></a>
+                                                                                                                                                                                    </c:if>
+                                                                                                                                                                                </c:if>
+                                                                                                                                                                            </c:forEach>
+
                                                                                                                                                                             <ul>
-                                                                                                                                                                                <c:forEach var="oficinasDependiente2" items="${oficinasDependientes}">
-                                                                                                                                                                                    <c:if test="${oficinasDependiente2.oficinaResponsable.id == oficinasDependiente.id}">
+                                                                                                                                                                                <c:forEach var="oficinaAuxiliar2" items="${oficinasAuxiliares}">
+                                                                                                                                                                                    <c:if test="${oficinaAuxiliar2.oficinaResponsable.id == oficinaAuxiliar.id}">
                                                                                                                                                                                         <li>
                                                                                                                                                                                             <a href="javascript:void(0);"><span
                                                                                                                                                                                                     class="panel-heading btn-ofaux vuitanta-percent"
                                                                                                                                                                                                     style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                                                    class="fa fa-home"></i> ${oficinasDependiente2.codigo} - ${oficinasDependiente2.denominacion}</span></a>
+                                                                                                                                                                                                    class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denominacion}</span></a>
                                                                                                                                                                                         </li>
                                                                                                                                                                                     </c:if>
                                                                                                                                                                                 </c:forEach>
@@ -710,26 +895,30 @@
                                                                                                                                                         </li>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
-                                                                                                                                                <!-- **** Oficinas Funcionales ***-->
-                                                                                                                                                <c:forEach var="oficinaOrganizativa" items="${oficinasOrganizativas}">
-                                                                                                                                                    <c:if test="${oficinaOrganizativa.id == organismo7.id}">
-                                                                                                                                                        <li>
-                                                                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                                                                    class="panel-heading btn-success vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                    class="fa fa-institution"></i> ${oficinaOrganizativa.nombre}</span></a>
-                                                                                                                                                        </li>
+                                                                                                                                                <!-- **** Oficinas Funcionales/Organizativas ***-->
+                                                                                                                                                <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
+                                                                                                                                                    <c:if test="${relacionOrganizativaOfi.organismo.id == organismo7.id}">
+                                                                                                                                                        <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
+                                                                                                                                                            <li>
+                                                                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                                                                        class="panel-heading btn-success vuitanta-percent"
+                                                                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                                                                        class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
+                                                                                                                                                            </li>
+                                                                                                                                                        </c:if>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
                                                                                                                                                 <!-- **** Oficinas Sir ***-->
-                                                                                                                                                <c:forEach var="oficinaSir" items="${oficinasSir}">
-                                                                                                                                                    <c:if test="${oficinaSir.id == organismo7.id}">
-                                                                                                                                                        <li>
-                                                                                                                                                            <a href="javascript:void(0);"><span
-                                                                                                                                                                    class="panel-heading btn-ofsir vuitanta-percent"
-                                                                                                                                                                    style="cursor:copy" onclick="copyToClipboard(this)"><i
-                                                                                                                                                                    class="fa fa-exchange"></i> ${oficinaSir.nombre}</span></a>
-                                                                                                                                                        </li>
+                                                                                                                                                <c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
+                                                                                                                                                    <c:if test="${relacionSirOfi.organismo.id == organismo7.id}">
+                                                                                                                                                        <c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo7.id}">
+                                                                                                                                                            <li>
+                                                                                                                                                                <a href="javascript:void(0);"><span
+                                                                                                                                                                        class="panel-heading btn-ofsir vuitanta-percent"
+                                                                                                                                                                        style="cursor:copy" onclick="copyToClipboard(this)"><i
+                                                                                                                                                                        class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+                                                                                                                                                            </li>
+                                                                                                                                                        </c:if>
                                                                                                                                                     </c:if>
                                                                                                                                                 </c:forEach>
                                                                                                                                             </ul>
@@ -781,17 +970,17 @@
 <script type="text/javascript">
     $(function () {
         $('.tree li:has(ul > li)').addClass('parent_li').find(' > span').attr('title', 'Amaga la branca');
-        $('.tree li:has(ul > li)').addClass('parent_li').find(' > span').addClass('fa fa-minus');
+        $('.tree li:has(ul > li)').addClass('parent_li').find(' > span > i').addClass('fa fa-minus');
         $('.tree li.parent_li > span').on('click', function (e) {
             var children = $(this).parent('li.parent_li').find(' > ul > li');
             if (children.is(":visible")) {
                 children.hide('fast');
-                $(this).removeClass('fa fa-minus');
-                $(this).attr('title', 'Mostra la branca').addClass('fa fa-plus');
+                $(this).find(' > i').removeClass('fa fa-minus');
+                $(this).attr('title', 'Mostra la branca').find(' > i').addClass('fa fa-plus');
             } else {
                 children.show('fast');
-                $(this).removeClass('fa fa-plus');
-                $(this).attr('title', 'Amaga la branca').addClass('fa fa-minus');
+                $(this).find(' > i').removeClass('fa fa-plus');
+                $(this).attr('title', 'Amaga la branca').find(' > i').addClass('fa fa-minus');
             }
             e.stopPropagation();
         });
@@ -801,14 +990,14 @@
 <script type="text/javascript">
     function amaga(numeroPrimer, numeroSegon, numeroTercer) {
 
-        $('.tree li:has(ul > li)').addClass('parent_li').find(' > span').removeClass('fa fa-minus');
+        $('.tree li:has(ul > li)').addClass('parent_li').find(' > span > i').removeClass('fa fa-minus');
 
         for(var i=0;i<numeroTercer;i++){
             var variable = $("#tercerNivell" + i).parent('li.parent_li').find(' > ul > li');
             variable.hide('fast');
             if($("#tercerNivell" + i).parent('li.parent_li').find(' > ul > li').val() != undefined){
-                $("#tercerNivell" + i).removeClass('fa fa-minus');
-                $("#tercerNivell" + i).attr('title', 'Mostra la branca').addClass('fa fa-plus');
+                $("#tercerNivell" + i).find(' > i').removeClass('fa fa-minus');
+                $("#tercerNivell" + i).attr('title', 'Mostra la branca').find(' > i').addClass('fa fa-plus');
             }
         }
 
@@ -816,8 +1005,8 @@
             var variable = $("#segonNivell" + i).parent('li.parent_li').find(' > ul > li');
             variable.hide('fast');
             if($("#segonNivell" + i).parent('li.parent_li').find(' > ul > li').val() != undefined){
-                $("#segonNivell" + i).removeClass('fa fa-minus');
-                $("#segonNivell" + i).attr('title', 'Mostra la branca').addClass('fa fa-plus');
+                $("#segonNivell" + i).find(' > i').removeClass('fa fa-minus');
+                $("#segonNivell" + i).attr('title', 'Mostra la branca').find(' > i').addClass('fa fa-plus');
             }
         }
 
@@ -825,14 +1014,14 @@
             var variable = $("#primerNivell" + i).parent('li.parent_li').find(' > ul > li');
             variable.hide('fast');
             if($("#primerNivell" + i).parent('li.parent_li').find(' > ul > li').val() != undefined){
-                $("#primerNivell" + i).removeClass('fa fa-minus');
-                $("#primerNivell" + i).attr('title', 'Mostra la branca').addClass('fa fa-plus');
+                $("#primerNivell" + i).find(' > i').removeClass('fa fa-minus');
+                $("#primerNivell" + i).attr('title', 'Mostra la branca').find(' > i').addClass('fa fa-plus');
             }
         }
 
-        $("#govern").addClass('fa fa-minus');
+        $("#govern").find(' > i').addClass('fa fa-minus');
         $("#govern").attr('title', 'Amaga la branca');
-        $("#entidad").addClass('fa fa-minus');
+        $("#entidad").find(' > i').addClass('fa fa-minus');
         $("#entidad").attr('title', 'Amaga la branca');
 
     }
