@@ -725,7 +725,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
         registroSir.setCodigoUnidadTramitacionDestino(registroEntrada.getDestinoExternoCodigo());
-        registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
+        if(registroEntrada.getDestinoExternoDenominacion().length() > 80) {  // recortamos en caso de que pase de 80 caracteres
+            registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion().substring(0,79));
+        } else{
+            registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
+        }
 
         // Segmento De_Asunto
         registroSir.setResumen(registroDetalle.getExtracto());
