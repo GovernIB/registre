@@ -696,6 +696,37 @@ public class AnexoController extends BaseController {
     }
 
 
+    /**
+     * Mètodes utilitzat dins regweb3.tld
+     *
+     * @param custodiaID
+     * @return
+     */
+    public static String getDocMime(String custodiaID, Long idEntidad) throws Exception, I18NException {
+
+        DocumentCustody dc = getAnexoLocalEJBStatic().getDocumentInfoOnly(custodiaID, idEntidad);
+        if (dc == null) {
+            return "";
+        }
+        return dc.getMime();
+    }
+
+    /**
+     * Mètodes utilitzat dins regweb3.tld
+     *
+     * @param custodiaID
+     * @return
+     */
+    public static String getSignMime(String custodiaID, Long idEntidad) throws Exception, I18NException {
+
+        SignatureCustody sc = getAnexoLocalEJBStatic().getSignatureInfoOnly(custodiaID, idEntidad);
+        if (sc == null) {
+            return "";
+        }
+        return sc.getMime();
+    }
+
+
     protected static AnexoLocal anexoEjbStatic = null;
 
     private static AnexoLocal getAnexoLocalEJBStatic() throws Exception {

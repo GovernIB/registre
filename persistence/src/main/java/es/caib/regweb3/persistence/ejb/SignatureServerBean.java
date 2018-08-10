@@ -353,6 +353,11 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
       sri = new SignatureRequestedInformation();
       sri.setReturnSignatureTypeFormatProfile(true);
+      sri.setReturnCertificateInfo(false);
+      sri.setReturnCertificates(false);
+      sri.setReturnTimeStampInfo(false);
+      sri.setReturnValidationChecks(false);
+      sri.setValidateCertificateRevocation(false);
 
       ValidateSignatureRequest validationRequest = new ValidateSignatureRequest();
       validationRequest.setLanguage(locale.getLanguage());

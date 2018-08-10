@@ -16,6 +16,7 @@ import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import net.java.xades.security.xml.XMLSignatureElement;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -24,13 +25,23 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.utils.cxf.CXFUtils;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1732,7 +1743,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         HashMap<String,AnexoFull> anexosProcesados = new HashMap<String, AnexoFull>();
 
-        // Procesamos los Documentos con firma Attached o Detached
+        // Procesamos los Documentos con firma Attached o sin firma
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
             for (CamposNTI cnti : camposNTIs) {
                 if (anexoSir.getId().equals(cnti.getId())) {
@@ -1743,10 +1754,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         // Procesamos las Firma detached
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
-            transformarAnexoFirma(anexoSir, anexosProcesados);
+            transformarAnexoFirma(anexoSir, anexosProcesados,registroSir.getEntidad().getId());
         }
 
-        return new ArrayList<AnexoFull>(anexosProcesados.values());
+        // Eliminam duplicats
+        Set<AnexoFull> set = new HashSet<AnexoFull>(anexosProcesados.values());
+
+        return new ArrayList<AnexoFull>(set);
     }
 
     /**
@@ -1871,18 +1885,144 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param anexosProcesados Lista de anexos procesados anteriores.
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados) throws Exception {
+    private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad) throws Exception {
 
         // Si el IdentificadorDocumentoFirmado está informado y es DISTINTO al IdentificadorFichero, es una Firma Detached
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
                 !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
 
             log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
-            //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-            AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
-            anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
-            SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
-            anexoFull.setSignatureCustody(sc);
+
+            byte[] anexoSirData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
+            //Mandamos a validar para averiguar si es una firma attached o detached(Defensor pueblo, orve)
+            if(CXFUtils.isXMLFormat(anexoSirData)){ //Miramos si es un formato XML
+                //Averiguamos que tipo de XADES és (Attached o detached)
+                String format= getXAdESFormat(anexoSirData);
+
+                if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
+                    //Obtenemos el anexo original cuya firma es la que estamos tratando
+                    AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
+
+                    if(anexoFull.getSignatureCustody() == null) { // Es un documento sin firma(documento plano)
+                        //Descartamos la firma xsig y lanzamos mensaje.
+                        log.warn("Descartat FIRMA d'un anexoSir(document pla) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
+
+                        // Descomentar aquest codi quan arxiu deixi guardar xsig (propuesta de toni, pero esta mas ordenado en el codigo de marilen
+
+                        /* (//TODO Aquest codi s'ha d'eliminar, optimitzat a la linea 1923)
+                        anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+
+                        SignatureCustody sc = new SignatureCustody();
+                        sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+                        sc.setMime(anexoSir.getTipoMIME());
+                        sc.setName(anexoSir.getNombreFichero());
+
+                        anexoFull.setSignatureCustody(sc);
+
+                        // Afegirem nova referencia amb el ID la firma  dins del MAP
+                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFull);
+                        */
+
+                        //CASO XADES DETACHED DE DOCUMENT PLA = CADES (AFEGIT MARILEN, CODI OPTIMITZAT, descomentar quan ARXIU guardi Xsig)
+                        //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
+                       /* anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+                        SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
+                        anexoFull.setSignatureCustody(sc);*/
+
+                    }else{ //Es un documento firmado que además nos envian el xsig como detached.
+
+                        log.warn("Descartat FIRMA d'un anexoSir(documentsignat) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
+
+                        // Descomentar aquest codi quan arxiu deixi guardar xsig
+                            /*
+                        SignatureCustody scAntic = anexoFull.getSignatureCustody();
+
+                        // Apunta a una signatura (attached o detached): collim la signatura com a doc detached
+                        DocumentCustody  dc = new DocumentCustody(scAntic.getName(), scAntic.getMime(), scAntic.getData());
+
+                        AnexoFull anexoFullnou = new AnexoFull();
+                        anexoFullnou.setDocumentoCustody(dc);
+
+                        SignatureCustody sc = new SignatureCustody();
+                        sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+                        sc.setMime(anexoSir.getTipoMIME());
+                        sc.setName(anexoSir.getNombreFichero());
+                        anexoFullnou.setSignatureCustody(sc);
+
+                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );
+                           */
+                    }
+
+                }else{
+                    // XADES attached
+                    // CAS ORVE:  es una XADES attached pero AnexoSIR apunta a un DETACHED
+
+                    // nomes ens serveix el contingut que ja s'ha donat d'alta: no feim res per que ARXIU no funciomna
+                    log.warn("Descartat anexoSir-Detached amb firma tipus Xades attached (CAS ORVE)");
+
+                    // Descomentar aquest codi quan arxiu deixi guardar xsig i si es vol guardar dins arxiu la firma de comunicació
+                    /*SignatureCustody sc = new SignatureCustody();
+
+                    sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+                    sc.setMime(anexoSir.getTipoMIME());
+                    sc.setName(anexoSir.getNombreFichero());
+                    sc.setAttachedDocument(true);
+
+                    //Montamos el nuevo anexoFull
+                    AnexoFull anexoFullnou = new AnexoFull();
+                    Anexo anexoNou = new Anexo();
+                    anexoFullnou.setSignatureCustody(sc);
+                    anexoFullnou.setDocumentoCustody(null);
+                    anexoNou.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+
+
+                    anexoNou.setTitulo(anexoSir.getNombreFichero());
+                    anexoNou.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+                    anexoNou.setObservaciones(anexoSir.getObservaciones());
+                    anexoNou.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+                    anexoNou.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
+                    if(anexoSir.getTipoDocumento()!=null) {
+                        anexoNou.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
+                    }
+
+                    if(anexoSir.getCertificado()!= null) {
+                        anexoNou.setCertificado(anexoSir.getCertificado().getBytes());
+                    }
+
+                    if (anexoSir.getFirma() != null) {
+                        anexoNou.setFirma(anexoSir.getFirma().getBytes());
+
+                    }
+                    if (anexoSir.getTimestamp() != null) {
+                        anexoNou.setTimestamp(anexoSir.getTimestamp().getBytes());
+                    }
+
+                    if (anexoSir.getValidacionOCSPCertificado() != null) {
+                        anexoNou.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
+                    }
+
+                    if(anexoSir.getHash()!= null){
+                        anexoNou.setHash(anexoSir.getHash().getBytes());
+                    }
+
+                    anexoFullnou.setAnexo(anexoNou);
+
+
+                    anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
+
+
+                }
+            } else {
+                log.info("Entro en CADES");
+                // CADES
+
+                //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
+                AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
+                anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+                SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
+                anexoFull.setSignatureCustody(sc);
+
+            }
 
         }
 
@@ -1975,5 +2115,75 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
         return sc;
     }
+
+
+
+
+    /** La firma està continguda dins del document: PADES, ODT, OOXML */
+    public static final String SIGNFORMAT_IMPLICIT_ENVELOPED_ATTACHED = "implicit_enveloped/attached";
+
+    /** La firma conté al document: Xades ATTACHED */
+    public static final String SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED = "implicit_enveloping/attached";
+
+    /**
+     * El documetn està forà de la firma: xades detached i cades detached
+     */
+    public static final String SIGNFORMAT_EXPLICIT_DETACHED = "explicit/detached";
+
+    /**
+     * Cas específic de Xades externally detached
+     */
+    public static final String SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED = "explicit/externally_detached";
+
+
+    /**
+     * AQUEST MÈTODE ESTA DUPLICAT AL PLUGIN-INTEGR@
+     * @param signature
+     * @return
+     */
+    private  String getXAdESFormat(byte[] signature) throws Exception {
+
+        DocumentBuilderFactory dBFactory = DocumentBuilderFactory.newInstance();
+        dBFactory.setNamespaceAware(true);
+
+        Document eSignature = dBFactory.newDocumentBuilder().parse(
+           new ByteArrayInputStream(signature));
+
+        XMLSignature xmlSignature;
+        String rootName = eSignature.getDocumentElement().getNodeName();
+        if (rootName.equalsIgnoreCase("ds:Signature") || rootName.equals("ROOT_COSIGNATURES")) {
+            //  "XAdES Enveloping"
+            return SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED;
+        }
+        NodeList signatureNodeLs = eSignature.getElementsByTagName("ds:Manifest");
+        if (signatureNodeLs.getLength() > 0) {
+            //  "XAdES Externally Detached
+            return SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED;
+        }
+        NodeList signsList = eSignature.getElementsByTagNameNS(
+           "http://www.w3.org/2000/09/xmldsig#", "Signature");
+        if (signsList.getLength() == 0) {
+            throw new Exception("No te firmes");
+        }
+        Node signatureNode = signsList.item(0);
+        try {
+            xmlSignature = new XMLSignatureElement((Element) signatureNode).getXMLSignature();
+        } catch (MarshalException e) {
+            throw new Exception("marshal exception: " + e.getMessage(), e);
+        }
+        List<?> references = xmlSignature.getSignedInfo().getReferences();
+        for (int i = 0; i < references.size(); ++i) {
+            if (!"".equals(((Reference) references.get(i)).getURI()))
+                continue;
+            //  "XAdES Enveloped"
+            return SIGNFORMAT_IMPLICIT_ENVELOPED_ATTACHED;
+        }
+        //  "XAdES Detached"
+        return SIGNFORMAT_EXPLICIT_DETACHED;
+    }
+
+
+
+
 
 }
