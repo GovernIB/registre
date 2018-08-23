@@ -298,15 +298,20 @@ public class Sicres3XML {
 
                     Assert.isTrue(validacionDocumento.getValido(), "El campo 'documento' del SegmentoInteresados, no es correcto."); */
 
-                    // Validar que el Tipo Documento concuerda con Nombre o Razon Social
-                    if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
-                            interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
-                        Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Interesado()),
-                                "El campo 'RazonSocialInteresado' del SegmentoInteresados, no puede estar vacio.");
-                    } else {
-                        Assert.isTrue(StringUtils.isNotBlank(interesado.getNombre_Interesado()) &&
-                                        StringUtils.isNotBlank(interesado.getPrimer_Apellido_Interesado()),
-                                "Los campos 'NombreInteresado' y 'PrimerApellidoInteresado' del SegmentoInteresados, no pueden estar vacios.");
+                    // Validar si es Salida y tipo documento 'O'
+                    if (fichero.getTipoRegistro().equals(TipoRegistro.SALIDA) && interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
+                        Assert.hasText(interesado.getDocumento_Identificacion_Interesado(), "El campo 'DocumentoIdentificacionInteresado' está vacío.");
+                    }else {
+                        // Validar que el Tipo Documento concuerda con Nombre o Razon Social
+                        if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||
+                                interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
+                            Assert.isTrue(StringUtils.isNotBlank(interesado.getRazon_Social_Interesado()),
+                                    "El campo 'RazonSocialInteresado' del SegmentoInteresados, no puede estar vacio.");
+                        } else {
+                            Assert.isTrue(StringUtils.isNotBlank(interesado.getNombre_Interesado()) &&
+                                            StringUtils.isNotBlank(interesado.getPrimer_Apellido_Interesado()),
+                                    "Los campos 'NombreInteresado' y 'PrimerApellidoInteresado' del SegmentoInteresados, no pueden estar vacios.");
+                        }
                     }
                 }
 

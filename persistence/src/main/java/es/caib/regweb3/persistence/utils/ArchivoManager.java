@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.utils;
 
 import es.caib.regweb3.model.Archivo;
 import es.caib.regweb3.persistence.ejb.ArchivoLocal;
+import es.caib.regweb3.utils.MimeTypeUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -34,6 +35,14 @@ public class ArchivoManager {
     public Archivo prePersist() throws Exception {
 
         archivoActual = new Archivo();
+
+        if(mime == null){
+            mime = MimeTypeUtils.getMimeTypeFileName(nombreFichero);
+            if(mime == null) {
+                mime = "application/octet-stream";
+            }
+        }
+
         archivoActual.setMime(mime);
         archivoActual.setNombre(nombreFichero);
         archivoActual.setTamano((long) fichero.length);
