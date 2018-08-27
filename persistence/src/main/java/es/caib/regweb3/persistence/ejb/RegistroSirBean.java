@@ -222,12 +222,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             trazabilidadSirEjb.persist(trazabilidadSir);
 
         }catch (Exception e){
-            log.info("Error al crear el RegistroSir, eliminamos los posibles anexos creados");
+            log.info("Error al crear el RegistroSir:");
+            e.printStackTrace();
             for(AnexoSir anexoSir: registroSir.getAnexos()){
                 ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(),archivoEjb);
                 am.processError();
+                log.info("Eliminamos los posibles archivos creados: " + anexoSir.getAnexo().getId());
             }
-            e.printStackTrace();
             throw e;
         }
 
