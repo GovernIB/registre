@@ -117,10 +117,23 @@ public class RecepcionBean implements RecepcionLocal{
             throw e;
 
         } catch (RuntimeException e) {
-            //Error inesperado, NO ENVIAMOS UN MENSAJE DE ERROR DE CONTROL, PORQUÉ NO SE DEBE A LAS VALIDACIONES
-            log.info("Error inesperado recibiendo el Fichero de Intercambio, no enviamos un mensaje de control de error", e);
 
-            //enviarMensajeError(xmlFicheroIntercambio, errorGenerico, e.getMessage());
+            log.info("Error inesperado recibiendo el Fichero de Intercambio, enviamos un mensaje de control de error", e);
+            if(ficheroIntercambio != null){
+                mensajeError = crearMensajeError(ficheroIntercambio, errorGenerico, e.getMessage());
+                enviarMensajeError(mensajeError);
+            }
+
+            // Integración
+            if(entidad != null){
+                descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
+                peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
+                peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+                peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
+                peticion.append("Destino: ").append(ficheroIntercambio.getDescripcionEntidadRegistralDestino()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
+
+                webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
+            }
 
             throw e;
         }
