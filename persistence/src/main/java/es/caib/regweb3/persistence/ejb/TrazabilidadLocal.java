@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
+import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -102,5 +103,15 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @throws Exception
      */
     List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception;
+
+    /**
+     * Obtiene todos los RegistroEntrada validos que han sido creados a partir de una recepción SIR paginados
+     * @param idOficina
+     * @param idEntidad
+     * @param pageNumber
+     * @return
+     * @throws Exception
+     */
+    public Paginacion getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
 
 }

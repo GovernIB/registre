@@ -508,6 +508,21 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return mav;
     }
 
+    @RequestMapping(value = "/pendientesDistribuir/list/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView pendientesDistribuir(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("registroEntrada/pendientesDistribuirList");
+
+        Oficina oficinaActiva = getOficinaActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        Paginacion paginacion = trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(), entidadActiva.getId(), pageNumber);
+
+        mav.addObject("paginacion", paginacion);
+
+        return mav;
+    }
+
 
     /**
      * Anular un {@link es.caib.regweb3.model.RegistroEntrada}

@@ -4,6 +4,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -214,6 +215,55 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         }
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception {
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select t.registroEntradaDestino from Trazabilidad as t " +
+                "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
+                "t.registroEntradaDestino.destino != null and " +
+                "t.registroEntradaDestino.oficina.id = :idOficina and " +
+                "t.registroEntradaDestino.estado = :registro_valido " +
+                " order by t.fecha");
+
+        q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        q2 = em.createQuery("Select count(t.registroEntradaDestino.id) from Trazabilidad as t " +
+                "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
+                "t.registroEntradaDestino.destino != null and " +
+                "t.registroEntradaDestino.oficina.id = :idOficina and " +
+                "t.registroEntradaDestino.estado = :registro_valido " +
+                " order by t.fecha");
+
+        q2.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+        q2.setParameter("idEntidad", idEntidad);
+        q2.setParameter("idOficina", idOficina);
+        q2.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+
+
+        Paginacion paginacion;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
     }
 
     @Override
