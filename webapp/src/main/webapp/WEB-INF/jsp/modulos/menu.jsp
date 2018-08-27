@@ -196,18 +196,28 @@
                         </c:if>
 
                         <%--Menú SIR--%>
-                        <c:if test="${loginInfo.entidadActiva.sir && loginInfo.oficinaActiva.sirRecepcion}">
+                        <c:if test="${loginInfo.entidadActiva.sir}">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                     <spring:message code="menu.sir"/> <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos"/></a></li>
-                                    <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados"/></a></li>
+                                    <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
+                                        <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="registroSir.recibidos"/></a></li>
+                                    </c:if>
+                                    <c:if test="${loginInfo.oficinaActiva.sirEnvio}">
+                                        <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados"/></a></li>
+                                    </c:if>
                                     <li class="divider"></li>
-                                    <li><a href="<c:url value="/registroSir/pendientesProcesar/list"/>"><i class="fa fa-refresh fa-spin"></i> <spring:message code="registroSir.pendientesProcesar"/></a></li>
-                                    <li><a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroEntrada.pendientesSir"/></a></li>
-                                    <li><a href="<c:url value="/registroSalida/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroSalida.pendientesSir"/></a></li>
+                                    <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">
+                                        <li><a href="<c:url value="/registroSir/pendientesProcesar/list"/>"><i class="fa fa-refresh fa-spin"></i> <spring:message code="registroSir.pendientesProcesar"/></a></li>
+                                    </c:if>
+
+                                    <c:if test="${loginInfo.oficinaActiva.sirEnvio}">
+                                        <li><a href="<c:url value="/registroEntrada/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroEntrada.pendientesSir"/></a></li>
+                                        <li><a href="<c:url value="/registroSalida/pendientesSir/list/1"/>"><i class="fa fa-warning"></i> <spring:message code="registroSalida.pendientesSir"/></a></li>
+                                    </c:if>
+
                                 </ul>
                             </div>
                         </c:if>
