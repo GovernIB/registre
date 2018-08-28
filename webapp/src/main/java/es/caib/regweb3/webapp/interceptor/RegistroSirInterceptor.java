@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -36,9 +35,6 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     public UsuarioEntidadLocal usuarioEntidadEjb;
-
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
