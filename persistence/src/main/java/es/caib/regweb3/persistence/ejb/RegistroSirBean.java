@@ -290,7 +290,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 count++;
             }
             q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append(" order by registroSir.id desc");
+            query.append(" order by registroSir.fechaRecepcion desc");
             q = em.createQuery(query.toString());
 
             for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -301,7 +301,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         } else {
             q2 = em.createQuery(query.toString().replaceAll("Select registroSir from RegistroSir as registroSir ", "Select count(registroSir.id) from RegistroSir as registroSir "));
-            query.append("order by registroSir.id desc");
+            query.append("order by registroSir.fechaRecepcion desc");
             q = em.createQuery(query.toString());
         }
 
@@ -389,7 +389,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
                 "where registroSir.codigoEntidadRegistral = :oficinaSir and registroSir.estado = :idEstado " +
-                "order by registroSir.id desc");
+                "order by registroSir.fechaRecepcion desc");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);

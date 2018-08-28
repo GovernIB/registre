@@ -81,7 +81,7 @@
                                             <thead>
                                             <tr>
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                                <th><spring:message code="regweb.fecha"/></th>
+                                                <th><spring:message code="regweb.recibido"/></th>
                                                 <th><spring:message code="regweb.tipo"/></th>
                                                 <th><spring:message code="registroSir.oficinaOrigen"/></th>
                                                 <th><spring:message code="registroSir.oficinaDestino"/></th>
@@ -96,7 +96,7 @@
                                             <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
                                                 <tr>
                                                     <td> ${registroSir.identificadorIntercambio}</td>
-                                                    <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                    <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy"/></td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
                                                             <span class="label label-info"><spring:message code="registroSir.entrada"/></span>

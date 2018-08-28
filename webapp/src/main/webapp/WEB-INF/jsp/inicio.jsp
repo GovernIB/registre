@@ -80,7 +80,7 @@
                         <div class="columnesInici">
 
                             <%--REGISTROS SIR PENDIENTES DE PROCESAR--%>
-                            <c:if test="${not empty registrosSir}">
+                            <c:if test="${not empty pendientesProcesarSir}">
                                 <div class="col-xs-6 filas">
 
                                     <div id="pendientesProc" class="panel panel-primary">
@@ -103,7 +103,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th><spring:message code="oficioRemision.origen"/></th>
-                                                        <th><spring:message code="regweb.fecha"/></th>
+                                                        <th><spring:message code="regweb.recibido"/></th>
                                                         <th><spring:message code="registroSir.extracto"/></th>
                                                         <th>Doc</th>
                                                         <th class="center"></th>
@@ -111,10 +111,10 @@
                                                     </thead>
 
                                                     <tbody>
-                                                    <c:forEach var="registroSir" items="${registrosSir}">
+                                                    <c:forEach var="registroSir" items="${pendientesProcesarSir}">
                                                         <tr>
                                                             <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
-                                                            <td><fmt:formatDate value="${registroSir.fechaRegistro}" pattern="dd/MM/yyyy"/></td>
+                                                            <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy"/></td>
                                                             <td>
                                                                 <c:if test="${fn:length(registroSir.resumen) <= 40}">
                                                                     ${registroSir.resumen}
