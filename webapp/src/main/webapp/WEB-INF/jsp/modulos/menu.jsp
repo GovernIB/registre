@@ -196,7 +196,7 @@
                         </c:if>
 
                         <%--Menú SIR--%>
-                        <c:if test="${loginInfo.entidadActiva.sir}">
+                        <c:if test="${loginInfo.entidadActiva.sir && (loginInfo.oficinaActiva.sirRecepcion || loginInfo.oficinaActiva.sirEnvio)}">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                     <spring:message code="menu.sir"/> <span class="caret"></span>
