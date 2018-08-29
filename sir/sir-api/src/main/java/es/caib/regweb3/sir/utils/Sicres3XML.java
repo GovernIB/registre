@@ -2068,7 +2068,7 @@ public class Sicres3XML {
         }
 
         try {
-            unidadTF = unidadesService.obtenerUnidad(codigoUnidadTramitacion,null,null);
+            unidadTF = unidadesService.buscarUnidad(codigoUnidadTramitacion);
 
         } catch (Exception e) {
             log.info("Error en validarCodigoUnidadTramitacion: " + e.getMessage(), e);
