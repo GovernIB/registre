@@ -64,8 +64,19 @@
 					  <goal>shade</goal>
 					</goals>
 					<configuration>
+						<!--<minimizeJar>true</minimizeJar>-->
+                        <artifactSet>
+                            <excludes>
+                                <exclude>eu.medsea.mimeutil:*</exclude>
+                                <exclude>org.apache.httpcomponents:*</exclude>
+                                <exclude>org.slf4j:*</exclude>
+                                <exclude>es.caib.dir3caib:*</exclude>
+                                <exclude>commons-codec:*</exclude>
+                                <exclude>commons-logging:*</exclude>
+                            </excludes>
+                        </artifactSet>
 
-					  <filters>
+                        <filters>
 						<filter>
 						  <artifact>es.caib.regweb3:regweb3-utils</artifact>
 						  <includes>
