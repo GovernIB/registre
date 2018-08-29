@@ -229,7 +229,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "t.registroEntradaDestino.destino != null and " +
                 "t.registroEntradaDestino.oficina.id = :idOficina and " +
                 "t.registroEntradaDestino.estado = :registro_valido " +
-                " order by t.fecha");
+                " order by t.fecha desc");
 
         q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q.setParameter("idEntidad", idEntidad);
@@ -241,7 +241,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "t.registroEntradaDestino.destino != null and " +
                 "t.registroEntradaDestino.oficina.id = :idOficina and " +
                 "t.registroEntradaDestino.estado = :registro_valido " +
-                " order by t.fecha");
+                " order by t.fecha desc");
 
         q2.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q2.setParameter("idEntidad", idEntidad);
