@@ -47,6 +47,9 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/ArxiuEJB/local")
     private ArxiuLocal arxiuEjb;
 
+    @EJB(mappedName = "regweb3/AnexoSirEJB/local")
+    private AnexoSirLocal anexoSirEjb;
+
 
     @Override
     public void purgarIntegraciones() throws Exception{
@@ -58,6 +61,19 @@ public class SchedulerBean implements SchedulerLocal{
             log.info("------------- Purgando integraciones de " + entidad.getNombre() + " -------------");
             log.info(" ");
             integracionEjb.purgarIntegraciones(entidad.getId());
+        }
+    }
+
+    @Override
+    public void purgarAnexosSir() throws Exception{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- Purgando AnexosSir de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            anexoSirEjb.purgarArchivos(entidad.getId());
         }
     }
 

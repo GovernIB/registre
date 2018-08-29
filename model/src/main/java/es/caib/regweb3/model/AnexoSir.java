@@ -96,6 +96,11 @@ public class AnexoSir implements Serializable {
      */
     private byte[] anexoData;
 
+    /**
+     * Indica si el Archivo ha sido purgado del sistema
+     */
+    private Boolean purgado = false;
+
 
     public AnexoSir() {
     }
@@ -245,6 +250,15 @@ public class AnexoSir implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    @Column(name = "PURGADO", nullable = false)
+    public Boolean getPurgado() {
+        return purgado;
+    }
+
+    public void setPurgado(Boolean purgado) {
+        this.purgado = purgado;
     }
 
     @Transient

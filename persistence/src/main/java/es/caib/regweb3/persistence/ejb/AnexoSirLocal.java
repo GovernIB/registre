@@ -17,6 +17,13 @@ import javax.ejb.Local;
 public interface AnexoSirLocal extends BaseEjb<AnexoSir, Long> {
 
     /**
+     * Elimina los Archivos del sistema de archivos de los RegistrosSir Aceptados, Rechazados o Reenviados
+     * @param idEntidad
+     * @throws Exception
+     */
+    void purgarArchivos(Long idEntidad) throws Exception;
+
+    /**
      * Elimina los AnexoSir de una Entidad
      * @param idEntidad
      * @return

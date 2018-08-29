@@ -20,6 +20,11 @@ public interface SchedulerLocal {
     /**
      * @throws Exception
      */
+    void purgarAnexosSir() throws Exception;
+
+    /**
+     * @throws Exception
+     */
     void reintentarEnviosSinConfirmacion() throws Exception;
 
     /**

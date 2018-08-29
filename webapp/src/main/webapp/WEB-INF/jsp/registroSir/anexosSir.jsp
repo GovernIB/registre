@@ -126,19 +126,30 @@
                                             </select>
                                         </td>
                                     </c:if>
-                                    <td class="center ajustTamanySir"><a class="btn btn-success btn-default btn-sm"
-                                                          href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
-                                                          target="_blank"
-                                                          title="<spring:message code="anexo.descargar"/>"><span
-                                            class="fa fa-download"></span></a></td>
+
+                                    <c:if test="${not anexo.documento.purgado}">
+                                        <td class="center ajustTamanySir">
+                                            <a class="btn btn-success btn-sm"
+                                                     href="<c:url value="/archivo/${anexo.documento.anexo.id}"/>"
+                                                     target="_blank" title="<spring:message code="anexo.descargar"/>"><span
+                                                    class="fa fa-download"></span></a>
+                                        </td>
+                                    </c:if>
+
+                                    <c:if test="${anexo.documento.purgado}">
+                                        <td class="center ajustTamanySir">
+                                            <a class="btn btn-success btn-sm disabled"
+                                                     href="javascript:void(0);" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-download"></span></a>
+                                        </td>
+                                    </c:if>
+
 
                                     <td class="center ajustTamanySir">
                                         <c:if test="${not empty anexo.firma}">
                                             <a class="btn btn-info btn-default btn-sm"
                                                               href="<c:url value="/archivo/${anexo.firma.anexo.id}"/>"
                                                               target="_blank"
-                                                              title="<spring:message code="anexo.tipofirma.detached"/>"><span
-                                                class="fa fa-download"></span></a>
+                                                              title="<spring:message code="anexo.tipofirma.detached"/>"><span class="fa fa-download"></span></a>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && anexo.tieneFirma}">
                                             <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>

@@ -58,5 +58,7 @@ alter table RWE_COLA
 alter table rwe_anexo add FECHAVALIDACION timestamp;
 alter table rwe_anexo add MOTIVONOVALID varchar(2000);
 alter table rwe_anexo add ESTADOFIRMA int8  DEFAULT 0;
+
 --Nuevos campos eliminar anexos distribuidos
 alter table rwe_anexo add PURGADO bool default false;
+alter table rwe_anexo_sir add PURGADO bool default false;

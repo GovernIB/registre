@@ -22,7 +22,6 @@ public class Regweb3Scheduler {
     @EJB(mappedName = "regweb3/SchedulerEJB/local")
     private SchedulerLocal schedulerEjb;
 
-
     /**
      * Qué hace: Realiza tareas administrativas generales de la aplicación
      * Cuando lo hace: Todos días, a las 01:00 h.
@@ -31,6 +30,7 @@ public class Regweb3Scheduler {
     public void tareasAdministrativas(){
         try {
             schedulerEjb.purgarIntegraciones();
+            schedulerEjb.purgarAnexosSir();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,6 +102,16 @@ public class Regweb3Scheduler {
         }
     }
 
+    /**
+     * Scheduler para realizar pruebas que se ejecutará cada 60 segundos
+     */
+    //@Scheduled(cron = "*/60 * * * * *") // */60 * * * * * cada 60 secs
+    public void pruebas(){
+        try {
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

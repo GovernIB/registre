@@ -1,6 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.AnexoSir;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -65,6 +67,29 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
         q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void purgarArchivos(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir " +
+                "where anexoSir.purgado = false and (anexoSir.registroSir.estado = :aceptado or anexoSir.registroSir.estado = :reenviado or " +
+                "anexoSir.registroSir.estado = :rechazado)");
+
+        q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
+        q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
+        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
+
+        List<AnexoSir> anexos = q.getResultList();
+        log.info("Total archivos a eliminar: " + anexos.size());
+
+        // Eliminamos los Archivos del RegistroSir
+        for (AnexoSir anexoSir: anexos) {
+            FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
+            anexoSir.setPurgado(true);
+            merge(anexoSir);
+        }
     }
 
     @Override
