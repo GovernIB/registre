@@ -163,12 +163,14 @@
                                                 <col>
                                                 <col>
                                                 <col>
+                                                <col>
                                             </colgroup>
                                             <thead>
                                             <tr>
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                 <th><spring:message code="registroSir.fechaRecepcion"/></th>
                                                 <th class="center"><spring:message code="regweb.tipo"/></th>
+                                                <th class="center"><spring:message code="registroSir.aplicacion"/></th>
                                                 <th><spring:message code="regweb.origen"/></th>
                                                 <th><spring:message code="registroSir.oficinaDestino"/></th>
                                                 <th class="center"><spring:message code="registroSir.estado"/></th>
@@ -191,6 +193,7 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
+                                                    <td>${registroSir.aplicacion}</td>
                                                     <td><label class="no-bold" rel="ayuda" data-content="${registroSir.codigoEntidadRegistralInicio}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralInicio}</label></td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td class="center">
