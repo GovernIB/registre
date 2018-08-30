@@ -153,15 +153,15 @@
                                                     class="label label-default">No</span></p></td>
                                         </c:if>
                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
-                                            <td class="center">
-                                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                                <td class="center">
                                                     <a class="btn btn-success btn-default btn-sm"
                                                        href="<c:url value="/anexo/descargarFirma/${anexo.id}/true"/>"
                                                        target="_blank"
                                                        title="<spring:message code="anexo.descargar"/>">
                                                         <span class="fa fa-download"></span></a>
-                                                </c:if>
-                                            </td>
+                                                </td>
+                                            </c:if>
                                             <td class="center">
                                                 <c:if test="${anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">
                                                     <p rel="ayuda"
