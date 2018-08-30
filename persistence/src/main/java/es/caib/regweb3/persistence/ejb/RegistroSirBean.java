@@ -1787,7 +1787,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados) throws Exception {
 
-        // Solo procesamos Documentos, no Firmas
+        // Solo procesamos Documentos no firmados o firmados attached, no las firmas detached
         if(StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
                 anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
 
@@ -1896,7 +1896,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad) throws Exception {
 
-        // Si el IdentificadorDocumentoFirmado está informado y es DISTINTO al IdentificadorFichero, es una Firma Detached
+        // Solo procesamos las Firmas Detached
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
                 !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
 

@@ -23,8 +23,8 @@ import javax.ejb.Stateless;
 @RunAs("RWE_USUARI")
 public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    private SirLocal sirEjb;
+    @EJB(mappedName = "regweb3/SirRecepcionEJB/local")
+    private SirRecepcionLocal sirRecepcionEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
@@ -35,12 +35,12 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
 
     @Override
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
-        sirEjb.recibirMensajeDatosControl(mensaje);
+        sirRecepcionEjb.recibirMensajeDatosControl(mensaje);
     }
 
     @Override
     public Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
-        return  sirEjb.recibirFicheroIntercambio(ficheroIntercambio);
+        return  sirRecepcionEjb.recibirFicheroIntercambio(ficheroIntercambio);
     }
 
     @Override

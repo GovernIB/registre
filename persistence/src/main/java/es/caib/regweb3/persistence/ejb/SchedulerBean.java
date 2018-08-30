@@ -26,8 +26,8 @@ public class SchedulerBean implements SchedulerLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    private SirLocal sirEjb;
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     private EntidadLocal entidadEjb;
@@ -86,7 +86,7 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Reintentando envios sin ack de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEjb.reintentarEnviosSinConfirmacion(entidad.getId());
+            sirEnvioEjb.reintentarEnviosSinConfirmacion(entidad.getId());
         }
     }
 
@@ -99,7 +99,7 @@ public class SchedulerBean implements SchedulerLocal{
             log.info(" ");
             log.info("------------- SIR: Reintentando envios con errores de " + entidad.getNombre() + " -------------");
             log.info(" ");
-            sirEjb.reintentarEnviosConError(entidad.getId());
+            sirEnvioEjb.reintentarEnviosConError(entidad.getId());
         }
     }
 

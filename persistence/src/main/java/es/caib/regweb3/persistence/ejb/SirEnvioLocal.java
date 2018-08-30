@@ -3,8 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
-import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -20,22 +18,7 @@ import java.util.List;
  */
 @Local
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
-public interface SirLocal {
-
-    /**
-     * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
-     * @param ficheroIntercambio
-     * @throws Exception
-     */
-    Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
-
-    /**
-     * Realiza las acciones pertinentes cuando se recibie un mensaje de control
-     *
-     * @param mensaje
-     * @throws Exception
-     */
-    void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
+public interface SirEnvioLocal {
 
     /**
      * @param tipoRegistro

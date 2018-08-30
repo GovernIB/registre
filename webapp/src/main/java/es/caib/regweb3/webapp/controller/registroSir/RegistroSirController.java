@@ -60,8 +60,8 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    private SirLocal sirEjb;
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
@@ -214,7 +214,7 @@ public class RegistroSirController extends BaseController {
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
         //si el estado del registro sir  es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
-        model.addAttribute("puedeReenviar",  sirEjb.puedeReenviarRegistroSir(registroSir.getEstado()));
+        model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado()));
 
 
         // Si el registro sir cuyo estado es RECIBIDO
@@ -272,7 +272,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
@@ -308,7 +308,7 @@ public class RegistroSirController extends BaseController {
 
         // Rechaza el RegistroSir
         try{
-            sirEjb.rechazarRegistroSir(registroSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
+            sirEnvioEjb.rechazarRegistroSir(registroSir, oficinaActiva, usuarioEntidad.getUsuario(), rechazarForm.getObservacionesRechazo());
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.rechazo.ok"));
 
@@ -356,7 +356,7 @@ public class RegistroSirController extends BaseController {
         try{
             if(oficinaReenvio != null){//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                sirEjb.reenviarRegistroSir(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
+                sirEnvioEjb.reenviarRegistroSir(registroSir, oficinaReenvio, oficinaActiva,usuarioEntidad.getUsuario(),reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));

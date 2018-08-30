@@ -56,8 +56,8 @@ public class OficioRemisionController extends BaseController {
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     private TrazabilidadLocal trazabilidadEjb;
 
-    @EJB(mappedName = "regweb3/SirEJB/local")
-    private SirLocal sirEjb;
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
 
 
 
@@ -477,7 +477,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
+                        OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(
                                 RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
                                 getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
 
@@ -536,7 +536,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEjb.enviarFicheroIntercambio(
+                        OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(
                                 RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
                                 getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
 
