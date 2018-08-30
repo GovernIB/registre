@@ -156,7 +156,7 @@ public class SirController extends BaseController {
 
         Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
 
-        return "redirect:/sir/monitorRecibidos";
+        return "redirect:/sir/monitorEnviados";
     }
 
 }
