@@ -138,11 +138,9 @@
 
                                     <c:if test="${anexo.documento.purgado}">
                                         <td class="center ajustTamanySir">
-                                            <a class="btn btn-success btn-sm disabled"
-                                                     href="javascript:void(0);" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-download"></span></a>
+                                            <a href="javascript:void(0);" class="btn btn-success disabled btn-sm" title="<spring:message code="registroSir.anexo.eliminado"/>"><span class="fa fa-download"></span></a>
                                         </td>
                                     </c:if>
-
 
                                     <td class="center ajustTamanySir">
                                         <c:if test="${not empty anexo.firma}">
