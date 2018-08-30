@@ -1173,7 +1173,7 @@ public class SirBean implements SirLocal {
                 // Volvemos a enviar los RegistrosSir
                 for (Long registroSir : registrosSir) {
 
-                    reintentarEnvio(registroSir);
+                    reintentarEnvioRegistroSir(registroSir);
                 }
             }else{
                 log.info("No hay RegistrosSir pendientes de volver a enviar al nodo CIR");
@@ -1219,7 +1219,7 @@ public class SirBean implements SirLocal {
                 // Volvemos a enviar los RegistrosSir
                 for (Long registroSir : registrosSir) {
 
-                    reintentarEnvio(registroSir);
+                    reintentarEnvioRegistroSir(registroSir);
                 }
             }else{
                 log.info("No hay RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
@@ -1255,7 +1255,7 @@ public class SirBean implements SirLocal {
      * @param idRegistroSir
      * @throws Exception
      */
-    private void reintentarEnvio(Long idRegistroSir) throws Exception{
+    private void reintentarEnvioRegistroSir(Long idRegistroSir) throws Exception{
 
         RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
 
@@ -1286,7 +1286,7 @@ public class SirBean implements SirLocal {
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reintentar envío con error: " + oficio.getIdentificadorIntercambio();
+        String descripcion = "Reintentar envío: " + oficio.getIdentificadorIntercambio();
         peticion.append("IdentificadorIntercambio: ").append(oficio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
         peticion.append("Origen: ").append(oficio.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("Destino: ").append(oficio.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
@@ -1294,7 +1294,7 @@ public class SirBean implements SirLocal {
         if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
 
             try{
-                log.info("Reintentando envio OficioRemisionSir " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino());
+                log.info("Reintentando envio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino() + " ("+oficio.getCodigoEntidadRegistralDestino()+")");
 
                 // Transformamos el RegistroEntrada en un RegistroSir
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
@@ -1313,7 +1313,7 @@ public class SirBean implements SirLocal {
         }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
 
             try{
-                log.info("Reintentando envio OficioRemisionSir" + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino());
+                log.info("Reintentando envio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino() + " ("+oficio.getCodigoEntidadRegistralDestino()+")");
 
                 // Transformamos el RegistroSalida en un RegistroSir
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
@@ -1343,6 +1343,9 @@ public class SirBean implements SirLocal {
 
         // Actualizamos el Oficio
         oficioRemisionEjb.merge(oficio);
+
+        //Integración
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
 
     }
 
