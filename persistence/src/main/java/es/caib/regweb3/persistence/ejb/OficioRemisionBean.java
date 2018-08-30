@@ -37,7 +37,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @Resource
     private javax.ejb.SessionContext ejbContext;
 
-    @EJB public LibroLocal libroEjb;
+    @EJB private LibroLocal libroEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
