@@ -218,7 +218,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             trazabilidadSir.setNombreUsuario(registroSir.getNombreUsuario());
             trazabilidadSir.setContactoUsuario(registroSir.getContactoUsuario());
             trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
-            trazabilidadSir.setFecha(new Date());
             trazabilidadSirEjb.persist(trazabilidadSir);
 
         }catch (Exception e){

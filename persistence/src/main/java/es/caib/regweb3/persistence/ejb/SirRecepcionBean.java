@@ -137,7 +137,6 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                     trazabilidadSir.setNombreUsuario(ficheroIntercambio.getNombreUsuario());
                     trazabilidadSir.setContactoUsuario(ficheroIntercambio.getContactoUsuario());
                     trazabilidadSir.setObservaciones(ficheroIntercambio.getDescripcionTipoAnotacion());
-                    trazabilidadSir.setFecha(new Date());
                     trazabilidadSirEjb.persist(trazabilidadSir);
 
 
@@ -295,7 +294,6 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                         trazabilidadSir.setNombreUsuario(ficheroIntercambio.getNombreUsuario());
                         trazabilidadSir.setContactoUsuario(ficheroIntercambio.getContactoUsuario());
                         trazabilidadSir.setObservaciones(ficheroIntercambio.getDescripcionTipoAnotacion());
-                        trazabilidadSir.setFecha(new Date());
                         trazabilidadSirEjb.persist(trazabilidadSir);
                     }
                 }else{

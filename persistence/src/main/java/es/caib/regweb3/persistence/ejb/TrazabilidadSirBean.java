@@ -68,8 +68,6 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
     }
 
 
-
-
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<TrazabilidadSir> getByRegistroSir(Long idRegistroSir) throws Exception {

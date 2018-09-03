@@ -287,6 +287,7 @@
                                     <li class="submenu-complet"><a href="<c:url value="/integracion/list/0"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
                                     <li class="submenu-complet"><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-ellipsis-h"></i> <spring:message code="cola.colas"/></a></li>
                                     <li class="divider"></li>
+                                    <%--SIR--%>
                                     <c:if test="${loginInfo.entidadActiva.sir}">
                                         <li class="dropdown-submenu-left toggle-left">
                                             <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.sir"/></a>
@@ -294,6 +295,7 @@
                                                 <li><a href="<c:url value="/integracion/list/4"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.sir"/></a></li>
                                                 <li><a href="<c:url value="/sir/monitorEnviados"/>"><i class="fa fa-refresh"></i> <spring:message code="sir.monitor.envios"/></a></li>
                                                 <li><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-refresh"></i> <spring:message code="sir.monitor.recibidos"/></a></li>
+                                                <li><a href="<c:url value="/sir/pendientesDistribuir"/>"><i class="fa fa-sign-out"></i> <spring:message code="menu.pendientesDistribuir"/></a></li>
                                             </ul>
                                         </li>
                                         <li class="divider"></li>

@@ -112,6 +112,6 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    public Paginacion getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
+    Paginacion getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
 
 }

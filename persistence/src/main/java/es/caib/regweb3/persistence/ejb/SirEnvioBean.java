@@ -276,7 +276,6 @@ public class SirEnvioBean implements SirEnvioLocal {
             trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
             trazabilidadSir.setContactoUsuario(usuario.getUsuario().getEmail());
             trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
-            trazabilidadSir.setFecha(new Date());
             trazabilidadSirEjb.persist(trazabilidadSir);
 
             // CREAMOS LA TRAZABILIDAD
@@ -371,7 +370,6 @@ public class SirEnvioBean implements SirEnvioLocal {
             trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
             trazabilidadSir.setContactoUsuario(usuario.getEmail());
             trazabilidadSir.setObservaciones(observaciones);
-            trazabilidadSir.setFecha(new Date());
             trazabilidadSirEjb.persist(trazabilidadSir);
 
             // Modificamos el estado del RegistroSir
@@ -455,7 +453,6 @@ public class SirEnvioBean implements SirEnvioLocal {
             trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
             trazabilidadSir.setContactoUsuario(usuario.getEmail());
             trazabilidadSir.setObservaciones(observaciones);
-            trazabilidadSir.setFecha(new Date());
             trazabilidadSirEjb.persist(trazabilidadSir);
 
             // Modificamos el estado del RegistroSir

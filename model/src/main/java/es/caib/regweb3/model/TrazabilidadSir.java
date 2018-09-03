@@ -37,6 +37,7 @@ public class TrazabilidadSir implements Serializable {
 
     public TrazabilidadSir(Long tipo) {
         this.tipo = tipo;
+        this.fecha = new Date();
     }
 
     @Id

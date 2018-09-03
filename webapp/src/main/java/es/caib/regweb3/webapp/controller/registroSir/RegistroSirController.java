@@ -91,7 +91,6 @@ public class RegistroSirController extends BaseController {
         RegistroSirBusquedaForm registroSirBusquedaForm = new RegistroSirBusquedaForm(new RegistroSir(),1);
         model.addAttribute("estados", EstadoRegistroSir.values());
         model.addAttribute("registroSirBusqueda", registroSirBusquedaForm);
-        model.addAttribute("anys", getAnys());
 
         return mav;
     }
@@ -113,7 +112,6 @@ public class RegistroSirController extends BaseController {
         mav.addObject("estados", EstadoRegistroSir.values());
         mav.addObject("paginacion", paginacion);
         mav.addObject("registroSirBusqueda", busqueda);
-        mav.addObject("anys", getAnys());
 
         return mav;
 

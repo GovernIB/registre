@@ -224,28 +224,31 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         Query q;
         Query q2;
 
+        String oficinaWhere = "";
+        if (idOficina != null) {
+            oficinaWhere = " t.registroEntradaDestino.oficina.id = :idOficina and ";
+        }
+
         q = em.createQuery("Select t.registroEntradaDestino from Trazabilidad as t " +
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
-                "t.registroEntradaDestino.destino != null and " +
-                "t.registroEntradaDestino.oficina.id = :idOficina and " +
+                "t.registroEntradaDestino.destino != null and " + oficinaWhere +
                 "t.registroEntradaDestino.estado = :registro_valido " +
                 " order by t.fecha desc");
 
         q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("idOficina", idOficina);
         q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+        if (idOficina != null) q.setParameter("idOficina", idOficina);
 
         q2 = em.createQuery("Select count(t.registroEntradaDestino.id) from Trazabilidad as t " +
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
-                "t.registroEntradaDestino.destino != null and " +
-                "t.registroEntradaDestino.oficina.id = :idOficina and " +
+                "t.registroEntradaDestino.destino != null and " + oficinaWhere +
                 "t.registroEntradaDestino.estado = :registro_valido ");
 
         q2.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q2.setParameter("idEntidad", idEntidad);
-        q2.setParameter("idOficina", idOficina);
         q2.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+        if (idOficina != null) q2.setParameter("idOficina", idOficina);
 
 
         Paginacion paginacion;

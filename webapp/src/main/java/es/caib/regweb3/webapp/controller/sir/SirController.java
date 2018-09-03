@@ -1,19 +1,14 @@
 package es.caib.regweb3.webapp.controller.sir;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.OficioRemision;
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
-import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.OficinaLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSirLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.OficioRemisionBusquedaForm;
+import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.springframework.stereotype.Controller;
@@ -44,6 +39,9 @@ public class SirController extends BaseController {
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
+
+    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
+    private TrazabilidadLocal trazabilidadEjb;
 
     /**
      * Listado de oficios de remisión sir enviados
@@ -139,6 +137,55 @@ public class SirController extends BaseController {
         mav.addObject("registroSirBusqueda", busqueda);
         mav.addObject("anys", getAnys());
         mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+
+        return mav;
+
+    }
+
+    /**
+     * Listado de todos los RegistroSirs
+     */
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public String pendientesDistribuir() {
+        return "redirect:/registroSir/pendientesDistribuir";
+    }
+
+    /**
+     * Listado de RegistroSirs
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/pendientesDistribuir", method = RequestMethod.GET)
+    public ModelAndView pendientesDistribuir(Model model, HttpServletRequest request)throws Exception {
+
+        ModelAndView mav = new ModelAndView("sir/pendientesDistribuirList");
+        Entidad entidad = getEntidadActiva(request);
+
+        RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
+        mav.addObject("registroEntradaBusqueda", registroEntradaBusqueda);
+        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+
+        return mav;
+    }
+
+    /**
+     * Realiza la busqueda de {@link RegistroSir} según los parametros del formulario
+     */
+    @RequestMapping(value = "/pendientesDistribuir", method = RequestMethod.POST)
+    public ModelAndView pendientesDistribuir(@ModelAttribute RegistroEntradaBusqueda busqueda, HttpServletRequest request)throws Exception {
+
+        ModelAndView mav = new ModelAndView("sir/pendientesDistribuirList");
+        Entidad entidad = getEntidadActiva(request);
+
+        RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
+
+        Paginacion paginacion = trazabilidadEjb.getPendientesDistribuirSir(registroEntrada.getOficina().getId(), entidad.getId(),busqueda.getPageNumber());
+
+        busqueda.setPageNumber(1);
+
+        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+        mav.addObject("paginacion", paginacion);
+        mav.addObject("registroEntradaBusqueda", busqueda);
 
         return mav;
 

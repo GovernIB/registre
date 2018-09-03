@@ -38,9 +38,6 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
     private CatProvinciaLocal catProvinciaEjb;
 
-    @EJB(mappedName = "regweb3/ModeloReciboEJB/local")
-    public ModeloReciboLocal modeloReciboEjb;
-
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     public TrazabilidadLocal trazabilidadEjb;
 

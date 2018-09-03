@@ -70,9 +70,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
-
 
     /**
     * Listado de todos los Registros de Entrada
