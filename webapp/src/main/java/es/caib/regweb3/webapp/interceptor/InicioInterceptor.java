@@ -80,6 +80,12 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             return false;
                         }
 
+                        // Si no tiene idioma por defecto, se lo ponemos
+                        if(usuario.getIdioma() == null){
+                            usuario.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+                            usuarioEjb.merge(usuario);
+                        }
+
                         // Configuramos en la sesion el usuario, sus roles, oficinas, etc..
                         loginInfo = loginService.configurarUsuario(usuario, request);
 
