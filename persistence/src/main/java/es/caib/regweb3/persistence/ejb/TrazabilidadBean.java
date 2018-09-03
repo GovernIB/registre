@@ -240,8 +240,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
                 "t.registroEntradaDestino.destino != null and " +
                 "t.registroEntradaDestino.oficina.id = :idOficina and " +
-                "t.registroEntradaDestino.estado = :registro_valido " +
-                " order by t.fecha desc");
+                "t.registroEntradaDestino.estado = :registro_valido ");
 
         q2.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q2.setParameter("idEntidad", idEntidad);
