@@ -389,7 +389,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                 // Actualizamos el OficioRemision
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
                 oficioRemision.setFechaEstado(new Date());
-                oficioRemision.setNumeroReintentos(0);
+                //oficioRemision.setNumeroReintentos(0);
                 oficioRemisionEjb.merge(oficioRemision);
 
                 break;
@@ -399,7 +399,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                 // Actualizamos el OficioRemision
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
                 oficioRemision.setFechaEstado(new Date());
-                oficioRemision.setNumeroReintentos(0);
+                //oficioRemision.setNumeroReintentos(0);
                 oficioRemisionEjb.merge(oficioRemision);
 
                 break;
@@ -524,7 +524,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
                 oficioRemision.setCodigoError(mensaje.getCodigoError());
                 oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                oficioRemision.setNumeroReintentos(0);
+                //oficioRemision.setNumeroReintentos(0);
                 oficioRemision.setFechaEstado(new Date());
                 oficioRemisionEjb.merge(oficioRemision);
 
@@ -535,7 +535,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
                 oficioRemision.setCodigoError(mensaje.getCodigoError());
                 oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                oficioRemision.setNumeroReintentos(0);
+                //oficioRemision.setNumeroReintentos(0);
                 oficioRemision.setFechaEstado(new Date());
                 oficioRemisionEjb.merge(oficioRemision);
 

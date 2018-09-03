@@ -165,6 +165,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
+                                                        <col>
                                                         <col width="51">
                                                     </colgroup>
                                                     <thead>
@@ -175,6 +176,7 @@
                                                             <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                             <th><spring:message code="oficioRemision.estado"/></th>
                                                             <th><spring:message code="oficioRemision.tipo"/></th>
+                                                            <th><spring:message code="oficioRemision.reintentos"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -209,7 +211,7 @@
                                                                         <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
                                                                     </c:if>
                                                                 </td>
-
+                                                                <td>${oficioRemision.numeroReintentos}</td>
                                                                 <td class="center">
                                                                     <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/detalle"/>" title="Detalle"><span class="fa fa-eye"></span></a>
                                                                 </td>
