@@ -325,7 +325,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
 
         // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
-        comprobarEntidad(mensaje.getCodigoEntidadRegistralDestino());
+        comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
 
         // Mensaje ACK
         if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
@@ -607,6 +607,34 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             }else if(!oficinaEjb.isSIRRecepcion(oficina.getId())){
                 log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para recibir asientos SIR");
                 throw new ValidacionException(Errores.ERROR_0037, "La Oficina "+ oficina.getDenominacion() +" no esta habilitada para recibir asientos SIR");
+            }
+
+        }else{
+            log.info("El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
+            throw new ValidacionException(Errores.ERROR_0037, "El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
+        }
+    }
+
+    /**
+     * Comprueba a partir de la Oficina destino, si la Entidad está integrada en SIR
+     * @param codigoEntidadRegistralDestino
+     * @throws Exception
+     */
+    private void comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception{
+
+        Entidad entidad;
+        Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
+
+        if(oficina != null){
+            entidad = oficina.getOrganismoResponsable().getEntidad();
+
+            if(!entidad.getActivo() || !entidad.getSir()){
+                log.info("La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
+                throw new ValidacionException(Errores.ERROR_0037, "La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
+
+            }else if(!oficinaEjb.isSIREnvio(oficina.getId())){
+                log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
+                throw new ValidacionException(Errores.ERROR_0037, "La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
             }
 
         }else{
