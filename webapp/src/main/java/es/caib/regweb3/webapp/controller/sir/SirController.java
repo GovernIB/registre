@@ -201,7 +201,10 @@ public class SirController extends BaseController {
      */
     @RequestMapping(value = "/huerfanos", method = RequestMethod.GET)
     public String huerfanos(HttpServletRequest request) {
-        Integer count = 0;
+
+        Integer total = 0;
+        Integer buenos = 0;
+        Integer huerfanos = 0;
 
         try {
             File directorio = FileSystemManager.getArchivosPath();
@@ -212,13 +215,15 @@ public class SirController extends BaseController {
 
                 for (File fichero : ficheros) {
                     if(fichero.isFile()){
-
+                        total = total + 1;
                         try{
                             Long idArchivo = Long.valueOf(fichero.getName());
 
                             if(!archivos.contains(idArchivo)){
 
-                                count = count + 1;
+                                huerfanos = huerfanos + 1;
+                            }else{
+                                buenos = buenos + 1;
                             }
 
                         }catch (NumberFormatException n){
@@ -227,7 +232,10 @@ public class SirController extends BaseController {
                     }
 
                 }
-                Mensaje.saveMessageInfo(request,"Hay " + count + " ficheros huerfanos");
+                Mensaje.saveMessageInfo(request,"Hay " + total+ " ficheros en total");
+                Mensaje.saveMessageInfo(request,"Hay " + (total - buenos) + " almacenados en DocumentCustody");
+                Mensaje.saveMessageInfo(request,"Hay " + buenos + " almacenados en bbdd");
+                Mensaje.saveMessageInfo(request,"Hay " + huerfanos + " huerfanos");
             }
 
         } catch (Exception e) {
