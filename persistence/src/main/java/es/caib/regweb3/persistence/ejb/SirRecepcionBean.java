@@ -54,7 +54,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
      * @throws Exception
      */
     @Override
-    public Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
+    public RegistroSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
 
         Boolean ack = true; // Indica si enviaremos un ack o no
         RegistroSir registroSir = null;
@@ -311,7 +311,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
         }
 
-        return ack;
+        return registroSir;
     }
 
     /**

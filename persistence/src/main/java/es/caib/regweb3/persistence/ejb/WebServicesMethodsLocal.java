@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 
@@ -28,7 +29,7 @@ public interface WebServicesMethodsLocal {
      * @param ficheroIntercambio
      * @throws Exception
      */
-    Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    RegistroSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      *

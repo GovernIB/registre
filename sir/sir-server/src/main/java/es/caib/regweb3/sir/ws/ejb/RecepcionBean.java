@@ -1,8 +1,11 @@
 package es.caib.regweb3.sir.ws.ejb;
 
+import es.caib.regweb3.model.AnexoSir;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.sir.core.model.Errores;
@@ -52,6 +55,7 @@ public class RecepcionBean implements RecepcionLocal{
      */
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception {
 
+        RegistroSir registroSir = null;
         Entidad entidad = null;
         FicheroIntercambio ficheroIntercambio = null;
         Mensaje mensajeError = null;
@@ -81,9 +85,9 @@ public class RecepcionBean implements RecepcionLocal{
             }
 
             // Creamos el RegistroSir a partir del xml recibido y validado
-            Boolean ack = webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
+            registroSir = webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
 
-            if (ack){ // Enviamos el ack si así lo hemos marcado
+            if (registroSir != null){ // Enviamos el ack si se ha creado un RegistroSir
                 mensajeEjb.enviarACK(ficheroIntercambio);
             }
 
@@ -118,10 +122,21 @@ public class RecepcionBean implements RecepcionLocal{
 
         } catch (RuntimeException e) {
 
-            log.info("Error inesperado recibiendo el Fichero de Intercambio, enviamos un mensaje de control de error", e);
+            log.info("-------- Error inesperado (RuntimeException) recibiendo el Fichero de Intercambio, enviamos un mensaje de control de error --------", e);
+            log.info("");
+
             if(ficheroIntercambio != null){
                 mensajeError = crearMensajeError(ficheroIntercambio, errorGenerico, e.getMessage());
                 enviarMensajeError(mensajeError);
+            }
+
+            // Eliminamos los posibles archivos creados en filesystem del RegistroSir
+            if(registroSir != null){
+                log.info("RuntimeException, eliminamos los archivosen filesystem de los anexosSir creados: ");
+                for(AnexoSir anexoSir: registroSir.getAnexos()){
+                    FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
+                    log.info("Eliminamos archivo: " + anexoSir.getAnexo().getId());
+                }
             }
 
             // Integración
@@ -134,6 +149,8 @@ public class RecepcionBean implements RecepcionLocal{
 
                 webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
             }
+            log.info("");
+            log.info("------------------------------------------------------------------------------------------------------------");
 
             throw e;
         }

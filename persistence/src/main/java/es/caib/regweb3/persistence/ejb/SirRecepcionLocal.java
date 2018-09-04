@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
 
@@ -21,7 +22,7 @@ public interface SirRecepcionLocal {
      * @param ficheroIntercambio
      * @throws Exception
      */
-    Boolean recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    RegistroSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
     /**
      * Realiza las acciones pertinentes cuando se recibie un mensaje de control
