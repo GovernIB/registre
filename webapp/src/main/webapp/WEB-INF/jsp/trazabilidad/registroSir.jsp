@@ -27,5 +27,6 @@
             <span class="label label-danger"><spring:message code="registroSir.salida"/></span></small></p>
         </c:if>
         <p><small class="text-muted"><i class="fa fa-barcode"></i> <strong><spring:message code="registroSir.identificadorIntercambio"/>:</strong> ${registroSir.identificadorIntercambio}</small></p>
+        <p><small class="text-muted"><i class="fa fa-gears"></i> <strong><spring:message code="registroSir.aplicacion"/>:</strong> ${registroSir.aplicacion}</small></p>
     </div>
 </div>
