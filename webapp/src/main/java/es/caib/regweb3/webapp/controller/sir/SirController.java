@@ -227,7 +227,7 @@ public class SirController extends BaseController {
                             }
 
                         }catch (NumberFormatException n){
-                            log.info("Omitimos el archivo: " + fichero.getName());
+                            //log.info("Omitimos el archivo: " + fichero.getName());
                         }
                     }
 
@@ -272,7 +272,7 @@ public class SirController extends BaseController {
                                 count = count + 1;
                             }
                         }catch (NumberFormatException n){
-                            log.info("Omitimos el archivo: " + fichero.getName());
+                            //log.info("Omitimos el archivo: " + fichero.getName());
                         }
                     }
 
