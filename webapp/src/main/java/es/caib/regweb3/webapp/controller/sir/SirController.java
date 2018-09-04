@@ -214,15 +214,16 @@ public class SirController extends BaseController {
                     if(fichero.isFile()){
 
                         try{
-                            if(!archivos.contains(Long.valueOf(fichero.getName()))){
+                            Long idArchivo = Long.valueOf(fichero.getName());
+
+                            if(!archivos.contains(idArchivo)){
 
                                 count = count + 1;
                             }
+
                         }catch (NumberFormatException n){
-
+                            log.info("Omitimos el archivo: " + fichero.getName());
                         }
-
-
                     }
 
                 }
@@ -255,15 +256,16 @@ public class SirController extends BaseController {
                     if(fichero.isFile()){
 
                         try{
-                            if(!archivos.contains(Long.valueOf(fichero.getName()))){
+                            Long idArchivo = Long.valueOf(fichero.getName());
+
+                            if(!archivos.contains(idArchivo)){
                                 log.info("Eliminamos el fichero huerfano: " + fichero.getName());
                                 FileSystemManager.eliminarArchivo(Long.valueOf(fichero.getName()));
                                 count = count + 1;
                             }
                         }catch (NumberFormatException n){
-
+                            log.info("Omitimos el archivo: " + fichero.getName());
                         }
-
                     }
 
                 }
