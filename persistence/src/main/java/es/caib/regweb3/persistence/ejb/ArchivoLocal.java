@@ -5,6 +5,7 @@ import es.caib.regweb3.model.Archivo;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.List;
 
 /**
  * Created by Fundacio Bit
@@ -15,6 +16,13 @@ import javax.ejb.Local;
 @Local
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface ArchivoLocal extends BaseEjb<Archivo, Long> {
+
+    /**
+     * Obtiene los id's de todos los Archivos de la aplicación
+     * @return
+     * @throws Exception
+     */
+    List<Long> getAllLigero() throws Exception;
 
     /**
      *

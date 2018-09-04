@@ -65,6 +65,14 @@ public class ArchivoBean extends BaseEjbJPA<Archivo, Long> implements ArchivoLoc
         return q.getResultList();
     }
 
+    @Override
+    public List<Long> getAllLigero() throws Exception {
+
+        Query q = em.createQuery("Select archivo.id from Archivo as archivo order by archivo.id");
+
+        return q.getResultList();
+    }
+
     /**
      * Elimina un archivo de la bbdd y del sistema de archivos
      * @param archivo

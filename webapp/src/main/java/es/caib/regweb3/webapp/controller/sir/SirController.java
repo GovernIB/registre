@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.sir;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +44,9 @@ public class SirController extends BaseController {
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     private TrazabilidadLocal trazabilidadEjb;
+
+    @EJB(mappedName = "regweb3/ArchivoEJB/local")
+    private ArchivoLocal archivoEjb;
 
     /**
      * Listado de oficios de remisión sir enviados
@@ -189,6 +194,79 @@ public class SirController extends BaseController {
 
         return mav;
 
+    }
+
+    /**
+     * Total Archivos huerfanos
+     */
+    @RequestMapping(value = "/huerfanos", method = RequestMethod.GET)
+    public String huerfanos(HttpServletRequest request) {
+        Integer count = 0;
+
+        try {
+            File directorio = FileSystemManager.getArchivosPath();
+            List<Long> archivos = archivoEjb.getAllLigero();
+
+            if(directorio != null){
+                File[] ficheros = directorio.listFiles();
+
+                for (File fichero : ficheros) {
+                    if(fichero.isFile()){
+
+                        if(!archivos.contains(Long.valueOf(fichero.getName()))){
+
+                            count = count + 1;
+                        }
+
+                    }
+
+                }
+                Mensaje.saveMessageInfo(request,"Hay " + count + " ficheros huerfanos");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Purgar Archivos huerfanos
+     */
+    @RequestMapping(value = "/purgarHuerfanos", method = RequestMethod.GET)
+    public String purgarHuerfanos(HttpServletRequest request) {
+        Integer count = 0;
+
+        try {
+            File directorio = FileSystemManager.getArchivosPath();
+            List<Long> archivos = archivoEjb.getAllLigero();
+
+            if(directorio != null){
+                File[] ficheros = directorio.listFiles();
+
+                for (File fichero : ficheros) {
+                    if(fichero.isFile()){
+
+                        if(!archivos.contains(Long.valueOf(fichero.getName()))){
+                            log.info("Eliminamos el fichero huerfano: " + fichero.getName());
+                            FileSystemManager.eliminarArchivo(Long.valueOf(fichero.getName()));
+                            count = count + 1;
+                        }
+
+                    }
+
+                }
+                Mensaje.saveMessageInfo(request,"Se han eliminado " + count + " ficheros huerfanos");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        return "redirect:/inici";
     }
 
     /**

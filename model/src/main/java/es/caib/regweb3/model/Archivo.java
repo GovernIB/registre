@@ -103,12 +103,7 @@ public class Archivo implements Serializable {
 
         Archivo archivo = (Archivo) o;
 
-        //if (!Arrays.equals(datos, archivo.datos)) return false;
-        if (!id.equals(archivo.id)) return false;
-        if (!mime.equals(archivo.mime)) return false;
-        if (!nombre.equals(archivo.nombre)) return false;
-        if (!tamano.equals(archivo.tamano)) return false;
-
-        return true;
+        return id.equals(archivo.id);
     }
+
 }
