@@ -151,5 +151,11 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
+<!-- Activa los popover reenviado y rechazado -->
+<script type="text/javascript">
+    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+</script>
+
 </body>
 </html>

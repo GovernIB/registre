@@ -30,9 +30,9 @@
         <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_RECHAZADO}">
-        <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" />: ${param.decodificacionTipoAnotacion}</span>
+        <p rel="rechazado" data-content="<c:out value="${param.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_REENVIADO}">
-        <span class="label label-danger"><spring:message code="registro.estado.${param.estado}" />: ${param.decodificacionTipoAnotacion}</span>
+        <p rel="reenviado" data-content="<c:out value="${param.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
 </c:choose>
