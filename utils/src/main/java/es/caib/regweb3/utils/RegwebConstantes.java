@@ -219,8 +219,7 @@ public interface RegwebConstantes {
     Long REGISTRO_RECTIFICADO = 9L;
     Long REGISTRO_RECHAZADO = 10L;
     Long REGISTRO_REENVIADO = 11L;
-    Long REGISTRO_DISTRIBUYENDO = 12L;
-    //en la cola de distribución
+    Long REGISTRO_DISTRIBUYENDO = 12L; //en la cola de distribución
 
     Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
