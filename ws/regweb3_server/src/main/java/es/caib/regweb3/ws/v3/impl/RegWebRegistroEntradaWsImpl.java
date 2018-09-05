@@ -5,6 +5,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
@@ -38,6 +39,7 @@ import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -438,7 +440,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 6.- Anulamos el RegistroEntrada
         // TODO Falta enviar boolean anular
-        registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad, "");
+        Locale locale = new Locale(UsuarioAplicacionCache.get().getIdioma());
+        registroEntradaEjb.anularRegistroEntrada(registroEntrada, usuarioEntidad, I18NLogicUtils.tradueix(locale, "registro.anulado.ws"));
     }
 
 

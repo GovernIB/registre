@@ -3,6 +3,7 @@ package es.caib.regweb3.ws.v3.impl;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -32,6 +33,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -418,7 +420,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 8.- Anulamos el RegistroSalida
         // TODO Falta Afegir paràmetre
-        registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad, "");
+        Locale locale = new Locale(UsuarioAplicacionCache.get().getIdioma());
+        registroSalidaEjb.anularRegistroSalida(registroSalida, usuarioEntidad, I18NLogicUtils.tradueix(locale, "registro.anulado.ws"));
 
     }
 
