@@ -203,7 +203,8 @@ public class SirController extends BaseController {
     public String huerfanos(HttpServletRequest request) {
 
         Integer total = 0;
-        Integer buenos = 0;
+        Integer bbdd = 0;
+        Integer documentCustody = 0;
         Integer huerfanos = 0;
 
         try {
@@ -223,18 +224,18 @@ public class SirController extends BaseController {
 
                                 huerfanos = huerfanos + 1;
                             }else{
-                                buenos = buenos + 1;
+                                bbdd = bbdd + 1;
                             }
 
                         }catch (NumberFormatException n){
-                            //log.info("Omitimos el archivo: " + fichero.getName());
+                            documentCustody = documentCustody +1;
                         }
                     }
 
                 }
                 Mensaje.saveMessageInfo(request,"Hay " + total+ " ficheros en total");
-                Mensaje.saveMessageInfo(request,"Hay " + (total - buenos) + " almacenados en DocumentCustody");
-                Mensaje.saveMessageInfo(request,"Hay " + buenos + " almacenados en bbdd");
+                Mensaje.saveMessageInfo(request,"Hay " + (documentCustody) + " almacenados en DocumentCustody");
+                Mensaje.saveMessageInfo(request,"Hay " + bbdd + " almacenados en bbdd");
                 Mensaje.saveMessageInfo(request,"Hay " + huerfanos + " huerfanos");
             }
 
