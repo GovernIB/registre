@@ -708,8 +708,8 @@
         <!-- Activa los popover resumen, reenviado y rechazado -->
         <script type="text/javascript">
             $("[rel='resumen']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-            $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-            $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+            $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+            $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
         </script>
 
         <!-- Lleva la classe filas al darrer panell dibuixat. Així funciona si només hi ha 2 panells -->
