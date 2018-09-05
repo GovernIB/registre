@@ -33,7 +33,7 @@
 
             <div class="col-xs-12">
 
-                <div class="panel panel-primary">
+                <div class="panel panel-warning">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroSir.buscador.recibidos"/> ${loginInfo.oficinaActiva.denominacion}</strong> </h3>
