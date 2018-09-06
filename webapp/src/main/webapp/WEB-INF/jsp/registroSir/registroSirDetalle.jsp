@@ -242,21 +242,13 @@
 
                             <c:if test="${not empty registroSir.estado}">
                                 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
-                                <dd>
-                                    <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
-                                        <span class="label label-warning"><spring:message
-                                                code="registroSir.estado.${registroSir.estado}"/></span>
-                                    </c:if>
-
-                                    <c:if test="${registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO_Y_ACK' || registroSir.estado == 'RECHAZADO_Y_ACK'}">
-                                        <span class="label label-success"><spring:message
-                                                code="registroSir.estado.${registroSir.estado}"/></span>
-                                    </c:if>
-
-                                    <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                        <span class="label label-danger"><spring:message
-                                                code="registroSir.estado.${registroSir.estado}"/></span>
-                                    </c:if>
+                                <dd class="eti-rechazo">
+                                    <c:import url="estadosRegistroSir.jsp">
+                                        <c:param name="estado" value="${registroSir.estado}"/>
+                                        <c:param name="decodificacionTipoAnotacion" value="${registroSir.decodificacionTipoAnotacion}"/>
+                                        <c:param name="codigoError" value="${registroSir.codigoError}"/>
+                                        <c:param name="descripcionError" value="${registroSir.descripcionError}"/>
+                                    </c:import>
                                 </dd>
                             </c:if>
 
@@ -594,6 +586,11 @@
         $(variable).parents(".form-group").removeClass("has-error");
     }
 
+</script>
+
+<script type="application/javascript">
+    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
 </script>
 
 </body>

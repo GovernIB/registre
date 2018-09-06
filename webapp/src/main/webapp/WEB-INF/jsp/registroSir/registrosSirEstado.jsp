@@ -109,17 +109,12 @@
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td class="center">
-                                                        <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
-                                                            <span class="label label-warning"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
-                                                        </c:if>
-
-                                                        <c:if test="${registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO_Y_ACK' || registroSir.estado == 'RECHAZADO_Y_ACK'}">
-                                                            <span class="label label-success"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
-                                                        </c:if>
-
-                                                        <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                                            <span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
-                                                        </c:if>
+                                                        <c:import url="estadosRegistroSir.jsp">
+                                                            <c:param name="estado" value="${registroSir.estado}"/>
+                                                            <c:param name="decodificacionTipoAnotacion" value="${registroSir.decodificacionTipoAnotacion}"/>
+                                                            <c:param name="codigoError" value="${registroSir.codigoError}"/>
+                                                            <c:param name="descripcionError" value="${registroSir.descripcionError}"/>
+                                                        </c:import>
                                                     </td>
                                                     <td>${registroSir.resumen}</td>
                                                     <td class="center">
@@ -167,6 +162,11 @@
 <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="application/javascript">
+    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+</script>
 
 
 </body>

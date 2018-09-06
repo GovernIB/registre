@@ -197,17 +197,12 @@
                                                     <td><label class="no-bold" rel="ayuda" data-content="${registroSir.codigoEntidadRegistralInicio}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralInicio}</label></td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td class="center">
-                                                        <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'REENVIADO' || registroSir.estado == 'RECHAZADO'}">
-                                                            <span class="label label-warning"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
-                                                        </c:if>
-
-                                                        <c:if test="${registroSir.estado == 'ACEPTADO' || registroSir.estado == 'REENVIADO_Y_ACK' || registroSir.estado == 'RECHAZADO_Y_ACK'}">
-                                                            <span class="label label-success"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
-                                                        </c:if>
-
-                                                        <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
-                                                            <p rel="errorSir" data-content="<c:out value="${registroSir.codigoError} - ${registroSir.descripcionError}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span></p>
-                                                        </c:if>
+                                                        <c:import url="../registroSir/estadosRegistroSir.jsp">
+                                                            <c:param name="estado" value="${registroSir.estado}"/>
+                                                            <c:param name="decodificacionTipoAnotacion" value="${registroSir.decodificacionTipoAnotacion}"/>
+                                                            <c:param name="codigoError" value="${registroSir.codigoError}"/>
+                                                            <c:param name="descripcionError" value="${registroSir.descripcionError}"/>
+                                                        </c:import>
                                                     </td>
                                                     <td>
                                                         <c:if test="${fn:length(registroSir.resumen) <= 40}">
@@ -265,6 +260,8 @@
 <c:import url="../modulos/pie.jsp"/>
 <script type="text/javascript">
     $("[rel='errorSir']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
 </script>
 
 </body>
