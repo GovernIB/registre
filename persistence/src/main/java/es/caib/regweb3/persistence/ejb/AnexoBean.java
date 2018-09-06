@@ -18,6 +18,7 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -263,7 +264,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
             // Validar firma del Anexo
-            if (!anexo.isJustificante() && validarAnexo) { //Solo validamos si no es justificante
+            log.info("Anexo tipo doc  " + anexo.getTipoDocumento());
+            //Solo validamos si no es justificante
+            if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO_SICRES.equals(anexo.getTipoDocumento())) { //Solo validamos si no es justificante
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
                     signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(),
@@ -1117,7 +1120,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-
     @Override
     /**
      * Método que elimina de custodia los anexos que se han enviado via SIR y han sido aceptados en destino.
@@ -1141,6 +1143,44 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
         }
     }
+
+    public void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException {
+
+        try {
+            Query query = em.createQuery("select anexo from Anexo as anexo where anexo.custodiaID=:custodiaId");
+            query.setParameter("custodiaId", custodiaId);
+
+            Anexo anexo = (Anexo) query.getSingleResult();
+            if (anexo != null && !isJustificante) {
+                eliminarCustodia(custodiaId, isJustificante, idEntidad);
+                anexo.setPurgado(true);
+                merge(anexo);
+            }
+
+        } catch (I18NException e) {
+            throw new I18NException("S'ha produit un error eliminant la custodia de l'annex");
+        }
+
+    }
+
+
+
+    @Override
+    public List<String> obtenerCustodyIdAnexosDistribuidos(int meses) throws Exception {
+        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
+
+        // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
+        Query query = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
+           "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
+           "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
+        query.setParameter("fechaPurgo", fechaPurgo);
+        query.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        query.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+
+
+        return query.getResultList();
+    }
+
 
 
     /**

@@ -43,6 +43,14 @@ public class Regweb3Scheduler {
             log.info("-- Error Scheduler: purgando AnexosSir --");
             e.printStackTrace();
         }
+
+        try {
+            schedulerEjb.purgarAnexosDistribuidos();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: purgando Anexos Distribuidos --");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -92,7 +100,7 @@ public class Regweb3Scheduler {
      * Qué hace: Distribuye los registros que hay en la cola
      * Cuando lo hace: cada 5 minutos
      */
-    @Scheduled(cron = "0 0/5 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+   // @Scheduled(cron = "0 0/5 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void distribuirRegistrosEnCola(){
 
         try {

@@ -126,6 +126,24 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException;
 
 
+  /**
+   * Elimina el archivo físico de custodia pero dejamos la info del anexo en la tabla de anexos y lo marcamos como purgado.
+   * @param custodiaId
+   * @param isJustificante
+   * @param idEntidad
+   * @throws Exception
+   * @throws I18NException
+   */
+  void purgarAnexo(String custodiaId, boolean isJustificante,Long idEntidad) throws Exception,I18NException;
+
+
+  /**
+   *  Obtiene los anexos distribuidos hace x meses que seran los candidatos a purgar.
+   * @return
+   * @throws Exception
+   */
+  List<String> obtenerCustodyIdAnexosDistribuidos(int meses) throws Exception;
+
     /**
      *  Obtiene el id del Justificante que tiene un registroDetalle
      * @param idRegistroDetalle

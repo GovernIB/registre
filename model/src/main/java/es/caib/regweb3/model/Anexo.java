@@ -87,7 +87,10 @@ public class Anexo implements Serializable {
 
     private int estadoFirma;
 
-    
+    //Gestión anexos distribuidos
+    private boolean purgado = false;
+
+
     public Anexo() {
     }
     
@@ -120,6 +123,7 @@ public class Anexo implements Serializable {
       this.signFormat = a.signFormat;
       this.signProfile = a.signProfile;
       this.signType = a.signType;
+      this.purgado=a.purgado;
     }
 
     public static List<Anexo> clone(List<Anexo> list) {
@@ -377,6 +381,15 @@ public class Anexo implements Serializable {
 
     public void setEstadoFirma(int estadoFirma) {
         this.estadoFirma = estadoFirma;
+    }
+
+    @Column(name = "PURGADO")
+    public boolean isPurgado() {
+        return purgado;
+    }
+
+    public void setPurgado(boolean purgado) {
+        this.purgado = purgado;
     }
 
     @Transient

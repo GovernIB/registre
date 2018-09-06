@@ -55,5 +55,11 @@ public interface SchedulerLocal {
      */
     void cerrarExpedientes() throws Exception;
 
+    /**
+     * Inicia la purga de los anexos de los registros distribuidos para cada una de las entidades.
+     * @throws Exception
+     */
+    void purgarAnexosDistribuidos() throws Exception;
+
 }
 

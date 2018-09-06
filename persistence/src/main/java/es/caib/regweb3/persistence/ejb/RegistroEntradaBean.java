@@ -993,8 +993,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                             log.info("distribucion OK REGISTRO " + registroEntrada.getNumeroRegistroFormateado() + "   IdObjeto: " + elementoADistribuir1.getIdObjeto());
                             //Tramitamos el registro de entrada
                             tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
-                            //Marcamos los anexos como distribuidos para la futura purga
-                          //  anexoEjb.marcarAnexosDistribuidos(registroEntrada.getRegistroDetalle().getAnexos());
                             //Añadimos la integración correcta.
                             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION,descripcion,peticion.toString(),System.currentTimeMillis() - tiempo,entidadId,registroEntrada.getNumeroRegistroFormateado());
 
@@ -1112,15 +1110,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
                         // Si ya ha sido enviado, lo marcamos como tramitado.
                         if(respuestaDistribucion.getEnviado()){
+                            //En tramitar entrada creamos la trazabilidad de distribución y con esa fecha trabajamos para obtener los anexos a purgar
                             tramitarRegistroEntrada(re,usuarioEntidad);
-                          //  anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
 
                             // Integración
                             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(),numRegFormat);
                             log.info("");
                             log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
                             log.info("------------------------------------------------------------");
-                            //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
                         }
 
                     }
@@ -1142,11 +1139,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                     re.getRegistroDetalle().getAnexosFull().add(justificante);
                 }
+                //En tramitar entrada creamos la trazabilidad de distribución y con esa fecha trabajamos para obtener los anexos a purgar
                 tramitarRegistroEntrada(re,usuarioEntidad);
-              //  anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
                 //Integración
                 integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
-                //TODO Marcar Anexos como distribuidos para despues poderlos borrar.(2 mesos para rectificar)
 
                 log.info("");
                 log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
@@ -1212,8 +1208,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
                     //Tramitamos el registro de entrada
                     tramitarRegistroEntrada(re, re.getUsuario());
-                    //Marcamos los anexos como distribuidos para la posterior purga
-                //    anexoEjb.marcarAnexosDistribuidos(re.getRegistroDetalle().getAnexos());
                     integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidadId, re.getNumeroRegistroFormateado());
                     log.info("");
                     log.info("Fin distribución del registro: " + re.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));

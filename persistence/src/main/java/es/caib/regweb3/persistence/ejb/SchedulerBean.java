@@ -50,6 +50,9 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/AnexoSirEJB/local")
     private AnexoSirLocal anexoSirEjb;
 
+    @EJB(mappedName = "regweb3/AnexoEJB/local")
+    private AnexoLocal anexoEjb;
+
 
     @Override
     public void purgarIntegraciones() throws Exception{
@@ -172,6 +175,32 @@ public class SchedulerBean implements SchedulerLocal{
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Para cada una de las entidades del sistema, purga los anexos candidatos a
+     * purgar (anexos marcados como distribuidos hace x meses).
+     * @throws Exception
+     */
+    public void purgarAnexosDistribuidos() throws Exception{
+
+        try {
+            List<Entidad> entidades = entidadEjb.getAll();
+
+            for(Entidad entidad: entidades) {
+                //Obtenemos los custodiaID de todos los anexos que se han distribuido los meses indicados por la propiedad global  "getMesesPurgoAnexos"
+                List<String> custodyIds = anexoEjb.obtenerCustodyIdAnexosDistribuidos( PropiedadGlobalUtil.getMesesPurgoAnexos( entidad.getId()));
+                for(String custodyId: custodyIds ){
+                    //Purgamos anexo a anexo
+                    anexoEjb.purgarAnexo(custodyId, false,entidad.getId());
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("Error purgando anexos distribuidos ...", e);
+        } catch (I18NException ie){
+            log.error("Error purgando anexos distribuidos ...", ie);
         }
     }
 }

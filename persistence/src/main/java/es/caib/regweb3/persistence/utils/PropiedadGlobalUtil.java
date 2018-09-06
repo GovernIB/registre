@@ -582,4 +582,21 @@ public class PropiedadGlobalUtil {
         return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
+    /**
+     * Si no está configurado, se devuelven 2 meses
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getMesesPurgoAnexos(Long idEntidad) {
+        final String partialPropertyName = "anexos.purgo.meses";
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+
+
+        if (valor == null) {
+            valor = 2;
+        }
+        return valor;
+    }
+
+
 }

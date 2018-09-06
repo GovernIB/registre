@@ -97,9 +97,9 @@
                         <tr>
                             <th><spring:message code="anexo.titulo"/></th>
                             <th><spring:message code="anexo.tipoDocumento"/></th>
-
-                            <th class="center"><spring:message code="anexo.tamano"/></th>
-
+                            <c:if test="${!anexoFull.anexo.purgado}">
+                                <th class="center"><spring:message code="anexo.tamano"/></th>
+                            </c:if>
                             <th class="center"><spring:message code="anexo.anexo"/></th>
                             <th class="center">Firma</th>
                             <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -132,50 +132,90 @@
                                 </td>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED}">
-                                    <td class="center">
-
+                                    <td class="center"> <%--ANEXO--%>
+                                        <c:if test="${!anexoFull.anexo.purgado}">
                                             <a class="btn btn-success btn-default btn-sm"
                                                href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
                                                target="_blank"
                                                title="<spring:message code="anexo.descargar"/>"><span
                                                     class="fa fa-download"></span></a>
+                                        </c:if>
+                                        <c:if test="${anexoFull.anexo.purgado}">
+                                            <a class="btn btn-success btn-default btn-sm disabled"
+                                               href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
+                                               target="_blank"
+                                               title="<spring:message code="anexo.descargar"/>"><span
+                                                    class="fa fa-download"></span></a>
+                                        </c:if>
                                     </td>
-                                    <td class="center">
+                                    <td class="center"> <%--FIRMA--%>
 
-                                        <c:if test="${anexoFull.anexo.firmaValida}">
+                                        <%--definimos la clase y la etiqueta en funcion de los estados--%>
+                                        <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">
                                             <c:set var="clase" value="btn btn-info btn-default btn-sm"/>
                                             <c:set var="etiqueta" value="anexo.tipofirma.detached.valido"/>
                                         </c:if>
-                                        <c:if test="${!anexoFull.anexo.firmaValida}">
+                                        <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_ERROR}">
                                             <c:set var="clase" value="btn btn-danger btn-default btn-sm"/>
                                             <c:set var="etiqueta" value="anexo.tipofirma.detached.invalido"/>
                                         </c:if>
-                                        <a class="${clase}"
-                                           href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
-                                           target="_blank"
-                                           title="<spring:message code="${etiqueta}"/>"><span class="fa fa-key"></span></a>
+                                        <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_NOINFO}">
+                                            <c:set var="clase" value="btn btn-warning btn-default btn-sm"/>
+                                            <c:set var="etiqueta" value="anexo.tipofirma.detached.noinfo"/>
+                                        </c:if>
+                                        <c:if test="${!anexoFull.anexo.purgado}">
+                                            <a class="${clase}"
+                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               target="_blank"
+                                               title="<spring:message code="${etiqueta}"/>"><span
+                                                    class="fa fa-key"></span></a>
+                                        </c:if>
+                                        <c:if test="${anexoFull.anexo.purgado}"> <%--Si esta purgado se deshabilita--%>
+                                            <a class="${clase} disabled"
+                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               target="_blank"
+                                               title="<spring:message code="${etiqueta}"/>"><span
+                                                    class="fa fa-key"></span></a>
+                                        </c:if>
                                     </td>
                                 </c:if>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA}">
                                     <td class="center">
-
+                                        <c:if test="${!anexoFull.anexo.purgado}">
                                             <a class="btn btn-success btn-default btn-sm"
                                                href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
                                                target="_blank"
                                                title="<spring:message code="anexo.descargar"/>"><span
                                                     class="fa fa-download"></span></a>
+                                        </c:if>
+                                        <c:if test="${anexoFull.anexo.purgado}">
+                                            <a class="btn btn-success btn-default btn-sm disabled"
+                                               href="<c:url value="/anexo/descargarDocumento/${anexoFull.anexo.id}"/>"
+                                               target="_blank"
+                                               title="<spring:message code="anexo.descargar"/>"><span
+                                                    class="fa fa-download"></span></a>
+                                        </c:if>
                                     </td>
                                     <td class="center"><p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.sinfirma"/>" data-toggle="popover"><span class="label label-default">No</span></p></td>
                                 </c:if>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                     <td class="center">
-
+                                        <c:if test="${!anexoFull.anexo.purgado}">
                                             <a class="btn btn-success btn-default btn-sm"
                                                href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
                                                target="_blank"
-                                               title="<spring:message code="anexo.descargar"/>"><span class="fa fa-download"></span></a>
+                                               title="<spring:message code="anexo.descargar"/>"><span
+                                                    class="fa fa-download"></span></a>
+                                        </c:if>
+                                        <c:if test="${anexoFull.anexo.purgado}">
+                                            <a class="btn btn-success btn-default btn-sm disabled"
+                                               href="<c:url value="/anexo/descargarFirma/${anexoFull.anexo.id}/true"/>"
+                                               target="_blank"
+                                               title="<spring:message code="anexo.descargar"/>"><span
+                                                    class="fa fa-download"></span></a>
+                                        </c:if>
                                     </td>
                                     <td class="center">
                                         <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">

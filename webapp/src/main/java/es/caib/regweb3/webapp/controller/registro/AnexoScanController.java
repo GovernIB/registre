@@ -285,7 +285,6 @@ public class AnexoScanController extends AnexoController {
             dc = sd.getScannedPlainFile();
             sc = sd.getScannedSignedFile();
 
-
             final int modoFirma;
             if (dc == null) {
                 // Firma: PAdES, CAdES, XAdES
