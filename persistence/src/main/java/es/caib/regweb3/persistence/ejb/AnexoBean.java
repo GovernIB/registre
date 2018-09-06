@@ -1120,15 +1120,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-    @Override
-    /**
-     * Método que elimina de custodia los anexos que se han enviado via SIR y han sido aceptados en destino.
+    /** Método que elimina de custodia los anexos que se han enviado via SIR y han sido aceptados en destino.
      *
      * @param idRegistroDetalle
      * @param idEntidad
      * @throws Exception
      * @throws I18NException
      */
+    @Override
     public void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException {
         Query query = em.createQuery("select anexo.custodiaID, anexo.justificante from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
@@ -1144,6 +1143,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
     }
 
+    @Override
     public void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException {
 
         try {
@@ -1162,7 +1162,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
 
     }
-
 
 
     @Override
