@@ -64,5 +64,5 @@ alter table rwe_anexo add MOTIVONOVALID varchar2(2000 char);
 alter table rwe_anexo add (ESTADOFIRMA number(19,0) DEFAULT 0);
 
 --Nuevos campos eliminar anexos
-alter table rwe_anexo add PURGADO number(1,0) default false;
+alter table rwe_anexo add (PURGADO number(1,0) default 0);
 alter table rwe_anexo_sir add (PURGADO number(1,0) default 0);
