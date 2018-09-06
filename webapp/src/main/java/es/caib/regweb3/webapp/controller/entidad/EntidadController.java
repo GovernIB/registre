@@ -546,7 +546,7 @@ public class EntidadController extends BaseController {
 
         try {
 
-            Descarga ultimaDescarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidadId);
+            Descarga ultimaDescarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadId);
             Timestamp fechaUltimaActualizacion = null;
             if (ultimaDescarga.getFechaImportacion() != null) {
                 fechaUltimaActualizacion = new Timestamp(ultimaDescarga.getFechaImportacion().getTime());

@@ -30,7 +30,7 @@ public interface DescargaLocal extends BaseEjb<Descarga, Long> {
    * @return  la descarga encontrada
    * @throws Exception
    */
-  Descarga findByTipoEntidad(String tipo, Long idEntidad) throws Exception;
+  Descarga ultimaDescarga(String tipo, Long idEntidad) throws Exception;
 
   /**
    *  Obtiene el valor de la primera descarga de un tipo y de una entidad

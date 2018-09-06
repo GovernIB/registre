@@ -70,7 +70,7 @@ public class OrganismoController extends BaseController {
        Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), null, null, vigente.getId(), false);
 
        // Mirant si es una sincronitzacio o actualitzacio
-       Descarga descarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidad.getId());
+       Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
        if(descarga != null){
             model.addAttribute("descarga", descarga);
        }
@@ -99,7 +99,7 @@ public class OrganismoController extends BaseController {
       Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), null, organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
 
       // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
-      Descarga descarga = descargaEjb.findByTipoEntidad(RegwebConstantes.UNIDAD, entidad.getId());
+      Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
       if(descarga != null){
         mav.addObject("descarga", descarga);
       }

@@ -56,7 +56,7 @@ public class DescargaBean extends BaseEjbJPA<Descarga, Long> implements Descarga
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Descarga findByTipoEntidad(String tipo, Long idEntidad) throws Exception {
+    public Descarga ultimaDescarga(String tipo, Long idEntidad) throws Exception {
 
         Query query = em.createQuery( "select descarga from Descarga as descarga where descarga.tipo=? and descarga.entidad.id =? order by descarga.id desc");
         query.setParameter(1, tipo);
