@@ -910,7 +910,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
-    public String arreglarSignatureCustody(SignatureCustody signature,
+    private String arreglarSignatureCustody(SignatureCustody signature,
                                            DocumentCustody doc, Anexo anexo, String mimeFinal) throws Exception {
 
         if (signature != null && signature.getData() != null) {//Si nos envian firma
