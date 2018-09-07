@@ -56,7 +56,6 @@ public class SirRecepcionBean implements SirRecepcionLocal {
     @Override
     public RegistroSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
 
-        Boolean ack = true; // Indica si enviaremos un ack o no
         RegistroSir registroSir = null;
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
@@ -89,7 +88,6 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                     // Enviamos el Mensaje de Confirmación
                     RegistroEntrada registroEntrada = trazabilidadEjb.getRegistroAceptado(registroSir.getId());
                     mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
-                    ack = false;
                 } else {
                     log.info("Se ha recibido un ENVIO con estado incompatible: " + ficheroIntercambio.getIdentificadorIntercambio());
                     throw new ValidacionException(Errores.ERROR_0037);
@@ -323,7 +321,15 @@ public class SirRecepcionBean implements SirRecepcionLocal {
     public void recibirMensajeDatosControl(Mensaje mensaje) throws Exception{
 
         // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
-        comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
+        Entidad entidad = comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Recepción MensajeControl: " + mensaje.getTipoMensaje().getName();
+        peticion.append("IdentificadorIntercambio: ").append(mensaje.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(mensaje.getCodigoEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(mensaje.getCodigoEntidadRegistralDestino()).append(System.getProperty("line.separator"));
+        peticion.append("Descripcion: ").append(mensaje.getDescripcionMensaje()).append(System.getProperty("line.separator"));
 
         // Mensaje ACK
         if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK)){
@@ -359,6 +365,8 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
             RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
 
+            peticion.append("CodigoError: ").append(mensaje.getCodigoError()).append(System.getProperty("line.separator"));
+
             if(oficioRemision != null){
                 procesarMensajeERROR(oficioRemision, mensaje);
             }else if(registroSir != null){
@@ -372,6 +380,9 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
             throw new ValidacionException(Errores.ERROR_0037);
         }
+
+
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
 
     }
 
@@ -521,30 +532,33 @@ public class SirRecepcionBean implements SirRecepcionLocal {
 
             case (RegwebConstantes.OFICIO_SIR_ENVIADO):
 
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
-                oficioRemision.setCodigoError(mensaje.getCodigoError());
-                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                //oficioRemision.setNumeroReintentos(0);
-                oficioRemision.setFechaEstado(new Date());
-                oficioRemisionEjb.merge(oficioRemision);
+                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+                    oficioRemision.setCodigoError(mensaje.getCodigoError());
+                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                    oficioRemision.setFechaEstado(new Date());
+                    oficioRemisionEjb.merge(oficioRemision);
+                }
 
                 break;
 
             case (RegwebConstantes.OFICIO_SIR_REENVIADO):
 
-                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
-                oficioRemision.setCodigoError(mensaje.getCodigoError());
-                oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
-                //oficioRemision.setNumeroReintentos(0);
-                oficioRemision.setFechaEstado(new Date());
-                oficioRemisionEjb.merge(oficioRemision);
+                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+                    oficioRemision.setCodigoError(mensaje.getCodigoError());
+                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                    oficioRemision.setFechaEstado(new Date());
+                    oficioRemisionEjb.merge(oficioRemision);
+                }
 
                 break;
 
             case (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR):
             case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
 
-                log.info("Se ha recibido un mensaje duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+                log.info("Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
                 throw new ValidacionException(Errores.ERROR_0037);
 
         }
@@ -563,7 +577,6 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
             registroSir.setCodigoError(mensaje.getCodigoError());
             registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setNumeroReintentos(0);
             registroSir.setFechaEstado(new Date());
             registroSirEjb.merge(registroSir);
 
@@ -572,14 +585,13 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ERROR);
             registroSir.setCodigoError(mensaje.getCodigoError());
             registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
-            registroSir.setNumeroReintentos(0);
             registroSir.setFechaEstado(new Date());
             registroSirEjb.merge(registroSir);
 
         } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
                 EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
 
-            log.info("Se ha recibido un registroSir duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+            log.info("Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
             throw new ValidacionException(Errores.ERROR_0037);
 
         }
@@ -618,7 +630,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
      * @param codigoEntidadRegistralDestino
      * @throws Exception
      */
-    private void comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception{
+    private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception{
 
         Entidad entidad;
         Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
@@ -634,6 +646,8 @@ public class SirRecepcionBean implements SirRecepcionLocal {
                 log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
                 throw new ValidacionException(Errores.ERROR_0037, "La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
             }
+
+            return entidad;
 
         }else{
             log.info("El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
