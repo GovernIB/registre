@@ -11,9 +11,9 @@ import javax.ejb.Local;
 /*@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})*/
 public interface EmisionLocal {
 
-    public void enviarFicheroIntercambio(RegistroSir registroSir) throws Exception;
+    void enviarFicheroIntercambio(RegistroSir registroSir) throws Exception;
 
-    public void reenviarFicheroIntercambio(RegistroSir registroSir)  throws Exception;
+    void reenviarFicheroIntercambio(RegistroSir registroSir)  throws Exception;
 
-    public void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception;
+    void rechazarFicheroIntercambio(RegistroSir registroSir) throws Exception;
 }

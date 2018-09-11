@@ -18,23 +18,23 @@ public interface MensajeLocal {
      * @param registroSir
      * @param numeroRegistro
      */
-    public void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro);
+    void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro);
 
     /**
      *
      * @param ficheroIntercambio
      */
-    public void enviarACK(FicheroIntercambio ficheroIntercambio);
+    void enviarACK(FicheroIntercambio ficheroIntercambio);
 
     /**
      *
      * @param mensaje
      */
-    public void enviarACK(Mensaje mensaje);
+    void enviarACK(Mensaje mensaje);
 
     /**
      *
      * @param mensaje
      */
-    public void enviarMensajeError(Mensaje mensaje);
+    void enviarMensajeError(Mensaje mensaje);
 }
