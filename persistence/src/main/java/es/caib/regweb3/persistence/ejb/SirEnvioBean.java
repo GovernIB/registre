@@ -50,7 +50,6 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private MensajeLocal mensajeEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
-    @EJB private OficinaLocal oficinaEjb;
     @EJB private IntegracionLocal integracionEjb;
 
     /**
