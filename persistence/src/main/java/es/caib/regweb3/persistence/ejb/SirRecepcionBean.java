@@ -9,7 +9,6 @@ import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 import es.caib.regweb3.sir.core.utils.Mensaje;
-import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -39,11 +38,8 @@ public class SirRecepcionBean implements SirRecepcionLocal {
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
-    @EJB private JustificanteLocal justificanteEjb;
-    @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
-    @EJB private ContadorLocal contadorEjb;
     @EJB private OficinaLocal oficinaEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private AnexoLocal anexoEjb;
@@ -381,7 +377,7 @@ public class SirRecepcionBean implements SirRecepcionLocal {
             throw new ValidacionException(Errores.ERROR_0037);
         }
 
-
+        // Integración
         integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
 
     }
