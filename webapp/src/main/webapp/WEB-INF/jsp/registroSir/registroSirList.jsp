@@ -157,6 +157,7 @@
 
                                             <tbody>
                                             <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
+                                                <c:set var="registroSir" value="${registroSir}" scope="request"/>
                                                 <tr>
                                                     <td> ${registroSir.identificadorIntercambio}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
@@ -172,12 +173,7 @@
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td class="center">
-                                                        <c:import url="estadosRegistroSir.jsp">
-                                                            <c:param name="estado" value="${registroSir.estado}"/>
-                                                            <c:param name="decodificacionTipoAnotacion" value="${registroSir.decodificacionTipoAnotacion}"/>
-                                                            <c:param name="codigoError" value="${registroSir.codigoError}"/>
-                                                            <c:param name="descripcionError" value="${registroSir.descripcionError}"/>
-                                                        </c:import>
+                                                        <c:import url="estadosRegistroSir.jsp" />
                                                     </td>
                                                     <td>
                                                         <c:if test="${fn:length(registroSir.resumen) <= 40}">

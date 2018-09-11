@@ -243,12 +243,7 @@
                             <c:if test="${not empty registroSir.estado}">
                                 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroSir.estado"/>: </dt>
                                 <dd class="eti-rechazo">
-                                    <c:import url="estadosRegistroSir.jsp">
-                                        <c:param name="estado" value="${registroSir.estado}"/>
-                                        <c:param name="decodificacionTipoAnotacion" value="${registroSir.decodificacionTipoAnotacion}"/>
-                                        <c:param name="codigoError" value="${registroSir.codigoError}"/>
-                                        <c:param name="descripcionError" value="${registroSir.descripcionError}"/>
-                                    </c:import>
+                                    <c:import url="estadosRegistroSir.jsp" />
                                 </dd>
                             </c:if>
 
