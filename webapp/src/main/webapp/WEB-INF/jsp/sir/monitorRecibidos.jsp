@@ -195,7 +195,7 @@
                                                     </td>
                                                     <td>${registroSir.aplicacion}</td>
                                                     <td><label class="no-bold" rel="ayuda" data-content="${registroSir.codigoEntidadRegistralInicio}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralInicio}</label></td>
-                                                    <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
+                                                    <td><label class="no-bold" rel="ayuda" data-content="${registroSir.codigoEntidadRegistralDestino}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralDestino}</label></td>
                                                     <td class="center">
                                                         <c:import url="../registroSir/estadosRegistroSir.jsp">
                                                             <c:param name="estado" value="${registroSir.estado}"/>
