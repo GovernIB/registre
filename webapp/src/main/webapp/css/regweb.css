@@ -1347,3 +1347,7 @@ pre {
 .eti-rechazo{
     width:200px;
 }
+
+.alturaArbol{
+    min-height: 430px !important;
+}

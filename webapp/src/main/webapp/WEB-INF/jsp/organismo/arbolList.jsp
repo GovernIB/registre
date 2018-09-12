@@ -14,7 +14,7 @@
 
 <div class="row-fluid container main">
 
-    <div class="well well-white">
+    <div class="well well-white alturaArbol">
 
         <div class="row">
             <div class="col-xs-12">
