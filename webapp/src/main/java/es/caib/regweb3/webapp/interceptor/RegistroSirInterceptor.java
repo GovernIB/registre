@@ -47,6 +47,10 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
             Oficina oficinaActiva = loginInfo.getOficinaActiva();
             Entidad entidadActiva = loginInfo.getEntidadActiva();
 
+            if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+                return true;
+            }
+
             // Comprobamos que el usuario dispone de una OficinaActiva
             if(oficinaActiva == null){
                 log.info("No existe una OficinaActiva");
@@ -70,7 +74,6 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
-
 
             //comprobar variable archivos path
             if(FileSystemManager.getArchivosPath()==null){

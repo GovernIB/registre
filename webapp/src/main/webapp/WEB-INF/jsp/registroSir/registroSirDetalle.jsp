@@ -21,7 +21,13 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-list"></i> <spring:message code="registroSir.listado"/></a></li>
+                    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
+                        <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-list"></i> <spring:message code="registroSir.listado"/></a></li>
+                    </c:if>
+                    <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
+                        <li><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-list"></i> <spring:message code="sir.monitor.recibidos"/></a></li>
+                    </c:if>
+
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</li>
                 </ol>
             </div>
@@ -274,7 +280,7 @@
                     <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
                     <%-- Se muestra la Botonera si el RegistroSir está pendiente de procesar--%>
-                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                    <c:if test="${registroSir.estado == 'RECIBIDO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
                         <%--Formulari per completar dades del registre--%>
                         <div class="panel-footer">

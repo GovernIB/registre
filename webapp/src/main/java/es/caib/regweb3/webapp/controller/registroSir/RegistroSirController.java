@@ -216,13 +216,12 @@ public class RegistroSirController extends BaseController {
 
 
         // Si el registro sir cuyo estado es RECIBIDO
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
+        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO) && isOperador(request)){
 
             // Tengo permisos para gestionarlo?
             if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistral())){
 
                 // Obtenemos los libros del Organismo destinatário del RegistroSir
-                //List<Libro> libros = libroEjb.getLibrosActivosOrganismo(registroSir.getCodigoUnidadTramitacionDestino());
                 List<Libro> libros = getLibrosRegistroEntrada(request);
 
                 model.addAttribute("libros",libros);
