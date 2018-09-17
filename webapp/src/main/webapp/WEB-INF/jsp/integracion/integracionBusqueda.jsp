@@ -20,7 +20,8 @@
                 <div class="col-xs-12">
                     <ol class="breadcrumb">
                         <c:import url="../modulos/migadepan.jsp"/>
-                        <li class="active"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></li>
+                        <li><a href="<c:url value="/integracion/list/0"/>"> <i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
+                        <li class="active"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/> de ${busqueda.texto}</li>
                     </ol>
                 </div>
             </div><!-- /.row -->
@@ -30,119 +31,79 @@
             <div class="row">
                 <div class="col-xs-12">
 
-                    <ul class="nav nav-tabs nav-justified" role="tablist">
-
-                        <c:forEach items="${tipos}" var="tipoIntegracion">
-                            <li <c:if test="${tipo == tipoIntegracion}">class="active"</c:if>><a href="<c:url value="/integracion/list/${tipoIntegracion}"/>"><i class="fa fa-file-o"></i> <spring:message code="integracion.tipo.${tipoIntegracion}" /></a></li>
-                        </c:forEach>
-
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active"><a href="javascript:void(0);"> <i class="fa fa-file-o"></i> Integraciones de ${busqueda.texto}</a></li>
                     </ul>
 
                     <div class="tab-content">
 
                         <div class="panel-body">
 
-                            <div class="row">
-                                <div class="form-group col-xs-12">
-                                    <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
-                                        <form:hidden path="pageNumber"/>
-
-                                                <div class="form-group col-xs-3 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
-                                                            <form:option value="" label="..."/>
-                                                            <c:forEach var="estado" items="${estados}">
-                                                                <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
-                                                            </c:forEach>
-                                                        </form:select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group col-xs-4 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="numRegFormat"><spring:message code="registroEntrada.numeroRegistro"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:input path="numRegFormat" cssClass="form-control" maxlength="255" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="form-group col-xs-1 espaiLinies senseMargeLat">
-                                                    <button type="button" onclick="doForm('#integracionBusqueda')" class="btn btn-warning btn-sm btn-block">
-                                                        <spring:message code="regweb.buscar"/>
-                                                    </button>
-                                                </div>
-
-                                    </form:form>
-                                </div>
-
-                            </div>
-
-                            <c:if test="${empty paginacion.listado}">
+                            <c:if test="${empty integraciones}">
                                 <div class="alert alert-grey alert-dismissable">
                                     <spring:message code="regweb.listado.vacio"/> <strong><spring:message code="integracion.integracion"/></strong>
                                 </div>
                             </c:if>
 
-                            <c:if test="${not empty paginacion.listado}">
+                            <c:if test="${not empty integraciones}">
 
                                 <div class="alert-grey">
-                                    <c:if test="${paginacion.totalResults == 1}">
+                                    <c:if test="${fn:length(integraciones) == 1}">
                                         <spring:message code="regweb.resultado"/>
-                                        <strong>${paginacion.totalResults}</strong> <spring:message code="integracion.integracion"/>
+                                        <strong>${fn:length(integraciones)}</strong> <spring:message code="integracion.integracion"/>
                                     </c:if>
-                                    <c:if test="${paginacion.totalResults > 1}">
+                                    <c:if test="${fn:length(integraciones) > 1}">
                                         <spring:message code="regweb.resultados"/>
-                                        <strong>${paginacion.totalResults}</strong> <spring:message code="integracion.integraciones"/>
+                                        <strong>${fn:length(integraciones)}</strong> <spring:message code="integracion.integraciones"/>
                                     </c:if>
 
-                                    <p class="pull-right"><spring:message code="regweb.pagina"/>
-                                        <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                 </div>
 
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover table-striped tablesorter">
                                         <colgroup>
                                             <col width="140">
+                                            <col width="80">
                                             <col width="140">
-                                            <col width="200">
+                                            <col width="150">
                                             <col width="80">
                                             <col width="70">
-                                            <col>
+                                            <col width="150">
                                             <col width="60">
                                         </colgroup>
                                         <thead>
-                                        <tr>
-                                            <th><spring:message code="integracion.fecha"/></th>
-                                            <c:if test="${tipo != RegwebConstantes.INTEGRACION_SIR}">
+                                            <tr>
+                                                <th><spring:message code="integracion.fecha"/></th>
+                                                <th class="center"><spring:message code="integracion.tipo"/></th>
                                                 <th><spring:message code="registroEntrada.numeroRegistro"/></th>
-                                            </c:if>
-                                            <c:if test="${tipo == RegwebConstantes.INTEGRACION_SIR}">
-                                                <th><spring:message code="registroSir.identificadorIntercambio"/></th>
-                                            </c:if>
-                                            <th><spring:message code="integracion.descripcion"/></th>
-                                            <th><spring:message code="integracion.tiempo"/></th>
-                                            <th><spring:message code="integracion.estado"/></th>
-                                            <th><spring:message code="integracion.error"/></th>
-                                            <th class="center"><spring:message code="regweb.acciones"/></th>
-                                        </tr>
+                                                <th><spring:message code="integracion.descripcion"/></th>
+                                                <th><spring:message code="integracion.tiempo"/></th>
+                                                <th class="center"><spring:message code="integracion.estado"/></th>
+                                                <th><spring:message code="integracion.error"/></th>
+                                                <th class="center"><spring:message code="regweb.acciones"/></th>
+                                            </tr>
                                         </thead>
 
                                         <tbody>
-                                        <c:forEach var="integracion" items="${paginacion.listado}">
+                                        <c:forEach var="integracion" items="${integraciones}">
                                             <tr>
                                                 <td><fmt:formatDate value="${integracion.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                <td><a href="javascript:void(0);" onclick="buscarIntegraciones('${integracion.numRegFormat}')" target="_blank">${integracion.numRegFormat}</a> </td>
+                                                <td class="center"><span class="label label-warning"><spring:message code="integracion.tipo.${integracion.tipo}" /></span> </td>
+                                                <td>${integracion.numRegFormat}</td>
                                                 <td>${integracion.descripcion}</td>
                                                 <td>${integracion.tiempoFormateado}</td>
-                                                <td>
+                                                <td class="center">
                                                     <c:if test="${integracion.estado == 0}"><span class="label label-success"><span class="fa fa-check"></span>  Ok</span></c:if>
                                                     <c:if test="${integracion.estado == 1}"><span class="label label-danger"><span class="fa fa-warning"></span> Error</span></c:if>
                                                 </td>
-                                                <td><c:out value="${integracion.error}"/></td>
+                                                <td>
+                                                    <c:if test="${fn:length(integracion.error) <= 50}">
+                                                        ${integracion.error}
+                                                    </c:if>
+                                                    <c:if test="${fn:length(integracion.error) > 50}">
+                                                        ${integracion.errorCorto}
+                                                    </c:if>
+                                                </td>
                                                 <td class="center">
                                                     <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoIntegracion" onclick="infoIntegracion('${integracion.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
                                                 </td>
@@ -150,15 +111,6 @@
                                         </c:forEach>
                                         </tbody>
                                     </table>
-
-                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal">
-                                        <form:hidden path="texto"/>
-                                    </form:form>
-
-                                    <!-- Paginacion -->
-                                    <c:import url="../modulos/paginacionBusqueda.jsp">
-                                        <c:param name="entidad" value="integracion"/>
-                                    </c:import>
 
                                 </div>
                             </c:if>
@@ -273,13 +225,6 @@
     tradsIntegracion['integracion.tipo.4'] = "<spring:message code='integracion.tipo.4' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.5'] = "<spring:message code='integracion.tipo.5' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.6'] = "<spring:message code='integracion.tipo.6' javaScriptEscape='true' />";
-
-    function buscarIntegraciones(numeroRegistro){
-
-        $('#texto').val(numeroRegistro);
-
-        $('#integracion').submit();
-    }
 
 </script>
 

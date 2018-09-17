@@ -231,4 +231,16 @@ public class Integracion implements Serializable {
     public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
     }
+
+    @Transient
+    public String getErrorCorto(){
+
+        String errorCorto = getError();
+
+        if (errorCorto.length() > 50) {
+            errorCorto = errorCorto.substring(0, 50) + "...";
+        }
+
+        return errorCorto;
+    }
 }

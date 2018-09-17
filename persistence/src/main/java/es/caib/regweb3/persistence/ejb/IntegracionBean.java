@@ -88,6 +88,20 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception{
+
+        Query q = em.createQuery("Select integracion from Integracion as integracion where " +
+                "integracion.entidad.id = :idEntidad and integracion.numRegFormat =:numeroRegistro order by integracion.id");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("numeroRegistro",numeroRegistro);
+
+        return q.getResultList();
+
+    }
+
+    @Override
     public Paginacion busqueda(Integracion integracion, Long idEntidad) throws Exception {
 
         Query q;

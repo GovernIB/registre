@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.IntegracionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.form.BasicForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by Fundació Bit
@@ -49,6 +51,7 @@ public class IntegracionController extends BaseController {
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("integracionBusqueda", busqueda);
         model.addAttribute("tipo", tipo);
+        model.addAttribute("integracion", new BasicForm());
 
         return "integracion/integracionList";
     }
@@ -69,6 +72,25 @@ public class IntegracionController extends BaseController {
         mav.addObject("paginacion", paginacion);
         mav.addObject("integracionBusqueda", busqueda);
         mav.addObject("tipo", busqueda.getTipo());
+        mav.addObject("integracion", new BasicForm());
+
+        return mav;
+    }
+
+    /**
+     * Búsqueda de integraciones {@link Integracion}
+     */
+    @RequestMapping(value = "/busqueda", method = RequestMethod.POST)
+    public ModelAndView busqueda(@ModelAttribute BasicForm busqueda, HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("integracion/integracionBusqueda");
+
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        List<Integracion> integraciones = integracionEjb.getByEntidadNumReg(entidadActiva.getId(),busqueda.getTexto());
+
+        mav.addObject("integraciones", integraciones);
+        mav.addObject("busqueda", busqueda);
 
         return mav;
     }

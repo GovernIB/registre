@@ -26,6 +26,15 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
     List<Integracion> getByEntidad(Long idEntidad) throws Exception;
 
     /**
+     * Obtiene las integraciones de un número de registro
+     * @param idEntidad
+     * @param numeroRegistro
+     * @return
+     * @throws Exception
+     */
+    List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception;
+
+    /**
      * Búsqueda de integraciones
      * @param integracion
      * @param idEntidad
