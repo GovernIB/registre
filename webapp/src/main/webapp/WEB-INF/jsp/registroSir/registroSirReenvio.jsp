@@ -74,8 +74,8 @@
                                         <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
                                     </div>
                                     <div class="col-xs-9" id="idObservaciones">
-                                        <form:textarea path="observaciones" rows="3" class="form-control"/>
-                                        <span class="errors"></span>
+                                        <form:textarea path="observaciones" rows="3" class="form-control" maxlength="80"/>
+                                        <span id="errorObsv" class="errors"></span>
                                     </div>
                                 </div>
                             </div>
