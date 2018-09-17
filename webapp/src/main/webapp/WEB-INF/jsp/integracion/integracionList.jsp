@@ -142,7 +142,14 @@
                                                     <c:if test="${integracion.estado == 0}"><span class="label label-success"><span class="fa fa-check"></span>  Ok</span></c:if>
                                                     <c:if test="${integracion.estado == 1}"><span class="label label-danger"><span class="fa fa-warning"></span> Error</span></c:if>
                                                 </td>
-                                                <td><c:out value="${integracion.error}"/></td>
+                                                <td>
+                                                    <c:if test="${fn:length(integracion.error) <= 50}">
+                                                        ${integracion.error}
+                                                    </c:if>
+                                                    <c:if test="${fn:length(integracion.error) > 50}">
+                                                        ${integracion.errorCorto}
+                                                    </c:if>
+                                                </td>
                                                 <td class="center">
                                                     <a class="btn btn-warning btn-sm" data-toggle="modal" role="button" href="#infoIntegracion" onclick="infoIntegracion('${integracion.id}')" title="<spring:message code="regweb.info"/>"><span class="fa fa-info-circle"></span></a>
                                                 </td>
