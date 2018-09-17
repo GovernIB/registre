@@ -237,7 +237,7 @@ public class Integracion implements Serializable {
 
         String errorCorto = getError();
 
-        if (errorCorto.length() > 50) {
+        if (errorCorto != null && errorCorto.length() > 50) {
             errorCorto = errorCorto.substring(0, 50) + "...";
         }
 
