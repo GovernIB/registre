@@ -145,35 +145,27 @@ public class SirController extends BaseController {
     }
 
     /**
-     * Listado de todos los RegistroSirs
-     */
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public String pendientesDistribuir() {
-        return "redirect:/registroSir/pendientesDistribuir";
-    }
-
-    /**
-     * Listado de RegistroSirs
+     * Listado de Registros de entrada pendientesDistribuir
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/pendientesDistribuir", method = RequestMethod.GET)
+    @RequestMapping(value = "/pendientesDistribuir/list", method = RequestMethod.GET)
     public ModelAndView pendientesDistribuir(Model model, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/pendientesDistribuirList");
         Entidad entidad = getEntidadActiva(request);
 
         RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
-        mav.addObject("registroEntradaBusqueda", registroEntradaBusqueda);
+        mav.addObject("pendientesDistribuirBusqueda", registroEntradaBusqueda);
         mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
 
         return mav;
     }
 
     /**
-     * Realiza la busqueda de {@link RegistroSir} según los parametros del formulario
+     * Realiza la busqueda de Registros de entrada pendientesDistribuir
      */
-    @RequestMapping(value = "/pendientesDistribuir", method = RequestMethod.POST)
+    @RequestMapping(value = "/pendientesDistribuir/list", method = RequestMethod.POST)
     public ModelAndView pendientesDistribuir(@ModelAttribute RegistroEntradaBusqueda busqueda, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/pendientesDistribuirList");
@@ -187,7 +179,7 @@ public class SirController extends BaseController {
 
         mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
         mav.addObject("paginacion", paginacion);
-        mav.addObject("registroEntradaBusqueda", busqueda);
+        mav.addObject("pendientesDistribuirBusqueda", busqueda);
 
         return mav;
 

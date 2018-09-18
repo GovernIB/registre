@@ -41,7 +41,7 @@
                         <h3 class="panel-title"><i class="fa fa-search"></i><strong> <spring:message code="registroEntrada.pendientesDistribuir.sir"/> </strong> </h3>
                     </div>
 
-                    <form:form modelAttribute="registroEntradaBusqueda" method="post" cssClass="form-horizontal">
+                    <form:form modelAttribute="pendientesDistribuirBusqueda" method="post" cssClass="form-horizontal">
                         <form:hidden path="pageNumber"/>
 
                         <div class="panel-body">
@@ -144,8 +144,8 @@
                                         </table>
 
                                         <!-- Paginacion -->
-                                        <c:import url="../modulos/paginacion.jsp">
-                                            <c:param name="entidad" value="sir/pendientesDistribuir"/>
+                                        <c:import url="../modulos/paginacionBusqueda.jsp">
+                                            <c:param name="entidad" value="pendientesDistribuir"/>
                                         </c:import>
 
                                     </div>
