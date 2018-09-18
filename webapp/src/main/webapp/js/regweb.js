@@ -299,6 +299,8 @@ function mensajeError(id,texto){
      "        </div></div>";
 
     $(id).append(mensaje);
+
+    $("html, body").animate({ scrollTop: 0 }, "slow"); // Movemos el scroll ariba de la página
 }
 
 /**
@@ -322,6 +324,8 @@ function mensajeSuccess(id,texto){
         "        </div></div>";
 
     $(id).append(mensaje);
+
+    $("html, body").animate({ scrollTop: 0 }, "slow"); // Movemos el scroll ariba de la página
 }
 
 

@@ -14,10 +14,7 @@ import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
@@ -197,6 +194,39 @@ public class SirController extends BaseController {
     }
 
     /**
+     * Reinicia el contador de reintentos SIR
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/{idOficio}/reiniciar", method = RequestMethod.GET)
+    public String reiniciar(@PathVariable Long idOficio, HttpServletRequest request)throws Exception {
+
+        oficioRemisionEjb.reiniciarIntentos(idOficio);
+
+        Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
+
+        return "redirect:/sir/monitorEnviados";
+    }
+
+    /**
+     * Envia un mensaje ACK
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/enviarACK", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean enviarACK(@RequestParam Long idRegistroSir, HttpServletRequest request)throws Exception {
+
+        try{
+            return registroSirEjb.enviarACK(idRegistroSir);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
      * Total Archivos huerfanos
      */
     @RequestMapping(value = "/huerfanos", method = RequestMethod.GET)
@@ -287,21 +317,6 @@ public class SirController extends BaseController {
 
 
         return "redirect:/inici";
-    }
-
-    /**
-     * Reinicia el contador de reintentos SIR
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{idOficio}/reiniciar", method = RequestMethod.GET)
-    public String reiniciar(@PathVariable Long idOficio, HttpServletRequest request)throws Exception {
-
-        oficioRemisionEjb.reiniciarIntentos(idOficio);
-
-        Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
-
-        return "redirect:/sir/monitorEnviados";
     }
 
 }

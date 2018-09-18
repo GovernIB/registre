@@ -148,6 +148,13 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     List<Long> getEnviadosConError(Long idEntidad) throws Exception;
 
     /**
+     * Envía un mensaje ACK a partir de los datos de un RegistroSir
+     * @param idRegistroSir
+     * @throws Exception
+     */
+    Boolean enviarACK(Long idRegistroSir) throws Exception;
+
+    /**
      * Elimina los RegistroSir de una Entidad
      * @param idEntidad
      * @return

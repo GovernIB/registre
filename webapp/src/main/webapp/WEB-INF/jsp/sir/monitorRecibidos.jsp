@@ -25,6 +25,8 @@
             </div>
         </div><!-- /.row -->
 
+        <div id="mensajes"></div>
+
         <c:import url="../modulos/mensajes.jsp"/>
 
         <!-- BUSCADOR -->
@@ -219,6 +221,10 @@
                                                             <ul class="dropdown-menu dropdown">
                                                                 <li class="dropdown-submenu-left">
                                                                     <a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a>
+                                                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                                                        <a href="javascript:void(0);" onclick="enviarACK('${registroSir.id}')"><spring:message code="registroSir.enviar.ACK"/></a>
+                                                                    </c:if>
+
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -261,7 +267,14 @@
     $("[rel='errorSir']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
     $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
     $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+
+    var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
+    var tradsRegistroSir = [];
+    tradsRegistroSir['registroSir.ACK.enviado.ok'] = "<spring:message code='registroSir.ACK.enviado.ok' javaScriptEscape='true' />";
+    tradsRegistroSir['registroSir.ACK.enviado.error'] = "<spring:message code='registroSir.ACK.enviado.error' javaScriptEscape='true' />";
 </script>
+
+<script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
 
 </body>
 </html>

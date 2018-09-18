@@ -3,16 +3,18 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.*;
 import es.caib.regweb3.model.utils.*;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
-import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.sir.core.schema.*;
 import es.caib.regweb3.sir.core.schema.types.Documentacion_FisicaType;
 import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
+import es.caib.regweb3.sir.core.utils.Mensaje;
+import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import net.java.xades.security.xml.XMLSignatureElement;
@@ -77,6 +79,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB private MensajeLocal mensajeEjb;
 
 
     @Override
@@ -901,6 +904,28 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
 
         return  q.getResultList();
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean enviarACK(Long idRegistroSir) throws Exception{
+
+        RegistroSir registroSir = findById(idRegistroSir);
+
+        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
+
+            Mensaje mensaje = new Mensaje();
+            mensaje.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
+            mensaje.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralOrigen());
+            mensaje.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
+
+            mensajeEjb.enviarACK(mensaje);
+
+            return true;
+        }
+
+        return false;
 
     }
 
