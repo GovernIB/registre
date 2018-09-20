@@ -5,6 +5,20 @@
 
     <ul class="timeline">
 
+        <c:if test="${registroSir.tipoAnotacion == '03'}">
+            <li>
+                <div class="timeline-badge success"><i class="fa fa-send"></i></div>
+                <div class="timeline-panel">
+                    <div class="timeline-heading">
+                        <h4 class="timeline-title"><spring:message code="regweb.inicio"/>:</h4>
+                    </div>
+                    <div class="timeline-body">
+                        <p><small><i class="fa fa-home"></i> <strong><spring:message code="registroSir.oficinaInicio"/>:</strong> ${registroSir.decodificacionEntidadRegistralInicio} - ${registroSir.codigoEntidadRegistralInicio}</small></p>
+                    </div>
+                </div>
+            </li>
+        </c:if>
+
         <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
 
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_RECEPCION}">
