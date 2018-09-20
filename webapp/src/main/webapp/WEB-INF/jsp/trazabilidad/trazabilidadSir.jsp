@@ -4,7 +4,8 @@
 <div class="col-xs-12">
 
     <ul class="timeline">
-
+        
+        <%--El FicheroIntercambio recibido es un Reenvio--%>
         <c:if test="${registroSir.tipoAnotacion == '03'}">
             <li>
                 <div class="timeline-badge success"><i class="fa fa-send"></i></div>
