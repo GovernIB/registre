@@ -924,6 +924,14 @@ function actualizarTipoDocumentoIdentificacion(){
 
     if(tipoDocumento != ''){
         $('#documento').removeAttr("disabled","disabled");
+        if(tipoDocumento == 2){
+            $('#razonSocial').removeAttr("disabled","disabled");
+        }else{
+            $('#razonSocial').val('');
+            $('#razonSocialError').html('');
+            $('#razonSocial').parents(".form-group").removeClass("has-error");
+            $('#razonSocial').attr("disabled","disabled");
+        }
     }else{
         $('#documento').val('');
         $('#documento').attr("disabled","disabled");

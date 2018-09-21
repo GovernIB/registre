@@ -162,6 +162,11 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         Long tipoDocumento = interesado.getTipoDocumentoIdentificacion();
 
         if(tipoDocumento != null){
+            // Si TipoDocumento = CIF -> RazonSocial obligatoria
+            if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_CIF_ID && isNullOrEmpty(interesado.getRazonSocial())){
+                rejectValue(errors, "razonSocial", "error.valor.requerido", "El camp és obligatori");
+            }
+
             rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
         }
 
