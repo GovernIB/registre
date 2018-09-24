@@ -1120,27 +1120,35 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-    /** Método que elimina de custodia los anexos que se han enviado via SIR y han sido aceptados en destino.
-     *
-     * @param idRegistroDetalle
-     * @param idEntidad
-     * @throws Exception
-     * @throws I18NException
-     */
     @Override
-    public void eliminarAnexosCustodiaRegistroDetalle(Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException {
-        Query query = em.createQuery("select anexo.custodiaID, anexo.justificante from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle");
-        query.setParameter("idRegistroDetalle", idRegistroDetalle);
+    @SuppressWarnings(value = "unchecked")
+    public void purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException{
 
-        List<Object[]> result = query.getResultList();
-        for (Object[] object : result) {
-            boolean isJustificante = ((Boolean) object[1]).booleanValue();
-            String custodiaID = (String) object[0];
-            //Se borran todos los anexos menos el justificante
-            if (!isJustificante) {
-                eliminarCustodia(custodiaID, isJustificante, idEntidad);
-            }
+        //Obtenemos los anexos de los registros de entrada que han sido aceptados y que no han sido purgados
+        Query q = em.createQuery("Select anexos from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where re.estado=:aceptado and  re.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
+
+        q.setParameter("aceptado",RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+        q.setParameter("idEntidad",idEntidad);
+
+        List<Anexo> anexos = q.getResultList();
+
+        //Obtenemos los anexos de los registros de salida que han sido aceptados y que no han sido purgados
+        Query qs = em.createQuery("Select anexos from  RegistroSalida as rs left join rs.registroDetalle.anexos as anexos where rs.estado=:aceptado and  rs.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
+
+        qs.setParameter("aceptado",RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+        qs.setParameter("idEntidad",idEntidad);
+
+        anexos.addAll(qs.getResultList());
+
+
+        for(Anexo anexo:anexos){
+            //Eliminamos de custodia los archivos asociados al anexo
+            eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante(), idEntidad);
+            //Marcamos el anexo como purgado
+            anexo.setPurgado(true);
+            merge(anexo);
         }
+
     }
 
     @Override

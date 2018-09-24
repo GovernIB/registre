@@ -61,5 +61,12 @@ public interface SchedulerLocal {
      */
     void purgarAnexosDistribuidos() throws Exception;
 
+    /**
+     * Método que purga los anexos de los registros que se han enviado via SIR y han sido confirmados
+     * en destino.
+     * @throws Exception
+     */
+    void purgarAnexosRegistrosConfirmados() throws Exception;
+
 }
 

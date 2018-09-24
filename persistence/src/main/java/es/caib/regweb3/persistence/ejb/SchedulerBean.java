@@ -41,6 +41,12 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
+    private RegistroDetalleLocal registroDetalleEjb;
+
+    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    private OficioRemisionLocal oficioRemisionEjb;
+
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
@@ -201,6 +207,28 @@ public class SchedulerBean implements SchedulerLocal{
             log.error("Error purgando anexos distribuidos ...", e);
         } catch (I18NException ie){
             log.error("Error purgando anexos distribuidos ...", ie);
+        }
+    }
+
+    /**
+     * Método que purga los anexos de los registros que se han enviado via SIR y han sido confirmados en destino.
+     * @throws Exception
+     */
+    public void purgarAnexosRegistrosConfirmados() throws Exception{
+
+        try {
+
+            List<Entidad> entidades = entidadEjb.getAll();
+
+            for(Entidad entidad: entidades) {
+                anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId());
+            }
+
+
+        } catch (Exception e) {
+            log.error("Error purgando anexos enviados por sir y que han sido confirmados ...", e);
+        } catch (I18NException ie){
+            log.error("Error purgando anexos enviados por sir y que han sido confirmados...", ie);
         }
     }
 }

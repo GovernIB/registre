@@ -52,6 +52,14 @@ public class Regweb3Scheduler {
             log.info("-- Error Scheduler: purgando Anexos Distribuidos --");
             e.printStackTrace();
         }
+
+        try {
+            schedulerEjb.purgarAnexosRegistrosConfirmados();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: purgando Anexos de registros enviados por Sir y que han sido confirmados --");
+            e.printStackTrace();
+        }
     }
 
     /**
