@@ -1,9 +1,9 @@
 package es.caib.regweb3.sir.ws.wssir8b.impl;
 
 
+import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
-import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.ws.ejb.RecepcionLocal;
 import es.caib.regweb3.sir.ws.wssir8b.RespuestaWS;
 import es.caib.regweb3.sir.ws.wssir8b.WS_SIR8_B_PortType;
@@ -90,7 +90,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
         }catch (Exception e){
 
             if(e.getMessage().equals(Errores.ERROR_0037.getName()) || e.getMessage().equals(Errores.ERROR_COD_ENTIDAD_INVALIDO.getName())){ //Error de validación
-                log.info("Error de validacion en el Fichero de Intercambio", e);
+                log.info("Error de validacion en el Fichero de Intercambio: " + e.getLocalizedMessage());
                 respuestaWS = crearRespuestaWS(Errores.ERROR_0037);
             }else{
                 log.info("Error inesperado recibiendo en el Fichero de Intercambio", e);
@@ -98,7 +98,7 @@ public class WS_SIR8_BImpl implements WS_SIR8_B_PortType {
             }
         }
 
-        log.info("Respuesta envioFichero: " + respuestaWS.getCodigo() +" - "+ respuestaWS.getDescripcion());
+        //log.info("Respuesta envioFichero: " + respuestaWS.getCodigo() +" - "+ respuestaWS.getDescripcion());
 
         return respuestaWS;
     }
