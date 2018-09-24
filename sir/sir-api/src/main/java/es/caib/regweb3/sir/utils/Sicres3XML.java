@@ -1925,7 +1925,7 @@ public class Sicres3XML {
     }
 
     /**
-     * Convierte el xml recibido en un {@link es.caib.regweb3.sir.core.utils.Mensaje}
+     * Convierte el xml recibido en un {@link es.caib.regweb3.model.sir.MensajeControl}
      * @param xml
      * @return
      */
