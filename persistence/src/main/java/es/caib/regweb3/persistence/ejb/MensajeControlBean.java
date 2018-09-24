@@ -185,6 +185,10 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
             throw new ValidacionException(Errores.ERROR_0037, "El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
         }
 
+        // Guardar el mensaje
+        mensaje.setEntidad(entidad);
+        persist(mensaje);
+
         // Integración
         integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
 
