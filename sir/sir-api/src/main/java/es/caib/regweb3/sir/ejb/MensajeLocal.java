@@ -1,8 +1,8 @@
 package es.caib.regweb3.sir.ejb;
 
 import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 
 import javax.ejb.Local;
 
@@ -18,23 +18,23 @@ public interface MensajeLocal {
      * @param registroSir
      * @param numeroRegistro
      */
-    void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro);
+    MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro);
 
     /**
      *
      * @param ficheroIntercambio
      */
-    void enviarACK(FicheroIntercambio ficheroIntercambio);
+    MensajeControl enviarACK(FicheroIntercambio ficheroIntercambio);
 
     /**
      *
      * @param mensaje
      */
-    void enviarACK(Mensaje mensaje);
+    MensajeControl enviarACK(MensajeControl mensaje);
 
     /**
      *
      * @param mensaje
      */
-    void enviarMensajeError(Mensaje mensaje);
+    MensajeControl enviarMensajeError(MensajeControl mensaje);
 }

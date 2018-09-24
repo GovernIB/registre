@@ -1,7 +1,7 @@
 package es.caib.regweb3.sir.core.utils;
 
+import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
-import es.caib.regweb3.sir.core.model.TipoMensaje;
 
 import java.util.Date;
 import java.util.List;
@@ -66,12 +66,8 @@ public class Mensaje {
      */
     private String codigoError;
 
-    /**
-     * Constructor.
-     */
-    public Mensaje() {
-        super();
-    }
+
+    public Mensaje() { }
 
     public String getCodigoEntidadRegistralOrigen() {
         return codigoEntidadRegistralOrigen;

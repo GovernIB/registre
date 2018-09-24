@@ -152,13 +152,25 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws Exception {
 
-        Query q = em.createQuery("Select tra.registroEntradaDestino from Trazabilidad as tra " +
+        Query q = em.createQuery("Select tra.registroEntradaDestino.id, tra.registroEntradaDestino.numeroRegistroFormateado  from Trazabilidad as tra " +
                 "where tra.registroSir.id = :registroSir and tra.registroSir.estado = :aceptado");
 
         q.setParameter("registroSir", idRegistroSir);
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
 
-        return (RegistroEntrada) q.getSingleResult();
+        List<Object[]> result = q.getResultList();
+
+        if(result.size() == 1){
+            Object[] object = result.get(0);
+
+            RegistroEntrada registroEntrada = new RegistroEntrada();
+            registroEntrada.setId((Long)  object[0]);
+            registroEntrada.setNumeroRegistroFormateado((String) object[1]);
+
+            return registroEntrada;
+        }
+
+        return null;
     }
 
     @Override

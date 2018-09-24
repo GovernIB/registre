@@ -45,6 +45,9 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
     private ArchivoLocal archivoEjb;
 
+    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
+    private SirEnvioLocal sirEnvioEjb;
+
     /**
      * Listado de oficios de remisión sir enviados
      *
@@ -210,7 +213,7 @@ public class SirController extends BaseController {
     public Boolean enviarACK(@RequestParam Long idRegistroSir, HttpServletRequest request)throws Exception {
 
         try{
-            return registroSirEjb.enviarACK(idRegistroSir);
+            return sirEnvioEjb.enviarACK(idRegistroSir);
         }catch (Exception e){
             e.printStackTrace();
         }

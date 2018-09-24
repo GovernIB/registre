@@ -62,3 +62,24 @@ alter table rwe_anexo add ESTADOFIRMA int8  DEFAULT 0;
 --Nuevos campos eliminar anexos distribuidos
 alter table rwe_anexo add PURGADO bool default false;
 alter table rwe_anexo_sir add PURGADO bool default false;
+
+--Nueva Tabla RWE_MENSAJE_CONTROL
+create table RWE_MENSAJE_CONTROL (
+        ID int8 not null,
+        COD_ENT_REG_DEST varchar(21) not null,
+        COD_ENT_REG_ORI varchar(21) not null,
+        COD_ERROR varchar(4),
+        DESCRIPCION varchar(1024),
+        FECHA timestamp,
+        FECHA_DESTINO timestamp,
+        ID_INTERCAMBIO varchar(33) not null,
+        INDICADOR_PRUEBA int4 not null,
+        NUM_REG_DESTINO varchar(20),
+        TIPO_MENSAJE varchar(2) not null,
+        ENTIDAD int8 not null,
+        primary key (ID)
+    );
+alter table RWE_MENSAJE_CONTROL
+        add constraint RWE_MC_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;

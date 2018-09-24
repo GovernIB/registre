@@ -34,6 +34,13 @@ public interface SirEnvioLocal {
             throws Exception, I18NException, I18NValidationException;
 
     /**
+     * Envía un mensaje ACK a partir de los datos de un RegistroSir
+     * @param idRegistroSir
+     * @throws Exception
+     */
+    Boolean enviarACK(Long idRegistroSir) throws Exception;
+
+    /**
      * Renintenta los envíos a SIR que pendientes de llegar a destino.
      * @param idEntidad
      * @throws Exception

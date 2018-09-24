@@ -3,17 +3,17 @@ package es.caib.regweb3.sir.ws.ejb;
 import es.caib.regweb3.model.AnexoSir;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.Errores;
+import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.model.sir.TipoAnotacion;
+import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
+import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
-import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.model.TipoAnotacion;
-import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
@@ -40,7 +40,6 @@ public class RecepcionBean implements RecepcionLocal{
 
     private Sicres3XML sicres3XML = new Sicres3XML();
 
-
     private String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO
     private final String Codigo_Entidad_Registral_Destino_Xpath = "//Codigo_Entidad_Registral_Destino/text()";
     private final String Codigo_Entidad_Registral_Origen_Xpath = "//Codigo_Entidad_Registral_Origen/text()";
@@ -55,10 +54,10 @@ public class RecepcionBean implements RecepcionLocal{
      */
     public void recibirFicheroIntercambio(String xmlFicheroIntercambio, WebServicesMethodsLocal webServicesMethodsEjb) throws Exception {
 
-        RegistroSir registroSir = null;
+        RespuestaRecepcionSir respuesta = null;
         Entidad entidad = null;
         FicheroIntercambio ficheroIntercambio = null;
-        Mensaje mensajeError = null;
+        MensajeControl mensajeError = null;
         StringBuilder peticion = new StringBuilder();
         String descripcion = "Recepción FicheroIntercambio: ";
         long tiempo = System.currentTimeMillis();
@@ -80,25 +79,28 @@ public class RecepcionBean implements RecepcionLocal{
 
                 sicres3XML.validarFicheroIntercambio(ficheroIntercambio, webServicesMethodsEjb.getObtenerOficinasService(), webServicesMethodsEjb.getObtenerUnidadesService(), webServicesMethodsEjb.getFormatosAnexosSir());
             } catch (IllegalArgumentException e) {
-                log.info("Se produjo un error de validacion del xml recibido: " + e.getMessage());
+                log.info("ERROR DE VALIDACION DEL XML RECIBIDO: " + e.getLocalizedMessage());
                 throw new ValidacionException(Errores.ERROR_0037, e.getMessage(), e);
             }
 
-            // Creamos el RegistroSir a partir del xml recibido y validado
-            registroSir = webServicesMethodsEjb.recibirFicheroIntercambio(ficheroIntercambio);
+            // Procesamos el xml de intercambio recibido y validado
+            respuesta = webServicesMethodsEjb.procesarFicheroIntercambio(ficheroIntercambio);
 
-            if (registroSir != null){ // Enviamos el ack si se ha creado un RegistroSir
-                mensajeEjb.enviarACK(ficheroIntercambio);
+            // Enviamos el ack
+            if(respuesta.getAck()){
+                MensajeControl mensajeACK = mensajeEjb.enviarACK(ficheroIntercambio);
+                mensajeACK.setEntidad(entidad);
+                webServicesMethodsEjb.guardarMensajeControl(mensajeACK);
             }
 
         }catch (ValidacionException e) {
-            log.info("Error de validacion: " + e.getMensajeError());
             Errores errorValidacion = e.getErrorValidacion();
             String descripcionError = e.getMensajeError();
 
+            // Error de validación que permite crear un Mensaje de Error
             if(ficheroIntercambio != null && (!descripcionError.contains("CodigoEntidadRegistralOrigen") && !descripcionError.contains("CodigoEntidadRegistralDestino") && !descripcionError.contains("IdentificadorIntercambio"))){
-                mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError);
-                enviarMensajeError(mensajeError);
+                mensajeError = crearMensajeError(ficheroIntercambio, errorValidacion.getValue(), descripcionError, entidad);
+                enviarMensajeError(mensajeError, webServicesMethodsEjb);
 
                 // Integración
                 if(entidad != null){
@@ -111,9 +113,10 @@ public class RecepcionBean implements RecepcionLocal{
                     webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e,descripcionError, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
+            // Error de validación en algún campo que complica la creación de un Mensaje de Error
             }else if(ficheroIntercambio == null && !Errores.ERROR_COD_ENTIDAD_INVALIDO.getValue().equals(errorValidacion.getValue())){
                 mensajeError = parserForError(xmlFicheroIntercambio, errorValidacion.getValue(), descripcionError);
-                enviarMensajeError(mensajeError);
+                enviarMensajeError(mensajeError, webServicesMethodsEjb);
             }else{
                 log.info("El error de validacion afecta a campos necesarios para componer el mensaje de error, no se podra enviar");
             }
@@ -126,14 +129,14 @@ public class RecepcionBean implements RecepcionLocal{
             log.info("");
 
             if(ficheroIntercambio != null){
-                mensajeError = crearMensajeError(ficheroIntercambio, errorGenerico, e.getMessage());
-                enviarMensajeError(mensajeError);
+                mensajeError = crearMensajeError(ficheroIntercambio, errorGenerico, e.getMessage(), entidad);
+                enviarMensajeError(mensajeError, webServicesMethodsEjb);
             }
 
             // Eliminamos los posibles archivos creados en filesystem del RegistroSir
-            if(registroSir != null){
-                log.info("RuntimeException, eliminamos los archivosen filesystem de los anexosSir creados: ");
-                for(AnexoSir anexoSir: registroSir.getAnexos()){
+            if(respuesta.getRegistroSir() != null){
+                log.info("RuntimeException, eliminamos los archivos en filesystem de los anexosSir creados: ");
+                for(AnexoSir anexoSir: respuesta.getRegistroSir().getAnexos()){
                     FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
                     log.info("Eliminamos archivo: " + anexoSir.getAnexo().getId());
                 }
@@ -164,7 +167,7 @@ public class RecepcionBean implements RecepcionLocal{
     public void recibirMensajeDatosControl(String xmlMensaje, WebServicesMethodsLocal webServicesMethodsEjb){
 
         // Parseamos el mensaje xml
-        Mensaje mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
+        MensajeControl mensaje = sicres3XML.parseXMLMensaje(xmlMensaje);
 
         // Validamos el mensaje recibido
         sicres3XML.validarMensaje(mensaje);
@@ -173,7 +176,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         try {
 
-            webServicesMethodsEjb.recibirMensajeDatosControl(mensaje);
+            webServicesMethodsEjb.procesarMensajeDatosControl(mensaje);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,15 +191,19 @@ public class RecepcionBean implements RecepcionLocal{
      *
      * @param mensaje
      */
-    private void enviarMensajeError(Mensaje mensaje){
+    private void enviarMensajeError(MensajeControl mensaje, WebServicesMethodsLocal webServicesMethodsEjb){
 
         try {
 
             mensajeEjb.enviarMensajeError(mensaje);
+            webServicesMethodsEjb.guardarMensajeControl(mensaje);
 
         }catch (RuntimeException ex) {
             // Comprobamos una posible excepción al no disponer de los datos necesarios para enviar los mensajes
-            log.info("No es posible enviar el mensaje de Error, posiblemente por falta de campos minimos requeridos", ex);
+            log.info("No es posible enviar o guardar el mensaje de Error, posiblemente por falta de campos minimos requeridos", ex);
+        } catch (Exception e) {
+            log.info("No es posible enviar o guardar el mensaje de Error, posiblemente por falta de campos minimos requeridos", e);
+            e.printStackTrace();
         }
 
     }
@@ -206,16 +213,17 @@ public class RecepcionBean implements RecepcionLocal{
      * @param ficheroIntercambio
      * @return
      */
-    private Mensaje crearMensajeError(FicheroIntercambio ficheroIntercambio, String codigoError, String descripcionError) {
+    private MensajeControl crearMensajeError(FicheroIntercambio ficheroIntercambio, String codigoError, String descripcionError, Entidad entidad) {
 
-        Mensaje mensaje = new Mensaje();
+        MensajeControl mensaje = new MensajeControl();
 
         mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
         mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
         mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
-        mensaje.setTipoMensaje(TipoMensaje.ERROR);
+        mensaje.setTipoMensaje(TipoMensaje.ERROR.getValue());
         mensaje.setCodigoError(codigoError);
         mensaje.setDescripcionMensaje(descripcionError);
+        mensaje.setEntidad(entidad);
 
         return mensaje;
 
@@ -226,11 +234,11 @@ public class RecepcionBean implements RecepcionLocal{
      * @param xml
      * @return
      */
-    private Mensaje parserForError(String xml, String codigoError, String descripcionError) {
+    private MensajeControl parserForError(String xml, String codigoError, String descripcionError) {
 
         log.info("Intentamos parsear el xml recibido para enviar el mensaje de Error");
 
-        Mensaje mensaje = new Mensaje();
+        MensajeControl mensaje = new MensajeControl();
 
         XPathReaderUtil reader = null;
         // procesamos el xml para procesar las peticiones xpath
@@ -250,7 +258,7 @@ public class RecepcionBean implements RecepcionLocal{
             mensaje.setCodigoEntidadRegistralOrigen(codigoEntidadRegistralDestino.getNodeValue());
             mensaje.setCodigoEntidadRegistralDestino(codigoEntidadRegistralOrigen.getNodeValue());
             mensaje.setIdentificadorIntercambio(identificadorIntercambio.getNodeValue());
-            mensaje.setTipoMensaje(TipoMensaje.ERROR);
+            mensaje.setTipoMensaje(TipoMensaje.ERROR.getValue());
             mensaje.setCodigoError(codigoError);
             mensaje.setDescripcionMensaje(descripcionError);
 

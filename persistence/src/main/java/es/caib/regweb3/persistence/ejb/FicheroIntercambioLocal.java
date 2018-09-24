@@ -1,8 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -15,22 +14,14 @@ import javax.ejb.Local;
  */
 @Local
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
-public interface SirRecepcionLocal {
+public interface FicheroIntercambioLocal {
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      * @param ficheroIntercambio
      * @throws Exception
      */
-    RegistroSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
-
-    /**
-     * Realiza las acciones pertinentes cuando se recibie un mensaje de control
-     *
-     * @param mensaje
-     * @throws Exception
-     */
-    void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
+    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
 
 }
 

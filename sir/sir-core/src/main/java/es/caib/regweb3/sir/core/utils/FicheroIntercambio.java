@@ -1,8 +1,8 @@
 package es.caib.regweb3.sir.core.utils;
 
+import es.caib.regweb3.model.sir.TipoAnotacion;
+import es.caib.regweb3.model.sir.TipoTransporte;
 import es.caib.regweb3.model.utils.TipoRegistro;
-import es.caib.regweb3.sir.core.model.TipoAnotacion;
-import es.caib.regweb3.sir.core.model.TipoTransporte;
 import es.caib.regweb3.sir.core.schema.De_Internos_Control;
 import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;

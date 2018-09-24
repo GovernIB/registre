@@ -13,7 +13,6 @@ import es.caib.regweb3.sir.core.schema.types.Documentacion_FisicaType;
 import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -904,28 +903,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
 
         return  q.getResultList();
-
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Boolean enviarACK(Long idRegistroSir) throws Exception{
-
-        RegistroSir registroSir = findById(idRegistroSir);
-
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
-
-            Mensaje mensaje = new Mensaje();
-            mensaje.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
-            mensaje.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralOrigen());
-            mensaje.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
-
-            mensajeEjb.enviarACK(mensaje);
-
-            return true;
-        }
-
-        return false;
 
     }
 

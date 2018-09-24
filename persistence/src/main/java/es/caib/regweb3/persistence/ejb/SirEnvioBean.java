@@ -4,12 +4,13 @@ import es.caib.dir3caib.ws.api.oficina.ContactoTF;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.model.sir.TipoAnotacion;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.sir.core.model.TipoAnotacion;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -48,6 +49,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private JustificanteLocal justificanteEjb;
     @EJB private EmisionLocal emisionEjb;
     @EJB private MensajeLocal mensajeEjb;
+    @EJB private MensajeControlLocal mensajeControlEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
@@ -292,7 +294,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
             // Enviamos el Mensaje de Confirmación
-            mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
+            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
+            confirmacion.setEntidad(registroSir.getEntidad());
+            mensajeControlEjb.persist(confirmacion);
 
             // Integracion
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -603,6 +607,31 @@ public class SirEnvioBean implements SirEnvioLocal {
             throw e;
 
         }
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean enviarACK(Long idRegistroSir) throws Exception{
+
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+
+        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
+
+            MensajeControl mensaje = new MensajeControl();
+            mensaje.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
+            mensaje.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralOrigen());
+            mensaje.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
+            mensaje.setEntidad(registroSir.getEntidad());
+
+            mensaje = mensajeEjb.enviarACK(mensaje);
+
+            mensajeControlEjb.persist(mensaje);
+
+            return true;
+        }
+
+        return false;
 
     }
 

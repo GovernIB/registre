@@ -1,11 +1,11 @@
 package es.caib.regweb3.sir.ejb;
 
 import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.Errores;
+import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.core.model.Errores;
-import es.caib.regweb3.sir.core.model.TipoMensaje;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
@@ -33,22 +33,20 @@ public class MensajeBean implements MensajeLocal {
      *
      * @param numeroRegistro Información del RegistroSir
      */
-    public void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro) {
+    public MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro) {
 
         log.info("Enviando Mensaje de confirmación del RegistroSir: " + registroSir.getIdentificadorIntercambio());
 
-        Mensaje confirmacion = new Mensaje();
+        MensajeControl confirmacion = new MensajeControl();
         confirmacion.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
         confirmacion.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
         confirmacion.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
-        confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION);
+        confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION.getValue());
         confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
         confirmacion.setNumeroRegistroEntradaDestino(numeroRegistro);
         confirmacion.setFechaEntradaDestino(new Date());
 
-        enviarMensaje(confirmacion);
-
-        log.info("Mensaje de confirmacion enviado");
+        return enviarMensaje(confirmacion);
     }
 
     /**
@@ -56,19 +54,18 @@ public class MensajeBean implements MensajeLocal {
      *
      * @param ficheroIntercambio Información del RegistroSir.
      */
-    public void enviarACK(FicheroIntercambio ficheroIntercambio) {
+    public MensajeControl enviarACK(FicheroIntercambio ficheroIntercambio) {
 
-        Mensaje mensaje = new Mensaje();
+        log.info("Enviando Mensaje ACK: " + ficheroIntercambio.getIdentificadorIntercambio());
+
+        MensajeControl mensaje = new MensajeControl();
         mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
         mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
         mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
-        mensaje.setTipoMensaje(TipoMensaje.ACK);
+        mensaje.setTipoMensaje(TipoMensaje.ACK.getValue());
         mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
 
-
-        enviarMensaje(mensaje);
-
-        log.info("Mensaje de control (ACK) enviado");
+        return enviarMensaje(mensaje);
     }
 
     /**
@@ -76,14 +73,14 @@ public class MensajeBean implements MensajeLocal {
      *
      * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
      */
-    public void enviarACK(Mensaje mensaje) {
+    public MensajeControl enviarACK(MensajeControl mensaje) {
 
-        mensaje.setTipoMensaje(TipoMensaje.ACK);
+        log.info("Enviando Mensaje ACK: " + mensaje.getIdentificadorIntercambio());
+
+        mensaje.setTipoMensaje(TipoMensaje.ACK.getValue());
         mensaje.setDescripcionMensaje(TipoMensaje.ACK.getName());
 
-        enviarMensaje(mensaje);
-
-        log.info("Mensaje de control (ACK) enviado");
+        return enviarMensaje(mensaje);
     }
 
     /**
@@ -92,15 +89,12 @@ public class MensajeBean implements MensajeLocal {
      * @param mensaje Campos del mensaje obtenidos del FicheroIntercambio recibido
 
      */
-    public void enviarMensajeError(Mensaje mensaje) {
+    public MensajeControl enviarMensajeError(MensajeControl mensaje) {
 
-        enviarMensaje(mensaje);
-
-        log.info("Mensaje de control (ERROR) enviado");
-
+        return enviarMensaje(mensaje);
     }
 
-    private void enviarMensaje(Mensaje mensaje) {
+    private MensajeControl enviarMensaje(MensajeControl mensaje) {
 
         sicres3XML.validarMensaje(mensaje);
 
@@ -109,7 +103,7 @@ public class MensajeBean implements MensajeLocal {
         // Crear el XML del mensaje en formato SICRES 3.0
         String xml = sicres3XML.createXMLMensaje(mensaje);
 
-        log.info("Mensaje a ws_sir7: " + xml);
+        //log.info("Mensaje a ws_sir7: " + xml);
 
         try {
             WS_SIR7_PortType ws_sir7 = getWS_SIR7();
@@ -132,6 +126,10 @@ public class MensajeBean implements MensajeLocal {
             }
 
         }
+
+        log.info("Mensaje de control (" + mensaje.getDescripcionMensaje()+ ") enviado correctamente");
+
+        return mensaje;
     }
 
     /**

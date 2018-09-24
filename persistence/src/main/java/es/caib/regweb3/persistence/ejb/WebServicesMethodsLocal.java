@@ -3,9 +3,9 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 
 import javax.ejb.Local;
 
@@ -22,14 +22,21 @@ public interface WebServicesMethodsLocal {
      * @param mensaje
      * @throws Exception
      */
-    void recibirMensajeDatosControl(Mensaje mensaje) throws Exception;
+    void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception;
 
     /**
      * Recibe un fichero de intercambio en formato SICRES3 desde un nodo distribuido
      * @param ficheroIntercambio
      * @throws Exception
      */
-    RegistroSir recibirFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+    RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception;
+
+    /**
+     * Guarda un nuevo Mensaje de Control
+     * @param mensajeControl
+     * @throws Exception
+     */
+    void guardarMensajeControl(MensajeControl mensajeControl) throws Exception;
 
     /**
      *

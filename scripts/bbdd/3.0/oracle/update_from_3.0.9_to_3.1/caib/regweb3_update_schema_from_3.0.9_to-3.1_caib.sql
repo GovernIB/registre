@@ -72,3 +72,25 @@ alter table rwe_anexo add (ESTADOFIRMA number(19,0) DEFAULT 0);
 --Nuevos campos eliminar anexos
 alter table rwe_anexo add (PURGADO number(1,0) default 0);
 alter table rwe_anexo_sir add (PURGADO number(1,0) default 0);
+
+--Nueva Tabla RWE_MENSAJE_CONTROL
+create table RWE_MENSAJE_CONTROL (
+        ID number(19,0) not null,
+        COD_ENT_REG_DEST varchar2(21 char) not null,
+        COD_ENT_REG_ORI varchar2(21 char) not null,
+        COD_ERROR varchar2(4 char),
+        DESCRIPCION varchar2(1024 char),
+        FECHA timestamp,
+        FECHA_DESTINO timestamp,
+        ID_INTERCAMBIO varchar2(33 char) not null,
+        INDICADOR_PRUEBA number(10,0) not null,
+        NUM_REG_DESTINO varchar2(20 char),
+        TIPO_MENSAJE varchar2(2 char) not null,
+        ENTIDAD number(19,0) not null
+    );
+alter table RWE_MENSAJE_CONTROL add constraint RWE_MENSAJE_CONTROL_pk primary key (ID);
+alter table RWE_MENSAJE_CONTROL
+        add constraint RWE_MC_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;
+grant select,insert,delete,update on RWE_MENSAJE_CONTROL to www_regweb;

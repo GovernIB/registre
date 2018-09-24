@@ -34,6 +34,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.Interesado</class>
         <class>es.caib.regweb3.model.Libro</class>
         <class>es.caib.regweb3.model.Lopd</class>
+        <class>es.caib.regweb3.model.sir.MensajeControl</class>
         <class>es.caib.regweb3.model.ModeloOficioRemision</class>
         <class>es.caib.regweb3.model.ModeloRecibo</class>
         <class>es.caib.regweb3.model.ModificacionLopdMigrado</class>

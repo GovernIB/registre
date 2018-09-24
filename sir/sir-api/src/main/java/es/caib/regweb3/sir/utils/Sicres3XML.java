@@ -5,12 +5,12 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
-import es.caib.regweb3.sir.core.model.*;
 import es.caib.regweb3.sir.core.schema.De_Anexo;
 import es.caib.regweb3.sir.core.schema.De_Interesado;
 import es.caib.regweb3.sir.core.schema.De_Mensaje;
@@ -18,7 +18,6 @@ import es.caib.regweb3.sir.core.schema.Fichero_Intercambio_SICRES_3;
 import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.utils.Assert;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.core.utils.Mensaje;
 import es.caib.regweb3.utils.MimeTypeUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.Versio;
@@ -650,7 +649,7 @@ public class Sicres3XML {
      * Valida un Mensaje de Control recibido o que va a ser enviado
      * @param mensaje
      */
-    public void validarMensaje(Mensaje mensaje) {
+    public void validarMensaje(MensajeControl mensaje) {
 
         Assert.notNull(mensaje, "El campo 'mensaje' no puede ser null");
 
@@ -1872,7 +1871,7 @@ public class Sicres3XML {
      * @param mensaje Información del mensaje.
      * @return XML de mensaje en formato SICRES 3.0
      */
-    public String createXMLMensaje(Mensaje mensaje) {
+    public String createXMLMensaje(MensajeControl mensaje) {
 
         Assert.notNull(mensaje, "La variable 'mensaje' no puede ser null");
 
@@ -1907,7 +1906,7 @@ public class Sicres3XML {
 
             // Tipo de mensaje
             if (mensaje.getTipoMensaje() != null) {
-                msg.setTipo_Mensaje(mensaje.getTipoMensaje().getValue());
+                msg.setTipo_Mensaje(mensaje.getTipoMensaje());
             }
 
             // Indicador de prueba
@@ -1930,9 +1929,9 @@ public class Sicres3XML {
      * @param xml
      * @return
      */
-    public Mensaje parseXMLMensaje(String xml) {
+    public MensajeControl parseXMLMensaje(String xml) {
 
-        Mensaje mensaje = null;
+        MensajeControl mensaje = null;
 
         try {
 
@@ -1941,7 +1940,7 @@ public class Sicres3XML {
 
             if (de_mensaje != null) {
 
-                mensaje = new Mensaje();
+                mensaje = new MensajeControl();
                 mensaje.setCodigoEntidadRegistralOrigen(de_mensaje.getCodigo_Entidad_Registral_Origen());
                 mensaje.setCodigoEntidadRegistralDestino(de_mensaje.getCodigo_Entidad_Registral_Destino());
                 mensaje.setIdentificadorIntercambio(de_mensaje.getIdentificador_Intercambio());
@@ -1964,7 +1963,7 @@ public class Sicres3XML {
                 // Tipo de mensaje
                 String tipoMensaje = de_mensaje.getTipo_Mensaje();
                 if (StringUtils.isNotBlank(tipoMensaje)) {
-                    mensaje.setTipoMensaje(TipoMensaje.getTipoMensaje(tipoMensaje));
+                    mensaje.setTipoMensaje(tipoMensaje);
                 }
 
                 // Indicador de prueba

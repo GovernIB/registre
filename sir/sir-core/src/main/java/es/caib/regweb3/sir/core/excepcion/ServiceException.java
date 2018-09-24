@@ -1,6 +1,6 @@
 package es.caib.regweb3.sir.core.excepcion;
 
-import es.caib.regweb3.sir.core.model.Errores;
+import es.caib.regweb3.model.sir.Errores;
 
 /**
  * Created by earrivi on 14/01/2016.

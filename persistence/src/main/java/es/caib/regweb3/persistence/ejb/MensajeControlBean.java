@@ -1,0 +1,441 @@
+package es.caib.regweb3.persistence.ejb;
+
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.OficioRemision;
+import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.Errores;
+import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.model.sir.TipoMensaje;
+import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.sir.core.excepcion.ValidacionException;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.log4j.Logger;
+import org.jboss.ejb3.annotation.SecurityDomain;
+
+import javax.ejb.EJB;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Created by Fundació BIT.
+ *
+ * @author earrivi
+ * Date: 06/03/18
+ */
+
+@Stateless(name = "MensajeControlEJB")
+@SecurityDomain("seycon")
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> implements MensajeControlLocal{
+
+    protected final Logger log = Logger.getLogger(getClass());
+
+    @PersistenceContext(unitName="regweb3")
+    private EntityManager em;
+
+    @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
+    @EJB private IntegracionLocal integracionEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private AnexoLocal anexoEjb;
+    @EJB private OficinaLocal oficinaEjb;
+
+
+    @Override
+    public MensajeControl getReference(Long id) throws Exception {
+
+        return em.getReference(MensajeControl.class, id);
+    }
+
+    @Override
+    public MensajeControl findById(Long id) throws Exception {
+
+        return em.find(MensajeControl.class, id);
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<MensajeControl> getAll() throws Exception {
+
+        return  em.createQuery("Select mc from MensajeControl as mc order by mc.id").getResultList();
+    }
+
+    @Override
+    public Long getTotal() throws Exception {
+
+        Query q = em.createQuery("Select count(mc.id) from MensajeControl as mc");
+
+        return (Long) q.getSingleResult();
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<MensajeControl> getPagination(int inicio) throws Exception {
+
+        Query q = em.createQuery("Select mc from MensajeControl as mc order by mc.id");
+        q.setFirstResult(inicio);
+        q.setMaxResults(RESULTADOS_PAGINACION);
+
+        return q.getResultList();
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<MensajeControl> getByEntidad(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select mc from MensajeControl as mc where mc.entidad.id = :idEntidad order by mc.id");
+        q.setParameter("idEntidad",idEntidad);
+
+        return q.getResultList();
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<MensajeControl> getByIdentificadorIntercambio(String identificadorIntercambio, Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select mc from MensajeControl as mc where " +
+                "mc.entidad.id = :idEntidad and mc.identificadorIntercambio =:identificadorIntercambio order by mc.id");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("identificadorIntercambio",identificadorIntercambio);
+
+        return q.getResultList();
+
+    }
+
+    /**
+     * Realiza las acciones pertinentes cuando se recibie un mensaje de control
+     * @param mensaje
+     * @throws Exception
+     */
+    @Override
+    public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception{
+
+        // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
+        Entidad entidad = comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Recepción MensajeControl: " + TipoMensaje.getTipoMensaje(mensaje.getTipoMensaje()).getName();
+        peticion.append("IdentificadorIntercambio: ").append(mensaje.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(mensaje.getCodigoEntidadRegistralOrigen()).append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(mensaje.getCodigoEntidadRegistralDestino()).append(System.getProperty("line.separator"));
+        peticion.append("Descripcion: ").append(mensaje.getDescripcionMensaje()).append(System.getProperty("line.separator"));
+
+        // Mensaje ACK
+        if(mensaje.getTipoMensaje().equals(TipoMensaje.ACK.getValue())){
+
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
+            RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
+
+            if(oficioRemision != null){
+                procesarMensajeACK(oficioRemision);
+            }else if(registroSir != null){
+                procesarMensajeACK(registroSir);
+            }else{
+                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+                throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+            }
+
+            // Mensaje CONFIRMACIÓN
+        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
+
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
+
+            if(oficioRemision != null){
+                procesarMensajeCONFIRMACION(oficioRemision, mensaje);
+            }else{
+                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+                throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+            }
+
+
+            // Mensaje ERROR
+        }else if(mensaje.getTipoMensaje().equals(TipoMensaje.ERROR.getValue())){
+
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(mensaje.getIdentificadorIntercambio(), mensaje.getCodigoEntidadRegistralDestino());
+            RegistroSir registroSir = registroSirEjb.getRegistroSir(mensaje.getIdentificadorIntercambio(),mensaje.getCodigoEntidadRegistralDestino());
+
+            peticion.append("CodigoError: ").append(mensaje.getCodigoError()).append(System.getProperty("line.separator"));
+
+            if(oficioRemision != null){
+                procesarMensajeERROR(oficioRemision, mensaje);
+            }else if(registroSir != null){
+                procesarMensajeERROR(registroSir, mensaje);
+            }else{
+                log.info("El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+                throw new ValidacionException(Errores.ERROR_0037, "El mensaje de control corresponde a un IdentificadorIntercambio que no existe en el sistema");
+            }
+
+        }else{
+            log.info("El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
+            throw new ValidacionException(Errores.ERROR_0037, "El tipo mensaje de control no es válido: " + mensaje.getTipoMensaje());
+        }
+
+        // Integración
+        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
+
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ACK
+     * @param oficioRemision
+     * @throws Exception
+     */
+    private void procesarMensajeACK(OficioRemision oficioRemision) throws Exception{
+
+        switch (oficioRemision.getEstado()) {
+
+            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+
+                // Actualizamos el OficioRemision
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+
+                break;
+
+            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+
+                // Actualizamos el OficioRemision
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ACK);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+
+                break;
+
+            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+
+                log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+
+                break;
+
+            default:
+                log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ACK
+     * @param registroSir
+     * @throws Exception
+     */
+    private void procesarMensajeACK(RegistroSir registroSir) throws Exception{
+
+        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+
+            // Actualizamos el registroSir
+            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
+            registroSir.setFechaEstado(new Date());
+            registroSirEjb.merge(registroSir);
+
+        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
+
+            // Actualizamos el registroSir
+            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ACK);
+            registroSir.setFechaEstado(new Date());
+            registroSirEjb.merge(registroSir);
+
+        } else if (EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado()) ||
+                EstadoRegistroSir.RECHAZADO_Y_ACK.equals(registroSir.getEstado())){
+
+            log.info("Se ha recibido un mensaje ACK duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+
+        }else{
+            log.info("Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje que no tiene el estado adecuado para recibir un ACK");
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo CONFIRMACION
+     * @param oficioRemision
+     * @throws Exception
+     */
+    private void procesarMensajeCONFIRMACION(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception{
+
+        switch (oficioRemision.getEstado()) {
+
+            case RegwebConstantes.OFICIO_SIR_ENVIADO:
+            case RegwebConstantes.OFICIO_SIR_ENVIADO_ACK:
+            case RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO_ACK:
+            case RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR:
+
+                oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+                oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+                oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
+                oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
+                oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
+                oficioRemisionEjb.merge(oficioRemision);
+
+                // Marcamos el Registro original como ACEPTADO
+                if (oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
+                    registroEntradaEjb.cambiarEstado(oficioRemision.getRegistrosEntrada().get(0).getId(), RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+
+                }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+                    registroSalidaEjb.cambiarEstado(oficioRemision.getRegistrosSalida().get(0).getId(),RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+
+                }
+
+                break;
+
+            case (RegwebConstantes.OFICIO_ACEPTADO):
+
+                log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
+
+                break;
+
+            default:
+                log.info("El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+                throw new ValidacionException(Errores.ERROR_0037, "El RegistroSir no tiene el estado necesario para ser Confirmado: " + oficioRemision.getIdentificadorIntercambio());
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ERROR
+     * @param oficioRemision
+     * @param mensaje
+     * @throws Exception
+     */
+    private void procesarMensajeERROR(OficioRemision oficioRemision, MensajeControl mensaje) throws Exception{
+
+        switch (oficioRemision.getEstado()) {
+
+            case (RegwebConstantes.OFICIO_SIR_ENVIADO):
+
+                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
+                    oficioRemision.setCodigoError(mensaje.getCodigoError());
+                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                    oficioRemision.setFechaEstado(new Date());
+                    oficioRemisionEjb.merge(oficioRemision);
+                }
+
+                break;
+
+            case (RegwebConstantes.OFICIO_SIR_REENVIADO):
+
+                if(!mensaje.getCodigoError().equals(Errores.ERROR_0039.getValue())){ // Solo modificamos su estado si no es un error 0039
+
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
+                    oficioRemision.setCodigoError(mensaje.getCodigoError());
+                    oficioRemision.setDescripcionError(mensaje.getDescripcionMensaje());
+                    oficioRemision.setFechaEstado(new Date());
+                    oficioRemisionEjb.merge(oficioRemision);
+                }
+
+                break;
+
+            case (RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR):
+            case (RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR):
+
+                log.info("Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+                throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + oficioRemision.getIdentificadorIntercambio());
+
+        }
+    }
+
+    /**
+     * Procesa un mensaje de control de tipo ERROR
+     * @param registroSir
+     * @param mensaje
+     * @throws Exception
+     */
+    private void procesarMensajeERROR(RegistroSir registroSir, MensajeControl mensaje) throws Exception{
+
+        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+
+            registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ERROR);
+            registroSir.setCodigoError(mensaje.getCodigoError());
+            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
+            registroSir.setFechaEstado(new Date());
+            registroSirEjb.merge(registroSir);
+
+        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
+
+            registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ERROR);
+            registroSir.setCodigoError(mensaje.getCodigoError());
+            registroSir.setDescripcionError(mensaje.getDescripcionMensaje());
+            registroSir.setFechaEstado(new Date());
+            registroSirEjb.merge(registroSir);
+
+        } else if (EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado()) ||
+                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
+
+            log.info("Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+            throw new ValidacionException(Errores.ERROR_0037, "Se ha recibido un mensaje de error duplicado con identificador: " + registroSir.getIdentificadorIntercambio());
+
+        }
+    }
+
+    /**
+     * Comprueba a partir de la Oficina destino, si la Entidad está integrada en SIR
+     * @param codigoEntidadRegistralDestino
+     * @throws Exception
+     */
+    private Entidad comprobarEntidadMensajeControl(String codigoEntidadRegistralDestino) throws Exception{
+
+        Entidad entidad;
+        Oficina oficina = oficinaEjb.findByCodigo(codigoEntidadRegistralDestino);
+
+        if(oficina != null){
+            entidad = oficina.getOrganismoResponsable().getEntidad();
+
+            if(!entidad.getActivo() || !entidad.getSir()){
+                log.info("La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
+                throw new ValidacionException(Errores.ERROR_0037, "La Entidad de la oficina "+ oficina.getDenominacion() +" no esta activa o no se ha activado su integracion con SIR");
+
+            }else if(!oficinaEjb.isSIREnvio(oficina.getId())){
+                log.info("La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
+                throw new ValidacionException(Errores.ERROR_0037, "La Oficina "+ oficina.getDenominacion() +" no esta habilitada para enviar asientos SIR");
+            }
+
+            return entidad;
+
+        }else{
+            log.info("El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
+            throw new ValidacionException(Errores.ERROR_0037, "El CodigoEntidadRegistralDestino del FicheroIntercambio no pertenece a ninguna Entidad del sistema: " + codigoEntidadRegistralDestino);
+        }
+    }
+
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception{
+
+        List<?> mensajes =  em.createQuery("select distinct(mc.id) from MensajeControl as mc where mc.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList();
+        Integer total = mensajes.size();
+
+        if(mensajes.size() > 0){
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (mensajes.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = mensajes.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from MensajeControl where id in (:mensajes)").setParameter("mensajes", subList).executeUpdate();
+                mensajes.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            em.createQuery("delete from MensajeControl where id in (:mensajes)").setParameter("mensajes", mensajes).executeUpdate();
+        }
+        return total;
+
+    }
+
+}

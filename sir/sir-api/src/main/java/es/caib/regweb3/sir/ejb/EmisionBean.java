@@ -1,8 +1,8 @@
 package es.caib.regweb3.sir.ejb;
 
 import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
-import es.caib.regweb3.sir.core.model.Errores;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.ws.api.wssir6b.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir6b.WS_SIR6_BServiceLocator;
