@@ -95,4 +95,5 @@ alter table RWE_MENSAJE_CONTROL
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
 create sequence RWE_SIR_SEQ;
+grant select on RWE_SIR_SEQ to www_regweb;
 grant select,insert,delete,update on RWE_MENSAJE_CONTROL to www_regweb;
