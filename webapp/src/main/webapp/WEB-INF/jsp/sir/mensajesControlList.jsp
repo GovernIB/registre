@@ -178,7 +178,7 @@
                                                             </c:if>
 
                                                             <c:if test="${mensajeControl.tipoComunicacion == RegwebConstantes.TIPO_COMUNICACION_RECIBIDO}">
-                                                                <span class="label label-warning"><spring:message code="mensajeControl.tipoComunicacion.2"/></span>
+                                                                <span class="label label-default"><spring:message code="mensajeControl.tipoComunicacion.2"/></span>
                                                             </c:if>
                                                         </td>
                                                         <td class="center">${mensajeControl.codigoEntidadRegistralOrigen}</td>
