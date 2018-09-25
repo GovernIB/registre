@@ -115,7 +115,7 @@
 
                             <div class="form-group col-xs-12">
                                 <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
-                        </div>
+                            </div>
                     </form:form>
 
                     <c:if test="${paginacion != null}">
