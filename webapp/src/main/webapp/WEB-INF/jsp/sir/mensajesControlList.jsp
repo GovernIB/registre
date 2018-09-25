@@ -198,7 +198,7 @@
                                                         </td>
                                                         <td class="center">
                                                             <c:if test="${mensajeControl.tipoComunicacion == RegwebConstantes.TIPO_COMUNICACION_ENVIADO}">
-                                                                <a class="btn btn-success btn-sm" href="javascript:void(0);" onclick="reenviarMensaje('${mensajeControl.id}')" title="<spring:message code="mensajeControl.reenviar"/>"><span class="fa fa-mail-forward"></span></a>
+                                                                <a class="btn btn-success btn-sm" href="javascript:void(0);" onclick='confirm("javascript:reenviarMensaje(${mensajeControl.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' title="<spring:message code="mensajeControl.reenviar"/>"><span class="fa fa-mail-forward"></span></a>
                                                             </c:if>
                                                             <c:if test="${mensajeControl.tipoComunicacion == RegwebConstantes.TIPO_COMUNICACION_RECIBIDO}">
                                                                 <a class="btn btn-success btn-sm disabled" href="javascript:void(0);" title="<spring:message code="mensajeControl.reenviar"/>"><span class="fa fa-mail-forward"></span></a>
