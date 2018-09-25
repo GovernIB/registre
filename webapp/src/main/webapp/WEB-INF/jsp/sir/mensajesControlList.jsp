@@ -100,7 +100,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="mensajeControl.tipoComunicacion" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoComunicacion.busqueda"/>" data-toggle="popover"><spring:message code="mensajeControl.tipo"/></label>
+                                        <label for="mensajeControl.tipoComunicacion" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoComunicacion.busqueda"/>" data-toggle="popover"><spring:message code="mensajeControl.comunicacion"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="mensajeControl.tipoComunicacion" cssClass="chosen-select">
