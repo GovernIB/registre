@@ -37,4 +37,11 @@ public interface MensajeLocal {
      * @param mensaje
      */
     MensajeControl enviarMensajeError(MensajeControl mensaje);
+
+    /**
+     * Reenvia un mensaje de control
+     * @param mensaje
+     * @return
+     */
+    MensajeControl reenviarMensajeControl(MensajeControl mensaje);
 }

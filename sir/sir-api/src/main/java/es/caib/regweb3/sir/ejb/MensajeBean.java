@@ -11,6 +11,7 @@ import es.caib.regweb3.sir.ws.api.wssir7.RespuestaWS;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7ServiceLocator;
 import es.caib.regweb3.sir.ws.api.wssir7.WS_SIR7_PortType;
 import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 
 import javax.ejb.Stateless;
@@ -37,7 +38,7 @@ public class MensajeBean implements MensajeLocal {
 
         log.info("Enviando Mensaje de confirmación del RegistroSir: " + registroSir.getIdentificadorIntercambio());
 
-        MensajeControl confirmacion = new MensajeControl();
+        MensajeControl confirmacion = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
         confirmacion.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
         confirmacion.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
         confirmacion.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
@@ -58,7 +59,7 @@ public class MensajeBean implements MensajeLocal {
 
         log.info("Enviando Mensaje ACK: " + ficheroIntercambio.getIdentificadorIntercambio());
 
-        MensajeControl mensaje = new MensajeControl();
+        MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
         mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
         mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
         mensaje.setIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio());
@@ -90,6 +91,16 @@ public class MensajeBean implements MensajeLocal {
 
      */
     public MensajeControl enviarMensajeError(MensajeControl mensaje) {
+
+        return enviarMensaje(mensaje);
+    }
+
+    /**
+     * Reenvia un mensaje de control
+     * @param mensaje
+     * @return
+     */
+    public MensajeControl reenviarMensajeControl(MensajeControl mensaje) {
 
         return enviarMensaje(mensaje);
     }

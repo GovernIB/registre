@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "RWE_MENSAJE_CONTROL")
-@SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
+@SequenceGenerator(name="sir_sequence",sequenceName = "RWE_SIR_SEQ", allocationSize = 1)
 public class MensajeControl implements Serializable {
 
     /**
@@ -82,11 +82,19 @@ public class MensajeControl implements Serializable {
      */
     private Date fecha = new Date();
 
+    /**
+     * Indica los mensajes enviados o recibidos
+     */
+    private Long tipoComunicacion;
+
     public MensajeControl() { }
 
+    public MensajeControl(Long tipoComunicacion) {
+        this.tipoComunicacion = tipoComunicacion;
+    }
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "generator")
+    @GeneratedValue(strategy= GenerationType.SEQUENCE,generator = "sir_sequence")
     @Column(name="ID")
     public Long getId() {
         return id;
@@ -197,6 +205,15 @@ public class MensajeControl implements Serializable {
 
     public void setFecha(Date fecha) {
         this.fecha = fecha;
+    }
+
+    @Column(name = "TIPO_COMUNICACION", nullable = false)
+    public Long getTipoComunicacion() {
+        return tipoComunicacion;
+    }
+
+    public void setTipoComunicacion(Long tipoComunicacion) {
+        this.tipoComunicacion = tipoComunicacion;
     }
 
     @Override

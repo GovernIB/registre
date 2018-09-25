@@ -1940,7 +1940,7 @@ public class Sicres3XML {
 
             if (de_mensaje != null) {
 
-                mensaje = new MensajeControl();
+                mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_RECIBIDO);
                 mensaje.setCodigoEntidadRegistralOrigen(de_mensaje.getCodigo_Entidad_Registral_Origen());
                 mensaje.setCodigoEntidadRegistralDestino(de_mensaje.getCodigo_Entidad_Registral_Destino());
                 mensaje.setIdentificadorIntercambio(de_mensaje.getIdentificador_Intercambio());

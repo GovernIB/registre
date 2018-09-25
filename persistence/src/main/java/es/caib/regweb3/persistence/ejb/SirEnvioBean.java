@@ -18,10 +18,13 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
@@ -40,6 +43,9 @@ import java.util.List;
 public class SirEnvioBean implements SirEnvioLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
+
+    @PersistenceContext(unitName = "regweb3")
+    private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
@@ -618,7 +624,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
 
-            MensajeControl mensaje = new MensajeControl();
+            MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
             mensaje.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
             mensaje.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralOrigen());
             mensaje.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());
@@ -629,6 +635,34 @@ public class SirEnvioBean implements SirEnvioLocal {
             mensajeControlEjb.persist(mensaje);
 
             return true;
+        }
+
+        return false;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean reenviarMensaje(MensajeControl mensaje) throws Exception{
+
+        try{
+
+            // Reenviar el mensaje
+            mensaje = mensajeEjb.reenviarMensajeControl(mensaje);
+
+            // Volver a guardar el mensaje enviado
+            // Detach de la sesion para poder duplicar el registro
+            Session session = (Session) em.getDelegate();
+            session.evict(mensaje);
+            mensaje.setId(null);
+            mensaje.setFecha(new Date());
+            mensajeControlEjb.persist(mensaje);
+
+            return true;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            log.info("Error reenviando el mensaje de control : " + mensaje.getIdentificadorIntercambio());
         }
 
         return false;

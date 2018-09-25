@@ -85,6 +85,7 @@ create table RWE_MENSAJE_CONTROL (
         ID_INTERCAMBIO varchar2(33 char) not null,
         INDICADOR_PRUEBA number(10,0) not null,
         NUM_REG_DESTINO varchar2(20 char),
+        TIPO_COMUNICACION number(19,0) not null,
         TIPO_MENSAJE varchar2(2 char) not null,
         ENTIDAD number(19,0) not null
     );
@@ -93,4 +94,5 @@ alter table RWE_MENSAJE_CONTROL
         add constraint RWE_MC_ENTIDAD_FK
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
+create sequence RWE_SIR_SEQ;
 grant select,insert,delete,update on RWE_MENSAJE_CONTROL to www_regweb;

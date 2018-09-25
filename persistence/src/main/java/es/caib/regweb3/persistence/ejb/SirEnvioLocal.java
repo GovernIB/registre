@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -39,6 +40,14 @@ public interface SirEnvioLocal {
      * @throws Exception
      */
     Boolean enviarACK(Long idRegistroSir) throws Exception;
+
+    /**
+     * Reenvía un mensaje de control
+     * @param mensaje
+     * @return
+     * @throws Exception
+     */
+    Boolean reenviarMensaje(MensajeControl mensaje) throws Exception;
 
     /**
      * Renintenta los envíos a SIR que pendientes de llegar a destino.

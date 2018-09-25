@@ -75,6 +75,7 @@ create table RWE_MENSAJE_CONTROL (
         ID_INTERCAMBIO varchar(33) not null,
         INDICADOR_PRUEBA int4 not null,
         NUM_REG_DESTINO varchar(20),
+        TIPO_COMUNICACION int8 not null,
         TIPO_MENSAJE varchar(2) not null,
         ENTIDAD int8 not null,
         primary key (ID)
@@ -83,3 +84,4 @@ alter table RWE_MENSAJE_CONTROL
         add constraint RWE_MC_ENTIDAD_FK
         foreign key (ENTIDAD)
         references RWE_ENTIDAD;
+create sequence RWE_SIR_SEQ;

@@ -8,10 +8,13 @@ import es.caib.regweb3.model.sir.Errores;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.persistence.utils.DataBaseUtils;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -22,8 +25,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -101,6 +103,87 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         return q.getResultList();
 
     }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, MensajeControl mensajeControl, Entidad entidad) throws Exception {
+
+        Query q;
+        Query q2;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
+
+        StringBuilder query = new StringBuilder("Select mensaje from MensajeControl as mensaje ");
+
+        // Entidad
+        where.add(" mensaje.entidad.id = :idEntidad "); parametros.put("idEntidad",entidad.getId());
+
+        // Tipo Mensaje Control
+        if(StringUtils.isNotEmpty(mensajeControl.getTipoMensaje())){
+            where.add(" mensaje.tipoMensaje = :tipoMensaje "); parametros.put("tipoMensaje",mensajeControl.getTipoMensaje());
+        }
+
+        // Tipo Comunicación
+        if(mensajeControl.getTipoComunicacion() != null){
+            where.add(" mensaje.tipoComunicacion = :tipoComunicacion "); parametros.put("tipoComunicacion",mensajeControl.getTipoComunicacion());
+        }
+
+        // Identificador Intercambio
+        if(StringUtils.isNotEmpty(mensajeControl.getIdentificadorIntercambio())){
+            where.add(DataBaseUtils.like("mensaje.identificadorIntercambio", "identificadorIntercambio", parametros, mensajeControl.getIdentificadorIntercambio()));
+        }
+
+        // Intervalo fechas
+        where.add(" (mensaje.fecha >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
+        where.add(" mensaje.fecha <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
+
+        // Parametros
+        if (parametros.size() != 0) {
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+            q2 = em.createQuery(query.toString().replaceAll("Select mensaje from MensajeControl as mensaje ", "Select count(mensaje.id) from MensajeControl as mensaje "));
+            query.append(" order by mensaje.id desc");
+            q = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+                q.setParameter(param.getKey(), param.getValue());
+                q2.setParameter(param.getKey(), param.getValue());
+            }
+
+        }else{
+            q2 = em.createQuery(query.toString().replaceAll("Select mensaje from MensajeControl as mensaje ", "Select count(mensaje.id) from MensajeControl as mensaje "));
+            query.append("order by mensaje.id desc");
+            q = em.createQuery(query.toString());
+        }
+
+
+        Paginacion paginacion;
+
+        if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
+            Long total = (Long)q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        }else{
+            paginacion = new Paginacion(0, 0);
+        }
+
+        List<MensajeControl> mensajes = q.getResultList();
+
+        paginacion.setListado(mensajes);
+
+        return paginacion;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")

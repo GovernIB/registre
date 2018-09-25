@@ -215,7 +215,7 @@ public class RecepcionBean implements RecepcionLocal{
      */
     private MensajeControl crearMensajeError(FicheroIntercambio ficheroIntercambio, String codigoError, String descripcionError, Entidad entidad) {
 
-        MensajeControl mensaje = new MensajeControl();
+        MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
 
         mensaje.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralDestino());
         mensaje.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
@@ -238,7 +238,7 @@ public class RecepcionBean implements RecepcionLocal{
 
         log.info("Intentamos parsear el xml recibido para enviar el mensaje de Error");
 
-        MensajeControl mensaje = new MensajeControl();
+        MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
 
         XPathReaderUtil reader = null;
         // procesamos el xml para procesar las peticiones xpath
