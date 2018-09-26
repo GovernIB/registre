@@ -88,6 +88,9 @@ public class EntidadController extends BaseController {
     @EJB(mappedName = "regweb3/ContadorEJB/local")
     private ContadorLocal contadorEjb;
 
+    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    private NotificacionLocal notificacionEjb;
+
     /**
      * Listado de todas las Entidades
      */
@@ -722,6 +725,8 @@ public class EntidadController extends BaseController {
 
             // Comprobar si el usuario tiene Registros en la Entidad
             if (entidadEjb.puedoEliminarlo(idUsuarioEntidad)) {
+                // Eliminamos las notificaciones
+                notificacionEjb.eliminarByUsuario(usuarioEntidad.getId());
                 // Si no tiene registros relacinados, lo eliminamos definitivamente.
                 usuarioEntidadEjb.remove(usuarioEntidad);
 

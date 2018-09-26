@@ -56,7 +56,7 @@ public interface NotificacionLocal extends BaseEjb<Notificacion, Long> {
      * @return
      * @throws Exception
      */
-    public Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception;
+     Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception;
 
     /**
      * Elimina las notificaciones de una Entidad
@@ -65,5 +65,12 @@ public interface NotificacionLocal extends BaseEjb<Notificacion, Long> {
      * @throws Exception
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Elimina las notificaciones del usuarioEntidad indicado, tanto si es remitente como destinatario.
+     * @param idUsuarioEntidad
+     * @throws Exception
+     */
+    void eliminarByUsuario(Long idUsuarioEntidad) throws Exception;
 
 }

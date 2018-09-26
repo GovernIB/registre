@@ -212,4 +212,12 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     }
 
+    @Override
+    public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception{
+        Query q = em.createQuery("delete from Notificacion as n where n.remitente.id=:idUsuarioEntidad or n.destinatario.id=:idUsuarioEntidad");
+        q.setParameter("idUsuarioEntidad" , idUsuarioEntidad);
+        q.executeUpdate();
+
+    }
+
 }
