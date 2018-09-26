@@ -210,10 +210,28 @@ public class SirController extends BaseController {
      */
     @RequestMapping(value = "/enviarACK", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean enviarACK(@RequestParam Long idRegistroSir, HttpServletRequest request)throws Exception {
+    public Boolean enviarACK(@RequestParam Long idRegistroSir)throws Exception {
 
         try{
             return sirEnvioEjb.enviarACK(idRegistroSir);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * Envia un mensaje de Confirmación
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/enviarConfirmacion", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean enviarConfirmacion(@RequestParam Long idRegistroSir)throws Exception {
+
+        try{
+            return sirEnvioEjb.enviarConfirmacion(idRegistroSir);
         }catch (Exception e){
             e.printStackTrace();
         }

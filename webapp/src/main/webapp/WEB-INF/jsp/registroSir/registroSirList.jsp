@@ -181,7 +181,7 @@
                                                         </c:if>
 
                                                         <c:if test="${fn:length(registroSir.resumen) > 40}">
-                                                            <p rel="resumen" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
+                                                            <p rel="popupArriba" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
                                                         </c:if>
                                                     </td>
                                                     <td class="center">
@@ -234,9 +234,8 @@
 
 <c:import url="../modulos/pie.jsp"/>
 <script type="text/javascript">
-    $("[rel='errorSir']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+    $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
 </script>
 
 </body>

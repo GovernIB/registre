@@ -39,6 +39,7 @@ public class MensajeBean implements MensajeLocal {
         log.info("Enviando Mensaje de confirmación del RegistroSir: " + registroSir.getIdentificadorIntercambio());
 
         MensajeControl confirmacion = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
+        confirmacion.setEntidad(registroSir.getEntidad());
         confirmacion.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
         confirmacion.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
         confirmacion.setIdentificadorIntercambio(registroSir.getIdentificadorIntercambio());

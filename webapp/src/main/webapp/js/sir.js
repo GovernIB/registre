@@ -15,15 +15,37 @@ function enviarACK(idRegistroSir){
         success: function(result) {
 
             if(result === true){
-                mensajeSuccess("#mensajes", tradsRegistroSir['registroSir.ACK.enviado.ok']);
+                mensajeSuccess("#mensajes", tradsMensajeControl['mensajeControl.ACK.enviado.ok']);
             }else{
-                mensajeError("#mensajes", tradsRegistroSir['registroSir.ACK.enviado.error']);
+                mensajeError("#mensajes", tradsMensajeControl['mensajeControl.ACK.enviado.error']);
             }
-
         }
-
     });
+}
 
+/**
+ * Envia un mensaje de Confirmación
+ * @param idRegistroSir
+ */
+function enviarConfirmacion(idRegistroSir){
+
+    //Enviamos el mensaje de Confirmación
+    $.ajax({
+        url: urlEnviarConfirmacion,
+        data: { idRegistroSir: idRegistroSir },
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(result) {
+
+            if(result === true){
+                mensajeSuccess("#mensajes", tradsMensajeControl['mensajeControl.confirmacion.enviado.ok']);
+            }else{
+                mensajeError("#mensajes", tradsMensajeControl['mensajeControl.confirmacion.enviado.error']);
+            }
+        }
+    });
 }
 
 /**

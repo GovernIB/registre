@@ -590,8 +590,7 @@
 </script>
 
 <script type="application/javascript">
-    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+    $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
 </script>
 
 </body>

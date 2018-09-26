@@ -42,6 +42,13 @@ public interface SirEnvioLocal {
     Boolean enviarACK(Long idRegistroSir) throws Exception;
 
     /**
+     * Envía un mensaje de confirmación a partir de los datos de un RegistroSir ACEPTADO
+     * @param idRegistroSir
+     * @throws Exception
+     */
+    Boolean enviarConfirmacion(Long idRegistroSir) throws Exception;
+
+    /**
      * Reenvía un mensaje de control
      * @param mensaje
      * @return

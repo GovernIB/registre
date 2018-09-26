@@ -83,7 +83,6 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     // Enviamos el Mensaje de Confirmación, no enviaremos ACK
                     RegistroEntrada registroEntrada = trazabilidadEjb.getRegistroAceptado(registroSir.getId());
                     MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
-                    confirmacion.setEntidad(entidad);
                     mensajeControlEjb.persist(confirmacion);
 
                     respuesta.setAck(false);
