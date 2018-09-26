@@ -300,9 +300,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
             // Enviamos el Mensaje de Confirmación
-            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
-            confirmacion.setEntidad(registroSir.getEntidad());
-            mensajeControlEjb.persist(confirmacion);
+            enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
 
             // Integracion
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -622,7 +620,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO)){
+        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO) || registroSir.getEstado().equals(EstadoRegistroSir.ACEPTADO)){
 
             MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
             mensaje.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
@@ -639,6 +637,22 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         return false;
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean enviarConfirmacion(Long idRegistroSir) throws Exception{
+
+        TrazabilidadSir trazabilidadSir = trazabilidadSirEjb.getByRegistroSirAceptado(idRegistroSir);
+
+        if(trazabilidadSir.getTipo().equals(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO)){
+
+            enviarMensajeConfirmacion(trazabilidadSir.getRegistroSir(), trazabilidadSir.getRegistroEntrada().getNumeroRegistroFormateado());
+
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -759,6 +773,21 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("Error al reintenar el envio de registros con error");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Envía un mensaje de Confirmación y lo guarda en bbdd
+     * @param registroSir
+     * @param numeroRegistroFormateado
+     * @throws Exception
+     */
+    private void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado) throws Exception{
+
+        // Enviamos el mensaje de confirmación
+        MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, numeroRegistroFormateado);
+
+        // Guardamos el mensaje de confirmación
+        mensajeControlEjb.persist(confirmacion);
     }
 
     /**

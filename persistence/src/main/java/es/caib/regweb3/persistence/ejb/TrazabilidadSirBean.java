@@ -81,6 +81,26 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public TrazabilidadSir getByRegistroSirAceptado(Long idRegistroSir) throws Exception {
+
+        Query q = em.createQuery("Select DISTINCT trazabilidadSir from TrazabilidadSir as trazabilidadSir " +
+                "where trazabilidadSir.registroSir.id = :registroSir and trazabilidadSir.tipo = :aceptado");
+
+        q.setParameter("registroSir", idRegistroSir);
+        q.setParameter("aceptado", RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+
+        List<TrazabilidadSir> result = q.getResultList();
+
+        if(result.size() == 1){
+            return (TrazabilidadSir) result.get(0);
+
+        }
+
+        return null;
+    }
+
+    @Override
     public Integer eliminarByEntidad(Long idEntidad){
 
         List<?> trazabilidadesSir =  em.createQuery("Select id from TrazabilidadSir where registroSir.entidad.id=:idEntidad").setParameter("idEntidad",idEntidad).getResultList();
