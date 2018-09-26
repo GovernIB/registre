@@ -103,7 +103,7 @@
                                                 <td>${registro.numeroRegistroFormateado}</td>
                                                 <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
                                                 <td class="center">${registro.usuario.usuario.identificador}</td>
-                                                <td class="center"><label class="no-bold" rel="ayuda" data-content="${registro.oficina.codigo}" data-toggle="popover">${registro.oficina.denominacion}</label></td>
+                                                <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.codigo}" data-toggle="popover">${registro.oficina.denominacion}</label></td>
                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                 <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
                                                     <td>${registro.registroDetalle.reserva}</td>
@@ -119,7 +119,7 @@
                                                 </td>
                                                 <c:if test="${registro.registroDetalle.interesados != null}">
                                                     <td class="center"><label
-                                                            class="no-bold representante" rel="ayuda"
+                                                            class="no-bold representante" rel="popupAbajo"
                                                             data-content="${registro.registroDetalle.nombreInteresadosHtml}"
                                                             data-toggle="popover">${registro.registroDetalle.totalInteresados}</label>
                                                     </td>
@@ -161,10 +161,6 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
-<!-- Activa los popover reenviado y rechazado -->
-<script type="text/javascript">
-    $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-</script>
 
 </body>
 </html>

@@ -95,11 +95,11 @@
                                         <tr>
                                             <td>${registro.numeroRegistroFormateado}</td>
                                             <td><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
-                                            <td><label class="no-bold" rel="ayuda"
+                                            <td><label class="no-bold" rel="popupAbajo"
                                                        data-content="${registro.libro.nombre}"
                                                        data-toggle="popover">${registro.libro.codigo}</label></td>
                                             <td>${registro.usuario.usuario.identificador}</td>
-                                            <td><label class="no-bold" rel="ayuda"
+                                            <td><label class="no-bold" rel="popupAbajo"
                                                        data-content="${registro.oficina.codigo}"
                                                        data-toggle="popover">${registro.oficina.denominacion}</label>
                                             </td>

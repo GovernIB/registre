@@ -44,10 +44,10 @@
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
                         <c:if test="${param.tipoRegistro == 'entrada'}">
-                            <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
+                            <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
                         </c:if>
                         <c:if test="${param.tipoRegistro == 'salida'}">
-                    <label rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
+                    <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
                         </c:if>
                 </div>
                 <div class="col-xs-10">
@@ -61,9 +61,9 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                    <label id="organismoInteresadoLabel" for="organismoInteresado" rel="ayuda" data-content="<spring:message code="registro.ayuda.organoInteresado"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="interesado.organismo"/></label>
-                    <label id="personaFisicaLabel" for="personaFisica" style="display: none;" rel="ayuda" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
-                    <label id="personaJuridicaLabel" for="personaJuridica" style="display: none;" rel="ayuda" data-content="<spring:message code="registro.ayuda.personaJuridica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.juridica"/></label>
+                    <label id="organismoInteresadoLabel" for="organismoInteresado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organoInteresado"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="interesado.organismo"/></label>
+                    <label id="personaFisicaLabel" for="personaFisica" style="display: none;" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
+                    <label id="personaJuridicaLabel" for="personaJuridica" style="display: none;" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaJuridica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.juridica"/></label>
                 </div>
                 <div class="col-xs-6">
 

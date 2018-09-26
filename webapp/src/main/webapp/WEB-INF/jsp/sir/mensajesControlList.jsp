@@ -49,7 +49,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="mensajeControl.identificadorIntercambio" rel="ayuda" data-content="<spring:message code="registro.ayuda.idEnviadoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.identificadorIntercambio"/></label>
+                                        <label for="mensajeControl.identificadorIntercambio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.idEnviadoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.identificadorIntercambio"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="mensajeControl.identificadorIntercambio" cssClass="form-control"/>
@@ -58,7 +58,7 @@
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="mensajeControl.tipoMensaje" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoEnviadoSir.busqueda"/>" data-toggle="popover"><spring:message code="mensajeControl.tipo"/></label>
+                                        <label for="mensajeControl.tipoMensaje" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoEnviadoSir.busqueda"/>" data-toggle="popover"><spring:message code="mensajeControl.tipo"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="mensajeControl.tipoMensaje" cssClass="chosen-select">
@@ -74,7 +74,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.fechaInicio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechainicio"/></label>
+                                        <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fechaInicio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechainicio"/></label>
                                     </div>
                                     <div class="col-xs-8" id="fechaInicio">
                                         <div class="input-group date no-pad-right">
@@ -86,7 +86,7 @@
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.fechaFin.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechafin"/></label>
+                                        <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fechaFin.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechafin"/></label>
                                     </div>
                                     <div class="col-xs-8" id="fechaFin">
                                         <div class="input-group date no-pad-right">
@@ -100,7 +100,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="mensajeControl.tipoComunicacion" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoComunicacion.busqueda"/>" data-toggle="popover"><spring:message code="mensajeControl.comunicacion"/></label>
+                                        <label for="mensajeControl.tipoComunicacion" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoComunicacion.busqueda"/>" data-toggle="popover"><spring:message code="mensajeControl.comunicacion"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="mensajeControl.tipoComunicacion" cssClass="chosen-select">
@@ -189,11 +189,11 @@
                                                             </c:if>
 
                                                             <c:if test="${mensajeControl.tipoMensaje == RegwebConstantes.MENSAJE_CONTROL_ERROR}">
-                                                                <p rel="info" data-content="<c:out value="${mensajeControl.codigoError} - ${mensajeControl.descripcionMensaje}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="mensajeControl.tipo.02"/></span></p>
+                                                                <p rel="popupAbajo" data-content="<c:out value="${mensajeControl.codigoError} - ${mensajeControl.descripcionMensaje}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="mensajeControl.tipo.02"/></span></p>
                                                             </c:if>
 
                                                             <c:if test="${mensajeControl.tipoMensaje == RegwebConstantes.MENSAJE_CONTROL_CONFIRMACION}">
-                                                                <p rel="info" data-content="<fmt:formatDate value="${mensajeControl.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/> - <c:out value="${mensajeControl.numeroRegistroEntradaDestino}" escapeXml="true"/>" data-toggle="popover"><span class="label label-success"><spring:message code="mensajeControl.tipo.03"/></span></p>
+                                                                <p rel="popupAbajo" data-content="<fmt:formatDate value="${mensajeControl.fechaEntradaDestino}" pattern="dd/MM/yyyy HH:mm:ss"/> - <c:out value="${mensajeControl.numeroRegistroEntradaDestino}" escapeXml="true"/>" data-toggle="popover"><span class="label label-success"><spring:message code="mensajeControl.tipo.03"/></span></p>
                                                             </c:if>
                                                         </td>
                                                         <td class="center">
@@ -230,7 +230,6 @@
 <c:import url="../modulos/pie.jsp"/>
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
 <script type="text/javascript">
-    $("[rel='info']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
     var urlReenviarMensaje = '<c:url value="/sir/mensajeControl/reenviar"/>';
     var tradsMensajesControl = [];
     tradsMensajesControl['mensajeControl.reenviado.ok'] = "<spring:message code='mensajeControl.reenviado.ok' javaScriptEscape='true' />";

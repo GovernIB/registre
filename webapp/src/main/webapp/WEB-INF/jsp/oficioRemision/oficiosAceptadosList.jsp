@@ -48,7 +48,7 @@
                                 <div class="col-xs-12">
                                     <div class="col-xs-6 espaiLinies">
                                         <div class="col-xs-4 pull-left etiqueta_regweb">
-                                            <label for="tipoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
+                                            <label for="tipoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:select path="tipoOficioRemision" cssClass="chosen-select">
@@ -61,7 +61,7 @@
 
                                     <div class="col-xs-6 espaiLinies">
                                         <div class="col-xs-4 pull-left etiqueta_regweb">
-                                            <label for="oficioRemision.numeroOficio" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
+                                            <label for="oficioRemision.numeroOficio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
@@ -127,7 +127,7 @@
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                             <td><fmt:formatDate value="${oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                                             <%--<td>${oficioRemision.usuarioResponsable.usuario.nombreCompleto}</td>--%>
-                                                            <td><label class="no-bold" rel="ayuda"
+                                                            <td><label class="no-bold" rel="popupAbajo"
                                                                        data-content="${oficioRemision.oficina.codigo}"
                                                                        data-toggle="popover">${oficioRemision.oficina.denominacion}</label>
                                                             </td>

@@ -60,7 +60,7 @@
 
                                <div class="form-group col-xs-12">
                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                       <label for="libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
+                                       <label for="libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                                    </div>
                                    <div class="col-xs-10">
                                        <form:select path="libro.id" items="${libros}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/> <form:errors path="libro.id" cssClass="help-block" element="span"/>
@@ -69,7 +69,7 @@
 
                                <div class="form-group col-xs-12">
                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                       <label for="registroDetalle.reserva" rel="ayuda" data-content="<spring:message code="registro.ayuda.reserva"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.reserva"/></label>
+                                       <label for="registroDetalle.reserva" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.reserva"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.reserva"/></label>
                                    </div>
                                    <div class="col-xs-10">
                                        <form:input path="registroDetalle.reserva" cssClass="form-control" maxlength="200"/> <form:errors path="registroDetalle.reserva" cssClass="help-block" element="span"/>

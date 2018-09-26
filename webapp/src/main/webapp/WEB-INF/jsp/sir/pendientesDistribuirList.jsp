@@ -49,7 +49,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="registroEntrada.oficina.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
+                                        <label for="registroEntrada.oficina.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="registroEntrada.oficina.id" cssClass="chosen-select">
@@ -122,7 +122,7 @@
                                                 <tr>
                                                     <td>${registro.numeroRegistroFormateado}</td>
                                                     <td><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                    <td><label class="no-bold" rel="ayuda" data-content="${registro.oficina.codigo}" data-toggle="popover">${registro.oficina.denominacion}</label></td>
+                                                    <td><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.codigo}" data-toggle="popover">${registro.oficina.denominacion}</label></td>
                                                     <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                     <td>${registro.registroDetalle.extracto}</td>
                                                     <td class="center">
@@ -172,9 +172,6 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
-<script type="text/javascript">
-    $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-</script>
 
 </body>
 </html>

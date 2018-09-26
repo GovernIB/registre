@@ -62,7 +62,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                                    <label for="registroSalida.libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.libro"/></label>
+                                                    <label for="registroSalida.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.libro"/></label>
                                                 </div>
                                                 <div class="col-xs-8">
                                                     <form:select path="registroSalida.libro.id" items="${librosRegistro}"
@@ -72,7 +72,7 @@
                                             </div>
                                             <div class="col-xs-6 espaiLinies">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                                    <label for="anyo" rel="ayuda" data-content="<spring:message code="registro.ayuda.anyoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.anyRegistro"/></label>
+                                                    <label for="anyo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anyoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.anyRegistro"/></label>
                                                 </div>
                                                 <div class="col-xs-8">
                                                     <form:select path="anyo" cssClass="chosen-select">
@@ -87,7 +87,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                                    <label for="destinatario.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.destinatario"/></label>
+                                                    <label for="destinatario.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.destinatario"/></label>
                                                 </div>
                                                 <div class="col-xs-8">
                                                     <form:select path="destinatario.codigo" items="${organismosDestino}" itemValue="codigo" itemLabel="denominacion" cssClass="chosen-select"/>
@@ -216,14 +216,14 @@
                                                             <td><form:checkbox id="oficio_id${indice.index}" path="registros[${indice.index}].id" value="${registroSalida.id}"/></td>
                                                             <td>${registroSalida.numeroRegistroFormateado}</td>
                                                             <td><fmt:formatDate value="${registroSalida.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                            <td><label class="no-bold" rel="ayuda" data-content="${registroSalida.oficina.codigo}"
+                                                            <td><label class="no-bold" rel="popupAbajo" data-content="${registroSalida.oficina.codigo}"
                                                                        data-toggle="popover">${registroSalida.oficina.denominacion}</label>
                                                             </td>
                                                             <td>${registroSalida.origen.denominacion}</td>
                                                             <td><c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/></td>
                                                             <%--<td class="center">
                                                                 <label class="no-bold representante"
-                                                                        rel="ayuda"
+                                                                        rel="popupAbajo"
                                                                         data-content="<c:out value="${registroSalida.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                         data-toggle="popover">${registroSalida.registroDetalle.totalInteresados}</label>
                                                             </td>--%>
@@ -244,7 +244,7 @@
                                                             <%--<div class="col-xs-3 pull-left">--%>
                                                                 <%--<spring:message code="oficioRemision.oficinaSir"/></div>--%>
                                                             <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
-                                                                <label for="oficinaSIRCodigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficinaSir"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="oficioRemision.oficinaSir"/></label>
+                                                                <label for="oficinaSIRCodigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficinaSir"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="oficioRemision.oficinaSir"/></label>
                                                             </div>
                                                             <div class="col-xs-9">
                                                                 <form:select path="oficinaSIRCodigo" items="${oficiosRemisionOrganismo.oficinasSIR}"

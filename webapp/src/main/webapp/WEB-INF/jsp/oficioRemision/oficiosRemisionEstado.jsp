@@ -91,7 +91,7 @@
                                             <tr>
                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                 <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
+                                                <td><label class="no-bold" rel="popupAbajo" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
                                                 <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
 
                                                 <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_DEVUELTO}">

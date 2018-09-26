@@ -42,7 +42,7 @@
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="tipo" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoLibro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
+                                            <label for="tipo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoLibro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:select path="tipo" cssClass="chosen-select" onchange="actualizarLibros(this.selectedIndex)">
@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="formato" rel="ayuda" data-content="<spring:message code="registro.ayuda.formato.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></label>
+                                            <label for="formato" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.formato.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.formato"/></label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:select path="formato" cssClass="chosen-select">
@@ -67,7 +67,7 @@
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat libros1">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="libros" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
+                                            <label for="libros" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                                         </div>
                                         <div class="col-xs-8" id="libr">
                                             <c:if test="${fn:length(libros) eq 1}">
@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat campos1">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="campos" rel="ayuda" data-content="<spring:message code="registro.ayuda.campos.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.campos"/></label>
+                                            <label for="campos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.campos.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.campos"/></label>
                                         </div>
                                         <div class="col-xs-8" id="campos">
                                             <spring:message code="informe.campos" var="varCampos"/>
@@ -119,7 +119,7 @@
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicio.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
+                                            <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.inicio.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
                                         </div>
                                         <div class="col-xs-8" id="fechaInicio">
                                             <div class="input-group date no-pad-right">
@@ -131,7 +131,7 @@
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.fin.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
+                                            <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fin.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
                                         </div>
                                         <div class="col-xs-8" id="fechaFin">
                                             <div class="input-group date no-pad-right">
@@ -162,7 +162,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="numeroRegistroFormateado" rel="ayuda" data-content="<spring:message code="registro.ayuda.numero.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro"/></label>
+                                                <label for="numeroRegistroFormateado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numero.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input path="numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="numeroRegistroFormateado" cssClass="help-block" element="span"/>
@@ -170,7 +170,7 @@
                                         </div>
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
+                                                <label for="extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input path="extracto" cssClass="form-control" maxlength="200" /> <form:errors path="extracto" cssClass="help-block" element="span"/>
@@ -181,7 +181,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="interessatNom" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombreInteresado.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.nombreInteresado"/></label>
+                                                <label for="interessatNom" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombreInteresado.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.nombreInteresado"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/>
@@ -190,7 +190,7 @@
                                         </div>
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="interessatLli1" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido1.libroRegistro"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
+                                                <label for="interessatLli1" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido1.libroRegistro"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input path="interessatLli1" cssClass="form-control" maxlength="255"/>
@@ -202,7 +202,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="interessatLli2" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido2.libroRegistro"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
+                                                <label for="interessatLli2" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido2.libroRegistro"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input path="interessatLli2" cssClass="form-control" maxlength="255"/>
@@ -211,7 +211,7 @@
                                         </div>
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="interessatDoc" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.docInteresado"/></label>
+                                                <label for="interessatDoc" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.docInteresado"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
@@ -223,7 +223,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="estado" rel="ayuda" data-content="<spring:message code="registro.ayuda.estado.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
+                                                <label for="estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estado.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:select path="estado" cssClass="chosen-select">
@@ -237,7 +237,7 @@
 
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="anexos" rel="ayuda" data-content="<spring:message code="registro.ayuda.anexos.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
+                                                <label for="anexos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anexos.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:checkbox path="anexos"/>
@@ -248,7 +248,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="idOficina" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.libroRegistro"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
+                                                <label for="idOficina" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.libroRegistro"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:select path="idOficina" cssClass="chosen-select">
@@ -262,7 +262,7 @@
 
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="organDestinatari" rel="ayuda" data-content="<spring:message code="registro.ayuda.destino.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
+                                                <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
                                             </div>
                                             <div class="col-xs-2 pull-left etiqueta_regweb control-label hidden"  id="orgOrig"><spring:message code="registroEntrada.organismoOrigen"/></div>
                                             <div class="col-xs-6">
@@ -286,7 +286,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
+                                                <label for="observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:input path="observaciones" class="form-control" type="text" value=""/>
@@ -294,7 +294,7 @@
                                         </div>
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="usuario" rel="ayuda" data-content="<spring:message code="registro.ayuda.usuario.libroRegistro"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
+                                                <label for="usuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuario.libroRegistro"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:select path="usuario" class="chosen-select">
@@ -310,7 +310,7 @@
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
                                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="idTipoAsunto" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoAsunto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.tipoAsunto"/></label>
+                                                <label for="idTipoAsunto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.tipoAsunto"/></label>
                                             </div>
                                             <div class="col-xs-8">
                                                 <form:select path="idTipoAsunto" cssClass="chosen-select">

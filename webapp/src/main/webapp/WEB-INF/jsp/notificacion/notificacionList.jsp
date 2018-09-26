@@ -111,7 +111,7 @@
                                                             </c:if>
 
                                                             <c:if test="${notificacion.estado == 1}">
-                                                                <span class="label label-success" rel="ayuda" data-content="<fmt:formatDate value="${notificacion.fechaLeido}" pattern="dd/MM/yyyy HH:mm:ss"/>" data-toggle="popover"><spring:message code="notificacion.estado.${notificacion.estado}"/></span>
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<fmt:formatDate value="${notificacion.fechaLeido}" pattern="dd/MM/yyyy HH:mm:ss"/>" data-toggle="popover"><spring:message code="notificacion.estado.${notificacion.estado}"/></span>
                                                             </c:if>
                                                         </td>
                                                         <td class="col-sm-1 col-xs-1 center">

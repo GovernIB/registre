@@ -42,7 +42,7 @@
 
         <div class="form-group col-xs-12" id="divmodofirma">
             <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                <label for="anexo.modoFirma" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoDocumento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
+                <label for="anexo.modoFirma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoDocumento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.tipoDocumento"/></label>
             </div>
             <div class="col-xs-10 radioButton">
                 <label class="radio">
@@ -64,7 +64,7 @@
         <!--ANEXO-->
         <div class="form-group col-xs-12" id="divInputArchivo">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                    <label for="documentoFile" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.archivo"/></label>
+                    <label for="documentoFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.archivo"/></label>
                 </div>
                 <div class="col-xs-6">
                     <div class="input-group">
@@ -88,7 +88,7 @@
         <!--FIRMA -->
         <div class="form-group col-xs-12" id="divInputFirma">
             <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                <label for="firmaFile" rel="ayuda" data-content="<spring:message code="registro.ayuda.firma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.firma"/></label>
+                <label for="firmaFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.firma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.firma"/></label>
             </div>
             <div class="col-xs-6">
                 <div class="input-group">

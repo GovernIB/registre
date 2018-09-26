@@ -52,7 +52,7 @@
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-8">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="idDatosOficinaReenvio" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSir.oficinaReenvio"/></label>
+                                        <label for="idDatosOficinaReenvio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSir.oficinaReenvio"/></label>
                                     </div>
                                     <div class="col-xs-6" id="idDatosOficinaReenvio">
                                         <form:textarea path="datosOficinaReenvio" class="form-control" rows="3" disabled="true"/> <span class="errors"></span>
@@ -71,7 +71,7 @@
                             <div class="col-xs-12">
                                 <div class="form-group col-xs-8">
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
+                                        <label for="observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.reenvio"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
                                     </div>
                                     <div class="col-xs-9" id="idObservaciones">
                                         <form:textarea path="observaciones" rows="3" class="form-control" maxlength="80"/>

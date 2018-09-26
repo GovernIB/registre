@@ -299,7 +299,7 @@
                                                         <c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}" escapeXml="true"/>
                                                     </c:if>
                                                     <c:if test="${fn:length(trazabilidad.registroEntradaOrigen.registroDetalle.extracto) > 40}">
-                                                        <p rel="extracto" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                        <p rel="popupArriba" data-content="<c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${trazabilidad.registroEntradaOrigen.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                     </c:if>
                                                 </td>
                                                 <td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/${trazabilidad.registroSalida.numeroRegistro}</td>
@@ -350,7 +350,7 @@
                                                         <c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>
                                                     </c:if>
                                                     <c:if test="${fn:length(registroSalida.registroDetalle.extracto) > 40}">
-                                                        <p rel="extracto" data-content="<c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroSalida.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                        <p rel="popupArriba" data-content="<c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroSalida.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                     </c:if>
                                                 </td>
                                                 <%--<td><fmt:formatDate value="${trazabilidad.registroSalida.fecha}" pattern="yyyy"/>/ ${trazabilidad.registroSalida.numeroRegistro}</td>--%>
@@ -381,12 +381,6 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
-<!-- Activa el popover -->
-<script type="text/javascript">
-
-    $("[rel='extracto']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-
-</script>
 
 <script type="text/javascript">
     function imprimirOficio(url) {

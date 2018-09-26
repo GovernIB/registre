@@ -81,7 +81,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
+                            <label for="libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                         </div>
                         <div class="col-xs-10">
                             <c:if test="${empty registroSalida.id}">
@@ -102,7 +102,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.salida"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
+                            <label for="registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.salida"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:textarea path="registroDetalle.extracto" rows="2" cssClass="form-control" maxlength="240"/> <form:errors path="registroDetalle.extracto" cssClass="help-block" element="span"/>
@@ -112,7 +112,7 @@
                     <div class="form-group col-xs-12">
 
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="origen.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSalida.organismoOrigen"/></label>
+                            <label for="origen.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSalida.organismoOrigen"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:select path="origen.codigo" cssClass="chosen-select">
@@ -136,7 +136,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.tipoAsunto.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
+                            <label for="registroDetalle.tipoAsunto.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
                         </div>
                         <div class="col-xs-10">
 
@@ -151,7 +151,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.idioma" rel="ayuda" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
+                            <label for="registroDetalle.idioma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:select path="registroDetalle.idioma" cssClass="chosen-select">
@@ -165,7 +165,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.tipoDocumentacionFisica" rel="ayuda" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.documentacionFisica"/></label>
+                            <label for="registroDetalle.tipoDocumentacionFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.documentacionFisica"/></label>
                         </div>
                         <div class="col-xs-10 radioButton">
                             <c:forEach items="${tiposDocumentacionFisica}" var="tipoDocFisica">
@@ -204,7 +204,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.codigoAsunto.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.codigoAsunto"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoAsunto"/></label>
+                            <label for="registroDetalle.codigoAsunto.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoAsunto"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoAsunto"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:select path="registroDetalle.codigoAsunto.id" disabled="true" cssClass="chosen-select"/> <form:errors path="registroDetalle.codigoAsunto.id" cssClass="help-block" element="span"/>
@@ -213,14 +213,14 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.referenciaExterna" rel="ayuda" data-content="<spring:message code="registro.ayuda.refExterna"/>" data-toggle="popover"><spring:message code="registroEntrada.referenciaExterna"/></label>
+                            <label for="registroDetalle.referenciaExterna" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.refExterna"/>" data-toggle="popover"><spring:message code="registroEntrada.referenciaExterna"/></label>
                         </div>
                         <div class="col-xs-4">
                             <form:input path="registroDetalle.referenciaExterna" maxlength="16" cssClass="form-control"/> <form:errors path="registroDetalle.referenciaExterna" cssClass="help-block" element="span"/>
                         </div>
 
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.expediente" rel="ayuda" data-content="<spring:message code="registro.ayuda.expediente"/>" data-toggle="popover"><spring:message code="registroEntrada.expediente"/></label>
+                            <label for="registroDetalle.expediente" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.expediente"/>" data-toggle="popover"><spring:message code="registroEntrada.expediente"/></label>
                         </div>
                         <div class="col-xs-4">
                             <form:input path="registroDetalle.expediente" maxlength="80" cssClass="form-control"/> <form:errors path="registroDetalle.expediente" cssClass="help-block" element="span"/>
@@ -229,7 +229,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.transporte" rel="ayuda" data-content="<spring:message code="registro.ayuda.transporte"/>" data-toggle="popover"><spring:message code="registroEntrada.transporte"/></label>
+                            <label for="registroDetalle.transporte" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.transporte"/>" data-toggle="popover"><spring:message code="registroEntrada.transporte"/></label>
                         </div>
                         <div class="col-xs-5">
                            <form:select path="registroDetalle.transporte" cssClass="chosen-select"> 
@@ -243,7 +243,7 @@
 
                         </div>
                         <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.numeroTransporte" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroTransporte"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroTransporte"/></label>
+                            <label for="registroDetalle.numeroTransporte" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroTransporte"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroTransporte"/></label>
                         </div>
                         <div class="col-xs-4">
                             <form:input path="registroDetalle.numeroTransporte" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.numeroTransporte" cssClass="help-block" element="span"/>
@@ -252,7 +252,7 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb12 control-label textEsq">
-                            <label for="registroDetalle.observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
+                            <label for="registroDetalle.observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
                         </div>
                         <div class="col-xs-10">
                             <form:input path="registroDetalle.observaciones" cssClass="form-control" maxlength="50"/> <form:errors path="registroDetalle.observaciones" cssClass="help-block" element="span"/>
@@ -262,7 +262,7 @@
                     <div class="form-group col-xs-12">
 
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.oficinaOrigen.codigo" rel="ayuda" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><spring:message code="registroEntrada.oficinaOrigen"/></label>
+                            <label for="registroDetalle.oficinaOrigen.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.origen"/>" data-toggle="popover"><spring:message code="registroEntrada.oficinaOrigen"/></label>
                         </div>
                         <div class="col-xs-8">
                             <form:select path="registroDetalle.oficinaOrigen.codigo" cssClass="chosen-select">
@@ -294,14 +294,14 @@
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.numeroRegistroOrigen" rel="ayuda" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
+                            <label for="registroDetalle.numeroRegistroOrigen" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numRegOrigen"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
                         </div>
                         <div class="col-xs-4">
                             <form:input path="registroDetalle.numeroRegistroOrigen" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.numeroRegistroOrigen" cssClass="help-block" element="span"/>
                         </div>
 
                         <div class="col-xs-1 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="registroDetalle.fechaOrigen" rel="ayuda" data-content="<spring:message code="registro.ayuda.fecha"/>" data-toggle="popover"><spring:message code="registroEntrada.fecha"/></label>
+                            <label for="registroDetalle.fechaOrigen" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fecha"/>" data-toggle="popover"><spring:message code="registroEntrada.fecha"/></label>
                         </div>
                         <div class="col-xs-5 pad-right-15" id="fechaOrigen">
                             <div class="input-group date no-pad-right">

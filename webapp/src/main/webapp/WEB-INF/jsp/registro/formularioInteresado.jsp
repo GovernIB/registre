@@ -40,7 +40,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="nombre" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombre.interesado"/>" data-toggle="popover"><spring:message code="regweb.nombre"/></label>
+                                <label for="nombre" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombre.interesado"/>" data-toggle="popover"><spring:message code="regweb.nombre"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="nombre" name="nombre" class="form-control" tabindex="1" type="text" value="" maxlength="30"/>
@@ -49,7 +49,7 @@
                         </div>
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="apellido1" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido1.interesado"/>" data-toggle="popover"><spring:message code="usuario.apellido1"/></label>
+                                <label for="apellido1" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido1.interesado"/>" data-toggle="popover"><spring:message code="usuario.apellido1"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="apellido1" name="apellido1" class="form-control" tabindex="2" type="text" value="" maxlength="30"/>
@@ -61,7 +61,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="apellido2" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido2.interesado"/>" data-toggle="popover"><spring:message code="usuario.apellido2"/></label>
+                                <label for="apellido2" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido2.interesado"/>" data-toggle="popover"><spring:message code="usuario.apellido2"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="apellido2" name="apellido2" class="form-control" tabindex="3" type="text" value="" maxlength="30"/>
@@ -70,7 +70,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="tipoDocumentoIdentificacion" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoDoc.interesado"/>" data-toggle="popover"><spring:message code="persona.tipoDocumentoIdentificacion"/></label>
+                                <label for="tipoDocumentoIdentificacion" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoDoc.interesado"/>" data-toggle="popover"><spring:message code="persona.tipoDocumentoIdentificacion"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <select id="tipoDocumentoIdentificacion" name="tipoDocumentoIdentificacion" class="chosen-select" tabindex="4">
@@ -87,7 +87,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="documento" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento.interesado"/>" data-toggle="popover"><spring:message code="usuario.documento"/></label>
+                                <label for="documento" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento.interesado"/>" data-toggle="popover"><spring:message code="usuario.documento"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="documento" name="documento" maxlength="17" class="form-control" tabindex="5" type="text" value="" disabled="disabled" style="text-transform:uppercase"/>
@@ -97,7 +97,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="email" rel="ayuda" data-content="<spring:message code="registro.ayuda.mail.interesado"/>" data-toggle="popover"><spring:message code="usuario.email"/></label>
+                                <label for="email" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.mail.interesado"/>" data-toggle="popover"><spring:message code="usuario.email"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="email" name="email" class="form-control" tabindex="6" type="text" value="" maxlength="160"/>
@@ -109,7 +109,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="telefono" rel="ayuda" data-content="<spring:message code="registro.ayuda.telefono.interesado"/>" data-toggle="popover"><spring:message code="persona.telefono"/></label>
+                                <label for="telefono" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.telefono.interesado"/>" data-toggle="popover"><spring:message code="persona.telefono"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="telefono" name="telefono" class="form-control" tabindex="7" type="text" value="" maxlength="20"/>
@@ -118,7 +118,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="canal" rel="ayuda" data-content="<spring:message code="registro.ayuda.canal.interesado"/>" data-toggle="popover"><spring:message code="persona.canal"/></label>
+                                <label for="canal" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.canal.interesado"/>" data-toggle="popover"><spring:message code="persona.canal"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <select id="canal" name="canal" class="chosen-select" tabindex="8">
@@ -135,7 +135,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="pais.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.pais.interesado"/>" data-toggle="popover"><spring:message code="interesado.pais"/></label>
+                                <label for="pais.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.pais.interesado"/>" data-toggle="popover"><spring:message code="interesado.pais"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <select id="pais.id" name="pais.id" class="chosen-select" tabindex="9" disabled="disabled">
@@ -150,7 +150,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="provincia.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.provincia.interesado"/>" data-toggle="popover"><spring:message code="interesado.provincia"/></label>
+                                <label for="provincia.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.provincia.interesado"/>" data-toggle="popover"><spring:message code="interesado.provincia"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <select id="provincia.id" name="provincia.id" class="chosen-select" tabindex="10" onchange="actualizarLocalidad(this)" disabled="disabled">
@@ -167,7 +167,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="localidad.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.localidad.interesado"/>" data-toggle="popover"><spring:message code="interesado.localidad"/></label>
+                                <label for="localidad.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.localidad.interesado"/>" data-toggle="popover"><spring:message code="interesado.localidad"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <select id="localidad.id" name="localidad.id" class="chosen-select" tabindex="11" disabled="disabled"></select>
@@ -177,7 +177,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="direccion" rel="ayuda" data-content="<spring:message code="registro.ayuda.direccion.interesado"/>" data-toggle="popover"><spring:message code="persona.direccion"/></label>
+                                <label for="direccion" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.direccion.interesado"/>" data-toggle="popover"><spring:message code="persona.direccion"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="direccion" name="direccion" class="form-control" tabindex="12" type="text" value="" maxlength="160" disabled="disabled"/>
@@ -189,7 +189,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="cp" rel="ayuda" data-content="<spring:message code="registro.ayuda.cp.interesado"/>" data-toggle="popover"><spring:message code="persona.cp"/></label>
+                                <label for="cp" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.cp.interesado"/>" data-toggle="popover"><spring:message code="persona.cp"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="cp" name="cp" class="form-control" type="text" tabindex="13" value="" maxlength="5" disabled="disabled"/>
@@ -199,7 +199,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="razonSocial" rel="ayuda" data-content="<spring:message code="registro.ayuda.razon.interesado"/>" data-toggle="popover"><spring:message code="persona.razonSocial"/></label>
+                                <label for="razonSocial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.razon.interesado"/>" data-toggle="popover"><spring:message code="persona.razonSocial"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="razonSocial" name="razonSocial" class="form-control" tabindex="14" type="text" value="" maxlength="80" disabled="disabled"/>
@@ -211,7 +211,7 @@
                     <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="direccionElectronica" rel="ayuda" data-content="<spring:message code="registro.ayuda.direccionElectronica.interesado"/>" data-toggle="popover"><spring:message code="persona.direccionElectronica"/></label>
+                                <label for="direccionElectronica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.direccionElectronica.interesado"/>" data-toggle="popover"><spring:message code="persona.direccionElectronica"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="direccionElectronica" name="direccionElectronica" class="form-control" tabindex="15" type="text" value="" maxlength="160" disabled="disabled"/>
@@ -221,7 +221,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.interesado"/>" data-toggle="popover"><spring:message code="interesado.observaciones"/></label>
+                                <label for="observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.interesado"/>" data-toggle="popover"><spring:message code="interesado.observaciones"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <textarea id="observaciones" name="observaciones" class="form-control" tabindex="16" rows="2" maxlength="160"></textarea>

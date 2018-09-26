@@ -58,7 +58,7 @@
                         
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libro.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
+                                    <label for="registroEntrada.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="registroEntrada.libro.id" items="${librosConsulta}" itemLabel="nombreCompleto" itemValue="id" cssClass="chosen-select"/>
@@ -66,7 +66,7 @@
                             </div>
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.estado" rel="ayuda" data-content="<spring:message code="registro.ayuda.estado.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
+                                    <label for="registroEntrada.estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estado.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="registroEntrada.estado" cssClass="chosen-select">
@@ -83,7 +83,7 @@
                             
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.numeroRegistroFormateado" rel="ayuda" data-content="<spring:message code="registro.ayuda.numero.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro"/></label>
+                                    <label for="registroEntrada.numeroRegistroFormateado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numero.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.numeroRegistro"/></label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="registroEntrada.numeroRegistroFormateado" cssClass="form-control"/> <form:errors path="registroEntrada.numeroRegistroFormateado" cssClass="help-block" element="span"/>
@@ -91,7 +91,7 @@
                             </div>
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.registroDetalle.extracto" rel="ayuda" data-content="<spring:message code="registro.ayuda.extracto.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
+                                    <label for="registroEntrada.registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.extracto"/></label>
                                 </div>
                                 <div class="col-xs-8">
                                     <form:input path="registroEntrada.registroDetalle.extracto" cssClass="form-control" maxlength="200" /> <form:errors path="registroEntrada.registroDetalle.extracto" cssClass="help-block" element="span"/>
@@ -103,7 +103,7 @@
                             
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicio.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
+                                    <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.inicio.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaInicio"/></label>
                                 </div>
                                 <div class="col-xs-8" id="fechaInicio">
                                     <div class="input-group date no-pad-right">
@@ -116,7 +116,7 @@
                             </div>
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.fin.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
+                                    <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.fin.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.fechaFin"/></label>
                                 </div>
                                 <div class="col-xs-8" id="fechaFin">
                                     <div class="input-group date no-pad-right">
@@ -149,7 +149,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="interessatNom" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombre.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.nombreInteresado"/></label>
+                                        <label for="interessatNom" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombre.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.nombreInteresado"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input  path="interessatNom" cssClass="form-control" maxlength="255"/>
@@ -158,7 +158,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="interessatLli1" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido1.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
+                                        <label for="interessatLli1" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido1.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido1"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="interessatLli1" cssClass="form-control" maxlength="255"/>
@@ -170,7 +170,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="interessatLli2" rel="ayuda" data-content="<spring:message code="registro.ayuda.apellido2.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
+                                        <label for="interessatLli2" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.apellido2.busqueda"/>" data-toggle="popover"><spring:message code="interesado.apellido2"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="interessatLli2" cssClass="form-control" maxlength="255"/>
@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="interessatDoc" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.docInteresado"/></label>
+                                        <label for="interessatDoc" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.docInteresado"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
@@ -191,7 +191,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="registroEntrada.oficina.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
+                                        <label for="registroEntrada.oficina.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="registroEntrada.oficina.id" cssClass="chosen-select">
@@ -204,7 +204,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="organDestinatari" rel="ayuda" data-content="<spring:message code="registro.ayuda.destino.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
+                                        <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
                                     </div>
                                     <div class="col-xs-6">
                                         <form:select path="organDestinatari" cssClass="chosen-select">
@@ -227,7 +227,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="observaciones" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
+                                        <label for="observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.observaciones"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="observaciones" class="form-control" type="text" value=""/>
@@ -235,7 +235,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="usuario" rel="ayuda" data-content="<spring:message code="registro.ayuda.usuario.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
+                                        <label for="usuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuario.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="usuario" class="chosen-select">
@@ -251,7 +251,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="anexos" rel="ayuda" data-content="<spring:message code="registro.ayuda.anexos.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
+                                        <label for="anexos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anexos.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:checkbox path="anexos"/>
@@ -354,7 +354,7 @@
                                                                 <td>${registro.numeroRegistroFormateado}</td>
                                                                 <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
                                                                 <td class="center">${registro.usuario.usuario.identificador}</td>
-                                                                <td class="center"><label class="no-bold" rel="ayuda" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
+                                                                <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                                 <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RESERVA}">
                                                                 <td>
@@ -362,7 +362,7 @@
                                                                         ${registro.registroDetalle.reserva}
                                                                     </c:if>
                                                                     <c:if test="${fn:length(registro.registroDetalle.reserva) > 40}">
-                                                                        <p rel="reserva" data-content="${registro.registroDetalle.reserva}" data-toggle="popover">${registro.registroDetalle.reservaCorto}</p>
+                                                                        <p rel="popupArriba" data-content="${registro.registroDetalle.reserva}" data-toggle="popover">${registro.registroDetalle.reservaCorto}</p>
                                                                     </c:if>
                                                                 </td>
                                                                 </c:if>
@@ -372,7 +372,7 @@
                                                                             <c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>
                                                                         </c:if>
                                                                         <c:if test="${fn:length(registro.registroDetalle.extracto) > 40}">
-                                                                            <p rel="extracto" data-content="<c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registro.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                                            <p rel="popupArriba" data-content="<c:out value="${registro.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registro.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                                         </c:if>
                                                                     </td>
                                                                 </c:if>
@@ -384,7 +384,7 @@
                                                                 </td>
                                                                 <c:if test="${registro.registroDetalle.interesados != null}">
                                                                     <td class="center"><label
-                                                                            class="no-bold representante" rel="ayuda"
+                                                                            class="no-bold representante" rel="popupAbajo"
                                                                             data-content="<c:out value="${registro.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                             data-toggle="popover"><c:out value="${registro.registroDetalle.totalInteresados}" escapeXml="true"/></label>
                                                                     </td>
@@ -471,9 +471,6 @@
 
 <!-- Cambia la imagen de la búsqueda avanzada-->
 <script type="text/javascript">
-
-    $("[rel='extracto']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-    $("[rel='reserva']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
 
     // Posicionamos el ratón en el campo indicado al cargar el modal
     $('#modalBuscadorlistaRegEntrada').on('shown.bs.modal', function () {

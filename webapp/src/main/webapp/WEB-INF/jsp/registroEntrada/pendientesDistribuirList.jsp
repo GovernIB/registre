@@ -93,8 +93,8 @@
                                             <tr>
                                                 <td>${registro.numeroRegistroFormateado}</td>
                                                 <td><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                <td><label class="no-bold" rel="ayuda" data-content="${registro.libro.nombre}" data-toggle="popover">${registro.libro.codigo}</label></td>
-                                                <td><label class="no-bold" rel="ayuda" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
+                                                <td><label class="no-bold" rel="popupAbajo" data-content="${registro.libro.nombre}" data-toggle="popover">${registro.libro.codigo}</label></td>
+                                                <td><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                 <td>${registro.registroDetalle.extracto}</td>
 

@@ -20,7 +20,7 @@
                     <c:if test="${param.tipoPersona eq 'Fisicas' || param.tipoPersona eq 'Todas'}">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="nombre${param.tipoPersona}" rel="ayuda" data-content="<spring:message code="registro.ayuda.nombre.fisica"/>" data-toggle="popover"><spring:message code="regweb.nombre"/></label>
+                                <label for="nombre${param.tipoPersona}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombre.fisica"/>" data-toggle="popover"><spring:message code="regweb.nombre"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="nombre${param.tipoPersona}" name="nombre${param.tipoPersona}" autofocus="autofocus" class="form-control" type="text" value=""/>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="apellido1${param.tipoPersona}" rel="ayuda" data-content="<spring:message code="registro.ayuda.llinatge2.fisica"/>" data-toggle="popover"><spring:message code="persona.apellido1"/></label>
+                                <label for="apellido1${param.tipoPersona}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.llinatge2.fisica"/>" data-toggle="popover"><spring:message code="persona.apellido1"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="apellido1${param.tipoPersona}" name="apellido1${param.tipoPersona}" class="form-control" type="text" value=""/>
@@ -37,7 +37,7 @@
 
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="apellido2${param.tipoPersona}" rel="ayuda" data-content="<spring:message code="registro.ayuda.llinatge2.fisica"/>" data-toggle="popover"><spring:message code="persona.apellido2"/></label>
+                                <label for="apellido2${param.tipoPersona}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.llinatge2.fisica"/>" data-toggle="popover"><spring:message code="persona.apellido2"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="apellido2${param.tipoPersona}" name="apellido2${param.tipoPersona}" class="form-control" type="text" value=""/>
@@ -49,7 +49,7 @@
                     <c:if test="${param.tipoPersona eq 'Juridicas' || param.tipoPersona eq 'Todas'}">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="razonSocial${param.tipoPersona}" rel="ayuda" data-content="<spring:message code="registro.ayuda.razon.juridica"/>" data-toggle="popover"><spring:message code="persona.razonSocial"/></label>
+                                <label for="razonSocial${param.tipoPersona}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.razon.juridica"/>" data-toggle="popover"><spring:message code="persona.razonSocial"/></label>
                             </div>
                             <div class="col-xs-8">
                                 <input id="razonSocial${param.tipoPersona}" name="razonSocial${param.tipoPersona}" autofocus="autofocus" class="form-control" type="text" value=""/>
@@ -59,7 +59,7 @@
 
                     <div class="form-group col-xs-6 senseMargeLat">
                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                            <label for="documento${param.tipoPersona}" rel="ayuda" data-content="<spring:message code="registro.ayuda.documento.persona"/>" data-toggle="popover"><spring:message code="persona.documento"/></label>
+                            <label for="documento${param.tipoPersona}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.documento.persona"/>" data-toggle="popover"><spring:message code="persona.documento"/></label>
                         </div>
                         <div class="col-xs-8">
                             <input id="documento${param.tipoPersona}" name="documento${param.tipoPersona}" class="form-control" type="text" value=""/>

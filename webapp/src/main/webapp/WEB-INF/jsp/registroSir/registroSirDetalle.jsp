@@ -316,7 +316,7 @@
                                 <%--Idioma--%>
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="idIdioma" rel="ayuda" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
+                                        <label for="idIdioma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.idioma"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.idioma"/></label>
                                     </div>
                                     <div class="col-xs-7 no-pad-right" id="idioma">
                                         <form:select path="idIdioma" cssClass="chosen-select">
@@ -339,7 +339,7 @@
 
                                 <div class="form-group col-xs-12">
                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="idTipoAsunto" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
+                                        <label for="idTipoAsunto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
                                     </div>
                                     <div class="col-xs-7 no-pad-right" id="tipoAsunto">
                                         <form:select path="idTipoAsunto" cssClass="chosen-select">
@@ -495,7 +495,7 @@
                                 <div class="panel-body">
                                     <div class="form-group col-xs-12">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="observacionesRechazoSir" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.rechazo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
+                                            <label for="observacionesRechazoSir" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.rechazo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
                                         </div>
                                         <div class="col-xs-8" id="observacionesRechazoSir">
                                             <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
@@ -589,9 +589,6 @@
 
 </script>
 
-<script type="application/javascript">
-    $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-</script>
 
 </body>
 </html>

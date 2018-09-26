@@ -116,7 +116,7 @@
                                             <td>${propiedadGlobal.descripcion}</td>
                                             <td>
                                                 <c:if test="${propiedadGlobal.clave != propiedadGlobal.claveCorto}">
-                                                    <p rel="valorPropiedad" data-content="${propiedadGlobal.clave}" data-toggle="popover">${propiedadGlobal.claveCorto}</p>
+                                                    <p rel="popupArriba" data-content="${propiedadGlobal.clave}" data-toggle="popover">${propiedadGlobal.claveCorto}</p>
                                                 </c:if>
                                                 <c:if test="${propiedadGlobal.clave == propiedadGlobal.claveCorto}">
                                                     ${propiedadGlobal.clave}
@@ -125,7 +125,7 @@
                                             <td>
                                                 <c:if test="${not empty propiedadGlobal.valor}">
                                                     <c:if test="${propiedadGlobal.valor != propiedadGlobal.valorCorto}">
-                                                        <p rel="valorPropiedad" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p>
+                                                        <p rel="popupArriba" data-content="${propiedadGlobal.valor}" data-toggle="popover">${propiedadGlobal.valorCorto}</p>
                                                     </c:if>
                                                     <c:if test="${propiedadGlobal.valor == propiedadGlobal.valorCorto}">
                                                         ${propiedadGlobal.valor}

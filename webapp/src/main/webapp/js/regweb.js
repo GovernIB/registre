@@ -57,11 +57,11 @@
         }
     });
 
-    $("[rel='ayuda']").popover({ trigger: "hover",placement: "bottom",container:"body", html:true});
 
-    $("[rel='valorPropiedad']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-
-    $("[rel='contactesOficina']").popover({ trigger: 'hover', container: 'body', html: true, placement: 'right'});
+    <!-- Activa los popover de mensajes de ampliación de información de los registros -->
+    $("[rel='popupAbajo']").popover({ trigger: "hover",placement: "bottom",container:"body", html:true});
+    $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='popupDerecha']").popover({ trigger: 'hover', container: 'body', html: true, placement: 'right'});
 
 
     $.sessionTimeout({

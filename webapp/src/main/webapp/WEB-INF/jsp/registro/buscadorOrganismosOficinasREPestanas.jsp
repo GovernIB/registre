@@ -35,7 +35,7 @@ que se le indica -->
                             <div class="form-group col-xs-12 senseMargeLat">
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="denominacion${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.denominacion"/></label>
+                                        <label for="denominacion${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.denominacion"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <input id="denominacion${param.tipo}" name="denominacion" class="form-control"
@@ -45,7 +45,7 @@ que se le indica -->
 
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="codigoOrganismo${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.codigo.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.codigo"/></label>
+                                        <label for="codigoOrganismo${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigo.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.codigo"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <input id="codigoOrganismo${param.tipo}" name="codigoOrganismo" class="form-control"
@@ -58,7 +58,7 @@ que se le indica -->
                             <div class="form-group col-xs-12 senseMargeLat">
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="codNivelAdministracion${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.nivel.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.nivelAdministracion"/></label>
+                                        <label for="codNivelAdministracion${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nivel.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.nivelAdministracion"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <select id="codNivelAdministracion${param.tipo}" name="codNivelAdministracion"
@@ -75,7 +75,7 @@ que se le indica -->
                                 <!-- Comunidad Autonoma -->
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="codComunidadAutonoma${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.comunidad.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.comunidadAutonoma"/></label>
+                                        <label for="codComunidadAutonoma${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.comunidad.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.comunidadAutonoma"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <select id="codComunidadAutonoma${param.tipo}" name="codComunidadAutonoma"
@@ -95,7 +95,7 @@ que se le indica -->
                             <div class="form-group col-xs-12 senseMargeLat">
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="provincia${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.provincia.organismo"/>" data-toggle="popover"><spring:message code="interesado.provincia"/></label>
+                                        <label for="provincia${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.provincia.organismo"/>" data-toggle="popover"><spring:message code="interesado.provincia"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <select id="provincia${param.tipo}" name="provincia" class="chosen-select"
@@ -110,7 +110,7 @@ que se le indica -->
 
                                 <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="localidad${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.localidad.organismo"/>" data-toggle="popover"><spring:message code="interesado.localidad"/></label>
+                                        <label for="localidad${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.localidad.organismo"/>" data-toggle="popover"><spring:message code="interesado.localidad"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <select id="localidad${param.tipo}" name="localidad" class="chosen-select">
@@ -128,7 +128,7 @@ que se le indica -->
                                 <div class="form-group col-xs-12 senseMargeLat">
                                     <div class="col-xs-6">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="unidadRaiz${param.tipo}" rel="ayuda" data-content="<spring:message code="registro.ayuda.raiz.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.unidadRaiz"/></label>
+                                            <label for="unidadRaiz${param.tipo}" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.raiz.organismo"/>" data-toggle="popover"><spring:message code="organismo.buscador.unidadRaiz"/></label>
                                         </div>
                                         <div class="col-xs-8">
                                             <input type="checkbox" id="unidadRaiz${param.tipo}"/>

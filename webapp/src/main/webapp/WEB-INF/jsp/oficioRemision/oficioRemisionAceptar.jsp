@@ -212,11 +212,11 @@
                                                             <c:out value="${registroEntrada.registroDetalle.extracto}" escapeXml="true"/>
                                                         </c:if>
                                                         <c:if test="${fn:length(registroEntrada.registroDetalle.extracto) > 40}">
-                                                            <p rel="extracto" data-content="<c:out value="${registroEntrada.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroEntrada.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                            <p rel="popupArriba" data-content="<c:out value="${registroEntrada.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroEntrada.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                         </c:if>
                                                     </td>
 
-                                                    <td class="center"><label class="no-bold representante" rel="ayuda"
+                                                    <td class="center"><label class="no-bold representante" rel="popupAbajo"
                                                                               data-content="<c:out value="${registroEntrada.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                               data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
                                                     </td>
@@ -330,10 +330,10 @@
                                                                 <c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>
                                                             </c:if>
                                                             <c:if test="${fn:length(registroSalida.registroDetalle.extracto) > 40}">
-                                                                <p rel="extracto" data-content="<c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroSalida.registroDetalle.extractoCorto}" escapeXml="true"/></p>
+                                                                <p rel="popupArriba" data-content="<c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroSalida.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                             </c:if>
                                                         </td>
-                                                        <td class="center"><label class="no-bold representante" rel="ayuda"
+                                                        <td class="center"><label class="no-bold representante" rel="popupAbajo"
                                                                                   data-content="<c:out value="${registroSalida.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
                                                                                   data-toggle="popover">${registroSalida.registroDetalle.totalInteresados}</label>
                                                         </td>
@@ -367,12 +367,6 @@
 
 <c:import url="../modulos/pie.jsp"/>
 
-<!-- Activa el popover -->
-<script type="text/javascript">
-
-    $("[rel='extracto']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-
-</script>
 
 <script type="text/javascript">
     function imprimirOficio(url) {

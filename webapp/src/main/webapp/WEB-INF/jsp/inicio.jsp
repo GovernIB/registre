@@ -597,7 +597,7 @@
                                                     <c:forEach var="oficioRemision" items="${oficiosRechazados}" varStatus="status">
                                                         <tr>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                            <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
+                                                            <td><label class="no-bold" rel="popupAbajo" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
                                                             <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                             <td>
                                                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
@@ -663,7 +663,7 @@
                                                     <c:forEach var="oficioRemision" items="${oficiosReenviados}" varStatus="status">
                                                         <tr>
                                                             <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                            <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
+                                                            <td><label class="no-bold" rel="popupAbajo" data-content="${oficioRemision.oficina.codigo}" data-toggle="popover">${oficioRemision.oficina.denominacion}</label></td>
                                                             <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                             <td>
                                                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
@@ -705,11 +705,6 @@
 
         <c:import url="modulos/pie.jsp"/>
 
-        <!-- Activa los popover resumen, reenviado y rechazado -->
-        <script type="text/javascript">
-            $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-            $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-        </script>
 
         <!-- Lleva la classe filas al darrer panell dibuixat. Així funciona si només hi ha 2 panells -->
         <script type="text/javascript">

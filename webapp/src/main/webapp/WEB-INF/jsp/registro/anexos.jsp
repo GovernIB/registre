@@ -113,7 +113,7 @@
                             <tr id="anexo${anexoFull.anexo.id}">
                                 <td>
                                     <c:if test="${anexoFull.anexo.titulo != anexoFull.anexo.tituloCorto}">
-                                        <p rel="ayuda" data-content="<c:out value="${anexoFull.anexo.titulo}" escapeXml="true"/>" data-toggle="popover"><c:out value="${anexoFull.anexo.tituloCorto}" escapeXml="true"/></p>
+                                        <p rel="popupAbajo" data-content="<c:out value="${anexoFull.anexo.titulo}" escapeXml="true"/>" data-toggle="popover"><c:out value="${anexoFull.anexo.tituloCorto}" escapeXml="true"/></p>
                                     </c:if>
                                     <c:if test="${anexoFull.anexo.titulo == anexoFull.anexo.tituloCorto}">
                                         <c:out value="${anexoFull.anexo.titulo}" escapeXml="true"/>
@@ -197,7 +197,7 @@
                                                     class="fa fa-download"></span></a>
                                         </c:if>
                                     </td>
-                                    <td class="center"><p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.sinfirma"/>" data-toggle="popover"><span class="label label-default">No</span></p></td>
+                                    <td class="center"><p rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.sinfirma"/>" data-toggle="popover"><span class="label label-default">No</span></p></td>
                                 </c:if>
 
                                 <c:if test="${anexoFull.anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
@@ -219,13 +219,13 @@
                                     </td>
                                     <td class="center">
                                         <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_VALIDA}">
-                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>(<fmt:formatDate value="${anexoFull.anexo.fechaValidacion}" pattern="dd/MM/yyyy"/>)" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
+                                            <p rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.attached.valido"/>(<fmt:formatDate value="${anexoFull.anexo.fechaValidacion}" pattern="dd/MM/yyyy"/>)" data-toggle="popover"><span class="label label-success"><span class="fa fa-key"></span></span></p>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_ERROR}">
-                                            <p rel="ayuda" data-content="${anexoFull.anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
+                                            <p rel="popupAbajo" data-content="${anexoFull.anexo.motivoNoValidacion}" data-toggle="popover"><span class="label label-danger"><span class="fa fa-key"></span></span></p>
                                         </c:if>
                                         <c:if test="${anexoFull.anexo.estadoFirma == RegwebConstantes.ANEXO_FIRMA_NOINFO}">
-                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
+                                            <p rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                         </c:if>
                                     </td>
                                 </c:if>

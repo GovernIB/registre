@@ -65,7 +65,7 @@
                                 <tr id="anexo${anexo.documento.id}">
                                     <td class="ajustTamanySir">
                                         <c:if test="${anexo.documento.nombreFichero != anexo.documento.nombreFicheroCorto}">
-                                            <p rel="ayuda" data-content="${anexo.documento.nombreFichero}" data-toggle="popover">${anexo.documento.nombreFicheroCorto}</p>
+                                            <p rel="popupAbajo" data-content="${anexo.documento.nombreFichero}" data-toggle="popover">${anexo.documento.nombreFicheroCorto}</p>
                                         </c:if>
                                         <c:if test="${anexo.documento.nombreFichero == anexo.documento.nombreFicheroCorto}">
                                             ${anexo.documento.nombreFichero}
@@ -159,7 +159,7 @@
 
                                         </c:if>
                                         <c:if test="${empty anexo.firma && anexo.tieneFirma}">
-                                            <p rel="ayuda" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
+                                            <p rel="popupAbajo" data-content="<spring:message code="anexo.tipofirma.attached"/>" data-toggle="popover"><span class="label label-success">Si</span></p>
                                         </c:if>
                                         <c:if test="${empty anexo.firma && !anexo.tieneFirma}">
                                             <span class="label label-danger">No</span>

@@ -34,7 +34,7 @@
                         <div class="panel-body">
                             <div class="form-group col-xs-12">
                                 <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
-                                    <label for="motivoAnulacion" rel="ayuda" data-content="<spring:message code="registro.ayuda.observaciones.anulacion"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSir.motivo"/></label>
+                                    <label for="motivoAnulacion" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.anulacion"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSir.motivo"/></label>
                                 </div>
                                 <div class="col-xs-9" id="motivoAnulacion">
                                     <form:textarea path="observacionesAnulacion" rows="5" cssClass="form-control"/> <span class="errors"></span>

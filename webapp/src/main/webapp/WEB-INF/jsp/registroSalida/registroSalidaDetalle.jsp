@@ -413,10 +413,6 @@
 
 </script>
 
-<!-- Activa los popover reenviado y rechazado -->
-<script type="text/javascript">
-    $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-</script>
 
 </body>
 </html>

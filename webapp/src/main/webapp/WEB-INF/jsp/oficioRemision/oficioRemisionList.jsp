@@ -51,7 +51,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="tipoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
+                                        <label for="tipoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="tipoOficioRemision" cssClass="chosen-select">
@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="destinoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.destino"/></label>
+                                        <label for="destinoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.destino"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="destinoOficioRemision" cssClass="chosen-select">
@@ -80,7 +80,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="oficioRemision.libro.id" rel="ayuda" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.libro"/></label>
+                                        <label for="oficioRemision.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.libro"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="estadoOficioRemision" rel="ayuda" data-content="<spring:message code="registro.ayuda.estadoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.estado"/></label>
+                                        <label for="estadoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estadoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.estado"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="estadoOficioRemision" cssClass="chosen-select">
@@ -104,7 +104,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="oficioRemision.numeroOficio" rel="ayuda" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
+                                        <label for="oficioRemision.numeroOficio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="usuario" rel="ayuda" data-content="<spring:message code="registro.ayuda.usuarioOficio.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
+                                        <label for="usuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuarioOficio.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:select path="usuario" class="chosen-select">
@@ -128,7 +128,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="fechaInicio" rel="ayuda" data-content="<spring:message code="registro.ayuda.inicioOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechainicio"/></label>
+                                        <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.inicioOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechainicio"/></label>
                                     </div>
                                     <div class="col-xs-8" id="fechaInicio">
                                         <div class="input-group date no-pad-right">
@@ -140,7 +140,7 @@
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="fechaFin" rel="ayuda" data-content="<spring:message code="registro.ayuda.finOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechafin"/></label>
+                                        <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.finOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechafin"/></label>
                                     </div>
                                     <div class="col-xs-8" id="fechaFin">
                                         <div class="input-group date no-pad-right">
@@ -214,7 +214,7 @@
                                                     <tr>
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="yyyy"/> / ${oficioRemision.numeroOficio}</td>
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                        <td><label class="no-bold" rel="ayuda" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
+                                                        <td><label class="no-bold" rel="popupAbajo" data-content="${oficioRemision.oficina.denominacion}" data-toggle="popover">${oficioRemision.oficina.codigo}</label></td>
                                                         <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
                                                         <td>
                                                             <span class="label label-default">
@@ -278,9 +278,7 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
-<script type="text/javascript">
-    $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-</script>
+
 
 </body>
 </html>
