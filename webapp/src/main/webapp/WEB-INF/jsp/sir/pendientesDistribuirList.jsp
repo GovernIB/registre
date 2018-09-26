@@ -173,7 +173,7 @@
 
 <c:import url="../modulos/pie.jsp"/>
 <script type="text/javascript">
-    $("[rel='errorSir']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
 </script>
 
 </body>

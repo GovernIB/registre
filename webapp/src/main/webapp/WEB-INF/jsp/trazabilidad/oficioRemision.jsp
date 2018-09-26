@@ -91,12 +91,12 @@
         <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
 
             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO}">
-                <p rel="reenviado" data-content="<c:out value="${registroSalida.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover">
+                <p rel="popupAbajo" data-content="<c:out value="${registroSalida.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover">
                     <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong><span class="label label-warning">
             </c:if>
 
             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO}">
-                <p rel="rechazado" data-content="<c:out value="${registroSalida.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover">
+                <p rel="popupAbajo" data-content="<c:out value="${registroSalida.registroDetalle.decodificacionTipoAnotacion}" escapeXml="true"/>" data-toggle="popover">
                     <small><i class="fa fa-bookmark"></i> <strong><spring:message code="oficioRemision.estado"/>:</strong><span class="label label-danger">
             </c:if>
 

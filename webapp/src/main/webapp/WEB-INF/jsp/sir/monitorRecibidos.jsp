@@ -153,7 +153,7 @@
                                         <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
                                     </div>
 
-                                    <div class="table-responsive">
+                                    <div class="table-responsive overVisible">
 
                                         <table class="table table-bordered table-hover table-striped tablesorter">
                                             <colgroup>
@@ -264,9 +264,8 @@
 
 <c:import url="../modulos/pie.jsp"/>
 <script type="text/javascript">
-    $("[rel='errorSir']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
-    $("[rel='rechazado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
-    $("[rel='reenviado']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
+    $("[rel='popupArriba']").popover({ trigger: 'hover',placement: 'top',container:"body", html:true});
+    $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
 
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
     var tradsRegistroSir = [];

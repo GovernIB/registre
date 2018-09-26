@@ -1351,3 +1351,7 @@ pre {
 .alturaArbol{
     min-height: 430px !important;
 }
+
+.overVisible{
+    overflow-x: visible !important;
+}
