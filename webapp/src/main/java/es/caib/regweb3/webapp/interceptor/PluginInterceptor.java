@@ -15,12 +15,12 @@ import javax.servlet.http.HttpSession;
 /**
  * Created by Fundació BIT.
  *
- * Interceptor para el RegistroSir
+ * Interceptor para el Plugin
  *
- * @author jpernia
+ * @author earrivi
  * Date: 5/12/14
  */
-public class SirInterceptor extends HandlerInterceptorAdapter {
+public class PluginInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -33,8 +33,8 @@ public class SirInterceptor extends HandlerInterceptorAdapter {
         LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
         Rol rolActivo = loginInfo.getRolActivo();
 
-        // Comprobamos que el usuario dispone del Rol ROL_ADMIN
-        if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+        // Comprobamos que el usuario dispone del Rol ROL_ADMIN o RWE_SUPERADMIN
+        if (rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)) {
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             response.sendRedirect("/regweb3/aviso");
