@@ -221,8 +221,11 @@
                                                             <ul class="dropdown-menu dropdown">
                                                                 <li class="dropdown-submenu-left">
                                                                     <a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a>
-                                                                    <c:if test="${registroSir.estado == 'RECIBIDO'}">
-                                                                        <a href="javascript:void(0);" onclick="enviarACK('${registroSir.id}')"><spring:message code="registroSir.enviar.ACK"/></a>
+                                                                    <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'ACEPTADO'}">
+                                                                        <a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a>
+                                                                    </c:if>
+                                                                    <c:if test="${registroSir.estado == 'ACEPTADO'}">
+                                                                        <a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a>
                                                                     </c:if>
 
                                                                 </li>
@@ -268,9 +271,12 @@
     $("[rel='popupAbajo']").popover({ trigger: 'hover',placement: 'bottom',container:"body", html:true});
 
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
-    var tradsRegistroSir = [];
-    tradsRegistroSir['registroSir.ACK.enviado.ok'] = "<spring:message code='registroSir.ACK.enviado.ok' javaScriptEscape='true' />";
-    tradsRegistroSir['registroSir.ACK.enviado.error'] = "<spring:message code='registroSir.ACK.enviado.error' javaScriptEscape='true' />";
+    var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
+    var tradsMensajeControl = [];
+    tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
+    tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
+    tradsMensajeControl['mensajeControl.confirmacion.enviado.ok'] = "<spring:message code='mensajeControl.confirmacion.enviado.ok' javaScriptEscape='true' />";
+    tradsMensajeControl['mensajeControl.confirmacion.enviado.error'] = "<spring:message code='mensajeControl.confirmacion.enviado.error' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
