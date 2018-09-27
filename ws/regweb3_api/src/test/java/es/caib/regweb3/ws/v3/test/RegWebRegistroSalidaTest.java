@@ -96,7 +96,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
     @Test
     public void crearRegistroSalida() throws Exception{
 
-        for(int i=0;i<1;i++){
+        for(int i=0;i<100;i++){
 
 
         RegistroSalidaWs registroSalidaWs = new RegistroSalidaWs();
@@ -130,7 +130,14 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
 
-        DatosInteresadoWs interesado = new DatosInteresadoWs();
+            DatosInteresadoWs interesado = new DatosInteresadoWs();
+            interesado.setTipoInteresado(TIPO_INTERESADO_ADMINISTRACION);
+            interesado.setTipoDocumentoIdentificacion("O");
+            interesado.setDocumento("L01181113");
+            interesado.setRazonSocial("Ayuntamiento de Jun");
+            interesadoWs.setInteresado(interesado);
+
+        /*DatosInteresadoWs interesado = new DatosInteresadoWs();
         interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
         interesado.setTipoDocumentoIdentificacion("N");
         interesado.setDocumento("00000001R");
@@ -150,7 +157,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         representante.setApellido1("De la torre");
         representante.setPais((long) 724);
         representante.setProvincia((long) 46);
-        interesadoWs.setRepresentante(representante);
+        interesadoWs.setRepresentante(representante);*/
 
         registroSalidaWs.getInteresados().add(interesadoWs);
 

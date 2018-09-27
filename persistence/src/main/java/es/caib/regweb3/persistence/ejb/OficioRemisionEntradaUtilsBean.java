@@ -71,10 +71,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
-
-
 
 
     @Override
@@ -100,19 +96,16 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
-
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
         }
 
-
-        List<Object[]> internos = q.getResultList();
-        for (Object[] object : internos){
-            Organismo organismo = new Organismo(null,(String) object[0], (String) object[1]);
+        List<Object[]> organismosInternos = q.getResultList();
+        for (Object[] organismoInterno : organismosInternos){
+            Organismo organismo = new Organismo(null,(String) organismoInterno[0], (String) organismoInterno[1]);
 
             organismosDestino.add(organismo);
         }
-
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
         Query q1;
@@ -125,10 +118,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
 
-        List<Object[]> externos = q1.getResultList();
+        List<Object[]> organismosExternos = q1.getResultList();
 
-        for (Object[] object : externos){
-            Organismo organismo = new Organismo(null,(String) object[0], (String) object[1]);
+        for (Object[] organismoExterno : organismosExternos){
+            Organismo organismo = new Organismo(null,(String) organismoExterno[0], (String) organismoExterno[1]);
 
             organismosDestino.add(organismo);
         }

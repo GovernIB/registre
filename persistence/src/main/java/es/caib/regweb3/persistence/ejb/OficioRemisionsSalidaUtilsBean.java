@@ -27,10 +27,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -76,9 +73,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
-
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -92,7 +86,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             queryFecha = " rs.fecha >= :fecha and ";
         }
 
-        Query q = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
+        // Obtenemos los Registros de Salida que son Oficio de remisión
+        Query q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " + queryFecha +
                 " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
@@ -107,10 +102,29 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q.setParameter("fecha", sdf.parse(fecha));
         }
 
-        List<Long> registros = q.getResultList();
+        List<Long> registros = q.getResultList(); // Registros de salida que son Oficios de Remision
 
         if(registros.size() > 0){
 
+            List<String> destinos = new ArrayList<String>();
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (registros.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = registros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+
+                Query q2 = em.createQuery("Select i.codigoDir3 from Interesado as i where i.tipo = :administracion and " +
+                        "i.registroDetalle.id in (:registros)");
+
+                // Parámetros
+                q2.setParameter("registros", subList);
+                q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+
+                destinos.addAll(q2.getResultList());
+                registros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+
+            // Obtenemos los destinos para solo tener en cuenta los que son Vigentes
             Query q2 = em.createQuery("Select i.codigoDir3 from Interesado as i where i.tipo = :administracion and " +
                     "i.registroDetalle.id in (:registros)");
 
@@ -118,7 +132,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q2.setParameter("registros", registros);
             q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
 
-            List<String> destinos = q2.getResultList();
+            destinos.addAll(q2.getResultList());
 
             for (String destino : destinos) {
                 Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(destino, entidadActiva);
@@ -133,17 +147,15 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
                     total = total + 1;
                 }
-
             }
         }
 
         return total;
-
     }
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
+    public LinkedHashSet<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
 
         String queryFecha="";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -154,7 +166,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         // Obtenemos los Registros de Salida que son Oficio de remisión
         Query q1;
-        q1 = em.createQuery("Select rs.registroDetalle.id from RegistroSalida as rs where " +
+        q1 = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
                 "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " + queryFecha +
                 " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
 
@@ -169,11 +181,28 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q1.setParameter("fecha", sdf.parse(fecha));
         }
 
-        List<Object> registros = q1.getResultList();
+        List<Object> registros = q1.getResultList(); // Registros de salida que son Oficios de Remision
 
-        // Obtenemos los Interesados  de tipo administración destinatarios de los Registros de Salida
-        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
+        // Obtenemos los Interesados de tipo administración destinatarios de los Registros de Salida
+        LinkedHashSet<Organismo> organismosDestino =  new LinkedHashSet<Organismo>(); // LinkedHashSet No permite duplicados
+        List<Object[]> destinos = new ArrayList<Object[]>();
+
         if(registros.size() > 0){
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (registros.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+                List<?> subList = registros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+
+                Query q2 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.tipo = :administracion and " +
+                        "i.registroDetalle.id in (:registros)");
+
+                // Parámetros
+                q2.setParameter("registros", subList);
+                q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+
+                destinos.addAll(q2.getResultList());
+                registros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
 
             // Obtenemos los destinos de los Interesados de los Registros Salida anteriores
             Query q2;
@@ -184,8 +213,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             q2.setParameter("registros", registros);
             q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
 
-            List<Object[]> destinos = q2.getResultList();
+            destinos.addAll(q2.getResultList());
 
+            // Solo incluimos los organismos vigentes
             for (Object[] object : destinos) {
                 Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero((String) object[0], entidadActiva);
 
@@ -203,7 +233,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             }
         }
 
-        return  organismosDestino;
+        return organismosDestino;
     }
 
     @Override

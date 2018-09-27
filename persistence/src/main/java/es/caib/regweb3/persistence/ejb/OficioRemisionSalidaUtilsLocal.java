@@ -11,6 +11,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    List<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
+    LinkedHashSet<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
