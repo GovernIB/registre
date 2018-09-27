@@ -34,7 +34,7 @@ public class MensajeBean implements MensajeLocal {
      *
      * @param numeroRegistro Información del RegistroSir
      */
-    public MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro) {
+    public MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro, Date fechaRegistro) {
 
         log.info("Enviando Mensaje de confirmación del RegistroSir: " + registroSir.getIdentificadorIntercambio());
 
@@ -46,7 +46,11 @@ public class MensajeBean implements MensajeLocal {
         confirmacion.setTipoMensaje(TipoMensaje.CONFIRMACION.getValue());
         confirmacion.setDescripcionMensaje(TipoMensaje.CONFIRMACION.getName());
         confirmacion.setNumeroRegistroEntradaDestino(numeroRegistro);
-        confirmacion.setFechaEntradaDestino(new Date());
+        if(fechaRegistro != null){
+            confirmacion.setFechaEntradaDestino(fechaRegistro);
+        }else {
+            confirmacion.setFechaEntradaDestino(new Date());
+        }
 
         return enviarMensaje(confirmacion);
     }

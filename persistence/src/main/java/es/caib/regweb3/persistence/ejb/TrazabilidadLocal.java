@@ -21,6 +21,14 @@ import java.util.Set;
 public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     /**
+     * Obtiene todas las Trazabilidades a partir de un Identificador Intercambio
+     * @param idIntercambio
+     * @return
+     * @throws Exception
+     */
+    List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception;
+
+    /**
      * Obtiene la Trazabilidad de un RegistroSalida
      * @param idRegistroSalida
      * @return

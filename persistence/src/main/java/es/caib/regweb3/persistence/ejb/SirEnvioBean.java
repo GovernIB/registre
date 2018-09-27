@@ -300,7 +300,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
             // Enviamos el Mensaje de Confirmación
-            enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado());
+            enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Integracion
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
@@ -647,7 +647,9 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         if(trazabilidadSir.getTipo().equals(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO)){
 
-            enviarMensajeConfirmacion(trazabilidadSir.getRegistroSir(), trazabilidadSir.getRegistroEntrada().getNumeroRegistroFormateado());
+            RegistroEntrada registroEntrada = trazabilidadSir.getRegistroEntrada();
+
+            enviarMensajeConfirmacion(trazabilidadSir.getRegistroSir(), registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             return true;
         }
@@ -781,10 +783,10 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @param numeroRegistroFormateado
      * @throws Exception
      */
-    private void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado) throws Exception{
+    private void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws Exception{
 
         // Enviamos el mensaje de confirmación
-        MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, numeroRegistroFormateado);
+        MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, numeroRegistroFormateado, fechaRegistro);
 
         // Guardamos el mensaje de confirmación
         mensajeControlEjb.persist(confirmacion);

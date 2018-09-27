@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -69,6 +70,19 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad order by trazabilidad.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+
+        return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select DISTINCT t from Trazabilidad as t " +
+                "where t.registroSir.identificadorIntercambio = :idIntercambio and t.registroSir.entidad.id = :idEntidad order by t.fecha ");
+
+        q.setParameter("idIntercambio", idIntercambio);
+        q.setParameter("idEntidad", idEntidad);
 
         return q.getResultList();
     }
@@ -152,7 +166,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada getRegistroAceptado(Long idRegistroSir) throws Exception {
 
-        Query q = em.createQuery("Select tra.registroEntradaDestino.id, tra.registroEntradaDestino.numeroRegistroFormateado  from Trazabilidad as tra " +
+        Query q = em.createQuery("Select tra.registroEntradaDestino.id, tra.registroEntradaDestino.numeroRegistroFormateado, tra.registroEntradaDestino.fecha from Trazabilidad as tra " +
                 "where tra.registroSir.id = :registroSir and tra.registroSir.estado = :aceptado");
 
         q.setParameter("registroSir", idRegistroSir);
@@ -166,6 +180,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
             RegistroEntrada registroEntrada = new RegistroEntrada();
             registroEntrada.setId((Long)  object[0]);
             registroEntrada.setNumeroRegistroFormateado((String) object[1]);
+            registroEntrada.setFecha((Date) object[2]);
 
             return registroEntrada;
         }

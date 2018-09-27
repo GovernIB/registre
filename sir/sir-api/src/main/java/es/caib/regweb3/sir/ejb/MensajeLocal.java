@@ -5,6 +5,7 @@ import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 
 import javax.ejb.Local;
+import java.util.Date;
 
 /**
  * Created by earrivi on 22/02/2017.
@@ -18,7 +19,7 @@ public interface MensajeLocal {
      * @param registroSir
      * @param numeroRegistro
      */
-    MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro);
+    MensajeControl enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistro, Date fechaRegistro);
 
     /**
      *
