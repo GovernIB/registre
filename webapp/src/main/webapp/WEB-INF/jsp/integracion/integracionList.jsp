@@ -135,7 +135,7 @@
                                         <c:forEach var="integracion" items="${paginacion.listado}">
                                             <tr>
                                                 <td><fmt:formatDate value="${integracion.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                <td><a href="javascript:void(0);" onclick="buscarIntegraciones('${integracion.numRegFormat}')" target="_blank">${integracion.numRegFormat}</a> </td>
+                                                <td><a href="javascript:void(0);" onclick="buscarIntegraciones('${integracion.numRegFormat}')">${integracion.numRegFormat}</a> </td>
                                                 <td>${integracion.descripcion}</td>
                                                 <td>${integracion.tiempoFormateado}</td>
                                                 <td>
@@ -158,7 +158,7 @@
                                         </tbody>
                                     </table>
 
-                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal">
+                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
                                         <form:hidden path="texto"/>
                                     </form:form>
 
