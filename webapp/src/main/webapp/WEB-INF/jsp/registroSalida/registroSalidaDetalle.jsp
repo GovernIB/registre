@@ -48,9 +48,11 @@
                     <div class="panel-body">
 
                         <%--DETALLE REGISTRO--%>
-                        <c:import url="../registro/detalleRegistro.jsp">
-                            <c:param name="tipoRegistro" value="salida"/>
-                        </c:import>
+                        <dl class="detalle_registro">
+                            <c:import url="../registro/detalleRegistro.jsp">
+                                <c:param name="tipoRegistro" value="salida"/>
+                            </c:import>
+                        </dl>
 
                     </div>
 

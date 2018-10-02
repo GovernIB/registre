@@ -55,18 +55,29 @@
 
                                             <%--DETALLE REGISTRO--%>
                                             <c:if test="${not empty trazabilidades}">
-
+                                                <%--REGISTRO ENTRADA--%>
                                                 <c:if test="${trazabilidades[0].oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
                                                     <c:set var="registro" value="${trazabilidades[0].registroEntradaOrigen}" scope="request"/>
-                                                    <c:import url="../registro/detalleRegistro.jsp">
-                                                        <c:param name="tipoRegistro" value="entrada"/>
-                                                    </c:import>
+                                                    <dl class="detalle_registro">
+                                                        <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
+                                                        <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
+
+                                                        <c:import url="../registro/detalleRegistro.jsp">
+                                                            <c:param name="tipoRegistro" value="entrada"/>
+                                                        </c:import>
+                                                    </dl>
                                                 </c:if>
+
+                                                <%--REGISTRO SALIDA--%>
                                                 <c:if test="${trazabilidades[0].oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
                                                     <c:set var="registro" value="${trazabilidades[0].registroSalida}" scope="request"/>
-                                                    <c:import url="../registro/detalleRegistro.jsp">
-                                                        <c:param name="tipoRegistro" value="salida"/>
-                                                    </c:import>
+                                                    <dl class="detalle_registro">
+                                                        <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
+                                                        <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
+                                                        <c:import url="../registro/detalleRegistro.jsp">
+                                                            <c:param name="tipoRegistro" value="salida"/>
+                                                        </c:import>
+                                                    </dl>
                                                 </c:if>
                                             </c:if>
 
