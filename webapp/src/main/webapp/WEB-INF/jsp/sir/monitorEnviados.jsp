@@ -219,7 +219,17 @@
                                                                     ${oficioRemision.numeroReintentos}
                                                                 </td>
                                                                 <td class="center">
-                                                                    <a class="btn btn-primary btn-sm" href="<c:url value="/sir/${oficioRemision.id}/reiniciar"/>" target="_blank" title="<spring:message code="registroSir.reiniciar"/>"><span class="fa fa-refresh"></span></a>
+                                                                    <div class="btn-group pull-right text12">
+                                                                        <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                                                                            <spring:message code="regweb.acciones"/> <span class="caret"></span>
+                                                                        </button>
+                                                                        <ul class="dropdown-menu dropdown">
+                                                                            <li class="dropdown-submenu-left">
+                                                                                <a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a>
+                                                                                <a href="<c:url value="/sir/${oficioRemision.id}/reiniciar"/>" target="_blank"><spring:message code="registroSir.reiniciar"/></a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                     </c:forEach>

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.controller.sir;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
@@ -42,11 +43,37 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     private TrazabilidadLocal trazabilidadEjb;
 
+    @EJB(mappedName = "regweb3/TrazabilidadSirEJB/local")
+    private TrazabilidadSirLocal trazabilidadSirEjb;
+
     @EJB(mappedName = "regweb3/ArchivoEJB/local")
     private ArchivoLocal archivoEjb;
 
     @EJB(mappedName = "regweb3/SirEnvioEJB/local")
     private SirEnvioLocal sirEnvioEjb;
+
+    @EJB(mappedName = "regweb3/MensajeControlEJB/local")
+    private MensajeControlLocal mensajeControlEjb;
+
+    /**
+     * Carga el formulario para ver el detalle de un IdentificadorIntercambio
+     */
+    @RequestMapping(value = "/{idIntercambio}/detalle", method = RequestMethod.GET)
+    public String detalleIdentificadorIntercambio(@PathVariable String idIntercambio, Model model, HttpServletRequest request) throws Exception {
+
+        Entidad entidad = getEntidadActiva(request);
+
+        List<TrazabilidadSir> trazabilidadesSir = trazabilidadSirEjb.getByIdIntercambio(idIntercambio, entidad.getId());
+        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByIdIntercambio(idIntercambio, entidad.getId());
+        List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(idIntercambio, entidad.getId());
+
+        model.addAttribute("trazabilidadesSir", trazabilidadesSir);
+        model.addAttribute("trazabilidades", trazabilidades);
+        model.addAttribute("mensajes", mensajes);
+        model.addAttribute("idIntercambio", idIntercambio);
+
+        return "sir/intercambioDetalle";
+    }
 
     /**
      * Listado de oficios de remisión sir enviados

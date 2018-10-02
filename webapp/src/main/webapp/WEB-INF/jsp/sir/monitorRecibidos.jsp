@@ -221,6 +221,7 @@
                                                             <ul class="dropdown-menu dropdown">
                                                                 <li class="dropdown-submenu-left">
                                                                     <a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a>
+                                                                    <a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a>
                                                                     <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'ACEPTADO'}">
                                                                         <a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a>
                                                                     </c:if>

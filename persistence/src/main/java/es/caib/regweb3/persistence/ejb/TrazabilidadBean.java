@@ -79,7 +79,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     public List<Trazabilidad> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT t from Trazabilidad as t " +
-                "where t.registroSir.identificadorIntercambio = :idIntercambio and t.registroSir.entidad.id = :idEntidad order by t.fecha ");
+                "where t.oficioRemision.identificadorIntercambio = :idIntercambio and t.oficioRemision.usuarioResponsable.entidad.id = :idEntidad order by t.fecha ");
 
         q.setParameter("idIntercambio", idIntercambio);
         q.setParameter("idEntidad", idEntidad);
