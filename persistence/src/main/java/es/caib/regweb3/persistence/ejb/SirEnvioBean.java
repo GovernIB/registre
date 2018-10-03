@@ -831,7 +831,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reintentar envío: " + oficio.getIdentificadorIntercambio();
+        String descripcion = "Reintentar envío a: " + oficio.getCodigoEntidadRegistralDestino();
         peticion.append("IdentificadorIntercambio: ").append(oficio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
         peticion.append("Origen: ").append(oficio.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("Destino: ").append(oficio.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
