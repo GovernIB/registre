@@ -220,7 +220,7 @@
                                     <p><i class="fa fa-institution"></i> <strong><spring:message code="organismo.organismo"/>:</strong> ${oficioRemision.destinoExternoDenominacion}</p>
                                     <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
 
-                                        <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino}</p>
+                                        <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</p>
                                         <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
                                             <div class="alert alert-grey"><small>${oficioRemision.contactosEntidadRegistralDestino}</small></div>
                                         </c:if>
