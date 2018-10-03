@@ -175,7 +175,7 @@
                                             </p>
                                         </div>
 
-                                        <div class="table-responsive">
+                                        <div class="table-responsive overVisible">
 
                                             <table class="table table-bordered table-hover table-striped tablesorter">
                                                 <colgroup>
