@@ -148,6 +148,13 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     List<Long> getEnviadosConError(Long idEntidad) throws Exception;
 
     /**
+     * Reinicia el contador de reintentos
+     * @param idRegistroSir
+     * @throws Exception
+     */
+    public void reiniciarIntentos(Long idRegistroSir) throws Exception;
+
+    /**
      * Elimina los RegistroSir de una Entidad
      * @param idEntidad
      * @return

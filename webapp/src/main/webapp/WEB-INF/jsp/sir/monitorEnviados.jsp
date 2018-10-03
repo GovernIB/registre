@@ -268,21 +268,19 @@
                                                             </c:if>
                                                         </td>
 
-                                                        <td class="center">
-                                                                ${oficioRemision.numeroReintentos}
-                                                        </td>
+                                                        <td class="center">${oficioRemision.numeroReintentos}</td>
                                                         <td class="center">
                                                             <div class="btn-group pull-right text12">
                                                                 <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                                                                     <spring:message code="regweb.acciones"/> <span class="caret"></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu dropdown">
-                                                                    <li>
-                                                                        <a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="<c:url value="/sir/${oficioRemision.id}/reiniciar"/>" target="_blank"><spring:message code="registroSir.reiniciar"/></a>
-                                                                    </li>
+                                                                    <li><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                    <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
+                                                                                  oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+                                                                        <li><a href="<c:url value="/sir/oficio/${oficioRemision.id}/reiniciar"/>" target="_blank"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                    </c:if>
+
                                                                 </ul>
                                                             </div>
                                                         </td>

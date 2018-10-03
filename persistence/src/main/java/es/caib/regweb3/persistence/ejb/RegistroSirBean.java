@@ -906,6 +906,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     }
 
+    @Override
+    public void reiniciarIntentos(Long idRegistroSir) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set numeroReintentos=0 where id = :idRegistroSir");
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
+
+    }
+
     /**
      * Transforma una Lista de {@link InteresadoSir} en una Lista de {@link Interesado}
      * @param interesados

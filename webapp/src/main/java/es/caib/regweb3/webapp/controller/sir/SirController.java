@@ -220,14 +220,29 @@ public class SirController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/{idOficio}/reiniciar", method = RequestMethod.GET)
-    public String reiniciar(@PathVariable Long idOficio, HttpServletRequest request)throws Exception {
+    @RequestMapping(value = "/oficio/{idOficio}/reiniciar", method = RequestMethod.GET)
+    public String reiniciarOficio(@PathVariable Long idOficio, HttpServletRequest request)throws Exception {
 
         oficioRemisionEjb.reiniciarIntentos(idOficio);
 
         Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
 
         return "redirect:/sir/monitorEnviados";
+    }
+
+    /**
+     * Reinicia el contador de reintentos SIR
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/registroSir/{idRegistroSir}/reiniciar", method = RequestMethod.GET)
+    public String reiniciarRegistroSir(@PathVariable Long idRegistroSir, HttpServletRequest request)throws Exception {
+
+        registroSirEjb.reiniciarIntentos(idRegistroSir);
+
+        Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
+
+        return "redirect:/sir/monitorRecibidos";
     }
 
     /**
