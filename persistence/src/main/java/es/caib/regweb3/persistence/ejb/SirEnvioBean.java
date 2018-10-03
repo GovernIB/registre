@@ -621,9 +621,8 @@ public class SirEnvioBean implements SirEnvioLocal {
     @SuppressWarnings(value = "unchecked")
     public Boolean enviarACK(Long idRegistroSir) throws Exception{
 
-        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
-
-        if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO) || registroSir.getEstado().equals(EstadoRegistroSir.ACEPTADO)){
+        try{
+            RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
             MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
             mensaje.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralDestino());
@@ -635,11 +634,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             mensajeControlEjb.persist(mensaje);
 
-            return true;
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
         }
 
-        return false;
-
+        return true;
     }
 
     @Override

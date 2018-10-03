@@ -3,10 +3,10 @@
 
 <!DOCTYPE html>
 <html lang="ca">
-<head>
-    <title><spring:message code="regweb.titulo"/></title>
-    <c:import url="../modulos/imports.jsp"/>
-</head>
+    <head>
+        <title><spring:message code="regweb.titulo"/></title>
+        <c:import url="../modulos/imports.jsp"/>
+    </head>
 
 <body>
 
@@ -219,17 +219,14 @@
                                                                 <spring:message code="regweb.acciones"/> <span class="caret"></span>
                                                             </button>
                                                             <ul class="dropdown-menu dropdown">
-                                                                <li class="dropdown-submenu-left">
-                                                                    <a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a>
-                                                                    <a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a>
-                                                                    <c:if test="${registroSir.estado == 'RECIBIDO' || registroSir.estado == 'ACEPTADO'}">
-                                                                        <a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a>
-                                                                    </c:if>
-                                                                    <c:if test="${registroSir.estado == 'ACEPTADO'}">
-                                                                        <a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a>
-                                                                    </c:if>
+                                                                <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
+                                                                <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                <li class="divider"></li>
+                                                                <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
+                                                                <c:if test="${registroSir.estado == 'ACEPTADO'}">
+                                                                    <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
+                                                                </c:if>
 
-                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -244,24 +241,14 @@
                                         </c:import>
 
                                     </div>
-
                                 </c:if>
-
                             </div>
                         </div>
-
                     </c:if>
-
-
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- FIN BUSCADOR -->
-
-
-
 
 </div>
 </div> <!-- /container -->
