@@ -194,10 +194,10 @@
                                                 <tr>
                                                     <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                     <th><spring:message code="oficioRemision.fecha"/></th>
+                                                    <th><spring:message code="oficioRemision.tipo"/></th>
                                                     <th><spring:message code="oficioRemision.oficina"/></th>
                                                     <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                     <th><spring:message code="oficioRemision.estado"/></th>
-                                                    <th><spring:message code="oficioRemision.tipo"/></th>
                                                     <th><spring:message code="oficioRemision.reintentos"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
@@ -208,6 +208,15 @@
                                                     <tr>
                                                         <td>${oficioRemision.identificadorIntercambio}</td>
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                        <td>
+                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
+                                                            </c:if>
+
+                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
+                                                            </c:if>
+                                                        </td>
                                                         <td><label class="no-bold" rel="popupAbajo"
                                                                    data-content="${oficioRemision.oficina.codigo}"
                                                                    data-toggle="popover">${oficioRemision.oficina.denominacion}</label>
@@ -260,16 +269,6 @@
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}">
                                                                 <span class="label label-danger"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
                                                         </td>
-                                                        <td>
-                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
-                                                            </c:if>
-
-                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
-                                                            </c:if>
-                                                        </td>
-
                                                         <td class="center">${oficioRemision.numeroReintentos}</td>
                                                         <td class="center">
                                                             <div class="btn-group pull-right text12">
