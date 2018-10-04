@@ -220,14 +220,17 @@ public class SirController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/oficio/{idOficio}/reiniciar", method = RequestMethod.GET)
-    public String reiniciarOficio(@PathVariable Long idOficio, HttpServletRequest request)throws Exception {
+    @RequestMapping(value = "/oficio/reiniciar", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean reiniciarOficio(@RequestParam Long id, HttpServletRequest request)throws Exception {
+        try{
+            oficioRemisionEjb.reiniciarIntentos(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
 
-        oficioRemisionEjb.reiniciarIntentos(idOficio);
-
-        Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
-
-        return "redirect:/sir/monitorEnviados";
+        return true;
     }
 
     /**
@@ -235,14 +238,17 @@ public class SirController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/registroSir/{idRegistroSir}/reiniciar", method = RequestMethod.GET)
-    public String reiniciarRegistroSir(@PathVariable Long idRegistroSir, HttpServletRequest request)throws Exception {
+    @RequestMapping(value = "/registroSir/reiniciar", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean reiniciarRegistroSir(@RequestParam Long id, HttpServletRequest request)throws Exception {
+        try{
+            registroSirEjb.reiniciarIntentos(id);
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
 
-        registroSirEjb.reiniciarIntentos(idRegistroSir);
-
-        Mensaje.saveMessageInfo(request, getMessage("registroSir.reiniciar.ok"));
-
-        return "redirect:/sir/monitorRecibidos";
+        return true;
     }
 
     /**

@@ -230,7 +230,8 @@
                                                                     <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
                                                                 </c:if>
                                                                 <c:if test="${registroSir.estado != 'ACEPTADO'}">
-                                                                    <li><a href="<c:url value="/sir/registroSir/${registroSir.id}/reiniciar"/>" target="_blank"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                    <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
+                                                                    <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
                                                                 </c:if>
                                                             </ul>
                                                         </div>
@@ -264,10 +265,13 @@
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
     var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
     var tradsMensajeControl = [];
+    var tradsSir = [];
     tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
     tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
     tradsMensajeControl['mensajeControl.confirmacion.enviado.ok'] = "<spring:message code='mensajeControl.confirmacion.enviado.ok' javaScriptEscape='true' />";
     tradsMensajeControl['mensajeControl.confirmacion.enviado.error'] = "<spring:message code='mensajeControl.confirmacion.enviado.error' javaScriptEscape='true' />";
+    tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
+    tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>

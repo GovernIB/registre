@@ -25,6 +25,8 @@
             </div>
         </div><!-- /.row -->
 
+        <div id="mensajes"></div>
+
         <c:import url="../modulos/mensajes.jsp"/>
 
         <!-- BUSCADOR -->
@@ -278,7 +280,8 @@
                                                                     <li><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
                                                                     <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
                                                                                   oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
-                                                                        <li><a href="<c:url value="/sir/oficio/${oficioRemision.id}/reiniciar"/>" target="_blank"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                        <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
+                                                                        <li><a href="javascript:void(0);" onclick="reiniciarContador('${oficioRemision.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
                                                                     </c:if>
 
                                                                 </ul>
@@ -307,6 +310,14 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript">
+    var tradsSir = [];
+    tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
+    tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
+</script>
+
+<script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
 
 </body>
 </html>
