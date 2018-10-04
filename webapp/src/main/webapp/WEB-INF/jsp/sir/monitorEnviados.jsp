@@ -228,7 +228,7 @@
                                                                 <span class="label label-warning"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
                                                             </c:if>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}">
-                                                                <span class="label label-warning"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
+                                                                <span class="label label-success"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
                                                             </c:if>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}">
                                                                 <p rel="popupArriba"

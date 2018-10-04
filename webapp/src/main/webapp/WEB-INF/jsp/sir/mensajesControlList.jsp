@@ -170,7 +170,7 @@
                                             <tbody>
                                                 <c:forEach var="mensajeControl" items="${paginacion.listado}" varStatus="status">
                                                     <tr>
-                                                        <td>${mensajeControl.identificadorIntercambio}</td>
+                                                        <td><a href="<c:url value="/sir/${mensajeControl.identificadorIntercambio}/detalle"/>" target="_blank">${mensajeControl.identificadorIntercambio}</a></td>
                                                         <td><fmt:formatDate value="${mensajeControl.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                                         <td class="center">
                                                             <c:if test="${mensajeControl.tipoComunicacion == RegwebConstantes.TIPO_COMUNICACION_ENVIADO}">
