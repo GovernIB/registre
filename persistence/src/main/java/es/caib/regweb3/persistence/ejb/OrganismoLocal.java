@@ -99,13 +99,6 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      */
     Organismo findByCodigoLigero(String codigo) throws Exception;
 
-    /**
-     *  Devuelve el organismo por codigo si esta vigente
-     * @param codigo
-     * @return
-     * @throws Exception
-     */
-    Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Devuelve Organismo con el mismo código dir3 en otra Entidad y con libros
@@ -115,6 +108,14 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     Organismo findByCodigoOtraEntidadConLibros(String codigo, Long idEntidadActiva) throws Exception;
+
+    /**
+     *  Devuelve el organismo por codigo si esta vigente
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception;
 
     /**
      * Obtiene los organismos de una entidad que tienen libros
