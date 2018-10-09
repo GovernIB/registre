@@ -180,9 +180,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
-                "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
-                "organismo.estado.codigoEstadoEntidad=:vigente");
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, " +
+                "organismo.estado.id from Organismo as organismo where organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
+                "organismo.estado.codigoEstadoEntidad=:vigente and organismo.codigo not in " +
+                "(select org.codigo from organismo as org where org.entidad != :idEntidad and org.entidad.activo = true)");
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
@@ -262,6 +263,31 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }
     }
 
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoOtraEntidadConLibros(String codigo, Long idEntidadActiva) throws Exception {
+
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, " +
+                "organismo.estado.id from Organismo as organismo inner join organismo.libros as libros where " +
+                "organismo.codigo = :codigo and organismo.entidad.id != :idEntidadActiva and organismo.entidad.activo = true ");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidadActiva", idEntidadActiva);
+
+        List<Object[]> result = q.getResultList();
+
+        if (result.size() == 1) {
+            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
+            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
+            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            return organismo;
+        } else {
+            return null;
+        }
+
+    }
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadLibros(Long entidad) throws Exception {
@@ -290,30 +316,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }
 
         return organismos;
-
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Organismo findByCodigoOtraEntidadConLibros(String codigo, Long idEntidadActiva) throws Exception {
-
-        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, " +
-                "organismo.estado.id from Organismo as organismo inner join organismo.libros as libros where " +
-                "organismo.codigo = :codigo and organismo.entidad.id != :idEntidadActiva and organismo.entidad.activo = true ");
-
-        q.setParameter("codigo", codigo);
-        q.setParameter("idEntidadActiva", idEntidadActiva);
-
-        List<Object[]> result = q.getResultList();
-
-        if (result.size() == 1) {
-            Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
-            organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
-            organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
-            return organismo;
-        } else {
-            return null;
-        }
 
     }
 
@@ -496,6 +498,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         List<Organismo> organismos = q.getResultList();
         for (Organismo org : organismos) {
             Hibernate.initialize(org.getLibros());
+            Hibernate.initialize(org.getOrganismoRaiz());
+            Hibernate.initialize(org.getOrganismoSuperior());
         }
         paginacion.setListado(organismos);
 
