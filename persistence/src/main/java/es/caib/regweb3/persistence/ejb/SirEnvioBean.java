@@ -11,6 +11,7 @@ import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -225,6 +226,12 @@ public class SirEnvioBean implements SirEnvioLocal {
             log.info("----------------------------------------------------------------------------------------------");
 
 
+        }catch (SIRException s){
+            s.printStackTrace();
+            if(registroSir != null){
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            }
+            throw s;
         }catch (Exception e){
             e.printStackTrace();
             if(registroSir != null){

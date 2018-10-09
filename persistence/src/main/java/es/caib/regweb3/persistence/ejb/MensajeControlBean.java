@@ -386,7 +386,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
 
             case (RegwebConstantes.OFICIO_ACEPTADO):
 
-                log.info("Se ha recibido un mensaje de confirmación duplicado: " + mensaje.toString());
+                log.info("Se ha recibido un mensaje de confirmación duplicado");
 
                 break;
 
