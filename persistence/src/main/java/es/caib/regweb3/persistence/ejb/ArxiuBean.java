@@ -109,10 +109,10 @@ public class ArxiuBean implements ArxiuLocal{
             Date hoy = new Date();
             SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 
-            log.info("SERIE: " + custody.getPropertySerieDocumentalEL());
-
             //String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\")";
             String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:fecha_inicio:[2018-05-01T00:00:00.000Z TO "+formatDate.format(hoy)+"T23:59:59.000Z] AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\") ";
+
+            log.info("queryDM: " + queryDM);
 
             ResultadoBusqueda<Expediente> result = apiArxiu.busquedaExpedientes(queryDM,0);
 
