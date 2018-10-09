@@ -272,7 +272,7 @@
                                             <label for="observacionesRechazoSir" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.rechazo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.observaciones"/></label>
                                         </div>
                                         <div class="col-xs-8" id="observacionesRechazoSir">
-                                            <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control"/> <span class="errors"></span>
+                                            <form:textarea path="observacionesRechazo" rows="5" cssClass="form-control" maxlength="80"/> <span class="errors"></span>
                                         </div>
                                     </div>
 
