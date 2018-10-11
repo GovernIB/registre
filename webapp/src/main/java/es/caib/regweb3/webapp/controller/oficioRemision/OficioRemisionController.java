@@ -432,6 +432,7 @@ public class OficioRemisionController extends BaseController {
 
         List<OficioRemision> oficioRemisionList = new ArrayList<OficioRemision>();
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        String redirect = "/inici";
 
         // Comprobamos que la Entidad que envía está en SIR
         Entidad entidadActual = getEntidadActiva(request);
@@ -441,12 +442,12 @@ public class OficioRemisionController extends BaseController {
             return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
         }
 
-        // OFICIO DE REMISION ENTRADA
-        if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
+        try {
 
-            log.debug("Entra Dins oficioRemisionSir ENTRADA");
+            // OFICIO DE REMISION ENTRADA
+            if (RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemisionForm.getTipoOficioRemision())) {
 
-            try {
+                redirect = "redirect:/oficioRemision/entradasPendientesRemision";
 
                 // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
                 if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
@@ -485,27 +486,10 @@ public class OficioRemisionController extends BaseController {
                     }
                 }
 
-            } catch (SIRException s) {
-                log.error(" Error enviant a SIR: " + s.getMessage(), s);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+                // OFICIO DE REMISION SALIDA
+            } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemisionForm.getTipoOficioRemision())) {
 
-            } catch (I18NException e) {
-                log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-            } catch (I18NValidationException ve) {
-                log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
-            }
-
-            // OFICIO DE REMISION SALIDA
-        } else if (RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemisionForm.getTipoOficioRemision())) {
-
-            log.debug("Entra Dins oficioRemisionSir SALIDA");
-
-            try {
+                redirect = "redirect:/oficioRemision/salidasPendientesRemision";
 
                 // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
                 if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
@@ -543,34 +527,29 @@ public class OficioRemisionController extends BaseController {
                         oficioRemisionList.add(oficioRemision);
                     }
                 }
-
-
-            } catch (SIRException s) {
-                log.error(" Error enviant a SIR: " + s.getMessage(), s);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-            } catch (I18NException e) {
-                log.error(I18NUtils.getMessage(e), e);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
-            } catch (I18NValidationException ve) {
-                log.error(I18NUtils.getMessage(ve), ve);
-                Mensaje.saveMessageError(request, getMessage("registroSir.error.envio"));
-                return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
             }
-        }
 
-        log.debug("Final de oficioRemisionSir");
+        } catch (SIRException s) {
+            log.info(" Error enviant a SIR: " + s.getMessage(), s);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": "+s.getMessage());
+            return new ModelAndView(redirect);
+        } catch (I18NException e) {
+            log.info(" Error enviant a SIR: " + I18NUtils.getMessage(e), e);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio")  +": "+e.getMessage());
+            return new ModelAndView(redirect);
+        } catch (I18NValidationException ve) {
+            log.info(" Error enviant a SIR: " + I18NUtils.getMessage(ve), ve);
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio")  +": "+ve.getMessage());
+            return new ModelAndView(redirect);
+        }
 
         // TODO Missatge
         if (oficioRemisionList.size() == 0) {
-            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+            return new ModelAndView(redirect);
         } else {
 
             if (oficioRemisionList.size() == 1) {
-                String redirect = "redirect:/oficioRemision/" + oficioRemisionList.get(0).getId() + "/detalle";
-                log.info("Redirecting to: " + redirect);
-                return new ModelAndView(redirect);
+                return new ModelAndView("redirect:/oficioRemision/" + oficioRemisionList.get(0).getId() + "/detalle");
             } else {
                 //Model model, HttpServletRequest request)throws Exception {
 

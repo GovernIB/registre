@@ -89,7 +89,14 @@
                                             <tr>
                                                 <td><fmt:formatDate value="${integracion.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                                 <td class="center"><span class="label label-warning"><spring:message code="integracion.tipo.${integracion.tipo}" /></span> </td>
-                                                <td>${integracion.numRegFormat}</td>
+                                                <td>
+                                                    <c:if test="${integracion.tipo == RegwebConstantes.INTEGRACION_SIR}">
+                                                        <a href="<c:url value="/sir/${integracion.numRegFormat}/detalle"/>" target="_blank">${integracion.numRegFormat}</a>
+                                                    </c:if>
+                                                    <c:if test="${integracion.tipo != RegwebConstantes.INTEGRACION_SIR}">
+                                                        ${integracion.numRegFormat}
+                                                    </c:if>
+                                                </td>
                                                 <td>${integracion.descripcion}</td>
                                                 <td>${integracion.tiempoFormateado}</td>
                                                 <td class="center">

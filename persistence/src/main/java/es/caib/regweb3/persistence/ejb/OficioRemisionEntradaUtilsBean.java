@@ -123,7 +123,18 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         for (Object[] organismoExterno : organismosExternos){
             Organismo organismo = new Organismo(null,(String) organismoExterno[0], (String) organismoExterno[1]);
 
-            organismosDestino.add(organismo);
+            // Cercam si el destí extern ja existeix com a intern, per no duplicar-los a la llista (EPD creada com Entitat)
+            Boolean existeix = false;
+            for(Organismo organ : organismosDestino) {
+                if(organismo.getCodigo().equals(organ.getCodigo())) {
+                    existeix= true;
+                    break;
+                }
+            }
+            if(!existeix){
+                organismosDestino.add(organismo);
+            }
+
         }
 
         return organismosDestino;

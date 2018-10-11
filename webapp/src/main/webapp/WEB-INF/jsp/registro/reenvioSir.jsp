@@ -93,7 +93,7 @@
                                         <label><span class="text-danger"> * </span><spring:message code="registroEntrada.observaciones"/></label>
                                     </div>
                                     <div class="col-xs-9" id="idObservaciones">
-                                        <form:textarea path="observaciones" rows="3" class="form-control"/>
+                                        <form:textarea path="observaciones" rows="3" class="form-control" maxlength="80"/>
                                         <span class="errors"></span>
                                     </div>
                                 </div>

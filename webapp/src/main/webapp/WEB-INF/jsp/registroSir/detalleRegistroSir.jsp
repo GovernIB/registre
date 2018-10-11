@@ -218,14 +218,17 @@
         <dd> ${registroSir.numeroReintentos}</dd>
     </c:if>
 
-    <c:if test="${not empty registroSir.codigoError}">
-        <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>: </dt>
-        <dd> ${registroSir.codigoError}</dd>
+    <c:if test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
+        <c:if test="${not empty registroSir.codigoError}">
+            <dt><i class="fa fa-bug"></i> <spring:message code="registroSir.codigoError"/>: </dt>
+            <dd> ${registroSir.codigoError}</dd>
+        </c:if>
+
+        <c:if test="${not empty registroSir.descripcionError}">
+            <dt><i class="fa fa-comment"></i> <spring:message code="registroSir.descripcionError"/>: </dt>
+            <dd> ${registroSir.descripcionError}</dd>
+        </c:if>
     </c:if>
 
-    <c:if test="${not empty registroSir.descripcionError}">
-        <dt><i class="fa fa-comment"></i> <spring:message code="registroSir.descripcionError"/>: </dt>
-        <dd> ${registroSir.descripcionError}</dd>
-    </c:if>
 
 </dl>

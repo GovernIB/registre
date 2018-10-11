@@ -15,6 +15,8 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -103,15 +105,20 @@ public class ArxiuBean implements ArxiuLocal{
 
             ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
 
-            log.info("SERIE: " + custody.getPropertySerieDocumentalEL());
+            // Fecha fin búsqueda
+            Date hoy = new Date();
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 
-            String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\")";
+            //String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\")";
+            String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:fecha_inicio:[2018-05-01T00:00:00.000Z TO "+formatDate.format(hoy)+"T23:59:59.000Z] AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\") ";
+
+            log.info("queryDM: " + queryDM);
 
             ResultadoBusqueda<Expediente> result = apiArxiu.busquedaExpedientes(queryDM,0);
 
             if (hiHaErrorEnCerca(result.getCodigoResultado())) {
-                log.info("Error en la búsqueda de espedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
-                throw new Exception("Error en la búsqueda de espedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
+                log.info("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
+                throw new Exception("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
             }
 
             List<Expediente> lista = result.getListaResultado();

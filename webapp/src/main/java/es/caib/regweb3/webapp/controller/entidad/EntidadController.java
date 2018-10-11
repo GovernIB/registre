@@ -1085,9 +1085,6 @@ public class EntidadController extends BaseController {
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN
         List<UsuarioEntidad> administradoresEntidad = usuarioEntidadEjb.findAdministradoresByEntidad(entidad.getId());
-        /*for (UsuarioEntidad usuario : administradoresEntidad) {
-            usuarioService.actualizarRoles(usuario.getUsuario());
-        }*/
 
         // Eliminamos el Propietario de la Entidad
         UsuarioEntidad usuarioPropietario = usuarioEntidadEjb.findByUsuarioEntidad(propietario.getId(), entidad.getId());

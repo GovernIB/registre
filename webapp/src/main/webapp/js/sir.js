@@ -72,3 +72,28 @@ function reenviarMensaje(idMensaje){
         }
     });
 }
+
+/**
+ * Envia un mensaje ACK
+ * @param id
+ * @param url
+ */
+function reiniciarContador(id, url){
+    //Reiniciamos el contador de reintentos
+    $.ajax({
+        url: url,
+        data: { id: id },
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(result) {
+
+            if(result === true){
+                mensajeSuccess("#mensajes", tradsSir['registroSir.reiniciar.ok']);
+            }else{
+                mensajeError("#mensajes", tradsSir['registroSir.reiniciar.error']);
+            }
+        }
+    });
+}

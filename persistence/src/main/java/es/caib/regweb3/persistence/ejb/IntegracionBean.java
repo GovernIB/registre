@@ -204,12 +204,10 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     public Integer purgarIntegraciones(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.DATE, -7); //el -7 indica que se le restaran 7 dias
-
+        hoy.add(Calendar.DATE, -10); //el -7 indica que se le restaran 7 dias
 
         List<?> integracion =  em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad and i.fecha <= :fecha").setParameter("idEntidad",idEntidad).setParameter("fecha", hoy.getTime()).getResultList();
         Integer total = integracion.size();
-        log.info("total integraciones a eliminar: " + integracion.size());
 
         if(integracion.size() > 0){
 
@@ -224,7 +222,6 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             em.createQuery("delete from Integracion where id in (:integracion)").setParameter("integracion", integracion).executeUpdate();
         }
         return total;
-
     }
 
     @Override

@@ -25,6 +25,8 @@
             </div>
         </div><!-- /.row -->
 
+        <div id="mensajes"></div>
+
         <c:import url="../modulos/mensajes.jsp"/>
 
         <!-- BUSCADOR -->
@@ -175,7 +177,7 @@
                                             </p>
                                         </div>
 
-                                        <div class="table-responsive">
+                                        <div class="table-responsive overVisible">
 
                                             <table class="table table-bordered table-hover table-striped tablesorter">
                                                 <colgroup>
@@ -192,10 +194,10 @@
                                                 <tr>
                                                     <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                     <th><spring:message code="oficioRemision.fecha"/></th>
+                                                    <th><spring:message code="oficioRemision.tipo"/></th>
                                                     <th><spring:message code="oficioRemision.oficina"/></th>
                                                     <th><spring:message code="oficioRemision.organismoDestino"/></th>
                                                     <th><spring:message code="oficioRemision.estado"/></th>
-                                                    <th><spring:message code="oficioRemision.tipo"/></th>
                                                     <th><spring:message code="oficioRemision.reintentos"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
@@ -206,6 +208,15 @@
                                                     <tr>
                                                         <td>${oficioRemision.identificadorIntercambio}</td>
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                        <td>
+                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
+                                                            </c:if>
+
+                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
+                                                            </c:if>
+                                                        </td>
                                                         <td><label class="no-bold" rel="popupAbajo"
                                                                    data-content="${oficioRemision.oficina.codigo}"
                                                                    data-toggle="popover">${oficioRemision.oficina.denominacion}</label>
@@ -228,7 +239,7 @@
                                                                 <span class="label label-warning"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
                                                             </c:if>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK}">
-                                                                <span class="label label-warning"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
+                                                                <span class="label label-success"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
                                                             </c:if>
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR}">
                                                                 <p rel="popupArriba"
@@ -258,31 +269,20 @@
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_ANULADO}">
                                                                 <span class="label label-danger"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span></c:if>
                                                         </td>
-                                                        <td>
-                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
-                                                            </c:if>
-
-                                                            <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
-                                                            </c:if>
-                                                        </td>
-
-                                                        <td class="center">
-                                                                ${oficioRemision.numeroReintentos}
-                                                        </td>
+                                                        <td class="center">${oficioRemision.numeroReintentos}</td>
                                                         <td class="center">
                                                             <div class="btn-group pull-right text12">
                                                                 <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                                                                     <spring:message code="regweb.acciones"/> <span class="caret"></span>
                                                                 </button>
                                                                 <ul class="dropdown-menu dropdown">
-                                                                    <li>
-                                                                        <a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="<c:url value="/sir/${oficioRemision.id}/reiniciar"/>" target="_blank"><spring:message code="registroSir.reiniciar"/></a>
-                                                                    </li>
+                                                                    <li><a href="<c:url value="/sir/${oficioRemision.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                    <c:if test="${oficioRemision.estado != RegwebConstantes.OFICIO_ACEPTADO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_RECHAZADO &&
+                                                                                  oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO && oficioRemision.estado != RegwebConstantes.OFICIO_SIR_DEVUELTO}">
+                                                                        <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
+                                                                        <li><a href="javascript:void(0);" onclick="reiniciarContador('${oficioRemision.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                    </c:if>
+
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -309,6 +309,14 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript">
+    var tradsSir = [];
+    tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
+    tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
+</script>
+
+<script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
 
 </body>
 </html>

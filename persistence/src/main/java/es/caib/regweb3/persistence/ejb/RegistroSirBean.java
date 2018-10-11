@@ -876,7 +876,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public List<Long> getEnviadosSinAck(Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select registroSir.id from RegistroSir as registroSir " +
-                "where registroSir.entidad.id = :idEntidad and registroSir.estado = :reenviado or registroSir.estado = :rechazado " +
+                "where registroSir.entidad.id = :idEntidad and (registroSir.estado = :reenviado or registroSir.estado = :rechazado) " +
                 "and registroSir.numeroReintentos < :maxReintentos");
 
         q.setParameter("idEntidad", idEntidad);
@@ -903,6 +903,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
 
         return  q.getResultList();
+
+    }
+
+    @Override
+    public void reiniciarIntentos(Long idRegistroSir) throws Exception {
+
+        Query q = em.createQuery("update RegistroSir set numeroReintentos=0 where id = :idRegistroSir");
+        q.setParameter("idRegistroSir", idRegistroSir);
+        q.executeUpdate();
 
     }
 

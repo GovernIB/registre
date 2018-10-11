@@ -120,6 +120,8 @@
                                                 <tr>
                                                     <th><spring:message code="organismo.organismo"/></th>
                                                     <th><spring:message code="entidad.codigoDir3"/></th>
+                                                    <th><spring:message code="organismo.organismoSuperior"/></th>
+                                                    <th>EDP</th>
                                                     <th class="center"><spring:message code="organismo.estado"/></th>
                                                     <th class="center"><spring:message code="organismo.libros"/></th>
                                                     <th width="100" class="center"><spring:message code="regweb.acciones"/></th>
@@ -131,7 +133,23 @@
                                                     <tr>
                                                         <td>${organismo.denominacion}</td>
                                                         <td>${organismo.codigo}</td>
-                                                        <td>${organismo.estado.descripcionEstadoEntidad}</td>
+                                                        <td>
+                                                            <c:if test="${not empty organismo.organismoSuperior}">
+                                                                ${organismo.organismoSuperior.denominacion}
+                                                            </c:if>
+                                                            <c:if test="${empty organismo.organismoSuperior}">
+                                                                ${organismo.organismoRaiz.denominacion}
+                                                            </c:if>
+                                                        </td>
+                                                        <td>
+                                                            <c:if test="${organismo.edp == true}">
+                                                                <span class="label label-success">Si</span>
+                                                            </c:if>
+                                                            <c:if test="${organismo.edp == false}">
+                                                                <span class="label label-danger">No</span>
+                                                            </c:if>
+                                                        </td>
+                                                        <td class="center">${organismo.estado.descripcionEstadoEntidad}</td>
                                                         <td class="center">${fn:length(organismo.libros)}</td>
                                                         <td class="center">
                                                             <c:if test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">

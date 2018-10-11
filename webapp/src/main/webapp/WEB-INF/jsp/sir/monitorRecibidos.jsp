@@ -165,6 +165,7 @@
                                                 <col>
                                                 <col>
                                                 <col>
+                                                <col>
                                                 <col width="51">
                                             </colgroup>
                                             <thead>
@@ -177,6 +178,7 @@
                                                 <th><spring:message code="registroSir.oficinaDestino"/></th>
                                                 <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th>Doc</th>
+                                                <th><spring:message code="oficioRemision.reintentos"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                             </thead>
@@ -213,6 +215,7 @@
                                                             <i class="fa fa-file-text text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registroSir.documentacionFisica}"/>"></i>
                                                         </c:if>
                                                     </td>
+                                                    <td class="center">${registroSir.numeroReintentos}</td>
                                                     <td class="center">
                                                         <div class="btn-group pull-right text12">
                                                             <button type="button" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -226,7 +229,10 @@
                                                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
                                                                     <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.confirmacion"/></a></li>
                                                                 </c:if>
-
+                                                                <c:if test="${registroSir.estado != 'ACEPTADO'}">
+                                                                    <c:url value="/sir/registroSir/reiniciar" var="urlReiniciar"/>
+                                                                    <li><a href="javascript:void(0);" onclick="reiniciarContador('${registroSir.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
+                                                                </c:if>
                                                             </ul>
                                                         </div>
                                                     </td>
@@ -259,10 +265,13 @@
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
     var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
     var tradsMensajeControl = [];
+    var tradsSir = [];
     tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
     tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
     tradsMensajeControl['mensajeControl.confirmacion.enviado.ok'] = "<spring:message code='mensajeControl.confirmacion.enviado.ok' javaScriptEscape='true' />";
     tradsMensajeControl['mensajeControl.confirmacion.enviado.error'] = "<spring:message code='mensajeControl.confirmacion.enviado.error' javaScriptEscape='true' />";
+    tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
+    tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
