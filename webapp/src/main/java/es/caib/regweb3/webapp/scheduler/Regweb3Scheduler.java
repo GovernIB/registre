@@ -144,7 +144,7 @@ public class Regweb3Scheduler {
     /**
      * Scheduler para realizar pruebas que se ejecutará cada 60 segundos
      */
-    @Scheduled(cron = "*/60 * * * * *") // */60 * * * * * cada 60 secs
+   /* @Scheduled(cron = "*//*60 * * * * *") // *//*60 * * * * * cada 60 secs
     public void pruebas(){
         try {
             schedulerEjb.purgarAnexosRegistrosConfirmados();
@@ -152,6 +152,6 @@ public class Regweb3Scheduler {
             log.info("-- Error pruebas --");
             e.printStackTrace();
         }
-    }
+    }*/
 
 }
