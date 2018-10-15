@@ -240,7 +240,7 @@ public class SchedulerBean implements SchedulerLocal{
 
                 if(PropiedadGlobalUtil.getGenerarComunicaciones(entidad.getId())){
                     log.info(" ");
-                    log.info("------------- Generando notificaciones para" + entidad.getNombre() + " -------------");
+                    log.info("------------- Generando notificaciones para " + entidad.getNombre() + " -------------");
                     log.info(" ");
                     notificacionEjb.notificacionesRegistrosSirPendientes(entidad.getId());
                 }
