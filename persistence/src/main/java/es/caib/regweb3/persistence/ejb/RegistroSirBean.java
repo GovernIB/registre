@@ -13,7 +13,6 @@ import es.caib.regweb3.sir.core.schema.types.Documentacion_FisicaType;
 import es.caib.regweb3.sir.core.schema.types.Indicador_PruebaType;
 import es.caib.regweb3.sir.core.schema.types.Tipo_RegistroType;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
-import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import net.java.xades.security.xml.XMLSignatureElement;
@@ -78,7 +77,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
-    @EJB private MensajeLocal mensajeEjb;
 
 
     @Override
@@ -397,6 +395,21 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
 
         return  q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long getPendientesProcesarCount(String oficinaSir) throws Exception{
+
+        Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir " +
+                "where registroSir.codigoEntidadRegistral = :oficinaSir and registroSir.estado = :idEstado " +
+                "and registroSir.documentacionFisica = :no_acompanya");
+
+        q.setParameter("oficinaSir", oficinaSir);
+        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
+        q.setParameter("no_acompanya", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC.toString());
+
+        return  (Long) q.getSingleResult();
     }
 
     @Override

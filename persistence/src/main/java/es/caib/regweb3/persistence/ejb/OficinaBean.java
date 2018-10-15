@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -38,6 +39,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB private CatServicioLocal catServicioEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
 
     @Override
@@ -525,6 +528,25 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         return paginacion;
 
+    }
+
+    @Override
+    public LinkedHashSet<UsuarioEntidad> usuariosPermisoOficina(Long idOficina) throws Exception{
+
+        LinkedHashSet<Libro> libros = new LinkedHashSet<Libro>();
+        LinkedHashSet<UsuarioEntidad> usuarios = new LinkedHashSet<UsuarioEntidad>();
+
+        //Obtener los usuarios que registran en esa oficina
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(findById(idOficina));
+
+        // Obtenemos los libros de cada Organismo
+        for (Organismo organismo : organismos) {
+            libros.addAll(libroEjb.getLibrosActivosOrganismo(organismo.getId()));
+        }
+
+        usuarios.addAll(permisoLibroUsuarioEjb.getUsuariosPermiso(libros, RegwebConstantes.PERMISO_SIR));
+
+        return usuarios;
     }
 
     /**

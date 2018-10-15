@@ -82,9 +82,25 @@
                                             <tbody>
                                                 <c:forEach var="notificacion" items="${paginacion.listado}">
                                                     <tr>
-                                                        <td class="col-sm-2 col-xs-2" style="cursor:pointer;" onclick="verNotificacion('${notificacion.id}');"><span><fmt:formatDate value="${notificacion.fechaEnviado}" pattern="dd/MM/yyyy HH:mm:ss"/></span></td>
                                                         <td class="col-sm-2 col-xs-2" style="cursor:pointer;" onclick="verNotificacion('${notificacion.id}');">
-                                                            <span>${notificacion.nombreRemitente}</span>
+                                                            <span>
+                                                                <c:if test="${notificacion.estado == 0}">
+                                                                    <strong><fmt:formatDate value="${notificacion.fechaEnviado}" pattern="dd/MM/yyyy HH:mm:ss"/></strong>
+                                                                </c:if>
+                                                                <c:if test="${notificacion.estado == 1}">
+                                                                    <fmt:formatDate value="${notificacion.fechaEnviado}" pattern="dd/MM/yyyy HH:mm:ss"/>
+                                                                </c:if>
+                                                            </span>
+                                                        </td>
+                                                        <td class="col-sm-2 col-xs-2" style="cursor:pointer;" onclick="verNotificacion('${notificacion.id}');">
+                                                            <span>
+                                                                <c:if test="${notificacion.estado == 0}">
+                                                                    <strong>${notificacion.nombreRemitente}</strong>
+                                                                </c:if>
+                                                                <c:if test="${notificacion.estado == 1}">
+                                                                    ${notificacion.nombreRemitente}
+                                                                </c:if>
+                                                            </span>
                                                         </td>
                                                         <td class="col-sm-1 col-xs-1" style="cursor:pointer;" onclick="verNotificacion('${notificacion.id}');">
                                                             <c:if test="${notificacion.tipo == 0}">
@@ -98,10 +114,10 @@
                                                             </c:if>
                                                         </td>
                                                         <td class="col-sm-5 col-xs-5" style="cursor:pointer;" onclick="verNotificacion('${notificacion.id}');">
-                                                            <c:if test="${fn:length(notificacion.asunto) <= 40}">
-                                                                <c:out value="${notificacion.asunto}" escapeXml="true"/>
+                                                            <c:if test="${notificacion.estado == 0}">
+                                                                <strong><c:out value="${notificacion.asuntoCorto}" escapeXml="true"/></strong>
                                                             </c:if>
-                                                            <c:if test="${fn:length(notificacion.asunto) > 40}">
+                                                            <c:if test="${notificacion.estado == 1}">
                                                                 <c:out value="${notificacion.asuntoCorto}" escapeXml="true"/>
                                                             </c:if>
                                                         </td>

@@ -68,5 +68,11 @@ public interface SchedulerLocal {
      */
     void purgarAnexosRegistrosConfirmados() throws Exception;
 
+    /**
+     * Genera Comunicaciones automáticas
+     * @throws Exception
+     */
+    void generarComunicaciones() throws Exception;
+
 }
 

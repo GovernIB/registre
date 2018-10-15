@@ -59,6 +59,13 @@ public interface NotificacionLocal extends BaseEjb<Notificacion, Long> {
      Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception;
 
     /**
+     * Envía notificaciones a los usuarios de las oficinas con más de 10 registros sir pendientes de procesar
+     * @param idEntidad
+     * @throws Exception
+     */
+     void notificacionesRegistrosSirPendientes(Long idEntidad) throws Exception;
+
+    /**
      * Elimina las notificaciones de una Entidad
      * @param idEntidad
      * @return

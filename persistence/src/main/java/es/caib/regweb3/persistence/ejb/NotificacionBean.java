@@ -1,11 +1,15 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Notificacion;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +32,8 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private RegistroSirLocal registroSirEjb;
 
     @Override
     public Notificacion getReference(Long id) throws Exception {
@@ -187,6 +193,34 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         q.setParameter("nueva",RegwebConstantes.NOTIFICACION_ESTADO_NUEVA);
 
         return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public void notificacionesRegistrosSirPendientes(Long idEntidad) throws Exception{
+
+        List<Oficina> oficinasSir = oficinaEjb.oficinasSIREntidad(idEntidad);
+
+        for (Oficina oficina : oficinasSir) {
+
+            if(registroSirEjb.getPendientesProcesarCount(oficina.getCodigo()) > 10){
+                log.info("Conunicaciones para la oficina: " + oficina.getDenominacion());
+                LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
+
+                //Crear notificación para cada usuario
+                for (UsuarioEntidad usuario : usuarios) {
+
+                    Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma()));
+
+                    Notificacion nueva = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_COMUNICADO);
+                    nueva.setRemitente(null);
+                    nueva.setAsunto(I18NLogicUtils.tradueix(locale, "notificacion.RegistrosSirPendientes.asunto"));
+                    nueva.setMensaje(I18NLogicUtils.tradueix(locale, "notificacion.RegistrosSirPendientes.mensaje", oficina.getDenominacion()));
+                    nueva.setDestinatario(usuario);
+
+                    persist(nueva);
+                }
+            }
+        }
     }
 
 

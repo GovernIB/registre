@@ -60,6 +60,14 @@ public class Regweb3Scheduler {
             log.info("-- Error Scheduler: purgando Anexos de registros enviados por Sir y que han sido confirmados --");
             e.printStackTrace();
         }
+
+        try {
+            schedulerEjb.generarComunicaciones();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: Generando comunicaciones --");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -144,14 +152,14 @@ public class Regweb3Scheduler {
     /**
      * Scheduler para realizar pruebas que se ejecutará cada 60 segundos
      */
-   /* @Scheduled(cron = "*//*60 * * * * *") // *//*60 * * * * * cada 60 secs
+    @Scheduled(cron = "*/60 * * * * *") // **60 * * * * * cada 60 secs
     public void pruebas(){
         try {
-            schedulerEjb.purgarAnexosRegistrosConfirmados();
+            schedulerEjb.generarComunicaciones();
         } catch (Exception e) {
             log.info("-- Error pruebas --");
             e.printStackTrace();
         }
-    }*/
+    }
 
 }

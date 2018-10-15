@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
@@ -208,6 +209,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
+
+    /**
+     * Obtiene los usuarios que le dan servicio a una Oficina con el permiso indicado
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    LinkedHashSet<UsuarioEntidad> usuariosPermisoOficina(Long idOficina) throws Exception;
 
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina

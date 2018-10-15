@@ -96,6 +96,14 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception;
 
     /**
+     * Obtiene el total de RegistrosSir pendientes de procesar según la oficina
+     * @param oficinaSir
+     * @return
+     * @throws Exception
+     */
+    Long getPendientesProcesarCount(String oficinaSir) throws Exception;
+
+    /**
      * Modifica el Estado de un {@link RegistroSir}
      * @param idRegistroSir
      * @param estado

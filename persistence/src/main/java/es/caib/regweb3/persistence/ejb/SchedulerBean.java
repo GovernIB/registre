@@ -41,12 +41,6 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    private RegistroDetalleLocal registroDetalleEjb;
-
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    private OficioRemisionLocal oficioRemisionEjb;
-
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
@@ -58,6 +52,9 @@ public class SchedulerBean implements SchedulerLocal{
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
+
+    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    private NotificacionLocal notificacionEjb;
 
 
     @Override
@@ -230,5 +227,28 @@ public class SchedulerBean implements SchedulerLocal{
         } catch (I18NException ie){
             log.error("Error purgando anexos enviados por sir y que han sido confirmados...", ie);
         }
+    }
+
+    @Override
+    public void generarComunicaciones() throws Exception{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        try {
+
+            for(Entidad entidad: entidades) {
+
+                if(PropiedadGlobalUtil.getGenerarComunicaciones(entidad.getId())){
+                    log.info(" ");
+                    log.info("------------- Generando notificaciones para" + entidad.getNombre() + " -------------");
+                    log.info(" ");
+                    notificacionEjb.notificacionesRegistrosSirPendientes(entidad.getId());
+                }
+
+            }
+        }catch (Exception e){
+            log.error("Error generando notificacionesRegistrosSirPendientes", e);
+        }
+
     }
 }

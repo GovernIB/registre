@@ -360,6 +360,53 @@ public class PropiedadGlobalUtil {
 
     }
 
+    /**
+     * Retorna el valor de la propiedad del Username de la Url de Validación
+     * @return
+     */
+    public static String getUrlValidationUsername(Long idEntidad) {
+        final String partialPropertyName = "urlvalidation.username";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Retorna el valor de la propiedad del Username de la Url de Validación
+     * @return
+     */
+    public static String getUrlValidationPassword(Long idEntidad) {
+        final String partialPropertyName = "urlvalidation.password";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
+     * Si no está configurado, se devuelven 2 meses
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getMesesPurgoAnexos(Long idEntidad) {
+        final String partialPropertyName = "anexos.purgo.meses";
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+
+
+        if (valor == null) {
+            valor = 2;
+        }
+        return valor;
+    }
+
+    /**
+     * Devuelve el valor de la propiedad que indica si se generarán Comunicaciones a los usuarios de registro
+     *
+     * @return
+     */
+    public static Boolean getGenerarComunicaciones(Long idEntidad) {
+        final String partialPropertyName = "comunicaciones.generar";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
 
     /**
      *
@@ -561,42 +608,5 @@ public class PropiedadGlobalUtil {
             return null;
         }
     }
-
-    /**
-     * Retorna el valor de la propiedad del Username de la Url de Validación
-     * @return
-     */
-    public static String getUrlValidationUsername(Long idEntidad) {
-        final String partialPropertyName = "urlvalidation.username";
-
-        return getStringByEntidad(idEntidad, partialPropertyName);
-    }
-
-    /**
-     * Retorna el valor de la propiedad del Username de la Url de Validación
-     * @return
-     */
-    public static String getUrlValidationPassword(Long idEntidad) {
-        final String partialPropertyName = "urlvalidation.password";
-
-        return getStringByEntidad(idEntidad, partialPropertyName);
-    }
-
-    /**
-     * Si no está configurado, se devuelven 2 meses
-     * @param idEntidad
-     * @return
-     */
-    public static Integer getMesesPurgoAnexos(Long idEntidad) {
-        final String partialPropertyName = "anexos.purgo.meses";
-        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
-
-
-        if (valor == null) {
-            valor = 2;
-        }
-        return valor;
-    }
-
 
 }

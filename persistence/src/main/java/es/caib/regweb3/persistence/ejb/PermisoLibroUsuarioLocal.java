@@ -207,6 +207,14 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
     Boolean existePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception;
 
     /**
+     * Obtiene los Usuarios que tienen el permiso indicado en una lista de libros
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    List<UsuarioEntidad> getUsuariosPermiso(Set<Libro> libros, Long permiso) throws Exception;
+
+    /**
      * Elimina las PermisoLibroUsuario de un Usuario
      * @param idUsuarioEntidad
      * @throws Exception

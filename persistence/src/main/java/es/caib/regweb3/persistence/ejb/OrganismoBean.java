@@ -32,11 +32,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
-    public CatEstadoEntidadLocal catEstadoEntidadEjb;
-
-    @EJB(name = "LibroEJB")
-    public LibroLocal libroEjb;
+    @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
+    @EJB public LibroLocal libroEjb;
 
 
     @Override
