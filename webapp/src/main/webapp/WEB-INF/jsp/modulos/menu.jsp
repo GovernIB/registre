@@ -103,7 +103,12 @@
                                 <ul class="dropdown-menu scrollable-menu">
                                     <c:forEach var="oficina" items="${loginInfo.oficinasRegistro}">
                                         <c:if test="${oficina.id != loginInfo.oficinaActiva.id}">
-                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}</a></li>
+                                            <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}
+                                                <c:if test="${oficina.sirEnvio || oficina.sirRecepcion}">
+                                                    <span class="label"><img src="<c:url value="/img/logo-SIR-azul.png"/>" width="19" alt="Oficina SIR" title="Oficina SIR" style="vertical-align: inherit"/></span>
+                                                </c:if>
+                                                </a>
+                                            </li>
                                         </c:if>
                                     </c:forEach>
                                 </ul>
