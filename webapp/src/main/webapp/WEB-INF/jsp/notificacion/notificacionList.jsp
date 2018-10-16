@@ -104,10 +104,10 @@
                                                         </td>
                                                         <td class="col-sm-1 col-xs-1" style="cursor:pointer;" onclick="verNotificacion('${notificacion.id}');">
                                                             <c:if test="${notificacion.tipo == 0}">
-                                                                <span class="label label-warning"><spring:message code="notificacion.tipo.${notificacion.tipo}"/></span>
+                                                                <span class="label label-default"><spring:message code="notificacion.tipo.${notificacion.tipo}"/></span>
                                                             </c:if>
                                                             <c:if test="${notificacion.tipo == 1}">
-                                                                <span class="label label-success"><spring:message code="notificacion.tipo.${notificacion.tipo}"/></span>
+                                                                <span class="label label-warning"><spring:message code="notificacion.tipo.${notificacion.tipo}"/></span>
                                                             </c:if>
                                                             <c:if test="${notificacion.tipo == 2}">
                                                                 <span class="label label-danger"><spring:message code="notificacion.tipo.${notificacion.tipo}"/></span>

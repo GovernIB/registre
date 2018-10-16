@@ -234,21 +234,25 @@ public class SchedulerBean implements SchedulerLocal{
 
         List<Entidad> entidades = entidadEjb.getAll();
 
-        try {
+        for(Entidad entidad: entidades) {
 
-            for(Entidad entidad: entidades) {
+            if(PropiedadGlobalUtil.getGenerarComunicaciones(entidad.getId())){
+                log.info(" ");
+                log.info("------------- Generando notificaciones para " + entidad.getNombre() + " -------------");
+                log.info(" ");
 
-                if(PropiedadGlobalUtil.getGenerarComunicaciones(entidad.getId())){
-                    log.info(" ");
-                    log.info("------------- Generando notificaciones para " + entidad.getNombre() + " -------------");
-                    log.info(" ");
+                try{
                     notificacionEjb.notificacionesRegistrosSirPendientes(entidad.getId());
+                }catch (Exception e){
+                    log.error("Error generando notificacionesRegistrosSirPendientes", e);
                 }
 
+                try{
+                    notificacionEjb.notificacionesRechazadosDevueltos(entidad.getId());
+                }catch (Exception e){
+                    log.error("Error generando notificacionesRechazadosDevueltos", e);
+                }
             }
-        }catch (Exception e){
-            log.error("Error generando notificacionesRegistrosSirPendientes", e);
         }
-
     }
 }

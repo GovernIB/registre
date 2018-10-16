@@ -704,7 +704,7 @@ public interface RegwebConstantes {
     /* -------------- NOTIFICACIONES --------------*/
 
     Long NOTIFICACION_TIPO_COMUNICADO = 0L; // Enviado por el Administrador de entidad
-    Long NOTIFICACION_TIPO_INFORMATIVO = 1L; // Enviado autoáticamente por el sistema
+    Long NOTIFICACION_TIPO_AVISO = 1L; // Enviado autoáticamente por el sistema
     Long NOTIFICACION_TIPO_ERROR = 2L; // Error
 
     Long[] NOTIFICACION_TIPOS = {

@@ -34,6 +34,8 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @EJB private OficinaLocal oficinaEjb;
     @EJB private RegistroSirLocal registroSirEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
 
     @Override
     public Notificacion getReference(Long id) throws Exception {
@@ -203,7 +205,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         for (Oficina oficina : oficinasSir) {
 
             if(registroSirEjb.getPendientesProcesarCount(oficina.getCodigo()) > 10){
-                log.info("Conunicaciones para la oficina: " + oficina.getDenominacion());
+                log.info("Conunicaciones RegistrosSirPendientes para la oficina: " + oficina.getDenominacion());
                 LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
 
                 //Crear notificación para cada usuario
@@ -211,10 +213,59 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
                     Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma()));
 
-                    Notificacion nueva = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_COMUNICADO);
+                    Notificacion nueva = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_AVISO);
                     nueva.setRemitente(null);
                     nueva.setAsunto(I18NLogicUtils.tradueix(locale, "notificacion.RegistrosSirPendientes.asunto"));
                     nueva.setMensaje(I18NLogicUtils.tradueix(locale, "notificacion.RegistrosSirPendientes.mensaje", oficina.getDenominacion()));
+                    nueva.setDestinatario(usuario);
+
+                    persist(nueva);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void notificacionesRechazadosDevueltos(Long idEntidad) throws Exception{
+
+        List<Oficina> oficinasSir = oficinaEjb.oficinasSIREntidad(idEntidad);
+
+        for (Oficina oficina : oficinasSir) {
+
+            // Registros entrada Rechazados o Devueltos al origen
+            if(registroEntradaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
+                log.info("Conunicaciones Entradas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
+                LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
+
+                //Crear notificación para cada usuario
+                for (UsuarioEntidad usuario : usuarios) {
+
+                    Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma()));
+
+                    Notificacion nueva = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_AVISO);
+                    nueva.setRemitente(null);
+                    nueva.setAsunto(I18NLogicUtils.tradueix(locale, "notificacion.EntradasRechazadasDevueltas.asunto"));
+                    nueva.setMensaje(I18NLogicUtils.tradueix(locale, "notificacion.EntradasRechazadasDevueltas.mensaje", oficina.getDenominacion()));
+                    nueva.setDestinatario(usuario);
+
+                    persist(nueva);
+                }
+            }
+
+            // Registros salida Rechazados o Devueltos al origen
+            if(registroSalidaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
+                log.info("Conunicaciones Salidas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
+                LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
+
+                //Crear notificación para cada usuario
+                for (UsuarioEntidad usuario : usuarios) {
+
+                    Locale locale = new Locale(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getUsuario().getIdioma()));
+
+                    Notificacion nueva = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_AVISO);
+                    nueva.setRemitente(null);
+                    nueva.setAsunto(I18NLogicUtils.tradueix(locale, "notificacion.SalidasRechazadasDevueltas.asunto"));
+                    nueva.setMensaje(I18NLogicUtils.tradueix(locale, "notificacion.SalidasRechazadasDevueltas.mensaje", oficina.getDenominacion()));
                     nueva.setDestinatario(usuario);
 
                     persist(nueva);
