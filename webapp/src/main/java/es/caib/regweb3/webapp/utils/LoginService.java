@@ -263,6 +263,7 @@ public class LoginService {
             // Las añadimos al listado general de oficinas
             loginInfo.getOficinasRegistro().addAll(oficinasSIR);
 
+            // Indicamos si la oficina es SIR para que aparezca en el listado
             for (Oficina oficina : loginInfo.getOficinasRegistro()) {
 
                 oficina.setSirRecepcion(oficinaEjb.isSIRRecepcion(oficina.getId()));
