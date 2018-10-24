@@ -14,6 +14,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
 import es.caib.regweb3.sir.ejb.MensajeLocal;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -114,7 +115,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 if (!registroDetalle.getTieneJustificante()) {
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), "es");
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), Configuracio.getDefaultLanguage());
                     registroDetalle.getAnexosFull().add(anexoFull);
                 }
 
@@ -167,7 +168,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 // Si no tiene generado el Justificante, lo hacemos
                 if (!registroDetalle.getTieneJustificante()) {
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), "es");
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), Configuracio.getDefaultLanguage());
 
                     registroDetalle.getAnexosFull().add(anexoFull);
                 }

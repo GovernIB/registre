@@ -625,7 +625,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
              registroEntrada = cargarAnexosFull(registroEntrada);
             // Creamos el anexo del justificante y se lo añadimos al registro
-            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+            AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
             registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
 
         }
@@ -980,7 +980,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         //Si no tiene justificante lo generamos
                         AnexoFull justificante = null;
                         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                            justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                            justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
                             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
                         }
 
@@ -1100,7 +1100,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         //Generamos Justificante
                         AnexoFull justificante = null;
                         if(!re.getRegistroDetalle().getTieneJustificante()) {
-                            justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                            justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
                             re.getRegistroDetalle().getAnexosFull().add(justificante);
                         }
 
@@ -1136,7 +1136,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
                 AnexoFull justificante = null;
                 if(!re.getRegistroDetalle().getTieneJustificante()) {
-                    justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                    justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
                     re.getRegistroDetalle().getAnexosFull().add(justificante);
                 }
                 //En tramitar entrada creamos la trazabilidad de distribución y con esa fecha trabajamos para obtener los anexos a purgar
@@ -1196,7 +1196,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 //Generamos el justificante porque antes no lo hemos hecho
                 AnexoFull justificante = null;
                 if(!re.getRegistroDetalle().getTieneJustificante()) {
-                    justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                    justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
                     re.getRegistroDetalle().getAnexosFull().add(justificante);
                 }
 
@@ -1381,7 +1381,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Miramos si debemos generar el justificante
         AnexoFull justificante = null;
         if(!original.getRegistroDetalle().getTieneJustificante()) {
-            justificante = justificanteEjb.crearJustificante(original.getUsuario(), original, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+            justificante = justificanteEjb.crearJustificante(original.getUsuario(), original, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
         }
 
         switch (confAnexos) {

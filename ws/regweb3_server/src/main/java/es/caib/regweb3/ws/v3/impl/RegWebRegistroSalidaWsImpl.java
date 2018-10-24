@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.RegistroSalidaConverter;
@@ -331,7 +332,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
 
                 try{
-                    justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),"ca");
+                    justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);

@@ -12,6 +12,7 @@ import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -462,7 +463,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
                 try{
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
                     registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
                     // Añadimos el Correcto
                     correctos.add(registro);
