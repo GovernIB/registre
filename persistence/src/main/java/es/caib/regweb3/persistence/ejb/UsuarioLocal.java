@@ -63,4 +63,11 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @throws Exception
      */
     Paginacion busqueda(Integer pageNumber, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
+
+    /**
+     * Asocia el idioma por defecto de la aplicación a los usurios sin idioma
+     * @return
+     * @throws Exception
+     */
+    Integer asociarIdioma() throws Exception;
 }

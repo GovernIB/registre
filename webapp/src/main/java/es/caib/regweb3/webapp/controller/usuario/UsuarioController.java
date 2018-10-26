@@ -277,6 +277,26 @@ public class UsuarioController extends BaseController {
          return "redirect:/usuario/list";
      }
 
+    /**
+     * Asocia el idioma por defecto de la aplicación a los usuarios sin idioma
+     */
+    @RequestMapping(value = "/sinIdioma")
+    public String usuariosIdioma(HttpServletRequest request) {
+
+        try {
+
+            Integer total = usuarioEjb.asociarIdioma();
+
+            Mensaje.saveMessageInfo(request, "Se han modificado " +total+" usuarios sin idioma.");
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request,"Error asociendo idioma por defecto");
+            e.printStackTrace();
+        }
+
+        return "redirect:/usuario/list";
+    }
+
 
 
      @ModelAttribute("idiomas")

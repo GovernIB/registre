@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.springframework.stereotype.Controller;
@@ -41,7 +44,10 @@ public class InicioController extends BaseController{
     private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
 
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    private TrazabilidadLocal trazabilidadBean;
+    private TrazabilidadLocal trazabilidadEjb;
+
+    @EJB(mappedName = "regweb3/LibroEJB/local")
+    private LibroLocal libroEjb;
 
 
     @RequestMapping(value = "/inici")
@@ -88,15 +94,30 @@ public class InicioController extends BaseController{
                 mav.addObject("pendientesProcesarSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("entradasRechazadosReenviados", registroEntradaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                mav.addObject("pendientesDistribuir", trazabilidadBean.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),getOrganismosOficioRemision(request,organismosOficinaActiva),5));
+                mav.addObject("pendientesDistribuir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),getOrganismosOficioRemision(request,organismosOficinaActiva),5));
             }
+
+        }
+
+        // DASHBOARD para Administradores de Entidad
+        if (isAdminEntidad(request)) {
+
+            // Última sincronización de organismos
+            mav.addObject("descargaUnidad", descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadActiva.getId()));
+
+            // Oficinas activas en SIR
+            if(entidadActiva.getSir()){
+                mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidadActiva.getId()));
+            }
+
+            // Libros activos
+            mav.addObject("libros", libroEjb.getLibrosEntidad(entidadActiva.getId()));
 
         }
 
         // Comprobación de si se ha hecho alguna sincronización del Catálogo DIR3
         if (isSuperAdmin(request) || isAdminEntidad(request)) {
-            Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
-            mav.addObject("catalogo", catalogo);
+            mav.addObject("catalogo", descargaEjb.findByTipo(RegwebConstantes.CATALOGO));
         }
 
 

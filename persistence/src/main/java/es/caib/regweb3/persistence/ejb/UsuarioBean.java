@@ -3,6 +3,8 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -189,6 +191,18 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         paginacion.setListado(q.getResultList());
 
         return paginacion;
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Integer asociarIdioma() throws Exception {
+
+        Query q = em.createQuery("update from Usuario set idioma = :idioma where idioma is null");
+
+        q.setParameter("idioma", RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage()));
+
+        return q.executeUpdate();
 
     }
 }
