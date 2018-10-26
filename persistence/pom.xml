@@ -111,9 +111,9 @@
         </dependency>
 
         <dependency>
-          <groupId>org.fundaciobit.plugins</groupId>
-          <artifactId>plugin-validatesignature-api</artifactId>
-          <version>1.0.0</version>
+          <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+          <artifactId>pluginsib-validatesignature-api</artifactId>
+          <version>2.0.0</version>
           <scope>provided</scope>
         </dependency>
 
@@ -177,20 +177,21 @@
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bctsp-jdk15</artifactId>
+            <artifactId>bctsp-jdk15on</artifactId>
             <version>1.46</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15</artifactId>
-            <version>1.46</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcmail-jdk15</artifactId>
-            <version>1.46</version>
+            <artifactId>bcmail-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -227,6 +228,11 @@
             <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-ripea</artifactId>
             <version>3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+            <artifactId>pluginsib-validatesignature-api</artifactId>
+            <version>RELEASE</version>
         </dependency>
 
     </dependencies>

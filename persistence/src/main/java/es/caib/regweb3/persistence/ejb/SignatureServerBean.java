@@ -320,14 +320,14 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
 
     protected ValidateSignatureResponse callToValidaFirma(Locale locale, SignatureCustody sign,
-        DocumentCustody doc,Long idEntidad) throws I18NException {
+                                                          DocumentCustody doc, Long idEntidad) throws I18NException {
       ValidateSignatureResponse resp;
 
       long start = System.currentTimeMillis();
 
       // TODO CACHE DE PLUGIN!!!!!
       IValidateSignaturePlugin validatePlugin;
-      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
+      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin2(idEntidad,
                  RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
 
       if (validatePlugin == null) {// El plugin de Validació de Firmes no s'ha definit.

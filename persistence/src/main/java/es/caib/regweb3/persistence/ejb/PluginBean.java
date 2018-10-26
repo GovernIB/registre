@@ -176,18 +176,37 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     @Override
     public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
-      try {
-        List<Plugin> plugins;
-        
-        plugins = findByEntidadTipo(idEntidad, tipoPlugin);
-        
+        try {
+            List<Plugin> plugins;
 
-        if (plugins.size() > 0) {
-            return cargarPlugin(plugins.get(0));
+            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+
+
+            if (plugins.size() > 0) {
+                return cargarPlugin(plugins.get(0));
+            }
+        } catch (Exception e) {
+            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
         }
-      } catch (Exception e) {
-        throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
-      }
+
+        return null;
+    }
+
+    @Override
+    public Object getPlugin2(Long idEntidad, Long tipoPlugin) throws I18NException {
+
+        try {
+            List<Plugin> plugins;
+
+            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+
+
+            if (plugins.size() > 0) {
+                return cargarPlugin2(plugins.get(0));
+            }
+        } catch (Exception e) {
+            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+        }
 
         return null;
     }
@@ -258,6 +277,41 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         // Carregant la classe
         return PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
     }
+
+    /**
+     *
+     * @param plugin
+     * @return
+     * @throws Exception
+     */
+    private Object cargarPlugin2(Plugin plugin) throws Exception {
+
+        String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
+
+        // Si no existe el plugin, retornamos null
+        if (plugin == null) {
+            log.info("No existe ningun plugin de este tipo definido en el sistema", new Exception());
+            return null;
+        }
+
+        // Obtenemos la clase del Plugin
+        String className = plugin.getClase().trim();
+
+        // Obtenemos sus propiedades
+        Properties prop = new Properties();
+
+        if (plugin.getPropiedadesEntidad() != null && plugin.getPropiedadesEntidad().trim().length() != 0) {
+            prop.load(new StringReader(plugin.getPropiedadesEntidad()));
+        }
+
+        if (plugin.getPropiedadesAdmin() != null && plugin.getPropiedadesAdmin().trim().length() != 0) {
+            prop.load(new StringReader(plugin.getPropiedadesAdmin()));
+        }
+
+        // Carregant la classe
+        return org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
+    }
+
 
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {

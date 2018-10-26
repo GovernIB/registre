@@ -375,9 +375,9 @@
     <!-- ===================================================== -->
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-validatesignature-api</artifactId>
-      <version>1.0.0</version>
+      <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+      <artifactId>pluginsib-validatesignature-api</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     
@@ -386,9 +386,16 @@
     
     <!-- PLUGIN DE @FIRMA -->
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-validatesignature-afirmacxf</artifactId>
-      <version>1.0.3</version>
+      <groupId>org.apache.santuario</groupId>
+      <artifactId>xmlsec</artifactId>
+      <version>1.5.5</version>
+
+    </dependency>
+
+    <dependency>
+      <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+      <artifactId>pluginsib-validatesignature-afirmacxf</artifactId>
+      <version>2.0.0</version>
 
         <exclusions>
           <exclusion>
@@ -486,18 +493,20 @@
 
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bctsp-jdk15</artifactId>
+      <artifactId>bctsp-jdk15on</artifactId>
       <version>1.46</version>
     </dependency>
+
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15</artifactId>
-      <version>1.46</version>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcmail-jdk15</artifactId>
-      <version>1.46</version>
+      <artifactId>bcmail-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
     </dependency>
 
     <!-- apache POI -->
@@ -534,9 +543,9 @@
       </activation>
       <dependencies>
         <dependency>
-          <groupId>org.fundaciobit.plugins</groupId>
-          <artifactId>plugin-validatesignature-integra</artifactId>
-          <version>1.0.0</version>
+          <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
+          <artifactId>pluginsib-validatesignature-integra</artifactId>
+          <version>2.0.0</version>
           
           <exclusions>
             <!-- Eliminam tota la comunicació AXIS -->
@@ -592,10 +601,11 @@
               <artifactId>wss4j</artifactId>
             </exclusion>
 
-            <exclusion>  
-              <groupId>org.apache.santuario</groupId>
+            <exclusion>
+              <groupId>xml-security</groupId>
               <artifactId>xmlsec</artifactId>
             </exclusion>
+
 
           </exclusions> 
 
@@ -622,29 +632,6 @@
       </dependencies>
     </profile>
 
-    <!-- ========== PLUGIN DE SCAN DE CAIB  DIGITAL v3.1.3 =========== -->
-    <profile>
-      <id>caibscanweb313</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.fundaciobit.plugins</groupId>
-          <artifactId>plugin-scanweb-caib</artifactId>
-          <version>1.0.0</version>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <!-- ========== PLUGIN DE SCAN DE CAIB  DIGITAL v4.0 =========== -->
-    <profile>
-      <id>caibscanweb</id>
-      <dependencies>
-        <dependency>
-          <groupId>org.fundaciobit.plugins</groupId>
-          <artifactId>plugin-scanweb-caib</artifactId>
-          <version>2.0.3</version>
-        </dependency>
-      </dependencies>
-    </profile>
 
     <!-- ====== PLUGIN DE SCAN DE DynamicWebTwain (DWT) ====== -->
     <profile>
