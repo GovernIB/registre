@@ -114,15 +114,8 @@
                                 <div class="panel-footer center">
                                     <c:if test="${isDistribuir && puedeDistribuir}">
 
-                                        <c:if test="${distribuirRipea}">
                                             <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
                                                     class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                        </c:if>
-
-                                        <c:if test="${not distribuirRipea}">
-                                            <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.manualmente" htmlEscape="true"/>")'
-                                                    class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                        </c:if>
 
                                     </c:if>
 

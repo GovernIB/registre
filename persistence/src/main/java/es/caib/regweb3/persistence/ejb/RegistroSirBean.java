@@ -397,6 +397,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return  q.getResultList();
     }
 
+
+
     @Override
     @SuppressWarnings(value = "unchecked")
     public Long getPendientesProcesarCount(String oficinaSir) throws Exception{
@@ -1779,14 +1781,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
             for (CamposNTI cnti : camposNTIs) {
                 if (anexoSir.getId().equals(cnti.getId())) {
-                    transformarAnexoDocumento(anexoSir, registroSir.getEntidad().getId(), cnti, anexosProcesados);
+                    transformarAnexoDocumento(anexoSir, registroSir.getEntidad().getId(), cnti, anexosProcesados,anexoSir.getRegistroSir().getAplicacion());
                 }
             }
         }
 
         // Procesamos las Firma detached
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
-            transformarAnexoFirma(anexoSir, anexosProcesados,registroSir.getEntidad().getId());
+            transformarAnexoFirma(anexoSir, anexosProcesados,registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion());
         }
 
         // Eliminam duplicats
@@ -1808,7 +1810,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param idEntidad
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados) throws Exception {
+    private void transformarAnexoDocumento(AnexoSir anexoSir, Long idEntidad, CamposNTI camposNTI, HashMap<String,AnexoFull> anexosProcesados, String aplicacion) throws Exception {
 
         // Solo procesamos Documentos no firmados o firmados attached, no las firmas detached
         if(StringUtils.isEmpty(anexoSir.getIdentificadorDocumentoFirmado()) ||
@@ -1917,47 +1919,43 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param anexosProcesados Lista de anexos procesados anteriores.
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad) throws Exception {
+    private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad, String aplicacion) throws Exception {
 
-        // Solo procesamos las Firmas Detached
+        // En este método solo se procesan las firmas detached(aquellas que nos informan
+        // con el identificador de documento firmado, que son firma de otro segmento anexo
         if (es.caib.regweb3.utils.StringUtils.isNotEmpty(anexoSir.getIdentificadorDocumentoFirmado()) &&
                 !anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())) {
 
             log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
 
             byte[] anexoSirData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
-            //Mandamos a validar para averiguar si es una firma attached o detached(Defensor pueblo, orve)
+
+            // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
+            log.info("APLICACION: " + aplicacion);
+            if(RegwebConstantes.APLICACION_SIR_ORVE.equals(aplicacion)){
+                // Decodificar
+                log.info("Entramos en decodificar caso ORVE");
+                anexoSirData=Base64.decodeBase64(anexoSirData);
+                anexoSir.setAnexoData(anexoSirData);
+            }
+
             if(CXFUtils.isXMLFormat(anexoSirData)){ //Miramos si es un formato XML
-                //Averiguamos que tipo de XADES és (Attached o detached)
+                //A pesar de que por identificador de documento firmado nos indican que es una firma detached, debemos
+                // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
                 String format= getXAdESFormat(anexoSirData);
 
                 if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
-                    //Obtenemos el anexo original cuya firma es la que estamos tratando
-                    AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
+                    //Obtenemos el anexo original cuya firma es la que estamos tratando, que ha sido previamente procesado
+                    AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());
 
                     if(anexoFull.getSignatureCustody() == null) { // Es un documento sin firma(documento plano)
                         //Descartamos la firma xsig y lanzamos mensaje.
-                        log.warn("Descartat FIRMA d'un anexoSir(document pla) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
+                        log.warn("FIRMA d'un anexoSir(document pla) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
 
                         // Descomentar aquest codi quan arxiu deixi guardar xsig (propuesta de toni, pero esta mas ordenado en el codigo de marilen
-
-                        /* (//TODO Aquest codi s'ha d'eliminar, optimitzat a la linea 1923)
-                        anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
-
-                        SignatureCustody sc = new SignatureCustody();
-                        sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
-                        sc.setMime(anexoSir.getTipoMIME());
-                        sc.setName(anexoSir.getNombreFichero());
-
-                        anexoFull.setSignatureCustody(sc);
-
-                        // Afegirem nova referencia amb el ID la firma  dins del MAP
-                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFull);
-                        */
-
                         //CASO XADES DETACHED DE DOCUMENT PLA = CADES (AFEGIT MARILEN, CODI OPTIMITZAT, descomentar quan ARXIU guardi Xsig)
                         //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                       /* anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+                        /*anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
                         SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
                         anexoFull.setSignatureCustody(sc);*/
 
@@ -1966,12 +1964,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         log.warn("Descartat FIRMA d'un anexoSir(documentsignat) ja que es tipus Xades Detached no suportada per ARXIU: només guardam document ");
 
                         // Descomentar aquest codi quan arxiu deixi guardar xsig
-                            /*
-                        SignatureCustody scAntic = anexoFull.getSignatureCustody();
+
+                        //NO SOPORTADO POR MODELO CUSTODIA
+                        //Obtenemos el documento firmado que está en signatureCustody porque ha sido procesado
+                        // anteriormente.
+                        /*SignatureCustody scAntic = anexoFull.getSignatureCustody();
 
                         // Apunta a una signatura (attached o detached): collim la signatura com a doc detached
+                        //Creamos un nuevo documentCustody para guardar el documento firmado
                         DocumentCustody  dc = new DocumentCustody(scAntic.getName(), scAntic.getMime(), scAntic.getData());
 
+                        *//*Montamos el nuevo anexo
+                            -(DocumentCustody = documento firmado)
+                            -(signatureCustody = firma detached que estamos tratando)
+                        *//*
                         AnexoFull anexoFullnou = new AnexoFull();
                         anexoFullnou.setDocumentoCustody(dc);
 
@@ -1981,8 +1987,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         sc.setName(anexoSir.getNombreFichero());
                         anexoFullnou.setSignatureCustody(sc);
 
-                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );
-                           */
+                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
+
                     }
 
                 }else{
@@ -1990,9 +1996,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     // CAS ORVE:  es una XADES attached pero AnexoSIR apunta a un DETACHED
 
                     // nomes ens serveix el contingut que ja s'ha donat d'alta: no feim res per que ARXIU no funciomna
-                    log.warn("Descartat anexoSir-Detached amb firma tipus Xades attached (CAS ORVE)");
+                    log.warn("AnexoSir-Detached amb firma tipus Xades attached (CAS ORVE)");
 
                     // Descomentar aquest codi quan arxiu deixi guardar xsig i si es vol guardar dins arxiu la firma de comunicació
+
+                    //En este caso, nos mandan un xml attached, como detached. Por tanto lo guardaremos como una firma attached aislada
+                    //Aquí perdemos el vinculo al documento del que nos indican que es su firma detached(lo cual no es cierto)
                     /*SignatureCustody sc = new SignatureCustody();
 
                     sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
@@ -2000,14 +2009,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     sc.setName(anexoSir.getNombreFichero());
                     sc.setAttachedDocument(true);
 
-                    //Montamos el nuevo anexoFull
+                    //Montamos el nuevo anexoFull como attached, ya que es un xades attached
                     AnexoFull anexoFullnou = new AnexoFull();
                     Anexo anexoNou = new Anexo();
                     anexoFullnou.setSignatureCustody(sc);
                     anexoFullnou.setDocumentoCustody(null);
                     anexoNou.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
 
-
+                    //Debemos construir el anexo completo, porque es nuevo.
                     anexoNou.setTitulo(anexoSir.getNombreFichero());
                     anexoNou.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
                     anexoNou.setObservaciones(anexoSir.getObservaciones());
@@ -2016,32 +2025,25 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if(anexoSir.getTipoDocumento()!=null) {
                         anexoNou.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
                     }
-
                     if(anexoSir.getCertificado()!= null) {
                         anexoNou.setCertificado(anexoSir.getCertificado().getBytes());
                     }
-
                     if (anexoSir.getFirma() != null) {
                         anexoNou.setFirma(anexoSir.getFirma().getBytes());
-
                     }
                     if (anexoSir.getTimestamp() != null) {
                         anexoNou.setTimestamp(anexoSir.getTimestamp().getBytes());
                     }
-
                     if (anexoSir.getValidacionOCSPCertificado() != null) {
                         anexoNou.setValidacionOCSPCertificado(anexoSir.getValidacionOCSPCertificado().getBytes());
                     }
-
                     if(anexoSir.getHash()!= null){
                         anexoNou.setHash(anexoSir.getHash().getBytes());
                     }
-
                     anexoFullnou.setAnexo(anexoNou);
 
 
                     anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
-
 
                 }
             } else {

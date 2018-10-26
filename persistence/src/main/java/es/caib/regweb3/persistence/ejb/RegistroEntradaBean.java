@@ -1088,6 +1088,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
                 //Obtenemos los anexos en función de la configuración establecida
                 //re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
+                //Se gestionan los anexos a distribuir, en función de la aplicación SIR que los ha enviado
+                re= gestionAnexosByAplicacionSIR(re);
 
                 if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
                     respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
@@ -1441,5 +1443,74 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             postProcesoPlugin.nuevoRegistroEntrada(re);
         }
     }
+
+    /**
+     *  Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
+     *  Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
+     *
+     * @param original
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    private RegistroEntrada gestionAnexosByAplicacionSIR(RegistroEntrada original) throws Exception, I18NException, I18NValidationException {
+
+        List<AnexoFull> anexosFullADistribuir = new ArrayList<AnexoFull>();
+        //Obtenemos las trazabilidades del registro para obtener la información de la aplicación de la que provienen
+        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(original.getId());
+        //Obtenemos los anexos del registro para tratarlos
+        List<AnexoFull> anexosFull =original.getRegistroDetalle().getAnexosFull();
+
+        //Para cada una de las trazabilidades obtenemos la aplicación de la que provienen y tratamos en función de la aplicación
+        for (Trazabilidad trazabilidad : trazabilidades) {
+            RegistroSir registroSir = trazabilidad.getRegistroSir();
+
+
+            if(RegwebConstantes.APLICACION_SIR_REGISTROELECTRONICO.equals(registroSir.getAplicacion())) {
+                original.getRegistroDetalle().setAnexosFull(gestionarByAplicacionByNombreFichero( RegwebConstantes.FICHERO_REGISTROELECTRONICO, anexosFull, anexosFullADistribuir));
+            }
+
+            if(RegwebConstantes.APLICACION_SIR_DEFENSORPUEBLO.equals(registroSir.getAplicacion())) {
+                original.getRegistroDetalle().setAnexosFull(gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_DEFENSORPUEBLO, anexosFull, anexosFullADistribuir));
+            }
+
+        }
+
+        return original;
+    }
+
+
+    /**
+     * Este método lo que hace es eliminar de la lista de anexos a distribuir, aquellos que el Arxiu no soporta que son
+     * de formato xml y que no puede hacer el upgrade de la firma.
+     * Lo que hace es comparar el nombre del Fichero y la aplicación de la que procede, para determinar si lo elimina o no.
+     * @param nombreFichero
+     * @param anexosFull
+     * @param anexosFullADistribuir
+     * @return
+     * @throws Exception
+     */
+    private List<AnexoFull> gestionarByAplicacionByNombreFichero(String nombreFichero, List<AnexoFull> anexosFull, List<AnexoFull> anexosFullADistribuir) throws Exception {
+        //para cada uno de los anexos miramos si es uno de los conflictivos.
+        //Estan tipificados en Regweb3Constantes.
+        for (AnexoFull anexoFull: anexosFull) {
+            String nombreFicheroTemp = "";
+            //Si es un documento sin firma, el nombre està en DocumentCustody
+            if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA){
+                nombreFicheroTemp = anexoFull.getDocumentoCustody().getName();
+            }else { // Si tiene firma, el nombre está en SignatureCustody.
+                nombreFicheroTemp = anexoFull.getSignatureCustody().getName();
+            }
+
+            //Si el nombre del fichero es distinto al que nos han indicado, se puede distribuir
+            if(!nombreFichero.equals(nombreFicheroTemp)){
+                anexosFullADistribuir.add(anexoFull);
+            }
+        }
+        return anexosFullADistribuir;
+    }
+
+
 
 }

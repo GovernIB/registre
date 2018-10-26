@@ -751,4 +751,13 @@ public interface RegwebConstantes {
                                        TIPOMIME_SVG, TIPOMIME_TIFF, TIPOMIME_TXT};
 
 
+
+    /*------ CODIGOS APLICACIONES INTEGRADAS SIR -------------*/
+    String APLICACION_SIR_REGISTROELECTRONICO = "REC2";
+    String APLICACION_SIR_DEFENSORPUEBLO = "DEFP";
+    String APLICACION_SIR_ORVE = "ORVE";
+
+    /*--------------- NOMBRES ARCHIVOS PROBLEMATICOS SIR----------------*/
+    String FICHERO_REGISTROELECTRONICO = "XMLResumenSolicitudENI.xml";
+    String FICHERO_DEFENSORPUEBLO = "sicres_firmado.xsig";
 }
