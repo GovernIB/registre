@@ -74,15 +74,14 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
     public void purgarArchivos(Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir " +
-                "where anexoSir.purgado = false and (anexoSir.registroSir.estado = :aceptado or anexoSir.registroSir.estado = :reenviado or " +
-                "anexoSir.registroSir.estado = :rechazado)");
+                "where anexoSir.purgado = false and (anexoSir.registroSir.estado = :aceptado or anexoSir.registroSir.estado = :reenviado )");
+
 
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
-        q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
+        //q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
 
         List<AnexoSir> anexos = q.getResultList();
-        log.info("Total archivos a eliminar: " + anexos.size());
 
         // Eliminamos los Archivos del RegistroSir
         for (AnexoSir anexoSir: anexos) {
