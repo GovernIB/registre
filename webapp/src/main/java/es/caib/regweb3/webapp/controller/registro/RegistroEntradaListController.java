@@ -285,7 +285,22 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("posYsello", entidadActiva.getPosYsello());
         }
 
-        
+        // ANULAR DISTRIBUIR TEMPORAL POR MOTIVO DE FIRMA XSIG NO VALIDABLE
+
+        boolean distribuirRipea = true;
+        if(PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
+
+            for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
+
+                if (!anexo.getFirmaValida()) {
+                    distribuirRipea = false;
+                    break;
+                }
+            }
+
+        }
+        model.addAttribute("distribuirRipea", distribuirRipea);
+
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 

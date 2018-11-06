@@ -409,6 +409,18 @@ public class PropiedadGlobalUtil {
 
 
     /**
+     * Propiedad temporal que nos permite indicar si no queremos distribuir
+     * @param idEntidad
+     * @return
+     */
+    public static boolean getNoDistribuir(Long idEntidad){
+        final String partialPropertyName = "nodistribuir";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+
+    /**
      *
      * @param idEntidad
      * @param partialPropertyName

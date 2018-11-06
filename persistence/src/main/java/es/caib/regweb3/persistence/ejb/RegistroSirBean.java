@@ -1942,9 +1942,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             if(CXFUtils.isXMLFormat(anexoSirData)){ //Miramos si es un formato XML
                 //A pesar de que por identificador de documento firmado nos indican que es una firma detached, debemos
                 // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
-                String format= getXAdESFormat(anexoSirData);
 
-                if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
+                /*******  COMENTAMOS TEMPORALMENTE MIRAR EL FORMATO DEL XADES YA QUE EN TODOS LOS CASOS SE ELIMINA EL XSIG, LO HACEMOS A RAIZ DEL PROBLEMA DE FORMATO DE GEISER CON EL XML CON CAPA <AFIRMA></AFIRMA>  ********/
+               // String format= getXAdESFormat(anexoSirData);
+
+               // if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
                     //Obtenemos el anexo original cuya firma es la que estamos tratando, que ha sido previamente procesado
                     AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());
 
@@ -1991,12 +1993,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     }
 
-                }else{
+               // }else{
                     // XADES attached
                     // CAS ORVE:  es una XADES attached pero AnexoSIR apunta a un DETACHED
 
                     // nomes ens serveix el contingut que ja s'ha donat d'alta: no feim res per que ARXIU no funciomna
-                    log.warn("AnexoSir-Detached amb firma tipus Xades attached (CAS ORVE)");
+                    //log.warn("AnexoSir-Detached amb firma tipus Xades attached (CAS ORVE)");
 
                     // Descomentar aquest codi quan arxiu deixi guardar xsig i si es vol guardar dins arxiu la firma de comunicació
 
@@ -2045,7 +2047,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
 
-                }
+               // }
             } else {
                 log.info("Entro en CADES");
                 // CADES
