@@ -32,14 +32,14 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     protected final Logger log = Logger.getLogger(getClass());
 
 
-    public static final String basePluginRipea = DISTRIBUCION_BASE_PROPERTY + "distribuciongoib.";
-    public static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
-    public static final String PROPERTY_PASSWORD = basePluginRipea + "password";
-    public static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
-    public static final String PROPERTY_MAXREINTENTOS = basePluginRipea + "maxreintentos";
-    public static final String PROPERTY_ENVIOCOLA = basePluginRipea + "enviocola";
-    public static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginRipea + "listadodestinatariosmodificable";
-    public static final String PROPERTY_CONFIGURACIONANEXOS = basePluginRipea + "configuracionanexos";
+    private static final String basePluginRipea = DISTRIBUCION_BASE_PROPERTY + "distribucionripea.";
+    private static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
+    private static final String PROPERTY_PASSWORD = basePluginRipea + "password";
+    private static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
+    private static final String PROPERTY_MAXREINTENTOS = basePluginRipea + "maxreintentos";
+    private static final String PROPERTY_ENVIOCOLA = basePluginRipea + "enviocola";
+    private static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginRipea + "listadodestinatariosmodificable";
+    private static final String PROPERTY_CONFIGURACIONANEXOS = basePluginRipea + "configuracionanexos";
 
 
     public String getPropertyUsuario() throws Exception {
