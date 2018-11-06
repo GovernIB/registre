@@ -1,7 +1,6 @@
 package es.caib.regweb3.plugins.distribucion.ripea;
 
 
-import es.caib.distribucio.ws.v1.bustia.*;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
@@ -10,6 +9,7 @@ import es.caib.regweb3.plugins.distribucion.Destinatarios;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
+import es.caib.ripea.ws.v1.bustia.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
@@ -155,7 +155,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
             String usuario = getPropertyUsuario();
             String password = getPropertyPassword();
 
-            BustiaV1 client = es.caib.distribucio.ws.client.BustiaV1WsClientFactory.getWsClient(
+            BustiaV1 client = es.caib.ripea.ws.client.BustiaV1WsClientFactory.getWsClient(
                     endpoint,
                     usuario,
                     password);
@@ -367,7 +367,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     }
 
     /**
-     * Método que transforma un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.distribucio.ws.v1.bustia.RegistreAnnex}
+     * Método que transforma un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.ripea.ws.v1.bustia.RegistreAnnex}
      * @param anexo
      * @return
      * @throws Exception
@@ -381,7 +381,7 @@ public class DistribucionRipeaPlugin extends AbstractPluginProperties implements
     }
 
     /**
-     * Método que transforma un {@link es.caib.regweb3.model.utils.AnexoFull} en un {@link es.caib.distribucio.ws.v1.bustia.RegistreInteressat}
+     * Método que transforma un {@link es.caib.regweb3.model.utils.AnexoFull} en un {@link es.caib.ripea.ws.v1.bustia.RegistreInteressat}
      * @param anexoFull
      * @return
      * @throws Exception

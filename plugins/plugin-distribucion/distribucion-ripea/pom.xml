@@ -70,8 +70,8 @@
         </dependency>
 
         <dependency>
-            <groupId>es.caib.distribucio</groupId>
-            <artifactId>distribucio-ws-client</artifactId>
+            <groupId>es.caib.ripea</groupId>
+            <artifactId>ripea-ws-client</artifactId>
             <version>0.1</version>
         </dependency>
 
