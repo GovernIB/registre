@@ -34,6 +34,7 @@ public class LoginInfo {
     private Oficina oficinaActiva;
     private LinkedHashSet<Organismo> organismosOficinaActiva;
     private Configuracion configuracion;
+    private Boolean enlaceDir3 = false;
 
     final User springSecurityUser;
     final Collection<GrantedAuthority> springRoles;
@@ -208,6 +209,14 @@ public class LoginInfo {
         this.configuracion = configuracion;
     }
 
+    public Boolean getEnlaceDir3() {
+        return enlaceDir3;
+    }
+
+    public void setEnlaceDir3(Boolean enlaceDir3) {
+        this.enlaceDir3 = enlaceDir3;
+    }
+
     public Rol getRolActivo() {
         return rolActivo;
     }
@@ -249,6 +258,7 @@ public class LoginInfo {
         this.oficinaActiva = null;
         this.organismosOficinaActiva = null;
         this.configuracion = null;
+        this.enlaceDir3 = false;
     }
 
     @Override

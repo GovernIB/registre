@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.utils;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
@@ -505,6 +506,8 @@ public class LoginService {
     private UsuarioEntidad setUsuarioEntidadActivo(LoginInfo loginInfo, Entidad entidad) throws Exception{
 
         loginInfo.setUsuarioEntidadActivo(usuarioEntidadEjb.findByUsuarioEntidadActivo(loginInfo.getUsuarioAutenticado().getId(), entidad.getId()));
+
+        loginInfo.setEnlaceDir3(PropiedadGlobalUtil.getEnlaceDir3(entidad.getId()));
 
         log.info("Entidad activa usuario: " + entidad.getNombre() + " - " + loginInfo.getUsuarioAutenticado().getNombreCompleto());
 

@@ -407,7 +407,6 @@ public class PropiedadGlobalUtil {
 
     }
 
-
     /**
      * Propiedad temporal que nos permite indicar si no queremos distribuir
      * @param idEntidad
@@ -416,9 +415,17 @@ public class PropiedadGlobalUtil {
     public static boolean getNoDistribuir(Long idEntidad){
         final String partialPropertyName = "nodistribuir";
         return getBooleanByEntidad(idEntidad, partialPropertyName);
-
     }
 
+    /**
+     * Propiedad que permite mostrar un enlace en le menú a la instalación de DIR3CAIB
+     * @param idEntidad
+     * @return
+     */
+    public static boolean getEnlaceDir3(Long idEntidad){
+        final String partialPropertyName = "enlaceDir3";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
 
     /**
      *

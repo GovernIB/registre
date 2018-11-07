@@ -140,6 +140,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"resultsperpage.lopd","20","Resultados por página en los informes LOPD", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"maxuploadsizeinbytes","10485760","Tamaño máximo permitido por anexo en bytes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"sir.reintentos","10","Número máximo de reintentos para los envios SIR", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_SIR));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"enlaceDir3","true","Permite mostrar un enlace en le menú a la instalación de DIR3CAIB", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
 
         // Creamos los Plugins
         pluginEjb.persist(new Plugin("Custodia","Custodia de anexos","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
