@@ -91,21 +91,28 @@ public class Organismo implements Serializable {
     public Organismo(Long id) {
         this.id = id;
     }
-    public Organismo(Long id, String denominacion) {
 
+    public Organismo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public Organismo(Long id, String denominacion) {
         this.id = id;
         this.denominacion = denominacion;
     }
 
-    public Organismo(Long id, String codigo, String denominacion) {
+    public Organismo(Long idOrganismo, Long idOrgRaiz) {
+        this.id = idOrganismo;
+        this.organismoRaiz = new Organismo(idOrgRaiz);
+    }
 
+    public Organismo(Long id, String codigo, String denominacion) {
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
     }
 
     public Organismo(Long id, String codigo, String denominacion, Boolean edp) {
-
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
@@ -113,7 +120,6 @@ public class Organismo implements Serializable {
     }
 
     public Organismo(Long id, String codigo, String denominacion, Long organismoSuperior, Boolean edp) {
-
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;
@@ -122,7 +128,6 @@ public class Organismo implements Serializable {
     }
 
     public Organismo(Long id, String codigo, String denominacion, List<Libro> libros) {
-
         this.id = id;
         this.codigo = codigo;
         this.denominacion = denominacion;

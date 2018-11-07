@@ -179,13 +179,23 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<RelacionOrganizativaOfi> organizativaByEntidadEstado(Long idEntidad, String estado) throws Exception{
-        Query q = em.createQuery("Select relacionOrganizativaOfi from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
+        Query q = em.createQuery("Select relacionOrganizativaOfi.oficina.id, relacionOrganizativaOfi.oficina.codigo, relacionOrganizativaOfi.oficina.denominacion, " +
+                "relacionOrganizativaOfi.organismo.id, relacionOrganizativaOfi.oficina.organismoResponsable.id, relacionOrganizativaOfi.organismo.organismoRaiz.id " +
+                "from RelacionOrganizativaOfi as relacionOrganizativaOfi where " +
                 "relacionOrganizativaOfi.organismo.entidad.id =:idEntidad and relacionOrganizativaOfi.estado.codigoEstadoEntidad =:estado order by relacionOrganizativaOfi.oficina.codigo");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<RelacionOrganizativaOfi> relacionOrganizativaOfis = new ArrayList<RelacionOrganizativaOfi>();
+
+        for (Object[] object : result) {
+            RelacionOrganizativaOfi relacionOrganizativaOfi = new RelacionOrganizativaOfi((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4], (Long) object[5]);
+            relacionOrganizativaOfis.add(relacionOrganizativaOfi);
+        }
+
+        return relacionOrganizativaOfis;
     }
 
     @Override
