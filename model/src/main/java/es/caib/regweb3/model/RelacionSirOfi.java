@@ -22,6 +22,11 @@ public class RelacionSirOfi implements Serializable {
 
     public RelacionSirOfi(){}
 
+    public RelacionSirOfi(Long idOficina, String codOficina, String denOficina, Long idOrganismo, Long idOrgResponsable) {
+        this.oficina = new Oficina(idOficina, codOficina, denOficina, idOrgResponsable);
+        this.organismo = new Organismo(idOrganismo);
+    }
+
 
     @Id
     @ManyToOne(optional = false)

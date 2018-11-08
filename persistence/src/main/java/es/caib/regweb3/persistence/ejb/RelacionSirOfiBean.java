@@ -115,13 +115,22 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<RelacionSirOfi> relacionesSirOfiByEntidadEstado(Long idEntidad, String estado) throws Exception{
-        Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
+        Query q = em.createQuery("Select relacionSirOfi.oficina.id, relacionSirOfi.oficina.codigo, relacionSirOfi.oficina.denominacion, " +
+                "relacionSirOfi.organismo.id, relacionSirOfi.oficina.organismoResponsable.id from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.entidad.id =:idEntidad and relacionSirOfi.estado.codigoEstadoEntidad =:estado order by relacionSirOfi.oficina.codigo");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+        List<RelacionSirOfi> relacionSirOfis = new ArrayList<RelacionSirOfi>();
+
+        for (Object[] object : result) {
+            RelacionSirOfi relacionSirOfi = new RelacionSirOfi((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4]);
+            relacionSirOfis.add(relacionSirOfi);
+        }
+
+        return relacionSirOfis;
     }
 
     @Override
