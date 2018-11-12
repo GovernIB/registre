@@ -1944,9 +1944,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
 
                 /*******  COMENTAMOS TEMPORALMENTE MIRAR EL FORMATO DEL XADES YA QUE EN TODOS LOS CASOS SE ELIMINA EL XSIG, LO HACEMOS A RAIZ DEL PROBLEMA DE FORMATO DE GEISER CON EL XML CON CAPA <AFIRMA></AFIRMA>  ********/
-               // String format= getXAdESFormat(anexoSirData);
+                String format= getXAdESFormat(anexoSirData);
 
-               // if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
+                if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
                     //Obtenemos el anexo original cuya firma es la que estamos tratando, que ha sido previamente procesado
                     AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());
 
@@ -1993,7 +1993,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     }
 
-               // }else{
+                }else{
                     // XADES attached
                     // CAS ORVE:  es una XADES attached pero AnexoSIR apunta a un DETACHED
 
@@ -2047,7 +2047,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
 
-               // }
+                }
             } else {
                 log.info("Entro en CADES");
                 // CADES
