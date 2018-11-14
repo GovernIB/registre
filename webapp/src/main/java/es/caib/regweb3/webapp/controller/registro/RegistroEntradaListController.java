@@ -291,13 +291,14 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         if(PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
 
             for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
-
-                if (!anexo.getFirmaValida()) {
-                    distribuirRipea = false;
-                    break;
+                //Solo miramos si la firma es valida si el anexo tiene firma
+                if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+                    if (!anexo.getFirmaValida()) {
+                        distribuirRipea = false;
+                        break;
+                    }
                 }
             }
-
         }
         model.addAttribute("distribuirRipea", distribuirRipea);
 
