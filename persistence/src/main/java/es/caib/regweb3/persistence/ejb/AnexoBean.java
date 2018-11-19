@@ -265,8 +265,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             // Validar firma del Anexo
             log.info("Anexo tipo doc  " + anexo.getTipoDocumento());
-            //Solo validamos si no es justificante
-            if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getTipoDocumento())) { //Solo validamos si no es justificante
+            //Solo validamos si no es justificante, no es fichero tecnico y nos indican que se debe validar
+            if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getTipoDocumento())) {
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
                     signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(),

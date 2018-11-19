@@ -965,6 +965,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                         elementoADistribuir1 = elementoADistribuir;
                         //Obtenemos el registro de entrada que se debe distribuir
                         RegistroEntrada registroEntrada = getConAnexosFull(elementoADistribuir1.getIdObjeto());
+
                         //Montamos la petición de la integración
                         peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
                         peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -984,6 +985,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
                         }
 
+                        //Gestionamos los anexos sir antes de distribuir
+                        registroEntrada = gestionAnexosByAplicacionSIR(registroEntrada);
                         //Invocamos al plugin para distribuir el registro
                         Boolean distribuidoOK = plugin.enviarDestinatarios(registroEntrada, null, "", new Locale("ca"));
 
@@ -1192,7 +1195,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_DISTRIBUCION);
             if (distribucionPlugin != null) {
                 ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-                re = obtenerAnexosDistribucion(re, configuracionDistribucion.getConfiguracionAnexos());
                 Locale locale = new Locale(idioma);
 
                 //Generamos el justificante porque antes no lo hemos hecho
@@ -1201,6 +1203,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                     justificante = justificanteEjb.crearJustificante(re.getUsuario(), re, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
                     re.getRegistroDetalle().getAnexosFull().add(justificante);
                 }
+                re= gestionAnexosByAplicacionSIR(re);
 
                 distribucionOk = distribucionPlugin.enviarDestinatarios(re, wrapper.getDestinatarios(), wrapper.getObservaciones(), locale);
                 //Integración

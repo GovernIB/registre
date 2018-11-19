@@ -540,6 +540,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         log.info("Firma Tipo " + firma.getTipus());
 
         if(firma.getTipus() == null || firma.getPerfil() == null){
+            log.info("Anexo: " + anexo.getTitulo());
             throw new Exception("Error: Tipus Firma o Perfil Firma no poden ser buits");
         }
     }
