@@ -203,7 +203,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
      * Carga el formulario para ver el detalle de un {@link es.caib.regweb3.model.RegistroEntrada}
      */
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
-    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException {
+    public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException, I18NValidationException {
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
         Entidad entidadActiva = getEntidadActiva(request);
@@ -289,10 +289,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         boolean distribuirRipea = true;
         if(PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
-
             for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
                 //Solo miramos si la firma es valida si el anexo tiene firma
-                if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {
+                if (anexo.getModoFirma()!= RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && !anexo.isJustificante()) {
                     if (!anexo.getFirmaValida()) {
                         distribuirRipea = false;
                         break;
