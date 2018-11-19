@@ -60,6 +60,14 @@ public class Regweb3Scheduler {
             log.info("-- Error Scheduler: purgando Anexos de registros enviados por Sir y que han sido confirmados --");
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Qué hace: Genera las comunicaciones automáticas a los usuarios
+     * Cuando lo hace: cada Domingo
+     */
+    @Scheduled(cron = "0 0 1 * * SUN")
+    public void generarComunicaciones(){
 
         try {
             schedulerEjb.generarComunicaciones();
@@ -68,6 +76,7 @@ public class Regweb3Scheduler {
             log.info("-- Error Scheduler: Generando comunicaciones --");
             e.printStackTrace();
         }
+
     }
 
     /**
