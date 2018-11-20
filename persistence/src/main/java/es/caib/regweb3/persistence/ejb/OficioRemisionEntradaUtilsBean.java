@@ -76,7 +76,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
+    public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos, Integer total) throws Exception {
 
         List<Organismo> organismosDestino =  new ArrayList<Organismo>();
 
@@ -101,6 +101,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             q.setParameter("organismos", organismos);
         }
 
+        if(total != null){
+            q.setMaxResults(total);
+        }
+
         List<Object[]> organismosInternos = q.getResultList();
         for (Object[] organismoInterno : organismosInternos){
             Organismo organismo = new Organismo(null,(String) organismoInterno[0], (String) organismoInterno[1]);
@@ -118,6 +122,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
+
+        if(total != null){
+            q1.setMaxResults(total);
+        }
 
         List<Object[]> organismosExternos = q1.getResultList();
 
@@ -365,13 +373,13 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
         if (organismos.size() > 0) {
-            organismosWhere = "re.destino.id not in (:organismos)";
+            organismosWhere = " and re.destino.id not in (:organismos)";
         }
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
                 "re.id = :idRegistro and re.estado = :valido and " +
-                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente and " + organismosWhere);
+                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente " + organismosWhere);
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);

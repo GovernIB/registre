@@ -81,7 +81,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Long total = 0L;
 
         // Registros de salida que son Oficios de Remision
-        List<Long> registros = registrosSalidaPendientesRemision(idOficina, libros, organismos);
+        List<Long> registros = registrosSalidaPendientesRemision(idOficina, libros, organismos, null);
 
         if(registros.size() > 0){
 
@@ -109,12 +109,12 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
+    public LinkedHashSet<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva, Integer total) throws Exception {
 
         LinkedHashSet<Organismo> organismosDestino =  new LinkedHashSet<Organismo>(); // LinkedHashSet No permite duplicados
 
         // Registros de salida que son Oficios de Remision
-        List<Long> registros = registrosSalidaPendientesRemision(idOficina, libros, organismos);
+        List<Long> registros = registrosSalidaPendientesRemision(idOficina, libros, organismos, total);
 
         if(registros.size() > 0){
 
@@ -197,7 +197,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
      * @throws Exception
      */
     @SuppressWarnings(value = "unchecked")
-    private List<Long> registrosSalidaPendientesRemision(Long idOficina, List<Libro> libros,Set<String> organismos) throws Exception{
+    private List<Long> registrosSalidaPendientesRemision(Long idOficina, List<Libro> libros,Set<String> organismos, Integer total) throws Exception{
 
         String queryFecha="";
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
@@ -220,6 +220,10 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         if(StringUtils.isNotEmpty(fecha)){
             SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
             q.setParameter("fecha", sdf.parse(fecha));
+        }
+
+        if(total != null){
+            q.setMaxResults(total);
         }
 
         return q.getResultList(); // Registros de salida que son Oficios de Remision

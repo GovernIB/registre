@@ -233,13 +233,33 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         if(!registro.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
 
             // Oficio Remision
-            if(entidadActiva.getOficioRemision()){
+            if(entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))){
                 oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva);
                 if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);
                 }
             }
             model.addAttribute("oficio", oficio);
+
+
+            // ANULAR DISTRIBUIR TEMPORAL POR MOTIVO DE FIRMA XSIG NO VALIDABLE
+            if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+
+                boolean distribuirRipea = true;
+                if(PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
+                    for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
+                        //Solo miramos si la firma es valida si el anexo tiene firma
+                        if (anexo.getModoFirma()!= RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && !anexo.isJustificante()) {
+                            if (!anexo.getFirmaValida()) {
+                                distribuirRipea = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                model.addAttribute("distribuirRipea", distribuirRipea);
+            }
+
 
             // Anexos
             Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))&& oficinaRegistral && puedeEditar && !tieneJustificante;
@@ -284,22 +304,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("posXsello", entidadActiva.getPosXsello());
             model.addAttribute("posYsello", entidadActiva.getPosYsello());
         }
-
-        // ANULAR DISTRIBUIR TEMPORAL POR MOTIVO DE FIRMA XSIG NO VALIDABLE
-
-        boolean distribuirRipea = true;
-        if(PropiedadGlobalUtil.getNoDistribuir(entidadActiva.getId())) {
-            for (Anexo anexo : registro.getRegistroDetalle().getAnexos()) {
-                //Solo miramos si la firma es valida si el anexo tiene firma
-                if (anexo.getModoFirma()!= RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA && !anexo.getTipoDocumento().equals(RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO) && !anexo.isJustificante()) {
-                    if (!anexo.getFirmaValida()) {
-                        distribuirRipea = false;
-                        break;
-                    }
-                }
-            }
-        }
-        model.addAttribute("distribuirRipea", distribuirRipea);
 
         // Alta en tabla LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
