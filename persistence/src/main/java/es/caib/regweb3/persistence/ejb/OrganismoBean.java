@@ -177,10 +177,9 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, " +
-                "organismo.estado.id from Organismo as organismo where organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
-                "organismo.estado.codigoEstadoEntidad=:vigente and organismo.codigo not in " +
-                "(select org.codigo from organismo as org where org.entidad != :idEntidad and org.entidad.activo = true)");
+        Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
+                "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and " +
+                "organismo.estado.codigoEstadoEntidad=:vigente");
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
