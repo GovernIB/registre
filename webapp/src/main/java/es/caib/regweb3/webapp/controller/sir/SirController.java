@@ -7,12 +7,15 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.OficioRemisionBusquedaForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import org.dom4j.Document;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
@@ -285,6 +291,56 @@ public class SirController extends BaseController {
         }
 
         return false;
+    }
+
+    @RequestMapping(value = "/{idOficioRemision}/ficheroIntercambio", method = RequestMethod.GET)
+    public void generarFicheroIntercambio(@PathVariable("idOficioRemision") Long idOficioRemision, HttpServletRequest request, HttpServletResponse response)  {
+        RegistroSir registroSir = null;
+        Sicres3XML sicres3XML = new Sicres3XML();
+
+        try {
+            OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
+
+            if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
+                registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
+            }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
+                registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+            }
+
+            if(registroSir != null){
+                Document doc = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
+
+                try {
+
+
+                    String filename = registroSir.getIdentificadorIntercambio()+".xml";
+                    response.setContentType("text/xml");
+                    response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+                    response.setContentLength( doc.asXML().getBytes().length);
+
+                    OutputStream output = response.getOutputStream();
+                    output.write(doc.asXML().getBytes(Charset.forName("UTF-8")));
+                    output.flush();
+                    output.close();
+
+
+                } catch (NumberFormatException e) {
+                    log.info(e);
+                }  catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } catch (I18NException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**

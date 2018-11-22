@@ -130,6 +130,13 @@
 
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>regweb3-sir-api</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>plugin-distribucion-api</artifactId>
       <type>jar</type>
       <version>${project.version}</version>
