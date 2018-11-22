@@ -1447,6 +1447,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
     }
 
+
     /**
      *  Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
      *  Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
@@ -1460,25 +1461,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     private RegistroEntrada gestionAnexosByAplicacionSIR(RegistroEntrada original) throws Exception, I18NException, I18NValidationException {
 
         List<AnexoFull> anexosFullADistribuir = new ArrayList<AnexoFull>();
-        //Obtenemos las trazabilidades del registro para obtener la información de la aplicación de la que provienen
-        List<Trazabilidad> trazabilidades = trazabilidadEjb.getByRegistroEntrada(original.getId());
         //Obtenemos los anexos del registro para tratarlos
         List<AnexoFull> anexosFull =original.getRegistroDetalle().getAnexosFull();
-
-        //Para cada una de las trazabilidades obtenemos la aplicación de la que provienen y tratamos en función de la aplicación
-        for (Trazabilidad trazabilidad : trazabilidades) {
-            RegistroSir registroSir = trazabilidad.getRegistroSir();
+        //Lista de anexos para el procesamiento intermedio
+        List<AnexoFull> anexosFullIntermedio = new ArrayList<AnexoFull>();
 
 
-            if(RegwebConstantes.APLICACION_SIR_REGISTROELECTRONICO.equals(registroSir.getAplicacion())) {
-                original.getRegistroDetalle().setAnexosFull(gestionarByAplicacionByNombreFichero( RegwebConstantes.FICHERO_REGISTROELECTRONICO, anexosFull, anexosFullADistribuir));
-            }
+        gestionarByAplicacionByNombreFichero( RegwebConstantes.FICHERO_REGISTROELECTRONICO, anexosFull, anexosFullIntermedio);
+        gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_DEFENSORPUEBLO, anexosFullIntermedio, anexosFullADistribuir);
 
-            if(RegwebConstantes.APLICACION_SIR_DEFENSORPUEBLO.equals(registroSir.getAplicacion())) {
-                original.getRegistroDetalle().setAnexosFull(gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_DEFENSORPUEBLO, anexosFull, anexosFullADistribuir));
-            }
-
-        }
+        original.getRegistroDetalle().setAnexosFull(anexosFullADistribuir);
 
         return original;
     }
