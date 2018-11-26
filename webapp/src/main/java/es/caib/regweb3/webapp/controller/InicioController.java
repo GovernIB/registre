@@ -76,7 +76,7 @@ public class InicioController extends BaseController{
                 if(librosRegistroEntrada.size() > 0) {
 
                     // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
-                    mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva), 10));
+                    mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva), 5));
 
                     // Obtenemos los Oficios pendientes de Llegada
                     mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
