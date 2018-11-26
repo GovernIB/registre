@@ -98,9 +98,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Reintenta enviar los Registros sin confirmación o con error
-     * Cuando lo hace: Todos días, cada hora.
+     * Cuando lo hace: Todos días, cada 50 minutos.
      */
-    @Scheduled(cron = "0 0 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+    @Scheduled(cron = "0 0/55 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void reintentarEnvioSir(){
 
         try {
