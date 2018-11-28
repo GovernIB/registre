@@ -169,7 +169,7 @@ public class SchedulerBean implements SchedulerLocal{
                     log.info("------------- Cerrando expedientes en DM de la entidad: " + entidad.getNombre() + " -------------");
                     log.info(" ");
 
-                    arxiuEjb.cerrarExpedientesScheduler(entidad.getId());
+                    arxiuEjb.cerrarExpedientesScheduler(entidad.getId(), PropiedadGlobalUtil.getFechaInicioCerrarExpedientes(entidad.getId()));
 
                     log.info(" ");
                     log.info("------------- FIN expedientes en DM de la entidad: " + entidad.getNombre() + " -------------");

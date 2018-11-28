@@ -28,8 +28,9 @@ public interface ArxiuLocal {
     /**
      *
      * @param idEntidad
+     * @param fechaInicio
      * @throws Exception
      */
-    public void cerrarExpedientesScheduler(Long idEntidad) throws Exception;
+    public void cerrarExpedientesScheduler(Long idEntidad, String fechaInicio) throws Exception;
 
 }

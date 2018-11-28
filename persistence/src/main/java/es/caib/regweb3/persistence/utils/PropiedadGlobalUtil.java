@@ -361,6 +361,16 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Devuelve el valor de la propiedad con la fechaInicio para cerar los expedientes
+     *
+     * @return
+     */
+    public static String getFechaInicioCerrarExpedientes(Long idEntidad) {
+        final String partialPropertyName = "arxiu.fechaInicio.cerrarExpedientes";
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
      * Retorna el valor de la propiedad del Username de la Url de Validación
      * @return
      */
