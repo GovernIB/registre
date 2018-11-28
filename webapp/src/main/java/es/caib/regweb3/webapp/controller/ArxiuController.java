@@ -311,8 +311,9 @@ public class ArxiuController extends BaseController {
 
     }
 
-    @RequestMapping(value = "/expedientesAbiertos/{pageNumber}", method = RequestMethod.GET)
-    public ModelAndView expedientesAbiertos(@PathVariable Integer pageNumber, HttpServletRequest request) {
+    @RequestMapping(value = "/expedientesAbiertos/{initialDate}/{endDate}/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView expedientesAbiertos(@PathVariable String initialDate, @PathVariable String endDate,
+                                            @PathVariable Integer pageNumber, HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("arxiu/expedientesAbiertos");
 
@@ -330,7 +331,8 @@ public class ArxiuController extends BaseController {
             SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
 
             //String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\")";
-            String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:fecha_inicio:[2018-05-01T00:00:00.000Z TO "+formatDate.format(hoy)+"T23:59:59.000Z] AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\") ";
+            //String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:fecha_inicio:[2018-05-01T00:00:00.000Z TO "+formatDate.format(hoy)+"T23:59:59.000Z] AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\") ";
+            String queryDM = "(+TYPE:\"eni:expediente\" AND @eni\\:fecha_inicio:["+initialDate+" TO "+endDate+"] AND @eni\\:cod_clasificacion:\""+custody.getPropertySerieDocumentalEL()+"\") ";
             ResultadoBusqueda<Expediente> result = apiArxiu.busquedaExpedientes(queryDM,pageNumber);
 
             log.info("getCodigoResultado: " + result.getCodigoResultado());
@@ -352,6 +354,8 @@ public class ArxiuController extends BaseController {
             mav.addObject("lista",lista);
 
             mav.addObject("serie",custody.getPropertySerieDocumentalEL());
+            mav.addObject("initialDate",initialDate);
+            mav.addObject("endDate",endDate);
             mav.addObject("queryDM",queryDM);
 
 

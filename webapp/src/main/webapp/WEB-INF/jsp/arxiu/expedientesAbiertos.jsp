@@ -42,6 +42,8 @@
                                 <div class="row">
                                     <div class="col-xs-12">
 
+                                        <strong>Fecha Inicio:</strong> ${initialDate}<br>
+                                        <strong>Fecha Fin:</strong> ${endDate}<br>
                                         <strong>queryDM:</strong> ${queryDM}<br>
                                         <strong>Serie:</strong> ${serie}<br><br>
 
