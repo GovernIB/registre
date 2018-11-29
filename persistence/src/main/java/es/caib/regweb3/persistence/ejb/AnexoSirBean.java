@@ -78,7 +78,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
 
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
-        q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
+        //q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
         //q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
 
         List<AnexoSir> anexos = q.getResultList();
