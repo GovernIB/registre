@@ -70,6 +70,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    private DistribucionLocal distribucionEjb;
+
 
     /**
     * Listado de todos los Registros de Entrada
@@ -705,7 +708,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
             //Distribuimos el registro
-            respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuarioEntidad);
+            respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
             if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
                 if(respuestaDistribucion.getEnviadoCola()){ //Si se ha enviado a la cola
@@ -785,7 +788,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
         try {
-             enviado = registroEntradaEjb.enviar(registroEntrada, wrapper,
+             enviado = distribucionEjb.enviar(registroEntrada, wrapper,
                     usuarioEntidad.getEntidad().getId(),
                     RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuarioEntidad.getUsuario().getIdioma()));
 

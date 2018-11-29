@@ -98,9 +98,10 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Reintenta enviar los Registros sin confirmación o con error
-     * Cuando lo hace: Todos días, cada 50 minutos.
+     * Cuando lo hace: en cada hora, se ejecuta a los 15 minutos despues de iniciada la hora y cada 45 minutos
+     * que al coincidir con la hora en punto y tener un desplazamiento de 15 minutos, conseguimos que se ejecute a y 15 en cada hora).
      */
-    @Scheduled(cron = "0 0/55 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+    @Scheduled(cron = "0 15/45 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void reintentarEnvioSir(){
 
         try {
@@ -126,7 +127,7 @@ public class Regweb3Scheduler {
      * Qué hace: Distribuye los registros que hay en la cola
      * Cuando lo hace: cada 30 minutos
      */
-    @Scheduled(cron = "0 0/30 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+     @Scheduled(cron = "0 0/30 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void distribuirRegistrosEnCola(){
 
         try {
@@ -161,7 +162,7 @@ public class Regweb3Scheduler {
     /**
      * Scheduler para realizar pruebas que se ejecutará cada 60 segundos
      */
-    //@Scheduled(cron = "*/60 * * * * *") // **60 * * * * * cada 60 secs
+   // @Scheduled(cron = "*/60 * * * * *") // **60 * * * * * cada 60 secs
     public void pruebas(){
         try {
 

@@ -55,11 +55,11 @@ import java.util.Locale;
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
 @WebService(name = RegWebRegistroEntradaWsImpl.NAME_WS, portName = RegWebRegistroEntradaWsImpl.NAME_WS,
-        serviceName = RegWebRegistroEntradaWsImpl.NAME_WS + "Service",
-        endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebRegistroEntradaWs")
+   serviceName = RegWebRegistroEntradaWsImpl.NAME_WS + "Service",
+   endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebRegistroEntradaWs")
 @WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebRegistroEntradaWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
-        implements RegWebRegistroEntradaWs {
+   implements RegWebRegistroEntradaWs {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -125,13 +125,16 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    private DistribucionLocal distribucionEjb;
+
     @Override
     @RolesAllowed({ROL_USUARI})
     @WebMethod
     @Deprecated
     public IdentificadorWs altaRegistroEntrada(@WebParam(name = "registroEntradaWs")
-            RegistroEntradaWs registroEntradaWs)
-            throws Throwable, WsI18NException, WsValidationException {
+                                                  RegistroEntradaWs registroEntradaWs)
+       throws Throwable, WsI18NException, WsValidationException {
 
         Entidad entidad = null;
 
@@ -160,8 +163,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({ROL_USUARI})
     @WebMethod
     public IdentificadorWs nuevoRegistroEntrada(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroEntradaWs")
-            RegistroEntradaWs registroEntradaWs)
-            throws Throwable, WsI18NException, WsValidationException {
+       RegistroEntradaWs registroEntradaWs)
+       throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
         StringBuilder peticion = new StringBuilder();
@@ -244,13 +247,13 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         }
 
-        // Recuperamos el username correcto 
+        // Recuperamos el username correcto
         registroEntradaWs.setCodigoUsuario(usuario.getUsuario().getIdentificador());
 
         // 8.- Convertir RegistroEntradaWs a RegistroEntrada
         RegistroEntrada registroEntrada = RegistroEntradaConverter.getRegistroEntrada(
-                registroEntradaWs, usuario, libro, oficina, destinoInterno, destinoExterno,
-                codigoAsuntoEjb, tipoAsuntoEjb, oficinaEjb);
+           registroEntradaWs, usuario, libro, oficina, destinoInterno, destinoExterno,
+           codigoAsuntoEjb, tipoAsuntoEjb, oficinaEjb);
 
         // 9.- Validar el RegistroEntrada
         validateRegistroEntrada(registroEntrada);
@@ -400,11 +403,10 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @WebMethod
     public void anularRegistroEntrada(
-            @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-            @WebParam(name = "usuario") String usuario,
-            @WebParam(name = "entidad") String entidad,
-            @WebParam(name = "anular") boolean anular)
-            throws Throwable, WsI18NException, WsValidationException {
+       @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
+       @WebParam(name = "entidad") String entidad,
+       @WebParam(name = "anular") boolean anular)
+       throws Throwable, WsI18NException, WsValidationException {
 
 
         //1.- Validar obligatorios
@@ -539,7 +541,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // 7.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = registroEntradaEjb.distribuir(registroEntrada, usuario);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
             if(respuestaDistribucion.getDestinatarios() != null){
@@ -574,12 +576,12 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @WebMethod
     public IdentificadorWs obtenerRegistroEntradaID(
-            @WebParam(name = "anyo") int anyo,
-            @WebParam(name = "numeroRegistro") int numeroRegistro,
-            @WebParam(name = "libro") String libro,
-            @WebParam(name = "usuario") String usuario,
-            @WebParam(name = "entidad") String entidad)
-            throws Throwable, WsI18NException {
+       @WebParam(name = "anyo") int anyo,
+       @WebParam(name = "numeroRegistro") int numeroRegistro,
+       @WebParam(name = "libro") String libro,
+       @WebParam(name = "usuario") String usuario,
+       @WebParam(name = "entidad") String entidad)
+       throws Throwable, WsI18NException {
 
 
         // 1.- Validaciones comunes
@@ -627,7 +629,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         registro = registroEntradaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, libro);
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro
-                    + "/" + anyo + " (" + libro + ")");
+               + "/" + anyo + " (" + libro + ")");
         }
 
         // LOPD
@@ -642,10 +644,10 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @WebMethod
     public RegistroEntradaResponseWs obtenerRegistroEntrada(
-            @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-            @WebParam(name = "usuario") String usuario,
-            @WebParam(name = "entidad") String entidad)
-            throws Throwable, WsI18NException, WsValidationException {
+       @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
+       @WebParam(name = "usuario") String usuario,
+       @WebParam(name = "entidad") String entidad)
+       throws Throwable, WsI18NException, WsValidationException {
 
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
@@ -694,7 +696,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         RegistroEntradaResponseWs responseWs = null;
         try{
             responseWs = RegistroEntradaConverter.getRegistroEntradaResponseWs(registro,
-                    UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+               UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
         }catch (Exception e){
 
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);

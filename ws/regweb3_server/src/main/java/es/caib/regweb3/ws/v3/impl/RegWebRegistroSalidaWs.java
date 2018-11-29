@@ -66,7 +66,6 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
     /**
      * Anula un {@link es.caib.regweb3.model.RegistroSalida}
      * @param numeroRegistro
-     * @param usuario
      * @param entidad
      * @throws Throwable
      * @throws org.fundaciobit.genapp.common.ws.WsI18NException
@@ -75,7 +74,6 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
     @WebMethod
     public void anularRegistroSalida(
         @WebParam(name = "numeroRegistro") String numeroRegistro,
-        @WebParam(name = "usuario") String usuario,
         @WebParam(name = "entidad") String entidad,
         @WebParam(name = "anular") boolean anular)
     throws Throwable, WsI18NException, WsValidationException;
@@ -83,7 +81,6 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
     /**
      * Obtiene un {@link es.caib.regweb3.model.RegistroSalida}
      * @param numeroRegistro
-     * @param usuario
      * @param entidad
      * @return
      * @throws Throwable

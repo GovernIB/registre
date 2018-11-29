@@ -56,6 +56,9 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/NotificacionEJB/local")
     private NotificacionLocal notificacionEjb;
 
+    @EJB(mappedName = "regweb3/DistribucionEJB/local")
+    private DistribucionLocal distribucionEjb;
+
 
     @Override
     public void purgarIntegraciones() throws Exception{
@@ -143,7 +146,7 @@ public class SchedulerBean implements SchedulerLocal{
                 log.info("------------- Distribucion: Procesando registros En Cola " + entidad.getNombre() + " -------------");
                 log.info(" ");
 
-                registroEntradaEjb.distribuirRegistrosEnCola(entidad.getId());
+                distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
             }
         } catch (I18NException e) {
             log.error("Error Distribuyendo los registros de la entidad ...", e);

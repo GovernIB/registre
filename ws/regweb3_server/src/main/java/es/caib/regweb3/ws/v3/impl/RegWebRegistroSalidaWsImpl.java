@@ -368,7 +368,6 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @Override
     @WebMethod
     public void anularRegistroSalida(@WebParam(name = "numeroRegistro") String numeroRegistro,
-                                     @WebParam(name = "usuario") String usuario,
                                      @WebParam(name = "entidad") String entidad,
                                      @WebParam(name = "anular") boolean anular)
             throws Throwable, WsI18NException, WsValidationException {

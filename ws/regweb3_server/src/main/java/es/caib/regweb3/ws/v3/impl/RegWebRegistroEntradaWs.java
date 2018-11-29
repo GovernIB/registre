@@ -61,7 +61,6 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
     /**
      * Anula un {@link es.caib.regweb3.model.RegistroEntrada}
      * @param numeroRegistroFormateado
-     * @param usuario
      * @param entidad
      * @param anular Si true, anula el registro, si es false, entonces quita la anulacion.
      * @throws Throwable
@@ -71,7 +70,6 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
     @WebMethod
     public void anularRegistroEntrada(
             @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-            @WebParam(name = "usuario") String usuario,
             @WebParam(name = "entidad") String entidad,
             @WebParam(name = "anular") boolean anular)
             throws Throwable, WsI18NException, WsValidationException;
@@ -79,7 +77,6 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
     /**
      * Tramita un {@link es.caib.regweb3.model.RegistroEntrada}
      * @param numeroRegistroFormateado
-     * @param usuario
      * @param entidad
      * @throws Throwable
      * @throws WsI18NException
@@ -102,7 +99,6 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
     /**
      * Obtiene un {@link es.caib.regweb3.model.RegistroEntrada}
      * @param numeroRegistroFormateado
-     * @param usuario
      * @param entidad
      * @return
      * @throws Throwable
