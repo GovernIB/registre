@@ -1078,9 +1078,9 @@ public class EntidadController extends BaseController {
                                                                  Entidad entidad) throws Exception, I18NException {
 
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
-        List<UsuarioEntidad> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
-        for (UsuarioEntidad usuario : usuarios) {
-            loginService.actualizarRoles(usuario.getUsuario());
+        List<Usuario> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
+        for (Usuario usuario : usuarios) {
+            loginService.actualizarRoles(usuario);
         }
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN
@@ -1088,9 +1088,7 @@ public class EntidadController extends BaseController {
 
         // Eliminamos el Propietario de la Entidad
         UsuarioEntidad usuarioPropietario = usuarioEntidadEjb.findByUsuarioEntidad(propietario.getId(), entidad.getId());
-        if (administradoresEntidad.contains(usuarioPropietario)) {
-            administradoresEntidad.remove(usuarioPropietario);
-        }
+        administradoresEntidad.remove(usuarioPropietario);
 
         return administradoresEntidad;
     }

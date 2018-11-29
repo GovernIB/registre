@@ -208,9 +208,9 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception {
+    public List<Usuario> findActivosByEntidad(Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where " +
+        Query q = em.createQuery("Select usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.activo = true order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);

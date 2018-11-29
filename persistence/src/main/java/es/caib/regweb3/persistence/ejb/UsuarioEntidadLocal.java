@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
@@ -85,7 +86,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    List<UsuarioEntidad> findActivosByEntidad(Long idEntidad) throws Exception;
+    List<Usuario> findActivosByEntidad(Long idEntidad) throws Exception;
 
     /**
      * Devuelve los UsuarioEntidad de una Entidad que tiene el ROL RWE_ADMIN
