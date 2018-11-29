@@ -170,12 +170,12 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="registroSir.identificadorIntercambio"/></th>
+                                                <th class="center"><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                 <th><spring:message code="registroSir.fechaRecepcion"/></th>
                                                 <th class="center"><spring:message code="regweb.tipo"/></th>
                                                 <th class="center"><spring:message code="registroSir.aplicacion"/></th>
-                                                <th><spring:message code="regweb.origen"/></th>
-                                                <th><spring:message code="registroSir.oficinaDestino"/></th>
+                                                <th class="center"><spring:message code="regweb.origen"/></th>
+                                                <th class="center"><spring:message code="registroSir.oficinaDestino"/></th>
                                                 <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th>Doc</th>
                                                 <th><spring:message code="oficioRemision.reintentos"/></th>

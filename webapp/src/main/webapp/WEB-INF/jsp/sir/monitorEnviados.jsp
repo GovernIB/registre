@@ -194,10 +194,10 @@
                                                 <tr>
                                                     <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                     <th><spring:message code="oficioRemision.fecha"/></th>
-                                                    <th><spring:message code="oficioRemision.tipo"/></th>
-                                                    <th><spring:message code="oficioRemision.oficina"/></th>
-                                                    <th><spring:message code="oficioRemision.organismoDestino"/></th>
-                                                    <th><spring:message code="oficioRemision.estado"/></th>
+                                                    <th class="center"><spring:message code="oficioRemision.tipo"/></th>
+                                                    <th class="center"><spring:message code="oficioRemision.oficina"/></th>
+                                                    <th class="center"><spring:message code="oficioRemision.organismoDestino"/></th>
+                                                    <th class="center"><spring:message code="oficioRemision.estado"/></th>
                                                     <th><spring:message code="oficioRemision.reintentos"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
@@ -208,7 +208,7 @@
                                                     <tr>
                                                         <td>${oficioRemision.identificadorIntercambio}</td>
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                        <td>
+                                                        <td class="center">
                                                             <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
                                                                 <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
                                                             </c:if>
@@ -225,7 +225,7 @@
                                                                    data-content="<spring:message code="oficina.oficina"/>: ${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})"
                                                                    data-toggle="popover">${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</label>
                                                         </td>
-                                                        <td>
+                                                        <td class="center">
                                                             <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO}">
                                                                 <span class="label label-success"><spring:message code="oficioRemision.estado.${oficioRemision.estado}"/></span>
                                                             </c:if>
