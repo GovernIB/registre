@@ -1931,13 +1931,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             byte[] anexoSirData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
 
             // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
-            log.info("APLICACION: " + aplicacion);
-            if(RegwebConstantes.APLICACION_SIR_ORVE.equals(aplicacion)){
-                // Decodificar
+            if(Base64.isBase64(anexoSirData)){
                 log.info("Entramos en decodificar caso ORVE");
                 anexoSirData=Base64.decodeBase64(anexoSirData);
                 anexoSir.setAnexoData(anexoSirData);
-            }
+            };
 
             if(CXFUtils.isXMLFormat(anexoSirData)){ //Miramos si es un formato XML
                 //A pesar de que por identificador de documento firmado nos indican que es una firma detached, debemos
@@ -2125,7 +2123,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             sc = new SignatureCustody();
 
-            sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
+            //Averiguamos si está en Base64 para decodificarlo y luego que se valide bien la firma.
+            byte[] anexoData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
+            if(Base64.isBase64(anexoData)){
+                log.info("Entramos en decodificar base64");
+                anexoData=Base64.decodeBase64(anexoData);
+            };
+            sc.setData(anexoData);
             sc.setMime(anexoSir.getTipoMIME());
             sc.setName(anexoSir.getNombreFichero());
 
