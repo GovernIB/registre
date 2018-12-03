@@ -992,11 +992,26 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if(interesado.getProvincia() != null){
-            interesadoSir.setCodigoProvinciaInteresado(interesado.getProvincia().getCodigoProvincia().toString());
+            String codigoProvincia = interesado.getProvincia().getCodigoProvincia().toString();
+
+            if(codigoProvincia.length() == 1){ // Le añadimos '0' delante si el código es del 1-9
+                codigoProvincia = "0"+codigoProvincia;
+            }
+            interesadoSir.setCodigoProvinciaInteresado(codigoProvincia);
         }
 
         if(interesado.getLocalidad() != null){
-            interesadoSir.setCodigoMunicipioInteresado(interesado.getLocalidad().getCodigoLocalidad().toString());
+            String codigoMunicipio = interesado.getLocalidad().getCodigoLocalidad().toString();
+
+            if(codigoMunicipio.length() == 1){
+                codigoMunicipio = "000"+codigoMunicipio;
+            }else if(codigoMunicipio.length() == 2){
+                codigoMunicipio = "00"+codigoMunicipio;
+            }else if(codigoMunicipio.length() == 3){
+                codigoMunicipio = "0"+codigoMunicipio;
+            }
+
+            interesadoSir.setCodigoMunicipioInteresado(codigoMunicipio);
         }
 
         if (StringUtils.isNotEmpty(interesado.getDireccion())) {
