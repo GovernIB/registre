@@ -16,6 +16,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.webapp.form.CerrarExpedientesForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -25,6 +26,7 @@ import org.fundaciobit.plugins.documentcustody.arxiudigitalcaib.ArxiuDigitalCAIB
 import org.fundaciobit.plugins.utils.Metadata;
 import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -358,6 +360,9 @@ public class ArxiuController extends BaseController {
             mav.addObject("endDate",endDate);
             mav.addObject("queryDM",queryDM);
 
+            CerrarExpedientesForm cerrarExpedientesForm = new CerrarExpedientesForm(lista);
+            mav.addObject(cerrarExpedientesForm);
+
 
         }catch (I18NException e1) {
             log.info("Error 1 en la busqueda de expedientesAbiertos", e1);
@@ -372,6 +377,57 @@ public class ArxiuController extends BaseController {
 
         return mav;
 
+    }
+
+    @RequestMapping(value = "/expedientesAbiertos/{initialDate}/{endDate}/{pageNumber}", method = RequestMethod.POST)
+    public String expedientesAbiertos(@ModelAttribute CerrarExpedientesForm cerrarExpedientesForm, @PathVariable String initialDate, @PathVariable String endDate,
+                                            @PathVariable Integer pageNumber, HttpServletRequest request) {
+
+        Entidad entidad = getEntidadActiva(request);
+
+        try {
+            ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+
+            ApiArchivoDigital apiArxiu = custody.getApiArxiu(null);
+            Integer cerrados = 0;
+            for (String uuid : cerrarExpedientesForm.getUuids()) {
+
+                log.info("Cerrando expediente de: " + uuid);
+
+                Resultado<Expediente> expedientes = apiArxiu.obtenerExpediente(uuid);
+
+                if (hiHaErrorEnCerca(expedientes.getCodigoResultado())) {
+                    Mensaje.saveMessageError(request, expedientes.getCodigoResultado() + "-" + expedientes.getMsjResultado());
+                    throw new Exception("Error Consultant si Expedient existeix: "
+                            + expedientes.getCodigoResultado() + "-" + expedientes.getMsjResultado());
+                }
+
+                //Cerrar expediente
+                Expediente expediente = expedientes.getElementoDevuelto();
+
+                try{
+                    arxiuEjb.cerrarExpediente(expediente, apiArxiu, entidad.getId());
+                    cerrados = cerrados +1;
+                }catch (CustodyException c){
+                    log.info("Ha ocurrido un error al cerrar el expediente: "+ expediente.getName()+ " --> " + c.getMessage());
+                }
+
+            }
+
+            Mensaje.saveMessageInfo(request, "Se han cerrado "+cerrados+" expedientes.");
+
+        }catch (I18NException e1) {
+            log.info("Error 1 en la busqueda de expedientesAbiertos", e1);
+            e1.printStackTrace();
+        } catch (CustodyException e2) {
+            log.info("Error 2 en la busqueda de expedientesAbiertos", e2);
+            e2.printStackTrace();
+        } catch (Exception e3) {
+            log.info("Error 3 en la busqueda de expedientesAbiertos", e3);
+            e3.printStackTrace();
+        }
+
+        return  "redirect:/arxiu/expedientesAbiertos/"+initialDate+"/"+endDate+"/0";
     }
 
     @RequestMapping(value = "/cerrarExpediente/{idExpediente}", method = RequestMethod.GET)
@@ -399,6 +455,7 @@ public class ArxiuController extends BaseController {
             Expediente expediente = expedientes.getElementoDevuelto();
 
             arxiuEjb.cerrarExpediente(expediente, apiArxiu, entidad.getId());
+            Mensaje.saveMessageInfo(request,"Se ha cerrado correctamente el expediente: " +idExpediente);
 
 
         }catch (I18NException e) {

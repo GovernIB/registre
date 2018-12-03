@@ -53,6 +53,12 @@
                                             </div>
                                         </c:if>
 
+                                        <c:if test="${cerrados != null}">
+                                            <div class="alert alert-grey ">
+                                                <strong>Se han cerrado ${cerrados} expedientes correctamente</strong>
+                                            </div>
+                                        </c:if>
+
                                         <c:if test="${total > 0}">
 
                                             <div class="col-xs-12">
@@ -62,36 +68,43 @@
                                                     </div>
 
                                                     <c:if test="${not empty lista}">
-                                                        <div class="table-responsive">
-                                                            <table class="table table-bordered table-hover table-striped">
-                                                                <colgroup>
-                                                                    <col>
-                                                                    <col>
-                                                                    <col width="51">
-                                                                </colgroup>
-                                                                <thead>
-                                                                <tr>
-                                                                    <th>Nombre</th>
-                                                                    <th>id</th>
-                                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
-                                                                </tr>
-                                                                </thead>
+                                                        <form:form modelAttribute="cerrarExpedientesForm" method="post" cssClass="form-horizontal">
 
-                                                                <tbody>
-                                                                <c:forEach var="expediente" items="${lista}">
+                                                            <div class="table-responsive">
+                                                                <table class="table table-bordered table-hover table-striped">
+                                                                    <colgroup>
+                                                                        <col>
+                                                                        <col>
+                                                                        <col width="51">
+                                                                    </colgroup>
+                                                                    <thead>
                                                                     <tr>
-                                                                        <td>${expediente.name}</td>
-                                                                        <td>${expediente.id}</td>
-                                                                        <td class="center">
-                                                                            <a class="btn btn-warning btn-sm" target="_blank" href="<c:url value="/arxiu/cerrarExpediente/${expediente.id}"/>" title="Cerrar expediente"><span class="fa fa-close"></span></a>
-                                                                        </td>
+                                                                        <th>Nombre</th>
+                                                                        <th>id</th>
+                                                                        <th class="center"><spring:message code="regweb.acciones"/></th>
                                                                     </tr>
-                                                                </c:forEach>
+                                                                    </thead>
 
-                                                                </tbody>
-                                                            </table>
+                                                                    <tbody>
+                                                                        <c:forEach var="expediente" items="${lista}" varStatus="status">
+                                                                            <form:hidden path="uuids[${status.index}]"/>
+                                                                            <tr>
+                                                                                <td>${expediente.name}</td>
+                                                                                <td>${expediente.id}</td>
+                                                                                <td class="center">
+                                                                                    <a class="btn btn-warning btn-sm" target="_blank" href="<c:url value="/arxiu/cerrarExpediente/${expediente.id}"/>" title="Cerrar expediente"><span class="fa fa-close"></span></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </c:forEach>
 
-                                                        </div>
+                                                                    </tbody>
+                                                                </table>
+
+                                                                <input type="submit" value="Cerrar expedientes" onclick="" class="btn btn-warning btn-sm"/>
+
+                                                            </div>
+
+                                                        </form:form>
                                                     </c:if>
 
                                             </div>
