@@ -988,7 +988,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         }
 
         if(interesado.getPais() != null){
-            interesadoSir.setCodigoPaisInteresado(interesado.getPais().getCodigoPais().toString());
+            String codigoPais = interesado.getPais().getCodigoPais().toString();
+
+            if(codigoPais.length() == 1){
+                codigoPais = "00"+codigoPais;
+            }else if(codigoPais.length() == 2){
+                codigoPais = "0"+codigoPais;
+            }
+
+            interesadoSir.setCodigoPaisInteresado(codigoPais);
         }
 
         if(interesado.getProvincia() != null){
@@ -1070,15 +1078,40 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             if(representante.getPais() != null){
-                interesadoSir.setCodigoPaisRepresentante(representante.getPais().getCodigoPais().toString());
+                String codigoPais = representante.getPais().getCodigoPais().toString();
+
+                if(codigoPais.length() == 1){ // Le añadimos '00' delante si el código es del 1-9
+                    codigoPais = "00"+codigoPais;
+                }else if(codigoPais.length() == 2){ // Le añadimos '0' delante si el código es hasta 99
+                    codigoPais = "0"+codigoPais;
+                }
+
+                interesadoSir.setCodigoPaisRepresentante(codigoPais);
             }
 
             if(representante.getProvincia() != null){
-                interesadoSir.setCodigoProvinciaRepresentante(representante.getProvincia().getCodigoProvincia().toString());
+
+                String codigoProvincia = representante.getProvincia().getCodigoProvincia().toString();
+
+                if(codigoProvincia.length() == 1){
+                    codigoProvincia = "0"+codigoProvincia;  // Le añadimos '0' delante si el código es del 1-9
+                }
+
+                interesadoSir.setCodigoProvinciaRepresentante(codigoProvincia);
             }
 
             if(representante.getLocalidad() != null){
-                interesadoSir.setCodigoMunicipioRepresentante(representante.getLocalidad().getCodigoLocalidad().toString());
+                String codigoMunicipio = representante.getLocalidad().getCodigoLocalidad().toString();
+
+                if(codigoMunicipio.length() == 1){
+                    codigoMunicipio = "000"+codigoMunicipio; // Le añadimos '000' delante si el código es hasta 1-9
+                }else if(codigoMunicipio.length() == 2){ // Le añadimos '00' delante si el código es hasta 99
+                    codigoMunicipio = "00"+codigoMunicipio;
+                }else if(codigoMunicipio.length() == 3){
+                    codigoMunicipio = "0"+codigoMunicipio; // Le añadimos '0' delante si el código es hasta 999
+                }
+
+                interesadoSir.setCodigoMunicipioRepresentante(codigoMunicipio);
             }
 
             if (StringUtils.isNotEmpty(representante.getDireccion())) {
