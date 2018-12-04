@@ -143,9 +143,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Cierra los expedientes que están en DM del Arxiu del GOIB
-     * Cuando lo hace: Desde las 00:00 hasta las 07:00 y desde las 15:00 hasta las 00:00 cada 30 minutos
+     * Cuando lo hace: Desde las 00:00 hasta las 07:00 y desde las 15:00 hasta las 00:00 cada 15 minutos
      */
-    @Scheduled(cron = "0 0/30 0,1,2,3,4,5,6,7,15,16,17,18,19,20,21,22,23 * * *") // 0 0/30 15-7 * * *   0 0/30 * * * *
+    @Scheduled(cron = "0 0/15 0,1,2,3,4,5,6,7,15,16,17,18,19,20,21,22,23 * * *") // 0 0/30 15-7 * * *   0 0/30 * * * *
     public void cerrarExpedientes(){
         try {
 
