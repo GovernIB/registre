@@ -35,6 +35,7 @@ public class LoginInfo {
     private LinkedHashSet<Organismo> organismosOficinaActiva;
     private Configuracion configuracion;
     private Boolean enlaceDir3 = false;
+    private Boolean mostrarAvisos;
 
     final User springSecurityUser;
     final Collection<GrantedAuthority> springRoles;
@@ -221,6 +222,13 @@ public class LoginInfo {
         return rolActivo;
     }
 
+    public Boolean getMostrarAvisos() {
+        return mostrarAvisos;
+    }
+
+    public void setMostrarAvisos(Boolean mostrarAvisos) {
+        this.mostrarAvisos = mostrarAvisos;
+    }
 
     public static LoginInfo getInstance() throws LoginException {
         Object obj;

@@ -508,6 +508,7 @@ public class LoginService {
         loginInfo.setUsuarioEntidadActivo(usuarioEntidadEjb.findByUsuarioEntidadActivo(loginInfo.getUsuarioAutenticado().getId(), entidad.getId()));
 
         loginInfo.setEnlaceDir3(PropiedadGlobalUtil.getEnlaceDir3(entidad.getId()));
+        loginInfo.setMostrarAvisos(PropiedadGlobalUtil.getMostrarAvisos(entidad.getId()));
 
         log.info("Entidad activa usuario: " + entidad.getNombre() + " - " + loginInfo.getUsuarioAutenticado().getNombreCompleto());
 

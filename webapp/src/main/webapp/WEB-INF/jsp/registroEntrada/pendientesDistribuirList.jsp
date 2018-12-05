@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="true"/> <%--Importamos el menú de avisos--%>
+                        <c:param name="avisos" value="${loginInfo.mostrarAvisos}"/> <%--Importamos el menú de avisos--%>
                     </c:import>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroEntrada.pendientesDistribuir.sir"/></strong></li>
                 </ol>

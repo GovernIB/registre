@@ -370,6 +370,18 @@ public class PropiedadGlobalUtil {
         return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
+
+    /**
+     * Retorna el valor de la propiedad que indica si mostraremos los avisos o no
+     *
+     * @return
+     */
+    public static Boolean getMostrarAvisos(Long idEntidad) {
+        final String partialPropertyName = "avisos";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
     /**
      * Retorna el valor de la propiedad del Username de la Url de Validación
      * @return

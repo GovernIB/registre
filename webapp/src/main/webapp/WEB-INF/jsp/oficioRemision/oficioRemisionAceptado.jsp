@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp">
-                        <c:param name="avisos" value="true"/>
+                        <c:param name="avisos" value="${loginInfo.mostrarAvisos}"/>
                     </c:import>
                     <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="oficioRemision.aceptado"/></strong></li>
                 </ol>
