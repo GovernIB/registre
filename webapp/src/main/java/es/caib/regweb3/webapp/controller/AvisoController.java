@@ -114,7 +114,7 @@ public class AvisoController extends BaseController {
         }
 
         Long end = System.currentTimeMillis();
-        log.debug("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
+        log.info("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
         return mav;
     }
 
