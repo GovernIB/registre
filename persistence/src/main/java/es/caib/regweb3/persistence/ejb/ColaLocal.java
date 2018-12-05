@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -54,30 +55,40 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     Paginacion busqueda(Cola cola, Long idEntidad) throws Exception;
 
     /**
+     *
+     * @param re
+     * @param usuarioEntidad
+     * @param maxReintentos
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, int maxReintentos) throws Exception, I18NException, I18NValidationException;
+
+    /**
      * Vuelve a activar los elementos en la cola poniendo el contador a 0 para que se puedan volver a enviar
      * @param idEntidad
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
-     Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException, I18NValidationException;
-
+     Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException;
 
     /**
-     *  Actualiza los datos de un elemento de la cola durante el proceso de reintentos.
-     * @param elemento elemento que se actualiza
-     * @param idioma idioma del mail que se va a enviar
-     * @param administradores
-     * parametros necesarios para crear la entrada en la tabla de integraciones
+     *
+     * @param elemento
      * @param descripcion
      * @param peticion
      * @param tiempo
      * @param entidadId
      * @param hora
+     * @param idioma
      * @param th
+     * @param administradores
+     * @param maxReintentos
      * @throws Exception
      */
-    void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores, int maxReintentos) throws Exception;
+     void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores, int maxReintentos) throws Exception;
 
     /**
      * Elimina los elementos de la cola de distribución de la entidad indicada

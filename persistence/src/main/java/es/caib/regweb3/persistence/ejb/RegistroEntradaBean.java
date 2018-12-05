@@ -74,15 +74,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB(mappedName = "regweb3/JustificanteEJB/local")
     private JustificanteLocal justificanteEjb;
 
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
-    private IntegracionLocal integracionEjb;
-
-    @EJB(mappedName = "regweb3/ColaEJB/local")
-    private ColaLocal colaEjb;
-
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    private UsuarioEntidadLocal usuarioEntidadEjb;
-
 
 
     @SuppressWarnings("unchecked")

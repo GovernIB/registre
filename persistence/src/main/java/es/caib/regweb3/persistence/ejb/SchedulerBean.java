@@ -4,8 +4,8 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
@@ -136,24 +136,23 @@ public class SchedulerBean implements SchedulerLocal{
      * @throws Exception
      */
     @Override
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void distribuirRegistrosEnCola() throws Exception{
 
         try {
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
 
-            for(Entidad entidad: entidades) {
+            for (Entidad entidad : entidades) {
                 log.info(" ");
                 log.info("------------- Distribucion: Procesando registros En Cola " + entidad.getNombre() + " -------------");
                 log.info(" ");
 
                 distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
             }
-        } catch (I18NException e) {
-            log.error("Error Distribuyendo los registros de la entidad ...", e);
-        }catch (I18NValidationException e) {
-            log.error("Error Distribuyendo los registros de la entidad ...", e);
-        }
 
+        }catch (Exception e){
+            log.error("Error distribuyendo registros de la Cola ...", e);
+        }
     }
 
     /**
@@ -258,4 +257,5 @@ public class SchedulerBean implements SchedulerLocal{
             }
         }
     }
+
 }

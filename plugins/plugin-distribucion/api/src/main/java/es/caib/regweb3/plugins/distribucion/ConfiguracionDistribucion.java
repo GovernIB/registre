@@ -30,10 +30,9 @@ public class ConfiguracionDistribucion {
 
     }
 
-    public ConfiguracionDistribucion(boolean listadoDestinatariosModificable, int configuracionAnexos,int maxReintentos, boolean envioCola) {
+    public ConfiguracionDistribucion(boolean listadoDestinatariosModificable, int configuracionAnexos, boolean envioCola) {
         this.listadoDestinatariosModificable = listadoDestinatariosModificable;
         this.configuracionAnexos = configuracionAnexos;
-        this.maxReintentos = maxReintentos;
         this.envioCola = envioCola;
 
     }
@@ -52,14 +51,6 @@ public class ConfiguracionDistribucion {
 
     public void setConfiguracionAnexos(int configuracionAnexos) {
         this.configuracionAnexos = configuracionAnexos;
-    }
-
-    public int getMaxReintentos() {
-        return maxReintentos;
-    }
-
-    public void setMaxReintentos(int maxReintentos) {
-        this.maxReintentos = maxReintentos;
     }
 
     public boolean isEnvioCola() {

@@ -8,7 +8,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -93,9 +92,6 @@ public class ColaController extends BaseController {
             Mensaje.saveMessageInfo(request, getMessage("cola.reiniciada"));
 
 
-        } catch (I18NValidationException e) {
-            Mensaje.saveMessageError(request, getMessage("cola.error.reiniciar"));
-            e.printStackTrace();
 
         } catch (I18NException ie) {
             Mensaje.saveMessageError(request, getMessage("cola.error.reiniciar"));

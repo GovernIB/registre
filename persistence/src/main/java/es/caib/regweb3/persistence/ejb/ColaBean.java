@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.MailUtils;
@@ -32,18 +33,14 @@ import java.util.*;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
-
     protected final Logger log = Logger.getLogger(getClass());
-
-
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-
-    @EJB public IntegracionLocal integracionEjb;
-
-    @EJB public PluginLocal pluginEjb;
+    @EJB private IntegracionLocal integracionEjb;
+    @EJB private PluginLocal pluginEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
 
 
     @Override
@@ -204,13 +201,40 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     }
 
+    @Override
+    public void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, int maxReintentos) throws Exception, I18NException, I18NValidationException {
+
+        try {
+            //Creamos un elemento nuevo de la cola de distribución
+            Cola cola = new Cola();
+            cola.setIdObjeto(re.getId());
+            cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
+            cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
+            cola.setUsuarioEntidad(usuarioEntidad);
+            cola.setDenominacionOficina(re.getOficina().getDenominacion());
+
+            persist(cola);
+
+            log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
+            registroEntradaEjb.cambiarEstadoHistorico(re,RegwebConstantes.REGISTRO_DISTRIBUYENDO, usuarioEntidad);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     @Override
-    public Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException, I18NValidationException {
+    public Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException {
+
+        //Obtenemos el numero máximo de reintentos de una propiedad global
+        Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);
 
         IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
         //Obtenemos todos los que han alcanzado el máximo de reintentos.
-        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null,distribucionPlugin.configurarDistribucion().getMaxReintentos());
+        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null,maxReintentos);
         //Reseteamos los valores de los pendientes para que vuelvan a entrar en la cola.
         for(Cola pendiente: pendientesDistribuir){
             reiniciarElementoCola(pendiente);
@@ -224,6 +248,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         paginacion.setListado(pendientesDistribuir.subList(inicio,fin));
         return paginacion;
     }
+
 
     @Override
     public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores, int maxReintentos) throws Exception{
@@ -253,17 +278,14 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             //Guardamos que ha ocurrido un error en integraciones
             elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
             merge(elemento);
-            try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, null,System.currentTimeMillis() - tiempo, entidadId, elemento.getDescripcionObjeto());
-            }catch(Exception ee){
-                elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
-                merge(elemento);
-                ee.printStackTrace();
-            }
+
+            // Añadimos el error a la integración
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, null,System.currentTimeMillis() - tiempo, entidadId, elemento.getDescripcionObjeto());
+
         }catch (Exception e){
             elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
             merge(elemento);
-            log.error(e.getCause());
+            e.printStackTrace();
         }
     }
 

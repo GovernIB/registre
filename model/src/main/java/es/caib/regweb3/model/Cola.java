@@ -22,7 +22,7 @@ public class Cola implements Serializable{
     private Long id;
     private Long tipo; //de que tipo es el elemento de la cola(por el momento solo seran distribuciones)
     private Integer numeroMaximoReintentos;
-    private int numeroReintentos;
+    private int numeroReintentos = 0;
     private Long idObjeto; // Identificador del objeto en cola(Ex: registro pendiente de distribuir)
     private String descripcionObjeto; // Descripción del objeto en cola(Ex: registro pendiente de distribuir)
     private String denominacionOficina; //Denominacion Oficina en la que se ha creado el objeto

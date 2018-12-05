@@ -36,7 +36,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     private static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
     private static final String PROPERTY_PASSWORD = basePluginRipea + "password";
     private static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
-    private static final String PROPERTY_MAXREINTENTOS = basePluginRipea + "maxreintentos";
     private static final String PROPERTY_ENVIOCOLA = basePluginRipea + "enviocola";
     private static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginRipea + "listadodestinatariosmodificable";
     private static final String PROPERTY_CONFIGURACIONANEXOS = basePluginRipea + "configuracionanexos";
@@ -55,10 +54,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     public String getPropertyEndPoint() throws Exception {
 
         return getPropertyRequired(PROPERTY_ENDPOINT);
-    }
-
-    public String getPropertyMaxReintentos() throws Exception {
-        return getPropertyRequired(PROPERTY_MAXREINTENTOS);
     }
 
     public  String getPropertyEnvioCola()  throws Exception{
@@ -179,7 +174,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         *  3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
         * */
         /* EN ESTA IMPLEMENTACION NO SE EMPLEA */
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(Boolean.valueOf(getPropertyDestinatariosModificable()), Integer.valueOf(getPropertyConfiguracionAnexos()),Integer.valueOf(getPropertyMaxReintentos()),Boolean.valueOf(getPropertyEnvioCola()));
+        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(Boolean.valueOf(getPropertyDestinatariosModificable()), Integer.valueOf(getPropertyConfiguracionAnexos()),Boolean.valueOf(getPropertyEnvioCola()));
         return cd;
 
     }
@@ -296,7 +291,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     }
 
     /**
-     * Método que transforma de un {@link es.caib.regweb3.model.Interesado} a {@link es.caib.ripea.ws.v1.bustia.RegistreInteressat}
+     * Método que transforma de un {@link es.caib.regweb3.model.Interesado} a {@link es.caib.distribucio.ws.v1.bustia.RegistreInteressat}
      * @param interesado
      * @param language
      * @return

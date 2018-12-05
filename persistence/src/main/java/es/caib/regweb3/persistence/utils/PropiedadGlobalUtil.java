@@ -407,6 +407,21 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Obtenemos el número máximo de reintenso de la cola
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getMaxReintentosCola(Long idEntidad) {
+        final String partialPropertyName = "cola.maxReintentos";
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+
+        if (valor == null) {
+            valor = 4;
+        }
+        return valor;
+    }
+
+    /**
      * Devuelve el valor de la propiedad que indica si se generarán Comunicaciones a los usuarios de registro
      *
      * @return
