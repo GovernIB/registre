@@ -44,6 +44,14 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
     Paginacion busqueda(Integracion integracion, Long idEntidad) throws Exception;
 
     /**
+     * Obtiene las últimas 10 Integraciones con error de los últimos 2 días
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Integracion> ultimasIntegracionesError(Long idEntidad) throws Exception;
+
+    /**
      *
      * @param tipo
      * @param descripcion

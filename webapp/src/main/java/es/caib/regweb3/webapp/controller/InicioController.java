@@ -6,6 +6,7 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.form.BasicForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,9 @@ public class InicioController extends BaseController{
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    private IntegracionLocal integracionEjb;
+
 
     @RequestMapping(value = "/inici")
     public ModelAndView principal(HttpServletRequest request, Model model) throws Exception{
@@ -57,7 +61,7 @@ public class InicioController extends BaseController{
         Oficina oficinaActiva = getOficinaActiva(request);
         Entidad entidadActiva = getEntidadActiva(request);
 
-        // Solo obtenemos los datos para el dashboard si el Usuario es Operador
+        // DASHBOARD OPERADOR
         if(isOperador(request) && oficinaActiva != null){
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
@@ -99,19 +103,15 @@ public class InicioController extends BaseController{
 
         }
 
-        // DASHBOARD para Administradores de Entidad
+        // DASHBOARD ADMINISTRADOR ENTIDAD
         if (isAdminEntidad(request)) {
+
+            // Últimas incidencias de Integraciones
+            mav.addObject("incidencias", integracionEjb.ultimasIntegracionesError(entidadActiva.getId()));
+            model.addAttribute("integracion", new BasicForm());
 
             // Última sincronización de organismos
             mav.addObject("descargaUnidad", descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadActiva.getId()));
-
-            // Oficinas activas en SIR
-            if(entidadActiva.getSir()){
-                mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidadActiva.getId()));
-            }
-
-            // Libros activos
-            mav.addObject("libros", libroEjb.getLibrosEntidad(entidadActiva.getId()));
 
         }
 

@@ -180,6 +180,27 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Integracion> ultimasIntegracionesError(Long idEntidad) throws Exception{
+
+        Query q = em.createQuery("Select integracion from Integracion as integracion where " +
+                "integracion.entidad.id = :idEntidad and integracion.estado =:estado and " +
+                "integracion.fecha >= :fecha order by integracion.id desc");
+
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("estado",RegwebConstantes.INTEGRACION_ESTADO_ERROR);
+
+        Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
+        hoy.add(Calendar.DATE, -2); //el -2 indica que se le restaran 3 dias
+        q.setParameter("fecha", hoy.getTime());
+
+        q.setMaxResults(10);
+
+        return q.getResultList();
+
+    }
+
+    @Override
     public void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
 
         persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad, numRegFormat));
@@ -204,7 +225,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     public Integer purgarIntegraciones(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.DATE, -10); //el -7 indica que se le restaran 7 dias
+        hoy.add(Calendar.DATE, -10); //el -10 indica que se le restaran 10 dias
 
         List<?> integracion =  em.createQuery("select distinct(i.id) from Integracion as i where i.entidad.id = :idEntidad and i.fecha <= :fecha").setParameter("idEntidad",idEntidad).setParameter("fecha", hoy.getTime()).getResultList();
         Integer total = integracion.size();

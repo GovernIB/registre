@@ -63,3 +63,14 @@ function limpiarIntegracion(){
     $('#error').html('');
     $('#excepcion').html('');
 }
+
+/**
+ * Invoca al formulario de búsqueda de integraciones por número de registro
+ * @param numeroRegistro
+ */
+function buscarIntegraciones(numeroRegistro){
+
+    $('#texto').val(numeroRegistro);
+
+    $('#integracion').submit();
+}

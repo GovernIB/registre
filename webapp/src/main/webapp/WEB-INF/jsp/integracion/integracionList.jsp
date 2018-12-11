@@ -281,13 +281,6 @@
     tradsIntegracion['integracion.tipo.5'] = "<spring:message code='integracion.tipo.5' javaScriptEscape='true' />";
     tradsIntegracion['integracion.tipo.6'] = "<spring:message code='integracion.tipo.6' javaScriptEscape='true' />";
 
-    function buscarIntegraciones(numeroRegistro){
-
-        $('#texto').val(numeroRegistro);
-
-        $('#integracion').submit();
-    }
-
 </script>
 
 
