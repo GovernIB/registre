@@ -191,7 +191,7 @@
                                     </c:if>
                                 </c:if>
                                 <c:if test="${oficio.sir && !loginInfo.oficinaActiva.sirEnvio}">
-                                    <p class="text-danger">El <strong>destinatario</strong> dispone de una Oficina integrada en SIR, pero la ${loginInfo.oficinaActiva.denominacion} no está integrada en SIR y no se podrá realizar el intercambio.</p>
+                                    <p class="text-danger">El <strong><spring:message code="notificacion.destinatario"/></strong> <spring:message code="oficioRemision.noSIR.1"/> ${loginInfo.oficinaActiva.denominacion} <spring:message code="oficioRemision.noSIR.2"/></p>
                                     <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>
