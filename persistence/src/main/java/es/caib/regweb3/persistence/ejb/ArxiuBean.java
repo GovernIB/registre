@@ -100,6 +100,9 @@ public class ArxiuBean implements ArxiuLocal{
 
     public void cerrarExpedientesScheduler(Long idEntidad, String fechaInicio) throws Exception{
 
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+
         try {
 
             ArxiuDigitalCAIBDocumentCustodyPlugin custody = (ArxiuDigitalCAIBDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -118,18 +121,26 @@ public class ArxiuBean implements ArxiuLocal{
             log.info("fechaFin: " + formatDate.format(hoy)+"T23:59:59.000Z");
             log.info("queryDM: " + queryDM);
 
+            peticion.append("fecha inicio: ").append(fechaInicio).append(System.getProperty("line.separator"));
+            peticion.append("fecha fin: ").append(formatDate.format(hoy)+"T23:59:59.000Z").append(System.getProperty("line.separator"));
+            peticion.append("queryDM: ").append(queryDM).append(System.getProperty("line.separator"));
+
             ResultadoBusqueda<Expediente> result = apiArxiu.busquedaExpedientes(queryDM,0);
 
             if (hiHaErrorEnCerca(result.getCodigoResultado())) {
                 log.info("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(), new CustodyException("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado()), null,System.currentTimeMillis() - tiempo, idEntidad, "");
                 throw new Exception("Error en la búsqueda de expedientes: " + result.getCodigoResultado() + "-" + result.getMsjResultado());
             }
 
             List<Expediente> lista = result.getListaResultado();
 
-            log.info("Total expedientes abiertos: " + result.getNumeroTotalResultados());
-            log.info("Total expedientes a cerrar: " + lista.size());
-            log.info("");
+            peticion.append("expedientes abiertos totales: ").append(result.getNumeroTotalResultados()).append(System.getProperty("line.separator"));
+            peticion.append("expedientes a cerrar: ").append(lista.size()).append(System.getProperty("line.separator"));
+
+            //log.info("Total expedientes abiertos: " + result.getNumeroTotalResultados());
+            //log.info("Total expedientes a cerrar: " + lista.size());
+            //log.info("");
 
             for (Expediente expediente : lista) {
 
@@ -140,6 +151,8 @@ public class ArxiuBean implements ArxiuLocal{
                 }
 
             }
+
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, "");
 
         }catch (I18NException e) {
             e.printStackTrace();
