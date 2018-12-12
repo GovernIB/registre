@@ -48,6 +48,7 @@ public class ArxiuBean implements ArxiuLocal{
         int reintents = 10;
 
         peticion.append("expediente: ").append(expediente.getName()).append(System.getProperty("line.separator"));
+        peticion.append("id: ").append(expediente.getId()).append(System.getProperty("line.separator"));
 
         do {
             --reintents;
