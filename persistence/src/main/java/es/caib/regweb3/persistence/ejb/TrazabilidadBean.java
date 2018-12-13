@@ -349,16 +349,18 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         Integer total = registrosEntrada.size();
         log.info("Total registros entrada: " + total);
 
+        if(total > 0){
+            while (registrosEntrada.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
 
-        while (registrosEntrada.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
-
-            List<?> subList = registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-            log.info("Update entrada: " + em.createQuery("update from RegistroEntrada set estado = 13 where id in (:id)").setParameter("id", subList).executeUpdate());
-            log.info("Update historico entrada: " + em.createQuery("update from HistoricoRegistroEntrada set estado = 13 where estado=4 and registroEntrada.id in (:id)").setParameter("id", subList).executeUpdate());
-            registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+                List<?> subList = registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                log.info("Update entrada: " + em.createQuery("update from RegistroEntrada set estado = 13 where id in (:id)").setParameter("id", subList).executeUpdate());
+                log.info("Update historico entrada: " + em.createQuery("update from HistoricoRegistroEntrada set estado = 13 where estado=4 and registroEntrada.id in (:id)").setParameter("id", subList).executeUpdate());
+                registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+            log.info("Update entrada: " + em.createQuery("update from RegistroEntrada set estado = 13 where id in (:id)").setParameter("id", registrosEntrada).executeUpdate());
+            log.info("Update historico entrada: " + em.createQuery("update from HistoricoRegistroEntrada set estado = 13 where estado=4 and registroEntrada.id in (:id)").setParameter("id", registrosEntrada).executeUpdate());
         }
-        log.info("Update entrada: " + em.createQuery("update from RegistroEntrada set estado = 13 where id in (:id)").setParameter("id", registrosEntrada).executeUpdate());
-        log.info("Update historico entrada: " + em.createQuery("update from HistoricoRegistroEntrada set estado = 13 where estado=4 and registroEntrada.id in (:id)").setParameter("id", registrosEntrada).executeUpdate());
+
 
         return total;
     }
@@ -382,15 +384,17 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         Integer total = registrosSalida.size();
         log.info("Total registros salida: " + total);
 
-        while (registrosSalida.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+        if(total > 0){
+            while (registrosSalida.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
 
-            List<?> subList = registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-            log.info("Update salida: " + em.createQuery("update from RegistroSalida set estado = 13 where id in (:id)").setParameter("id", subList).executeUpdate());
-            log.info("Update historico salida: " + em.createQuery("update from HistoricoRegistroSalida set estado = 13 where estado=4 and registroSalida.id in (:id)").setParameter("id", subList).executeUpdate());
-            registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+                List<?> subList = registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                log.info("Update salida: " + em.createQuery("update from RegistroSalida set estado = 13 where id in (:id)").setParameter("id", subList).executeUpdate());
+                log.info("Update historico salida: " + em.createQuery("update from HistoricoRegistroSalida set estado = 13 where estado=4 and registroSalida.id in (:id)").setParameter("id", subList).executeUpdate());
+                registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+            log.info("Update salida: " + em.createQuery("update from RegistroSalida set estado = 13 where id in (:id)").setParameter("id", registrosSalida).executeUpdate());
+            log.info("Update historico salida: " + em.createQuery("update from HistoricoRegistroSalida set estado = 13 where estado=4 and registroSalida.id in (:id)").setParameter("id", registrosSalida).executeUpdate());
         }
-        log.info("Update salida: " + em.createQuery("update from RegistroSalida set estado = 13 where id in (:id)").setParameter("id", registrosSalida).executeUpdate());
-        log.info("Update historico salida: " + em.createQuery("update from HistoricoRegistroSalida set estado = 13 where estado=4 and registroSalida.id in (:id)").setParameter("id", registrosSalida).executeUpdate());
 
         return total;
     }
