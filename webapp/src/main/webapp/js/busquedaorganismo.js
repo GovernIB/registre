@@ -596,9 +596,9 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
                 html += '<ul>';
                 html += '<li>';
                 if (tipoOrganismo == 'OrganismoInteresado') {
-                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
+                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + " - " + result.tieneOficinaSir + "</span>";
                 } else {
-                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + "</span>";
+                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + " - " + result.tieneOficinaSir +  "</span>";
                 }
 
                 //imprimir los hijos
@@ -636,9 +636,9 @@ function pintarHijos(hijos, tipoOrganismo, idRegistroDetalle) {
     for (var i = 0; i < hijos.length; i++) {
         var denominacion = normalizarTexto(hijos[i].denominacion);
         if (tipoOrganismo == 'OrganismoInteresado') {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addOrganismoInteresadoModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addOrganismoInteresadoModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + " - " + hijos[i].tieneOficinaSir +  "</span>";
         } else {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + "</span>";
+            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + " - " + hijos[i].tieneOficinaSir +"</span>";
         }
         if (hijos[i].hijos.length > 0) {
             htmlp += pintarHijos(hijos[i].hijos, tipoOrganismo, idRegistroDetalle);
