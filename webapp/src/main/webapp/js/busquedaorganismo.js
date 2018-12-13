@@ -592,13 +592,22 @@ function mostrarArbol(organismo, urlServidor, tipoOrganismo, idRegistroDetalle) 
             } else {
                 var denominacion = normalizarTexto(result.denominacion);
 
+                var path = window.location.pathname;
+                var retall = path.substring(1);
+                var context = "/" + retall.substring(0,retall.indexOf("/"));
 
                 html += '<ul>';
                 html += '<li>';
                 if (tipoOrganismo == 'OrganismoInteresado') {
-                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.denominacion + " - " + result.codigo + " - " + result.tieneOficinaSir + "</span>";
+                    html += "<span class=\"panel-heading btn-primary vuitanta-percent\" id=\"entidad\" onclick=\"addOrganismoInteresadoModal('" + result.codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + result.codigo + " - " + result.denominacion + "</span>";
+                    if(result.tieneOficinaSir){
+                        html += "<span class=\"panel-heading btn-ofsir vuitanta-percent\" style=\"\"><img src=\""+context+"/img/logo-SIR.png\" width=\"20\" alt=\"SIR\" title=\"SIR\"/></span>";
+                    }
                 } else {
-                    html += "<span class=\"badge-arbre btn-primary\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.denominacion + " - " + result.codigo + " - " + result.tieneOficinaSir +  "</span>";
+                    html += "<span class=\"panel-heading btn-primary vuitanta-percent\" id=\"entidad\" onclick=\"asignarOrganismo('" + result.codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + result.codigo + " - " + result.denominacion + "</span>";
+                    if(result.tieneOficinaSir){
+                        html += "<span class=\"panel-heading btn-ofsir vuitanta-percent\" style=\"\"><img src=\""+context+"/img/logo-SIR.png\" width=\"20\" alt=\"SIR\" title=\"SIR\"/></span>";
+                    }
                 }
 
                 //imprimir los hijos
@@ -632,13 +641,23 @@ function pintarHijos(hijos, tipoOrganismo, idRegistroDetalle) {
 
     var htmlp = '';
 
+    var path = window.location.pathname;
+    var retall = path.substring(1);
+    var context = "/" + retall.substring(0,retall.indexOf("/"));
+
     htmlp += '<ul>';
     for (var i = 0; i < hijos.length; i++) {
         var denominacion = normalizarTexto(hijos[i].denominacion);
         if (tipoOrganismo == 'OrganismoInteresado') {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"addOrganismoInteresadoModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + " - " + hijos[i].tieneOficinaSir +  "</span>";
+            htmlp += "<li> <span class=\"panel-heading btn-primary vuitanta-percent\" onclick=\"addOrganismoInteresadoModal('" + hijos[i].codigo + "','" + denominacion + "','Administración','" + tipoOrganismo + "','" + idRegistroDetalle + "')\">" + hijos[i].codigo + " - " + hijos[i].denominacion + "</span>";
+            if(hijos[i].tieneOficinaSir){
+                htmlp += "<span class=\"panel-heading btn-ofsir vuitanta-percent\" style=\"\"><img src=\""+context+"/img/logo-SIR.png\" width=\"20\" alt=\"SIR\" title=\"SIR\"/></span>";
+            }
         } else {
-            htmlp += "<li> <span class=\"badge-arbre btn-primary\" onclick=\"asignarOrganismo('" + hijos[i].codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].denominacion + " - " + hijos[i].codigo + " - " + hijos[i].tieneOficinaSir +"</span>";
+            htmlp += "<li> <span class=\"panel-heading btn-primary vuitanta-percent\" onclick=\"asignarOrganismo('" + hijos[i].codigo + "','" + denominacion + "','" + tipoOrganismo + "')\">" + hijos[i].codigo + " - " + hijos[i].denominacion + "</span>";
+            if(hijos[i].tieneOficinaSir){
+                htmlp += "<span class=\"panel-heading btn-ofsir vuitanta-percent\" style=\"\"><img src=\""+context+"/img/logo-SIR.png\" width=\"20\" alt=\"SIR\" title=\"SIR\"/></span>";
+            }
         }
         if (hijos[i].hijos.length > 0) {
             htmlp += pintarHijos(hijos[i].hijos, tipoOrganismo, idRegistroDetalle);
