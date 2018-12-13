@@ -213,6 +213,7 @@ public interface RegwebConstantes {
     Long REGISTRO_PENDIENTE_VISAR = 3L;
     Long REGISTRO_OFICIO_EXTERNO = 4L;
     Long REGISTRO_OFICIO_INTERNO = 5L;
+    Long REGISTRO_OFICIO_SIR = 13L;
     Long REGISTRO_OFICIO_ACEPTADO = 6L;
     Long REGISTRO_DISTRIBUIDO = 7L;
     Long REGISTRO_ANULADO = 8L;
@@ -227,6 +228,7 @@ public interface RegwebConstantes {
             REGISTRO_PENDIENTE_VISAR,
             REGISTRO_OFICIO_EXTERNO,
             REGISTRO_OFICIO_INTERNO,
+            REGISTRO_OFICIO_SIR,
             REGISTRO_OFICIO_ACEPTADO,
             REGISTRO_DISTRIBUIDO,
             REGISTRO_ANULADO,

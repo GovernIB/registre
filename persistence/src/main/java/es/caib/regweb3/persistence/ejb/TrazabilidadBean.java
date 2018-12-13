@@ -329,4 +329,69 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         }
 
     }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Integer actualizarEstadoSirEntrada(Long idEntidad) throws Exception{
+
+        Query q =  em.createQuery("Select registroEntradaOrigen.id from Trazabilidad where " +
+                "oficioRemision.sir = true " +
+                "and oficioRemision.tipoOficioRemision = :entrada " +
+                "and registroEntradaOrigen.estado = :oficioExterno " +
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+
+        q.setParameter("entrada",RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("oficioExterno",RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+
+        List<Long> registrosEntrada = q.getResultList();
+
+        Integer total = registrosEntrada.size();
+        log.info("Total registros entrada: " + total);
+
+
+        while (registrosEntrada.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+            List<?> subList = registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+            log.info("Update entrada: " + em.createQuery("update from RegistroEntrada set estado = 13 where id in (:id)").setParameter("id", subList).executeUpdate());
+            log.info("Update historico entrada: " + em.createQuery("update from HistoricoRegistroEntrada set estado = 13 where estado=4 and registroEntrada.id in (:id)").setParameter("id", subList).executeUpdate());
+            registrosEntrada.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+        }
+        log.info("Update entrada: " + em.createQuery("update from RegistroEntrada set estado = 13 where id in (:id)").setParameter("id", registrosEntrada).executeUpdate());
+        log.info("Update historico entrada: " + em.createQuery("update from HistoricoRegistroEntrada set estado = 13 where estado=4 and registroEntrada.id in (:id)").setParameter("id", registrosEntrada).executeUpdate());
+
+        return total;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Integer actualizarEstadoSirSalida(Long idEntidad) throws Exception{
+
+        Query q1 =  em.createQuery("Select registroSalida.id from Trazabilidad where " +
+                "oficioRemision.sir = true " +
+                "and oficioRemision.tipoOficioRemision = :salida " +
+                "and registroSalida.estado = :oficioExterno " +
+                "and oficioRemision.usuarioResponsable.entidad.id = :idEntidad");
+
+        q1.setParameter("salida",RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+        q1.setParameter("idEntidad",idEntidad);
+        q1.setParameter("oficioExterno",RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+
+        List<Long> registrosSalida = q1.getResultList();
+
+        Integer total = registrosSalida.size();
+        log.info("Total registros salida: " + total);
+
+        while (registrosSalida.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+            List<?> subList = registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+            log.info("Update salida: " + em.createQuery("update from RegistroSalida set estado = 13 where id in (:id)").setParameter("id", subList).executeUpdate());
+            log.info("Update historico salida: " + em.createQuery("update from HistoricoRegistroSalida set estado = 13 where estado=4 and registroSalida.id in (:id)").setParameter("id", subList).executeUpdate());
+            registrosSalida.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+        }
+        log.info("Update salida: " + em.createQuery("update from RegistroSalida set estado = 13 where id in (:id)").setParameter("id", registrosSalida).executeUpdate());
+        log.info("Update historico salida: " + em.createQuery("update from HistoricoRegistroSalida set estado = 13 where estado=4 and registroSalida.id in (:id)").setParameter("id", registrosSalida).executeUpdate());
+
+        return total;
+    }
 }

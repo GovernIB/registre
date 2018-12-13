@@ -436,4 +436,28 @@ public class SirController extends BaseController {
         return "redirect:/inici";
     }
 
+    /**
+     * Cambiar estado OFICIO_SIR
+     */
+    @RequestMapping(value = "/cambiarEstadoSirEntrada", method = RequestMethod.GET)
+    public String cambiarEstadoSirEntrada(HttpServletRequest request) throws Exception {
+
+        Integer total = trazabilidadEjb.actualizarEstadoSirEntrada(getEntidadActiva(request).getId());
+        Mensaje.saveMessageInfo(request,"Se han actualizado " + total + " registros de entrada");
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Cambiar estado OFICIO_SIR
+     */
+    @RequestMapping(value = "/cambiarEstadoSirSalida", method = RequestMethod.GET)
+    public String cambiarEstadoSirSalida(HttpServletRequest request) throws Exception {
+
+        Integer total = trazabilidadEjb.actualizarEstadoSirSalida(getEntidadActiva(request).getId());
+        Mensaje.saveMessageInfo(request,"Se han actualizado " + total + " registros de salida");
+
+        return "redirect:/inici";
+    }
+
 }

@@ -140,6 +140,8 @@ public class LibroRegistroExcel extends AbstractExcelView {
             estadoRegistro = getMessage("registro.estado.7");
         }else if(estado.equals(RegwebConstantes.REGISTRO_ANULADO)){
             estadoRegistro = getMessage("registro.estado.8");
+        }else if(estado.equals(RegwebConstantes.REGISTRO_OFICIO_SIR)) {
+            estadoRegistro = getMessage("registro.estado.13");
         }
         String tieneAnexos;
         if(anexos){

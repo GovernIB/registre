@@ -211,7 +211,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
 
             // Registramos el Oficio de Remisión SIR
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
 
             // Enviamos el Registro al Componente CIR
             emisionEjb.enviarFicheroIntercambio(registroSir);
@@ -587,7 +587,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
 
             // Registramos el Oficio de Remisión SIR
-            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_EXTERNO);
+            oficioRemision = oficioRemisionEjb.registrarOficioRemision(oficioRemision, RegwebConstantes.REGISTRO_OFICIO_SIR);
 
             // Actualizamos la unidad de tramitación destino con el organismo responsable de la oficina de reenvio
             registroSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
