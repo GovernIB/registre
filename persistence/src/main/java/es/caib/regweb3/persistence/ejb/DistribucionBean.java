@@ -151,7 +151,7 @@ public class DistribucionBean implements DistribucionLocal{
          return true;
       }else{
          //Gestionamos los anexos sir antes de distribuir
-         registroEntrada = gestionAnexosByAplicacionSIR(registroEntrada);
+         registroEntrada = gestionFicherosTecnicos(registroEntrada);
          boolean distribuido = distribucionPlugin.enviarDestinatarios(registroEntrada, null, "", new Locale("ca"));
          if (distribuido) { //Si ha ido bien lo marcamos como distribuido
             registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
@@ -378,6 +378,34 @@ public class DistribucionBean implements DistribucionLocal{
 
       gestionarByAplicacionByNombreFichero( RegwebConstantes.FICHERO_REGISTROELECTRONICO, anexosFull, anexosFullIntermedio);
       gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_DEFENSORPUEBLO, anexosFullIntermedio, anexosFullADistribuir);
+
+      original.getRegistroDetalle().setAnexosFull(anexosFullADistribuir);
+
+      return original;
+   }
+
+
+   /**
+    *  Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
+    *  Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
+    *
+    * @param original
+    * @return
+    * @throws Exception
+    * @throws I18NException
+    * @throws I18NValidationException
+    */
+   private RegistroEntrada gestionFicherosTecnicos(RegistroEntrada original) throws Exception, I18NException, I18NValidationException {
+
+      List<AnexoFull> anexosFullADistribuir = new ArrayList<AnexoFull>();
+      //Obtenemos los anexos del registro para tratarlos
+      List<AnexoFull> anexosFull =original.getRegistroDetalle().getAnexosFull();
+
+      for(AnexoFull anexoFull: anexosFull){
+         if(!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())){
+            anexosFullADistribuir.add(anexoFull);
+         }
+      }
 
       original.getRegistroDetalle().setAnexosFull(anexosFullADistribuir);
 
