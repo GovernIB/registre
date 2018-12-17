@@ -1990,7 +1990,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
 
                 /*******  COMENTAMOS TEMPORALMENTE MIRAR EL FORMATO DEL XADES YA QUE EN TODOS LOS CASOS SE ELIMINA EL XSIG, LO HACEMOS A RAIZ DEL PROBLEMA DE FORMATO DE GEISER CON EL XML CON CAPA <AFIRMA></AFIRMA>  ********/
-                String format= getXAdESFormat(anexoSirData);
+                /*String format= getXAdESFormat(anexoSirData);
 
                 if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
                     //Obtenemos el anexo original cuya firma es la que estamos tratando, que ha sido previamente procesado
@@ -2003,9 +2003,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         // Descomentar aquest codi quan arxiu deixi guardar xsig (propuesta de toni, pero esta mas ordenado en el codigo de marilen
                         //CASO XADES DETACHED DE DOCUMENT PLA = CADES (AFEGIT MARILEN, CODI OPTIMITZAT, descomentar quan ARXIU guardi Xsig)
                         //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                        /*anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+                        *//*anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
                         SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
-                        anexoFull.setSignatureCustody(sc);*/
+                        anexoFull.setSignatureCustody(sc);*//*
 
                     }else{ //Es un documento firmado que además nos envian el xsig como detached.
 
@@ -2016,16 +2016,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         //NO SOPORTADO POR MODELO CUSTODIA
                         //Obtenemos el documento firmado que está en signatureCustody porque ha sido procesado
                         // anteriormente.
-                        /*SignatureCustody scAntic = anexoFull.getSignatureCustody();
+                        *//*SignatureCustody scAntic = anexoFull.getSignatureCustody();
 
                         // Apunta a una signatura (attached o detached): collim la signatura com a doc detached
                         //Creamos un nuevo documentCustody para guardar el documento firmado
                         DocumentCustody  dc = new DocumentCustody(scAntic.getName(), scAntic.getMime(), scAntic.getData());
 
-                        *//*Montamos el nuevo anexo
+                        *//**//*Montamos el nuevo anexo
                             -(DocumentCustody = documento firmado)
                             -(signatureCustody = firma detached que estamos tratando)
-                        *//*
+                        *//**//*
                         AnexoFull anexoFullnou = new AnexoFull();
                         anexoFullnou.setDocumentoCustody(dc);
 
@@ -2035,7 +2035,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                         sc.setName(anexoSir.getNombreFichero());
                         anexoFullnou.setSignatureCustody(sc);
 
-                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
+                        anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*//*
 
                     }
 
@@ -2050,7 +2050,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     //En este caso, nos mandan un xml attached, como detached. Por tanto lo guardaremos como una firma attached aislada
                     //Aquí perdemos el vinculo al documento del que nos indican que es su firma detached(lo cual no es cierto)
-                    /*SignatureCustody sc = new SignatureCustody();
+                    *//*SignatureCustody sc = new SignatureCustody();
 
                     sc.setData(FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId()));
                     sc.setMime(anexoSir.getTipoMIME());
@@ -2091,9 +2091,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     anexoFullnou.setAnexo(anexoNou);
 
 
-                    anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*/
+                    anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*//*
 
-                }
+                }*/
             } else {
                 log.info("Entro en CADES");
                 // CADES
