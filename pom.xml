@@ -22,6 +22,7 @@
     <scanweb.api.version>2.0.3</scanweb.api.version>
     <itext.version>5.4.3</itext.version>
     <bouncycastle.version>1.51</bouncycastle.version>
+    <plugin-documentcustody-arxiudigitalcaib.version>3.0.14</plugin-documentcustody-arxiudigitalcaib.version>
   </properties>
 
   <modules>
