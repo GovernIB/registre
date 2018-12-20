@@ -38,9 +38,6 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/ContadorEJB/local")
     private ContadorLocal contadorEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 

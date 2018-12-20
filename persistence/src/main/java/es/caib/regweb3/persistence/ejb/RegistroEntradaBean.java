@@ -185,7 +185,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -196,14 +196,14 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         StringBuilder query = new StringBuilder(queryBase);
 
         // Numero registro
-        if (StringUtils.isNotEmpty(registroEntrada.getNumeroRegistroFormateado())) {
+        if (StringUtils.isNotEmpty(re.getNumeroRegistroFormateado())) {
             where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
-            parametros.put("numeroRegistroFormateado", "%" + registroEntrada.getNumeroRegistroFormateado() + "%");
+            parametros.put("numeroRegistroFormateado", "%" + re.getNumeroRegistroFormateado() + "%");
         }
 
         // Extracto
-        if (StringUtils.isNotEmpty(registroEntrada.getRegistroDetalle().getExtracto())) {
-            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, new String(registroEntrada.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
+        if (StringUtils.isNotEmpty(re.getRegistroDetalle().getExtracto())) {
+            where.add(DataBaseUtils.like("registroEntrada.registroDetalle.extracto", "extracto", parametros, new String(re.getRegistroDetalle().getExtracto().getBytes("ISO-8859-1"), "UTF-8")));
         }
 
         // Observaciones
@@ -252,15 +252,15 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         }
 
         // Estado registro
-        if (registroEntrada.getEstado() != null && registroEntrada.getEstado() > 0) {
+        if (re.getEstado() != null && re.getEstado() > 0) {
             where.add(" registroEntrada.estado = :idEstadoRegistro ");
-            parametros.put("idEstadoRegistro", registroEntrada.getEstado());
+            parametros.put("idEstadoRegistro", re.getEstado());
         }
 
         // Oficina Registro
-        if (registroEntrada.getOficina().getId() != null && registroEntrada.getOficina().getId() > 0) {
+        if (re.getOficina() != null && (re.getOficina().getId() != null && re.getOficina().getId() > 0)) {
             where.add(" registroEntrada.oficina.id = :idOficina ");
-            parametros.put("idOficina", registroEntrada.getOficina().getId());
+            parametros.put("idOficina", re.getOficina().getId());
         }
 
         // Intervalo fechas
@@ -270,8 +270,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         parametros.put("fechaFin", fechaFin);
 
         // Libro
-        where.add(" registroEntrada.libro.id = :idLibro");
-        parametros.put("idLibro", registroEntrada.getLibro().getId());
+        if(re.getLibro().getId() !=  null && re.getLibro().getId() > 0){
+            where.add(" registroEntrada.libro.id = :idLibro");
+            parametros.put("idLibro", re.getLibro().getId());
+        }
 
         // Buscamos registros de entrada con anexos
         if (anexos) {

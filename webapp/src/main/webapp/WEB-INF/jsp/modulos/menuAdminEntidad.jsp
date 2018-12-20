@@ -67,7 +67,15 @@
         </button>
         <ul class="dropdown-menu">
             <li class="submenu-complet"><a href="<c:url value="/integracion/list/0"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
-            <li class="submenu-complet"><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-ellipsis-h"></i> <spring:message code="cola.colas"/></a></li>
+            <li class="divider"></li>
+            <li class="dropdown-submenu-left toggle-left">
+                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.distribucion"/></a>
+                <ul class="dropdown-menu">
+                    <li><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-ellipsis-h"></i> <spring:message code="cola.colas"/></a></li>
+                    <li><a href="<c:url value="/distribucion/distribuidos/list"/>"><i class="fa fa-gears"></i> <spring:message code="registroEntrada.distribuidos"/></a></li>
+                    <li><a href="<c:url value="/sir/pendientesDistribuir/list"/>"><i class="fa fa-sign-out"></i> <spring:message code="menu.pendientesDistribuir"/></a></li>
+                </ul>
+            </li>
             <li class="divider"></li>
             <li class="dropdown-submenu-left toggle-left">
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.estadisticas"/></a>
