@@ -96,7 +96,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <thead>
                                                         <tr>
                                                             <th><spring:message code="integracion.fecha"/></th>
@@ -139,7 +139,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <thead>
                                                             <tr>
                                                                 <th><spring:message code="organismo.organismos"/></th>
@@ -182,7 +182,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col>
@@ -258,7 +258,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col width="80">
                                                             <col>
@@ -309,7 +309,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col>
@@ -364,7 +364,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col>
@@ -419,7 +419,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col width="80">
                                                             <col>
@@ -474,7 +474,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col>
@@ -525,7 +525,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col width="51">
@@ -571,7 +571,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col width="51">
@@ -616,7 +616,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col width="80">
                                                             <col>
@@ -668,7 +668,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col>
@@ -744,7 +744,7 @@
 
                                                 <div class="table-responsive-inici">
 
-                                                    <table class="table table-hover table-striped">
+                                                    <table class="table table-hover table-striped marg-bot0">
                                                         <colgroup>
                                                             <col>
                                                             <col>

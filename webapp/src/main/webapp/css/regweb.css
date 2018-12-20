@@ -1355,3 +1355,7 @@ pre {
 .overVisible{
     overflow-x: visible !important;
 }
+
+.marg-bot0 {
+    margin-bottom: 0;
+}
