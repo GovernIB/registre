@@ -211,11 +211,8 @@
                                                                     </c:if>
 
                                                                     <c:if test="${fn:length(registroSir.resumen) > 40}">
-                                                                        <p rel="resumen" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
+                                                                        <p rel="popupArriba" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
                                                                     </c:if>
-                                                                <c:if test="${fn:length(registroSir.resumen) > 40}">
-                                                                    <p rel="popupArriba" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
-                                                                </c:if>
 
                                                                 </td>
                                                                 <td class="center">
