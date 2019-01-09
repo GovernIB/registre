@@ -1090,7 +1090,7 @@ public class Sicres3XML {
 
             // Tipo_MIME
             // Enviar solo tipos mimes inferiores a 20 y aceptados por SIR, si no, no se informa.
-            if (anexoSir.getTipoMIME() != null && tipoMimeAceptadoPorSir(anexoSir.getTipoMIME())!=null) {
+            if (anexoSir.getTipoMIME() != null) {
                 elem = rootElement.addElement("Tipo_MIME");
                 elem.addCDATA(anexoSir.getTipoMIME());
             }
@@ -2170,21 +2170,6 @@ public class Sicres3XML {
 
     private static boolean isEmptyCollection(Collection collection) {
       return (collection == null || collection.isEmpty());
-    }
-
-    /**
-     * Método que comprueba si el tipoMime es aceptado por SIR, si no lo es devuelve null
-     * @param tipoMime
-     * @return
-     */
-    private String tipoMimeAceptadoPorSir(String tipoMime){
-
-        if(tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR && Arrays.asList(TIPOS_MIME_ACEPTADO_SIR).contains(tipoMime)){
-            return tipoMime;
-        }else{
-            return null;
-        }
-
     }
     
     

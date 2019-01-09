@@ -137,7 +137,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
             // A PARTIR D'AQUI TOT ES SIR
 
-            if ((doc != null && sign == null)) {
+            if ((doc != null && sign == null)) { // Caso documento sin firmar
 
                 try {
 
@@ -414,7 +414,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         // (2) Enviam a firmar
         firmaCAdESEPESDetached(input, doc, locale, signaturePlugin, idEntidad, numeroRegistro);
 
-        input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
+         //input.getSignatureCustody().setName(doc.getName().replace('.', '_') + "_EPES.csig");
+        // El nombre de la firma es el mismo que el fichero pero cambiando su extension a .csig
+        input.getSignatureCustody().setName(doc.getName().replace(".pdf" , ".csig"));
 
     }
 

@@ -1246,8 +1246,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                                    byte[] anexoData, String identificadorDocumentoFirmado, String observaciones){
         AnexoSir anexoSir = new AnexoSir();
 
+
+
+        //Controlamos que el nombre fichero no supere el maxlength de SIR
+        if (nombreFichero.length() >= RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR) {
+            String nombreFicheroSinExtension = nombreFichero.substring(0, nombreFichero.lastIndexOf("."));
+            String extension = nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length());
+            nombreFicheroSinExtension = nombreFicheroSinExtension.substring(0, RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR-5);
+            nombreFichero = nombreFicheroSinExtension + extension;
+        }
         anexoSir.setNombreFichero(nombreFichero);
+
         anexoSir.setIdentificadorFichero(identificadorFichero);
+
         if(validezDocumento != null){
             anexoSir.setValidezDocumento(validezDocumento);
         }
@@ -1264,13 +1275,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         if(validacionOCSPCertificado != null){
             anexoSir.setValidacionOCSPCertificado(Base64.encodeBase64String(validacionOCSPCertificado));
         }
-
         anexoSir.setHash(Base64.encodeBase64String(hash));
         if(tipoMime != null){
             if(tipoMime.equals("text/xml")){ //SICRES3 obliga a que el mime de un xml sea application/xml
                 anexoSir.setTipoMIME("application/xml");
             }else{
-                anexoSir.setTipoMIME(tipoMime);
+                if(tipoMimeAceptadoPorSir(tipoMime)!=null) {
+                    anexoSir.setTipoMIME(tipoMime);
+                }
             }
         }
         if(anexoData != null){
@@ -1280,7 +1292,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             anexoSir.setIdentificadorDocumentoFirmado(identificadorDocumentoFirmado);
         }
 
-        anexoSir.setObservaciones(observaciones);
+        if(observaciones.length()>= RegwebConstantes.ANEXO_OBSERVACIONES_MAXLENGTH_SIR) {
+            anexoSir.setObservaciones(observaciones.substring(0, RegwebConstantes.ANEXO_OBSERVACIONES_MAXLENGTH_SIR));
+        }else{
+            anexoSir.setObservaciones(observaciones);
+        }
 
         return anexoSir;
     }
@@ -2270,8 +2286,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         return SIGNFORMAT_EXPLICIT_DETACHED;
     }
 
+    /**
+     * Método que comprueba si el tipoMime es aceptado por SIR, si no lo es devuelve null
+     * @param tipoMime
+     * @return
+     */
+    private String tipoMimeAceptadoPorSir(String tipoMime){
 
+        if(tipoMime.length() <= ANEXO_TIPOMIME_MAXLENGTH_SIR && Arrays.asList(TIPOS_MIME_ACEPTADO_SIR).contains(tipoMime)){
+            return tipoMime;
+        }else{
+            return null;
+        }
 
-
+    }
 
 }
