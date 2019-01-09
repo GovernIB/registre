@@ -333,14 +333,12 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
                 try{
                     justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
-                }catch (Exception e){
+                }catch (I18NException e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
                 sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
-                // Alta en la tabla de LOPD
-                lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
             }else{
                 throw new I18NException("registro.justificante.valido");
             }
@@ -352,14 +350,22 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
                 throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
             }
 
-            justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
-            sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
-            // Alta en la tabla de LOPD
-            lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
+            // Obtenemos el Justificante
+            try{
+                justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
+                sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo().getCustodiaID(), true, entidadActiva.getId());
+            }catch (Exception e){
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+                throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
+            }
+
         }
 
         // Integracion
         integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+
+        // Alta en la tabla de LOPD
+        lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
 
         return new JustificanteWs(sc.getData());
     }
