@@ -34,7 +34,7 @@
 
                         <div class="panel panel-warning">
                             <div class="panel-heading">
-                                <h3 class="panel-title"><i class="fa fa-search"></i><strong> Búsqueda de expedientes</strong> </h3>
+                                <h3 class="panel-title"><i class="fa fa-search"></i><strong> Búsqueda de expedientes en RM</strong> </h3>
                             </div>
 
                             <div class="panel-body">
