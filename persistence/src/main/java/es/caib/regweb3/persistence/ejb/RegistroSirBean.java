@@ -270,8 +270,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             where.add(DataBaseUtils.like("registroSir.identificadorIntercambio", "identificadorIntercambio", parametros, registroSir.getIdentificadorIntercambio()));
         }
 
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getNumeroRegistro())) {
+            where.add(DataBaseUtils.like("registroSir.numeroRegistro", "numeroRegistro", parametros, registroSir.getNumeroRegistro()));
+        }
+
         if (StringUtils.isNotEmpty(estado)) {
             where.add(" registroSir.estado = :estado "); parametros.put("estado", EstadoRegistroSir.getEstadoRegistroSir(estado));
+        }
+
+        if (registroSir.getTipoRegistro() != null) {
+            where.add(" registroSir.tipoRegistro = :tipoRegistro "); parametros.put("tipoRegistro", registroSir.getTipoRegistro());
         }
 
         // Intervalo fechas

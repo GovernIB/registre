@@ -55,7 +55,16 @@
                                         <form:input path="registroSir.identificadorIntercambio" cssClass="form-control"/>
                                     </div>
                                 </div>
-
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.numeroRegistro" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroRegistro.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.numeroRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroSir.numeroRegistro" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estadoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.estado"/></label>
@@ -69,6 +78,21 @@
                                         </form:select>
                                     </div>
                                 </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoRegistro.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.tipoRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroSir.tipoRegistro" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="tipo" items="${tipos}">
+                                                <form:option value="${tipo}"><spring:message code="registroSir.tipoRegistro.${tipo.value}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+
                             </div>
 
                             <div class="col-xs-12">
@@ -144,10 +168,10 @@
                                             <thead>
                                             <tr>
                                                 <th><spring:message code="registroSir.identificadorIntercambio"/></th>
+                                                <th><spring:message code="registroSir.oficinaOrigen"/></th>
+                                                <th><spring:message code="registroSir.numeroRegistro"/></th>
                                                 <th><spring:message code="regweb.recibido"/></th>
                                                 <th class="center"><spring:message code="regweb.tipo"/></th>
-                                                <th><spring:message code="registroSir.oficinaOrigen"/></th>
-                                                <th><spring:message code="registroSir.oficinaDestino"/></th>
                                                 <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th><spring:message code="registroSir.extracto"/></th>
                                                 <th>Doc</th>
@@ -160,6 +184,8 @@
                                                 <c:set var="registroSir" value="${registroSir}" scope="request"/>
                                                 <tr>
                                                     <td> ${registroSir.identificadorIntercambio}</td>
+                                                    <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
+                                                    <td> ${registroSir.numeroRegistro}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
@@ -170,8 +196,6 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
-                                                    <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
-                                                    <td>${registroSir.decodificacionEntidadRegistralDestino}</td>
                                                     <td class="center">
                                                         <c:import url="estadosRegistroSir.jsp" />
                                                     </td>
