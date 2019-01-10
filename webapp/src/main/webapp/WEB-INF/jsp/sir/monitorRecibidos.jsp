@@ -89,10 +89,10 @@
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="registroSir.resumen" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extractoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.extracto"/></label>
+                                        <label for="registroSir.aplicacion" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.aplicacion.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.aplicacion"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:input path="registroSir.resumen" cssClass="form-control"/>
+                                        <form:input path="registroSir.aplicacion" maxlength="4" cssClass="form-control"/>
                                     </div>
                                 </div>
                             </div>
