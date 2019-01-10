@@ -74,7 +74,7 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
     public void purgarArchivos(Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir " +
-                "where anexoSir.purgado = false and (anexoSir.registroSir.estado = :aceptado or anexoSir.registroSir.estado = :reenviado )");
+                "where anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado");
 
 
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
