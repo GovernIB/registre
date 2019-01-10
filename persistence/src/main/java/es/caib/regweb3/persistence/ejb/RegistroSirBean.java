@@ -1261,7 +1261,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
 
         //Controlamos que el nombre fichero no supere el maxlength de SIR
-        if (nombreFichero.length() >= RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR) {
+        if (nombreFichero!=null && nombreFichero.length() >= RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR) {
             String nombreFicheroSinExtension = nombreFichero.substring(0, nombreFichero.lastIndexOf("."));
             String extension = nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length());
             nombreFicheroSinExtension = nombreFicheroSinExtension.substring(0, RegwebConstantes.ANEXO_NOMBREFICHERO_MAXLENGTH_SIR-5);
@@ -1304,7 +1304,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             anexoSir.setIdentificadorDocumentoFirmado(identificadorDocumentoFirmado);
         }
 
-        if(observaciones.length()>= RegwebConstantes.ANEXO_OBSERVACIONES_MAXLENGTH_SIR) {
+        if(observaciones!= null && observaciones.length()>= RegwebConstantes.ANEXO_OBSERVACIONES_MAXLENGTH_SIR) {
             anexoSir.setObservaciones(observaciones.substring(0, RegwebConstantes.ANEXO_OBSERVACIONES_MAXLENGTH_SIR));
         }else{
             anexoSir.setObservaciones(observaciones);
