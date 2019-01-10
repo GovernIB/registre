@@ -167,13 +167,13 @@
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                 <th><spring:message code="registroSir.oficinaOrigen"/></th>
-                                                <th><spring:message code="registroSir.numeroRegistro"/></th>
                                                 <th><spring:message code="regweb.recibido"/></th>
+                                                <th><spring:message code="registroSir.identificadorIntercambio"/></th>
+                                                <th><spring:message code="registroSir.numeroRegistro"/></th>
                                                 <th class="center"><spring:message code="regweb.tipo"/></th>
-                                                <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th><spring:message code="registroSir.extracto"/></th>
+                                                <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th>Doc</th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
@@ -183,10 +183,10 @@
                                             <c:forEach var="registroSir" items="${paginacion.listado}" varStatus="status">
                                                 <c:set var="registroSir" value="${registroSir}" scope="request"/>
                                                 <tr>
-                                                    <td> ${registroSir.identificadorIntercambio}</td>
                                                     <td>${registroSir.decodificacionEntidadRegistralOrigen}</td>
-                                                    <td> ${registroSir.numeroRegistro}</td>
                                                     <td><fmt:formatDate value="${registroSir.fechaRecepcion}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
+                                                    <td> ${registroSir.identificadorIntercambio}</td>
+                                                    <td> ${registroSir.numeroRegistro}</td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.tipoRegistro == 'ENTRADA'}">
                                                             <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
@@ -196,9 +196,6 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
-                                                    <td class="center">
-                                                        <c:import url="estadosRegistroSir.jsp" />
-                                                    </td>
                                                     <td>
                                                         <c:if test="${fn:length(registroSir.resumen) <= 40}">
                                                             ${registroSir.resumen}
@@ -207,6 +204,9 @@
                                                         <c:if test="${fn:length(registroSir.resumen) > 40}">
                                                             <p rel="popupArriba" data-content="${registroSir.resumen}" data-toggle="popover">${registroSir.resumenCorto}</p>
                                                         </c:if>
+                                                    </td>
+                                                    <td class="center">
+                                                        <c:import url="estadosRegistroSir.jsp" />
                                                     </td>
                                                     <td class="center">
                                                         <c:if test="${registroSir.documentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
