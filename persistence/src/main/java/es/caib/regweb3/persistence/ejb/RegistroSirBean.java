@@ -282,6 +282,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             where.add(" registroSir.tipoRegistro = :tipoRegistro "); parametros.put("tipoRegistro", registroSir.getTipoRegistro());
         }
 
+        if (es.caib.regweb3.utils.StringUtils.isNotEmpty(registroSir.getAplicacion())) {
+            where.add(DataBaseUtils.like("registroSir.aplicacion", "aplicacion", parametros, registroSir.getAplicacion()));
+        }
+
         // Intervalo fechas
         where.add(" (registroSir.fechaRecepcion >= :fechaInicio  "); parametros.put("fechaInicio", fechaInicio);
         where.add(" registroSir.fechaRecepcion <= :fechaFin) "); parametros.put("fechaFin", fechaFin);
