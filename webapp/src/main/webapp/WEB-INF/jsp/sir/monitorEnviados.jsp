@@ -210,11 +210,11 @@
                                                         <td><fmt:formatDate value="${oficioRemision.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
                                                         <td class="center">
                                                             <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
-                                                                <span class="label label-info"><spring:message code="oficioRemision.tipo.1"/></span>
+                                                                <span class="label label-info"><spring:message code="registroSir.entrada"/></span>
                                                             </c:if>
 
                                                             <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                                                                <span class="label label-danger"><spring:message code="oficioRemision.tipo.2"/></span>
+                                                                <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                             </c:if>
                                                         </td>
                                                         <td><label class="no-bold" rel="popupAbajo"
