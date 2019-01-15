@@ -202,7 +202,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, int maxReintentos) throws Exception, I18NException, I18NValidationException {
+    public void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         try {
             //Creamos un elemento nuevo de la cola de distribución

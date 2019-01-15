@@ -4,6 +4,43 @@
  */
 
 
+/**
+ * Función para redistribuir un Registro ya distribuido previamente.
+ * Solo funcionará para instalaciones donde no sea necesario escoger Destinatarios
+ * @param url
+ */
+function redistribuir(url){
+
+    jQuery.ajax({
+        async: true,
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json',
+        beforeSend: function(objeto){
+            waitingDialog.show(traddistribuir['distribuir.distribuyendo'], {dialogSize: 'm', progressType: 'success'});
+        },
+        success:function(respuesta){
+
+            if( respuesta.status == 'SUCCESS' || respuesta.status == 'ENVIADO_COLA'){
+                mensajeSuccess('#mensajes', 'Registro redistribuido correctamente');
+                waitingDialog.hide();
+                return false;
+            }else{
+                //Si ha ocurrido un fallo en el envio
+                if(respuesta.status == 'FAIL'){
+                    mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
+                    return false;
+                }
+
+            }
+            waitingDialog.hide();
+        }
+
+    });
+}
+
 /*
  * Función que permite distribuir el registro a los destinatarios que se le indiquen.
  * Realiza una llamada ajax para obtener los destinatarios

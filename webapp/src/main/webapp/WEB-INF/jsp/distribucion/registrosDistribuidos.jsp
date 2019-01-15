@@ -182,7 +182,7 @@
                                                             </c:import>
                                                         </td>
                                                         <td class="center">
-                                                            <a class="btn btn-primary btn-sm" href="" title="<spring:message code="registroEntrada.redistribuir"/>"><span class="fa fa-eye"></span></a>
+                                                            <a class="btn btn-primary btn-sm" href="javascript:void(0);" onclick="redistribuir('<c:url value="/distribucion/${registro.id}/redistribuir"/>')" title="<spring:message code="registroEntrada.redistribuir"/>"><span class="fa fa-refresh"></span></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -204,14 +204,31 @@
             </div>
         </div>
     </div>
+
+    <%-- MODAL Distribuir--%>
+    <c:import url="../registro/registroTramitar.jsp">
+        <c:param name="tipoRegistro" value="registroEntrada"/>
+    </c:import>
+
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript" src="<c:url value="/js/distribuir.js"/>"></script>
 
 <script type="text/javascript">
     var tradsSir = [];
     tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
     tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
+
+    <%-- Traducciones para distribuir.js --%>
+    var traddistribuir = [];
+    traddistribuir['campo.obligatorio'] = "<spring:message code='registro.distribuir.propuesto.obligatorio' javaScriptEscape='true' />";
+    traddistribuir['distribuir.nodestinatarios'] = "<spring:message code='registro.distribuir.nodestinatarios' javaScriptEscape='true' />";
+    traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.error.noEnviado' javaScriptEscape='true' />";
+    traddistribuir['distribuir.error.plugin'] = "<spring:message code='registroEntrada.distribuir.error.plugin' javaScriptEscape='true' />";
+    traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
+
 </script>
 
 

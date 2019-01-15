@@ -26,11 +26,12 @@ public interface DistribucionLocal  {
    *
    * @param re             registro de entrada a distribuir
    * @param usuarioEntidad
+   * @param forzarEnvio Fuerza que se distribuya directamente sin pasar por la Cola, aunque esté así configurado en el Plugin
    * @return lista de destinatarios a los que se debe distribuir el registro
    * @throws Exception
    * @throws I18NException
    */
-  RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
+  RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException;
 
   /**
    * Método que agrupa la distribución de los registros en cola.

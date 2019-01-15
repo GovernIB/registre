@@ -547,7 +547,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         try{
             // 7.- Distribuimos el registro de entrada
-            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario);
+            RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, false);
 
             // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
             if(respuestaDistribucion.getDestinatarios() != null){

@@ -58,12 +58,11 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      *
      * @param re
      * @param usuarioEntidad
-     * @param maxReintentos
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
-    void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad, int maxReintentos) throws Exception, I18NException, I18NValidationException;
+    void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Vuelve a activar los elementos en la cola poniendo el contador a 0 para que se puedan volver a enviar

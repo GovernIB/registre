@@ -47,7 +47,7 @@ public class DistribucionBean implements DistribucionLocal{
 
 
    @Override
-   public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+   public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException {
 
       RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
@@ -69,9 +69,6 @@ public class DistribucionBean implements DistribucionLocal{
       peticion.append("oficina: ").append(re.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
       peticion.append("clase: ").append(re.getClass().getName()).append(System.getProperty("line.separator"));
 
-      //Obtenemos el numero máximo de reintentos de una propiedad global
-      Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(usuarioEntidad.getEntidad().getId());
-
       //Obtenemos plugin
       try {
          IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
@@ -91,8 +88,8 @@ public class DistribucionBean implements DistribucionLocal{
                respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
             } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
 
-               if(configuracionDistribucion.isEnvioCola()){ //Si esta configurado para enviarlo a la cola
-                  colaEjb.enviarAColaDistribucion(re,usuarioEntidad, maxReintentos);
+               if(configuracionDistribucion.isEnvioCola() && !forzarEnvio){ //Si esta configurado para enviarlo a la cola
+                  colaEjb.enviarAColaDistribucion(re,usuarioEntidad);
                   respuestaDistribucion.setEnviadoCola(true);
 
                   return respuestaDistribucion;
@@ -139,6 +136,7 @@ public class DistribucionBean implements DistribucionLocal{
       log.info("DISTRIBUYENDO REGISTRO: " + registroEntrada.getNumeroRegistroFormateado());
 
       AnexoFull justificante = null;
+      // Si no tiene Justificante, lo creamos
       if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
          justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
          registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
