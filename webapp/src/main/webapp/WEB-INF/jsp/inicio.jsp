@@ -248,7 +248,7 @@
                                     <div class="col-xs-6 filas">
                                         <div id="pendientesDistribuir" class="panel panel-info">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-sign-out"></i> <a href="<c:url value="/registroEntrada/pendientesDistribuir/list/1"/>" class="primary"><strong><spring:message code="registroEntrada.pendientesDistribuir.sir"/></strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-sign-out"></i> <a href="<c:url value="/registroEntrada/pendientesDistribuirSir/list/1"/>" class="primary"><strong><spring:message code="registroEntrada.pendientesDistribuir.sir"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">

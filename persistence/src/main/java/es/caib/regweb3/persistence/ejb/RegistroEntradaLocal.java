@@ -79,6 +79,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     Paginacion getByOficinaEstadoPaginado(Integer pageNumber, Long idOficinaActiva, Long idEstado) throws Exception;
 
     /**
+     * Registros pendientes de distribuir
+     * @param pageNumber
+     * @param idOficinaActiva
+
+     * @return
+     * @throws Exception
+     */
+    Paginacion pendientesDistribuir(Integer pageNumber, Long idOficinaActiva) throws Exception;
+
+    /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
      *
      * @param idOficinaActiva

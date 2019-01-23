@@ -131,6 +131,7 @@
                     </div>
 
                     <c:if test="${empty registroSalidaBusqueda.registroSalida.oficina.id &&
+                    empty registroSalidaBusqueda.registroSalida.registroDetalle.tipoDocumentacionFisica &&
                     empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom &&
                     empty registroSalidaBusqueda.interessatLli1 && empty registroSalidaBusqueda.interessatLli2 &&
                     empty registroSalidaBusqueda.organOrigen && empty registroSalidaBusqueda.observaciones &&
@@ -138,6 +139,7 @@
                         <div id="demo" class="collapse">
                     </c:if>
                     <c:if test="${not empty registroSalidaBusqueda.registroSalida.oficina.id ||
+                    not empty registroSalidaBusqueda.registroSalida.registroDetalle.tipoDocumentacionFisica ||
                     not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom ||
                     not empty registroSalidaBusqueda.interessatLli1 || not empty registroSalidaBusqueda.interessatLli2 ||
                     not empty registroSalidaBusqueda.organOrigen || not empty registroSalidaBusqueda.observaciones ||
@@ -242,7 +244,20 @@
                             </div>
                         </div>
 
-                        <div class="col-xs-12" style="display:none;">
+                        <div class="col-xs-12">
+                            <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-4 pull-left etiqueta_regweb">
+                                    <label for="registroSalida.registroDetalle.tipoDocumentacionFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><spring:message code="registroSalida.tipoDocumentacionFisica"/></label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="registroSalida.registroDetalle.tipoDocumentacionFisica" cssClass="chosen-select">
+                                        <form:option value="" label="..."/>
+                                        <c:forEach var="tipoDocumentacion" items="${tiposDocumentacionFisica}">
+                                            <form:option value="${tipoDocumentacion}"><spring:message code="tipoDocumentacionFisica.${tipoDocumentacion}"/></form:option>
+                                        </c:forEach>
+                                    </form:select>
+                                </div>
+                            </div>
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
                                     <label for="anexos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anexos.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
@@ -321,6 +336,7 @@
                                         <col>
                                         <col>
                                         <col>
+                                        <col>
                                         <col width="125">
                                     </colgroup>
                                     <thead>
@@ -333,6 +349,7 @@
                                         <th class="center"><spring:message code="registroSalida.extracto"/></th>
                                         <th class="center"><spring:message code="registroSalida.estado"/></th>
                                         <th class="center"><spring:message code="registroSalida.destinatarios"/></th>
+                                        <th class="center">Doc.</th>
                                         <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
@@ -374,6 +391,17 @@
                                             <c:if test="${registro.registroDetalle.interesados == null}">
                                                 <td class="center">0</td>
                                             </c:if>
+                                            <td class="center">
+                                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                    <i class="fa fa-file-text text-verd" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                </c:if>
+                                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                    <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                </c:if>
+                                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                    <i class="fa fa-file-text text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                </c:if>
+                                            </td>
                                             <c:if test="${registro.registroDetalle.anexos != null}">
                                                 <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
                                                 <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>

@@ -16,7 +16,7 @@
                 <ul class="dropdown-menu pull-right">
                     <c:if test="${validos > 0}">
                         <li>
-                            <a href="<c:url value="/registroEntrada/validos/list/1"/>">
+                            <a href="<c:url value="/registroEntrada/pendientesDistribuir/list/1"/>">
                                 <div>
                                     <i class="fa fa-file-o"></i> <spring:message code="registroEntrada.pendientesDistribuir"/> (${validos})
                                 </div>

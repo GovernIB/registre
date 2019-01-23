@@ -14,8 +14,16 @@
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.listado"/></a></li>
+        <li class="divider"></li>
+        <c:if test="${loginInfo.entidadActiva.sir && loginInfo.oficinaActiva.sirRecepcion }">
+            <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesDistribuirSir/list/1"/>"><i class="fa fa-sign-out"></i> <spring:message code="registroEntrada.pendientesDistribuir.sir"/></a></li>
+        </c:if>
+        <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesDistribuir/list/1"/>"><i class="fa fa-sign-out"></i> <spring:message code="registroEntrada.pendientesDistribuir"/></a></li>
+        <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reservas/list/1"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reservas"/></a></li>
+        <li class="submenu-complet"><a href="<c:url value="/registroEntrada/pendientesVisar/list/1"/>"><i class="fa fa-check-square-o"></i> <spring:message code="registroEntrada.pendientesVisar"/></a></li>
         <%if (Configuracio.isCAIB()) {%>
-        <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><i class="fa fa-external-link"></i> <spring:message code="regweb.preregistro.caib"/></a></li>
+            <li class="divider"></li>
+            <li class="submenu-complet"><a href="<%=Configuracio.getUrlPreregistre()%>" target="_blank"><i class="fa fa-external-link"></i> <spring:message code="regweb.preregistro.caib"/></a></li>
         <%}%>
 
     </ul>

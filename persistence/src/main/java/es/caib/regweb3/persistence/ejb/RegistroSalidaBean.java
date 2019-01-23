@@ -246,6 +246,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             parametros.put("idEstadoRegistro", registroSalida.getEstado());
         }
 
+        // Tipo documentación física
+        if (registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null && registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() > 0) {
+            where.add(" registroSalida.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
+            parametros.put("tipoDocumentacion", registroSalida.getRegistroDetalle().getTipoDocumentacionFisica());
+        }
+
         // Oficina Registro
         if (registroSalida.getOficina().getId() != null && registroSalida.getOficina().getId() > 0) {
             where.add(" registroSalida.oficina.id = :idOficina ");

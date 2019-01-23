@@ -132,6 +132,7 @@
 
                         <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id &&
+                        empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
                         empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                         empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                         empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
@@ -139,6 +140,7 @@
                             <div id="demo" class="collapse">
                         </c:if>
                         <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id ||
+                        not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                         not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                         not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                         not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
@@ -251,6 +253,19 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.tipoDocumentacionFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.docFisica"/>" data-toggle="popover"><spring:message code="registroEntrada.tipoDocumentacionFisica"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroEntrada.registroDetalle.tipoDocumentacionFisica" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="tipoDocumentacion" items="${tiposDocumentacionFisica}">
+                                                <form:option value="${tipoDocumentacion}"><spring:message code="tipoDocumentacionFisica.${tipoDocumentacion}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="anexos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anexos.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
                                     </div>
                                     <div class="col-xs-8">
@@ -326,6 +341,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
+                                                        <col>
                                                         <col width="125">
                                                     </colgroup>
                                                     <thead>
@@ -343,6 +359,7 @@
                                                             </c:if>
                                                             <th class="center"><spring:message code="registroEntrada.estado"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.interesados"/></th>
+                                                            <th class="center">Doc.</th>
                                                             <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
@@ -392,6 +409,17 @@
                                                                 <c:if test="${registro.registroDetalle.interesados == null}">
                                                                     <td class="center">0</td>
                                                                 </c:if>
+                                                                <td class="center">
+                                                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                                        <i class="fa fa-file-text text-verd" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                                    </c:if>
+                                                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                                        <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                                    </c:if>
+                                                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                                        <i class="fa fa-file-text text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                                    </c:if>
+                                                                </td>
                                                                 <c:if test="${registro.registroDetalle.anexos != null}">
                                                                     <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
                                                                     <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>

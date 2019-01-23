@@ -61,6 +61,11 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
       return catNivelAdministracionEjb.getAll();
     }
 
+    @ModelAttribute("tiposDocumentacionFisica")
+    public Long[] tiposDocumentacionFisica() throws Exception {
+        return RegwebConstantes.TIPOS_DOCFISICA;
+    }
+
 
     @ModelAttribute("estados")
     public Long[] estados(HttpServletRequest request) throws Exception {

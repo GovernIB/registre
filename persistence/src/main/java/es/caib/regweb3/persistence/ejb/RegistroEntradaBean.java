@@ -257,6 +257,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             parametros.put("idEstadoRegistro", re.getEstado());
         }
 
+        // Tipo documentación física
+        if (re.getRegistroDetalle().getTipoDocumentacionFisica() != null && re.getRegistroDetalle().getTipoDocumentacionFisica() > 0) {
+            where.add(" registroEntrada.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
+            parametros.put("tipoDocumentacion", re.getRegistroDetalle().getTipoDocumentacionFisica());
+        }
+
         // Oficina Registro
         if (re.getOficina() != null && (re.getOficina().getId() != null && re.getOficina().getId() > 0)) {
             where.add(" registroEntrada.oficina.id = :idOficina ");
@@ -389,6 +395,45 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         return paginacion;
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion pendientesDistribuir(Integer pageNumber, Long idOficinaActiva) throws Exception{
+
+        Query q;
+        Query q2;
+
+        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado and re.registroDetalle.tipoDocumentacionFisica = :tipoDoc order by re.fecha desc");
+
+        q.setParameter("idOficinaActiva", idOficinaActiva);
+        q.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("tipoDoc", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+
+        q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+                "and re.estado = :idEstado and re.registroDetalle.tipoDocumentacionFisica = :tipoDoc");
+
+        q2.setParameter("idOficinaActiva", idOficinaActiva);
+        q2.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
+        q2.setParameter("tipoDoc", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+
+
+        Paginacion paginacion;
+
+        if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            Long total = (Long) q2.getSingleResult();
+            paginacion = new Paginacion(total.intValue(), pageNumber);
+            int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setFirstResult(inicio);
+            q.setMaxResults(RESULTADOS_PAGINACION);
+        } else {
+            paginacion = new Paginacion(0, 0);
+        }
+
+        paginacion.setListado(q.getResultList());
+
+        return paginacion;
     }
 
     @Override

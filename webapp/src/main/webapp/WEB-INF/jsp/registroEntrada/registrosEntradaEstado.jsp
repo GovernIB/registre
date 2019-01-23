@@ -75,6 +75,7 @@
                                             <col>
                                             <col>
                                             <col>
+                                            <col>
                                             <col width="50">
                                         </colgroup>
                                         <thead>
@@ -92,6 +93,7 @@
                                                 </c:if>
                                                 <th class="center"><spring:message code="registroEntrada.estado"/></th>
                                                 <th class="center"><spring:message code="registroEntrada.interesados"/></th>
+                                                <th class="center">Doc.</th>
                                                 <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
@@ -127,6 +129,17 @@
                                                 <c:if test="${registro.registroDetalle.interesados == null}">
                                                     <td class="center">0</td>
                                                 </c:if>
+                                                <td class="center">
+                                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                        <i class="fa fa-file-text text-verd" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                    </c:if>
+                                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                        <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                    </c:if>
+                                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                        <i class="fa fa-file-text text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                    </c:if>
+                                                </td>
                                                 <c:if test="${registro.registroDetalle.anexos != null}">
                                                     <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
                                                     <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>

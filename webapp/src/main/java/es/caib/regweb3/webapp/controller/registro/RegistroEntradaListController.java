@@ -450,7 +450,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return mav;
     }
 
-    @RequestMapping(value = "/validos/list/{pageNumber}")
+    @RequestMapping(value = "/pendientesDistribuir/list/{pageNumber}")
     public ModelAndView validos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
 
         ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
@@ -459,10 +459,10 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_VALIDO);
+            Paginacion paginacion = registroEntradaEjb.pendientesDistribuir(pageNumber,oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesDistribuir"));
-            mav.addObject("url", "validos");
+            mav.addObject("url", "pendientesDistribuir");
             mav.addObject("paginacion", paginacion);
 
         }
@@ -513,17 +513,20 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         return mav;
     }
 
-    @RequestMapping(value = "/pendientesDistribuir/list/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/pendientesDistribuirSir/list/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView pendientesDistribuir(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
 
-        ModelAndView mav = new ModelAndView("registroEntrada/pendientesDistribuirList");
+        ModelAndView mav = new ModelAndView("registroEntrada/registrosEntradaEstado");
 
         Oficina oficinaActiva = getOficinaActiva(request);
         Entidad entidadActiva = getEntidadActiva(request);
 
         Paginacion paginacion = trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(), entidadActiva.getId(), pageNumber);
 
+        mav.addObject("titulo",getMessage("registroEntrada.pendientesDistribuir.sir"));
         mav.addObject("paginacion", paginacion);
+        mav.addObject("url", "pendientesDistribuirSir");
+        mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO);
 
         return mav;
     }
