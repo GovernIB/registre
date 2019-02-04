@@ -117,6 +117,9 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         EstadoRegistroSir.REENVIADO_Y_ACK.equals(registroSir.getEstado())) {
 
                     // Modificar el estado del Registro a RECIBIDO
+                    registroSir.setCodigoEntidadRegistralOrigen(ficheroIntercambio.getCodigoEntidadRegistralOrigen());
+                    registroSir.setCodigoEntidadRegistralDestino(ficheroIntercambio.getCodigoEntidadRegistralDestino());
+                    registroSir.setAplicacion(ficheroIntercambio.getAplicacionEmisora());
                     registroSir.setEstado(EstadoRegistroSir.RECIBIDO);
                     registroSir.setFechaRecepcion(new Date());
                     registroSir.setFechaEstado(new Date());

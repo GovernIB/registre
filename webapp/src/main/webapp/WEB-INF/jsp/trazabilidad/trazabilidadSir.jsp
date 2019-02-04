@@ -22,6 +22,7 @@
 
         <c:forEach var="trazabilidad" items="${trazabilidades}" varStatus="status">
 
+            <%-- RECEPCIÓN --%>
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_RECEPCION}">
 
                 <li class="timeline-inverted">
@@ -42,24 +43,47 @@
 
             </c:if>
 
+            <%-- REENVÍO --%>
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_REENVIO}">
 
-                <li>
-                    <div class="timeline-badge success"><i class="fa fa-share"></i></div>
-                    <div class="timeline-panel">
-                        <div class="timeline-heading">
-                            <h4 class="timeline-title"><spring:message code="registroSir.reenviado"/>:</h4>
+                <%-- REENVÍO ENVIADO --%>
+                <c:if test="${trazabilidad.aplicacion == RegwebConstantes.CODIGO_APLICACION}">
+                    <li>
+                        <div class="timeline-badge success"><i class="fa fa-share"></i></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title"><spring:message code="registroSir.reenviado.a"/>:</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralDestino} - ${trazabilidad.codigoEntidadRegistralDestino}</small></p>
+                                <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
+                                <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaReenvio"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                            </div>
                         </div>
-                        <div class="timeline-body">
-                            <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralDestino} - ${trazabilidad.codigoEntidadRegistralDestino}</small></p>
-                            <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
-                            <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaReenvio"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                    </li>
+                </c:if>
+
+                <%-- REENVÍO RECIBIDO --%>
+                <c:if test="${trazabilidad.aplicacion != RegwebConstantes.CODIGO_APLICACION}">
+                    <li class="timeline-inverted">
+                        <div class="timeline-badge success"><i class="fa fa-reply"></i></div>
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title"><spring:message code="registroSir.reenviado.desde"/>:</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralOrigen} - ${trazabilidad.codigoEntidadRegistralOrigen}</small></p>
+                                <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralDestino} - ${trazabilidad.codigoEntidadRegistralDestino}</small></p>
+                                <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
+                                <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaReenvio"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                            </div>
                         </div>
-                    </div>
-                </li>
+                    </li>
+                </c:if>
 
             </c:if>
 
+            <%-- RECHAZO --%>
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO}">
 
                 <li>
@@ -78,6 +102,7 @@
 
             </c:if>
 
+            <%-- ACEPTADO --%>
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO}">
 
                 <li>
@@ -90,6 +115,7 @@
 
             </c:if>
 
+            <%-- RECHAZO ORIGEN --%>
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO_ORIGEN}">
 
                 <li class="timeline-inverted">
