@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<div class="timeline-badge warning"><i class="fa fa-file-o"></i></div>
+<div class="timeline-badge primary"><i class="fa fa-file-o"></i></div>
 <div class="timeline-panel <c:if test="${param.activo == true}">timeline-panel-activo-re</c:if>">
     <div class="timeline-heading">
         <h4 class="timeline-title">

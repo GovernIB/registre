@@ -26,7 +26,7 @@
             <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_RECEPCION}">
 
                 <li class="timeline-inverted">
-                    <div class="timeline-badge warning"><i class="fa fa-reply"></i></div>
+                    <div class="timeline-badge primary"><i class="fa fa-file-o"></i></div>
                     <div class="timeline-panel">
                         <div class="timeline-heading">
                             <h4 class="timeline-title"><spring:message code="registroSir.recibido"/>:</h4>
@@ -73,7 +73,6 @@
                             </div>
                             <div class="timeline-body">
                                 <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.origen"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralOrigen} - ${trazabilidad.codigoEntidadRegistralOrigen}</small></p>
-                                <p><small><i class="fa fa-home"></i> <strong><spring:message code="oficina.destino"/>:</strong> ${trazabilidad.decodificacionEntidadRegistralDestino} - ${trazabilidad.codigoEntidadRegistralDestino}</small></p>
                                 <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
                                 <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaReenvio"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
                             </div>
