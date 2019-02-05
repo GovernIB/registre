@@ -131,7 +131,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         for (Object[] organismoExterno : organismosExternos){
             Organismo organismo = new Organismo(null,(String) organismoExterno[0], (String) organismoExterno[1]);
-            
+
             organismosDestino.add(organismo);
         }
 
