@@ -403,7 +403,7 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Si no está configurado, se devuelven 2 meses
+     * Si no está configurado, se devuelven 3 meses
      * @param idEntidad
      * @return
      */
@@ -413,7 +413,7 @@ public class PropiedadGlobalUtil {
 
 
         if (valor == null) {
-            valor = 2;
+            valor = 3;
         }
         return valor;
     }
