@@ -15,6 +15,7 @@ create table RWE_ANEXO (
         MOTIVONOVALID varchar2(255 char),
         OBSERVACIONES varchar2(50 char),
         ORIGEN number(10,0),
+        PURGADO number(1,0),
         SIGNFORMAT varchar2(255 char),
         SIGNPROFILE varchar2(255 char),
         SIGNTYPE varchar2(255 char),
@@ -36,6 +37,7 @@ create table RWE_ANEXO (
         IDENTIFICADOR_FICHERO varchar2(50 char) not null,
         NOMBRE_FICHERO varchar2(80 char) not null,
         OBSERVACIONES varchar2(50 char),
+        PURGADO number(1,0) not null,
         TIMESTAMP clob,
         TIPO_DOCUMENTO varchar2(2 char) not null,
         TIPO_MIME varchar2(20 char),
@@ -316,6 +318,22 @@ create table RWE_ANEXO (
     PARTITION RWE_LOPD_2019 VALUES LESS THAN (TO_DATE('01-01-2019','DD-MM-YYYY')),
     PARTITION RWE_LOPD_2020 VALUES LESS THAN (TO_DATE('01-01-2020','DD-MM-YYYY')) 
  ) TABLESPACE REGWEB_DADES;
+
+    create table RWE_MENSAJE_CONTROL (
+        ID number(19,0) not null,
+        COD_ENT_REG_DEST varchar2(21 char) not null,
+        COD_ENT_REG_ORI varchar2(21 char) not null,
+        COD_ERROR varchar2(4 char),
+        DESCRIPCION varchar2(1024 char),
+        FECHA timestamp,
+        FECHA_DESTINO timestamp,
+        ID_INTERCAMBIO varchar2(33 char) not null,
+        INDICADOR_PRUEBA number(10,0) not null,
+        NUM_REG_DESTINO varchar2(20 char),
+        TIPO_COMUNICACION number(19,0) not null,
+        TIPO_MENSAJE varchar2(2 char) not null,
+        ENTIDAD number(19,0) not null
+    );
 
     create table RWE_MODELO_OFICIO_REMISION (
         ID number(19,0) not null,
@@ -769,6 +787,8 @@ create table RWE_ANEXO (
 
     create sequence RWE_ALL_SEQ;
 
+    create sequence RWE_SIR_SEQ;
+
 
  -- INICI Indexes
     create index RWE_ANEXO_REGDET_FK_I on RWE_ANEXO (REGISTRODETALLE) TABLESPACE REGWEB_INDEX;
@@ -888,6 +908,8 @@ create table RWE_ANEXO (
     alter table RWE_LIBRO add constraint RWE_LIBRO_pk primary key (ID);
 
     alter table RWE_LOPD add constraint RWE_LOPD_pk primary key (ID);
+
+    alter table RWE_MENSAJE_CONTROL add constraint RWE_MENSAJE_CONTROL_pk primary key (ID);
 
     alter table RWE_MODELO_OFICIO_REMISION add constraint RWE_MODELO_OFICIO_REMISION_pk primary key (ID);
 
@@ -1156,6 +1178,11 @@ create table RWE_ANEXO (
         add constraint RWE_LOPD_LIBRO_FK 
         foreign key (LIBRO) 
         references RWE_LIBRO;
+
+    alter table RWE_MENSAJE_CONTROL
+        add constraint RWE_MC_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;
 
     alter table RWE_MODELO_OFICIO_REMISION 
         add constraint RWE_MODELOFREMISION_ENTIDAD_FK 
@@ -1596,6 +1623,7 @@ create table RWE_ANEXO (
     grant select,insert,delete,update on RWE_INTERESADO_SIR to www_regweb;
     grant select,insert,delete,update on RWE_LIBRO to www_regweb;
     grant select,insert,delete,update on RWE_LOPD to www_regweb;
+    grant select,insert,delete,update on RWE_MENSAJE_CONTROL to www_regweb;
     grant select,insert,delete,update on RWE_MODELO_OFICIO_REMISION to www_regweb;
     grant select,insert,delete,update on RWE_MODELO_RECIBO to www_regweb;
     grant select,insert,delete,update on RWE_MODIFICACIONLOPD_MIGRADO to www_regweb;
