@@ -32,7 +32,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     protected final Logger log = Logger.getLogger(getClass());
 
 
-    private static final String basePluginRipea = DISTRIBUCION_BASE_PROPERTY + "distribucionripea.";
+    private static final String basePluginRipea = DISTRIBUCION_BASE_PROPERTY + "goib.";
     private static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
     private static final String PROPERTY_PASSWORD = basePluginRipea + "password";
     private static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
