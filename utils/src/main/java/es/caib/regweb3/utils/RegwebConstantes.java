@@ -689,9 +689,17 @@ public interface RegwebConstantes {
             INTEGRACION_FIRMA,
             INTEGRACION_DISTRIBUCION,
             INTEGRACION_WS,
+            INTEGRACION_SIR
+    };
+
+    Long[] INTEGRACION_TIPOS_CAIB = {
+            INTEGRACION_CUSTODIA,
+            INTEGRACION_JUSTIFICANTE,
+            INTEGRACION_FIRMA,
+            INTEGRACION_DISTRIBUCION,
+            INTEGRACION_WS,
             INTEGRACION_CERRAR_EXPEDIENTE,
             INTEGRACION_SIR
-
     };
 
     /* -------------- ESTADO INTEGRACION --------------*/
@@ -762,4 +770,13 @@ public interface RegwebConstantes {
     /*--------------- NOMBRES ARCHIVOS PROBLEMATICOS SIR----------------*/
     String FICHERO_REGISTROELECTRONICO = "XMLResumenSolicitudENI.xml";
     String FICHERO_DEFENSORPUEBLO = "sicres_firmado.xsig";
+
+    /* -------------- TIPO OPERACION WS NUEVA SALIDA --------------*/
+    Long TIPO_OPERACION_NOTIFICACION = 1L;
+    Long TIPO_OPERACION_COMUNICACION = 2L;
+
+    Long[] TIPOS_OPERACION = {
+            TIPO_OPERACION_NOTIFICACION,
+            TIPO_OPERACION_COMUNICACION
+    };
 }

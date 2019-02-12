@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Integracion;
 import es.caib.regweb3.persistence.ejb.IntegracionLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.BasicForm;
@@ -99,7 +100,11 @@ public class IntegracionController extends BaseController {
     @ModelAttribute("tipos")
     public
     Long[] tipos() {
-        return RegwebConstantes.INTEGRACION_TIPOS;
+        if(Configuracio.isCAIB()){
+            return RegwebConstantes.INTEGRACION_TIPOS_CAIB;
+        }else{
+            return RegwebConstantes.INTEGRACION_TIPOS;
+        }
     }
 
     @ModelAttribute("estados")
