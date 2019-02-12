@@ -32,39 +32,39 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     protected final Logger log = Logger.getLogger(getClass());
 
 
-    private static final String basePluginRipea = DISTRIBUCION_BASE_PROPERTY + "goib.";
-    private static final String PROPERTY_USUARIO = basePluginRipea + "usuario";
-    private static final String PROPERTY_PASSWORD = basePluginRipea + "password";
-    private static final String PROPERTY_ENDPOINT = basePluginRipea + "endpoint";
-    private static final String PROPERTY_ENVIOCOLA = basePluginRipea + "enviocola";
-    private static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginRipea + "listadodestinatariosmodificable";
-    private static final String PROPERTY_CONFIGURACIONANEXOS = basePluginRipea + "configuracionanexos";
+    private static final String basePluginDistribucionGoib = DISTRIBUCION_BASE_PROPERTY + "goib.";
+    private static final String PROPERTY_USUARIO = basePluginDistribucionGoib + "usuario";
+    private static final String PROPERTY_PASSWORD = basePluginDistribucionGoib + "password";
+    private static final String PROPERTY_ENDPOINT = basePluginDistribucionGoib + "endpoint";
+    private static final String PROPERTY_ENVIOCOLA = basePluginDistribucionGoib + "enviocola";
+    private static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginDistribucionGoib + "listadodestinatariosmodificable";
+    private static final String PROPERTY_CONFIGURACIONANEXOS = basePluginDistribucionGoib + "configuracionanexos";
 
 
-    public String getPropertyUsuario() throws Exception {
+    private String getPropertyUsuario() throws Exception {
 
         return getPropertyRequired(PROPERTY_USUARIO);
     }
 
-    public String getPropertyPassword() throws Exception {
+    private String getPropertyPassword() throws Exception {
 
         return getPropertyRequired(PROPERTY_PASSWORD);
     }
 
-    public String getPropertyEndPoint() throws Exception {
+    private String getPropertyEndPoint() throws Exception {
 
         return getPropertyRequired(PROPERTY_ENDPOINT);
     }
 
-    public  String getPropertyEnvioCola()  throws Exception{
+    private  String getPropertyEnvioCola()  throws Exception{
         return getPropertyRequired(PROPERTY_ENVIOCOLA);
     }
 
-    public  String getPropertyDestinatariosModificable()  throws Exception{
+    private  String getPropertyDestinatariosModificable()  throws Exception{
         return getPropertyRequired(PROPERTY_LISTADODESTINATARIOSMODIFICABLE);
     }
 
-    public  String getPropertyConfiguracionAnexos()  throws Exception{
+    private  String getPropertyConfiguracionAnexos()  throws Exception{
         return getPropertyRequired(PROPERTY_CONFIGURACIONANEXOS);
     }
 
