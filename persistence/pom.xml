@@ -6,7 +6,7 @@
     <parent>
         <artifactId>regweb3</artifactId>
         <groupId>es.caib.regweb3</groupId>
-        <version>3.1</version>
+        <version>3.1.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -227,12 +227,12 @@
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-ripea</artifactId>
-            <version>3.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-goib</artifactId>
-            <version>3.1</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.fundaciobit.pluginsib.validatesignature</groupId>
