@@ -1,9 +1,0 @@
-
-Parametres Opcionals:
-
- clean            Neteja el projecte abans de recompilar
- 
- -Piecisascanweb  Inclou el plugin de escaneig de IECISA
-                   (requerix configuracio dins regweb3-properties-service.xml)
-
-

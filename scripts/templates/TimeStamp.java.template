@@ -1,7 +1,0 @@
-package es.caib.regweb3.utils;
-/**
-* Codi autogenerat a partir del fitxer Versio.java.template.
-*/
-public final class TimeStamp {
-  public static final String TIMESTAMP="@timestamp@";
-}
