@@ -1,5 +1,10 @@
 # ![Logo](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/icon.jpg) Registre
 
+***Versions***
+
+> - Versió Estable: __resgistre-3.0__ (branca [registre-3.0](../../tree/registre-3.0))
+> - Versió en Desenvolupament: -
+
 ***Descripció***
 
 Aplicació web de registre d'anotacions a llibres d'entrada i sortida
