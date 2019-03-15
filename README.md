@@ -2,8 +2,8 @@
 
 ***Versions***
 
-> - Versió Estable: __resgistre-3.0__ (branca [registre-3.0](../../tree/registre-3.0))
-> - Versió en Desenvolupament: -
+> - Versió Estable: __resgistre-3.1__ (branca [registre-3.0](../../tree/registre-3.0))
+> - Versió en Desenvolupament: __resgistre-3.0__ (branca [registre-3.0](../../tree/registre-3.0))
 
 ***Descripció***
 
