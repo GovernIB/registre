@@ -1,11 +1,10 @@
 # ![Logo](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/icon.jpg) Registre
 
-
-**Descripció**
+***Descripció***
 
 Aplicació web de registre d'anotacions a llibres d'entrada i sortida
 
-**Característiques**
+***Característiques***
 
 * Registered: 2010-05-21 
 * Project Labels: registre, registre entrada i sortida, SIR, SICRES, DIR3, Registro de Entrada/Salida, Registro
@@ -18,19 +17,6 @@ Aplicació web de registre d'anotacions a llibres d'entrada i sortida
 * Translations: Catalan & Spanish
 * User Interface: Web-based
 
-**Captures de pantalla**
-
-![Administració](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/screenshots/314175.jpg)<br/>
-Administració
-
-![Consultar Sortides](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/screenshots/314173.jpg)<br/>
-Consultar Sortides
-
-![Menú Principal](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/screenshots/314169.jpg)<br/>
-Menú Principal
-
-![Registrar Entrada](https://github.com/GovernIB/maven/raw/binaris/registre/projectinfo_Attachments/screenshots/314171.jpg)<br/>
-Registrar Entrada
 
 
 
