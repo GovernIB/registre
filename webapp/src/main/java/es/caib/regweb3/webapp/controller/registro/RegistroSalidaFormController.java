@@ -76,7 +76,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Buscamos la Repro
         Repro repro = reproEjb.findById(idRepro);
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         LinkedHashSet<Oficina> oficinasOrigen = new LinkedHashSet<Oficina>(getOficinasOrigen(request));
 
         // Buscamos nuestra oficina activa
@@ -84,21 +83,19 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Cargamos la entida activa
         Entidad entidadActiva = getEntidadActiva(request);
 
-        RegistroSalida registroSalida = new RegistroSalida();
-
         // Cargamos los datos de la Repro en el Registro Entrada
-        cargarReproRegistroSalida(registroSalida, repro, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen);
+        RegistroSalida registroSalida = cargarReproRegistroSalida(repro, oficinaActiva, entidadActiva, oficinasOrigen);
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
 
-        model.addAttribute(getEntidadActiva(request));
+        model.addAttribute(entidadActiva);
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficinaActiva);
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
-        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
+        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen", oficinasOrigen);
 
         return "registroSalida/registroSalidaForm";
@@ -116,8 +113,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         registroSalida.setRegistroDetalle(new RegistroDetalle());
         registroSalida.setOficina(oficina);
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -126,7 +121,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute(oficina);
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("libros", getLibrosRegistroSalida(request));
-        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
+        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
 
         return "registroSalida/registroSalidaForm";
@@ -491,15 +486,14 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
     /**
      * Carga los valores de una Repro en un {@link es.caib.regweb3.model.RegistroSalida}
-     * @param registroSalida
      * @param repro
      * @param oficinaActiva
      * @return
      * @throws Exception
      */
-    private RegistroSalida cargarReproRegistroSalida(RegistroSalida registroSalida, Repro repro, Oficina oficinaActiva, Entidad entidadActiva,
-                                                       LinkedHashSet<Organismo> organismosOficinaActiva, LinkedHashSet<Oficina> oficinasOrigen) throws Exception {
+    private RegistroSalida cargarReproRegistroSalida(Repro repro, Oficina oficinaActiva, Entidad entidadActiva, LinkedHashSet<Oficina> oficinasOrigen) throws Exception {
 
+        RegistroSalida registroSalida =  new RegistroSalida();
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
         // Recuperamos los valores de la Repro

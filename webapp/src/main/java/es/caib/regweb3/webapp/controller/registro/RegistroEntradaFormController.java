@@ -86,16 +86,13 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Cargamos la entida activa
         Entidad entidadActiva = getEntidadActiva(request);
 
-        RegistroEntrada registroEntrada = new RegistroEntrada();
-
         // Cargamos los datos de la Repro en el Registro Entrada
-        cargarReproRegistroEntrada(registroEntrada, repro, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen);
+        RegistroEntrada registroEntrada = cargarReproRegistroEntrada(repro, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen);
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
-
-        model.addAttribute(getEntidadActiva(request));
+        model.addAttribute(entidadActiva);
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficinaActiva);
         model.addAttribute("registroEntrada",registroEntrada);
@@ -123,14 +120,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
         model.addAttribute(getEntidadActiva(request));
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
-        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
+        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
 
         return "registroEntrada/registroEntradaForm";
@@ -582,15 +577,15 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
     /**
      * Carga los valores de una Repro en un {@link es.caib.regweb3.model.RegistroEntrada}
-     * @param registroEntrada
      * @param repro
      * @param oficinaActiva
      * @return
      * @throws Exception
      */
-    private RegistroEntrada cargarReproRegistroEntrada(RegistroEntrada registroEntrada, Repro repro, Oficina oficinaActiva, Entidad entidadActiva,
+    private RegistroEntrada cargarReproRegistroEntrada(Repro repro, Oficina oficinaActiva, Entidad entidadActiva,
                                                        LinkedHashSet<Organismo> organismosOficinaActiva, LinkedHashSet<Oficina> oficinasOrigen) throws Exception{
 
+        RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
         // Recuperamos los valores de la Repro
