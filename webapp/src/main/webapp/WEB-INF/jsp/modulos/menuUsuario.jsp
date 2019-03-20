@@ -10,8 +10,8 @@
         <spring:message code="menu.entradas"/> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <%--<c:import url="/reprosUsuario/1"/>--%>
-        <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>
+        <%--<li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>--%>
+        <c:import url="/reprosUsuario/1"/>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.listado"/></a></li>
         <li class="divider"></li>
@@ -35,7 +35,8 @@
         <spring:message code="menu.salidas"/> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a></li>
+        <c:import url="/reprosUsuario/2"/>
+        <%--<li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a></li>--%>
         <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.listado"/></a></li>
     </ul>
 </div>
