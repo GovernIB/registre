@@ -172,12 +172,12 @@
                                 <div class="col-xs-9 campFormText">
                                     <c:if test="${empty anexoForm.anexo.id}">
                                         <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
-                                                ${anexoForm.documentoCustody.name}
+                                                ${anexoForm.documentTituloCorto}
                                         </a>
                                     </c:if>
                                     <c:if test="${not empty anexoForm.anexo.id}">
                                         <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
-                                                ${anexoForm.documentoCustody.name}</a>
+                                                ${anexoForm.documentTituloCorto}</a>
                                     </c:if>
                                 </div>
                             </div>
@@ -195,11 +195,11 @@
                                 <div class="col-xs-8 campFormText">
                                 <c:if test="${empty anexoForm.anexo.id}">
                                     <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
-                                            ${anexoForm.signatureCustody.name}</a>
+                                            ${anexoForm.signaturaTituloCorto}</a>
                                 </c:if>
                                 <c:if test="${not empty anexoForm.anexo.id}">
                                     <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">
-                                            ${anexoForm.signatureCustody.name}</a>
+                                            ${anexoForm.signaturaTituloCorto}</a>
                                 </c:if>
                                 </div>
                             </div>
