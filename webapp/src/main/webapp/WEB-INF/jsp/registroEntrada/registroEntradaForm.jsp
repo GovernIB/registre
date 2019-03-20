@@ -67,7 +67,8 @@
 
 
            <div class="row">
-               <form:form modelAttribute="registroEntrada" method="post" cssClass="form-horizontal">
+               <c:url value="/registroEntrada/new" var="urlRegistroEntrada"/>
+               <form:form modelAttribute="registroEntrada" method="post" cssClass="form-horizontal" action="${urlRegistroEntrada}">
 
                <div class="col-xs-6">
 

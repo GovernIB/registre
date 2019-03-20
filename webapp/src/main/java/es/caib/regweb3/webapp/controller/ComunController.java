@@ -149,6 +149,7 @@ public class ComunController extends BaseController {
 
         List<Repro> reprosUsuario = reproEjb.getActivasbyUsuario(getUsuarioEntidadActivo(request).getId(), tipoRegistro);
         mav.addObject("reprosUsuario", reprosUsuario);
+        mav.addObject("tipoRegistro", tipoRegistro);
 
         return mav;
     }

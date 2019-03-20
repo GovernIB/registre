@@ -174,6 +174,9 @@ textarea{
 .pad-left{
     padding-left: 25px;
 }
+.pad_left-20{
+    padding-left: 20px;
+}
 .margin-top20{
     margin-top: 20px;
 }
@@ -1358,4 +1361,15 @@ pre {
 
 .marg-bot0 {
     margin-bottom: 0;
+}
+
+.llista{
+    list-style: circle;
+    margin-left: 35px;
+}
+.padLlista{
+    padding-left: 5px !important;
+}
+.llistaReproMenu{
+    max-height: 300px;
 }
