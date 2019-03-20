@@ -11,7 +11,7 @@
     <c:if test="${not empty reprosUsuario}">
         <li class="dropdown-submenu-left toggle-left"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-chevron-left"></i> <i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a>
             <ul class="dropdown-menu scrollable-menu llistaReproMenu">
-                <li class="pad_left-20"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.repro"/></li>
+                <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.repro"/></li>
                 <li class="divider"></li>
                 <c:forEach items="${reprosUsuario}" var="repro">
                     <li class="llista"><a href="<c:url value="/registroEntrada/new/${repro.id}"/>" class="padLlista">${repro.nombre}</a></li>
@@ -30,7 +30,7 @@
     <c:if test="${not empty reprosUsuario}">
         <li class="dropdown-submenu-left toggle-left"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-chevron-left"></i> <i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a>
             <ul class="dropdown-menu scrollable-menu llistaReproMenu">
-                <li class="pad_left-20"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.repro"/></li>
+                <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.repro"/></li>
                 <li class="divider"></li>
                 <c:forEach items="${reprosUsuario}" var="repro">
                     <li class="llista"><a href="<c:url value="/registroSalida/new/${repro.id}"/>" class="padLateral5">${repro.nombre}</a></li>
