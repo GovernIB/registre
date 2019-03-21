@@ -59,8 +59,8 @@
         <sec:intercept-url pattern="/oficioRemision/**" access="hasRole('RWE_USUARI')"/>
         <!--Persona-->
         <sec:intercept-url pattern="/persona/**" access="hasAnyRole('RWE_ADMIN','RWE_USUARI')"/>
-        <!--Repro-->
-        <sec:intercept-url pattern="/repro/**" access="hasRole('RWE_USUARI')"/>
+        <!--Plantilla-->
+        <sec:intercept-url pattern="/plantilla/**" access="hasRole('RWE_USUARI')"/>
         <!--Libro-->
         <sec:intercept-url pattern="/libro/**" access="hasRole('RWE_ADMIN')"/>
         <!--Libro-->

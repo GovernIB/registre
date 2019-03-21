@@ -43,7 +43,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private PersonaLocal personaEjb;
     @EJB private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
     @EJB private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-    @EJB private ReproLocal reproEjb;
+    @EJB private PlantillaLocal plantillaEjb;
     @EJB private LopdLocal lopdEjb;
     @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
     @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
@@ -315,7 +315,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         return !registroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
            && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
-           && !reproEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
+           && !plantillaEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
     }
 
 
@@ -359,8 +359,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         // REGISTROS DETALLE
         log.info("RegistrosDetalle eliminados: " +registroDetalleEjb.eliminar(registrosDetalle, idEntidad));
 
-        // REPRO 
-        log.info("Repros eliminados: " +reproEjb.eliminarByEntidad(idEntidad));
+        // PLANTILLAS
+        log.info("Plantillas eliminadas: " +plantillaEjb.eliminarByEntidad(idEntidad));
 
         // LOPD 
         log.info("Lopds eliminados: " + lopdEjb.eliminarByEntidad(idEntidad));

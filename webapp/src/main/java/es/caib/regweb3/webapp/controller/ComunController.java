@@ -2,10 +2,10 @@ package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Repro;
+import es.caib.regweb3.model.Plantilla;
 import es.caib.regweb3.model.Rol;
+import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.persistence.ejb.ReproLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -40,8 +40,8 @@ public class ComunController extends BaseController {
     @EJB(mappedName = "regweb3/RolEJB/local")
     private RolLocal rolEjb;
 
-    @EJB(mappedName = "regweb3/ReproEJB/local")
-    private ReproLocal reproEjb;
+    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    private PlantillaLocal plantillaEjb;
 
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
@@ -142,13 +142,13 @@ public class ComunController extends BaseController {
         return new ModelAndView("aviso");
     }
 
-    @RequestMapping(value = "/reprosUsuario/{tipoRegistro}")
-    public ModelAndView reprosUsuario(@PathVariable Long tipoRegistro, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/plantillasUsuario/{tipoRegistro}")
+    public ModelAndView plantillasUsuario(@PathVariable Long tipoRegistro, HttpServletRequest request) throws Exception {
 
-        ModelAndView mav = new ModelAndView("modulos/menuRepros");
+        ModelAndView mav = new ModelAndView("modulos/menuPlantillas");
 
-        List<Repro> reprosUsuario = reproEjb.getActivasbyUsuario(getUsuarioEntidadActivo(request).getId(), tipoRegistro);
-        mav.addObject("reprosUsuario", reprosUsuario);
+        List<Plantilla> plantillasUsuario = plantillaEjb.getActivasbyUsuario(getUsuarioEntidadActivo(request).getId(), tipoRegistro);
+        mav.addObject("plantillasUsuario", plantillasUsuario);
         mav.addObject("tipoRegistro", tipoRegistro);
 
         return mav;

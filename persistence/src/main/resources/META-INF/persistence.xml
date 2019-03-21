@@ -55,7 +55,7 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
         <class>es.caib.regweb3.model.RegistroSalida</class>
         <class>es.caib.regweb3.model.RelacionOrganizativaOfi</class>
         <class>es.caib.regweb3.model.RelacionSirOfi</class>
-        <class>es.caib.regweb3.model.Repro</class>
+        <class>es.caib.regweb3.model.Plantilla</class>
         <class>es.caib.regweb3.model.Rol</class>
         <class>es.caib.regweb3.model.TipoAsunto</class>
         <class>es.caib.regweb3.model.TipoDocumental</class>

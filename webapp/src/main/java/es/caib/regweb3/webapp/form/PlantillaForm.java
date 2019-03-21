@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "reproForm")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ReproForm {
+public class PlantillaForm {
 
     @XmlElement
     private Long idRegistro;
@@ -23,7 +23,7 @@ public class ReproForm {
 
 
 
-    public ReproForm() {
+    public PlantillaForm() {
     }
 
     public Long getIdRegistro() {

@@ -41,8 +41,8 @@
 
                 <div class="panel panel-danger">
                     <div class="panel-heading">
-                        <c:if test="${empty registroSalida.id}"><a data-toggle="modal" role="button" href="#modalSelectRepro" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarRepros('<c:url value="/rest/obtenerRepros"/>','${loginInfo.usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="repro.select"/></a></c:if>
-                        <a data-toggle="modal" role="button" href="#modalNewRepro" class="btn btn-danger btn-xs pull-right" onclick="preparaFormularioRepro('<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-plus"></span> <spring:message code="repro.nuevo"/></a>
+                        <c:if test="${empty registroSalida.id}"><a data-toggle="modal" role="button" href="#modalSelectPlantilla" class="btn btn-danger btn-xs pull-right margin-left10" onclick="cargarPlantillas('<c:url value="/rest/obtenerPlantillas"/>','${loginInfo.usuarioEntidadActivo.id}','<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-refresh"></span> <spring:message code="plantilla.select"/></a></c:if>
+                        <a data-toggle="modal" role="button" href="#modalNewPlantilla" class="btn btn-danger btn-xs pull-right" onclick="preparaFormularioPlantilla('<%=RegwebConstantes.REGISTRO_SALIDA%>')"><span class="fa fa-plus"></span> <spring:message code="plantilla.nuevo"/></a>
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong>
                                 <c:if test="${not empty registroSalida.id}"><spring:message code="registroSalida.editar"/> ${registroSalida.numeroRegistroFormateado}</c:if>
@@ -356,8 +356,8 @@
         <c:param name="tipo" value="OficinaOrigen"/>
     </c:import>
 
-    <%--Nueva Repro--%>
-        <c:import url="../registro/formularioRepro.jsp"/>
+    <%--Nueva Plantilla--%>
+        <c:import url="../registro/formularioPlantilla.jsp"/>
 
     </div>
 </div> <!-- /container -->
@@ -366,7 +366,7 @@
 
 <script type="text/javascript">
     var urlObtenerAnexo = '<c:url value="/anexo/obtenerAnexo"/>';
-    var urlObtenerRepro = '<c:url value="/repro/obtenerRepro"/>';
+    var urlObtenerPlantilla = '<c:url value="/plantilla/obtenerPlantilla"/>';
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>
@@ -437,7 +437,7 @@
 
 </script>
 
-<script type="text/javascript" src="<c:url value="/js/repro.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>
 
 
 </body>

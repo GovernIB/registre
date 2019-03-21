@@ -4,7 +4,7 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.utils.ReproJson;
+import es.caib.regweb3.model.utils.PlantillaJson;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -42,13 +42,10 @@ public class RegistroUtils{
 
         if(bean instanceof RegistroEntrada){
             jaxbCtx = JAXBContext.newInstance(RegistroEntrada.class);
-            //log.info("Serializa RegistroEntrada");
         }else if(bean instanceof RegistroSalida){
             jaxbCtx = JAXBContext.newInstance(RegistroSalida.class);
-            //log.info("Serializa RegistroSalida");
-        }else if(bean instanceof ReproJson){
-            jaxbCtx = JAXBContext.newInstance(ReproJson.class);
-            //log.info("Serializa ReproJson");
+        }else if(bean instanceof PlantillaJson){
+            jaxbCtx = JAXBContext.newInstance(PlantillaJson.class);
         }
 
         StringWriter xmlWriter = new StringWriter();
@@ -62,23 +59,23 @@ public class RegistroUtils{
 
     /**
      *  Desserializa un XML en un {@link es.caib.regweb3.model.RegistroEntrada}
-     * @param repro
+     * @param plantilla
      * @return
      */
-    public static ReproJson desSerilizarReproXml(String repro) {
+    public static PlantillaJson desSerilizarPlantillaXml(String plantilla) {
 
         JAXBContext jaxbCtx;
-        ReproJson reproJson = null;
+        PlantillaJson plantillaJson = null;
         try {
-            jaxbCtx = JAXBContext.newInstance(ReproJson.class);
-            reproJson = (ReproJson) jaxbCtx.createUnmarshaller().unmarshal(
-                    new StringReader(repro));
+            jaxbCtx = JAXBContext.newInstance(PlantillaJson.class);
+            plantillaJson = (PlantillaJson) jaxbCtx.createUnmarshaller().unmarshal(
+                    new StringReader(plantilla));
 
         } catch (JAXBException e) {
             e.printStackTrace();
         }
 
-        return reproJson;
+        return plantillaJson;
     }
 
 

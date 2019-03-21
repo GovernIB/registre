@@ -11,7 +11,7 @@
     </button>
     <ul class="dropdown-menu">
         <%--<li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>--%>
-        <c:import url="/reprosUsuario/1"/>
+        <c:import url="/plantillasUsuario/1"/>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.listado"/></a></li>
         <li class="divider"></li>
@@ -35,7 +35,7 @@
         <spring:message code="menu.salidas"/> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <c:import url="/reprosUsuario/2"/>
+        <c:import url="/plantillasUsuario/2"/>
         <%--<li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a></li>--%>
         <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.listado"/></a></li>
     </ul>
@@ -96,7 +96,7 @@
         <c:if test="${loginInfo.entidadActiva != null}">
             <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><i class="fa fa-address-book-o"></i> <spring:message code="menu.personas"/></a></li>
         </c:if>
-        <li class="submenu-complet"><a href="<c:url value="/repro/list"/>"><i class="fa fa-briefcase"></i> <spring:message code="menu.repros"/></a></li>
+        <li class="submenu-complet"><a href="<c:url value="/plantilla/list"/>"><i class="fa fa-briefcase"></i> <spring:message code="menu.plantillas"/></a></li>
 
         <c:if test="${loginInfo.oficinaActiva != null}">
             <li class="divider"></li>
