@@ -357,7 +357,7 @@
 
 <%--<script type="text/javascript" src="<c:url value="/js/busquedaorganismo.js"/>"></script>--%>
 <script type="text/javascript" src="<c:url value="/js/sello.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/js/repro.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>
 
 <script type="text/javascript">
 

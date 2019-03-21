@@ -130,10 +130,10 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.ModeloOficioRemisionInterceptor"/>
         </mvc:interceptor>
 
-        <!--Interceptor para Repro-->
+        <!--Interceptor para Plantilla-->
         <mvc:interceptor>
-            <mvc:mapping path="/repro/**"/>
-            <bean class="es.caib.regweb3.webapp.interceptor.ReproInterceptor"/>
+            <mvc:mapping path="/plantilla/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.PlantillaInterceptor"/>
         </mvc:interceptor>
 
         <!--Interceptor para Admin-->

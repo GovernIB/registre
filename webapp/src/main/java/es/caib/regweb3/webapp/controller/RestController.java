@@ -48,8 +48,8 @@ public class RestController {
     @EJB(mappedName = "regweb3/PersonaEJB/local")
     private PersonaLocal personaEjb;
 
-    @EJB(mappedName = "regweb3/ReproEJB/local")
-    private ReproLocal reproEjb;
+    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    private PlantillaLocal plantillaEjb;
 
     @EJB(mappedName = "regweb3/InteresadoSirEJB/local")
     private InteresadoSirLocal interesadoSirEjb;
@@ -207,13 +207,13 @@ public class RestController {
     }
 
     /**
-     * Obtiene las {@link es.caib.regweb3.model.Repro} de un {@link es.caib.regweb3.model.UsuarioEntidad}
+     * Obtiene las {@link Plantilla} de un {@link es.caib.regweb3.model.UsuarioEntidad}
      */
-    @RequestMapping(value = "/obtenerRepros", method = RequestMethod.GET)
+    @RequestMapping(value = "/obtenerPlantillas", method = RequestMethod.GET)
     public @ResponseBody
-    List<Repro> obtenerRepros(@RequestParam Long idUsuario, @RequestParam Long tipoRegistro) throws Exception {
+    List<Plantilla> obtenerPlantillas(@RequestParam Long idUsuario, @RequestParam Long tipoRegistro) throws Exception {
 
-        return reproEjb.getActivasbyUsuario(idUsuario, tipoRegistro);
+        return plantillaEjb.getActivasbyUsuario(idUsuario, tipoRegistro);
     }
 
     /**

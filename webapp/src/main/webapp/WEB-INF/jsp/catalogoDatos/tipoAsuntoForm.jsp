@@ -390,9 +390,9 @@ function validateModal() {
     var nombreCorrecto = false;
     var traduccionesCorrecto = false;
     var noErrorTraducciones = true;
-    var nombreRepro = $("#modal-form input#codigo").val();
+    var codigo = $("#modal-form input#codigo").val();
     // Comprueba si Codigo tiene algún valor e indica el posible error
-    if (nombreRepro == "") {
+    if (codigo == "") {
         var variable = "#cod span.errors";
         var formatoHtml = "<span id='cod.errors' class='help-block'>El camp és obligatori</span>";
         $(variable).html(formatoHtml);
@@ -436,9 +436,9 @@ function validateModalCodAsunto(idCodAsunto) {
     var nombreCorrecto = false;
     var traduccionesCorrecto = false;
     var noErrorTraducciones = true;
-    var nombreRepro = $('#cod_'+idCodAsunto+' input#codigo').val();
+    var codigo = $('#cod_'+idCodAsunto+' input#codigo').val();
     // Comprueba si Codigo tiene algún valor e indica el posible error
-    if (nombreRepro == "") {
+    if (codigo == "") {
         var variable = "#cod_"+idCodAsunto+" span.errors";
         var formatoHtml = "<span id='cod.errors' class='help-block'>El camp és obligatori</span>";
         $(variable).html(formatoHtml);

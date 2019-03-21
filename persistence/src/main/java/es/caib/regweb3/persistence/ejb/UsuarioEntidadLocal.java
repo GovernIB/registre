@@ -149,7 +149,7 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @return
      * @throws Exception
      */
-    List<UsuarioEntidad> findUsuariosRepro(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
+    List<UsuarioEntidad> findUsuariosPlantilla(Long idEntidad, Long idUsuario, Long tipoUsuario) throws Exception;
 
     /**
      * Modifica la última Oficina utilizada por el usuario

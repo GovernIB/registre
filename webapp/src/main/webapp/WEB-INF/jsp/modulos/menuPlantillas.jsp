@@ -4,17 +4,17 @@
 
 <%--Registro Entrada--%>
 <c:if test="${tipoRegistro==1}">
-    <c:if test="${empty reprosUsuario}">
+    <c:if test="${empty plantillasUsuario}">
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>
     </c:if>
 
-    <c:if test="${not empty reprosUsuario}">
+    <c:if test="${not empty plantillasUsuario}">
         <li class="dropdown-submenu-left toggle-left"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-chevron-left"></i> <i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a>
-            <ul class="dropdown-menu scrollable-menu llistaReproMenu">
-                <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.repro"/></li>
+            <ul class="dropdown-menu scrollable-menu llistaPlantillaMenu">
+                <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.plantilla"/></li>
                 <li class="divider"></li>
-                <c:forEach items="${reprosUsuario}" var="repro">
-                    <li class="llista"><a href="<c:url value="/registroEntrada/new/${repro.id}"/>" class="padLlista">${repro.nombre}</a></li>
+                <c:forEach items="${plantillasUsuario}" var="plantilla">
+                    <li class="llista"><a href="<c:url value="/registroEntrada/new/${plantilla.id}"/>" class="padLlista">${plantilla.nombre}</a></li>
                 </c:forEach>
             </ul>
         </li>
@@ -23,17 +23,17 @@
 
 <%--Registro Salida--%>
 <c:if test="${tipoRegistro==2}">
-    <c:if test="${empty reprosUsuario}">
+    <c:if test="${empty plantillasUsuario}">
         <li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a></li>
     </c:if>
 
-    <c:if test="${not empty reprosUsuario}">
+    <c:if test="${not empty plantillasUsuario}">
         <li class="dropdown-submenu-left toggle-left"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-chevron-left"></i> <i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a>
-            <ul class="dropdown-menu scrollable-menu llistaReproMenu">
-                <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.repro"/></li>
+            <ul class="dropdown-menu scrollable-menu llistaPlantillaMenu">
+                <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.plantilla"/></li>
                 <li class="divider"></li>
-                <c:forEach items="${reprosUsuario}" var="repro">
-                    <li class="llista"><a href="<c:url value="/registroSalida/new/${repro.id}"/>" class="padLateral5">${repro.nombre}</a></li>
+                <c:forEach items="${plantillasUsuario}" var="plantilla">
+                    <li class="llista"><a href="<c:url value="/registroSalida/new/${plantilla.id}"/>" class="padLateral5">${plantilla.nombre}</a></li>
                 </c:forEach>
             </ul>
         </li>

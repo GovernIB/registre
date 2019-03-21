@@ -5,7 +5,7 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.ReproJson;
+import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -53,8 +53,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/ReproEJB/local")
-    private ReproLocal reproEjb;
+    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    private PlantillaLocal plantillaEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
@@ -70,13 +70,13 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
 
     /**
-     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada} a partir de una {@link es.caib.regweb3.model.Repro}
+     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.RegistroEntrada} a partir de una {@link Plantilla}
      */
-    @RequestMapping(value = "/new/{idRepro}", method = RequestMethod.GET)
-    public String nuevoRegistroEntradaRepro(@PathVariable("idRepro") Long idRepro, Model model, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/new/{idPlantilla}", method = RequestMethod.GET)
+    public String nuevoRegistroEntradaPlantilla(@PathVariable("idPlantilla") Long idPlantilla, Model model, HttpServletRequest request) throws Exception {
 
-        // Buscamos la Repro
-        Repro repro = reproEjb.findById(idRepro);
+        // Buscamos la Plantilla
+        Plantilla plantilla = plantillaEjb.findById(idPlantilla);
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         LinkedHashSet<Oficina> oficinasOrigen = new LinkedHashSet<Oficina>(getOficinasOrigen(request));
@@ -86,8 +86,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Cargamos la entida activa
         Entidad entidadActiva = getEntidadActiva(request);
 
-        // Cargamos los datos de la Repro en el Registro Entrada
-        RegistroEntrada registroEntrada = cargarReproRegistroEntrada(repro, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen);
+        // Cargamos los datos de la Plantilla en el Registro Entrada
+        RegistroEntrada registroEntrada = cargarPlantillaRegistroEntrada(plantilla, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen);
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
@@ -576,64 +576,64 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     }
 
     /**
-     * Carga los valores de una Repro en un {@link es.caib.regweb3.model.RegistroEntrada}
-     * @param repro
+     * Carga los valores de una Plantilla en un {@link es.caib.regweb3.model.RegistroEntrada}
+     * @param plantilla
      * @param oficinaActiva
      * @return
      * @throws Exception
      */
-    private RegistroEntrada cargarReproRegistroEntrada(Repro repro, Oficina oficinaActiva, Entidad entidadActiva,
+    private RegistroEntrada cargarPlantillaRegistroEntrada(Plantilla plantilla, Oficina oficinaActiva, Entidad entidadActiva,
                                                        LinkedHashSet<Organismo> organismosOficinaActiva, LinkedHashSet<Oficina> oficinasOrigen) throws Exception{
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
-        // Recuperamos los valores de la Repro
-        ReproJson reproJson = RegistroUtils.desSerilizarReproXml(repro.getRepro());
+        // Recuperamos los valores de la Plantilla
+        PlantillaJson plantillaJson = RegistroUtils.desSerilizarPlantillaXml(plantilla.getRepro());
 
-        // Asignamos los valores obtenidos de la Repro al Registro de Entrada
+        // Asignamos los valores obtenidos de la Plantilla al Registro de Entrada
         // ID registro Entrada
         registroEntrada.setId(null);
         // Libro
-        Libro libro = libroEjb.findByCodigo(reproJson.getIdLibro());
+        Libro libro = libroEjb.findByCodigo(plantillaJson.getIdLibro());
         registroEntrada.setLibro(libro);
         // Oficina
         registroEntrada.setOficina(oficinaActiva);
         // Extracto
-        registroDetalle.setExtracto(reproJson.getExtracto());
+        registroDetalle.setExtracto(plantillaJson.getExtracto());
         // Tipo Asunto
-        TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(Long.parseLong(reproJson.getIdTipoAsunto()));
+        TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdTipoAsunto()));
         registroDetalle.setTipoAsunto(tipoAsunto);
         // Código Asunto
-        if(reproJson.getIdCodigoAsunto()!=null && !reproJson.getIdCodigoAsunto().equals("")) {
-            CodigoAsunto codigoAsunto = codigoAsuntoEjb.findById(Long.parseLong(reproJson.getIdCodigoAsunto()));
+        if(plantillaJson.getIdCodigoAsunto()!=null && !plantillaJson.getIdCodigoAsunto().equals("")) {
+            CodigoAsunto codigoAsunto = codigoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdCodigoAsunto()));
             registroDetalle.setCodigoAsunto(codigoAsunto);
         }
         // Idioma
-        registroDetalle.setIdioma(Long.parseLong(reproJson.getIdIdioma()));
+        registroDetalle.setIdioma(Long.parseLong(plantillaJson.getIdIdioma()));
         // Referencia externa
-        registroDetalle.setReferenciaExterna(reproJson.getReferenciaExterna());
+        registroDetalle.setReferenciaExterna(plantillaJson.getReferenciaExterna());
         // Expediente
-        registroDetalle.setExpediente(reproJson.getExpediente());
+        registroDetalle.setExpediente(plantillaJson.getExpediente());
         // Transporte
-        registroDetalle.setTransporte(Long.parseLong(reproJson.getIdTransporte()));
+        registroDetalle.setTransporte(Long.parseLong(plantillaJson.getIdTransporte()));
         // Número transporte
-        registroDetalle.setNumeroTransporte(reproJson.getNumeroTransporte());
+        registroDetalle.setNumeroTransporte(plantillaJson.getNumeroTransporte());
         // Observaciones
-        registroDetalle.setObservaciones(reproJson.getObservaciones());
+        registroDetalle.setObservaciones(plantillaJson.getObservaciones());
         // Número Registro Origen
-        registroDetalle.setNumeroRegistroOrigen(reproJson.getNumeroRegistroOrigen());
+        registroDetalle.setNumeroRegistroOrigen(plantillaJson.getNumeroRegistroOrigen());
         // Fecha origen
-        if(!reproJson.getFechaOrigen().equals("")) {
-            Date fechaOrigen = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(reproJson.getFechaOrigen());
+        if(!plantillaJson.getFechaOrigen().equals("")) {
+            Date fechaOrigen = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(plantillaJson.getFechaOrigen());
             registroDetalle.setFechaOrigen(fechaOrigen);
         }
 
         // Comprobamos la unidad destino
         // Externa
-        if(reproJson.getDestinoCodigo()!= null && reproJson.isDestinoExterno()){ // Preguntamos a DIR3 si está Vigente
+        if(plantillaJson.getDestinoCodigo()!= null && plantillaJson.isDestinoExterno()){ // Preguntamos a DIR3 si está Vigente
             Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            UnidadTF unidad = unidadesService.obtenerUnidad(reproJson.getDestinoCodigo(), null, null);
+            UnidadTF unidad = unidadesService.obtenerUnidad(plantillaJson.getDestinoCodigo(), null, null);
             if(unidad != null) {
                 if (unidad.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { //Si está vigente, asignamos la unidad al Registro de entrada
                     Organismo organismoExterno = new Organismo();
@@ -645,7 +645,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
             // Interna
         }else{ // Comprobamos en REGWEB3 si está vigente
-            Organismo organismoDestino = organismoEjb.findByCodigoEntidad(reproJson.getDestinoCodigo(), entidadActiva.getId());
+            Organismo organismoDestino = organismoEjb.findByCodigoEntidad(plantillaJson.getDestinoCodigo(), entidadActiva.getId());
             if(organismoDestino != null){ // Ya no es vigente
                 registroEntrada.setDestino(organismoDestino);
             }
@@ -653,9 +653,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         // Oficina Origen
         // Externa
-        if(reproJson.getOficinaCodigo()!= null  && !reproJson.getOficinaCodigo().equals("-1") && reproJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
+        if(plantillaJson.getOficinaCodigo()!= null  && !plantillaJson.getOficinaCodigo().equals("-1") && plantillaJson.isOficinaExterna()){// Preguntamos a DIR3 si está Vigente
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            OficinaTF oficinaOrigen = oficinasService.obtenerOficina(reproJson.getOficinaCodigo(),null,null);
+            OficinaTF oficinaOrigen = oficinasService.obtenerOficina(plantillaJson.getOficinaCodigo(),null,null);
             if(oficinaOrigen != null) {
                 if (oficinaOrigen.getEstado().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { //Si está vigente, asignamos la oficina al Registro de entrada
                     Oficina oficinaExterna = new Oficina();
@@ -667,7 +667,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             }
             // Interna
         }else{// Comprobamos en REGWEB3 si está vigente
-            Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(reproJson.getOficinaCodigo());
+            Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(plantillaJson.getOficinaCodigo());
             if(oficinaOrigen != null){
                 registroDetalle.setOficinaOrigen(oficinaOrigen);
             }
