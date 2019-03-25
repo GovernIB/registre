@@ -15,6 +15,7 @@ public class DatosInteresadoWs implements Serializable {
     private String tipoDocumentoIdentificacion;
     private String documento;
     private String razonSocial;
+    private String codigoDire;
     private String nombre;
     private String apellido1;
     private String apellido2;
@@ -163,5 +164,13 @@ public class DatosInteresadoWs implements Serializable {
 
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
+    }
+
+    public String getCodigoDire() {
+        return codigoDire;
+    }
+
+    public void setCodigoDire(String codigoDire) {
+        this.codigoDire = codigoDire;
     }
 }

@@ -5,6 +5,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -50,4 +51,12 @@ public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
      * @throws Exception
      */
     boolean eliminarAnexoRegistroDetalle(Long idAnexo, Long idRegistroDetalle, Long idEntidad) throws Exception, I18NException;
+
+    /**
+     * Obtiene todos los identificadores de los registros detalle que se han confirmado en destino (aceptado).
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+     Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception;
 }

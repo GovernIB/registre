@@ -41,6 +41,21 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = "regweb3/SignatureServerEJB/local")
     public SignatureServerLocal signatureServerEjb;
 
+    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    private EntidadLocal entidadEjb;
+
+    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
+    private UsuarioEntidadLocal usuarioEntidadEjb;
+
+    @EJB(mappedName = "regweb3/OficinaEJB/local")
+    private OficinaLocal oficinaEjb;
+
+    @EJB(mappedName = "regweb3/LibroEJB/local")
+    private LibroLocal libroEjb;
+
+    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
     InteresadoValidator<Interesado> interesadoValidator = new InteresadoValidator<Interesado>();
@@ -201,6 +216,23 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
     }
 
+    /**
+     * Valida la obligatoriedad de los campos
+     * @param numeroRegistro
+     * @param entidad
+     * @param libro
+     * @throws org.fundaciobit.genapp.common.i18n.I18NException
+     */
+    protected void validarObligatorios(String numeroRegistro, String entidad, String libro) throws  I18NException, Exception{
+
+        validarObligatorios(numeroRegistro,entidad);
+
+        if(StringUtils.isEmpty(libro)){
+            throw new I18NException("error.valor.requerido.ws", "libro");
+        }
+
+    }
+
 
 
     /**
@@ -220,6 +252,9 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         }
         return organismosId;
     }
+
+
+
 
 
 }

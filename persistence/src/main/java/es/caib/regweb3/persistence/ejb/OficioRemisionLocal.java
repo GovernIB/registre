@@ -194,4 +194,22 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
      * @throws Exception
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Obtiene el oficio de Remisión a partir de un numero de registro formateado
+     * @param numeroRegistroFormateado
+     * @return
+     */
+    OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, String entidad,String libro) throws Exception;
+
+    /**
+     * Genera el pdf del oficio de remisión para obtenerlo via WS
+     * @param oficioRemision
+     * @param modeloOficioRemision
+     * @param registrosEntrada
+     * @param registrosSalida
+     * @return
+     * @throws Exception
+     */
+    byte[] generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception;
 }

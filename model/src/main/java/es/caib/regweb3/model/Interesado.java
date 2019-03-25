@@ -85,6 +85,10 @@ public class Interesado implements Serializable {
     private boolean guardarInteresado;
     @XmlTransient
     private Long entidad;
+
+    //Metadatos nueva arquitectura SIR
+    @XmlTransient
+    private String codigoDire;
     
     
     public Interesado() {
@@ -118,6 +122,7 @@ public class Interesado implements Serializable {
         this.tipo = tipo;
         this.razonSocial = razonSocial;
         this.email = email;
+
     }
 
 
@@ -207,6 +212,7 @@ public class Interesado implements Serializable {
       //this.registroDetalle = i.registroDetalle;
       this.guardarInteresado = i.guardarInteresado;
       this.entidad = i.entidad;
+      this.codigoDire = i.codigoDire;
     }
 
     
@@ -451,6 +457,16 @@ public class Interesado implements Serializable {
 
     public void setRegistroDetalle(RegistroDetalle registroDetalle) {
         this.registroDetalle = registroDetalle;
+    }
+
+
+    @Column(name = "CODIGODIRE", length = 15)
+    public String getCodigoDire() {
+        return codigoDire;
+    }
+
+    public void setCodigoDire(String codigoDire) {
+        this.codigoDire = codigoDire;
     }
 
     @Transient

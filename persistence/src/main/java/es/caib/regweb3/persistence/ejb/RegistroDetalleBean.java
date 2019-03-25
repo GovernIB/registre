@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -11,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -109,6 +111,29 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
 
         registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
         registrosDetalle.addAll(em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad").setParameter("idEntidad",idEntidad).getResultList()) ;
+
+        return registrosDetalle;
+    }
+
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Set<Long> getRegistrosDetalleConfirmados(Long idEntidad, Date fecha) throws Exception{
+        Set<Long> registrosDetalle = new HashSet<Long>();
+        //Obtenemos los registros detalle de los registros de entrada que se han aceptado
+        Query query = em.createQuery("Select distinct(registroDetalle.id) from RegistroEntrada where usuario.entidad.id = :idEntidad and estado =:aceptado");
+        query.setParameter("idEntidad",idEntidad);
+        query.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+        registrosDetalle.addAll(query.getResultList());
+
+        //Obtenemos los registros detalle de los registros de salida que se han aceptado
+        Query queryS = em.createQuery("Select distinct(registroDetalle.id) from RegistroSalida where usuario.entidad.id = :idEntidad and estado =:aceptado");
+        queryS.setParameter("idEntidad",idEntidad);
+        queryS.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+        registrosDetalle.addAll(queryS.getResultList());
+
+        registrosDetalle.addAll(queryS.getResultList()) ;
 
         return registrosDetalle;
     }

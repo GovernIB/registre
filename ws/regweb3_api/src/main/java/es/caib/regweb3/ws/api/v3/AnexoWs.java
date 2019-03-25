@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 
 
 /**
- * <p>Java class for anexoWs complex type.
+ * <p>Clase Java para anexoWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="anexoWs">
@@ -79,7 +79,7 @@ public class AnexoWs {
     protected String csv;
 
     /**
-     * Gets the value of the titulo property.
+     * Obtiene el valor de la propiedad titulo.
      * 
      * @return
      *     possible object is
@@ -91,7 +91,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the titulo property.
+     * Define el valor de la propiedad titulo.
      * 
      * @param value
      *     allowed object is
@@ -103,7 +103,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the nombreFicheroAnexado property.
+     * Obtiene el valor de la propiedad nombreFicheroAnexado.
      * 
      * @return
      *     possible object is
@@ -115,7 +115,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the nombreFicheroAnexado property.
+     * Define el valor de la propiedad nombreFicheroAnexado.
      * 
      * @param value
      *     allowed object is
@@ -127,7 +127,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the ficheroAnexado property.
+     * Obtiene el valor de la propiedad ficheroAnexado.
      * 
      * @return
      *     possible object is
@@ -138,18 +138,18 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the ficheroAnexado property.
+     * Define el valor de la propiedad ficheroAnexado.
      * 
      * @param value
      *     allowed object is
      *     byte[]
      */
     public void setFicheroAnexado(byte[] value) {
-        this.ficheroAnexado = ((byte[]) value);
+        this.ficheroAnexado = value;
     }
 
     /**
-     * Gets the value of the tipoMIMEFicheroAnexado property.
+     * Obtiene el valor de la propiedad tipoMIMEFicheroAnexado.
      * 
      * @return
      *     possible object is
@@ -161,7 +161,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the tipoMIMEFicheroAnexado property.
+     * Define el valor de la propiedad tipoMIMEFicheroAnexado.
      * 
      * @param value
      *     allowed object is
@@ -173,7 +173,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the tipoDocumental property.
+     * Obtiene el valor de la propiedad tipoDocumental.
      * 
      * @return
      *     possible object is
@@ -185,7 +185,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the tipoDocumental property.
+     * Define el valor de la propiedad tipoDocumental.
      * 
      * @param value
      *     allowed object is
@@ -197,7 +197,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the validezDocumento property.
+     * Obtiene el valor de la propiedad validezDocumento.
      * 
      * @return
      *     possible object is
@@ -209,7 +209,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the validezDocumento property.
+     * Define el valor de la propiedad validezDocumento.
      * 
      * @param value
      *     allowed object is
@@ -221,7 +221,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the tipoDocumento property.
+     * Obtiene el valor de la propiedad tipoDocumento.
      * 
      * @return
      *     possible object is
@@ -233,7 +233,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the tipoDocumento property.
+     * Define el valor de la propiedad tipoDocumento.
      * 
      * @param value
      *     allowed object is
@@ -245,7 +245,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the observaciones property.
+     * Obtiene el valor de la propiedad observaciones.
      * 
      * @return
      *     possible object is
@@ -257,7 +257,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the observaciones property.
+     * Define el valor de la propiedad observaciones.
      * 
      * @param value
      *     allowed object is
@@ -269,7 +269,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the origenCiudadanoAdmin property.
+     * Obtiene el valor de la propiedad origenCiudadanoAdmin.
      * 
      * @return
      *     possible object is
@@ -281,7 +281,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the origenCiudadanoAdmin property.
+     * Define el valor de la propiedad origenCiudadanoAdmin.
      * 
      * @param value
      *     allowed object is
@@ -293,7 +293,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the fechaCaptura property.
+     * Obtiene el valor de la propiedad fechaCaptura.
      * 
      * @return
      *     possible object is
@@ -305,7 +305,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the fechaCaptura property.
+     * Define el valor de la propiedad fechaCaptura.
      * 
      * @param value
      *     allowed object is
@@ -317,7 +317,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the modoFirma property.
+     * Obtiene el valor de la propiedad modoFirma.
      * 
      * @return
      *     possible object is
@@ -329,7 +329,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the modoFirma property.
+     * Define el valor de la propiedad modoFirma.
      * 
      * @param value
      *     allowed object is
@@ -341,7 +341,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the nombreFirmaAnexada property.
+     * Obtiene el valor de la propiedad nombreFirmaAnexada.
      * 
      * @return
      *     possible object is
@@ -353,7 +353,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the nombreFirmaAnexada property.
+     * Define el valor de la propiedad nombreFirmaAnexada.
      * 
      * @param value
      *     allowed object is
@@ -365,7 +365,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the firmaAnexada property.
+     * Obtiene el valor de la propiedad firmaAnexada.
      * 
      * @return
      *     possible object is
@@ -376,18 +376,18 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the firmaAnexada property.
+     * Define el valor de la propiedad firmaAnexada.
      * 
      * @param value
      *     allowed object is
      *     byte[]
      */
     public void setFirmaAnexada(byte[] value) {
-        this.firmaAnexada = ((byte[]) value);
+        this.firmaAnexada = value;
     }
 
     /**
-     * Gets the value of the tipoMIMEFirmaAnexada property.
+     * Obtiene el valor de la propiedad tipoMIMEFirmaAnexada.
      * 
      * @return
      *     possible object is
@@ -399,7 +399,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the tipoMIMEFirmaAnexada property.
+     * Define el valor de la propiedad tipoMIMEFirmaAnexada.
      * 
      * @param value
      *     allowed object is
@@ -411,7 +411,7 @@ public class AnexoWs {
     }
 
     /**
-     * Gets the value of the csv property.
+     * Obtiene el valor de la propiedad csv.
      * 
      * @return
      *     possible object is
@@ -423,7 +423,7 @@ public class AnexoWs {
     }
 
     /**
-     * Sets the value of the csv property.
+     * Define el valor de la propiedad csv.
      * 
      * @param value
      *     allowed object is
