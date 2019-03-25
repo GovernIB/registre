@@ -375,8 +375,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException {
 
+        log.info("entro en findByNumeroRegistroFormateadoConAnexos");
         RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado,codigoLibro);
         if(registroSalida!= null){
+            log.info("entro en registro salida no null" + registroSalida.getId());
             return cargarAnexosFull(registroSalida);
         }else{
             return null;

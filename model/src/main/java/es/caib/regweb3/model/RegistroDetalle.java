@@ -93,6 +93,15 @@ public class RegistroDetalle implements Serializable {
     @Transient
     private List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
 
+    //Metadatos nueva arquitectura SIR
+    @XmlTransient
+    private Long codigoSia;
+    @XmlTransient
+    private boolean presencial;
+    @XmlTransient
+    private String tipoEnvioDocumentacion;
+    // Fin Metadatos nueva arquitectura SIR
+
 
     public RegistroDetalle() {
     }
@@ -136,6 +145,9 @@ public class RegistroDetalle implements Serializable {
       this.codigoEntidadRegistralDestino = rd.getCodigoEntidadRegistralDestino();
       this.decodificacionEntidadRegistralDestino = rd.getDecodificacionEntidadRegistralDestino();
       this.identificadorIntercambio = rd.getIdentificadorIntercambio();
+      this.codigoSia = rd.getCodigoSia();
+      this.presencial = rd.isPresencial();
+      this.tipoEnvioDocumentacion = rd.getTipoEnvioDocumentacion();
     }
 
     /**
@@ -439,6 +451,34 @@ public class RegistroDetalle implements Serializable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+
+    @Column(name = "CODIGOSIA")
+    public Long getCodigoSia() {
+        return codigoSia;
+    }
+
+    public void setCodigoSia(Long codigoSia) {
+        this.codigoSia = codigoSia;
+    }
+
+    @Column(name = "PRESENCIAL")
+    public boolean isPresencial() {
+        return presencial;
+    }
+
+    public void setPresencial(boolean presencial) {
+        this.presencial = presencial;
+    }
+
+    @Column(name = "TIPOENVIODOC")
+    public String getTipoEnvioDocumentacion() {
+        return tipoEnvioDocumentacion;
+    }
+
+    public void setTipoEnvioDocumentacion(String tipoEnvioDocumentacion) {
+        this.tipoEnvioDocumentacion = tipoEnvioDocumentacion;
     }
 
     @Transient

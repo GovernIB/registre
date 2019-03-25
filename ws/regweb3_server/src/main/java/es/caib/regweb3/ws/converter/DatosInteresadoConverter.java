@@ -94,6 +94,7 @@ public class DatosInteresadoConverter extends CommonConverter {
         }
 
         if(StringUtils.isNotEmpty(datosInteresadoWs.getRazonSocial())){interesado.setRazonSocial(datosInteresadoWs.getRazonSocial());}
+        if(StringUtils.isNotEmpty(datosInteresadoWs.getCodigoDire())){interesado.setCodigoDire(datosInteresadoWs.getCodigoDire());}
         if(datosInteresadoWs.getPais() != null){interesado.setPais(getPais(datosInteresadoWs.getPais(), catPaisEjb));}
         if(datosInteresadoWs.getProvincia() != null){interesado.setProvincia(getProvincia(datosInteresadoWs.getProvincia(), catProvinciaEjb));}
         if(datosInteresadoWs.getLocalidad() != null && datosInteresadoWs.getProvincia() != null){interesado.setLocalidad(getLocalidad(datosInteresadoWs.getLocalidad(), datosInteresadoWs.getProvincia(), catLocalidadEjb));}
@@ -132,6 +133,7 @@ public class DatosInteresadoConverter extends CommonConverter {
 
         if(StringUtils.isNotEmpty(interesado.getDocumento())){datosInteresadoWs.setDocumento(interesado.getDocumento());}
         if(StringUtils.isNotEmpty(interesado.getRazonSocial())){datosInteresadoWs.setRazonSocial(interesado.getRazonSocial());}
+        if(StringUtils.isNotEmpty(interesado.getCodigoDire())){datosInteresadoWs.setCodigoDire(interesado.getCodigoDire());}
         if(interesado.getPais() != null){datosInteresadoWs.setPais(interesado.getPais().getCodigoPais());}
         if(interesado.getProvincia() != null){datosInteresadoWs.setProvincia(interesado.getProvincia().getCodigoProvincia());}
         if(interesado.getLocalidad() != null && interesado.getProvincia() != null){datosInteresadoWs.setLocalidad(interesado.getLocalidad().getCodigoLocalidad());}

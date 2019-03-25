@@ -197,18 +197,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-xs-6 senseMargeLat">
-                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="razonSocial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.razon.interesado"/>" data-toggle="popover"><spring:message code="persona.razonSocial"/></label>
-                            </div>
-                            <div class="col-xs-8">
-                                <input id="razonSocial" name="razonSocial" class="form-control" tabindex="14" type="text" value="" maxlength="80" disabled="disabled"/>
-                                <span id="razonSocialError"></span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                 <label for="direccionElectronica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.direccionElectronica.interesado"/>" data-toggle="popover"><spring:message code="persona.direccionElectronica"/></label>
@@ -218,7 +207,30 @@
                                 <span id="direccionElectronicaError"></span>
                             </div>
                         </div>
+                    </div>
 
+                    <div class="col-xs-12">
+                        <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="razonSocial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.razon.interesado"/>" data-toggle="popover"><spring:message code="persona.razonSocial"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <input id="razonSocial" name="razonSocial" class="form-control" tabindex="14" type="text" value="" maxlength="80" disabled="disabled"/>
+                                <span id="razonSocialError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-xs-6 senseMargeLat">
+                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                <label for="codigoDire" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoDIRe.interesado"/>" data-toggle="popover"><spring:message code="persona.codigoDire"/></label>
+                            </div>
+                            <div class="col-xs-8">
+                                <input id="codigoDire" name="codigoDire" class="form-control" tabindex="14" type="text" value="" maxlength="80" disabled="disabled"/>
+                                <span id="codigoDireError"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12">
                         <div class="form-group col-xs-6 senseMargeLat">
                             <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                 <label for="observaciones" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.interesado"/>" data-toggle="popover"><spring:message code="interesado.observaciones"/></label>

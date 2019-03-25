@@ -344,6 +344,7 @@ function editarInteresado(id){
 
             $('#direccion').val(result.direccion);
             $('#razonSocial').val(result.razonSocial);
+            $('#codigoDire').val(result.codigoDire);
             $('#direccionElectronica').val(result.direccionElectronica);
             $('#email').val(result.email);
             $('#cp').val(result.cp);
@@ -405,7 +406,7 @@ function procesarInteresado() {
     var url = $("#interesadoForm").attr("action").concat('/'+accion).concat('/'+idRegistroDetalle);
 
     var json = { "id": $('#id').val(), "tipo": $('#tipo').val(), "nombre" : $('#nombre').val(), "apellido1" : $('#apellido1').val(), "apellido2" : $('#apellido2').val(),"tipoDocumentoIdentificacion": $('#tipoDocumentoIdentificacion').val(), "documento" : $('#documento').val(),
-        "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
+        "pais" : $('#pais\\.id').val(),"provincia" : $('#provincia\\.id').val(), "localidad" : $('#localidad\\.id').val(), "direccion" : $('#direccion').val(), "razonSocial": $('#razonSocial').val(),"codigoDire": $('#codigoDire').val(), "email" : $('#email').val(), "cp" : $('#cp').val(), "telefono" : $('#telefono').val(),
         "direccionElectronica":$('#direccionElectronica').val(),"canal":$('#canal').val(), "observaciones":$('#observaciones').val(), "guardarInteresado":$('#guardarInteresado').prop('checked'), "isRepresentante" : $('#isRepresentante').val()};
 
     if($('#isRepresentante').val() == 'true'){ // Si es un representate, le añadimos a que persona representa
@@ -512,6 +513,7 @@ function quitarErroresInteresado(){
     quitarError('nombre');
     quitarError('apellido1');
     quitarError('razonSocial');
+    quitarError('codigoDire');
     quitarError('email');
     quitarError('documento');
     quitarError('direccion');
@@ -891,6 +893,7 @@ function camposTipoPersona(tipoInteresado){
     if(tipoInteresado == 2){ //Persona fisica
 
         $('#razonSocial').attr("disabled", "disabled");
+        $('#codigoDire').attr("disabled", "disabled");
         $('#nombre').removeAttr("disabled", "disabled");
         $('#apellido1').removeAttr("disabled", "disabled");
         $('#apellido2').removeAttr("disabled", "disabled");
@@ -905,6 +908,7 @@ function camposTipoPersona(tipoInteresado){
     if(tipoInteresado == 3){ //Persona juridica
 
         $('#razonSocial').removeAttr("disabled", "disabled");
+        $('#codigoDire').removeAttr("disabled", "disabled");
         $('#nombre').attr("disabled", "disabled");
         $('#apellido1').attr("disabled", "disabled");
         $('#apellido2').attr("disabled", "disabled");
@@ -1132,6 +1136,7 @@ function obtenerInteresado(idInteresado){
 
             $('#direccion').html(result.direccion);
             $('#razonSocial').html(result.razonSocial);
+            $('#codigoDire').html(result.codigoDire);
             $('#direccionElectronica').html(result.direccionElectronica);
             $('#email').html(result.email);
             $('#cp').html(result.cp);
@@ -1165,6 +1170,7 @@ function limpiarInteresadoDetalle(){
     $('#direccion').html('');
     $('#cp').html('');
     $('#razonSocial').html('');
+    $('#codigoDire').html('');
     $('#direccionElectronica').html('');
     $('#observaciones').html('');
 }

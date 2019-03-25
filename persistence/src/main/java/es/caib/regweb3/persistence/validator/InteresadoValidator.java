@@ -166,9 +166,21 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_CIF_ID && isNullOrEmpty(interesado.getRazonSocial())){
                 rejectValue(errors, "razonSocial", "error.valor.requerido", "El camp és obligatori");
             }
+            // Si TipoDocumento = NIF -> Documento es obligatorio
+            if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_NIF_ID && isNullOrEmpty(interesado.getDocumento())){
+                rejectValue(errors, "documento", "error.valor.requerido", "El camp és obligatori");
+            }
 
             rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
+        }else{
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
+                log.info("Entro en tipo persona fisica");
+                rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
+                rejectValue(errors, "documento", "error.valor.requerido", "El camp és obligatori");
+            }
+
         }
+
 
         if(tipoDocumento != null && StringUtils.isNotEmpty(interesado.getDocumento())) {
 

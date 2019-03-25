@@ -2,9 +2,9 @@ package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.model.ModeloOficioRemision;
 import es.caib.regweb3.model.OficioRemision;
+import es.caib.regweb3.utils.CombineStream;
+import es.caib.regweb3.utils.ConvertirTexto;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.utils.CombineStream;
-import es.caib.regweb3.webapp.utils.ConvertirTexto;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.view.AbstractView;

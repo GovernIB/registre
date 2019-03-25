@@ -112,6 +112,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setRegistroDetalle(new RegistroDetalle());
         registroSalida.setOficina(oficina);
+        registroSalida.getRegistroDetalle().setPresencial(true);
 
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_SALIDA);
@@ -495,6 +496,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
         RegistroSalida registroSalida =  new RegistroSalida();
         RegistroDetalle registroDetalle = new RegistroDetalle();
+        registroSalida.getRegistroDetalle().setPresencial(true);
 
         // Recuperamos los valores de la Plantilla
         PlantillaJson plantillaJson = RegistroUtils.desSerilizarPlantillaXml(plantilla.getRepro());
