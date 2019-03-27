@@ -28,21 +28,9 @@ public interface AsientoRegistralWs {
     @WebMethod
     es.caib.regweb3.ws.model.AsientoRegistralWs crearAsientoRegistral(
             @WebParam(name = "entidad")String entidad,
-            @WebParam(name = "asientoRegistral") es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral)throws Throwable, WsI18NException, WsValidationException;
+            @WebParam(name = "asientoRegistral") es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral,
+            @WebParam(name = "tipoOperacion") Long tipoOperacion)throws Throwable, WsI18NException, WsValidationException;
 
-    /**
-     * Crea un {@link es.caib.regweb3.ws.model.AsientoRegistralWs } de tipo Salida y lo notificará o lo comunicará en
-     * función del tipo de operación indicada (1= Notificación, 2= Comunicación)
-     * Este método lo invocarà la aplicación NOTIB.
-     * @param entidad
-     * @param asientoRegistral
-     * @return
-     */
-    @WebMethod
-    es.caib.regweb3.ws.model.AsientoRegistralWs salidaAsientoRegistral(
-       @WebParam(name = "entidad")String entidad,
-       @WebParam(name = "asientoRegistral") es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral,
-       @WebParam(name = "tipoOperacion") Long tipoOperacion)throws Throwable, WsI18NException, WsValidationException;
 
     /**
      * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs }
