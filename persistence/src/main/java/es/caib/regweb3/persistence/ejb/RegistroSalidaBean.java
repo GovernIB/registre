@@ -273,6 +273,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             where.add(" registroSalida.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
         }
 
+        //Presencial
+        if(registroSalida.getRegistroDetalle().getPresencial() != null){
+            where.add(" registroSalida.registroDetalle.presencial = :presencial ");
+            parametros.put("presencial", registroSalida.getRegistroDetalle().getPresencial());
+        }
+
         // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
             query.append("where ");

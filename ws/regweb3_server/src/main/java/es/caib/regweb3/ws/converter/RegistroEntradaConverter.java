@@ -45,6 +45,7 @@ public class RegistroEntradaConverter extends CommonConverter {
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
+        registroDetalle.setPresencial(false);
 
         if (destinoInterno == null) {
             registroEntrada.setDestino(null);

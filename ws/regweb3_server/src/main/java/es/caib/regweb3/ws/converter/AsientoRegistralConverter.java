@@ -220,7 +220,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       }
 
       asientoRegistral.setCodigoSia(registroDetalle.getCodigoSia());
-      asientoRegistral.setPresencial(registroDetalle.isPresencial());
+      asientoRegistral.setPresencial(registroDetalle.getPresencial());
       asientoRegistral.setTipoEnvioDocumentacion(registroDetalle.getTipoEnvioDocumentacion());
 
       //Campos de SIR

@@ -44,6 +44,7 @@ public class RegistroSalidaConverter extends CommonConverter {
 
         RegistroSalida registroSalida = new RegistroSalida();
         RegistroDetalle registroDetalle = new RegistroDetalle();
+        registroDetalle.setPresencial(false);
 
         registroSalida.setOrigen(organismo);
         registroSalida.setOficina(oficina);

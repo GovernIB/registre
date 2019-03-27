@@ -53,7 +53,7 @@ public class AsientoRegistralWs {
     private String solicita;
     private List<InteresadoWs> interesados;
     private List<AnexoWs> anexos;
-    private boolean presencial;
+    private Boolean presencial;
 
     private Long estado;
 
@@ -381,11 +381,11 @@ public class AsientoRegistralWs {
         this.anexos = anexos;
     }
 
-    public boolean isPresencial() {
+    public Boolean getPresencial() {
         return presencial;
     }
 
-    public void setPresencial(boolean presencial) {
+    public void setPresencial(Boolean presencial) {
         this.presencial = presencial;
     }
 
