@@ -272,6 +272,20 @@
                                         <form:checkbox path="anexos"/>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-xs-12">
+                               <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroEntrada.registroDetalle.presencial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.presencial"/>" data-toggle="popover"><spring:message code="registro.presencial"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroEntrada.registroDetalle.presencial" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <form:option value="true"><spring:message code="regweb.si"/></form:option>
+                                            <form:option value="false"><spring:message code="regweb.no"/></form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
                                 <div class="col-xs-6 espaiLinies"><div class="col-xs-12">&nbsp;</div></div>
                             </div>
 
@@ -342,6 +356,7 @@
                                                         <col>
                                                         <col>
                                                         <col>
+                                                        <col>
                                                         <col width="125">
                                                     </colgroup>
                                                     <thead>
@@ -350,7 +365,7 @@
                                                             <th class="center"><spring:message code="registroEntrada.fecha"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.usuario"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.oficina"/></th>
-                                                            <th class="center"><spring:message code="organismo.destino"/></th>
+                                                            <th class="center"><spring:message code="organismo.destino.corto"/></th>
                                                             <c:if test="${registroEntradaBusqueda.registroEntrada.estado == 2}">
                                                                 <th class="center"><spring:message code="registroEntrada.reserva"/></th>
                                                             </c:if>
@@ -361,6 +376,7 @@
                                                             <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                             <th class="center">Doc.</th>
                                                             <th class="center"><spring:message code="registroEntrada.anexos"/></th>
+                                                            <th class="center"><spring:message code="registro.presencial"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
@@ -427,7 +443,14 @@
                                                                 <c:if test="${registro.registroDetalle.anexos == null}">
                                                                     <td class="center">0</td>
                                                                 </c:if>
-
+                                                                <td class="center">
+                                                                    <c:if test="${registro.registroDetalle.presencial}">
+                                                                        <span class="label label-success"><spring:message code="regweb.si"/></span>
+                                                                    </c:if>
+                                                                    <c:if test="${not registro.registroDetalle.presencial}">
+                                                                        <span class="label label-danger"><spring:message code="regweb.no"/></span>
+                                                                    </c:if>
+                                                                </td>
                                                                 <td class="center">
                                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                                     <%--Acciones según el estado--%>

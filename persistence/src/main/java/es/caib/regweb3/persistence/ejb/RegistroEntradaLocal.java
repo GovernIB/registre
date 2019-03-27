@@ -373,6 +373,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws Exception;
 
     /**
+     *
+     * @param idEntidad
+     * @param documento
+     * @return
+     * @throws Exception
+     */
+    List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws Exception;
+
+    /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re

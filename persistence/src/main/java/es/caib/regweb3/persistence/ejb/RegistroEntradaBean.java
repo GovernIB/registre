@@ -286,6 +286,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             where.add(" registroEntrada.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
         }
 
+        //Presencial
+        if(re.getRegistroDetalle().getPresencial() != null){
+            where.add(" registroEntrada.registroDetalle.presencial = :presencial ");
+            parametros.put("presencial", re.getRegistroDetalle().getPresencial());
+        }
+
         // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
 
@@ -1040,6 +1046,21 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return registroEntrada;
     }
 
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("documento", documento.trim());
+
+        return q.getResultList();
+    }
 
 
     public void postProcesoActualizarRegistro(RegistroEntrada re,Long entidadId) throws Exception, I18NException {

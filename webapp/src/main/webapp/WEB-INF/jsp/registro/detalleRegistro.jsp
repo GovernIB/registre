@@ -48,6 +48,12 @@
 <c:if test="${not empty registro.registroDetalle.codigoSia}"> <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.codigoSIA"/>: </dt> <dd> ${registro.registroDetalle.codigoSia}</dd></c:if>
 <c:if test="${not empty registro.registroDetalle.observaciones}"> <dt><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.observaciones"/>: </dt> <dd> ${registro.registroDetalle.observaciones}</dd></c:if>
 <hr class="${divider}">
+<c:if test="${registro.registroDetalle.presencial}">
+    <dt><i class="fa fa-user"></i> <spring:message code="registro.presencial"/>: </dt> <dd> <span class="label label-success"><spring:message code="regweb.si"/></span></dd>
+</c:if>
+<c:if test="${not registro.registroDetalle.presencial}">
+    <dt><i class="fa fa-user"></i> <spring:message code="registro.presencial"/>: </dt> <dd> <span class="label label-danger"><spring:message code="regweb.no" /></span></dd>
+</c:if>
 <dt><i class="fa fa-gears"></i> <spring:message code="registroEntrada.aplicacion"/>: </dt> <dd> ${registro.registroDetalle.aplicacion} ${registro.registroDetalle.version}</dd>
 <dt><i class="fa fa-bookmark"></i> <spring:message code="registroEntrada.estado"/>: </dt>
 <dd class="eti-rechazo">

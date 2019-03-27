@@ -97,7 +97,7 @@ public class RegistroDetalle implements Serializable {
     @XmlTransient
     private Long codigoSia;
     @XmlTransient
-    private boolean presencial;
+    private Boolean presencial;
     @XmlTransient
     private String tipoEnvioDocumentacion;
     // Fin Metadatos nueva arquitectura SIR
@@ -146,7 +146,7 @@ public class RegistroDetalle implements Serializable {
       this.decodificacionEntidadRegistralDestino = rd.getDecodificacionEntidadRegistralDestino();
       this.identificadorIntercambio = rd.getIdentificadorIntercambio();
       this.codigoSia = rd.getCodigoSia();
-      this.presencial = rd.isPresencial();
+      this.presencial = rd.getPresencial();
       this.tipoEnvioDocumentacion = rd.getTipoEnvioDocumentacion();
     }
 
@@ -464,11 +464,11 @@ public class RegistroDetalle implements Serializable {
     }
 
     @Column(name = "PRESENCIAL")
-    public boolean isPresencial() {
+    public Boolean getPresencial() {
         return presencial;
     }
 
-    public void setPresencial(boolean presencial) {
+    public void setPresencial(Boolean presencial) {
         this.presencial = presencial;
     }
 

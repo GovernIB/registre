@@ -114,7 +114,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Oficina oficina = getOficinaActiva(request);
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
-        registroEntrada.setRegistroDetalle(new RegistroDetalle());
         registroEntrada.setOficina(oficina);
         registroEntrada.getRegistroDetalle().setPresencial(true);
 
@@ -588,7 +587,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         RegistroDetalle registroDetalle = new RegistroDetalle();
-        registroEntrada.getRegistroDetalle().setPresencial(true);
+        registroDetalle.setPresencial(true);
 
         // Recuperamos los valores de la Plantilla
         PlantillaJson plantillaJson = RegistroUtils.desSerilizarPlantillaXml(plantilla.getRepro());
