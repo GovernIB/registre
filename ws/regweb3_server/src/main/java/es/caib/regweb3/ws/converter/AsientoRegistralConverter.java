@@ -2,10 +2,7 @@ package es.caib.regweb3.ws.converter;
 
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
-import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
@@ -138,7 +135,7 @@ public class AsientoRegistralConverter extends CommonConverter {
 
 
    public static AsientoRegistralWs getAsientoRegistralBean(RegistroEntrada registroEntrada,
-                                                            String idioma, OficioRemisionLocal oficioRemisionEjb) throws Exception, I18NException {
+                                                            String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
 
       if (registroEntrada == null) {
          return null;
@@ -223,25 +220,40 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setPresencial(registroDetalle.getPresencial());
       asientoRegistral.setTipoEnvioDocumentacion(registroDetalle.getTipoEnvioDocumentacion());
 
-      //Campos de SIR
-      //Campos de SIR TODO Mirar trazabilidad y posibles estados del registro y obtener la info de la trazabilidad y el oficio de Remisión
-     /* if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_SIR)){
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(),registroEntrada.getOficina().getCodigo());
-            if(oficioRemision!=null) {
-               asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
-               asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
-               asientoRegistral.setMotivo("");// TODO EDU No se de donde sacar esto???
+      if (registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_ACEPTADO)) {
+         OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), registroEntrada.getOficina().getCodigo());
+         if (oficioRemision != null) {
+            asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
+            asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
+         }
+      } else if (registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)) {
+
+         List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
+
+         for (TrazabilidadSir trazaSir : trazabilidades) {
+            if (RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO.equals(trazaSir.getTipo())) {
+               asientoRegistral.setMotivo(trazaSir.getObservaciones());
             }
-      }*/
+         }
+
+      } else if (registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)) {
+         List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
+
+         for (TrazabilidadSir trazaSir : trazabilidades) {
+            if (RegwebConstantes.TRAZABILIDAD_SIR_REENVIO.equals(trazaSir.getTipo())) {
+               asientoRegistral.setMotivo(trazaSir.getObservaciones());
+            }
+         }
+      }
 
       return asientoRegistral;
 
    }
 
    public static AsientoRegistralWs getAsientoRegistralBeanConAnexos(RegistroEntrada registroEntrada,
-                                                                     String idioma, OficioRemisionLocal oficioRemisionEjb, AnexoLocal anexoEjb) throws Exception, I18NException {
+                                                                     String idioma, OficioRemisionLocal oficioRemisionEjb, AnexoLocal anexoEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
 
-      AsientoRegistralWs asientoRegistral = getAsientoRegistralBean(registroEntrada,idioma,oficioRemisionEjb);
+      AsientoRegistralWs asientoRegistral = getAsientoRegistralBean(registroEntrada,idioma,oficioRemisionEjb, trazabilidadEjb);
 
       if(registroEntrada.getRegistroDetalle().getAnexos() != null){
          List<AnexoWs> anexosWs = procesarAnexosWs(registroEntrada.getRegistroDetalle().getAnexos(), anexoEjb, registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId());
@@ -259,7 +271,7 @@ public class AsientoRegistralConverter extends CommonConverter {
 
 
    public static AsientoRegistralWs getAsientoRegistralBean(RegistroSalida registroSalida,
-                                                            String idioma, OficioRemisionLocal oficioRemisionEjb) throws Exception, I18NException {
+                                                            String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
 
       if (registroSalida == null) {
          return null;
@@ -295,11 +307,11 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setIdioma(registroDetalle.getIdioma());
 
 
-      if(registroDetalle.getCodigoAsunto() != null){
+      if (registroDetalle.getCodigoAsunto() != null) {
          TraduccionCodigoAsunto traduccionCodigoAsunto = (TraduccionCodigoAsunto) registroDetalle.getCodigoAsunto().getTraduccion(idioma);
          asientoRegistral.setCodigoAsunto(registroDetalle.getCodigoAsunto().getCodigo());
          asientoRegistral.setCodigoAsuntoDenominacion(traduccionCodigoAsunto.getNombre());
-      }else{
+      } else {
          asientoRegistral.setCodigoAsunto(null);
          asientoRegistral.setCodigoAsuntoDenominacion(null);
       }
@@ -307,9 +319,9 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setReferenciaExterna(registroDetalle.getReferenciaExterna());
       asientoRegistral.setNumeroExpediente(registroDetalle.getExpediente());
 
-      if(registroDetalle.getTransporte() != null){
+      if (registroDetalle.getTransporte() != null) {
          asientoRegistral.setTipoTransporte(RegwebConstantes.CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
-      }else{
+      } else {
          asientoRegistral.setTipoTransporte(null);
 
       }
@@ -323,7 +335,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setSolicita(registroDetalle.getSolicita());
 
       //Interesados
-      if(registroDetalle.getInteresados() != null){
+      if (registroDetalle.getInteresados() != null) {
          List<InteresadoWs> interesadosWs = procesarInteresadosWs(registroDetalle.getInteresados());
 
          asientoRegistral.setInteresados(interesadosWs);
@@ -331,34 +343,51 @@ public class AsientoRegistralConverter extends CommonConverter {
 
 
       // Campos únicos de RegistroEntrada
-      if(registroSalida.getOrigen() != null ){
+      if (registroSalida.getOrigen() != null) {
          asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigen().getCodigo());
          asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigen().getDenominacion());
-      }else{
+      } else {
          asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigenExternoCodigo());
          asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigenExternoDenominacion());
       }
 
       asientoRegistral.setCodigoSia(registroDetalle.getCodigoSia());
 
-      //Campos de SIR TODO Mirar trazabilidad y posibles estados del registro y obtener la info de la trazabilidad y el oficio de Remisión
-     /* if(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_SIR)){
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(),registroSalida.getOficina().getCodigo());
-            if(oficioRemision!=null){
-               asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
-               asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
-               asientoRegistral.setMotivo("");// No se de donde sacar esto???
+
+      if (registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_ACEPTADO)) {
+         OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), registroSalida.getOficina().getCodigo());
+         if (oficioRemision != null) {
+            asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
+            asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
+         }
+      } else if (registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)) {
+
+         List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
+
+         for (TrazabilidadSir trazaSir : trazabilidades) {
+            if (RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO.equals(trazaSir.getTipo())) {
+               asientoRegistral.setMotivo(trazaSir.getObservaciones());
             }
-      }*/
+         }
+
+      } else if (registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)) {
+         List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
+
+         for (TrazabilidadSir trazaSir : trazabilidades) {
+            if (RegwebConstantes.TRAZABILIDAD_SIR_REENVIO.equals(trazaSir.getTipo())) {
+               asientoRegistral.setMotivo(trazaSir.getObservaciones());
+            }
+         }
+      }
 
       return asientoRegistral;
 
    }
 
    public static AsientoRegistralWs getAsientoRegistralBeanConAnexos(RegistroSalida registroSalida,
-                                                                     String idioma, OficioRemisionLocal oficioRemisionEjb, AnexoLocal anexoEjb) throws Exception, I18NException {
+                                                                     String idioma, OficioRemisionLocal oficioRemisionEjb, AnexoLocal anexoEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
 
-      AsientoRegistralWs asientoRegistral = getAsientoRegistralBean(registroSalida,idioma,oficioRemisionEjb);
+      AsientoRegistralWs asientoRegistral = getAsientoRegistralBean(registroSalida,idioma,oficioRemisionEjb,trazabilidadEjb);
 
       if(registroSalida.getRegistroDetalle().getAnexos() != null){
          List<AnexoWs> anexosWs = procesarAnexosWs(registroSalida.getRegistroDetalle().getAnexos(), anexoEjb, registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId());
