@@ -2,23 +2,17 @@ package es.caib.regweb3.webapp.view;
 
 import es.caib.regweb3.model.ModeloOficioRemision;
 import es.caib.regweb3.model.OficioRemision;
+import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.utils.CombineStream;
-import es.caib.regweb3.utils.ConvertirTexto;
-import es.caib.regweb3.utils.RegwebConstantes;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.view.AbstractView;
 
+import javax.ejb.EJB;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -29,6 +23,9 @@ import java.util.Map;
 public class OficioRemisionRtfView extends AbstractView {
 
     protected final Logger log = Logger.getLogger(getClass());
+
+    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    private OficioRemisionLocal oficioRemisionEjb;
 
     public OficioRemisionRtfView() {
         setContentType("text/rtf;charset=UTF-8");
@@ -46,104 +43,16 @@ public class OficioRemisionRtfView extends AbstractView {
 
 
         OficioRemision oficioRemision = (OficioRemision) model.get("oficioRemision");
+
         ModeloOficioRemision modeloOficioRemision = (ModeloOficioRemision) model.get("modeloOficioRemision");
-
-        File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
-
-        // Convertimos el archivo a array de bytes
-        byte[] datos = FileUtils.readFileToByteArray(archivo);
-        InputStream is = new ByteArrayInputStream(datos);
-        java.util.Hashtable<String,Object> ht = new java.util.Hashtable<String,Object>();
-
-        // Extraemos año de la fecha del registro
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        String anoOficio = formatYear.format(oficioRemision.getFecha());
-
-
-        // Fecha según el idioma y mes
-        Date dataActual = new Date();
-        SimpleDateFormat sdf1 = new SimpleDateFormat("dd");
-        SimpleDateFormat sdf2 = new SimpleDateFormat("MMMMM", new Locale("es"));
-        SimpleDateFormat sdf4 = new SimpleDateFormat("MMMMM", new Locale("ca"));
-        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy");
-        String diaRecibo = sdf1.format(dataActual);
-        String mesRecibo;
-        String anoRecibo = sdf3.format(dataActual);
-        String fechaActualCa;
-        String fechaActualEs;
-
-        // Fecha en castellano
-        mesRecibo = sdf2.format(dataActual);
-        fechaActualEs = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
-
-        // Fecha en catalán
-        mesRecibo = sdf4.format(dataActual);
-        if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
-            mesRecibo= " d'" + mesRecibo;
-        }else{
-            mesRecibo= " de " + mesRecibo;
-        }
-        fechaActualCa = diaRecibo + mesRecibo + " de " + anoRecibo;
-
-        // Registros
-        String registros = "";
-
-        if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
-
-            List<String> registrosEntrada = (List<String>) model.get("registrosEntrada");
-            for (String registroEntrada : registrosEntrada) {
-                registros = registros.concat("- " + registroEntrada + "\\\r\n");
-            }
-
-        }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
-
-            List<String> registrosSalida = (List<String>) model.get("registrosSalida");
-            for (String registroSalida : registrosSalida) {
-                registros = registros.concat("- " + registroSalida + "\\\r\n");
-            }
-        }
-
-
-        // Mapeamos los campos del rtf con los del registro
-        if(oficioRemision.getOrganismoDestinatario() != null) {
-            ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getOrganismoDestinatario().getDenominacion()));
-            String direccion = "";
-            if(oficioRemision.getOrganismoDestinatario().getNombreVia() != null){
-                direccion = direccion + oficioRemision.getOrganismoDestinatario().getNombreVia() + " ";
-            }
-            if(oficioRemision.getOrganismoDestinatario().getNumVia() != null){
-                direccion = direccion + oficioRemision.getOrganismoDestinatario().getNumVia() + " ";
-            }
-            if(oficioRemision.getOrganismoDestinatario().getCodPostal() != null){
-                direccion = direccion + "- " + oficioRemision.getOrganismoDestinatario().getCodPostal() + " ";
-            }
-            if(oficioRemision.getOrganismoDestinatario().getLocalidad() != null){
-                direccion = direccion + oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre();
-            }
-            ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(direccion));
-        } else{
-            ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getDestinoExternoDenominacion()));
-            ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(""));
-        }
-        ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
-        ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
-        ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
-        if(oficioRemision.getOficina().getLocalidad() != null){
-            ht.put("(localidadOficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getLocalidad().getNombre()));
-        }else{
-            ht.put("(localidadOficina)", "");
-        }
-        ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registros));
-        ht.put("(data)", ConvertirTexto.toCp1252(fechaActualCa));
-        ht.put("(fecha)", ConvertirTexto.toCp1252(fechaActualEs));
-
-        // Reemplaza el texto completo
-        ht.put("(read_only)", ConvertirTexto.getISOBytes("\\annotprot\\readprot\\enforceprot1\\protlevel3\\readonlyrecommended "));
-
-        CombineStream cs = new CombineStream(is, ht);
+        List<String> entradas = (List<String>) model.get("registrosEntrada");
+        List<String> salidas = (List<String>) model.get("registrosSalida");
+        CombineStream cs = oficioRemisionEjb.generarOficioRemisionRtf(oficioRemision,modeloOficioRemision, entradas,salidas);
 
         try {
         // Retornamos el archivo
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        String anoOficio = formatYear.format(oficioRemision.getFecha());
         String nombreFichero = "OficioRemision_"+ oficioRemision.getNumeroOficio()+ "/"+anoOficio +".rtf";
 
         response.setHeader("Content-Type", "text/rtf;charset=UTF-8");

@@ -7,7 +7,6 @@ import es.caib.regweb3.utils.ConvertirTexto;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -798,7 +797,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
-    public byte[] generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception{
+    public CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception{
 
 
             log.info("modeloOficioRemision  "+ modeloOficioRemision.getModelo());
@@ -890,9 +889,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             // Reemplaza el texto completo
             ht.put("(read_only)", ConvertirTexto.getISOBytes("\\annotprot\\readprot\\enforceprot1\\protlevel3\\readonlyrecommended "));
 
-            CombineStream cs = new CombineStream(is, ht);
+            return new CombineStream(is, ht);
 
-            return IOUtils.toByteArray(cs);
+
     }
 
 }
