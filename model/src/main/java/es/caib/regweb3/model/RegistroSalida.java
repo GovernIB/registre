@@ -52,7 +52,7 @@ public class RegistroSalida implements IRegistro {
      * 
      */
     public RegistroSalida() {
-      super();
+        this.registroDetalle = new RegistroDetalle();
     }
 
     public RegistroSalida(Long id) {
