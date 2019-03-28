@@ -18,6 +18,7 @@ import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.OficioWs;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -829,7 +830,8 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
             //Obtenemos el modelo asociado
             ModeloOficioRemision modeloOficioRemision = modeloOficioRemisionEjb.findById( modelos.get(0).getId());
             //Generamos el documento del oficio de remisión
-            return new OficioWs(oficioRemisionEjb.generarOficioRemisionRtf(oficio, modeloOficioRemision, registrosEntrada, registrosSalida));
+
+            return new OficioWs(IOUtils.toByteArray(oficioRemisionEjb.generarOficioRemisionRtf(oficio, modeloOficioRemision, registrosEntrada, registrosSalida)));
 
         }else{
             throw new Exception("La entidad no tiene ningún modelo de oficio de remisión y no se ha podido generar.");
