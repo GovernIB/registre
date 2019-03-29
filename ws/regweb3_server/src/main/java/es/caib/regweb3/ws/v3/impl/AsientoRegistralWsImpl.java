@@ -210,33 +210,27 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
 
         // 8.- Validar los Interesados
-        List<Interesado> interesados = null;
-       /* if(tipoOperacion == null) {
-            if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
-                // Procesamos los interesados
-                interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
-
-            } else {
-                throw new I18NException("interesado.registro.obligatorio");
-            }
-        }else{//Si se indica tipoOperacion, solo se permite un interesado
+        List<Interesado> interesados;
+        if(tipoOperacion!= null && TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación solo se permite un interesado
             if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
 
-                if(asientoRegistral.getInteresados().size() == 1) {
+                if (asientoRegistral.getInteresados().size() == 1) {
                     // Procesamos los interesados
                     interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
-                }else{
+                } else {
                     throw new I18NException("interesado.registro.obligatorio.uno");
                 }
 
             } else {
                 throw new I18NException("interesado.registro.obligatorio");
             }
-        }*/
-        for(InteresadoWs interesadoWs: asientoRegistral.getInteresados()){
-            if(TIPO_INTERESADO_ADMINISTRACION.equals(interesadoWs.getInteresado().getTipoInteresado())){
-                //Mirar si es SIR
+        }else{
+            if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
+                // Procesamos los interesados
+                interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
 
+            } else {
+                throw new I18NException("interesado.registro.obligatorio");
             }
         }
 
