@@ -47,7 +47,7 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
             Oficina oficinaActiva = loginInfo.getOficinaActiva();
             Entidad entidadActiva = loginInfo.getEntidadActiva();
 
-            if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+            if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                 return true;
             }
 

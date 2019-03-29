@@ -36,7 +36,7 @@ public class IntegracionInterceptor extends HandlerInterceptorAdapter {
         Entidad entidadActiva = loginInfo.getEntidadActiva();
 
         // Comprobamos que el usuario dispone del Rol RWE_ADMIN
-        if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+        if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             response.sendRedirect("/regweb3/aviso");

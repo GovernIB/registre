@@ -188,7 +188,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                 }
 
-                if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+                if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
 
 
 

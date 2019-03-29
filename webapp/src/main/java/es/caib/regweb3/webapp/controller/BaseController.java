@@ -132,7 +132,7 @@ public class BaseController {
      */
     protected Boolean isAdminEntidad(HttpServletRequest request){
 
-        return getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_ADMIN);
+        return getRolActivo(request).getNombre().equals(RegwebConstantes.RWE_ADMIN);
     }
 
     /**

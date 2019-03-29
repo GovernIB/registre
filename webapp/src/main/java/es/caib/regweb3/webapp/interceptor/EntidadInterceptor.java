@@ -46,7 +46,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Listado usuarios de la entidad
             if(url.equals("/entidad/usuarios")){
-                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");
@@ -56,14 +56,14 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Editar entidad
             if((url.contains("edit"))){
-                if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
+                if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
                     log.info("Error, editar entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.edit"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
                 //comprobar variable archivos path
-                if(FileSystemManager.getArchivosPath()==null && rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+                if(FileSystemManager.getArchivosPath()==null && rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                     log.info("Error, editar entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                     response.sendRedirect("/regweb3/aviso");
@@ -93,7 +93,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Permisos Usuario
             if((url.contains("permisos"))){
-                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                     log.info("Error, modificar permisos");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.permisos"));
                     response.sendRedirect("/regweb3/aviso");
@@ -113,7 +113,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Sincronizar/Actualizar organismos
             if((url.contains("actualizar") || url.contains("sincronizar"))){
-                if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+                if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
                     Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
                     if (catalogo == null) {
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
