@@ -136,6 +136,8 @@
             <role-name>RWE_SUPERADMIN</role-name>
             <role-name>RWE_ADMIN</role-name>
             <role-name>RWE_USUARI</role-name>
+            <role-name>RWE_WS_IN</role-name>
+            <role-name>RWE_WS_OUT</role-name>
 		</auth-constraint>
 	</security-constraint>
 
@@ -157,6 +159,16 @@
     <security-role>
         <description>Usuari de REGWEB3</description>
         <role-name>RWE_USUARI</role-name>
+    </security-role>
+
+    <security-role>
+        <description>Usuari de REGWEB3</description>
+        <role-name>RWE_WS_IN</role-name>
+    </security-role>
+
+    <security-role>
+        <description>Usuari de REGWEB3</description>
+        <role-name>RWE_WS_OUT</role-name>
     </security-role>
 
     <listener>

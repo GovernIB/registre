@@ -38,23 +38,20 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     public AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    public SignatureServerLocal signatureServerEjb;
-
     @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
+    public EntidadLocal entidadEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    private UsuarioEntidadLocal usuarioEntidadEjb;
+    public UsuarioEntidadLocal usuarioEntidadEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
+    public OficinaLocal oficinaEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
+    public LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
