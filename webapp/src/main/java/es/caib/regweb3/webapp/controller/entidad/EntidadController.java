@@ -645,7 +645,7 @@ public class EntidadController extends BaseController {
             return "redirect:/entidad/usuarios";
         }
 
-        if (roles.contains("RWE_USUARI") || !usuarioEntidad.getActivo()) {
+        if (roles.contains("RWE_USUARI") || roles.contains("RWE_WS_SALIDA") || roles.contains("RWE_WS_ENTRADA")|| !usuarioEntidad.getActivo()) {
 
             PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);

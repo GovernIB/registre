@@ -15,7 +15,7 @@ import java.util.Locale;
  * @author anadal
  */
 @Local
-@RolesAllowed({"RWE_USUARI"})
+@RolesAllowed({"RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface SignatureServerLocal {
   
       
