@@ -22,7 +22,7 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_IN","RWE_WS_OUT"})
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
@@ -243,6 +243,15 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     Long getSirRechazadosReenviadosCount(Long idOficina) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @param documento
+     * @return
+     * @throws Exception
+     */
+    List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception;
 
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.

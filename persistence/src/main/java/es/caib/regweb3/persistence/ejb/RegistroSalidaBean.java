@@ -732,6 +732,21 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return (Long) q.getSingleResult();
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception{
+
+        Query q;
+
+        q = em.createQuery("Select DISTINCT rs from RegistroSalida as rs left outer join rs.registroDetalle.interesados interessat " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and rs.usuario.entidad.id = :idEntidad");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("documento", documento.trim());
+
+        return q.getResultList();
+    }
+
     /**
      * Carga los Anexos Completos al RegistroSalida pasado por parámetro
      * @param registroSalida

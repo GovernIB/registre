@@ -24,7 +24,7 @@ import java.util.List;
  * Date: 6/03/13
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_IN","RWE_WS_OUT"})
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
   /**

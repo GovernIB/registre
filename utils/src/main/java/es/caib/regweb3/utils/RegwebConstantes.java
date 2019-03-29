@@ -86,11 +86,14 @@ public interface RegwebConstantes {
     String ROL_USUARI = "RWE_USUARI"; // Usuarios entidad
     Long ROL_USUARI_ID = 3L;
 
-    String ROL_WS_IN = "RWE_WS_IN"; // Usuarios entidad
-    Long ROL_WS_IN_ID = 4L;
+    String RWE_WS_ENTRADA = "RWE_WS_ENTRADA"; // Rol para realizar Registros de Entrada via WS
+    Long RWE_WS_ENTRADA_ID = 4L;
 
-    String ROL_WS_OUT = "RWE_WS_OUT"; // Usuarios entidad
-    Long ROL_WS_OUT_ID = 5L;
+    String ROL_WS_SALIDA = "RWE_WS_SALIDA"; // Rol para realizar Registros de Salida via WS
+    Long ROL_WS_SALIDA_ID = 5L;
+
+    String ROL_WS_CIUDADANO = "RWE_WS_CIUDADANO"; // Rol para obtener registros de un usuario
+    Long ROL_WS_CIUDADANO_ID = 6L;
 
     /* -------------- ESTADO ENTIDAD --------------*/
     String ESTADO_ENTIDAD_ANULADO = "A";

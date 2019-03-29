@@ -9,6 +9,7 @@ import org.fundaciobit.genapp.common.ws.WsValidationException;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -100,4 +101,8 @@ public interface AsientoRegistralWs {
        @WebParam(name = "entidad") String entidad,
        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
        @WebParam(name = "libro") String libro) throws Throwable, WsI18NException, WsValidationException;
+
+
+    @WebMethod
+    List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerRegistrosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException;
 }

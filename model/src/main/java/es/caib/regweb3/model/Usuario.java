@@ -45,6 +45,13 @@ public class Usuario implements Serializable {
     @XmlTransient
     private Boolean rwe_usuari = false;
     @XmlTransient
+    private Boolean rwe_ws_entrada = false;
+    @XmlTransient
+    private Boolean rwe_ws_salida = false;
+    @XmlTransient
+    private Boolean rwe_ws_ciudadano = false;
+
+    @XmlTransient
     private Long idioma;
 
     /**
@@ -141,8 +148,6 @@ public class Usuario implements Serializable {
     public void setTipoUsuario(Long tipoUsuario) { this.tipoUsuario = tipoUsuario; }
 
 
-
-
     @Column(name="IDIOMA")
     public Long getIdioma() {
         return idioma;
@@ -151,7 +156,6 @@ public class Usuario implements Serializable {
     public void setIdioma(Long idioma) {
         this.idioma = idioma;
     }
-
    
 
     @Column(name = "RWE_SUPERADMIN", nullable = false)
@@ -172,7 +176,6 @@ public class Usuario implements Serializable {
         this.rwe_admin = rwe_admin;
     }
 
-
     @Column(name = "RWE_USUARI", nullable = false)
     public Boolean getRwe_usuari() {
         return rwe_usuari;
@@ -182,6 +185,32 @@ public class Usuario implements Serializable {
         this.rwe_usuari = rwe_usuari;
     }
 
+    @Column(name = "RWE_WS_ENTRADA", nullable = false)
+    public Boolean getRwe_ws_entrada() {
+        return rwe_ws_entrada;
+    }
+
+    public void setRwe_ws_entrada(Boolean rwe_ws_entrada) {
+        this.rwe_ws_entrada = rwe_ws_entrada;
+    }
+
+    @Column(name = "RWE_WS_SALIDA", nullable = false)
+    public Boolean getRwe_ws_salida() {
+        return rwe_ws_salida;
+    }
+
+    public void setRwe_ws_salida(Boolean rwe_ws_salida) {
+        this.rwe_ws_salida = rwe_ws_salida;
+    }
+
+    @Column(name = "RWE_WS_CIUDADANO", nullable = false)
+    public Boolean getRwe_ws_ciudadano() {
+        return rwe_ws_ciudadano;
+    }
+
+    public void setRwe_ws_ciudadano(Boolean rwe_ws_ciudadano) {
+        this.rwe_ws_ciudadano = rwe_ws_ciudadano;
+    }
 
     @Transient
     public void setRoles(List<Rol> roles){
@@ -202,6 +231,24 @@ public class Usuario implements Serializable {
             setRwe_usuari(true);
         }else{
             setRwe_usuari(false);
+        }
+
+        if(roles.contains(new Rol(RegwebConstantes.RWE_WS_ENTRADA))){
+            setRwe_ws_entrada(true);
+        }else{
+            setRwe_ws_entrada(false);
+        }
+
+        if(roles.contains(new Rol(RegwebConstantes.ROL_WS_SALIDA))){
+            setRwe_ws_salida(true);
+        }else{
+            setRwe_ws_salida(false);
+        }
+
+        if(roles.contains(new Rol(RegwebConstantes.ROL_WS_CIUDADANO))){
+            setRwe_ws_ciudadano(true);
+        }else{
+            setRwe_ws_ciudadano(false);
         }
 
     }
