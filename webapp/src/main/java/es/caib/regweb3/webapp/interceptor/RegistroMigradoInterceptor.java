@@ -35,7 +35,7 @@ public class RegistroMigradoInterceptor extends HandlerInterceptorAdapter {
             Boolean tieneRegistrosMigrados = loginInfo.getRegistrosMigrados();
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI o Rol RWE_ADMIN
-            if(!(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)||rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))){
+            if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)||rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");
@@ -57,7 +57,7 @@ public class RegistroMigradoInterceptor extends HandlerInterceptorAdapter {
             // Comprobaciones previas al detalle de un Registro Migrado
             if(url.contains("detalle")){
 
-                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");

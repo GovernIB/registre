@@ -160,14 +160,14 @@ public class AuthenticationSuccessListener implements
         for (GrantedAuthority grantedAuthority : authorities) {
             String rol = grantedAuthority.getAuthority();
             log.info("Rol SEYCON : " + rol);
-            if (RegwebConstantes.ROL_USUARI.equals(rol)) {
-                roles.add(RegwebConstantes.ROL_USUARI);
+            if (RegwebConstantes.RWE_USUARI.equals(rol)) {
+                roles.add(RegwebConstantes.RWE_USUARI);
             }
             if (RegwebConstantes.ROL_ADMIN.equals(rol)) {
                 roles.add(RegwebConstantes.ROL_ADMIN);
             }
-            if (RegwebConstantes.ROL_SUPERADMIN.equals(rol)) {
-                roles.add(RegwebConstantes.ROL_SUPERADMIN);
+            if (RegwebConstantes.RWE_SUPERADMIN.equals(rol)) {
+                roles.add(RegwebConstantes.RWE_SUPERADMIN);
             }
         }
 

@@ -249,7 +249,7 @@ public class EntidadController extends BaseController {
             // Comprobamos que el usuario puede editar la Entidad solicitada
             //Si el usuario es SUPERADMIN PUEDE EDITAR CUALQUIER ENTIDAD
             Rol rolActivo = getRolActivo(request);
-            if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)) {
+            if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)) {
 
                 List<Entidad> entidades = getEntidadesAutenticado(request);
                 if (!entidades.contains(entidad)) {

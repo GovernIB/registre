@@ -123,7 +123,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
     public IdentificadorWs obtenerRegistroEntradaID(
          @WebParam(name = "any")int any,

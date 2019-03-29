@@ -57,7 +57,7 @@ public class PlantillaInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Cualquier accion con Plantilla
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+            if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");

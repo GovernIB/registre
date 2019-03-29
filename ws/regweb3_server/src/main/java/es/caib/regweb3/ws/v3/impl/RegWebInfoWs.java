@@ -26,7 +26,7 @@ public interface RegWebInfoWs {
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
     public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
             WsI18NException;
@@ -37,7 +37,7 @@ public interface RegWebInfoWs {
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
     public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
       throws Throwable, WsI18NException;
@@ -76,7 +76,7 @@ public interface RegWebInfoWs {
      * @throws WsI18NException
      */
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                           @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
 
@@ -90,13 +90,13 @@ public interface RegWebInfoWs {
      * @throws WsI18NException
      */
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
         @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
 
 
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     public List<OrganismoWs> listarOrganismos(        
         @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
         throws Throwable, WsI18NException;

@@ -34,7 +34,7 @@ public class PluginInterceptor extends HandlerInterceptorAdapter {
         Rol rolActivo = loginInfo.getRolActivo();
 
         // Comprobamos que el usuario dispone del Rol ROL_ADMIN o RWE_SUPERADMIN
-        if (rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)) {
+        if (rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)) {
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             response.sendRedirect("/regweb3/aviso");

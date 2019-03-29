@@ -140,7 +140,7 @@ public class LoginService {
             asignarEntidadesAdministradas(loginInfo, loginInfo.getEntidadActiva());
 
         // Si RolActivo del usuario autenticado es Operador
-        }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+        }else if(rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
 
             //Asignamos las Entidades donde tiene acceso el usuario operador
             asignarEntidadesOperador(loginInfo, loginInfo.getEntidadActiva());
@@ -149,7 +149,7 @@ public class LoginService {
             asignarOficinasRegistro(loginInfo);
 
         // Asigna la Configuración del SuperAdministrador
-        }else if(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+        }else if(rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
             List<Configuracion> configuraciones = configuracionEjb.getAll();
             if(configuraciones.size()>0) {
                 loginInfo.setConfiguracion(configuraciones.get(0));
@@ -345,7 +345,7 @@ public class LoginService {
         // Asociamos lel nuevo UsuarioEntidadActivo
         setUsuarioEntidadActivo(loginInfo, entidadNueva);
 
-        if(loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_USUARI)){ // Solo si es Operador
+        if(loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_USUARI)){ // Solo si es Operador
             asignarOficinasRegistro(loginInfo);
 
         } else {
@@ -540,9 +540,9 @@ public class LoginService {
 
         List<String> roles = new ArrayList<String>();
 
-        if(request.isUserInRole(RegwebConstantes.ROL_SUPERADMIN)){roles.add(RegwebConstantes.ROL_SUPERADMIN);}
+        if(request.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)){roles.add(RegwebConstantes.RWE_SUPERADMIN);}
         if(request.isUserInRole(RegwebConstantes.ROL_ADMIN)){roles.add(RegwebConstantes.ROL_ADMIN);}
-        if(request.isUserInRole(RegwebConstantes.ROL_USUARI)){roles.add(RegwebConstantes.ROL_USUARI);}
+        if(request.isUserInRole(RegwebConstantes.RWE_USUARI)){roles.add(RegwebConstantes.RWE_USUARI);}
 
         if(roles.size() > 0){
             rolesUsuario = rolEjb.getByRol(roles);

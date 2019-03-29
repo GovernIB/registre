@@ -35,7 +35,7 @@ public class Dir3Interceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = loginInfo.getRolActivo();
 
             // Cualquier accion con Dir3
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+            if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");
