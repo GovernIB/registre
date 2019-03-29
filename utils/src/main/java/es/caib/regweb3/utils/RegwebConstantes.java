@@ -80,7 +80,7 @@ public interface RegwebConstantes {
     String RWE_SUPERADMIN = "RWE_SUPERADMIN";// SuperAdministradores entidad
     Long RWE_SUPERADMIN_ID = 1L;
 
-    String ROL_ADMIN = "RWE_ADMIN";  // Administradores entidad
+    String RWE_ADMIN = "RWE_ADMIN";  // Administradores entidad
     Long RWE_ADMIN_ID = 2L;
 
     String RWE_USUARI = "RWE_USUARI"; // Usuarios entidad
