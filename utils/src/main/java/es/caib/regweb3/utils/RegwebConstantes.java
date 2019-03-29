@@ -86,6 +86,12 @@ public interface RegwebConstantes {
     String ROL_USUARI = "RWE_USUARI"; // Usuarios entidad
     Long ROL_USUARI_ID = 3L;
 
+    String ROL_WS_IN = "RWE_WS_IN"; // Usuarios entidad
+    Long ROL_WS_IN_ID = 4L;
+
+    String ROL_WS_OUT = "RWE_WS_OUT"; // Usuarios entidad
+    Long ROL_WS_OUT_ID = 5L;
+
     /* -------------- ESTADO ENTIDAD --------------*/
     String ESTADO_ENTIDAD_ANULADO = "A";
     String ESTADO_ENTIDAD_EXTINGUIDO = "E";

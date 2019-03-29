@@ -62,20 +62,8 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     RegistroSalidaValidator<RegistroSalida> registroSalidaValidator = new RegistroSalidaValidator<RegistroSalida>();
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
-
     @EJB(mappedName = "regweb3/OrganismoEJB/local")
     private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    private UsuarioEntidadLocal usuarioEntidadEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     private TipoAsuntoLocal tipoAsuntoEjb;
@@ -88,7 +76,6 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
-
 
     @EJB(mappedName = "regweb3/LopdEJB/local")
     private LopdLocal lopdEjb;
@@ -107,12 +94,6 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
     @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
     private CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
-
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    private AnexoLocal anexoEjb;
 
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
@@ -142,7 +123,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
     @Override
     @WebMethod
     public es.caib.regweb3.ws.model.AsientoRegistralWs crearAsientoRegistral(
@@ -230,7 +211,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
         // 8.- Validar los Interesados
         List<Interesado> interesados = null;
-        if(tipoOperacion == null) {
+       /* if(tipoOperacion == null) {
             if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
                 // Procesamos los interesados
                 interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
@@ -250,6 +231,12 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
             } else {
                 throw new I18NException("interesado.registro.obligatorio");
+            }
+        }*/
+        for(InteresadoWs interesadoWs: asientoRegistral.getInteresados()){
+            if(TIPO_INTERESADO_ADMINISTRACION.equals(interesadoWs.getInteresado().getTipoInteresado())){
+                //Mirar si es SIR
+
             }
         }
 
@@ -427,7 +414,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
 
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
     @Override
     @WebMethod
     public es.caib.regweb3.ws.model.AsientoRegistralWs obtenerAsientoRegistral(
@@ -543,7 +530,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
     }
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
     @Override
     @WebMethod
     public JustificanteWs obtenerJustificante(
@@ -711,7 +698,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     }
 
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
     @Override
     @WebMethod
     public void distribuirAsientoRegistral(
@@ -794,7 +781,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
      * @throws WsI18NException
      * @throws WsValidationException
      */
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
     @Override
     @WebMethod
     public OficioWs obtenerOficioExterno(
