@@ -123,7 +123,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
 
-    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
+    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
     @Override
     @WebMethod
     public es.caib.regweb3.ws.model.AsientoRegistralWs crearAsientoRegistral(
@@ -408,7 +408,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
 
 
-    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
+    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
     @Override
     @WebMethod
     public es.caib.regweb3.ws.model.AsientoRegistralWs obtenerAsientoRegistral(
@@ -524,7 +524,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
     }
 
-    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
+    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
     @Override
     @WebMethod
     public JustificanteWs obtenerJustificante(
@@ -692,7 +692,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     }
 
 
-    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
+    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
     @Override
     @WebMethod
     public void distribuirAsientoRegistral(
@@ -775,7 +775,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
      * @throws WsI18NException
      * @throws WsValidationException
      */
-    @RolesAllowed({ROL_WS_IN, ROL_WS_OUT})
+    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
     @Override
     @WebMethod
     public OficioWs obtenerOficioExterno(
@@ -818,6 +818,84 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
             throw new Exception("La entidad no tiene ningún modelo de oficio de remisión y no se ha podido generar.");
         }
 
+    }
+
+    @RolesAllowed({ROL_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerRegistrosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{
+
+        // Definimos la petición que se guardá en el monitor de integración
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String numRegFormat = "";
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
+        // 1.- Validar campo obligatorio entidad
+        if(StringUtils.isEmpty(entidad)){
+            throw new I18NException("error.valor.requerido.ws", "entidad");
+        }
+
+        // 2.- Validar campo obligatorio documento
+        if(StringUtils.isEmpty(documento)){
+            throw new I18NException("error.valor.requerido.ws", "documento");
+        }
+
+        peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
+
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        // 2.- Comprobar que la entidad existe y está activa
+        if(entidadActiva == null){
+            log.info("La entidad "+entidad+" no existe.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }else if(!entidadActiva.getActivo()){
+            throw new I18NException("registro.entidad.inactiva", entidad);
+        }
+
+        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
+        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
+            log.info("El usuario " + UsuarioAplicacionCache.get().getUsuario().getNombreCompleto() + " no pertenece a la entidad.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }
+
+        List<es.caib.regweb3.ws.model.AsientoRegistralWs> asientos = new ArrayList<es.caib.regweb3.ws.model.AsientoRegistralWs>();
+
+        try{
+
+            List<RegistroEntrada> entradas = registroEntradaEjb.getByDocumento(entidadActiva.getId(),documento);
+            List<RegistroSalida> salidas = registroSalidaEjb.getByDocumento(entidadActiva.getId(),documento);
+
+
+            for (RegistroEntrada entrada : entradas) {
+
+                asientos.add(AsientoRegistralConverter.getAsientoRegistralBean(entrada,
+                        UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb));
+
+            }
+
+            for (RegistroSalida salida : salidas) {
+
+                asientos.add(AsientoRegistralConverter.getAsientoRegistralBean(salida,
+                        UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb));
+
+            }
+
+            log.info("Asientos totales: " + asientos.size());
+
+            // Alta en la tabla de LOPD
+//            lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
+
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+
+        }catch (Exception e){
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            throw new I18NException("error.ws.general");
+        }
+
+
+        return asientos;
     }
 
 

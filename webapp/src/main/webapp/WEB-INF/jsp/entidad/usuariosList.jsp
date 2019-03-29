@@ -169,10 +169,12 @@
                                                             </c:if>
                                                         </td>
                                                         <td class="center">
-                                                            <c:if test="${usuarioEntidad.usuario.rwe_usuari == true}">
+                                                            <c:if test="${usuarioEntidad.usuario.rwe_usuari == true || usuarioEntidad.usuario.rwe_ws_entrada == true
+                                                            || usuarioEntidad.usuario.rwe_ws_salida == true || usuarioEntidad.usuario.rwe_ws_ciudadano == true}">
                                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/entidad/permisos/${usuarioEntidad.id}"/>" title="<spring:message code="usuario.modificar.permisos"/>"><span class="fa fa-key"></span></a>
                                                             </c:if>
-                                                            <c:if test="${usuarioEntidad.usuario.rwe_usuari == false}">
+                                                            <c:if test="${usuarioEntidad.usuario.rwe_usuari == false && usuarioEntidad.usuario.rwe_ws_entrada == false
+                                                            && usuarioEntidad.usuario.rwe_ws_salida == false && usuarioEntidad.usuario.rwe_ws_ciudadano == false}">
                                                                 <a class="btn btn-warning disabled btn-sm" title="<spring:message code="usuario.asignar.permisos.denegado"/> "><span class="fa fa-key"></span></a>
                                                             </c:if>
 
