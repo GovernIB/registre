@@ -142,7 +142,7 @@ public class BaseController {
      */
     protected Boolean isSuperAdmin(HttpServletRequest request){
 
-        return getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_SUPERADMIN);
+        return getRolActivo(request).getNombre().equals(RegwebConstantes.RWE_SUPERADMIN);
     }
 
     /**
@@ -152,7 +152,7 @@ public class BaseController {
      */
     protected Boolean isOperador(HttpServletRequest request){
 
-        return getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_USUARI);
+        return getRolActivo(request).getNombre().equals(RegwebConstantes.RWE_USUARI);
     }
 
 

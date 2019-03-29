@@ -215,7 +215,7 @@ public class Usuario implements Serializable {
     @Transient
     public void setRoles(List<Rol> roles){
 
-        if(roles.contains(new Rol(RegwebConstantes.ROL_SUPERADMIN))){
+        if(roles.contains(new Rol(RegwebConstantes.RWE_SUPERADMIN))){
             setRwe_superadmin(true);
         }else{
             setRwe_superadmin(false);
@@ -227,7 +227,7 @@ public class Usuario implements Serializable {
             setRwe_admin(false);
         }
 
-        if(roles.contains(new Rol(RegwebConstantes.ROL_USUARI))){
+        if(roles.contains(new Rol(RegwebConstantes.RWE_USUARI))){
             setRwe_usuari(true);
         }else{
             setRwe_usuari(false);
@@ -239,13 +239,13 @@ public class Usuario implements Serializable {
             setRwe_ws_entrada(false);
         }
 
-        if(roles.contains(new Rol(RegwebConstantes.ROL_WS_SALIDA))){
+        if(roles.contains(new Rol(RegwebConstantes.RWE_WS_SALIDA))){
             setRwe_ws_salida(true);
         }else{
             setRwe_ws_salida(false);
         }
 
-        if(roles.contains(new Rol(RegwebConstantes.ROL_WS_CIUDADANO))){
+        if(roles.contains(new Rol(RegwebConstantes.RWE_WS_CIUDADANO))){
             setRwe_ws_ciudadano(true);
         }else{
             setRwe_ws_ciudadano(false);

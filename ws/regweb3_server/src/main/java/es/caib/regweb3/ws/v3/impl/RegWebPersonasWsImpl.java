@@ -38,7 +38,7 @@ import java.util.List;
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebPersonasWsImpl.NAME + "Ejb")
-@RolesAllowed({ RegwebConstantes.ROL_SUPERADMIN })
+@RolesAllowed({ RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = { "es.caib.regweb3.ws.utils.RegWebInInterceptor" })
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb3.ws.utils.RegWebInInterceptor" })
@@ -89,7 +89,7 @@ public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements Re
   //@Resource
   //private WebServiceContext wsContext;
 
-  @RolesAllowed({ ROL_SUPERADMIN })
+  @RolesAllowed({RWE_SUPERADMIN})
   @WebMethod
   @Override
   public List<PersonaWs> listarPersonas(String entidadCodigoDir3) throws Throwable, WsI18NException {
@@ -115,7 +115,7 @@ public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements Re
 
   }
 
-  @RolesAllowed({ ROL_SUPERADMIN })
+  @RolesAllowed({RWE_SUPERADMIN})
   @WebMethod
   @Override
   public Long crearPersona(@WebParam(name = "personaWs")PersonaWs personaWs) throws Throwable,WsI18NException, WsValidationException {
@@ -154,7 +154,7 @@ public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements Re
   }
 
 
-  @RolesAllowed({ ROL_SUPERADMIN })
+  @RolesAllowed({RWE_SUPERADMIN})
   @WebMethod
   @Override
   public void borrarPersona(@WebParam(name = "personaID")Long personaID) throws Throwable, WsI18NException, WsI18NException {
@@ -171,7 +171,7 @@ public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements Re
 
 
 
-  @RolesAllowed({ ROL_SUPERADMIN })
+  @RolesAllowed({RWE_SUPERADMIN})
   @WebMethod
   @Override
   public void actualizarPersona(@WebParam(name = "personaWs")PersonaWs personaWs) throws Throwable, WsI18NException, WsValidationException {

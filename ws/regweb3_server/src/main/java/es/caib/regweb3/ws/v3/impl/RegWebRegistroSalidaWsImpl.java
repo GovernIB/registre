@@ -44,7 +44,7 @@ import java.util.Locale;
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebRegistroSalidaWsImpl.NAME + "Ejb")
-@RolesAllowed({RegwebConstantes.ROL_SUPERADMIN})
+@RolesAllowed({RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
@@ -116,7 +116,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
 
     @Override
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({RWE_USUARI})
     @WebMethod
     @Deprecated
     public IdentificadorWs altaRegistroSalida(@WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
@@ -144,7 +144,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     }
 
     @Override
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({RWE_USUARI})
     @WebMethod
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
 
@@ -276,7 +276,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         return identificadorWs;
     }
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({RWE_USUARI})
     @WebMethod
     @Override
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
@@ -370,7 +370,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         return new JustificanteWs(sc.getData());
     }
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
     public void anularRegistroSalida(@WebParam(name = "numeroRegistro") String numeroRegistro,
@@ -431,7 +431,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     }
 
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
     public RegistroSalidaResponseWs obtenerRegistroSalida(
@@ -514,7 +514,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ROL_USUARI})
+    @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
     public IdentificadorWs obtenerRegistroSalidaID(

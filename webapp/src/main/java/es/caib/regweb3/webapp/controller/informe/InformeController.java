@@ -75,11 +75,11 @@ public class InformeController extends AbstractRegistroCommonFormController {
         model.addAttribute("informeLibroBusquedaForm",informeLibroBusquedaForm);
         model.addAttribute("libros", libros(request));
         model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-        if(getRolActivo(request).getId().equals(RegwebConstantes.ROL_USUARI_ID)) {
+        if(getRolActivo(request).getId().equals(RegwebConstantes.RWE_USUARI_ID)) {
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             model.addAttribute("organosDestino", organismosOficinaActiva);
         }
-        if(getRolActivo(request).getId().equals(RegwebConstantes.ROL_ADMIN_ID)) {
+        if(getRolActivo(request).getId().equals(RegwebConstantes.RWE_ADMIN_ID)) {
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(getEntidadActiva(request).getId()));
         }
 

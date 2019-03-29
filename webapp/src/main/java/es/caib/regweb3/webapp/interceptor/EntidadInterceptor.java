@@ -56,7 +56,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Editar entidad
             if((url.contains("edit"))){
-                if(!(rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
+                if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN))) {
                     log.info("Error, editar entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.edit"));
                     response.sendRedirect("/regweb3/aviso");
@@ -73,7 +73,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Nueva entidad
             if(url.equals("/entidad/new")){
-                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                     log.info("Error, nueva entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.alta"));
                     response.sendRedirect("/regweb3/aviso");
@@ -83,7 +83,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Listado de Entidades
             if(url.equals("/entidad/list")){
-                if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                     log.info("Error, listar entidades");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.lista"));
                     response.sendRedirect("/regweb3/aviso");
@@ -103,7 +103,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
 
             // Activar/Anular entidad
             if((url.contains("activar") || url.contains("anular") || url.contains("eliminar") || url.contains("reiniciarContadores"))){
-              if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+              if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                   log.info("Error de rol");
                   Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                   response.sendRedirect("/regweb3/aviso");

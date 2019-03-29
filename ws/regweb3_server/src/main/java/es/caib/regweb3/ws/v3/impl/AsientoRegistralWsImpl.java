@@ -43,7 +43,7 @@ import java.util.*;
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = AsientoRegistralWsImpl.NAME + "Ejb")
-@RolesAllowed({RegwebConstantes.ROL_SUPERADMIN})
+@RolesAllowed({RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
@@ -123,7 +123,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
 
-    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
     public es.caib.regweb3.ws.model.AsientoRegistralWs crearAsientoRegistral(
@@ -408,7 +408,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
 
 
-    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
     public es.caib.regweb3.ws.model.AsientoRegistralWs obtenerAsientoRegistral(
@@ -524,7 +524,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
     }
 
-    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
     public JustificanteWs obtenerJustificante(
@@ -692,7 +692,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     }
 
 
-    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
     public void distribuirAsientoRegistral(
@@ -775,7 +775,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
      * @throws WsI18NException
      * @throws WsValidationException
      */
-    @RolesAllowed({RWE_WS_ENTRADA, ROL_WS_SALIDA})
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
     public OficioWs obtenerOficioExterno(
@@ -820,7 +820,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
     }
 
-    @RolesAllowed({ROL_WS_CIUDADANO})
+    @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
     public List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerRegistrosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{

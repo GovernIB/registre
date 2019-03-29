@@ -123,7 +123,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                 }
 
                 // Comprobaciones de Configuración obligatoria de la aplicación
-                if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_USUARI)) {
+                if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_USUARI)) {
 
                     //Plugin Generación Justificante
                     if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
@@ -220,7 +220,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                 //Validamos variable es.caib.regweb3.archivos.path
                 //comprobar variable archivos path
-                if (request.getRequestURI().equals("/regweb3/configuracion/editar") && FileSystemManager.getArchivosPath() == null && loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)) {
+                if (request.getRequestURI().equals("/regweb3/configuracion/editar") && FileSystemManager.getArchivosPath() == null && loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)) {
                     log.info("Error, editar entidad");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                     response.sendRedirect("/regweb3/aviso");

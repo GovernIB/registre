@@ -50,7 +50,7 @@ public class ConfiguracionController extends BaseController {
 
             //Si el usuario es SUPERADMIN PUEDE EDITAR LA CONFIGURACION
             Rol rolActivo = getRolActivo(request);
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+            if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                 Mensaje.saveMessageError(request, getMessage("usuario.asignar.permisos.denegado"));
                 return "redirect:/inici";
             }
@@ -195,7 +195,7 @@ public class ConfiguracionController extends BaseController {
             }
 
             // Asigna la Configuración del SuperAdministrador
-            if(getRolActivo(request).getNombre().equals(RegwebConstantes.ROL_SUPERADMIN)){
+            if(getRolActivo(request).getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                 getLoginInfo(request).setConfiguracion(configuracion);
             }
 

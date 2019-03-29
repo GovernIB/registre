@@ -35,7 +35,7 @@ import java.util.Set;
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebInfoWsImpl.NAME + "Ejb")
-@RolesAllowed({ RegwebConstantes.ROL_SUPERADMIN })
+@RolesAllowed({ RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = { "es.caib.regweb3.ws.utils.RegWebInInterceptor" })
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb3.ws.utils.RegWebInInterceptor" })
@@ -92,7 +92,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
    */
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
           WsI18NException {
 
@@ -132,7 +132,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
    */
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
       WsI18NException {
 
@@ -171,7 +171,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
    */
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
       WsI18NException {
 
@@ -220,7 +220,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<LibroOficinaWs> obtenerLibrosOficina(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,@WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException {
 
     // 1.- Comprobaciones de parámetros obligatórios
@@ -288,7 +288,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<LibroOficinaWs> obtenerLibrosOficinaUsuario(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "usuario") String usuario, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException {
 
     // 1.- Comprobaciones de parámetros obligatórios
@@ -356,7 +356,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   @Override
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                           @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
@@ -399,7 +399,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
     @Override
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
         @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
@@ -451,7 +451,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.ROL_USUARI })
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<OrganismoWs> listarOrganismos(
       @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
       throws Throwable, WsI18NException {

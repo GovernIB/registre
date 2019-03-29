@@ -68,7 +68,7 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Comprobamos que el usuario dispone del Rol RWE_USUARI
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_USUARI)){
+            if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");
