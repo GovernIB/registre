@@ -35,7 +35,7 @@ public class TipoAsuntoInterceptor extends HandlerInterceptorAdapter {
             Rol rolActivo = loginInfo.getRolActivo();
 
             // Cualquier accion con TipoAsunto
-            if(!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+            if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
                 log.info("Error de rol");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                 response.sendRedirect("/regweb3/aviso");

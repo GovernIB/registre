@@ -1052,7 +1052,7 @@ public class EntidadController extends BaseController {
     private List<Usuario> propietarios() throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
-        String[] usuarios = loginPlugin.getUsernamesByRol(RegwebConstantes.ROL_ADMIN);
+        String[] usuarios = loginPlugin.getUsernamesByRol(RegwebConstantes.RWE_ADMIN);
 
         List<Usuario> administradoresEntidad = new ArrayList<Usuario>();
 

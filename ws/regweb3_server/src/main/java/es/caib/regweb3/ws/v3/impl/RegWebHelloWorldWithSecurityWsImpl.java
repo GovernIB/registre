@@ -25,7 +25,7 @@ import javax.xml.ws.WebServiceContext;
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
 @Stateless(name = RegWebHelloWorldWithSecurityWsImpl.NAME + "Ejb")
-@RolesAllowed({ RegwebConstantes.RWE_USUARI, RegwebConstantes.ROL_ADMIN, RegwebConstantes.RWE_SUPERADMIN})
+@RolesAllowed({ RegwebConstantes.RWE_USUARI, RegwebConstantes.RWE_ADMIN, RegwebConstantes.RWE_SUPERADMIN})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = { "es.caib.regweb3.ws.utils.RegWebInInterceptor" })
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = { "es.caib.regweb3.ws.utils.RegWebInInterceptor" })
@@ -45,7 +45,7 @@ public class RegWebHelloWorldWithSecurityWsImpl extends AuthenticatedBaseWsImpl
   private WebServiceContext wsContext;
 
 
-  @RolesAllowed({ RegwebConstantes.RWE_SUPERADMIN, RegwebConstantes.ROL_ADMIN, RegwebConstantes.RWE_USUARI})
+  @RolesAllowed({ RegwebConstantes.RWE_SUPERADMIN, RegwebConstantes.RWE_ADMIN, RegwebConstantes.RWE_USUARI})
   @WebMethod
   public String echo(@WebParam (name ="echo") @Null String echo)  {
 

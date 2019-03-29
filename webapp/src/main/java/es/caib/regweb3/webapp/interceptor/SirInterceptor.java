@@ -33,8 +33,8 @@ public class SirInterceptor extends HandlerInterceptorAdapter {
         LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
         Rol rolActivo = loginInfo.getRolActivo();
 
-        // Comprobamos que el usuario dispone del Rol ROL_ADMIN
-        if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+        // Comprobamos que el usuario dispone del Rol RWE_ADMIN
+        if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             response.sendRedirect("/regweb3/aviso");

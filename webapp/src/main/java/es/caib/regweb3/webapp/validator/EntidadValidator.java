@@ -54,7 +54,7 @@ public class EntidadValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.descripcion", "error.valor.requerido", "El camp és obligatori");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.codigoDir3", "error.valor.requerido", "El camp és obligatori");
 
-        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+        if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.colorMenu", "error.valor.requerido", "El camp és obligatori");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.sello", "error.valor.requerido", "El camp Format Segell és obligatori");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.numRegistro", "error.valor.requerido", "El camp Format Número Registre és obligatori");

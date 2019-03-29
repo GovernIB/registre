@@ -135,7 +135,7 @@ public class LoginService {
         loginInfo.resetDatos();
 
         // Si el RolActivo del usuario autenticado es Administrador de Entidad
-        if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)){
+        if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
 
             asignarEntidadesAdministradas(loginInfo, loginInfo.getEntidadActiva());
 
@@ -541,7 +541,7 @@ public class LoginService {
         List<String> roles = new ArrayList<String>();
 
         if(request.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)){roles.add(RegwebConstantes.RWE_SUPERADMIN);}
-        if(request.isUserInRole(RegwebConstantes.ROL_ADMIN)){roles.add(RegwebConstantes.ROL_ADMIN);}
+        if(request.isUserInRole(RegwebConstantes.RWE_ADMIN)){roles.add(RegwebConstantes.RWE_ADMIN);}
         if(request.isUserInRole(RegwebConstantes.RWE_USUARI)){roles.add(RegwebConstantes.RWE_USUARI);}
 
         if(roles.size() > 0){

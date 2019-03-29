@@ -163,8 +163,8 @@ public class AuthenticationSuccessListener implements
             if (RegwebConstantes.RWE_USUARI.equals(rol)) {
                 roles.add(RegwebConstantes.RWE_USUARI);
             }
-            if (RegwebConstantes.ROL_ADMIN.equals(rol)) {
-                roles.add(RegwebConstantes.ROL_ADMIN);
+            if (RegwebConstantes.RWE_ADMIN.equals(rol)) {
+                roles.add(RegwebConstantes.RWE_ADMIN);
             }
             if (RegwebConstantes.RWE_SUPERADMIN.equals(rol)) {
                 roles.add(RegwebConstantes.RWE_SUPERADMIN);

@@ -44,7 +44,7 @@ public class ModeloReciboInterceptor extends HandlerInterceptorAdapter {
                     return false;
                 }
             }else{  // Cualquier accion con Modelo Recibo que no sea Imprimir
-                if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+                if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");

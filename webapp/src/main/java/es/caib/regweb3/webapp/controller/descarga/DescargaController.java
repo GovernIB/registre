@@ -48,7 +48,7 @@ public class DescargaController extends BaseController {
 
         Rol rolActivo = getRolActivo(request);
         // Comprobamos que el usuario dispone del Rol RWE_USUARI
-        if (!rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+        if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
             return "redirect:/aviso";

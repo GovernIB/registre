@@ -33,7 +33,7 @@ public class PropiedadGlobalInterceptor extends HandlerInterceptorAdapter {
         LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
         Rol rolActivo = loginInfo.getRolActivo();
 
-        // Comprobamos que el usuario dispone del Rol ROL_ADMIN o RWE_SUPERADMIN
+        // Comprobamos que el usuario dispone del Rol RWE_ADMIN o RWE_SUPERADMIN
         if (rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)) {
             log.info("Error de rol");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));

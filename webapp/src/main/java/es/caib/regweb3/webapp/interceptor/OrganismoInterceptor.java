@@ -42,7 +42,7 @@ public class  OrganismoInterceptor extends HandlerInterceptorAdapter {
             LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
             Rol rolActivo = loginInfo.getRolActivo();
 
-            if(rolActivo.getNombre().equals(RegwebConstantes.ROL_ADMIN)) {
+            if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
                 // Comprobamos que el catalogo ha sido sincronizado al menos una vez
                 Descarga catalogo = descargaEjb.findByTipo(RegwebConstantes.CATALOGO);
                 if (catalogo == null) {

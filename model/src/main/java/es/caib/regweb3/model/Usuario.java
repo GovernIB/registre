@@ -221,7 +221,7 @@ public class Usuario implements Serializable {
             setRwe_superadmin(false);
         }
 
-        if(roles.contains(new Rol(RegwebConstantes.ROL_ADMIN))){
+        if(roles.contains(new Rol(RegwebConstantes.RWE_ADMIN))){
             setRwe_admin(true);
         }else{
             setRwe_admin(false);
