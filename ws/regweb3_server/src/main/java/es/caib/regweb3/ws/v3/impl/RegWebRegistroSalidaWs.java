@@ -46,6 +46,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
      */
     @WebMethod
+    @Deprecated
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad")String entidad,
         @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs)
         throws Throwable,WsI18NException, WsValidationException;
@@ -60,6 +61,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad")String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
 
@@ -72,6 +74,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
      */
     @WebMethod
+    @Deprecated
     public void anularRegistroSalida(
         @WebParam(name = "numeroRegistro") String numeroRegistro,
         @WebParam(name = "entidad") String entidad,
@@ -88,6 +91,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws org.fundaciobit.genapp.common.ws.WsValidationException
      */
     @WebMethod
+    @Deprecated
     public RegistroSalidaResponseWs obtenerRegistroSalida(@WebParam(name = "numeroRegistro") String numeroRegistro, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
     
     /**
@@ -103,6 +107,7 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      */
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
+    @Deprecated
     public IdentificadorWs obtenerRegistroSalidaID(
          @WebParam(name = "any")int any,
          @WebParam(name = "numeroRegistro")int numeroRegistro,
@@ -112,9 +117,11 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
           throws Throwable, WsI18NException;
 
     @WebMethod
+    @Deprecated
     public String getVersion();
 
 
     @WebMethod
+    @Deprecated
     public int getVersionWs();
 }
