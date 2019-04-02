@@ -162,6 +162,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @Override
     @RolesAllowed({RWE_USUARI})
     @WebMethod
+    @Deprecated
     public IdentificadorWs nuevoRegistroEntrada(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroEntradaWs")
        RegistroEntradaWs registroEntradaWs)
        throws Throwable, WsI18NException, WsValidationException {
@@ -311,6 +312,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({RWE_USUARI})
     @WebMethod
     @Override
+    @Deprecated
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         StringBuilder peticion = new StringBuilder();
@@ -408,6 +410,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public void anularRegistroEntrada(
        @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
        @WebParam(name = "entidad") String entidad,
@@ -458,6 +461,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public void tramitarRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
 
         //1.- Validar obligatorios
@@ -501,6 +505,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
 
         //1.- Validar obligatorios
@@ -581,6 +586,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public IdentificadorWs obtenerRegistroEntradaID(
        @WebParam(name = "anyo") int anyo,
        @WebParam(name = "numeroRegistro") int numeroRegistro,
@@ -649,6 +655,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public RegistroEntradaResponseWs obtenerRegistroEntrada(
        @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
        @WebParam(name = "usuario") String usuario,

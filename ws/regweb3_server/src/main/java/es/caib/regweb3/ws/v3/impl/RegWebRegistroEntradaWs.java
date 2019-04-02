@@ -44,6 +44,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public IdentificadorWs nuevoRegistroEntrada(@WebParam(name = "entidad")String entidad, @WebParam(name = "registroEntradaWs")RegistroEntradaWs registroEntradaWs) throws Throwable, WsI18NException, WsValidationException;
 
     /**
@@ -56,6 +57,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
     /**
@@ -68,6 +70,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public void anularRegistroEntrada(
             @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
             @WebParam(name = "entidad") String entidad,
@@ -83,6 +86,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public void tramitarRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "usuario") String usuario, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException;
 
     /**
@@ -94,6 +98,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException ;
 
     /**
@@ -106,6 +111,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      * @throws WsValidationException
      */
     @WebMethod
+    @Deprecated
     public RegistroEntradaResponseWs obtenerRegistroEntrada(
             @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
             @WebParam(name = "usuario") String usuario,
@@ -125,6 +131,7 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
      */
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
+    @Deprecated
     public IdentificadorWs obtenerRegistroEntradaID(
          @WebParam(name = "any")int any,
          @WebParam(name = "numeroRegistro")int numeroRegistro,
@@ -136,9 +143,11 @@ public interface RegWebRegistroEntradaWs /*extends IBaseWs*/ {
     
 
     @WebMethod
+    @Deprecated
     public String getVersion();
 
 
     @WebMethod
+    @Deprecated
     public int getVersionWs();
 }
