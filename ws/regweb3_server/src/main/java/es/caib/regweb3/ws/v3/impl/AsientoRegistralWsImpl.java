@@ -243,7 +243,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
 
         // Convertir AsientoRegistralWs a RegistroEntrada
-        if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro())){
+        if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro()) || usuario.getUsuario().getRwe_ws_entrada()){
 
             // 10.- Comprobar que el Organismo destino está vigente
             Organismo destinoInterno = organismoEjb.findByCodigoEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
@@ -306,7 +306,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
 
 
 
-        }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro())){
+        }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro()) && usuario.getUsuario().getRwe_ws_salida()){
 
 
                 // 10.- Comprobar que el Organismo Origen está vigente
@@ -400,8 +400,9 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
                     throw new I18NException("registro.nuevo.error");
                 }
+        }else{
+            throw new I18NException("registro.usuario.rol", asientoRegistral.getCodigoUsuario());
         }
-
         return asientoRegistral;
     }
 
