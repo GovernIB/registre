@@ -104,5 +104,5 @@ public interface AsientoRegistralWs {
 
 
     @WebMethod
-    List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerRegistrosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException;
+    List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException;
 }
