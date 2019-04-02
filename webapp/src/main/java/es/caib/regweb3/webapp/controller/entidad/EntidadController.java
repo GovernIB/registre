@@ -1080,7 +1080,7 @@ public class EntidadController extends BaseController {
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
         List<Usuario> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
         for (Usuario usuario : usuarios) {
-            loginService.actualizarRoles(usuario);
+            usuarioEjb.actualizarRoles(usuario);
         }
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN

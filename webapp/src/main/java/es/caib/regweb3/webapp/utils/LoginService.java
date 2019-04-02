@@ -9,14 +9,16 @@ import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
-import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.fundaciobit.plugins.userinformation.UserInfo;
 import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -374,52 +376,6 @@ public class LoginService {
     }
 
     /**
-     * Obtiene los Roles del usuario mediante el plugin de Login.
-     * @param identificador
-     * @return
-     * @throws Exception
-     */
-    private List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception, I18NException {
-
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
-        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
-
-        List<String> roles = new ArrayList<String>();
-        List<Rol> rolesUsuario = null;
-
-        if(rolesInfo != null && rolesInfo.getRoles().length > 0){
-
-            Collections.addAll(roles, rolesInfo.getRoles());
-            if(roles.size() > 0){
-                rolesUsuario = rolEjb.getByRol(roles);
-            }
-        }else{
-            log.info("El usuario " + identificador + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
-        }
-
-        return rolesUsuario;
-    }
-
-    /**
-     * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
-     * Actualiza los Roles del usuario en la bbdd de REGWEB3
-     * @param usuario
-     * @throws Exception
-     */
-    public void actualizarRoles(Usuario usuario) throws Exception, I18NException {
-
-        List<Rol> rolesUsuario = obtenerRolesUserPlugin(usuario.getIdentificador());
-
-        if(rolesUsuario != null) {
-
-            // Actualizamos los Roles del usuario según sistema externo
-            usuario.setRoles(rolesUsuario);
-            usuarioEjb.merge(usuario);
-        }
-
-    }
-
-    /**
      * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
      * datos personales de la bbdd de Seycon.
      * @param identificador
@@ -470,7 +426,7 @@ public class LoginService {
             }
 
             // Roles
-            List<Rol> roles = obtenerRolesUserPlugin(identificador);
+            List<Rol> roles = rolEjb.obtenerRolesUserPlugin(identificador);
             if(roles == null || roles.size() == 0 ){
                 log.info("El usuario " + identificador + " no dispone de ningun Rol valido para REGWEB3");
                 return null;
