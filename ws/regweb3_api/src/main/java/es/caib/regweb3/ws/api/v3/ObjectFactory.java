@@ -30,19 +30,19 @@ public class ObjectFactory {
     private final static QName _JustificanteWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "justificanteWs");
     private final static QName _DistribuirAsientoRegistralResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "distribuirAsientoRegistralResponse");
     private final static QName _DatosInteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "datosInteresadoWs");
-    private final static QName _ObtenerRegistrosCiudadanoResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistrosCiudadanoResponse");
     private final static QName _ObtenerAsientoRegistralResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientoRegistralResponse");
     private final static QName _AnexoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "anexoWs");
     private final static QName _AsientoRegistralWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "asientoRegistralWs");
     private final static QName _InteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "interesadoWs");
     private final static QName _CrearAsientoRegistral_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "crearAsientoRegistral");
+    private final static QName _ObtenerAsientosCiudadanoResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientosCiudadanoResponse");
     private final static QName _WsI18NError_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "WsI18NError");
     private final static QName _DistribuirAsientoRegistral_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "distribuirAsientoRegistral");
     private final static QName _ObtenerOficioExterno_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerOficioExterno");
     private final static QName _WsValidationErrors_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "WsValidationErrors");
     private final static QName _CrearAsientoRegistralResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "crearAsientoRegistralResponse");
-    private final static QName _ObtenerRegistrosCiudadano_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistrosCiudadano");
     private final static QName _ObtenerAsientoRegistral_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientoRegistral");
+    private final static QName _ObtenerAsientosCiudadano_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientosCiudadano");
     private final static QName _ObtenerJustificanteResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificanteResponse");
 
     /**
@@ -58,14 +58,6 @@ public class ObjectFactory {
      */
     public ObtenerAsientoRegistralResponse createObtenerAsientoRegistralResponse() {
         return new ObtenerAsientoRegistralResponse();
-    }
-
-    /**
-     * Create an instance of {@link ObtenerRegistrosCiudadanoResponse }
-     * 
-     */
-    public ObtenerRegistrosCiudadanoResponse createObtenerRegistrosCiudadanoResponse() {
-        return new ObtenerRegistrosCiudadanoResponse();
     }
 
     /**
@@ -157,6 +149,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ObtenerAsientosCiudadano }
+     * 
+     */
+    public ObtenerAsientosCiudadano createObtenerAsientosCiudadano() {
+        return new ObtenerAsientosCiudadano();
+    }
+
+    /**
      * Create an instance of {@link WsValidationErrors }
      * 
      */
@@ -189,11 +189,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link ObtenerRegistrosCiudadano }
+     * Create an instance of {@link ObtenerAsientosCiudadanoResponse }
      * 
      */
-    public ObtenerRegistrosCiudadano createObtenerRegistrosCiudadano() {
-        return new ObtenerRegistrosCiudadano();
+    public ObtenerAsientosCiudadanoResponse createObtenerAsientosCiudadanoResponse() {
+        return new ObtenerAsientosCiudadanoResponse();
     }
 
     /**
@@ -291,15 +291,6 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerRegistrosCiudadanoResponse }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerRegistrosCiudadanoResponse")
-    public JAXBElement<ObtenerRegistrosCiudadanoResponse> createObtenerRegistrosCiudadanoResponse(ObtenerRegistrosCiudadanoResponse value) {
-        return new JAXBElement<ObtenerRegistrosCiudadanoResponse>(_ObtenerRegistrosCiudadanoResponse_QNAME, ObtenerRegistrosCiudadanoResponse.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerAsientoRegistralResponse }{@code >}}
      * 
      */
@@ -342,6 +333,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "crearAsientoRegistral")
     public JAXBElement<CrearAsientoRegistral> createCrearAsientoRegistral(CrearAsientoRegistral value) {
         return new JAXBElement<CrearAsientoRegistral>(_CrearAsientoRegistral_QNAME, CrearAsientoRegistral.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerAsientosCiudadanoResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerAsientosCiudadanoResponse")
+    public JAXBElement<ObtenerAsientosCiudadanoResponse> createObtenerAsientosCiudadanoResponse(ObtenerAsientosCiudadanoResponse value) {
+        return new JAXBElement<ObtenerAsientosCiudadanoResponse>(_ObtenerAsientosCiudadanoResponse_QNAME, ObtenerAsientosCiudadanoResponse.class, null, value);
     }
 
     /**
@@ -390,21 +390,21 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerRegistrosCiudadano }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerRegistrosCiudadano")
-    public JAXBElement<ObtenerRegistrosCiudadano> createObtenerRegistrosCiudadano(ObtenerRegistrosCiudadano value) {
-        return new JAXBElement<ObtenerRegistrosCiudadano>(_ObtenerRegistrosCiudadano_QNAME, ObtenerRegistrosCiudadano.class, null, value);
-    }
-
-    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerAsientoRegistral }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerAsientoRegistral")
     public JAXBElement<ObtenerAsientoRegistral> createObtenerAsientoRegistral(ObtenerAsientoRegistral value) {
         return new JAXBElement<ObtenerAsientoRegistral>(_ObtenerAsientoRegistral_QNAME, ObtenerAsientoRegistral.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerAsientosCiudadano }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerAsientosCiudadano")
+    public JAXBElement<ObtenerAsientosCiudadano> createObtenerAsientosCiudadano(ObtenerAsientosCiudadano value) {
+        return new JAXBElement<ObtenerAsientosCiudadano>(_ObtenerAsientosCiudadano_QNAME, ObtenerAsientosCiudadano.class, null, value);
     }
 
     /**
