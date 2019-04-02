@@ -111,7 +111,7 @@ public class UsuarioController extends BaseController {
                  usuario = usuarioEjb.persist(usuario);
 
                  // Obtiene los Roles del Usuario desde el sistema externo
-                 loginService.actualizarRoles(usuario);
+                 usuarioEjb.actualizarRoles(usuario);
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
 
@@ -173,7 +173,7 @@ public class UsuarioController extends BaseController {
                  usuario = usuarioEjb.merge(usuario);
 
                  // Actualizamos los Roles del Usuario desde el sistema externo y en la sesion
-                 loginService.actualizarRoles(usuario);
+                 usuarioEjb.actualizarRoles(usuario);
 
                  //Si el usuario modificado es el mismo que el UsuarioAutenticado, lo actualizamos en la sesión
                  if(usuario.getId().equals(usuarioAutenticado.getId())){

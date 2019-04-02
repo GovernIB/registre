@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -70,4 +71,13 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @throws Exception
      */
     Integer asociarIdioma() throws Exception;
+
+    /**
+     * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
+     * Actualiza los Roles del usuario en la bbdd de REGWEB3
+     * @param usuario
+     * @throws Exception
+     * @throws I18NException
+     */
+    void actualizarRoles(Usuario usuario) throws Exception, I18NException;
 }
