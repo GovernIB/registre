@@ -146,6 +146,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @Override
     @RolesAllowed({RWE_USUARI})
     @WebMethod
+    @Deprecated
     public IdentificadorWs nuevoRegistroSalida(@WebParam(name = "entidad") String entidad, @WebParam(name = "registroSalidaWs") RegistroSalidaWs registroSalidaWs) throws Throwable, WsI18NException, WsValidationException {
 
         IdentificadorWs identificadorWs = null;
@@ -279,6 +280,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @RolesAllowed({RWE_USUARI})
     @WebMethod
     @Override
+    @Deprecated
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         StringBuilder peticion = new StringBuilder();
@@ -373,6 +375,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public void anularRegistroSalida(@WebParam(name = "numeroRegistro") String numeroRegistro,
                                      @WebParam(name = "entidad") String entidad,
                                      @WebParam(name = "anular") boolean anular)
@@ -434,6 +437,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public RegistroSalidaResponseWs obtenerRegistroSalida(
             @WebParam(name = "numeroRegistro") String numeroRegistro,
             @WebParam(name = "usuario") String usuario,
@@ -517,6 +521,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @RolesAllowed({RWE_USUARI})
     @Override
     @WebMethod
+    @Deprecated
     public IdentificadorWs obtenerRegistroSalidaID(
             @WebParam(name = "anyo") int anyo,
             @WebParam(name = "numeroRegistro") int numeroRegistro,
