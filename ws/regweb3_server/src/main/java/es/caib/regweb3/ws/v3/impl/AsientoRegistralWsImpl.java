@@ -824,7 +824,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerRegistrosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{
+    public List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         StringBuilder peticion = new StringBuilder();
