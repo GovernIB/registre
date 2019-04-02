@@ -84,7 +84,7 @@ public class UsuarioExisteController extends BaseController {
                 }
 
                 // Actualizamos sus Roles
-                loginService.actualizarRoles(usuarioExistente);
+                usuarioEjb.actualizarRoles(usuarioExistente);
 
                 if(!usuarioExistente.getRwe_usuari() && !usuarioExistente.getRwe_admin()){
                     Mensaje.saveMessageError(request, getMessage("usuarioEntidad.rol"));

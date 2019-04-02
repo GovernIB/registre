@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Rol;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -23,4 +24,13 @@ public interface RolLocal extends BaseEjb<Rol, Long> {
      * @throws Exception
      */
     List<Rol> getByRol(List<String> roles) throws Exception;
+
+    /**
+     * Obtiene los Roles del usuario mediante el plugin de Login
+     * @param identificador
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    List<Rol> obtenerRolesUserPlugin(String identificador) throws Exception, I18NException;
 }
