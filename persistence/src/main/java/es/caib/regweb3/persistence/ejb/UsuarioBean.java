@@ -1,13 +1,16 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,6 +35,8 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
+
+    @EJB private RolLocal rolEjb;
 
 
     @Override
@@ -203,6 +208,20 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         q.setParameter("idioma", RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage()));
 
         return q.executeUpdate();
+
+    }
+
+    @Override
+    public void actualizarRoles(Usuario usuario) throws Exception, I18NException {
+
+        List<Rol> rolesUsuario = rolEjb.obtenerRolesUserPlugin(usuario.getIdentificador());
+
+        if(rolesUsuario != null) {
+
+            // Actualizamos los Roles del usuario según sistema externo
+            usuario.setRoles(rolesUsuario);
+            merge(usuario);
+        }
 
     }
 }
