@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for justificanteWs complex type.
+ * <p>Clase Java para justificanteWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="justificanteWs">
@@ -34,7 +34,7 @@ public class JustificanteWs {
     protected byte[] justificante;
 
     /**
-     * Gets the value of the justificante property.
+     * Obtiene el valor de la propiedad justificante.
      * 
      * @return
      *     possible object is
@@ -45,14 +45,14 @@ public class JustificanteWs {
     }
 
     /**
-     * Sets the value of the justificante property.
+     * Define el valor de la propiedad justificante.
      * 
      * @param value
      *     allowed object is
      *     byte[]
      */
     public void setJustificante(byte[] value) {
-        this.justificante = ((byte[]) value);
+        this.justificante = value;
     }
 
 }

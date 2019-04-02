@@ -111,16 +111,18 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
     // @Test
     public void anularRegistroEntrada() {
 
+/*
         try {
-            registroEntradaApi.anularRegistroEntrada("ADMP-E-2/2014", "earrivi", "A04006741", true);
+            registroEntradaApi.anularRegistroEntrada("ADMP-E-2/2014",  "earrivi","A04006741", true);
 
-            registroEntradaApi.anularRegistroEntrada("ADMP-E-2/2014", "earrivi", "A04006741", false);
+            registroEntradaApi.anularRegistroEntrada("ADMP-E-2/2014",  "earrivi","A04006741", false);
 
         } catch (WsI18NException e) {
             e.printStackTrace();
         } catch (WsValidationException e) {
             e.printStackTrace();
         }
+*/
     }
 
     @Test

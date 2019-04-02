@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for echo complex type.
+ * <p>Clase Java para echo complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="echo">
@@ -34,7 +34,7 @@ public class Echo {
     protected String echo;
 
     /**
-     * Gets the value of the echo property.
+     * Obtiene el valor de la propiedad echo.
      * 
      * @return
      *     possible object is
@@ -46,7 +46,7 @@ public class Echo {
     }
 
     /**
-     * Sets the value of the echo property.
+     * Define el valor de la propiedad echo.
      * 
      * @param value
      *     allowed object is

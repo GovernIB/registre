@@ -115,6 +115,18 @@
       <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:tipoAsuntoWs"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="listarLibros">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="oficinaCodigoDir3" type="xs:string"/>
+      <xs:element minOccurs="0" name="autorizacion" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="listarLibrosResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:libroWs"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="listarOrganismos">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
@@ -129,18 +141,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="codigo" type="xs:string"/>
       <xs:element minOccurs="0" name="nombre" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="listarLibros">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="entidadCodigoDir3" type="xs:string"/>
-      <xs:element minOccurs="0" name="oficinaCodigoDir3" type="xs:string"/>
-      <xs:element minOccurs="0" name="autorizacion" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="listarLibrosResponse">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:libroWs"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="listarTipoDocumental">
@@ -311,18 +311,18 @@
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="listarOrganismos">
-      <wsdl:input name="listarOrganismos" message="tns:listarOrganismos">
-    </wsdl:input>
-      <wsdl:output name="listarOrganismosResponse" message="tns:listarOrganismosResponse">
-    </wsdl:output>
-      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
-    </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="listarLibros">
       <wsdl:input name="listarLibros" message="tns:listarLibros">
     </wsdl:input>
       <wsdl:output name="listarLibrosResponse" message="tns:listarLibrosResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarOrganismos">
+      <wsdl:input name="listarOrganismos" message="tns:listarOrganismos">
+    </wsdl:input>
+      <wsdl:output name="listarOrganismosResponse" message="tns:listarOrganismosResponse">
     </wsdl:output>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
@@ -405,24 +405,24 @@
         <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="listarOrganismos">
-      <soap:operation soapAction="" style="document"/>
-      <wsdl:input name="listarOrganismos">
-        <soap:body use="literal"/>
-      </wsdl:input>
-      <wsdl:output name="listarOrganismosResponse">
-        <soap:body use="literal"/>
-      </wsdl:output>
-      <wsdl:fault name="WsI18NException">
-        <soap:fault name="WsI18NException" use="literal"/>
-      </wsdl:fault>
-    </wsdl:operation>
     <wsdl:operation name="listarLibros">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="listarLibros">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="listarLibrosResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="listarOrganismos">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="listarOrganismos">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="listarOrganismosResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsI18NException">

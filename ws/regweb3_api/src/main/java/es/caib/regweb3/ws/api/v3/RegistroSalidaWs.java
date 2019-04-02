@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for registroSalidaWs complex type.
+ * <p>Clase Java para registroSalidaWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="registroSalidaWs">
@@ -36,7 +36,7 @@ public class RegistroSalidaWs
     protected String origen;
 
     /**
-     * Gets the value of the origen property.
+     * Obtiene el valor de la propiedad origen.
      * 
      * @return
      *     possible object is
@@ -48,7 +48,7 @@ public class RegistroSalidaWs
     }
 
     /**
-     * Sets the value of the origen property.
+     * Define el valor de la propiedad origen.
      * 
      * @param value
      *     allowed object is

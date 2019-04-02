@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for libroWs complex type.
+ * <p>Clase Java para libroWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="libroWs">
@@ -43,7 +43,7 @@ public class LibroWs {
     protected String nombreLargo;
 
     /**
-     * Gets the value of the codigoLibro property.
+     * Obtiene el valor de la propiedad codigoLibro.
      * 
      * @return
      *     possible object is
@@ -55,7 +55,7 @@ public class LibroWs {
     }
 
     /**
-     * Sets the value of the codigoLibro property.
+     * Define el valor de la propiedad codigoLibro.
      * 
      * @param value
      *     allowed object is
@@ -67,7 +67,7 @@ public class LibroWs {
     }
 
     /**
-     * Gets the value of the codigoOrganismo property.
+     * Obtiene el valor de la propiedad codigoOrganismo.
      * 
      * @return
      *     possible object is
@@ -79,7 +79,7 @@ public class LibroWs {
     }
 
     /**
-     * Sets the value of the codigoOrganismo property.
+     * Define el valor de la propiedad codigoOrganismo.
      * 
      * @param value
      *     allowed object is
@@ -91,7 +91,7 @@ public class LibroWs {
     }
 
     /**
-     * Gets the value of the nombreCorto property.
+     * Obtiene el valor de la propiedad nombreCorto.
      * 
      * @return
      *     possible object is
@@ -103,7 +103,7 @@ public class LibroWs {
     }
 
     /**
-     * Sets the value of the nombreCorto property.
+     * Define el valor de la propiedad nombreCorto.
      * 
      * @param value
      *     allowed object is
@@ -115,7 +115,7 @@ public class LibroWs {
     }
 
     /**
-     * Gets the value of the nombreLargo property.
+     * Obtiene el valor de la propiedad nombreLargo.
      * 
      * @return
      *     possible object is
@@ -127,7 +127,7 @@ public class LibroWs {
     }
 
     /**
-     * Sets the value of the nombreLargo property.
+     * Define el valor de la propiedad nombreLargo.
      * 
      * @param value
      *     allowed object is

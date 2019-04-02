@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for wsI18NArgument complex type.
+ * <p>Clase Java para wsI18NArgument complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="wsI18NArgument">
@@ -37,7 +37,7 @@ public class WsI18NArgument {
     protected boolean translate;
 
     /**
-     * Gets the value of the value property.
+     * Obtiene el valor de la propiedad value.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class WsI18NArgument {
     }
 
     /**
-     * Sets the value of the value property.
+     * Define el valor de la propiedad value.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class WsI18NArgument {
     }
 
     /**
-     * Gets the value of the translate property.
+     * Obtiene el valor de la propiedad translate.
      * 
      */
     public boolean isTranslate() {
@@ -69,7 +69,7 @@ public class WsI18NArgument {
     }
 
     /**
-     * Sets the value of the translate property.
+     * Define el valor de la propiedad translate.
      * 
      */
     public void setTranslate(boolean value) {
