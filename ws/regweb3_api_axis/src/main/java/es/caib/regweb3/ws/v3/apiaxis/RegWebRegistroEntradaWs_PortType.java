@@ -17,5 +17,5 @@ public interface RegWebRegistroEntradaWs_PortType extends java.rmi.Remote {
     public void distribuirRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String entidad) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb3.ws.v3.apiaxis.IdentificadorWs altaRegistroEntrada(es.caib.regweb3.ws.v3.apiaxis.RegistroEntradaWs registroEntradaWs) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
     public int getVersionWs() throws java.rmi.RemoteException;
-    public void anularRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String usuario, java.lang.String entidad, boolean anular) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
+    public void anularRegistroEntrada(java.lang.String numeroRegistroFormateado, java.lang.String entidad, boolean anular) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
 }

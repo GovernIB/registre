@@ -14,6 +14,8 @@ public class DatosInteresadoWs  implements java.io.Serializable {
 
     private java.lang.Long canal;
 
+    private java.lang.String codigoDire;
+
     private java.lang.String cp;
 
     private java.lang.String direccion;
@@ -49,6 +51,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
            java.lang.String apellido1,
            java.lang.String apellido2,
            java.lang.Long canal,
+           java.lang.String codigoDire,
            java.lang.String cp,
            java.lang.String direccion,
            java.lang.String direccionElectronica,
@@ -66,6 +69,7 @@ public class DatosInteresadoWs  implements java.io.Serializable {
            this.apellido1 = apellido1;
            this.apellido2 = apellido2;
            this.canal = canal;
+           this.codigoDire = codigoDire;
            this.cp = cp;
            this.direccion = direccion;
            this.direccionElectronica = direccionElectronica;
@@ -140,6 +144,26 @@ public class DatosInteresadoWs  implements java.io.Serializable {
      */
     public void setCanal(java.lang.Long canal) {
         this.canal = canal;
+    }
+
+
+    /**
+     * Gets the codigoDire value for this DatosInteresadoWs.
+     * 
+     * @return codigoDire
+     */
+    public java.lang.String getCodigoDire() {
+        return codigoDire;
+    }
+
+
+    /**
+     * Sets the codigoDire value for this DatosInteresadoWs.
+     * 
+     * @param codigoDire
+     */
+    public void setCodigoDire(java.lang.String codigoDire) {
+        this.codigoDire = codigoDire;
     }
 
 
@@ -443,6 +467,9 @@ public class DatosInteresadoWs  implements java.io.Serializable {
             ((this.canal==null && other.getCanal()==null) || 
              (this.canal!=null &&
               this.canal.equals(other.getCanal()))) &&
+            ((this.codigoDire==null && other.getCodigoDire()==null) || 
+             (this.codigoDire!=null &&
+              this.codigoDire.equals(other.getCodigoDire()))) &&
             ((this.cp==null && other.getCp()==null) || 
              (this.cp!=null &&
               this.cp.equals(other.getCp()))) &&
@@ -504,6 +531,9 @@ public class DatosInteresadoWs  implements java.io.Serializable {
         }
         if (getCanal() != null) {
             _hashCode += getCanal().hashCode();
+        }
+        if (getCodigoDire() != null) {
+            _hashCode += getCodigoDire().hashCode();
         }
         if (getCp() != null) {
             _hashCode += getCp().hashCode();
@@ -575,6 +605,13 @@ public class DatosInteresadoWs  implements java.io.Serializable {
         elemField.setFieldName("canal");
         elemField.setXmlName(new javax.xml.namespace.QName("", "canal"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("codigoDire");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "codigoDire"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
