@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for WsI18NError complex type.
+ * <p>Clase Java para WsI18NError complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="WsI18NError">
@@ -36,7 +36,7 @@ public class WsI18NError {
     protected WsI18NTranslation translation;
 
     /**
-     * Gets the value of the translation property.
+     * Obtiene el valor de la propiedad translation.
      * 
      * @return
      *     possible object is
@@ -48,7 +48,7 @@ public class WsI18NError {
     }
 
     /**
-     * Sets the value of the translation property.
+     * Define el valor de la propiedad translation.
      * 
      * @param value
      *     allowed object is

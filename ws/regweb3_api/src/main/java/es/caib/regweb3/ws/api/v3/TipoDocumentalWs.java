@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for tipoDocumentalWs complex type.
+ * <p>Clase Java para tipoDocumentalWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="tipoDocumentalWs">
@@ -34,7 +34,7 @@ public class TipoDocumentalWs {
     protected String codigoNTI;
 
     /**
-     * Gets the value of the codigoNTI property.
+     * Obtiene el valor de la propiedad codigoNTI.
      * 
      * @return
      *     possible object is
@@ -46,7 +46,7 @@ public class TipoDocumentalWs {
     }
 
     /**
-     * Sets the value of the codigoNTI property.
+     * Define el valor de la propiedad codigoNTI.
      * 
      * @param value
      *     allowed object is

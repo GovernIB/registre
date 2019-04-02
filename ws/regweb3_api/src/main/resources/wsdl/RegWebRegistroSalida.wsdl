@@ -29,21 +29,15 @@
   <xs:element name="registroSalidaResponseWs" type="tns:registroSalidaResponseWs"/>
   <xs:element name="registroSalidaWs" type="tns:registroSalidaWs"/>
   <xs:element name="registroWs" type="tns:registroWs"/>
-  <xs:complexType name="obtenerJustificante">
+  <xs:complexType name="anularRegistroSalida">
     <xs:sequence>
+      <xs:element minOccurs="0" name="numeroRegistro" type="xs:string"/>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
-      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element name="anular" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="obtenerJustificanteResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:justificanteWs"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="justificanteWs">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="justificante" type="xs:base64Binary"/>
-    </xs:sequence>
+  <xs:complexType name="anularRegistroSalidaResponse">
+    <xs:sequence/>
   </xs:complexType>
   <xs:complexType name="wsFieldValidationError">
     <xs:sequence>
@@ -65,16 +59,21 @@
       <xs:element name="translate" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="anularRegistroSalida">
+  <xs:complexType name="obtenerJustificante">
     <xs:sequence>
-      <xs:element minOccurs="0" name="numeroRegistro" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
-      <xs:element name="anular" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="anularRegistroSalidaResponse">
-    <xs:sequence/>
+  <xs:complexType name="obtenerJustificanteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:justificanteWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="justificanteWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="justificante" type="xs:base64Binary"/>
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="getVersion">
     <xs:sequence/>
@@ -175,6 +174,7 @@
       <xs:element minOccurs="0" name="apellido1" type="xs:string"/>
       <xs:element minOccurs="0" name="apellido2" type="xs:string"/>
       <xs:element minOccurs="0" name="canal" type="xs:long"/>
+      <xs:element minOccurs="0" name="codigoDire" type="xs:string"/>
       <xs:element minOccurs="0" name="cp" type="xs:string"/>
       <xs:element minOccurs="0" name="direccion" type="xs:string"/>
       <xs:element minOccurs="0" name="direccionElectronica" type="xs:string"/>
@@ -364,20 +364,20 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebRegistroSalidaWs">
-    <wsdl:operation name="obtenerJustificante">
-      <wsdl:input name="obtenerJustificante" message="tns:obtenerJustificante">
+    <wsdl:operation name="anularRegistroSalida">
+      <wsdl:input name="anularRegistroSalida" message="tns:anularRegistroSalida">
     </wsdl:input>
-      <wsdl:output name="obtenerJustificanteResponse" message="tns:obtenerJustificanteResponse">
+      <wsdl:output name="anularRegistroSalidaResponse" message="tns:anularRegistroSalidaResponse">
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
-    <wsdl:operation name="anularRegistroSalida">
-      <wsdl:input name="anularRegistroSalida" message="tns:anularRegistroSalida">
+    <wsdl:operation name="obtenerJustificante">
+      <wsdl:input name="obtenerJustificante" message="tns:obtenerJustificante">
     </wsdl:input>
-      <wsdl:output name="anularRegistroSalidaResponse" message="tns:anularRegistroSalidaResponse">
+      <wsdl:output name="obtenerJustificanteResponse" message="tns:obtenerJustificanteResponse">
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>

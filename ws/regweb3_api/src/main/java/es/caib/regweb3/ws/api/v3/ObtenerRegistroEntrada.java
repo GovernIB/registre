@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for obtenerRegistroEntrada complex type.
+ * <p>Clase Java para obtenerRegistroEntrada complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="obtenerRegistroEntrada">
@@ -40,7 +40,7 @@ public class ObtenerRegistroEntrada {
     protected String entidad;
 
     /**
-     * Gets the value of the numeroRegistroFormateado property.
+     * Obtiene el valor de la propiedad numeroRegistroFormateado.
      * 
      * @return
      *     possible object is
@@ -52,7 +52,7 @@ public class ObtenerRegistroEntrada {
     }
 
     /**
-     * Sets the value of the numeroRegistroFormateado property.
+     * Define el valor de la propiedad numeroRegistroFormateado.
      * 
      * @param value
      *     allowed object is
@@ -64,7 +64,7 @@ public class ObtenerRegistroEntrada {
     }
 
     /**
-     * Gets the value of the usuario property.
+     * Obtiene el valor de la propiedad usuario.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class ObtenerRegistroEntrada {
     }
 
     /**
-     * Sets the value of the usuario property.
+     * Define el valor de la propiedad usuario.
      * 
      * @param value
      *     allowed object is
@@ -88,7 +88,7 @@ public class ObtenerRegistroEntrada {
     }
 
     /**
-     * Gets the value of the entidad property.
+     * Obtiene el valor de la propiedad entidad.
      * 
      * @return
      *     possible object is
@@ -100,7 +100,7 @@ public class ObtenerRegistroEntrada {
     }
 
     /**
-     * Sets the value of the entidad property.
+     * Define el valor de la propiedad entidad.
      * 
      * @param value
      *     allowed object is

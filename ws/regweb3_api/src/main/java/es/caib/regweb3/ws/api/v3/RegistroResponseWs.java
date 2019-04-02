@@ -9,9 +9,9 @@ import java.util.List;
 
 
 /**
- * <p>Java class for registroResponseWs complex type.
+ * <p>Clase Java para registroResponseWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="registroResponseWs">
@@ -178,7 +178,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the aplicacion property.
+     * Obtiene el valor de la propiedad aplicacion.
      * 
      * @return
      *     possible object is
@@ -190,7 +190,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the aplicacion property.
+     * Define el valor de la propiedad aplicacion.
      * 
      * @param value
      *     allowed object is
@@ -202,7 +202,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the codigoAsuntoCodigo property.
+     * Obtiene el valor de la propiedad codigoAsuntoCodigo.
      * 
      * @return
      *     possible object is
@@ -214,7 +214,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the codigoAsuntoCodigo property.
+     * Define el valor de la propiedad codigoAsuntoCodigo.
      * 
      * @param value
      *     allowed object is
@@ -226,7 +226,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the codigoAsuntoDescripcion property.
+     * Obtiene el valor de la propiedad codigoAsuntoDescripcion.
      * 
      * @return
      *     possible object is
@@ -238,7 +238,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the codigoAsuntoDescripcion property.
+     * Define el valor de la propiedad codigoAsuntoDescripcion.
      * 
      * @param value
      *     allowed object is
@@ -250,7 +250,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the codigoUsuario property.
+     * Obtiene el valor de la propiedad codigoUsuario.
      * 
      * @return
      *     possible object is
@@ -262,7 +262,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the codigoUsuario property.
+     * Define el valor de la propiedad codigoUsuario.
      * 
      * @param value
      *     allowed object is
@@ -274,7 +274,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the contactoUsuario property.
+     * Obtiene el valor de la propiedad contactoUsuario.
      * 
      * @return
      *     possible object is
@@ -286,7 +286,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the contactoUsuario property.
+     * Define el valor de la propiedad contactoUsuario.
      * 
      * @param value
      *     allowed object is
@@ -298,7 +298,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the docFisicaCodigo property.
+     * Obtiene el valor de la propiedad docFisicaCodigo.
      * 
      * @return
      *     possible object is
@@ -310,7 +310,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the docFisicaCodigo property.
+     * Define el valor de la propiedad docFisicaCodigo.
      * 
      * @param value
      *     allowed object is
@@ -322,7 +322,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the docFisicaDescripcion property.
+     * Obtiene el valor de la propiedad docFisicaDescripcion.
      * 
      * @return
      *     possible object is
@@ -334,7 +334,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the docFisicaDescripcion property.
+     * Define el valor de la propiedad docFisicaDescripcion.
      * 
      * @param value
      *     allowed object is
@@ -346,7 +346,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the entidadCodigo property.
+     * Obtiene el valor de la propiedad entidadCodigo.
      * 
      * @return
      *     possible object is
@@ -358,7 +358,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the entidadCodigo property.
+     * Define el valor de la propiedad entidadCodigo.
      * 
      * @param value
      *     allowed object is
@@ -370,7 +370,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the entidadDenominacion property.
+     * Obtiene el valor de la propiedad entidadDenominacion.
      * 
      * @return
      *     possible object is
@@ -382,7 +382,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the entidadDenominacion property.
+     * Define el valor de la propiedad entidadDenominacion.
      * 
      * @param value
      *     allowed object is
@@ -394,7 +394,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the expone property.
+     * Obtiene el valor de la propiedad expone.
      * 
      * @return
      *     possible object is
@@ -406,7 +406,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the expone property.
+     * Define el valor de la propiedad expone.
      * 
      * @param value
      *     allowed object is
@@ -418,7 +418,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the extracto property.
+     * Obtiene el valor de la propiedad extracto.
      * 
      * @return
      *     possible object is
@@ -430,7 +430,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the extracto property.
+     * Define el valor de la propiedad extracto.
      * 
      * @param value
      *     allowed object is
@@ -442,7 +442,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the fechaOrigen property.
+     * Obtiene el valor de la propiedad fechaOrigen.
      * 
      * @return
      *     possible object is
@@ -454,7 +454,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the fechaOrigen property.
+     * Define el valor de la propiedad fechaOrigen.
      * 
      * @param value
      *     allowed object is
@@ -466,7 +466,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the fechaRegistro property.
+     * Obtiene el valor de la propiedad fechaRegistro.
      * 
      * @return
      *     possible object is
@@ -478,7 +478,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the fechaRegistro property.
+     * Define el valor de la propiedad fechaRegistro.
      * 
      * @param value
      *     allowed object is
@@ -490,7 +490,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the idiomaCodigo property.
+     * Obtiene el valor de la propiedad idiomaCodigo.
      * 
      * @return
      *     possible object is
@@ -502,7 +502,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the idiomaCodigo property.
+     * Define el valor de la propiedad idiomaCodigo.
      * 
      * @param value
      *     allowed object is
@@ -514,7 +514,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the idiomaDescripcion property.
+     * Obtiene el valor de la propiedad idiomaDescripcion.
      * 
      * @return
      *     possible object is
@@ -526,7 +526,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the idiomaDescripcion property.
+     * Define el valor de la propiedad idiomaDescripcion.
      * 
      * @param value
      *     allowed object is
@@ -567,7 +567,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the libroCodigo property.
+     * Obtiene el valor de la propiedad libroCodigo.
      * 
      * @return
      *     possible object is
@@ -579,7 +579,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the libroCodigo property.
+     * Define el valor de la propiedad libroCodigo.
      * 
      * @param value
      *     allowed object is
@@ -591,7 +591,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the libroDescripcion property.
+     * Obtiene el valor de la propiedad libroDescripcion.
      * 
      * @return
      *     possible object is
@@ -603,7 +603,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the libroDescripcion property.
+     * Define el valor de la propiedad libroDescripcion.
      * 
      * @param value
      *     allowed object is
@@ -615,7 +615,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the nombreUsuario property.
+     * Obtiene el valor de la propiedad nombreUsuario.
      * 
      * @return
      *     possible object is
@@ -627,7 +627,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the nombreUsuario property.
+     * Define el valor de la propiedad nombreUsuario.
      * 
      * @param value
      *     allowed object is
@@ -639,7 +639,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the numExpediente property.
+     * Obtiene el valor de la propiedad numExpediente.
      * 
      * @return
      *     possible object is
@@ -651,7 +651,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the numExpediente property.
+     * Define el valor de la propiedad numExpediente.
      * 
      * @param value
      *     allowed object is
@@ -663,7 +663,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the numTransporte property.
+     * Obtiene el valor de la propiedad numTransporte.
      * 
      * @return
      *     possible object is
@@ -675,7 +675,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the numTransporte property.
+     * Define el valor de la propiedad numTransporte.
      * 
      * @param value
      *     allowed object is
@@ -687,7 +687,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the numeroRegistro property.
+     * Obtiene el valor de la propiedad numeroRegistro.
      * 
      */
     public int getNumeroRegistro() {
@@ -695,7 +695,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the numeroRegistro property.
+     * Define el valor de la propiedad numeroRegistro.
      * 
      */
     public void setNumeroRegistro(int value) {
@@ -703,7 +703,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the numeroRegistroFormateado property.
+     * Obtiene el valor de la propiedad numeroRegistroFormateado.
      * 
      * @return
      *     possible object is
@@ -715,7 +715,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the numeroRegistroFormateado property.
+     * Define el valor de la propiedad numeroRegistroFormateado.
      * 
      * @param value
      *     allowed object is
@@ -727,7 +727,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the numeroRegistroOrigen property.
+     * Obtiene el valor de la propiedad numeroRegistroOrigen.
      * 
      * @return
      *     possible object is
@@ -739,7 +739,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the numeroRegistroOrigen property.
+     * Define el valor de la propiedad numeroRegistroOrigen.
      * 
      * @param value
      *     allowed object is
@@ -751,7 +751,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the observaciones property.
+     * Obtiene el valor de la propiedad observaciones.
      * 
      * @return
      *     possible object is
@@ -763,7 +763,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the observaciones property.
+     * Define el valor de la propiedad observaciones.
      * 
      * @param value
      *     allowed object is
@@ -775,7 +775,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the oficinaCodigo property.
+     * Obtiene el valor de la propiedad oficinaCodigo.
      * 
      * @return
      *     possible object is
@@ -787,7 +787,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the oficinaCodigo property.
+     * Define el valor de la propiedad oficinaCodigo.
      * 
      * @param value
      *     allowed object is
@@ -799,7 +799,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the oficinaDenominacion property.
+     * Obtiene el valor de la propiedad oficinaDenominacion.
      * 
      * @return
      *     possible object is
@@ -811,7 +811,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the oficinaDenominacion property.
+     * Define el valor de la propiedad oficinaDenominacion.
      * 
      * @param value
      *     allowed object is
@@ -823,7 +823,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the refExterna property.
+     * Obtiene el valor de la propiedad refExterna.
      * 
      * @return
      *     possible object is
@@ -835,7 +835,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the refExterna property.
+     * Define el valor de la propiedad refExterna.
      * 
      * @param value
      *     allowed object is
@@ -847,7 +847,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the solicita property.
+     * Obtiene el valor de la propiedad solicita.
      * 
      * @return
      *     possible object is
@@ -859,7 +859,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the solicita property.
+     * Define el valor de la propiedad solicita.
      * 
      * @param value
      *     allowed object is
@@ -871,7 +871,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the tipoAsuntoCodigo property.
+     * Obtiene el valor de la propiedad tipoAsuntoCodigo.
      * 
      * @return
      *     possible object is
@@ -883,7 +883,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the tipoAsuntoCodigo property.
+     * Define el valor de la propiedad tipoAsuntoCodigo.
      * 
      * @param value
      *     allowed object is
@@ -895,7 +895,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the tipoAsuntoDescripcion property.
+     * Obtiene el valor de la propiedad tipoAsuntoDescripcion.
      * 
      * @return
      *     possible object is
@@ -907,7 +907,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the tipoAsuntoDescripcion property.
+     * Define el valor de la propiedad tipoAsuntoDescripcion.
      * 
      * @param value
      *     allowed object is
@@ -919,7 +919,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the tipoTransporteCodigo property.
+     * Obtiene el valor de la propiedad tipoTransporteCodigo.
      * 
      * @return
      *     possible object is
@@ -931,7 +931,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the tipoTransporteCodigo property.
+     * Define el valor de la propiedad tipoTransporteCodigo.
      * 
      * @param value
      *     allowed object is
@@ -943,7 +943,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the tipoTransporteDescripcion property.
+     * Obtiene el valor de la propiedad tipoTransporteDescripcion.
      * 
      * @return
      *     possible object is
@@ -955,7 +955,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the tipoTransporteDescripcion property.
+     * Define el valor de la propiedad tipoTransporteDescripcion.
      * 
      * @param value
      *     allowed object is
@@ -967,7 +967,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Gets the value of the version property.
+     * Obtiene el valor de la propiedad version.
      * 
      * @return
      *     possible object is
@@ -979,7 +979,7 @@ public class RegistroResponseWs {
     }
 
     /**
-     * Sets the value of the version property.
+     * Define el valor de la propiedad version.
      * 
      * @param value
      *     allowed object is

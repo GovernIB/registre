@@ -17,6 +17,26 @@
   <xs:element name="listarPersonas" type="tns:listarPersonas"/>
   <xs:element name="listarPersonasResponse" type="tns:listarPersonasResponse"/>
   <xs:element name="personaWs" type="tns:personaWs"/>
+  <xs:complexType name="borrarPersona">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="personaID" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="borrarPersonaResponse">
+    <xs:sequence/>
+  </xs:complexType>
+  <xs:complexType name="wsI18NTranslation">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsI18NArgument">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="value" type="xs:string"/>
+      <xs:element name="translate" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="crearPersona">
     <xs:sequence>
       <xs:element minOccurs="0" name="personaWs" type="tns:personaWs"/>
@@ -60,26 +80,6 @@
       <xs:element name="error" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="wsI18NTranslation">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="code" type="xs:string"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="args" type="tns:wsI18NArgument"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="wsI18NArgument">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="value" type="xs:string"/>
-      <xs:element name="translate" type="xs:boolean"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="borrarPersona">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="personaID" type="xs:long"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="borrarPersonaResponse">
-    <xs:sequence/>
-  </xs:complexType>
   <xs:complexType name="getVersion">
     <xs:sequence/>
   </xs:complexType>
@@ -114,16 +114,16 @@
   <xs:complexType name="actualizarPersonaResponse">
     <xs:sequence/>
   </xs:complexType>
-  <xs:element name="WsValidationErrors" type="tns:WsValidationErrors"/>
-  <xs:complexType name="WsValidationErrors">
-    <xs:sequence>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="fieldFaults" type="tns:wsFieldValidationError"/>
-    </xs:sequence>
-  </xs:complexType>
   <xs:element name="WsI18NError" type="tns:WsI18NError"/>
   <xs:complexType name="WsI18NError">
     <xs:sequence>
       <xs:element name="translation" nillable="true" type="tns:wsI18NTranslation"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="WsValidationErrors" type="tns:WsValidationErrors"/>
+  <xs:complexType name="WsValidationErrors">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="fieldFaults" type="tns:wsFieldValidationError"/>
     </xs:sequence>
   </xs:complexType>
 </xs:schema>
@@ -152,16 +152,16 @@
     <wsdl:part name="parameters" element="tns:borrarPersona">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="actualizarPersona">
+    <wsdl:part name="parameters" element="tns:actualizarPersona">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="crearPersonaResponse">
     <wsdl:part name="parameters" element="tns:crearPersonaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="listarPersonasResponse">
     <wsdl:part name="parameters" element="tns:listarPersonasResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="actualizarPersona">
-    <wsdl:part name="parameters" element="tns:actualizarPersona">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="actualizarPersonaResponse">
@@ -185,6 +185,14 @@
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebPersonasWs">
+    <wsdl:operation name="borrarPersona">
+      <wsdl:input name="borrarPersona" message="tns:borrarPersona">
+    </wsdl:input>
+      <wsdl:output name="borrarPersonaResponse" message="tns:borrarPersonaResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="crearPersona">
       <wsdl:input name="crearPersona" message="tns:crearPersona">
     </wsdl:input>
@@ -192,14 +200,6 @@
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
-      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
-    </wsdl:fault>
-    </wsdl:operation>
-    <wsdl:operation name="borrarPersona">
-      <wsdl:input name="borrarPersona" message="tns:borrarPersona">
-    </wsdl:input>
-      <wsdl:output name="borrarPersonaResponse" message="tns:borrarPersonaResponse">
-    </wsdl:output>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>

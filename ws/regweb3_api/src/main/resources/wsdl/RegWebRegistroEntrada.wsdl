@@ -160,6 +160,7 @@
       <xs:element minOccurs="0" name="apellido1" type="xs:string"/>
       <xs:element minOccurs="0" name="apellido2" type="xs:string"/>
       <xs:element minOccurs="0" name="canal" type="xs:long"/>
+      <xs:element minOccurs="0" name="codigoDire" type="xs:string"/>
       <xs:element minOccurs="0" name="cp" type="xs:string"/>
       <xs:element minOccurs="0" name="direccion" type="xs:string"/>
       <xs:element minOccurs="0" name="direccionElectronica" type="xs:string"/>
@@ -292,7 +293,6 @@
   <xs:complexType name="anularRegistroEntrada">
     <xs:sequence>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-      <xs:element minOccurs="0" name="usuario" type="xs:string"/>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element name="anular" type="xs:boolean"/>
     </xs:sequence>
@@ -342,16 +342,16 @@
     <wsdl:part name="parameters" element="tns:obtenerRegistroEntradaResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="nuevoRegistroEntrada">
+    <wsdl:part name="parameters" element="tns:nuevoRegistroEntrada">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="tramitarRegistroEntrada">
     <wsdl:part name="parameters" element="tns:tramitarRegistroEntrada">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getVersionResponse">
     <wsdl:part name="parameters" element="tns:getVersionResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="nuevoRegistroEntrada">
-    <wsdl:part name="parameters" element="tns:nuevoRegistroEntrada">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerRegistroEntradaID">

@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for datosInteresadoWs complex type.
+ * <p>Clase Java para datosInteresadoWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="datosInteresadoWs">
@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="apellido1" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="apellido2" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="canal" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
+ *         &lt;element name="codigoDire" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="cp" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="direccion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="direccionElectronica" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -46,6 +47,7 @@ import javax.xml.bind.annotation.XmlType;
     "apellido1",
     "apellido2",
     "canal",
+    "codigoDire",
     "cp",
     "direccion",
     "direccionElectronica",
@@ -66,6 +68,7 @@ public class DatosInteresadoWs {
     protected String apellido1;
     protected String apellido2;
     protected Long canal;
+    protected String codigoDire;
     protected String cp;
     protected String direccion;
     protected String direccionElectronica;
@@ -82,7 +85,7 @@ public class DatosInteresadoWs {
     protected Long tipoInteresado;
 
     /**
-     * Gets the value of the apellido1 property.
+     * Obtiene el valor de la propiedad apellido1.
      * 
      * @return
      *     possible object is
@@ -94,7 +97,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the apellido1 property.
+     * Define el valor de la propiedad apellido1.
      * 
      * @param value
      *     allowed object is
@@ -106,7 +109,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the apellido2 property.
+     * Obtiene el valor de la propiedad apellido2.
      * 
      * @return
      *     possible object is
@@ -118,7 +121,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the apellido2 property.
+     * Define el valor de la propiedad apellido2.
      * 
      * @param value
      *     allowed object is
@@ -130,7 +133,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the canal property.
+     * Obtiene el valor de la propiedad canal.
      * 
      * @return
      *     possible object is
@@ -142,7 +145,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the canal property.
+     * Define el valor de la propiedad canal.
      * 
      * @param value
      *     allowed object is
@@ -154,7 +157,31 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the cp property.
+     * Obtiene el valor de la propiedad codigoDire.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCodigoDire() {
+        return codigoDire;
+    }
+
+    /**
+     * Define el valor de la propiedad codigoDire.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCodigoDire(String value) {
+        this.codigoDire = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad cp.
      * 
      * @return
      *     possible object is
@@ -166,7 +193,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the cp property.
+     * Define el valor de la propiedad cp.
      * 
      * @param value
      *     allowed object is
@@ -178,7 +205,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the direccion property.
+     * Obtiene el valor de la propiedad direccion.
      * 
      * @return
      *     possible object is
@@ -190,7 +217,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the direccion property.
+     * Define el valor de la propiedad direccion.
      * 
      * @param value
      *     allowed object is
@@ -202,7 +229,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the direccionElectronica property.
+     * Obtiene el valor de la propiedad direccionElectronica.
      * 
      * @return
      *     possible object is
@@ -214,7 +241,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the direccionElectronica property.
+     * Define el valor de la propiedad direccionElectronica.
      * 
      * @param value
      *     allowed object is
@@ -226,7 +253,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the documento property.
+     * Obtiene el valor de la propiedad documento.
      * 
      * @return
      *     possible object is
@@ -238,7 +265,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the documento property.
+     * Define el valor de la propiedad documento.
      * 
      * @param value
      *     allowed object is
@@ -250,7 +277,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the email property.
+     * Obtiene el valor de la propiedad email.
      * 
      * @return
      *     possible object is
@@ -262,7 +289,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the email property.
+     * Define el valor de la propiedad email.
      * 
      * @param value
      *     allowed object is
@@ -274,7 +301,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the localidad property.
+     * Obtiene el valor de la propiedad localidad.
      * 
      * @return
      *     possible object is
@@ -286,7 +313,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the localidad property.
+     * Define el valor de la propiedad localidad.
      * 
      * @param value
      *     allowed object is
@@ -298,7 +325,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the nombre property.
+     * Obtiene el valor de la propiedad nombre.
      * 
      * @return
      *     possible object is
@@ -310,7 +337,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the nombre property.
+     * Define el valor de la propiedad nombre.
      * 
      * @param value
      *     allowed object is
@@ -322,7 +349,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the observaciones property.
+     * Obtiene el valor de la propiedad observaciones.
      * 
      * @return
      *     possible object is
@@ -334,7 +361,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the observaciones property.
+     * Define el valor de la propiedad observaciones.
      * 
      * @param value
      *     allowed object is
@@ -346,7 +373,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the pais property.
+     * Obtiene el valor de la propiedad pais.
      * 
      * @return
      *     possible object is
@@ -358,7 +385,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the pais property.
+     * Define el valor de la propiedad pais.
      * 
      * @param value
      *     allowed object is
@@ -370,7 +397,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the provincia property.
+     * Obtiene el valor de la propiedad provincia.
      * 
      * @return
      *     possible object is
@@ -382,7 +409,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the provincia property.
+     * Define el valor de la propiedad provincia.
      * 
      * @param value
      *     allowed object is
@@ -394,7 +421,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the razonSocial property.
+     * Obtiene el valor de la propiedad razonSocial.
      * 
      * @return
      *     possible object is
@@ -406,7 +433,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the razonSocial property.
+     * Define el valor de la propiedad razonSocial.
      * 
      * @param value
      *     allowed object is
@@ -418,7 +445,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the telefono property.
+     * Obtiene el valor de la propiedad telefono.
      * 
      * @return
      *     possible object is
@@ -430,7 +457,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the telefono property.
+     * Define el valor de la propiedad telefono.
      * 
      * @param value
      *     allowed object is
@@ -442,7 +469,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the tipoDocumentoIdentificacion property.
+     * Obtiene el valor de la propiedad tipoDocumentoIdentificacion.
      * 
      * @return
      *     possible object is
@@ -454,7 +481,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the tipoDocumentoIdentificacion property.
+     * Define el valor de la propiedad tipoDocumentoIdentificacion.
      * 
      * @param value
      *     allowed object is
@@ -466,7 +493,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Gets the value of the tipoInteresado property.
+     * Obtiene el valor de la propiedad tipoInteresado.
      * 
      * @return
      *     possible object is
@@ -478,7 +505,7 @@ public class DatosInteresadoWs {
     }
 
     /**
-     * Sets the value of the tipoInteresado property.
+     * Define el valor de la propiedad tipoInteresado.
      * 
      * @param value
      *     allowed object is

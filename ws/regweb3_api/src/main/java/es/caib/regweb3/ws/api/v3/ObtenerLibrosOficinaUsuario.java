@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for obtenerLibrosOficinaUsuario complex type.
+ * <p>Clase Java para obtenerLibrosOficinaUsuario complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="obtenerLibrosOficinaUsuario">
@@ -40,7 +40,7 @@ public class ObtenerLibrosOficinaUsuario {
     protected Long tipoRegistro;
 
     /**
-     * Gets the value of the entidadCodigoDir3 property.
+     * Obtiene el valor de la propiedad entidadCodigoDir3.
      * 
      * @return
      *     possible object is
@@ -52,7 +52,7 @@ public class ObtenerLibrosOficinaUsuario {
     }
 
     /**
-     * Sets the value of the entidadCodigoDir3 property.
+     * Define el valor de la propiedad entidadCodigoDir3.
      * 
      * @param value
      *     allowed object is
@@ -64,7 +64,7 @@ public class ObtenerLibrosOficinaUsuario {
     }
 
     /**
-     * Gets the value of the usuario property.
+     * Obtiene el valor de la propiedad usuario.
      * 
      * @return
      *     possible object is
@@ -76,7 +76,7 @@ public class ObtenerLibrosOficinaUsuario {
     }
 
     /**
-     * Sets the value of the usuario property.
+     * Define el valor de la propiedad usuario.
      * 
      * @param value
      *     allowed object is
@@ -88,7 +88,7 @@ public class ObtenerLibrosOficinaUsuario {
     }
 
     /**
-     * Gets the value of the tipoRegistro property.
+     * Obtiene el valor de la propiedad tipoRegistro.
      * 
      * @return
      *     possible object is
@@ -100,7 +100,7 @@ public class ObtenerLibrosOficinaUsuario {
     }
 
     /**
-     * Sets the value of the tipoRegistro property.
+     * Define el valor de la propiedad tipoRegistro.
      * 
      * @param value
      *     allowed object is

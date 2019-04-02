@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for listarCodigoAsunto complex type.
+ * <p>Clase Java para listarCodigoAsunto complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="listarCodigoAsunto">
@@ -37,7 +37,7 @@ public class ListarCodigoAsunto {
     protected String codigoTipoAsunto;
 
     /**
-     * Gets the value of the entidadCodigoDir3 property.
+     * Obtiene el valor de la propiedad entidadCodigoDir3.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class ListarCodigoAsunto {
     }
 
     /**
-     * Sets the value of the entidadCodigoDir3 property.
+     * Define el valor de la propiedad entidadCodigoDir3.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class ListarCodigoAsunto {
     }
 
     /**
-     * Gets the value of the codigoTipoAsunto property.
+     * Obtiene el valor de la propiedad codigoTipoAsunto.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class ListarCodigoAsunto {
     }
 
     /**
-     * Sets the value of the codigoTipoAsunto property.
+     * Define el valor de la propiedad codigoTipoAsunto.
      * 
      * @param value
      *     allowed object is

@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for obtenerRegistroEntradaID complex type.
+ * <p>Clase Java para obtenerRegistroEntradaID complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="obtenerRegistroEntradaID">
@@ -46,7 +46,7 @@ public class ObtenerRegistroEntradaID {
     protected String entidad;
 
     /**
-     * Gets the value of the any property.
+     * Obtiene el valor de la propiedad any.
      * 
      */
     public int getAny() {
@@ -54,7 +54,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Sets the value of the any property.
+     * Define el valor de la propiedad any.
      * 
      */
     public void setAny(int value) {
@@ -62,7 +62,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Gets the value of the numeroRegistro property.
+     * Obtiene el valor de la propiedad numeroRegistro.
      * 
      */
     public int getNumeroRegistro() {
@@ -70,7 +70,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Sets the value of the numeroRegistro property.
+     * Define el valor de la propiedad numeroRegistro.
      * 
      */
     public void setNumeroRegistro(int value) {
@@ -78,7 +78,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Gets the value of the libro property.
+     * Obtiene el valor de la propiedad libro.
      * 
      * @return
      *     possible object is
@@ -90,7 +90,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Sets the value of the libro property.
+     * Define el valor de la propiedad libro.
      * 
      * @param value
      *     allowed object is
@@ -102,7 +102,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Gets the value of the usuario property.
+     * Obtiene el valor de la propiedad usuario.
      * 
      * @return
      *     possible object is
@@ -114,7 +114,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Sets the value of the usuario property.
+     * Define el valor de la propiedad usuario.
      * 
      * @param value
      *     allowed object is
@@ -126,7 +126,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Gets the value of the entidad property.
+     * Obtiene el valor de la propiedad entidad.
      * 
      * @return
      *     possible object is
@@ -138,7 +138,7 @@ public class ObtenerRegistroEntradaID {
     }
 
     /**
-     * Sets the value of the entidad property.
+     * Define el valor de la propiedad entidad.
      * 
      * @param value
      *     allowed object is

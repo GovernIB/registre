@@ -10,9 +10,9 @@ import java.util.List;
 
 
 /**
- * <p>Java class for listarPersonasResponse complex type.
+ * <p>Clase Java para listarPersonasResponse complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="listarPersonasResponse">

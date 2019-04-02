@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for obtenerJustificante complex type.
+ * <p>Clase Java para obtenerJustificante complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="obtenerJustificante">
@@ -18,6 +18,8 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="libro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="tipoRegistro" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,15 +31,19 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "obtenerJustificante", propOrder = {
     "entidad",
-    "numeroRegistroFormateado"
+    "numeroRegistroFormateado",
+    "libro",
+    "tipoRegistro"
 })
 public class ObtenerJustificante {
 
     protected String entidad;
     protected String numeroRegistroFormateado;
+    protected String libro;
+    protected Long tipoRegistro;
 
     /**
-     * Gets the value of the entidad property.
+     * Obtiene el valor de la propiedad entidad.
      * 
      * @return
      *     possible object is
@@ -49,7 +55,7 @@ public class ObtenerJustificante {
     }
 
     /**
-     * Sets the value of the entidad property.
+     * Define el valor de la propiedad entidad.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +67,7 @@ public class ObtenerJustificante {
     }
 
     /**
-     * Gets the value of the numeroRegistroFormateado property.
+     * Obtiene el valor de la propiedad numeroRegistroFormateado.
      * 
      * @return
      *     possible object is
@@ -73,7 +79,7 @@ public class ObtenerJustificante {
     }
 
     /**
-     * Sets the value of the numeroRegistroFormateado property.
+     * Define el valor de la propiedad numeroRegistroFormateado.
      * 
      * @param value
      *     allowed object is
@@ -82,6 +88,54 @@ public class ObtenerJustificante {
      */
     public void setNumeroRegistroFormateado(String value) {
         this.numeroRegistroFormateado = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad libro.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getLibro() {
+        return libro;
+    }
+
+    /**
+     * Define el valor de la propiedad libro.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setLibro(String value) {
+        this.libro = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad tipoRegistro.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getTipoRegistro() {
+        return tipoRegistro;
+    }
+
+    /**
+     * Define el valor de la propiedad tipoRegistro.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setTipoRegistro(Long value) {
+        this.tipoRegistro = value;
     }
 
 }

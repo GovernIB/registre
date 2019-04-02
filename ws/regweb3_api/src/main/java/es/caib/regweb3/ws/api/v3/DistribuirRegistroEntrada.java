@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for distribuirRegistroEntrada complex type.
+ * <p>Clase Java para distribuirRegistroEntrada complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="distribuirRegistroEntrada">
@@ -18,7 +18,6 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="libro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -30,17 +29,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "distribuirRegistroEntrada", propOrder = {
     "numeroRegistroFormateado",
-    "entidad",
-    "libro"
+    "entidad"
 })
 public class DistribuirRegistroEntrada {
 
     protected String numeroRegistroFormateado;
     protected String entidad;
-    protected String libro;
 
     /**
-     * Gets the value of the numeroRegistroFormateado property.
+     * Obtiene el valor de la propiedad numeroRegistroFormateado.
      * 
      * @return
      *     possible object is
@@ -52,7 +49,7 @@ public class DistribuirRegistroEntrada {
     }
 
     /**
-     * Sets the value of the numeroRegistroFormateado property.
+     * Define el valor de la propiedad numeroRegistroFormateado.
      * 
      * @param value
      *     allowed object is
@@ -64,7 +61,7 @@ public class DistribuirRegistroEntrada {
     }
 
     /**
-     * Gets the value of the entidad property.
+     * Obtiene el valor de la propiedad entidad.
      * 
      * @return
      *     possible object is
@@ -76,7 +73,7 @@ public class DistribuirRegistroEntrada {
     }
 
     /**
-     * Sets the value of the entidad property.
+     * Define el valor de la propiedad entidad.
      * 
      * @param value
      *     allowed object is
@@ -85,30 +82,6 @@ public class DistribuirRegistroEntrada {
      */
     public void setEntidad(String value) {
         this.entidad = value;
-    }
-
-    /**
-     * Gets the value of the libro property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getLibro() {
-        return libro;
-    }
-
-    /**
-     * Sets the value of the libro property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setLibro(String value) {
-        this.libro = value;
     }
 
 }

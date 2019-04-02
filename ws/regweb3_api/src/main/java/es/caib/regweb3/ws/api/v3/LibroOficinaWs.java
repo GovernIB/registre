@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for libroOficinaWs complex type.
+ * <p>Clase Java para libroOficinaWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="libroOficinaWs">
@@ -37,7 +37,7 @@ public class LibroOficinaWs {
     protected OficinaWs oficinaWs;
 
     /**
-     * Gets the value of the libroWs property.
+     * Obtiene el valor de la propiedad libroWs.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class LibroOficinaWs {
     }
 
     /**
-     * Sets the value of the libroWs property.
+     * Define el valor de la propiedad libroWs.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class LibroOficinaWs {
     }
 
     /**
-     * Gets the value of the oficinaWs property.
+     * Obtiene el valor de la propiedad oficinaWs.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class LibroOficinaWs {
     }
 
     /**
-     * Sets the value of the oficinaWs property.
+     * Define el valor de la propiedad oficinaWs.
      * 
      * @param value
      *     allowed object is

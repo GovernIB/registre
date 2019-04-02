@@ -8,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for personaWs complex type.
+ * <p>Clase Java para personaWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="personaWs">
@@ -96,7 +96,7 @@ public class PersonaWs {
     protected Long tipoPersonaID;
 
     /**
-     * Gets the value of the apellido1 property.
+     * Obtiene el valor de la propiedad apellido1.
      * 
      * @return
      *     possible object is
@@ -108,7 +108,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the apellido1 property.
+     * Define el valor de la propiedad apellido1.
      * 
      * @param value
      *     allowed object is
@@ -120,7 +120,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the apellido2 property.
+     * Obtiene el valor de la propiedad apellido2.
      * 
      * @return
      *     possible object is
@@ -132,7 +132,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the apellido2 property.
+     * Define el valor de la propiedad apellido2.
      * 
      * @param value
      *     allowed object is
@@ -144,7 +144,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the canal property.
+     * Obtiene el valor de la propiedad canal.
      * 
      * @return
      *     possible object is
@@ -156,7 +156,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the canal property.
+     * Define el valor de la propiedad canal.
      * 
      * @param value
      *     allowed object is
@@ -168,7 +168,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the codigoEntidadGeograficaDir3ID property.
+     * Obtiene el valor de la propiedad codigoEntidadGeograficaDir3ID.
      * 
      * @return
      *     possible object is
@@ -180,7 +180,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the codigoEntidadGeograficaDir3ID property.
+     * Define el valor de la propiedad codigoEntidadGeograficaDir3ID.
      * 
      * @param value
      *     allowed object is
@@ -192,7 +192,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the cp property.
+     * Obtiene el valor de la propiedad cp.
      * 
      * @return
      *     possible object is
@@ -204,7 +204,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the cp property.
+     * Define el valor de la propiedad cp.
      * 
      * @param value
      *     allowed object is
@@ -216,7 +216,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the direccion property.
+     * Obtiene el valor de la propiedad direccion.
      * 
      * @return
      *     possible object is
@@ -228,7 +228,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the direccion property.
+     * Define el valor de la propiedad direccion.
      * 
      * @param value
      *     allowed object is
@@ -240,7 +240,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the direccionElectronica property.
+     * Obtiene el valor de la propiedad direccionElectronica.
      * 
      * @return
      *     possible object is
@@ -252,7 +252,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the direccionElectronica property.
+     * Define el valor de la propiedad direccionElectronica.
      * 
      * @param value
      *     allowed object is
@@ -264,7 +264,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the documento property.
+     * Obtiene el valor de la propiedad documento.
      * 
      * @return
      *     possible object is
@@ -276,7 +276,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the documento property.
+     * Define el valor de la propiedad documento.
      * 
      * @param value
      *     allowed object is
@@ -288,7 +288,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the email property.
+     * Obtiene el valor de la propiedad email.
      * 
      * @return
      *     possible object is
@@ -300,7 +300,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the email property.
+     * Define el valor de la propiedad email.
      * 
      * @param value
      *     allowed object is
@@ -312,7 +312,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the entidadDir3ID property.
+     * Obtiene el valor de la propiedad entidadDir3ID.
      * 
      * @return
      *     possible object is
@@ -324,7 +324,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the entidadDir3ID property.
+     * Define el valor de la propiedad entidadDir3ID.
      * 
      * @param value
      *     allowed object is
@@ -336,7 +336,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the guardarInteresado property.
+     * Obtiene el valor de la propiedad guardarInteresado.
      * 
      */
     public boolean isGuardarInteresado() {
@@ -344,7 +344,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the guardarInteresado property.
+     * Define el valor de la propiedad guardarInteresado.
      * 
      */
     public void setGuardarInteresado(boolean value) {
@@ -352,7 +352,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the id property.
+     * Obtiene el valor de la propiedad id.
      * 
      * @return
      *     possible object is
@@ -364,7 +364,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the id property.
+     * Define el valor de la propiedad id.
      * 
      * @param value
      *     allowed object is
@@ -376,7 +376,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the localidadDir3ID property.
+     * Obtiene el valor de la propiedad localidadDir3ID.
      * 
      * @return
      *     possible object is
@@ -388,7 +388,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the localidadDir3ID property.
+     * Define el valor de la propiedad localidadDir3ID.
      * 
      * @param value
      *     allowed object is
@@ -400,7 +400,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the nombre property.
+     * Obtiene el valor de la propiedad nombre.
      * 
      * @return
      *     possible object is
@@ -412,7 +412,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the nombre property.
+     * Define el valor de la propiedad nombre.
      * 
      * @param value
      *     allowed object is
@@ -424,7 +424,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the observaciones property.
+     * Obtiene el valor de la propiedad observaciones.
      * 
      * @return
      *     possible object is
@@ -436,7 +436,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the observaciones property.
+     * Define el valor de la propiedad observaciones.
      * 
      * @param value
      *     allowed object is
@@ -448,7 +448,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the paisDir3ID property.
+     * Obtiene el valor de la propiedad paisDir3ID.
      * 
      * @return
      *     possible object is
@@ -460,7 +460,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the paisDir3ID property.
+     * Define el valor de la propiedad paisDir3ID.
      * 
      * @param value
      *     allowed object is
@@ -472,7 +472,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the provinciaDir3ID property.
+     * Obtiene el valor de la propiedad provinciaDir3ID.
      * 
      * @return
      *     possible object is
@@ -484,7 +484,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the provinciaDir3ID property.
+     * Define el valor de la propiedad provinciaDir3ID.
      * 
      * @param value
      *     allowed object is
@@ -496,7 +496,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the razonSocial property.
+     * Obtiene el valor de la propiedad razonSocial.
      * 
      * @return
      *     possible object is
@@ -508,7 +508,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the razonSocial property.
+     * Define el valor de la propiedad razonSocial.
      * 
      * @param value
      *     allowed object is
@@ -520,7 +520,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the telefono property.
+     * Obtiene el valor de la propiedad telefono.
      * 
      * @return
      *     possible object is
@@ -532,7 +532,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the telefono property.
+     * Define el valor de la propiedad telefono.
      * 
      * @param value
      *     allowed object is
@@ -544,7 +544,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the tipoDocumentoIdentificacionNTI property.
+     * Obtiene el valor de la propiedad tipoDocumentoIdentificacionNTI.
      * 
      * @return
      *     possible object is
@@ -556,7 +556,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the tipoDocumentoIdentificacionNTI property.
+     * Define el valor de la propiedad tipoDocumentoIdentificacionNTI.
      * 
      * @param value
      *     allowed object is
@@ -568,7 +568,7 @@ public class PersonaWs {
     }
 
     /**
-     * Gets the value of the tipoPersonaID property.
+     * Obtiene el valor de la propiedad tipoPersonaID.
      * 
      * @return
      *     possible object is
@@ -580,7 +580,7 @@ public class PersonaWs {
     }
 
     /**
-     * Sets the value of the tipoPersonaID property.
+     * Define el valor de la propiedad tipoPersonaID.
      * 
      * @param value
      *     allowed object is

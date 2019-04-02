@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for interesadoWs complex type.
+ * <p>Clase Java para interesadoWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="interesadoWs">
@@ -37,7 +37,7 @@ public class InteresadoWs {
     protected DatosInteresadoWs representante;
 
     /**
-     * Gets the value of the interesado property.
+     * Obtiene el valor de la propiedad interesado.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class InteresadoWs {
     }
 
     /**
-     * Sets the value of the interesado property.
+     * Define el valor de la propiedad interesado.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class InteresadoWs {
     }
 
     /**
-     * Gets the value of the representante property.
+     * Obtiene el valor de la propiedad representante.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class InteresadoWs {
     }
 
     /**
-     * Sets the value of the representante property.
+     * Define el valor de la propiedad representante.
      * 
      * @param value
      *     allowed object is

@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for tipoAsuntoWs complex type.
+ * <p>Clase Java para tipoAsuntoWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="tipoAsuntoWs">
@@ -40,7 +40,7 @@ public class TipoAsuntoWs {
     protected String nombre;
 
     /**
-     * Gets the value of the activo property.
+     * Obtiene el valor de la propiedad activo.
      * 
      */
     public boolean isActivo() {
@@ -48,7 +48,7 @@ public class TipoAsuntoWs {
     }
 
     /**
-     * Sets the value of the activo property.
+     * Define el valor de la propiedad activo.
      * 
      */
     public void setActivo(boolean value) {
@@ -56,7 +56,7 @@ public class TipoAsuntoWs {
     }
 
     /**
-     * Gets the value of the codigo property.
+     * Obtiene el valor de la propiedad codigo.
      * 
      * @return
      *     possible object is
@@ -68,7 +68,7 @@ public class TipoAsuntoWs {
     }
 
     /**
-     * Sets the value of the codigo property.
+     * Define el valor de la propiedad codigo.
      * 
      * @param value
      *     allowed object is
@@ -80,7 +80,7 @@ public class TipoAsuntoWs {
     }
 
     /**
-     * Gets the value of the nombre property.
+     * Obtiene el valor de la propiedad nombre.
      * 
      * @return
      *     possible object is
@@ -92,7 +92,7 @@ public class TipoAsuntoWs {
     }
 
     /**
-     * Sets the value of the nombre property.
+     * Define el valor de la propiedad nombre.
      * 
      * @param value
      *     allowed object is

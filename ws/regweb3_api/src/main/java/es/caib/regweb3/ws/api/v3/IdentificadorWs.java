@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 
 
 /**
- * <p>Java class for identificadorWs complex type.
+ * <p>Clase Java para identificadorWs complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="identificadorWs">
@@ -43,7 +43,7 @@ public class IdentificadorWs {
     protected String numeroRegistroFormateado;
 
     /**
-     * Gets the value of the fecha property.
+     * Obtiene el valor de la propiedad fecha.
      * 
      * @return
      *     possible object is
@@ -55,7 +55,7 @@ public class IdentificadorWs {
     }
 
     /**
-     * Sets the value of the fecha property.
+     * Define el valor de la propiedad fecha.
      * 
      * @param value
      *     allowed object is
@@ -67,7 +67,7 @@ public class IdentificadorWs {
     }
 
     /**
-     * Gets the value of the numero property.
+     * Obtiene el valor de la propiedad numero.
      * 
      * @return
      *     possible object is
@@ -79,7 +79,7 @@ public class IdentificadorWs {
     }
 
     /**
-     * Sets the value of the numero property.
+     * Define el valor de la propiedad numero.
      * 
      * @param value
      *     allowed object is
@@ -91,7 +91,7 @@ public class IdentificadorWs {
     }
 
     /**
-     * Gets the value of the numeroRegistroFormateado property.
+     * Obtiene el valor de la propiedad numeroRegistroFormateado.
      * 
      * @return
      *     possible object is
@@ -103,7 +103,7 @@ public class IdentificadorWs {
     }
 
     /**
-     * Sets the value of the numeroRegistroFormateado property.
+     * Define el valor de la propiedad numeroRegistroFormateado.
      * 
      * @param value
      *     allowed object is

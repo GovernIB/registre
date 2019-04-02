@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for listarTipoDocumental complex type.
+ * <p>Clase Java para listarTipoDocumental complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="listarTipoDocumental">
@@ -34,7 +34,7 @@ public class ListarTipoDocumental {
     protected String entidadCodigoDir3;
 
     /**
-     * Gets the value of the entidadCodigoDir3 property.
+     * Obtiene el valor de la propiedad entidadCodigoDir3.
      * 
      * @return
      *     possible object is
@@ -46,7 +46,7 @@ public class ListarTipoDocumental {
     }
 
     /**
-     * Sets the value of the entidadCodigoDir3 property.
+     * Define el valor de la propiedad entidadCodigoDir3.
      * 
      * @param value
      *     allowed object is

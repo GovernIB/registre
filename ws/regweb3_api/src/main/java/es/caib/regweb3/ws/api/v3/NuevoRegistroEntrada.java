@@ -7,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for nuevoRegistroEntrada complex type.
+ * <p>Clase Java para nuevoRegistroEntrada complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
  * &lt;complexType name="nuevoRegistroEntrada">
@@ -37,7 +37,7 @@ public class NuevoRegistroEntrada {
     protected RegistroEntradaWs registroEntradaWs;
 
     /**
-     * Gets the value of the entidad property.
+     * Obtiene el valor de la propiedad entidad.
      * 
      * @return
      *     possible object is
@@ -49,7 +49,7 @@ public class NuevoRegistroEntrada {
     }
 
     /**
-     * Sets the value of the entidad property.
+     * Define el valor de la propiedad entidad.
      * 
      * @param value
      *     allowed object is
@@ -61,7 +61,7 @@ public class NuevoRegistroEntrada {
     }
 
     /**
-     * Gets the value of the registroEntradaWs property.
+     * Obtiene el valor de la propiedad registroEntradaWs.
      * 
      * @return
      *     possible object is
@@ -73,7 +73,7 @@ public class NuevoRegistroEntrada {
     }
 
     /**
-     * Sets the value of the registroEntradaWs property.
+     * Define el valor de la propiedad registroEntradaWs.
      * 
      * @param value
      *     allowed object is
