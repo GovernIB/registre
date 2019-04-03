@@ -150,7 +150,7 @@ public class AsientoRegistralWsServiceSoapBindingStub extends org.apache.axis.cl
         _operations[3] = oper;
 
         oper = new org.apache.axis.description.OperationDesc();
-        oper.setName("obtenerRegistrosCiudadano");
+        oper.setName("obtenerAsientosCiudadano");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "entidad"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
@@ -553,7 +553,7 @@ public class AsientoRegistralWsServiceSoapBindingStub extends org.apache.axis.cl
 }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[] obtenerRegistrosCiudadano(java.lang.String entidad, java.lang.String documento) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[] obtenerAsientosCiudadano(java.lang.String entidad, java.lang.String documento) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -565,7 +565,7 @@ public class AsientoRegistralWsServiceSoapBindingStub extends org.apache.axis.cl
         _call.setProperty(org.apache.axis.client.Call.SEND_TYPE_ATTR, Boolean.FALSE);
         _call.setProperty(org.apache.axis.AxisEngine.PROP_DOMULTIREFS, Boolean.FALSE);
         _call.setSOAPVersion(org.apache.axis.soap.SOAPConstants.SOAP11_CONSTANTS);
-        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerRegistrosCiudadano"));
+        _call.setOperationName(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientosCiudadano"));
 
         setRequestHeaders(_call);
         setAttachments(_call);
