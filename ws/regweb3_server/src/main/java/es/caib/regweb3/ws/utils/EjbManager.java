@@ -1,5 +1,6 @@
 package es.caib.regweb3.ws.utils;
 
+import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import org.apache.log4j.Logger;
@@ -17,9 +18,9 @@ public final class EjbManager {
 
 
   protected static UsuarioEntidadLocal usuariEntitatEjb;
-  
   protected static UsuarioLocal usuariEjb;
-  
+  protected static PluginLocal pluginEjb;
+
 
 
   public static UsuarioEntidadLocal getUsuarioEntidadEJB() throws Exception {
@@ -43,6 +44,18 @@ public final class EjbManager {
       
     }
     return usuariEjb;
+
+  }
+
+  public static PluginLocal getPluginEJB() throws Exception {
+
+    if (pluginEjb == null) {
+
+      pluginEjb = (PluginLocal) new InitialContext()
+            .lookup("regweb3/PluginEJB/local");
+
+    }
+    return pluginEjb;
   }
   
   

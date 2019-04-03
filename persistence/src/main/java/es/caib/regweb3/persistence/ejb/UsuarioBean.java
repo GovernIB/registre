@@ -8,17 +8,16 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.userinformation.RolesInfo;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -215,6 +214,32 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     public void actualizarRoles(Usuario usuario) throws Exception, I18NException {
 
         List<Rol> rolesUsuario = rolEjb.obtenerRolesUserPlugin(usuario.getIdentificador());
+
+        if(rolesUsuario != null) {
+
+            // Actualizamos los Roles del usuario según sistema externo
+            usuario.setRoles(rolesUsuario);
+            merge(usuario);
+        }
+    }
+
+    @Override
+    public void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws Exception, I18NException {
+
+        RolLocal rolEjb = (RolLocal) new InitialContext().lookup("regweb3/RolEJB/local");
+
+        List<String> roles = new ArrayList<String>();
+        List<Rol> rolesUsuario = null;
+
+        if(rolesInfo != null && rolesInfo.getRoles().length > 0){
+
+            Collections.addAll(roles, rolesInfo.getRoles());
+            if(roles.size() > 0){
+                rolesUsuario = rolEjb.getByRol(roles);
+            }
+        }else{
+            log.info("El usuario " + usuario.getIdentificador() + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
+        }
 
         if(rolesUsuario != null) {
 
