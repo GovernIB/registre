@@ -18,6 +18,8 @@ import org.apache.cxf.service.model.BindingOperationInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
+import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
+import org.fundaciobit.plugins.userinformation.RolesInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -134,6 +136,20 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
     if (entitats.size() == 0) {
       throw WsUtils.mountException("L´usuari autenticat " + userapp
               + " no està relacionat amb cap entitat.");
+    }
+
+    // Actualizamos los Roles del usuario aplicación
+    try {
+
+      IUserInformationPlugin loginPlugin = (IUserInformationPlugin) EjbManager.getPluginEJB().getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
+      RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuariAplicacio.getIdentificador());
+
+      EjbManager.getUsuarioEJB().actualizarRolesWs(usuariAplicacio, rolesInfo);
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    } catch (I18NException e) {
+      e.printStackTrace();
     }
 
     UsuarioAplicacionCache.put(new UsuarioInfo(usuariAplicacio, entitats, method));
