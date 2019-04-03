@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.userinformation.RolesInfo;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -80,4 +81,13 @@ public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
      * @throws I18NException
      */
     void actualizarRoles(Usuario usuario) throws Exception, I18NException;
+
+    /**
+     * Obtiene los Roles del usuario de WS autenticado mediante el plugin de Login.
+     * Actualiza los Roles del usuario en la bbdd de REGWEB3
+     * @param usuario
+     * @throws Exception
+     * @throws I18NException
+     */
+    void actualizarRolesWs(Usuario usuario, RolesInfo rolesInfo) throws Exception, I18NException;
 }
