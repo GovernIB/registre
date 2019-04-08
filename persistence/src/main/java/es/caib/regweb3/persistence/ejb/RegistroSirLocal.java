@@ -34,14 +34,6 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
     RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
 
     /**
-     * Obtiene un RegistroSir a partir de los parámetros
-     * @param identificadorIntercambio
-     * @return
-     * @throws Exception
-     */
-    RegistroSir getRegistroSir(String identificadorIntercambio) throws Exception;
-
-    /**
      * Obtiene un RegistroSir incluyendo los anexos almancenados en disco
      * @param idRegistroSir
      * @return
@@ -62,6 +54,13 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      */
     void eliminarRegistroSir(Long idRegistroSir) throws Exception;
 
+    /**
+     * Marca como eliminado un RegitroSir, creando una TRAZABILIDAD_SIR_ELIMINADO
+     * @param registroSir
+     * @param usuario
+     * @throws Exception
+     */
+    void marcarEliminado(RegistroSir registroSir, UsuarioEntidad usuario, String observaciones) throws Exception;
 
     /**
      * Busca los RegistroSir en función de los parámetros, donde sólo mostrará los RegistroSir con codEntidadRegistralDestino = codOficinaActiva

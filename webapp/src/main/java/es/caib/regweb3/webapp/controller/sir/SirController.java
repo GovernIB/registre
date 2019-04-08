@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.form.EliminarForm;
 import es.caib.regweb3.webapp.form.OficioRemisionBusquedaForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
@@ -151,6 +152,7 @@ public class SirController extends BaseController {
         model.addAttribute("registroSirBusqueda", registroSirBusquedaForm);
         model.addAttribute("anys", getAnys());
         model.addAttribute("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+        mav.addObject("eliminarForm", new EliminarForm());
 
         return mav;
     }
@@ -175,6 +177,7 @@ public class SirController extends BaseController {
         mav.addObject("registroSirBusqueda", busqueda);
         mav.addObject("anys", getAnys());
         mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+        mav.addObject("eliminarForm", new EliminarForm());
 
         return mav;
 
@@ -291,6 +294,33 @@ public class SirController extends BaseController {
         }
 
         return false;
+    }
+
+    /**
+     * Eliminar un {@link es.caib.regweb3.model.RegistroSir}
+     */
+    @RequestMapping(value = "/registroSir/eliminar", method= RequestMethod.POST)
+    public String eliminarRegistroSir(@ModelAttribute EliminarForm eliminarForm, HttpServletRequest request) {
+
+        try {
+
+            UsuarioEntidad usuario = getUsuarioEntidadActivo(request);
+            RegistroSir registroSir  = registroSirEjb.findById(eliminarForm.getId());
+
+            if(EstadoRegistroSir.RECIBIDO.equals(registroSir.getEstado())){
+                registroSirEjb.marcarEliminado(registroSir, usuario, eliminarForm.getObservaciones());
+                Mensaje.saveMessageInfo(request, getMessage("registroSir.eliminar.ok"));
+
+            }else{
+                Mensaje.saveMessageError(request, getMessage("registroSir.eliminar.estado"));
+            }
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("registroSir.eliminar.error"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/sir/monitorRecibidos";
     }
 
     @RequestMapping(value = "/{idOficioRemision}/ficheroIntercambio", method = RequestMethod.GET)

@@ -133,6 +133,25 @@
 
             </c:if>
 
+            <%-- ELIMINADO --%>
+            <c:if test="${trazabilidad.tipo == RegwebConstantes.TRAZABILIDAD_SIR_ELIMINAR}">
+
+                <li>
+                    <div class="timeline-badge danger"><i class="fa fa-warning"></i></div>
+                    <div class="timeline-panel">
+                        <div class="timeline-heading">
+                            <h4 class="timeline-title"><spring:message code="registroSir.eliminado"/>:</h4>
+                        </div>
+                        <div class="timeline-body">
+                            <p><small><i class="fa fa-home"></i> <strong><spring:message code="usuario.usuario"/>:</strong> ${trazabilidad.nombreUsuario}</small></p>
+                            <p><small><i class="fa fa-file-o"></i> <strong><spring:message code="registroSir.motivo"/>:</strong> ${trazabilidad.observaciones}</small></p>
+                            <p><small><i class="fa fa-clock-o"></i> <strong><spring:message code="registroSir.fechaEliminado"/>:</strong> <fmt:formatDate value="${trazabilidad.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small></p>
+                        </div>
+                    </div>
+                </li>
+
+            </c:if>
+
         </c:forEach>
 
     </ul>

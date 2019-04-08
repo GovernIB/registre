@@ -17,4 +17,7 @@
     <c:when test="${registroSir.estado == 'REENVIADO_Y_ERROR' || registroSir.estado == 'RECHAZADO_Y_ERROR'}">
         <p rel="popupArriba" data-content="<c:out value="${registroSir.codigoError} - ${registroSir.descripcionError}" escapeXml="true"/>" data-toggle="popover"><span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span></p>
     </c:when>
+    <c:when test="${registroSir.estado == 'ELIMINADO'}">
+        <span class="label label-danger"><spring:message code="registroSir.estado.${registroSir.estado}" /></span>
+    </c:when>
 </c:choose>
