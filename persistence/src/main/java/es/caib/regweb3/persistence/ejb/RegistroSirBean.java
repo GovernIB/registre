@@ -124,27 +124,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception {
 
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
-                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistral = :codigoEntidadRegistralDestino");
+                "registroSir.identificadorIntercambio = :identificadorIntercambio and registroSir.codigoEntidadRegistral = :codigoEntidadRegistralDestino " +
+                "and registroSir.estado != :eliminado");
 
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
-
-        List<RegistroSir> registroSir = q.getResultList();
-        if(registroSir.size() == 1){
-            return registroSir.get(0);
-        }else{
-            return  null;
-        }
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public RegistroSir getRegistroSir(String identificadorIntercambio) throws Exception{
-
-        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir where " +
-                "registroSir.identificadorIntercambio = :identificadorIntercambio");
-
-        q.setParameter("identificadorIntercambio",identificadorIntercambio);
+        q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
 
         List<RegistroSir> registroSir = q.getResultList();
         if(registroSir.size() == 1){
@@ -246,6 +231,25 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         remove(findById(idRegistroSir));
 
+    }
+
+    @Override
+    public void marcarEliminado(RegistroSir registroSir, UsuarioEntidad usuario, String observaciones) throws Exception{
+
+        // Creamos la TrazabilidadSir
+        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ELIMINAR);
+        trazabilidadSir.setRegistroSir(registroSir);
+        trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+        trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+        trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+        trazabilidadSir.setContactoUsuario(usuario.getUsuario().getEmail());
+        trazabilidadSir.setObservaciones(observaciones);
+        trazabilidadSirEjb.persist(trazabilidadSir);
+
+        modificarEstado(registroSir.getId(),EstadoRegistroSir.ELIMINADO);
     }
 
     @Override

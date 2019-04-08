@@ -13,7 +13,8 @@ public enum EstadoRegistroSir {
     REENVIADO_Y_ERROR("4", "Reenviado y ERROR"),
     RECHAZADO("5", "Rechazado"),
     RECHAZADO_Y_ACK("6", "Rechazado y ACK"),
-    RECHAZADO_Y_ERROR("7", "Rechazado y ERROR");
+    RECHAZADO_Y_ERROR("7", "Rechazado y ERROR"),
+    ELIMINADO("8", "ELIMINADO");
 
     private final String value;
     private final String name;

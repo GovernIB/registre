@@ -224,6 +224,9 @@
                                                             <ul class="dropdown-menu dropdown">
                                                                 <li><a href="<c:url value="/registroSir/${registroSir.id}/detalle"/>" target="_blank"><spring:message code="registroSir.detalle"/></a></li>
                                                                 <li><a href="<c:url value="/sir/${registroSir.identificadorIntercambio}/detalle"/>" target="_blank"><spring:message code="idIntercambio.detalle"/></a></li>
+                                                                <c:if test="${registroSir.estado == 'RECIBIDO'}">
+                                                                    <li><a data-toggle="modal" role="button" href="#eliminarModal" onclick="limpiarModalEliminar(${registroSir.id});"><spring:message code="registroSir.eliminar"/></a></li>
+                                                                </c:if>
                                                                 <li class="divider"></li>
                                                                 <li><a href="javascript:void(0);" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")'><spring:message code="mensajeControl.enviar.ACK"/></a></li>
                                                                 <c:if test="${registroSir.estado == 'ACEPTADO'}">
@@ -260,6 +263,9 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+<%--Modal Eliminar RegistroSir--%>
+<c:import url="eliminarRegistroSir.jsp"/>
+
 <script type="text/javascript">
 
     var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
