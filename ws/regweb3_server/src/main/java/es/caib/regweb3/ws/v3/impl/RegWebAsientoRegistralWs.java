@@ -48,7 +48,6 @@ public interface RegWebAsientoRegistralWs {
     AsientoRegistralWs obtenerAsientoRegistral(
             @WebParam(name = "entidad") String entidad,
             @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-            @WebParam(name = "libro") String libro,
             @WebParam(name = "tipoRegistro") Long tipoRegistro,
             @WebParam(name = "conAnexos") boolean conAnexos) throws  Throwable, WsI18NException, WsValidationException;
 
@@ -57,7 +56,6 @@ public interface RegWebAsientoRegistralWs {
      * Obtiene el Justificante del {@link es.caib.regweb3.ws.model.AsientoRegistralWs } indicado, si es la primera vez lo generará
      * @param entidad
      * @param numeroRegistroFormateado
-     * @param libro
      * @return
      * @throws Throwable
      * @throws WsI18NException
@@ -67,7 +65,6 @@ public interface RegWebAsientoRegistralWs {
     JustificanteWs obtenerJustificante(
             @WebParam(name = "entidad") String entidad,
             @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
-            @WebParam(name = "libro") String libro,
             @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException, WsValidationException;
 
     /**
@@ -81,8 +78,7 @@ public interface RegWebAsientoRegistralWs {
     @WebMethod
     void distribuirAsientoRegistral(
             @WebParam(name = "entidad") String entidad,
-            @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-            @WebParam(name = "libro") String libro) throws Throwable, WsI18NException, WsValidationException;
+            @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
 
 
@@ -91,7 +87,6 @@ public interface RegWebAsientoRegistralWs {
      * Este asiento debe formar parte de un Oficio Externo.
      * @param entidad
      * @param numeroRegistroFormateado
-     * @param libro
      * @return
      * @throws Throwable
      * @throws WsI18NException
@@ -100,8 +95,7 @@ public interface RegWebAsientoRegistralWs {
     @WebMethod
     OficioWs obtenerOficioExterno(
        @WebParam(name = "entidad") String entidad,
-       @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
-       @WebParam(name = "libro") String libro) throws Throwable, WsI18NException, WsValidationException;
+       @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      * Obtiene los Asientos registral de un ciudadano

@@ -418,7 +418,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     public AsientoRegistralWs obtenerAsientoRegistral(
        @WebParam(name = "entidad") String entidad,
        @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-       @WebParam(name = "libro") String libro,
        @WebParam(name = "tipoRegistro") Long tipoRegistro,
        @WebParam(name = "conAnexos") boolean conAnexos) throws  Throwable, WsI18NException, WsValidationException{
 
@@ -428,7 +427,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad,libro);
+        validarObligatorios(numeroRegistroFormateado,entidad);
 
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
@@ -460,7 +459,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 5.- Obtenemos el RegistroEntrada
-            RegistroEntrada registro = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado, null);
+            RegistroEntrada registro = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
             if (registro == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
@@ -534,7 +533,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     public JustificanteWs obtenerJustificante(
        @WebParam(name = "entidad") String entidad,
        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
-       @WebParam(name = "libro") String libro,
        @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException, WsValidationException{
 
 
@@ -543,7 +541,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad,libro);
+        validarObligatorios(numeroRegistroFormateado,entidad);
 
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
         if(REGISTRO_ENTRADA.equals(tipoRegistro)) {
@@ -576,7 +574,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         SignatureCustody sc = null;
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 4.- Obtenemos el RegistroEntrada
-            RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado, null);
+            RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
             if (registroEntrada == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -701,11 +699,10 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @WebMethod
     public void distribuirAsientoRegistral(
        @WebParam(name = "entidad") String entidad,
-       @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
-       @WebParam(name = "libro") String libro) throws Throwable, WsI18NException, WsValidationException{
+       @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad,libro);
+        validarObligatorios(numeroRegistroFormateado,entidad);
 
         // 2.- Comprobar que la entidad existe y está activa
         Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
@@ -726,7 +723,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado,null);
+        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
 
         if (registroEntrada == null) {
@@ -773,7 +770,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
      * Este asiento debe formar parte de un Oficio Externo.
      * @param entidad
      * @param numeroRegistroFormateado
-     * @param libro
      * @return
      * @throws Throwable
      * @throws WsI18NException
@@ -784,13 +780,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @WebMethod
     public OficioWs obtenerOficioExterno(
        @WebParam(name = "entidad") String entidad,
-       @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
-       @WebParam(name = "libro") String libro) throws Throwable, WsI18NException, WsValidationException{
+       @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
-        validarObligatorios(numeroRegistroFormateado,entidad,libro);
+        validarObligatorios(numeroRegistroFormateado,entidad);
 
         //Averiguamos si existe un oficio de remisión para el número de registro indicado.
-        OficioRemision oficio = oficioRemisionEjb.getByNumeroRegistroFormateado(numeroRegistroFormateado,entidad,libro);
+        OficioRemision oficio = oficioRemisionEjb.getByNumeroRegistroFormateado(numeroRegistroFormateado,entidad);
         if(oficio == null){
             throw new I18NException("oficio.noExiste", numeroRegistroFormateado);
         }

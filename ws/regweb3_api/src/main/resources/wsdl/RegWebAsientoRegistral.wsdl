@@ -26,7 +26,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-      <xs:element minOccurs="0" name="libro" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoRegistro" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
@@ -64,7 +63,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-      <xs:element minOccurs="0" name="libro" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerOficioExternoResponse">
@@ -81,7 +79,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-      <xs:element minOccurs="0" name="libro" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="distribuirAsientoRegistralResponse">
@@ -91,7 +88,6 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-      <xs:element minOccurs="0" name="libro" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoRegistro" type="xs:long"/>
       <xs:element name="conAnexos" type="xs:boolean"/>
     </xs:sequence>
