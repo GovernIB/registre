@@ -125,6 +125,10 @@
                                                             <span class="label label-danger" rel="popupAbajo" data-content="<strong><spring:message code="registroSir.motivo"/>:</strong> <c:out value="${trazabilidadSir.observaciones}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-check fa-fw"></i> <spring:message code="trazabilidadSir.tipo.5"/></span>
                                                         </c:if>
 
+                                                        <c:if test="${trazabilidadSir.tipo == RegwebConstantes.TRAZABILIDAD_SIR_ELIMINAR}">
+                                                            <span class="label label-danger" rel="popupAbajo" data-content="<strong><spring:message code="registroSir.motivo"/>:</strong> <c:out value="${trazabilidadSir.observaciones}" escapeXml="true"/>" data-toggle="popover"><i class="fa fa-close fa-fw"></i> <spring:message code="trazabilidadSir.tipo.6"/></span>
+                                                        </c:if>
+
                                                         <span class="pull-right text-muted small"><em><fmt:formatDate value="${trazabilidadSir.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></em></span>
 
                                                     </a>
