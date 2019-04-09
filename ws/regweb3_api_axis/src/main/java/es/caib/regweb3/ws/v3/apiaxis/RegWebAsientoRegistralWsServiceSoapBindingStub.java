@@ -1,5 +1,5 @@
 /**
- * AsientoRegistralWsServiceSoapBindingStub.java
+ * RegWebAsientoRegistralWsServiceSoapBindingStub.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
@@ -7,7 +7,7 @@
 
 package es.caib.regweb3.ws.v3.apiaxis;
 
-public class AsientoRegistralWsServiceSoapBindingStub extends org.apache.axis.client.Stub implements es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs_PortType {
+public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.axis.client.Stub implements es.caib.regweb3.ws.v3.apiaxis.RegWebAsientoRegistralWs_PortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
@@ -208,16 +208,16 @@ public class AsientoRegistralWsServiceSoapBindingStub extends org.apache.axis.cl
 
     }
 
-    public AsientoRegistralWsServiceSoapBindingStub() throws org.apache.axis.AxisFault {
+    public RegWebAsientoRegistralWsServiceSoapBindingStub() throws org.apache.axis.AxisFault {
          this(null);
     }
 
-    public AsientoRegistralWsServiceSoapBindingStub(java.net.URL endpointURL, javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
+    public RegWebAsientoRegistralWsServiceSoapBindingStub(java.net.URL endpointURL, javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
          this(service);
          super.cachedEndpoint = endpointURL;
     }
 
-    public AsientoRegistralWsServiceSoapBindingStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
+    public RegWebAsientoRegistralWsServiceSoapBindingStub(javax.xml.rpc.Service service) throws org.apache.axis.AxisFault {
         if (service == null) {
             super.service = new org.apache.axis.client.Service();
         } else {

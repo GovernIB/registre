@@ -33,17 +33,17 @@ import javax.xml.bind.annotation.XmlType;
 public class CrearAsientoRegistralResponse {
 
     @XmlElement(name = "return")
-    protected AsientoRegistralWs_Type _return;
+    protected AsientoRegistralWs _return;
 
     /**
      * Obtiene el valor de la propiedad return.
      * 
      * @return
      *     possible object is
-     *     {@link AsientoRegistralWs_Type }
+     *     {@link AsientoRegistralWs }
      *     
      */
-    public AsientoRegistralWs_Type getReturn() {
+    public AsientoRegistralWs getReturn() {
         return _return;
     }
 
@@ -52,10 +52,10 @@ public class CrearAsientoRegistralResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link AsientoRegistralWs_Type }
+     *     {@link AsientoRegistralWs }
      *     
      */
-    public void setReturn(AsientoRegistralWs_Type value) {
+    public void setReturn(AsientoRegistralWs value) {
         this._return = value;
     }
 

@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlType;
 public class CrearAsientoRegistral {
 
     protected String entidad;
-    protected AsientoRegistralWs_Type asientoRegistral;
+    protected AsientoRegistralWs asientoRegistral;
     protected Long tipoOperacion;
 
     /**
@@ -68,10 +68,10 @@ public class CrearAsientoRegistral {
      * 
      * @return
      *     possible object is
-     *     {@link AsientoRegistralWs_Type }
+     *     {@link AsientoRegistralWs }
      *     
      */
-    public AsientoRegistralWs_Type getAsientoRegistral() {
+    public AsientoRegistralWs getAsientoRegistral() {
         return asientoRegistral;
     }
 
@@ -80,10 +80,10 @@ public class CrearAsientoRegistral {
      * 
      * @param value
      *     allowed object is
-     *     {@link AsientoRegistralWs_Type }
+     *     {@link AsientoRegistralWs }
      *     
      */
-    public void setAsientoRegistral(AsientoRegistralWs_Type value) {
+    public void setAsientoRegistral(AsientoRegistralWs value) {
         this.asientoRegistral = value;
     }
 
