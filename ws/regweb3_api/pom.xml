@@ -273,14 +273,14 @@
 						<goals><goal>java2ws</goal></goals>
 					</execution>
 					<execution>
-						<id>generate-wsdl-AsientoRegistralWs</id>
+						<id>generate-wsdl-RegWebAsientoRegistralWs</id>
 						<phase>generate-sources</phase>
 						<configuration>
 							<className>es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs</className>
 							<genWsdl>true</genWsdl>
 							<verbose>true</verbose>
-							<outputFile>${basedir}/src/main/resources/wsdl/AsientoRegistral.wsdl</outputFile>
-							<argline>-s ${basedir}/code -portname AsientoRegistralWs -address http://localhost:8080/regweb3/ws/v3/AsientoRegistral</argline>
+							<outputFile>${basedir}/src/main/resources/wsdl/RegWebAsientoRegistral.wsdl</outputFile>
+							<argline>-s ${basedir}/code -portname RegWebAsientoRegistralWs -address http://localhost:8080/regweb3/ws/v3/RegWebAsientoRegistral</argline>
 						</configuration>
 						<goals><goal>java2ws</goal></goals>
 					</execution>
@@ -369,13 +369,13 @@
 					  </configuration>  
 					</execution>
 					<execution>
-						  <id>WSDL to Java API AsientoRegistral</id>
+						  <id>WSDL to Java API RegWebAsientoRegistral</id>
 						  <goals><goal>wsconsume</goal></goals>
 						  <configuration>
 							  <wsdls>
-								  <wsdl>${basedir}/src/main/resources/wsdl/AsientoRegistral.wsdl</wsdl>
+								  <wsdl>${basedir}/src/main/resources/wsdl/RegWebAsientoRegistral.wsdl</wsdl>
 							  </wsdls>
-							  <wsdlLocation>http://localhost:8080/regweb3/ws/v3/AsientoRegistral?wsdl</wsdlLocation>
+							  <wsdlLocation>http://localhost:8080/regweb3/ws/v3/RegWebAsientoRegistral?wsdl</wsdlLocation>
 							  <argLine>-n</argLine>
 						  </configuration>
 					</execution>
