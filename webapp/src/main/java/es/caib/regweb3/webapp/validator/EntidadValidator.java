@@ -110,6 +110,18 @@ public class EntidadValidator implements Validator {
             }
         }
 
+        /*Validación de Format Num.Registre*/
+        if(entidad.getEntidad().getNumRegistro() != null){
+            try {
+                if(!entidad.getEntidad().getNumRegistro().contains("${numLlibre}")){ //Si no conté el camp numLlibre
+                    errors.rejectValue("entidad.numRegistro","error.numRegistre.incorrecto","error.numRegistre.numLlibre");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
 
