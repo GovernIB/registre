@@ -225,7 +225,7 @@
                                 <label for="codigoDire" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoDIRe.interesado"/>" data-toggle="popover"><spring:message code="persona.codigoDire"/></label>
                             </div>
                             <div class="col-xs-8">
-                                <input id="codigoDire" name="codigoDire" class="form-control" tabindex="14" type="text" value="" maxlength="80" disabled="disabled"/>
+                                <input id="codigoDire" name="codigoDire" class="form-control" tabindex="14" type="text" value="" maxlength="15" disabled="disabled"/>
                                 <span id="codigoDireError"></span>
                             </div>
                         </div>
