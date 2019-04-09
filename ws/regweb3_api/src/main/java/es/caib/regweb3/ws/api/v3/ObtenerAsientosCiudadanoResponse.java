@@ -35,7 +35,7 @@ import java.util.List;
 public class ObtenerAsientosCiudadanoResponse {
 
     @XmlElement(name = "return")
-    protected List<AsientoRegistralWs_Type> _return;
+    protected List<AsientoRegistralWs> _return;
 
     /**
      * Gets the value of the return property.
@@ -55,13 +55,13 @@ public class ObtenerAsientosCiudadanoResponse {
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link AsientoRegistralWs_Type }
+     * {@link AsientoRegistralWs }
      * 
      * 
      */
-    public List<AsientoRegistralWs_Type> getReturn() {
+    public List<AsientoRegistralWs> getReturn() {
         if (_return == null) {
-            _return = new ArrayList<AsientoRegistralWs_Type>();
+            _return = new ArrayList<AsientoRegistralWs>();
         }
         return this._return;
     }

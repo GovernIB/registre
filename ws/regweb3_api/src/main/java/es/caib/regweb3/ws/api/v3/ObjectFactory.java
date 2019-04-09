@@ -61,11 +61,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link AsientoRegistralWs_Type }
+     * Create an instance of {@link AsientoRegistralWs }
      * 
      */
-    public AsientoRegistralWs_Type createAsientoRegistralWs_Type() {
-        return new AsientoRegistralWs_Type();
+    public AsientoRegistralWs createAsientoRegistralWs() {
+        return new AsientoRegistralWs();
     }
 
     /**
@@ -309,12 +309,12 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link AsientoRegistralWs_Type }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link AsientoRegistralWs }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "asientoRegistralWs")
-    public JAXBElement<AsientoRegistralWs_Type> createAsientoRegistralWs(AsientoRegistralWs_Type value) {
-        return new JAXBElement<AsientoRegistralWs_Type>(_AsientoRegistralWs_QNAME, AsientoRegistralWs_Type.class, null, value);
+    public JAXBElement<AsientoRegistralWs> createAsientoRegistralWs(AsientoRegistralWs value) {
+        return new JAXBElement<AsientoRegistralWs>(_AsientoRegistralWs_QNAME, AsientoRegistralWs.class, null, value);
     }
 
     /**
