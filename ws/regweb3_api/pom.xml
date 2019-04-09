@@ -276,7 +276,7 @@
 						<id>generate-wsdl-AsientoRegistralWs</id>
 						<phase>generate-sources</phase>
 						<configuration>
-							<className>es.caib.regweb3.ws.v3.impl.AsientoRegistralWs</className>
+							<className>es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs</className>
 							<genWsdl>true</genWsdl>
 							<verbose>true</verbose>
 							<outputFile>${basedir}/src/main/resources/wsdl/AsientoRegistral.wsdl</outputFile>

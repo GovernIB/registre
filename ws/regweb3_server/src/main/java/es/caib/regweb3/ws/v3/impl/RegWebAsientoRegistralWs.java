@@ -1,6 +1,7 @@
 package es.caib.regweb3.ws.v3.impl;
 
 
+import es.caib.regweb3.ws.model.AsientoRegistralWs;
 import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.OficioWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
@@ -18,7 +19,7 @@ import java.util.List;
  * @author mgonzalez
  */
 @WebService
-public interface AsientoRegistralWs {
+public interface RegWebAsientoRegistralWs {
 
     /**
      * Crea un {@link es.caib.regweb3.ws.model.AsientoRegistralWs }
@@ -27,9 +28,9 @@ public interface AsientoRegistralWs {
      * @return
      */
     @WebMethod
-    es.caib.regweb3.ws.model.AsientoRegistralWs crearAsientoRegistral(
+    AsientoRegistralWs crearAsientoRegistral(
             @WebParam(name = "entidad")String entidad,
-            @WebParam(name = "asientoRegistral") es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral,
+            @WebParam(name = "asientoRegistral") AsientoRegistralWs asientoRegistral,
             @WebParam(name = "tipoOperacion") Long tipoOperacion)throws Throwable, WsI18NException, WsValidationException;
 
 
@@ -44,7 +45,7 @@ public interface AsientoRegistralWs {
      * @throws WsValidationException
      */
     @WebMethod
-    es.caib.regweb3.ws.model.AsientoRegistralWs obtenerAsientoRegistral(
+    AsientoRegistralWs obtenerAsientoRegistral(
             @WebParam(name = "entidad") String entidad,
             @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
             @WebParam(name = "libro") String libro,
@@ -102,7 +103,15 @@ public interface AsientoRegistralWs {
        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
        @WebParam(name = "libro") String libro) throws Throwable, WsI18NException, WsValidationException;
 
-
+    /**
+     * Obtiene los Asientos registral de un ciudadano
+     * @param entidad
+     * @param documento
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
     @WebMethod
-    List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException;
+    List<AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException;
 }

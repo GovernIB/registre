@@ -14,6 +14,7 @@ import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
 import es.caib.regweb3.utils.*;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
+import es.caib.regweb3.ws.model.AsientoRegistralWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.OficioWs;
@@ -38,24 +39,26 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import java.util.*;
 
+import static es.caib.regweb3.utils.RegwebConstantes.*;
+
 /**
  *
  */
 @SecurityDomain(RegwebConstantes.SECURITY_DOMAIN)
-@Stateless(name = AsientoRegistralWsImpl.NAME + "Ejb")
-@RolesAllowed({RegwebConstantes.RWE_SUPERADMIN})
+@Stateless(name = RegWebAsientoRegistralWsImpl.NAME + "Ejb")
+@RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA, RWE_WS_CIUDADANO})
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {"es.caib.regweb3.ws.utils.RegWebInInterceptor"})
-@WebService(name = AsientoRegistralWsImpl.NAME_WS, portName = AsientoRegistralWsImpl.NAME_WS,
-        serviceName = AsientoRegistralWsImpl.NAME_WS + "Service",
-        endpointInterface = "es.caib.regweb3.ws.v3.impl.AsientoRegistralWs")
-@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + AsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
-public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements es.caib.regweb3.ws.v3.impl.AsientoRegistralWs {
+@WebService(name = RegWebAsientoRegistralWsImpl.NAME_WS, portName = RegWebAsientoRegistralWsImpl.NAME_WS,
+        serviceName = RegWebAsientoRegistralWsImpl.NAME_WS + "Service",
+        endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebAsientoRegistralWs")
+@WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebAsientoRegistralWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
+public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl implements RegWebAsientoRegistralWs {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    public static final String NAME = "AsientoRegistral";
+    public static final String NAME = "RegWebAsientoRegistral";
 
     public static final String NAME_WS = NAME + "Ws";
 
@@ -126,9 +129,9 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
-    public es.caib.regweb3.ws.model.AsientoRegistralWs crearAsientoRegistral(
+    public AsientoRegistralWs crearAsientoRegistral(
        @WebParam(name = "entidad")String entidad,
-       @WebParam(name = "asientoRegistral") es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral,
+       @WebParam(name = "asientoRegistral") AsientoRegistralWs asientoRegistral,
        @WebParam(name = "tipoOperacion") Long tipoOperacion)throws Throwable, WsI18NException, WsValidationException{
 
         log.info("Dentro de crearAsientoRegitralWs");
@@ -242,7 +245,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
         }
 
 
-        // Convertir AsientoRegistralWs a RegistroEntrada
+        // Convertir RegWebAsientoRegistralWs a RegistroEntrada
         if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_entrada()){
 
             // 10.- Comprobar que el Organismo destino está vigente
@@ -412,7 +415,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
-    public es.caib.regweb3.ws.model.AsientoRegistralWs obtenerAsientoRegistral(
+    public AsientoRegistralWs obtenerAsientoRegistral(
        @WebParam(name = "entidad") String entidad,
        @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado,
        @WebParam(name = "libro") String libro,
@@ -452,7 +455,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
         }
 
 
-        es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral = null;
+        AsientoRegistralWs asientoRegistral = null;
 
 
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
@@ -824,7 +827,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public List<es.caib.regweb3.ws.model.AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{
+    public List<AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         StringBuilder peticion = new StringBuilder();
@@ -861,7 +864,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
             throw new I18NException("registro.entidad.noExiste", entidad);
         }
 
-        List<es.caib.regweb3.ws.model.AsientoRegistralWs> asientos = new ArrayList<es.caib.regweb3.ws.model.AsientoRegistralWs>();
+        List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
 
         try{
 
@@ -944,7 +947,7 @@ public class AsientoRegistralWsImpl  extends AbstractRegistroWsImpl implements e
     /*
       Método que crea el justiifcante del asiento registral y actualizar el estado del registro de salida y del asiento registral
      */
-    private void justificanteEstadoAsientoRegistral(RegistroSalida registroSalida, es.caib.regweb3.ws.model.AsientoRegistralWs asientoRegistral, Long estado) throws Exception, I18NValidationException, I18NException {
+    private void justificanteEstadoAsientoRegistral(RegistroSalida registroSalida, AsientoRegistralWs asientoRegistral, Long estado) throws Exception, I18NValidationException, I18NException {
         //Crear Justificante
         justificanteEjb.crearJustificante(registroSalida.getUsuario(),registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO,"ca" );
         //Marcar como distribuido
