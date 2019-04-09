@@ -31,9 +31,6 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroRegistroFormateado"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "libro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tipoRegistro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), java.lang.Long.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
@@ -64,9 +61,6 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroRegistroFormateado"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "libro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "oficioWs"));
         oper.setReturnClass(es.caib.regweb3.ws.v3.apiaxis.OficioWs.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
@@ -94,9 +88,6 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroRegistroFormateado"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "libro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -120,9 +111,6 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         param.setOmittable(true);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "numeroRegistroFormateado"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
-        param.setOmittable(true);
-        oper.addParameter(param);
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "libro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tipoRegistro"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), java.lang.Long.class, false, false);
@@ -380,7 +368,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.JustificanteWs obtenerJustificante(java.lang.String entidad, java.lang.String numeroRegistroFormateado, java.lang.String libro, java.lang.Long tipoRegistro) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.JustificanteWs obtenerJustificante(java.lang.String entidad, java.lang.String numeroRegistroFormateado, java.lang.Long tipoRegistro) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -396,7 +384,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado, libro, tipoRegistro});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado, tipoRegistro});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -425,7 +413,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.OficioWs obtenerOficioExterno(java.lang.String entidad, java.lang.String numeroRegistroFormateado, java.lang.String libro) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.OficioWs obtenerOficioExterno(java.lang.String entidad, java.lang.String numeroRegistroFormateado) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -441,7 +429,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado, libro});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -470,7 +458,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 }
     }
 
-    public void distribuirAsientoRegistral(java.lang.String entidad, java.lang.String numeroRegistroFormateado, java.lang.String libro) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public void distribuirAsientoRegistral(java.lang.String entidad, java.lang.String numeroRegistroFormateado) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -486,7 +474,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado, libro});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -508,7 +496,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs obtenerAsientoRegistral(java.lang.String entidad, java.lang.String numeroRegistroFormateado, java.lang.String libro, java.lang.Long tipoRegistro, boolean conAnexos) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs obtenerAsientoRegistral(java.lang.String entidad, java.lang.String numeroRegistroFormateado, java.lang.Long tipoRegistro, boolean conAnexos) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -524,7 +512,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado, libro, tipoRegistro, new java.lang.Boolean(conAnexos)});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, numeroRegistroFormateado, tipoRegistro, new java.lang.Boolean(conAnexos)});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;

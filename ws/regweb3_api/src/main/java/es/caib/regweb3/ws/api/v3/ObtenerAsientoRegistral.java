@@ -18,7 +18,6 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="libro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="tipoRegistro" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="conAnexos" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *       &lt;/sequence>
@@ -33,7 +32,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "obtenerAsientoRegistral", propOrder = {
     "entidad",
     "numeroRegistroFormateado",
-    "libro",
     "tipoRegistro",
     "conAnexos"
 })
@@ -41,7 +39,6 @@ public class ObtenerAsientoRegistral {
 
     protected String entidad;
     protected String numeroRegistroFormateado;
-    protected String libro;
     protected Long tipoRegistro;
     protected boolean conAnexos;
 
@@ -91,30 +88,6 @@ public class ObtenerAsientoRegistral {
      */
     public void setNumeroRegistroFormateado(String value) {
         this.numeroRegistroFormateado = value;
-    }
-
-    /**
-     * Obtiene el valor de la propiedad libro.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getLibro() {
-        return libro;
-    }
-
-    /**
-     * Define el valor de la propiedad libro.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setLibro(String value) {
-        this.libro = value;
     }
 
     /**
