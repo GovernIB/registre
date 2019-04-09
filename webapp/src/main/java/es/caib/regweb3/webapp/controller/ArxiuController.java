@@ -147,7 +147,7 @@ public class ArxiuController extends BaseController {
                             expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
 
                             if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado(), codigoLibro);
+                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
 
                                 if(registroEntrada != null){
                                     expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
@@ -241,7 +241,7 @@ public class ArxiuController extends BaseController {
                     if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(codigoLibro)){
 
                         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                            registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado, codigoLibro);
+                            registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
 
                             if(registroEntrada != null){
                                 registroDetalle = registroEntrada.getRegistroDetalle();

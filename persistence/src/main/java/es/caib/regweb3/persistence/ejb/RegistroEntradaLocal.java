@@ -143,22 +143,20 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro
      * @param codigoEntidad
      * @param numeroRegistroFormateado
-     * @param codigoLibro
      * @return
      * @throws Exception
      */
-    RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception;
+    RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception;
 
     /**
      * Obtiene el RegistroEntrada a partir de su numero de registro formateado, entidad y el libro cargando sus anexos.
      * @param codigoEntidad
      * @param numeroRegistroFormateado
-     * @param codigoLibro
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException;
+    public RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
 
     /**
      * Obtiene el numero de registro formateado de un RegistroEntrada

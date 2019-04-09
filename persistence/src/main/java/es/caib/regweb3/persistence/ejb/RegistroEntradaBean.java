@@ -521,24 +521,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception {
-
-
-        String conLibroWhere="";
-        if(codigoLibro != null){
-            conLibroWhere = "and re.libro.codigo=:codigoLibro";
-        }
-
+    public RegistroEntrada findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
 
         Query q = em.createQuery("Select re from RegistroEntrada as re where re.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and re.usuario.entidad.codigoDir3 = :codigoEntidad "+conLibroWhere);
+                "and re.usuario.entidad.codigoDir3 = :codigoEntidad ");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
         q.setParameter("codigoEntidad", codigoEntidad);
-
-        if(codigoLibro != null){
-            q.setParameter("codigoLibro", codigoLibro);
-        }
 
         List<RegistroEntrada> registro = q.getResultList();
 
@@ -552,10 +541,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException {
+    public RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
 
-       RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado,codigoLibro);
+       RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
        if(registroEntrada != null){
            return cargarAnexosFull(registroEntrada);
        }else{
