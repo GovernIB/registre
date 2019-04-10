@@ -97,6 +97,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen", oficinasOrigen);
+        model.addAttribute("origenPlantilla", true);
 
         return "registroSalida/registroSalidaForm";
     }

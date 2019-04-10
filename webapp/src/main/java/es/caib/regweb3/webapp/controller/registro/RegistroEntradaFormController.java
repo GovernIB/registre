@@ -99,6 +99,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
         model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen", oficinasOrigen);
+        model.addAttribute("origenPlantilla", true);
 
         return "registroEntrada/registroEntradaForm";
     }
