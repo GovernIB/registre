@@ -8,7 +8,7 @@ update RWE_REGISTRO_DETALLE set presencial = true;
 
 -- Marcamos los registros que se han creado via WS como Telemáticos
 update RWE_REGISTRO_DETALLE set presencial=false where id in(select re.registro_detalle from RWE_REGISTRO_ENTRADA re,rwe_usuario usu, RWE_USUARIO_ENTIDAD ue where usu.tipousuario=2 and usu.id=ue.USUARIO and ue.id=re.usuario);
-update RWE_REGISTRO_DETALLE set presencial=false where id in(select rs.registro_detalle from RWE_REGISTRO_SALIDA rs,rwe_usuario usu, RWE_USUARIO_ENTIDAD ue where usu.tipousuario=2 and usu.id=ue.USUARIO and ue.id=re.usuario);
+update RWE_REGISTRO_DETALLE set presencial=false where id in(select rs.registro_detalle from RWE_REGISTRO_SALIDA rs,rwe_usuario usu, RWE_USUARIO_ENTIDAD ue where usu.tipousuario=2 and usu.id=ue.USUARIO and ue.id=rs.usuario);
 
 -- Marcamos los registros recibidos via SIR como Telemáticos
 update RWE_REGISTRO_DETALLE set presencial=false where id in(select re.REGISTRO_DETALLE from RWE_TRAZABILIDAD_SIR tsir, RWE_REGISTRO_ENTRADA re where tsir.TIPO=4 and tsir.REGISTRO_ENTRADA=re.ID);
