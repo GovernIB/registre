@@ -67,7 +67,14 @@
 
 
            <div class="row">
-               <c:url value="/registroEntrada/new" var="urlRegistroEntrada"/>
+
+               <c:if test="${origenPlantilla}">
+                   <c:url value="/registroEntrada/new" var="urlRegistroEntrada"/>
+               </c:if>
+               <c:if test="${!origenPlantilla}">
+                   <c:url value="" var="urlRegistroEntrada"/>
+               </c:if>
+
                <form:form modelAttribute="registroEntrada" method="post" cssClass="form-horizontal" action="${urlRegistroEntrada}">
 
                <div class="col-xs-6">
