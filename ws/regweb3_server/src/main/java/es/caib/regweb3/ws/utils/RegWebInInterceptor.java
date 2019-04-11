@@ -144,6 +144,7 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
       IUserInformationPlugin loginPlugin = (IUserInformationPlugin) EjbManager.getPluginEJB().getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
       RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuariAplicacio.getIdentificador());
 
+
       EjbManager.getUsuarioEJB().actualizarRolesWs(usuariAplicacio, rolesInfo);
 
     } catch (Exception e) {
