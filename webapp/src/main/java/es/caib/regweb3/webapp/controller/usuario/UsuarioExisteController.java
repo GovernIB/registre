@@ -90,7 +90,9 @@ public class UsuarioExisteController extends BaseController {
                 // Actualizamos sus Roles
                 usuarioEjb.actualizarRoles(usuarioExistente, rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador()));
 
-                if(!usuarioExistente.getRwe_usuari() && !usuarioExistente.getRwe_admin()){
+                if(!usuarioExistente.getRwe_usuari() && !usuarioExistente.getRwe_admin() && !usuarioExistente.getRwe_ws_ciudadano()
+                        && !usuarioExistente.getRwe_ws_entrada() && !usuarioExistente.getRwe_ws_salida()){
+
                     Mensaje.saveMessageError(request, getMessage("usuarioEntidad.rol"));
                     return "redirect:/entidad/usuarios";
                 }
