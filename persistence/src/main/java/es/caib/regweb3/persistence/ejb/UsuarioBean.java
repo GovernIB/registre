@@ -237,7 +237,6 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
             if(roles.size() > 0){
 
                 rolesUsuario = rolEjb.getByRol(roles);
-                log.info("rolesUsuario" + rolesUsuario.size());
             }
         }else{
             log.info("El usuario " + usuario.getIdentificador() + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
