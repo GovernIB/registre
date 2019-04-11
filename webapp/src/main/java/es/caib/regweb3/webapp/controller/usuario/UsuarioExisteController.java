@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -38,6 +39,9 @@ public class UsuarioExisteController extends BaseController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private RolUtils rolUtils;
     
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
@@ -84,7 +88,7 @@ public class UsuarioExisteController extends BaseController {
                 }
 
                 // Actualizamos sus Roles
-                usuarioEjb.actualizarRoles(usuarioExistente);
+                usuarioEjb.actualizarRoles(usuarioExistente, rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador()));
 
                 if(!usuarioExistente.getRwe_usuari() && !usuarioExistente.getRwe_admin()){
                     Mensaje.saveMessageError(request, getMessage("usuarioEntidad.rol"));

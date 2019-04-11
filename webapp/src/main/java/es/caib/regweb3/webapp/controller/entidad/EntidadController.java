@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -60,6 +61,9 @@ public class EntidadController extends BaseController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private RolUtils rolUtils;
 
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     private DescargaLocal descargaEjb;
@@ -1080,7 +1084,8 @@ public class EntidadController extends BaseController {
         // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
         List<Usuario> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
         for (Usuario usuario : usuarios) {
-            usuarioEjb.actualizarRoles(usuario);
+
+            usuarioEjb.actualizarRoles(usuario, rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador()));
         }
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN

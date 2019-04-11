@@ -104,7 +104,7 @@ public class InicioController extends BaseController{
         }
 
         // DASHBOARD ADMINISTRADOR ENTIDAD
-        if (isAdminEntidad(request)) {
+        if (isAdminEntidad(request) && oficinaActiva != null) {
 
             // Últimas incidencias de Integraciones
             mav.addObject("incidencias", integracionEjb.ultimasIntegracionesError(entidadActiva.getId()));

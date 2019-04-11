@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.UsuarioBusquedaForm;
@@ -43,6 +44,9 @@ public class UsuarioController extends BaseController {
 
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    private RolUtils rolUtils;
        
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
@@ -111,7 +115,7 @@ public class UsuarioController extends BaseController {
                  usuario = usuarioEjb.persist(usuario);
 
                  // Obtiene los Roles del Usuario desde el sistema externo
-                 usuarioEjb.actualizarRoles(usuario);
+                 usuarioEjb.actualizarRoles(usuario, rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador()));
 
                  Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
 
@@ -173,7 +177,7 @@ public class UsuarioController extends BaseController {
                  usuario = usuarioEjb.merge(usuario);
 
                  // Actualizamos los Roles del Usuario desde el sistema externo y en la sesion
-                 usuarioEjb.actualizarRoles(usuario);
+                 usuarioEjb.actualizarRoles(usuario, rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador()));
 
                  //Si el usuario modificado es el mismo que el UsuarioAutenticado, lo actualizamos en la sesión
                  if(usuario.getId().equals(usuarioAutenticado.getId())){

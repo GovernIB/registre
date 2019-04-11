@@ -141,6 +141,7 @@
                                                     <col>
                                                     <col>
                                                     <col>
+                                                    <col>
                                                     <col width="101">
                                                 </colgroup>
                                                 <thead>
@@ -148,7 +149,8 @@
                                                     <th><spring:message code="regweb.nombre"/></th>
                                                     <th><spring:message code="usuario.email"/></th>
                                                     <th><spring:message code="usuario.identificador"/></th>
-                                                    <th><spring:message code="usuario.tipoUsuario"/></th>
+                                                    <th><spring:message code="usuario.tipo.corto"/></th>
+                                                    <th><spring:message code="usuario.roles"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                                 </thead>
@@ -165,6 +167,26 @@
                                                             </c:if>
                                                             <c:if test="${usuario.tipoUsuario == 2}">
                                                                 <span class="label label-danger"><spring:message code="usuario.tipo.2"/></span>
+                                                            </c:if>
+                                                        </td>
+                                                        <td>
+                                                            <c:if test="${usuario.rwe_superadmin}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.1.nombre"/>:</strong> <spring:message code="rol.1.descripcion"/>" data-toggle="popover"><i class="fa fa-institution"></i></span>
+                                                            </c:if>
+                                                            <c:if test="${usuario.rwe_admin}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.2.nombre"/>:</strong> <spring:message code="rol.2.descripcion"/>" data-toggle="popover"><i class="fa fa-home"></i></span>
+                                                            </c:if>
+                                                            <c:if test="${usuario.rwe_usuari}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.3.nombre"/>:</strong> <spring:message code="rol.3.descripcion"/>" data-toggle="popover"><i class="fa fa-file-o"></i></span>
+                                                            </c:if>
+                                                            <c:if test="${usuario.rwe_ws_entrada}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.4.nombre"/>:</strong> <spring:message code="rol.4.descripcion"/>" data-toggle="popover"><i class="fa fa-mail-reply"></i></span>
+                                                            </c:if>
+                                                            <c:if test="${usuario.rwe_ws_salida}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.5.nombre"/>:</strong> <spring:message code="rol.5.descripcion"/>" data-toggle="popover"><i class="fa fa-mail-forward"></i></span>
+                                                            </c:if>
+                                                            <c:if test="${usuario.rwe_ws_ciudadano}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.6.nombre"/>:</strong> <spring:message code="rol.6.descripcion"/>" data-toggle="popover"><i class="fa fa-user"></i></span>
                                                             </c:if>
                                                         </td>
                                                         <td class="center">
