@@ -150,7 +150,7 @@
                                                     <th><spring:message code="regweb.nombre"/></th>
                                                     <th><spring:message code="usuario.email"/></th>
                                                     <th><spring:message code="usuario.identificador"/></th>
-                                                    <th><spring:message code="usuario.tipoUsuario"/></th>
+                                                    <th><spring:message code="usuario.tipo.corto"/></th>
                                                     <th><spring:message code="usuario.roles"/></th>
                                                     <th class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
