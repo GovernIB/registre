@@ -211,7 +211,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
     public List<Usuario> findActivosByEntidad(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad where " +
-                "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.activo = true order by usuarioEntidad.usuario.apellido1");
+                "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_admin = true order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
 

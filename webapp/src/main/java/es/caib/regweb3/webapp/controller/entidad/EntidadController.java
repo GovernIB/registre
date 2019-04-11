@@ -276,9 +276,19 @@ public class EntidadController extends BaseController {
                 }
             }
 
-            model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
+            // Solo si es RWE_SUPERADMIN puede editar los Propietarios
+            if (rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)) {
+                model.addAttribute("propietarios", propietarios());
+            }
+
+            // Solo si es RWE_ADMIN puede editar los Administradores de entidad
+            if (rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
+                rolUtils.actualizarRolesUsuariosAdmin(entidad.getId());
+                model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidad.getPropietario(), entidad));
+            }
+
             model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
-            model.addAttribute("propietarios", propietarios());
+
 
         } catch (I18NException i18ne) {
             log.error(I18NUtils.getMessage(i18ne), i18ne);
@@ -304,9 +314,17 @@ public class EntidadController extends BaseController {
         if (result.hasErrors()) { // Si hay errores volvemos a la vista del formulario
 
             try {
-                model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
+                // Solo si es RWE_SUPERADMIN puede editar los Propietarios
+                if (getRolActivo(request).getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)) {
+                    model.addAttribute("propietarios", propietarios());
+                }
+
+                // Solo si es RWE_ADMIN puede editar los Administradores de entidad
+                if (getRolActivo(request).getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
+                    model.addAttribute("administradoresEntidad", administradoresEntidadModificar(entidadForm.getEntidad().getPropietario(), entidadForm.getEntidad()));
+                }
+
                 model.addAttribute("tieneOrganismos", entidadEjb.tieneOrganismos(entidadId));
-                model.addAttribute("propietarios", propietarios());
             } catch (I18NException i18ne) {
                 log.error(I18NUtils.getMessage(i18ne), i18ne);
                 Mensaje.saveMessageError(request, I18NUtils.getMessage(i18ne));
@@ -1052,7 +1070,6 @@ public class EntidadController extends BaseController {
      * @throws Exception
      * @throws I18NException
      */
-    /*@ModelAttribute("propietarios")*/
     private List<Usuario> propietarios() throws Exception, I18NException {
 
         IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
@@ -1080,13 +1097,6 @@ public class EntidadController extends BaseController {
      */
     private List<UsuarioEntidad> administradoresEntidadModificar(Usuario propietario,
                                                                  Entidad entidad) throws Exception, I18NException {
-
-        // Antes de nada, actualizamos los Roles contra Seycon de los UsuarioEntidad
-        List<Usuario> usuarios = usuarioEntidadEjb.findActivosByEntidad(entidad.getId());
-        for (Usuario usuario : usuarios) {
-
-            usuarioEjb.actualizarRoles(usuario, rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador()));
-        }
 
         // Obtenemos todos los UsuarioEntidad con Rol RWE_ADMIN
         List<UsuarioEntidad> administradoresEntidad = usuarioEntidadEjb.findAdministradoresByEntidad(entidad.getId());
