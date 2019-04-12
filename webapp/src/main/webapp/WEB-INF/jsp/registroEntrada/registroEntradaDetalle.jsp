@@ -362,11 +362,6 @@
         <c:param name="tipoRegistro" value="registroEntrada"/>
     </c:import>
 
-    <%-- MODAL Distribuir--%>
-    <c:import url="../registro/registroTramitar.jsp">
-        <c:param name="tipoRegistro" value="registroEntrada"/>
-    </c:import>
-
 </div>
 
 
@@ -375,7 +370,6 @@
 
 <script type="text/javascript">
     var urlDistribuir = '<c:url value="/registroEntrada/${registro.id}/distribuir"/>';
-    var urlEnviarDestinatarios = '<c:url value="/registroEntrada/${registro.id}/enviarDestinatarios"/>';
     var urlDetalle = '<c:url value="/registroEntrada/${registro.id}/detalle" />';
 
     <%-- Traducciones para distribuir.js --%>
