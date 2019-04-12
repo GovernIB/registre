@@ -51,17 +51,11 @@ public class DistribucionBean implements DistribucionLocal{
 
       RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
-      log.info("------------------------------------------------------------");
-      log.info("Distribuyendo el registro: " + re.getNumeroRegistroFormateado());
-      log.info("");
-
       //Información a guardar de la integración
       StringBuilder peticion = new StringBuilder();
       long tiempo = System.currentTimeMillis();
       String descripcion = "Distribución Registro";
-      String numRegFormat = "";
-
-      String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()) + "</b>&nbsp;&nbsp;&nbsp;";
+      String numRegFormat = re.getNumeroRegistroFormateado();
 
       //Montamos la petición de la integración
       peticion.append("usuario: ").append(re.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -76,19 +70,17 @@ public class DistribucionBean implements DistribucionLocal{
          //Si han especificado plug-in
          if (distribucionPlugin != null) {
 
-            numRegFormat = re.getNumeroRegistroFormateado();
-
             respuestaDistribucion.setHayPlugin(true);
 
             //Obtenemos la configuración de la distribución
-            ConfiguracionDistribucion configuracionDistribucion = distribucionPlugin.configurarDistribucion();
-            respuestaDistribucion.setListadoDestinatariosModificable(configuracionDistribucion.isListadoDestinatariosModificable());
+            ConfiguracionDistribucion conf = distribucionPlugin.configurarDistribucion();
+            respuestaDistribucion.setListadoDestinatariosModificable(conf.isListadoDestinatariosModificable());
 
-            if (configuracionDistribucion.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
+            if (conf.isListadoDestinatariosModificable()) {// Si es modificable, mostraremos pop-up
                respuestaDistribucion.setDestinatarios(distribucionPlugin.distribuir(re)); // isListado = true , puede escoger a quien lo distribuye de la listas propuestas.
             } else { // Si no es modificable, obtendra los destinatarios del propio registro y nos saltamos una llamada al plugin
 
-               if(configuracionDistribucion.isEnvioCola() && !forzarEnvio){ //Si esta configurado para enviarlo a la cola
+               if(conf.isEnvioCola() && !forzarEnvio){ //Si esta configurado para enviarlo a la cola
                   colaEjb.enviarAColaDistribucion(re,usuarioEntidad);
                   respuestaDistribucion.setEnviadoCola(true);
 
@@ -133,7 +125,9 @@ public class DistribucionBean implements DistribucionLocal{
    @Override
    public Boolean distribuirRegistroEntrada(RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, String descripcion, long tiempo, StringBuilder peticion) throws Exception, I18NValidationException, I18NException {
 
-      log.info("DISTRIBUYENDO REGISTRO: " + registroEntrada.getNumeroRegistroFormateado());
+      log.info("------------------------------------------------------------");
+      log.info("Distribuyendo el registro: " + registroEntrada.getNumeroRegistroFormateado());
+      log.info("");
 
       AnexoFull justificante = null;
       // Si no tiene Justificante, lo creamos
@@ -178,13 +172,13 @@ public class DistribucionBean implements DistribucionLocal{
          //Obtenermos plugin distribución
          IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
 
-         log.info("Iniciamos la distribucion de la cola");
-
          //Obtenemos el numero máximo de reintentos de una propiedad global
          Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);
 
          //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
          List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, RegwebConstantes.NUMELEMENTOSDISTRIBUIR, maxReintentos);
+
+         log.info("Hay "+elementosADistribuir.size()+" elementos que se van a distribuir en esta iteracion");
 
          for (Cola elementoADistribuir : elementosADistribuir) {
             StringBuilder peticion = new StringBuilder();
@@ -216,25 +210,26 @@ public class DistribucionBean implements DistribucionLocal{
                }
 
             } catch (Exception e) {
-               log.info("Primer Exception ");
+               log.info("Error distribuyendo registro de la Cola: " + elementoADistribuir.getDescripcionObjeto());
                e.printStackTrace();
                colaEjb.actualizarElementoCola(elementoADistribuir, descripcion, peticion, tiempo, idEntidad, hora, "ca", e, administradores, maxReintentos);
             } catch (I18NException e) {
-               log.info("Primer I18NException ");
+               log.info("Error distribuyendo registro de la Cola: " + elementoADistribuir.getDescripcionObjeto());
                e.printStackTrace();
                colaEjb.actualizarElementoCola(elementoADistribuir, descripcion, peticion, tiempo, idEntidad, hora, "ca", e, administradores, maxReintentos);
             } catch (I18NValidationException e) {
-               log.info("Primer I18NValidationException");
+               log.info("Error distribuyendo registro de la Cola: " + elementoADistribuir.getDescripcionObjeto());
                e.printStackTrace();
                colaEjb.actualizarElementoCola(elementoADistribuir, descripcion, peticion, tiempo, idEntidad, hora, "ca", e, administradores, maxReintentos);
             } catch (Throwable t) {
-               log.info("Primer Throwable");
+               log.info("Error distribuyendo registro de la Cola: " + elementoADistribuir.getDescripcionObjeto());
                t.printStackTrace();
                colaEjb.actualizarElementoCola(elementoADistribuir, descripcion, peticion, tiempo, idEntidad, hora, "ca", t, administradores, maxReintentos);
             }
          }
 
       } catch (I18NException e) {
+         log.info("Error iniciando la Cola de distribucion");
          e.printStackTrace();
       }
 

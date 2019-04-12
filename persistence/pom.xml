@@ -226,11 +226,6 @@
         </dependency>
         <dependency>
             <groupId>es.caib.regweb3</groupId>
-            <artifactId>plugin-distribucion-ripea</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>es.caib.regweb3</groupId>
             <artifactId>plugin-distribucion-goib</artifactId>
             <version>${project.version}</version>
         </dependency>

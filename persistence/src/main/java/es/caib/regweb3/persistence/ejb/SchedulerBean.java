@@ -141,10 +141,13 @@ public class SchedulerBean implements SchedulerLocal{
 
             for (Entidad entidad : entidades) {
                 log.info(" ");
-                log.info("------------- Distribucion: Procesando registros En Cola " + entidad.getNombre() + " -------------");
+                log.info("------------- Inicio Distribucion registros en Cola" + entidad.getNombre() + " -------------");
                 log.info(" ");
 
                 distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
+
+                log.info(" ");
+                log.info("------------- Fin Distribucion registros en Cola " + entidad.getNombre() + " -------------");
             }
 
         }catch (Exception e){
