@@ -15,6 +15,10 @@ public class Destinatario {
     public Destinatario() {
     }
 
+    public Destinatario(String id) {
+        this.id = id;
+    }
+
     /**
      * @param id
      * @param name

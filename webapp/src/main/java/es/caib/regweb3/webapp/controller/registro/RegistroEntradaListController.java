@@ -679,147 +679,85 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
+        RespuestaDistribucion respuesta = new RespuestaDistribucion();
 
-        JsonResponse respuesta = new JsonResponse();
+        JsonResponse response = new JsonResponse();
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
-            respuesta.setStatus("FAIL_NOVALIDO");
-            respuesta.setError(getMessage("registroEntrada.distribuir.error.novalido"));
-            respuesta.setResult(respuestaDistribucion);
+            response.setStatus("FAIL_NOVALIDO");
+            response.setError(getMessage("registroEntrada.distribuir.error.novalido"));
+            response.setResult(respuesta);
         }
 
         // Comprobamos que el usuario tiene permisos para Distribuir el registro
         if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO)){
-            respuesta.setStatus("FAIL_NOPERMISOS");
-            respuesta.setError(getMessage("registroEntrada.distribuir.error.nopermisos"));
-            respuesta.setResult(respuestaDistribucion);
+            response.setStatus("FAIL_NOPERMISOS");
+            response.setError(getMessage("registroEntrada.distribuir.error.nopermisos"));
+            response.setResult(respuesta);
         }
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
-            respuesta.setStatus("FAIL_NOISDISTRIBUIR");
-            respuesta.setError(getMessage("registroEntrada.distribuir.error.noIsdistribuir"));
-            respuesta.setResult(respuestaDistribucion);
+            response.setStatus("FAIL_NOISDISTRIBUIR");
+            response.setError(getMessage("registroEntrada.distribuir.error.noIsdistribuir"));
+            response.setResult(respuesta);
         }
 
         try {
             //Distribuimos el registro
-            respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, false);
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, false);
 
-            if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
-                if(respuestaDistribucion.getEnviadoCola()){ //Si se ha enviado a la cola
-                    respuesta.setStatus("ENVIADO_COLA");
+            if(respuesta.getHayPlugin() ){//
+                if(respuesta.getEnviadoCola()){ //Si se ha enviado a la cola
+                    response.setStatus("ENVIADO_COLA");
                     Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));
-                }else if ((respuestaDistribucion.getHayPlugin() && respuestaDistribucion.getEnviado())){ //Cuando hay plugin y ha llegado a destino
+                }else if ((respuesta.getHayPlugin() && respuesta.getEnviado())){ //Cuando se ha distribuido correctamente
                     Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    respuesta.setStatus("SUCCESS");
-                }else if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
-                    respuesta.setStatus("FAIL");
-                    respuesta.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
+                    response.setStatus("SUCCESS");
+                }else if(respuesta.getHayPlugin() && !respuesta.getEnviado()){ //Cuando no se ha distribuido correctamente
+                    response.setStatus("FAIL");
+                    response.setError(getMessage("registroEntrada.distribuir.error.noEnviado"));
                 }
             }else {
-                if(!respuestaDistribucion.getHayPlugin()){ //Si no ha plugin se cambia estado a tramitado.
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-                    respuesta.setStatus("SUCCESS");
-                }
+
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+                response.setStatus("SUCCESS");
             }
 
-            respuesta.setResult(respuestaDistribucion);
+            response.setResult(respuesta);
 
         } catch (I18NValidationException e) {
             e.printStackTrace();
-            respuesta.setStatus("FAIL");
-            respuesta.setError(I18NUtils.getMessage(e));
-            respuesta.setResult(respuestaDistribucion);
-            return respuesta;
+            response.setStatus("FAIL");
+            response.setError(I18NUtils.getMessage(e));
+            response.setResult(respuesta);
+            return response;
         } catch (I18NException ie) {
             ie.printStackTrace();
-            respuesta.setStatus("FAIL");
-            respuesta.setError(I18NUtils.getMessage(ie));
-            respuesta.setResult(respuestaDistribucion);
-            return respuesta;
+            response.setStatus("FAIL");
+            response.setError(I18NUtils.getMessage(ie));
+            response.setResult(respuesta);
+            return response;
         } catch(SocketTimeoutException ste){
             ste.printStackTrace();
-            respuesta.setStatus("FAIL");
-            respuesta.setError(ste.getMessage());
-            respuesta.setResult(respuestaDistribucion);
-            return respuesta;
+            response.setStatus("FAIL");
+            response.setError(ste.getMessage());
+            response.setResult(respuesta);
+            return response;
         } catch (Exception iie){
             iie.printStackTrace();
-            respuesta.setStatus("FAIL");
-            respuesta.setError(iie.getMessage());
-            respuesta.setResult(respuestaDistribucion);
-            return respuesta;
+            response.setStatus("FAIL");
+            response.setError(iie.getMessage());
+            response.setResult(respuesta);
+            return response;
         }
 
         // TODO eliminar referencia de custodia en los anexos si plugin arxiu digital
 
-        return respuesta;
-    }
-
-    /**
-     * Método que envia el registro de entrada a los destinatarios indicados y modifica el estado del registro
-     * a tramitado
-     * @param idRegistro identificador del registro de entrada
-     * @param wrapper contendrá los destinatarios seleccionados
-     * @param request
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{idRegistro}/enviarDestinatarios", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    Boolean enviarDestinatariosRegistroEntrada(@PathVariable Long idRegistro, 
-        @RequestBody DestinatarioWrapper wrapper, HttpServletRequest request)
-            throws Exception, I18NException, I18NValidationException {
-
-        log.info("Entramos en enviarDestinatariosRegistroEntrada");
-
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        log.info("Destinatarios obtenidos: " + wrapper.getDestinatarios().size());
-        log.info(" Observaciones obtenidas:" + wrapper.getObservaciones());
-        Boolean enviado = false;
-
-        // Enviamos el registro de entrada a los destinatarios indicados en la variable wrapper
-        try {
-             enviado = distribucionEjb.enviar(registroEntrada, wrapper,
-                    usuarioEntidad.getEntidad().getId(),
-                    RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuarioEntidad.getUsuario().getIdioma()));
-
-             if(enviado) { //Mostramos mensaje en funcion de si se ha enviado o ha habido un error.
-                // Marcamos el registro como tramitado, solo si se ha enviado bien
-                try {
-                    registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
-                } catch (I18NValidationException e) {
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.error.noEnviado")+": "+I18NUtils.getMessage(e));
-                }
-                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
-
-             } else {
-                Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
-             }
-
-        } catch (I18NValidationException e) {
-            Mensaje.saveMessageError(request, e.getMessage());
-            e.printStackTrace();
-
-        } catch (I18NException ie) {
-            Mensaje.saveMessageError(request, ie.getMessage());
-            ie.printStackTrace();
-
-        } catch (Exception iie){
-            Mensaje.saveMessageError(request,  iie.getMessage());
-            iie.printStackTrace();
-        }
-
-        return enviado;
-
+        return response;
     }
 
 

@@ -5,11 +5,8 @@ import es.caib.distribucio.ws.v1.bustia.*;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
-import es.caib.regweb3.plugins.distribucion.Destinatario;
-import es.caib.regweb3.plugins.distribucion.Destinatarios;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
@@ -19,7 +16,6 @@ import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -37,8 +33,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     private static final String PROPERTY_PASSWORD = basePluginDistribucionGoib + "password";
     private static final String PROPERTY_ENDPOINT = basePluginDistribucionGoib + "endpoint";
     private static final String PROPERTY_ENVIOCOLA = basePluginDistribucionGoib + "enviocola";
-    private static final String PROPERTY_LISTADODESTINATARIOSMODIFICABLE = basePluginDistribucionGoib + "listadodestinatariosmodificable";
-    private static final String PROPERTY_CONFIGURACIONANEXOS = basePluginDistribucionGoib + "configuracionanexos";
 
 
     private String getPropertyUsuario() throws Exception {
@@ -58,14 +52,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
     private  String getPropertyEnvioCola()  throws Exception{
         return getPropertyRequired(PROPERTY_ENVIOCOLA);
-    }
-
-    private  String getPropertyDestinatariosModificable()  throws Exception{
-        return getPropertyRequired(PROPERTY_LISTADODESTINATARIOSMODIFICABLE);
-    }
-
-    private  String getPropertyConfiguracionAnexos()  throws Exception{
-        return getPropertyRequired(PROPERTY_CONFIGURACIONANEXOS);
     }
 
 
@@ -93,17 +79,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
     }
 
     @Override
-    public Destinatarios distribuir(RegistroEntrada registro) throws Exception {
-
-        //nothing to do
-        //En este plugin los destinatarios(busties) se obtienen del organismo destino del registro.
-        return null;
-    }
-
-    @Override
-    public Boolean enviarDestinatarios(RegistroEntrada registro,
-        List<Destinatario> destinatariosDefinitivos, String observaciones,
-        Locale locale) throws Exception {
+    public Boolean distribuir(RegistroEntrada registro, Locale locale) throws Exception {
 
         try {
             //Transformamos a registreAnotació. TODO VER QUE CAMPOS DE REGISTRO ENVIAMOS A RIPEA
@@ -155,9 +131,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
                     usuario,
                     password);
 
-            long start = System.currentTimeMillis();
             client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
-            log.info("Total enviarAnotacioRegistreEntrada: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
 
             return true;
         } catch (Exception e) {
@@ -174,8 +148,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         *  3 = custodiaId + metadades. A dins el segment annexes de l'assentament s'enviaria l'Id del sistema que custodia l'arxiu i les metadades del document.
         * */
         /* EN ESTA IMPLEMENTACION NO SE EMPLEA */
-        ConfiguracionDistribucion cd = new ConfiguracionDistribucion(Boolean.valueOf(getPropertyDestinatariosModificable()), Integer.valueOf(getPropertyConfiguracionAnexos()),Boolean.valueOf(getPropertyEnvioCola()));
-        return cd;
+        return new ConfiguracionDistribucion(Boolean.valueOf(getPropertyEnvioCola()));
 
     }
 
@@ -346,7 +319,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         registreInteressat.setCodiPostal(interesado.getCp());
 
         //Razón Social
-        log.info("Razon social " + interesado.getRazonSocial());
         registreInteressat.setRaoSocial(interesado.getRazonSocial());
 
         //Observaciones
@@ -454,7 +426,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
             //en este caso el objeto Firma también incorpora el contenido de la firma
             Firma firma = new Firma();
-            log.info("Nombre de la firma " +anexoFull.getSignatureCustody().getName());
             firma.setFitxerNom(anexoFull.getSignatureCustody().getName());
             firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
             //TODO prueba con csv comentado

@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.utils.DestinatarioWrapper;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -33,26 +32,6 @@ public interface DistribucionLocal  {
    */
   RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException;
 
-  /**
-   * Método que agrupa la distribución de los registros en cola.
-   * @param entidadId
-   * @throws Exception
-   * @throws I18NException
-   * @throws I18NValidationException
-   */
- // void distribuirRegistrosEnCola(Long entidadId) throws Exception, I18NException, I18NValidationException;
-
-  /**
-   * Método que envia un registro de entrada a un conjunto de destinatarios
-   *
-   * @param re      registro de entrada
-   * @param wrapper contiene los destinatarios a los que enviar el registro de entrada
-   * @return
-   * @throws Exception
-   * @throws I18NException
-   */
-  Boolean enviar(RegistroEntrada re, DestinatarioWrapper wrapper,
-                        Long entidadId, String idioma) throws Exception, I18NException, I18NValidationException;
 
 
   /**

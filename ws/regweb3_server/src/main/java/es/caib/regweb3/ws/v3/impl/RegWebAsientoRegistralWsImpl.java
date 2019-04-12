@@ -747,16 +747,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             // 7.- Distribuimos el registro de entrada
             RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, false);
 
-            // Si el Plugin permite seleccionar Destinatarios, no se puede distribuir automaticamente
-            if(respuestaDistribucion.getDestinatarios() != null){
-                throw new I18NException("registroEntrada.distribuir.destinatarios");
-            }
+            if(!respuestaDistribucion.getEnviadoCola() && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
 
-            if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
-                if(!respuestaDistribucion.getEnviadoCola()  && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
-
-                    throw new I18NException(("registroEntrada.distribuir.error.noEnviado"));
-                }
+                throw new I18NException(("registroEntrada.distribuir.error.noEnviado"));
             }
 
         }catch (Exception e){
