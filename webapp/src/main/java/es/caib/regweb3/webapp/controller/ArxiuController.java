@@ -350,7 +350,10 @@ public class ArxiuController extends BaseController {
             List<Expediente> lista = result.getListaResultado();
 
             log.info("Total resultados: " + result.getNumeroTotalResultados());
-            log.info("Total lista: " + lista.size());
+
+            if(lista != null){
+                log.info("Total lista: " + lista.size());
+            }
 
             mav.addObject("total",result.getNumeroTotalResultados());
             mav.addObject("lista",lista);
