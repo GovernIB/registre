@@ -168,11 +168,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         // 4.- Comprobar que la Oficina está vigente
         Oficina oficina = null;
-        if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro())) {
-            oficina = oficinaEjb.findByCodigoEntidad(asientoRegistral.getEntidadRegistralDestinoCodigo(), entidadActiva.getId());
-        }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro())){
-            oficina = oficinaEjb.findByCodigoEntidad(asientoRegistral.getEntidadRegistralOrigenCodigo(), entidadActiva.getId());
-        }
+        oficina = oficinaEjb.findByCodigoEntidad(asientoRegistral.getEntidadRegistralOrigenCodigo(), entidadActiva.getId());
 
         if (oficina == null) { //No existe
             throw new I18NException("registro.oficina.noExiste", asientoRegistral.getEntidadRegistralDestinoCodigo());
