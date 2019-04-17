@@ -181,7 +181,7 @@ public class JustificanteBean implements JustificanteLocal {
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), i18nve, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
             log.error(i18nve.getMessage(), i18nve);
             throw i18nve;
@@ -190,7 +190,7 @@ public class JustificanteBean implements JustificanteLocal {
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante",peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
             log.error(i18ne.getMessage(), i18ne);
             throw i18ne;
@@ -199,7 +199,7 @@ public class JustificanteBean implements JustificanteLocal {
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                //ex.printStackTrace();
             }
             log.error(e.getMessage(), e);
             throw new I18NException(e, "justificante.error", new I18NArgumentString(e.getMessage()));
