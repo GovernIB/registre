@@ -318,13 +318,13 @@
                             </div>
                             <form:errors path="registroDetalle.fechaOrigen" cssClass="help-block" element="span"/>
                         </div>
-                        <div class="form-group col-xs-12">
-                            <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                <label for="registroDetalle.codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoSIA"/></label>
-                            </div>
-                            <div class="col-xs-4">
-                                <form:input path="registroDetalle.codigoSia" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.codigoSia" cssClass="help-block" element="span"/>
-                            </div>
+                    </div>
+                    <div class="form-group col-xs-12">
+                        <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
+                            <label for="registroDetalle.codigoSia" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoSIA"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoSIA"/></label>
+                        </div>
+                        <div class="col-xs-4">
+                            <form:input path="registroDetalle.codigoSia" maxlength="20" cssClass="form-control"/> <form:errors path="registroDetalle.codigoSia" cssClass="help-block" element="span"/>
                         </div>
                     </div>
 
