@@ -125,7 +125,8 @@ function nuevaPlantilla(){
         "oficinaCodigo": $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').val(),
         "oficinaDenominacion": $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').text(),
         "numeroRegistroOrigen": $('#registroDetalle\\.numeroRegistroOrigen').val(),
-        "fechaOrigen": $('#registroDetalle\\.fechaOrigen').val()};
+        "fechaOrigen": $('#registroDetalle\\.fechaOrigen').val(),
+        "codigoSia": $('#registroDetalle\\.codigoSia').val()};
 
     if(tipoRegistro == 1){ // RegistroEntrada
         json['destinoCodigo'] = $('#destino\\.codigo option:selected').val();
@@ -196,6 +197,7 @@ function rellenarFormulario(idPlantilla,tipoRegistro){
             $('#registroDetalle\\.observaciones').val(plantilla.observaciones);
             $('#registroDetalle\\.numeroRegistroOrigen').val(plantilla.numeroRegistroOrigen);
             $('#registroDetalle\\.fechaOrigen').val(plantilla.fechaOrigen);
+            $('#registroDetalle\\.codigoSia').val(plantilla.codigoSia);
 
             $('#libro\\.id').trigger("chosen:updated");
             $('#registroDetalle\\.tipoDocumentacionFisica').trigger("chosen:updated");

@@ -94,7 +94,7 @@ public class RegistroDetalle implements Serializable {
     private List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
 
     //Metadatos nueva arquitectura SIR
-    @XmlTransient
+    @XmlElement
     private Long codigoSia;
     @XmlTransient
     private Boolean presencial;
@@ -453,11 +453,8 @@ public class RegistroDetalle implements Serializable {
         this.version = version;
     }
 
-
     @Column(name = "CODIGOSIA")
-    public Long getCodigoSia() {
-        return codigoSia;
-    }
+    public Long getCodigoSia() { return codigoSia; }
 
     public void setCodigoSia(Long codigoSia) {
         this.codigoSia = codigoSia;

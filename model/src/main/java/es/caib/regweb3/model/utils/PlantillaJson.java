@@ -60,6 +60,8 @@ public class PlantillaJson implements Serializable {
     private String numeroRegistroOrigen;
     @XmlElement
     private String fechaOrigen;
+    @XmlElement
+    private String codigoSia;
 
     public PlantillaJson() {
     }
@@ -246,6 +248,14 @@ public class PlantillaJson implements Serializable {
 
     public void setFechaOrigen(String fechaOrigen) {
         this.fechaOrigen = fechaOrigen;
+    }
+
+    public String getCodigoSia() {
+        return codigoSia;
+    }
+
+    public void setCodigoSia(String codigoSia) {
+        this.codigoSia = codigoSia;
     }
 }
 
