@@ -447,7 +447,7 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
   @Override
   @WebMethod
-  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
   public LibroWs listarLibroOrganismo(@WebParam(name = "entidad") String entidad,
                                     @WebParam(name = "organismo") String organismo) throws Throwable, WsI18NException {
 
