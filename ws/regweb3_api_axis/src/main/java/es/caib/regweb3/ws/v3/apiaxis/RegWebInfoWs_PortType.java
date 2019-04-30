@@ -8,6 +8,7 @@
 package es.caib.regweb3.ws.v3.apiaxis;
 
 public interface RegWebInfoWs_PortType extends java.rmi.Remote {
+    public es.caib.regweb3.ws.v3.apiaxis.LibroWs listarLibroOrganismo(java.lang.String entidad, java.lang.String organismo) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb3.ws.v3.apiaxis.LibroOficinaWs[] obtenerLibrosOficinaUsuario(java.lang.String entidadCodigoDir3, java.lang.String usuario, java.lang.Long tipoRegistro) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
     public es.caib.regweb3.ws.v3.apiaxis.CodigoAsuntoWs[] listarCodigoAsunto(java.lang.String entidadCodigoDir3, java.lang.String codigoTipoAsunto) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsI18NError;
     public java.lang.String getVersion() throws java.rmi.RemoteException;
