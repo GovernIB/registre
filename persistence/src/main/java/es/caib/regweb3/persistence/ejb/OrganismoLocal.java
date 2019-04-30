@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -213,4 +214,13 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     Boolean isEdpConLibro(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene el Libro que registra al Organismos indicado, si no tiene, obtendrá el del Organismo
+     * inmediatamente superior
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    Libro obtenerLibroRegistro(Long idOrganismo) throws Exception;
 }

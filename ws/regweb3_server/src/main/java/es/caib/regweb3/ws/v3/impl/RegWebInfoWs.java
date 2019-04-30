@@ -28,7 +28,7 @@ public interface RegWebInfoWs {
      */
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
-    public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
+    List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
             WsI18NException;
     /**
      * Obtiene todos los Tipos Asunto de una Entidad
@@ -39,12 +39,12 @@ public interface RegWebInfoWs {
      */
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
-    public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
+    List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
       throws Throwable, WsI18NException;
     
 
     @WebMethod
-    public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
+    List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto)
       throws Throwable, WsI18NException;
 
     /**
@@ -55,7 +55,7 @@ public interface RegWebInfoWs {
      * @throws Throwable
      * @throws WsI18NException
      */
-    public List<LibroOficinaWs> obtenerLibrosOficina(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,@WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException;
+    List<LibroOficinaWs> obtenerLibrosOficina(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,@WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException;
 
     /**
      * Obtiene los pares Libro-Oficina en los que el usuario indicado puede registrar
@@ -66,7 +66,7 @@ public interface RegWebInfoWs {
      * @throws Throwable
      * @throws WsI18NException
      */
-    public List<LibroOficinaWs> obtenerLibrosOficinaUsuario(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "usuario") String usuario, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException;
+    List<LibroOficinaWs> obtenerLibrosOficinaUsuario(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "usuario") String usuario, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException;
     /**
      * Obtiene las Oficinas donde el usuario tiene permisos para realizar Registros
      * @param entidadCodigoDir3
@@ -77,7 +77,7 @@ public interface RegWebInfoWs {
      */
     @WebMethod
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
-    public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+    List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                           @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
 
     /**
@@ -91,21 +91,32 @@ public interface RegWebInfoWs {
      */
     @WebMethod
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
-    public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
+    List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
         @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
 
 
+    /**
+     * Obtiene el LibroWs donde puede registrar un Organismo
+     * @param entidad
+     * @param organismo
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    LibroWs listarLibroOrganismo(@WebParam(name = "entidad") String entidad,
+                                               @WebParam(name = "organismo") String organismo) throws Throwable, WsI18NException;
+
     @WebMethod
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
-    public List<OrganismoWs> listarOrganismos(        
+    List<OrganismoWs> listarOrganismos(
         @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
         throws Throwable, WsI18NException;
 
 
     @WebMethod
-    public String getVersion();
+    String getVersion();
 
 
     @WebMethod
-    public int getVersionWs();
+    int getVersionWs();
 }
