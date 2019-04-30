@@ -47,6 +47,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         Organismo organismo = em.find(Organismo.class, id);
         Hibernate.initialize(organismo.getLibros());
+        Hibernate.initialize(organismo.getOrganismoRaiz());
         Hibernate.initialize(organismo.getHistoricoUO());
 
         return organismo;
@@ -655,6 +656,22 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             return isEdpConLibro(organismo.getOrganismoSuperior().getId());
         }
 
+    }
+
+    @Override
+    public Libro obtenerLibroRegistro(Long idOrganismo) throws Exception{
+
+        Organismo organismo = findById(idOrganismo);
+
+        if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
+            return organismo.getLibros().get(0);
+
+        }else if(organismo.getOrganismoSuperior() == null){
+            return null;
+
+        }else{
+            return obtenerLibroRegistro(organismo.getOrganismoSuperior().getId());
+        }
     }
 
 

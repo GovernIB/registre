@@ -53,34 +53,31 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
 
 
   @EJB(mappedName = "regweb3/EntidadEJB/local")
-  public EntidadLocal entidadEjb;
-
-  @EJB(mappedName = "regweb3/LibroEJB/local")
-  public LibroLocal libroEjb;
+  private EntidadLocal entidadEjb;
 
   @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-  public TipoAsuntoLocal tipoAsuntoEjb;
+  private TipoAsuntoLocal tipoAsuntoEjb;
 
   @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-  public TipoDocumentalLocal tipoDocumentalEjb;
+  private TipoDocumentalLocal tipoDocumentalEjb;
   
   @EJB(mappedName = "regweb3/OrganismoEJB/local")
-  public OrganismoLocal organismoEjb;
+  private OrganismoLocal organismoEjb;
 
   @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
-  public CodigoAsuntoLocal codigoAsuntoEjb;
+  private CodigoAsuntoLocal codigoAsuntoEjb;
 
   @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-  public UsuarioEntidadLocal usuarioEntidadEjb;
+  private UsuarioEntidadLocal usuarioEntidadEjb;
 
   @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-  public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+  private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
   @EJB(mappedName = "regweb3/OficinaEJB/local")
-  public OficinaLocal oficinaEjb;
+  private OficinaLocal oficinaEjb;
 
   @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-  public RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
+  private RelacionOrganizativaOfiLocal relacionOrganizativaOfiLocalEjb;
 
 
   /**
@@ -447,6 +444,55 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       return listLibroWs;
 
     }
+
+  @Override
+  @WebMethod
+  @RolesAllowed({ RegwebConstantes.RWE_USUARI})
+  public LibroWs listarLibroOrganismo(@WebParam(name = "entidad") String entidad,
+                                    @WebParam(name = "organismo") String organismo) throws Throwable, WsI18NException {
+
+    // 1.- Comprobaciones de parámetros obligatórios
+    if(StringUtils.isEmpty(entidad)){
+      throw new I18NException("error.valor.requerido.ws", "entidad");
+    }
+
+    if(StringUtils.isEmpty(organismo)){
+      throw new I18NException("error.valor.requerido.ws", "organismo");
+    }
+
+    Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+    // 2.- Comprobar que la entidad existe y está activa
+    if(entidadActiva == null){
+      log.info("La entidad "+entidad+" no existe.");
+      throw new I18NException("registro.entidad.noExiste", entidad);
+    }else if(!entidadActiva.getActivo()){
+      throw new I18NException("registro.entidad.inactiva", entidad);
+    }
+
+    // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
+    if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
+      log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
+      throw new I18NException("registro.entidad.noExiste", entidad);
+    }
+
+    Organismo organismoActivo = organismoEjb.findByCodigoEntidad(organismo, entidadActiva.getId());
+
+    // 4. Comprobar que el Organismo existe y está vigente
+    if(organismoActivo == null){ //No existe
+      throw new I18NException("registro.organismo.noExiste", organismo);
+
+    }
+
+    // Obtenemos los libros a los que el usuario puede registrar
+    Libro libro = organismoEjb.obtenerLibroRegistro(organismoActivo.getId());
+
+    if(libro != null){
+        return CommonConverter.getLibroWs(libro);
+    }
+
+    throw new I18NException("organismo.no.libroRegistro", organismoActivo.getNombreCompleto());
+  }
   
   
   @Override
