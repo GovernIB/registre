@@ -1,6 +1,7 @@
 package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -16,6 +17,7 @@ import es.caib.regweb3.ws.converter.DatosInteresadoConverter;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
+import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -204,11 +206,28 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     protected void validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
 
         // 1.- Comprobaciones de parámetros obligatórios
-        if(StringUtils.isEmpty(numeroRegistro)){
-            throw new I18NException("error.valor.requerido.ws", "identificador");
-        }
         if(StringUtils.isEmpty(entidad)){
             throw new I18NException("error.valor.requerido.ws", "entidad");
+        }
+
+        if(StringUtils.isEmpty(numeroRegistro)){
+            throw new I18NException("error.valor.requerido.ws", "numeroRegistro");
+        }
+
+        // 2.- Comprobar que la entidad existe y está activa
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        if(entidadActiva == null){
+            log.info("La entidad "+entidad+" no existe.");
+            throw new I18NException("registro.entidad.noExiste", entidad);
+        }else if(!entidadActiva.getActivo()){
+            throw new I18NException("registro.entidad.inactiva", entidad);
+        }
+
+        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
+        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
+            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
+            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), entidad);
         }
 
     }

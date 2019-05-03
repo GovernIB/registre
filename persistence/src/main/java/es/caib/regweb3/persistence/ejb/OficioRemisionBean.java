@@ -771,7 +771,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q;
         RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
         if (registroEntrada == null) {
-            RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado,null);
+            RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
             if (registroSalida == null) {
                 return null;
             } else {

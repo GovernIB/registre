@@ -6,6 +6,7 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
@@ -14,10 +15,7 @@ import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
 import es.caib.regweb3.utils.*;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
-import es.caib.regweb3.ws.model.AsientoRegistralWs;
-import es.caib.regweb3.ws.model.InteresadoWs;
-import es.caib.regweb3.ws.model.JustificanteWs;
-import es.caib.regweb3.ws.model.OficioWs;
+import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -417,30 +415,17 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
        @WebParam(name = "tipoRegistro") Long tipoRegistro,
        @WebParam(name = "conAnexos") boolean conAnexos) throws  Throwable, WsI18NException, WsValidationException{
 
+        //1.- Validar obligatorios
+        validarObligatorios(numeroRegistroFormateado,entidad);
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
 
+        // Integraciones
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
-
-        //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-        // 2.- Comprobar que la entidad existe y está activa
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
 
-        // 3.- Comprobar que el usuario existe en la Entidad proporcionada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad " + entidadActiva.getNombre());
-            throw new I18NException("registroEntrada.usuario.noExiste", entidad);
-        }
 
         // 4.- Obtenemos el usuario entidad
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad( UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
@@ -486,7 +471,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
         }else if(REGISTRO_SALIDA.equals(tipoRegistro)){
             // 5.- Obtenemos el RegistroSalida
-            RegistroSalida registro = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado, null);
+            RegistroSalida registro = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
 
             if (registro == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -532,36 +517,21 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
        @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException, WsValidationException{
 
 
+        //1.- Validar obligatorios
+        validarObligatorios(numeroRegistroFormateado,entidad);
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        // Integraciones
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
-
-        //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
+
         if(REGISTRO_ENTRADA.equals(tipoRegistro)) {
             peticion.append("tipoRegistro: ").append("entrada").append(System.getProperty("line.separator"));
         }else if(REGISTRO_SALIDA.equals(tipoRegistro)){
             peticion.append("tipoRegistro: ").append("salida").append(System.getProperty("line.separator"));
         }
-
-        // 2.- Comprobar que la entidad existe y está activa
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
-
-        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), entidad);
-        }
-
 
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
@@ -575,8 +545,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             if (registroEntrada == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
-
-
 
             // Si no tiene Justificante, lo generamos
             if(!registroEntrada.getRegistroDetalle().getTieneJustificante()){
@@ -629,7 +597,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         } else if(REGISTRO_SALIDA.equals(tipoRegistro)){
 
             // 4.- Obtenemos el RegistroSalida
-            RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado,null);
+            RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
             if (registroSalida == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -689,6 +657,38 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
     }
 
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA, RWE_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public JustificanteReferenciaWs obtenerReferenciaJustificante(
+            @WebParam(name = "entidad") String entidad,
+            @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
+
+        //1.- Validar obligatorios
+        validarObligatorios(numeroRegistroFormateado,entidad);
+        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+        peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
+
+
+
+        try{
+            JustificanteReferencia jref = asientoRegistralEjb.obtenerReferenciaJustificante(numeroRegistroFormateado, entidadActiva);
+
+            log.info("CSV: " + jref.getCsv());
+            log.info("URL: " + jref.getUrl());
+
+            return new JustificanteReferenciaWs(jref.getCsv(), jref.getUrl());
+
+        }catch (Exception e){
+            throw new I18NException("error.ws.general");
+        }
+
+    }
+
 
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
@@ -699,22 +699,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         //1.- Validar obligatorios
         validarObligatorios(numeroRegistroFormateado,entidad);
-
-        // 2.- Comprobar que la entidad existe y está activa
         Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
-
-        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), entidad);
-        }
 
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 

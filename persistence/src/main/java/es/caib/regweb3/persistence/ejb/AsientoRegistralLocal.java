@@ -1,9 +1,11 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -35,5 +37,15 @@ public interface AsientoRegistralLocal {
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
        throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Obtiene la referencia del justificante de un Registro
+     * @param numeroRegistroformateado
+     * @param entidad
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException;
 }
 
