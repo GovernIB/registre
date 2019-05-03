@@ -12,6 +12,7 @@
   <xs:element name="distribuirAsientoRegistral" type="tns:distribuirAsientoRegistral"/>
   <xs:element name="distribuirAsientoRegistralResponse" type="tns:distribuirAsientoRegistralResponse"/>
   <xs:element name="interesadoWs" type="tns:interesadoWs"/>
+  <xs:element name="justificanteReferenciaWs" type="tns:justificanteReferenciaWs"/>
   <xs:element name="justificanteWs" type="tns:justificanteWs"/>
   <xs:element name="obtenerAsientoRegistral" type="tns:obtenerAsientoRegistral"/>
   <xs:element name="obtenerAsientoRegistralResponse" type="tns:obtenerAsientoRegistralResponse"/>
@@ -21,6 +22,8 @@
   <xs:element name="obtenerJustificanteResponse" type="tns:obtenerJustificanteResponse"/>
   <xs:element name="obtenerOficioExterno" type="tns:obtenerOficioExterno"/>
   <xs:element name="obtenerOficioExternoResponse" type="tns:obtenerOficioExternoResponse"/>
+  <xs:element name="obtenerReferenciaJustificante" type="tns:obtenerReferenciaJustificante"/>
+  <xs:element name="obtenerReferenciaJustificanteResponse" type="tns:obtenerReferenciaJustificanteResponse"/>
   <xs:element name="oficioWs" type="tns:oficioWs"/>
   <xs:complexType name="obtenerJustificante">
     <xs:sequence>
@@ -197,6 +200,23 @@
       <xs:element minOccurs="0" name="tipoInteresado" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="obtenerReferenciaJustificante">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerReferenciaJustificanteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:justificanteReferenciaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="justificanteReferenciaWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="csv" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="obtenerAsientosCiudadano">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
@@ -234,24 +254,44 @@
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="obtenerJustificante">
+    <wsdl:part name="parameters" element="tns:obtenerJustificante">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="obtenerOficioExternoResponse">
     <wsdl:part name="parameters" element="tns:obtenerOficioExternoResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerJustificante">
-    <wsdl:part name="parameters" element="tns:obtenerJustificante">
+  <wsdl:message name="obtenerReferenciaJustificante">
+    <wsdl:part name="parameters" element="tns:obtenerReferenciaJustificante">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="WsI18NException">
+    <wsdl:part name="WsI18NException" element="tns:WsI18NError">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="distribuirAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:distribuirAsientoRegistralResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoRegistralResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="crearAsientoRegistral">
+    <wsdl:part name="parameters" element="tns:crearAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerAsientosCiudadanoResponse">
     <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadanoResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="distribuirAsientoRegistral">
-    <wsdl:part name="parameters" element="tns:distribuirAsientoRegistral">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="obtenerOficioExterno">
     <wsdl:part name="parameters" element="tns:obtenerOficioExterno">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="distribuirAsientoRegistral">
+    <wsdl:part name="parameters" element="tns:distribuirAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="crearAsientoRegistralResponse">
@@ -262,16 +302,8 @@
     <wsdl:part name="parameters" element="tns:obtenerAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="distribuirAsientoRegistralResponse">
-    <wsdl:part name="parameters" element="tns:distribuirAsientoRegistralResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="WsI18NException">
-    <wsdl:part name="WsI18NException" element="tns:WsI18NError">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obtenerAsientoRegistralResponse">
-    <wsdl:part name="parameters" element="tns:obtenerAsientoRegistralResponse">
+  <wsdl:message name="obtenerReferenciaJustificanteResponse">
+    <wsdl:part name="parameters" element="tns:obtenerReferenciaJustificanteResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerAsientosCiudadano">
@@ -284,10 +316,6 @@
   </wsdl:message>
   <wsdl:message name="WsValidationException">
     <wsdl:part name="WsValidationException" element="tns:WsValidationErrors">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="crearAsientoRegistral">
-    <wsdl:part name="parameters" element="tns:crearAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebAsientoRegistralWs">
@@ -325,6 +353,16 @@
       <wsdl:input name="obtenerAsientoRegistral" message="tns:obtenerAsientoRegistral">
     </wsdl:input>
       <wsdl:output name="obtenerAsientoRegistralResponse" message="tns:obtenerAsientoRegistralResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerReferenciaJustificante">
+      <wsdl:input name="obtenerReferenciaJustificante" message="tns:obtenerReferenciaJustificante">
+    </wsdl:input>
+      <wsdl:output name="obtenerReferenciaJustificanteResponse" message="tns:obtenerReferenciaJustificanteResponse">
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
@@ -405,6 +443,21 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="obtenerAsientoRegistralResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerReferenciaJustificante">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerReferenciaJustificante">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerReferenciaJustificanteResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">

@@ -27,9 +27,11 @@ public class ObjectFactory {
     private final static QName _ObtenerOficioExternoResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerOficioExternoResponse");
     private final static QName _ObtenerJustificante_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificante");
     private final static QName _OficioWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "oficioWs");
+    private final static QName _ObtenerReferenciaJustificante_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerReferenciaJustificante");
     private final static QName _JustificanteWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "justificanteWs");
     private final static QName _DistribuirAsientoRegistralResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "distribuirAsientoRegistralResponse");
     private final static QName _DatosInteresadoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "datosInteresadoWs");
+    private final static QName _JustificanteReferenciaWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "justificanteReferenciaWs");
     private final static QName _ObtenerAsientoRegistralResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientoRegistralResponse");
     private final static QName _AnexoWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "anexoWs");
     private final static QName _AsientoRegistralWs_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "asientoRegistralWs");
@@ -42,6 +44,7 @@ public class ObjectFactory {
     private final static QName _WsValidationErrors_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "WsValidationErrors");
     private final static QName _CrearAsientoRegistralResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "crearAsientoRegistralResponse");
     private final static QName _ObtenerAsientoRegistral_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientoRegistral");
+    private final static QName _ObtenerReferenciaJustificanteResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerReferenciaJustificanteResponse");
     private final static QName _ObtenerAsientosCiudadano_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientosCiudadano");
     private final static QName _ObtenerJustificanteResponse_QNAME = new QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificanteResponse");
 
@@ -125,11 +128,27 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ObtenerReferenciaJustificante }
+     * 
+     */
+    public ObtenerReferenciaJustificante createObtenerReferenciaJustificante() {
+        return new ObtenerReferenciaJustificante();
+    }
+
+    /**
      * Create an instance of {@link DatosInteresadoWs }
      * 
      */
     public DatosInteresadoWs createDatosInteresadoWs() {
         return new DatosInteresadoWs();
+    }
+
+    /**
+     * Create an instance of {@link JustificanteReferenciaWs }
+     * 
+     */
+    public JustificanteReferenciaWs createJustificanteReferenciaWs() {
+        return new JustificanteReferenciaWs();
     }
 
     /**
@@ -197,6 +216,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ObtenerReferenciaJustificanteResponse }
+     * 
+     */
+    public ObtenerReferenciaJustificanteResponse createObtenerReferenciaJustificanteResponse() {
+        return new ObtenerReferenciaJustificanteResponse();
+    }
+
+    /**
      * Create an instance of {@link CrearAsientoRegistralResponse }
      * 
      */
@@ -221,19 +248,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link WsFieldValidationError }
-     * 
-     */
-    public WsFieldValidationError createWsFieldValidationError() {
-        return new WsFieldValidationError();
-    }
-
-    /**
      * Create an instance of {@link WsI18NArgument }
      * 
      */
     public WsI18NArgument createWsI18NArgument() {
         return new WsI18NArgument();
+    }
+
+    /**
+     * Create an instance of {@link WsFieldValidationError }
+     * 
+     */
+    public WsFieldValidationError createWsFieldValidationError() {
+        return new WsFieldValidationError();
     }
 
     /**
@@ -264,6 +291,15 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerReferenciaJustificante }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerReferenciaJustificante")
+    public JAXBElement<ObtenerReferenciaJustificante> createObtenerReferenciaJustificante(ObtenerReferenciaJustificante value) {
+        return new JAXBElement<ObtenerReferenciaJustificante>(_ObtenerReferenciaJustificante_QNAME, ObtenerReferenciaJustificante.class, null, value);
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link JustificanteWs }{@code >}}
      * 
      */
@@ -288,6 +324,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "datosInteresadoWs")
     public JAXBElement<DatosInteresadoWs> createDatosInteresadoWs(DatosInteresadoWs value) {
         return new JAXBElement<DatosInteresadoWs>(_DatosInteresadoWs_QNAME, DatosInteresadoWs.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link JustificanteReferenciaWs }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "justificanteReferenciaWs")
+    public JAXBElement<JustificanteReferenciaWs> createJustificanteReferenciaWs(JustificanteReferenciaWs value) {
+        return new JAXBElement<JustificanteReferenciaWs>(_JustificanteReferenciaWs_QNAME, JustificanteReferenciaWs.class, null, value);
     }
 
     /**
@@ -396,6 +441,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerAsientoRegistral")
     public JAXBElement<ObtenerAsientoRegistral> createObtenerAsientoRegistral(ObtenerAsientoRegistral value) {
         return new JAXBElement<ObtenerAsientoRegistral>(_ObtenerAsientoRegistral_QNAME, ObtenerAsientoRegistral.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerReferenciaJustificanteResponse }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://impl.v3.ws.regweb3.caib.es/", name = "obtenerReferenciaJustificanteResponse")
+    public JAXBElement<ObtenerReferenciaJustificanteResponse> createObtenerReferenciaJustificanteResponse(ObtenerReferenciaJustificanteResponse value) {
+        return new JAXBElement<ObtenerReferenciaJustificanteResponse>(_ObtenerReferenciaJustificanteResponse_QNAME, ObtenerReferenciaJustificanteResponse.class, null, value);
     }
 
     /**
