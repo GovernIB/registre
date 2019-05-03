@@ -2,6 +2,7 @@ package es.caib.regweb3.ws.v3.impl;
 
 
 import es.caib.regweb3.ws.model.AsientoRegistralWs;
+import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
 import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.OficioWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
@@ -66,6 +67,20 @@ public interface RegWebAsientoRegistralWs {
             @WebParam(name = "entidad") String entidad,
             @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
             @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException, WsValidationException;
+
+    /**
+     * Obtiene la referencia del Justificante del {@link es.caib.regweb3.ws.model.AsientoRegistralWs } indicado, si es la primera vez lo generará
+     * @param entidad
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
+    @WebMethod
+    JustificanteReferenciaWs obtenerReferenciaJustificante(
+            @WebParam(name = "entidad") String entidad,
+            @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      * Distribuye el {@link es.caib.regweb3.ws.model.AsientoRegistralWs }

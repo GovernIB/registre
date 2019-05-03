@@ -351,23 +351,14 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     @SuppressWarnings("unchecked")
-    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception {
-
-        String conLibroWhere="";
-        if(codigoLibro != null){
-            conLibroWhere = "and rs.libro.codigo=:codigoLibro";
-        }
+    public RegistroSalida findByNumeroRegistroFormateado(String codigoEntidad, String numeroRegistroFormateado) throws Exception {
 
 
         Query q = em.createQuery("Select rs from RegistroSalida as rs where rs.numeroRegistroFormateado = :numeroRegistroFormateado " +
-                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad "+conLibroWhere);
+                "and rs.usuario.entidad.codigoDir3 = :codigoEntidad ");
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
         q.setParameter("codigoEntidad", codigoEntidad);
-
-        if(codigoLibro != null){
-            q.setParameter("codigoLibro", codigoLibro);
-        }
 
         List<RegistroSalida> registro = q.getResultList();
 
@@ -379,12 +370,10 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado, String codigoLibro) throws Exception, I18NException {
+    public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
-        log.info("entro en findByNumeroRegistroFormateadoConAnexos");
-        RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado,codigoLibro);
+        RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
         if(registroSalida!= null){
-            log.info("entro en registro salida no null" + registroSalida.getId());
             return cargarAnexosFull(registroSalida);
         }else{
             return null;
