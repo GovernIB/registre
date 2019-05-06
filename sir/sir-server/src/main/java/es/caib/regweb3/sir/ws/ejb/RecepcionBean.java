@@ -1,6 +1,5 @@
 package es.caib.regweb3.sir.ws.ejb;
 
-import es.caib.regweb3.model.AnexoSir;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.sir.Errores;
@@ -8,7 +7,6 @@ import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.sir.TipoAnotacion;
 import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.persistence.ejb.WebServicesMethodsLocal;
-import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.excepcion.ServiceException;
 import es.caib.regweb3.sir.core.excepcion.ValidacionException;
@@ -137,13 +135,14 @@ public class RecepcionBean implements RecepcionLocal{
                 enviarMensajeError(mensajeError);
             }
 
-            // Eliminamos los posibles archivos creados en filesystem del RegistroSir
+            // Eliminamos el RegistroSir al completo
             if(respuesta.getRegistroSir() != null){
-                log.info("RuntimeException, eliminamos los archivos en filesystem de los anexosSir creados: ");
+                webServicesMethodsEjb.eliminarRegistroSir(respuesta.getRegistroSir());
+                /*log.info("RuntimeException, eliminamos los archivos en filesystem de los anexosSir creados: ");
                 for(AnexoSir anexoSir: respuesta.getRegistroSir().getAnexos()){
                     FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
                     log.info("Eliminamos archivo: " + anexoSir.getAnexo().getId());
-                }
+                }*/
             }
 
             // Integración
