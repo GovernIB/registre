@@ -626,7 +626,9 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Número Registro Origen
         registroDetalle.setNumeroRegistroOrigen(plantillaJson.getNumeroRegistroOrigen());
         // Código Sia
-        registroDetalle.setCodigoSia(Long.parseLong(plantillaJson.getCodigoSia()));
+        if(!plantillaJson.getCodigoSia().equals("")) {
+            registroDetalle.setCodigoSia(Long.parseLong(plantillaJson.getCodigoSia()));
+        }
         // Fecha origen
         if(!plantillaJson.getFechaOrigen().equals("")) {
             Date fechaOrigen = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(plantillaJson.getFechaOrigen());
