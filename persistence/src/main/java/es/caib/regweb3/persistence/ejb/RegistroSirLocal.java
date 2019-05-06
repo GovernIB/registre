@@ -49,10 +49,10 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
     /**
      * Eliminar un RegistroSir y sus trazabilidades
-     * @param idRegistroSir
+     * @param registroSir
      * @throws Exception
      */
-    void eliminarRegistroSir(Long idRegistroSir) throws Exception;
+    void eliminarRegistroSir(RegistroSir registroSir) throws Exception;
 
     /**
      * Marca como eliminado un RegitroSir, creando una TRAZABILIDAD_SIR_ELIMINADO

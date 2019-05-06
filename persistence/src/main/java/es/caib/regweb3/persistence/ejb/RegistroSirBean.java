@@ -33,6 +33,8 @@ import org.w3c.dom.NodeList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -56,6 +58,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 @Stateless(name = "RegistroSirEJB")
 @SecurityDomain("seycon")
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements RegistroSirLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -220,16 +223,25 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @Override
-    public void eliminarRegistroSir(Long idRegistroSir) throws Exception{
+    public void eliminarRegistroSir(RegistroSir registroSir) throws Exception{
 
-        List<TrazabilidadSir> trazabilidades = trazabilidadSirEjb.getByRegistroSir(idRegistroSir);
+        //RegistroSir registroSir = findById(idRegistroSir);
+
+        log.info("Eliminamos el RegistroSir: " + registroSir.getIdentificadorIntercambio());
+
+        List<TrazabilidadSir> trazabilidades = trazabilidadSirEjb.getByRegistroSir(registroSir.getId());
 
         // Eliminamos sus trazabilidades
         for (TrazabilidadSir trazabilidadSir :trazabilidades) {
             trazabilidadSirEjb.remove(trazabilidadSir);
         }
 
-        remove(findById(idRegistroSir));
+        for(AnexoSir anexoSir: registroSir.getAnexos()){
+            FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
+            log.info("Eliminamos archivo: " + anexoSir.getAnexo().getId());
+        }
+
+        remove(registroSir);
 
     }
 
