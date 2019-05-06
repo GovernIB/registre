@@ -2,9 +2,11 @@ package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.api.v3.*;
+import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
 
 
 /**
@@ -26,8 +28,190 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
+
+
+   // @Test
+    public void crearAsientoRegistral() throws Exception {
+
+        for (int i = 0; i < 1; i++) {
+
+            AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
+
+            asientoRegistralWs.setAplicacion("REGWEB3");
+            asientoRegistralWs.setAplicacionTelematica("REGWEB3");
+            asientoRegistralWs.setCodigoAsunto(null);
+            asientoRegistralWs.setCodigoSia(getTestCodigoSia());
+            asientoRegistralWs.setCodigoUsuario(getTestUserName());
+            asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
+            asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
+            asientoRegistralWs.setExpone("Expone");
+            asientoRegistralWs.setSolicita("Solicita");
+            asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+            asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
+            asientoRegistralWs.setPresencial(false);
+            asientoRegistralWs.setResumen("Prueba via RegwebAsientoRegistralTest");
+            asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+            asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
+            asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+            asientoRegistralWs.setTipoAsunto(getTestTipoAsunto());
+
+
+            // Interesados
+            InteresadoWs interesadoWs = new InteresadoWs();
+
+            DatosInteresadoWs interesado = new DatosInteresadoWs();
+            interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+            interesado.setTipoDocumentoIdentificacion("N");
+            interesado.setDocumento("43146650F");
+            interesado.setEmail("pgarcia@gmail.com");
+            interesado.setNombre("Julian");
+            interesado.setApellido1("González");
+            interesado.setCanal((long) 1);
+            interesado.setDireccion("Avenida picasso");
+            interesado.setLocalidad((long) 407);
+            interesado.setPais((long) 724);
+            interesado.setProvincia((long) 7);
+            interesadoWs.setInteresado(interesado);
+
+            /*DatosInteresadoWs representante = new DatosInteresadoWs();
+            representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
+            representante.setTipoDocumentoIdentificacion("N");
+            representante.setDocumento("33456299Q");
+            representante.setEmail("jdelatorre@gmail.com");
+            representante.setNombre("Juanito");
+            representante.setApellido1("De la torre");
+            representante.setPais((long) 724);
+            representante.setProvincia((long) 46);
+            interesadoWs.setRepresentante(representante);*/
+
+            asientoRegistralWs.getInteresados().add(interesadoWs);
+
+            /* InteresadoWs interesadoWs2 = new InteresadoWs();
+            DatosInteresadoWs organismo = new DatosInteresadoWs();
+            organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
+            organismo.setNombre("Presidencia Govern de les Illes Balears");
+            interesadoWs2.setInteresado(organismo);
+
+            asientoRegistralWs.getInteresados().add(interesadoWs2);*/
+
+            //asientoRegistralWs.getAnexos().addAll(getAnexos());
+
+            try {
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null);
+                System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
+                System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
     @Test
-    public void obtenerRegistroEntrada() {
+    public void crearAsientoRegistralConAnexos() throws Exception {
+
+        for (int i = 0; i < 1; i++) {
+
+            AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
+
+            asientoRegistralWs.setAplicacion("REGWEB3");
+            asientoRegistralWs.setAplicacionTelematica("REGWEB3");
+            asientoRegistralWs.setCodigoAsunto(null);
+            asientoRegistralWs.setCodigoSia(getTestCodigoSia());
+            asientoRegistralWs.setCodigoUsuario(getTestUserName());
+            asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
+            asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
+            asientoRegistralWs.setExpone("Expone");
+            asientoRegistralWs.setSolicita("Solicita");
+            asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+            asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
+            asientoRegistralWs.setPresencial(false);
+            asientoRegistralWs.setResumen("Prueba via RegwebAsientoRegistralTest");
+            asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+            asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
+            asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+            asientoRegistralWs.setTipoAsunto(getTestTipoAsunto());
+
+
+            // Interesados
+            InteresadoWs interesadoWs = new InteresadoWs();
+
+            DatosInteresadoWs interesado = new DatosInteresadoWs();
+            interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+            interesado.setTipoDocumentoIdentificacion("N");
+            interesado.setDocumento("43146650F");
+            interesado.setEmail("pgarcia@gmail.com");
+            interesado.setNombre("Julian");
+            interesado.setApellido1("González");
+            interesado.setCanal((long) 1);
+            interesado.setDireccion("Avenida picasso");
+            interesado.setLocalidad((long) 407);
+            interesado.setPais((long) 724);
+            interesado.setProvincia((long) 7);
+            interesadoWs.setInteresado(interesado);
+
+            /*DatosInteresadoWs representante = new DatosInteresadoWs();
+            representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
+            representante.setTipoDocumentoIdentificacion("N");
+            representante.setDocumento("33456299Q");
+            representante.setEmail("jdelatorre@gmail.com");
+            representante.setNombre("Juanito");
+            representante.setApellido1("De la torre");
+            representante.setPais((long) 724);
+            representante.setProvincia((long) 46);
+            interesadoWs.setRepresentante(representante);*/
+
+            asientoRegistralWs.getInteresados().add(interesadoWs);
+
+            /* InteresadoWs interesadoWs2 = new InteresadoWs();
+            DatosInteresadoWs organismo = new DatosInteresadoWs();
+            organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
+            organismo.setNombre("Presidencia Govern de les Illes Balears");
+            interesadoWs2.setInteresado(organismo);
+
+            asientoRegistralWs.getInteresados().add(interesadoWs2);*/
+
+            asientoRegistralWs.getAnexos().addAll(getAnexos());
+
+
+            try {
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null);
+                System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
+                System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+
+    @Test
+    public void obtenerAsientoregistral() throws Exception{
+
+        try {
+            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),"PRES-E-2/2019", RegwebConstantes.REGISTRO_ENTRADA,false);
+
+            System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
+        } catch (WsValidationException e) {
+            e.printStackTrace();
+        } catch (WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void obtenerReferenciaJustificante() {
 
         try {
             JustificanteReferenciaWs just = asientoRegistralApi.obtenerReferenciaJustificante(getTestEntidadCodigoDir3(),"");
@@ -51,6 +235,48 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         System.out.println("Justificante: " + justificanteWs.getJustificante().length);
     }
 
+    @Test
+    public void distribuirAsientoregistral() throws Exception{
+
+        try {
+            asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),"PRES-E-2/2019");
+
+        } catch (WsValidationException e) {
+            e.printStackTrace();
+        } catch (WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void obtenerOficioExterno() {
+
+        try {
+            OficioWs oficio = asientoRegistralApi.obtenerOficioExterno(getTestEntidadCodigoDir3(),"");
+
+            System.out.println("Oficio: " + oficio.getOficio());
+
+        } catch (WsValidationException e) {
+            e.printStackTrace();
+        } catch (WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void obtenerAsientosCiudadano() {
+
+        try {
+            List<AsientoRegistralWs> asientosCiudadano = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"");
+
+            System.out.println("Asientos encontrados: " +asientosCiudadano.size());
+
+        } catch (WsValidationException e) {
+            e.printStackTrace();
+        } catch (WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
