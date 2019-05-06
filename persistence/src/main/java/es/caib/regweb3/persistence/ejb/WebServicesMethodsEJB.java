@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroSir;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
@@ -36,6 +37,9 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @EJB(mappedName = "regweb3/MensajeControlEJB/local")
     private MensajeControlLocal mensajeControlEjb;
 
+    @EJB(mappedName = "regweb3/RegistroSirEJB/local")
+    private RegistroSirLocal registroSirEjb;
+
 
     @Override
     public void procesarMensajeDatosControl(MensajeControl mensaje) throws Exception{
@@ -45,6 +49,11 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public RespuestaRecepcionSir procesarFicheroIntercambio(FicheroIntercambio ficheroIntercambio) throws Exception{
         return ficheroIntercambioEjb.procesarFicheroIntercambio(ficheroIntercambio);
+    }
+
+    @Override
+    public void eliminarRegistroSir(RegistroSir registroSir) throws Exception{
+        registroSirEjb.eliminarRegistroSir(registroSir);
     }
 
     @Override
