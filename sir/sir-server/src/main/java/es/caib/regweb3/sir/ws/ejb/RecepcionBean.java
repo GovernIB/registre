@@ -138,6 +138,7 @@ public class RecepcionBean implements RecepcionLocal{
             // Eliminamos el RegistroSir al completo
             if(respuesta.getRegistroSir() != null){
                 webServicesMethodsEjb.eliminarRegistroSir(respuesta.getRegistroSir());
+                peticion.append("REGISTRO_SIR ELIMINADO: ").append("Se elimina el RegistroSir completo por errores previos").append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
                 /*log.info("RuntimeException, eliminamos los archivos en filesystem de los anexosSir creados: ");
                 for(AnexoSir anexoSir: respuesta.getRegistroSir().getAnexos()){
                     FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
