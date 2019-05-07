@@ -108,6 +108,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         reqContext.put(BindingProvider.PASSWORD_PROPERTY, pwd);
     }
 
+    public static Long getTestCodigoSia() {
+        return new Long(testProperties.getProperty("test_codigosia"));
+    }
+
     public static RegWebHelloWorldWs getHelloWorldApi() throws Exception {
 
         final String endpoint = getEndPoint(HELLO_WORLD);
@@ -265,8 +269,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
             final String fichero = "pdf_con_firma.pdf";
             anexoConFirmaAttached.setTitulo("Anexo Con Firma Attached");
-            String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
-            anexoConFirmaAttached.setValidezDocumento(copia);
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaAttached.setValidezDocumento(original);
             anexoConFirmaAttached.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaAttached.setTipoDocumento(formulario);
@@ -290,8 +294,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             AnexoWs anexoConFirmaDetached = new AnexoWs();
 
             anexoConFirmaDetached.setTitulo("Anexo Con Firma Detached");
-            String copia = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA);
-            anexoConFirmaDetached.setValidezDocumento(copia);
+            String original = CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_ORIGINAL);
+            anexoConFirmaDetached.setValidezDocumento(original);
             anexoConFirmaDetached.setTipoDocumental(getTestAnexoTipoDocumental());
             String formulario = CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO);
             anexoConFirmaDetached.setTipoDocumento(formulario);
