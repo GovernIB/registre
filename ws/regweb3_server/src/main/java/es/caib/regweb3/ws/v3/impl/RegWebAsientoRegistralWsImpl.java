@@ -13,7 +13,10 @@ import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
-import es.caib.regweb3.utils.*;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
 import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
@@ -130,9 +133,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     public AsientoRegistralWs crearAsientoRegistral(
        @WebParam(name = "entidad")String entidad,
        @WebParam(name = "asientoRegistral") AsientoRegistralWs asientoRegistral,
-       @WebParam(name = "tipoOperacion") Long tipoOperacion)throws Throwable, WsI18NException, WsValidationException{
-
-        log.info("Dentro de crearAsientoRegitralWs");
+       @WebParam(name = "tipoOperacion") Long tipoOperacion,
+       @WebParam(name = "distribuir") Boolean distribuir)throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         StringBuilder peticion = new StringBuilder();
@@ -142,105 +144,61 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         // 1.-Validar campo obligatorio entidad
-        if(StringUtils.isEmpty(entidad)){
-            throw new I18NException("error.valor.requerido.ws", "entidad");
-        }
+        Entidad entidadActiva = validarEntidad(entidad);
 
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        // 2.- Comprobar que la Oficina está vigente
+        Oficina oficina = validarOficina(asientoRegistral.getEntidadRegistralOrigenCodigo(), entidadActiva.getId());
 
+        // 3.- Comprobar que el Libro está vigente
+        Libro libro = validarLibro(asientoRegistral.getLibroCodigo(), entidadActiva.getId());
 
-        // 2.- Comprobar que la entidad existe y está activa
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
-
-        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }
-
-
-        // 4.- Comprobar que la Oficina está vigente
-        Oficina oficina = null;
-        oficina = oficinaEjb.findByCodigoEntidad(asientoRegistral.getEntidadRegistralOrigenCodigo(), entidadActiva.getId());
-
-        if (oficina == null) { //No existe
-            throw new I18NException("registro.oficina.noExiste", asientoRegistral.getEntidadRegistralDestinoCodigo());
-
-        } else if (!oficina.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-            throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
-        }
-
-
-        // 5.- Comprobar que el Libro está vigente
-        Libro libro = libroEjb.findByCodigoEntidad(asientoRegistral.getLibroCodigo(), entidadActiva.getId());
-
-        if (libro == null) { //No existe
-            throw new I18NException("registro.libro.noExiste", asientoRegistral.getLibroCodigo());
-
-        } else if (!libro.getActivo()) { //Si está inactivo
-            throw new I18NException("registro.libro.inactivo", asientoRegistral.getLibroCodigo());
-        }
-
-
-        // 6.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
-        // Nos pueden enviar el username en mayusculas
+        // 4.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
             throw new I18NException("registro.usuario.noExiste", asientoRegistral.getCodigoUsuario(), entidadActiva.getNombre());
 
-        } else if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_ENTRADA)) {
-            throw new I18NException("registro.usuario.permisos", asientoRegistral.getCodigoUsuario(), libro.getCodigo());
-
         }
-
 
         // 7.- Recuperamos el username correcto
         asientoRegistral.setCodigoUsuario(usuario.getUsuario().getIdentificador());
-        asientoRegistral.setAplicacion(CODIGO_APLICACION);
-        asientoRegistral.setVersion(Versio.VERSIO);
+        //asientoRegistral.setAplicacion(CODIGO_APLICACION); todo REPENSAR setAplicacionTelematica
+        //asientoRegistral.setVersion(Versio.VERSIO);
 
 
         // 8.- Validar los Interesados
         List<Interesado> interesados;
-        if(tipoOperacion!= null && TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación solo se permite un interesado
-            if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
+        if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
 
-                if (asientoRegistral.getInteresados().size() == 1) {
-                    // Procesamos los interesados
-                    interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
-                } else {
+            if(tipoOperacion!= null && TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación
+
+                if (asientoRegistral.getInteresados().size() != 1) { // solo se permite un interesado
                     throw new I18NException("interesado.registro.obligatorio.uno");
                 }
-
-            } else {
-                throw new I18NException("interesado.registro.obligatorio");
             }
+            // Procesamos los interesados
+            interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
+
         }else{
-            if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
-                // Procesamos los interesados
-                interesados = procesarInteresados(asientoRegistral.getInteresados(), interesadoEjb, catPaisEjb, catProvinciaEjb, catLocalidadEjb, personaEjb);
-
-            } else {
-                throw new I18NException("interesado.registro.obligatorio");
-            }
+            throw new I18NException("interesado.registro.obligatorio");
         }
+
 
         // 9.- Validar los Anexos
         List<AnexoFull> anexosFull = null;
         if (asientoRegistral.getAnexos() != null && asientoRegistral.getAnexos().size() > 0) {
-            //Procesamos los anexos
             anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId());
         }
 
 
         // Convertir RegWebAsientoRegistralWs a RegistroEntrada
         if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_entrada()){
+
+            // Comprobar PERMISO_REGISTRO_ENTRADA de usuario
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_ENTRADA)) {
+                throw new I18NException("registro.usuario.permisos", asientoRegistral.getCodigoUsuario(), libro.getCodigo());
+
+            }
 
             // 10.- Comprobar que el Organismo destino está vigente
             Organismo destinoInterno = organismoEjb.findByCodigoEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
@@ -272,16 +230,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             // 12.- Validar el RegistroEntrada
             validateRegistroEntrada(registroEntrada);
 
-
-            //13.- Asignamos interesados
-            registroEntrada.getRegistroDetalle().setInteresados(null);
-
-
-            //14.- Asignamos los anexos al Registro de Entrada
-            //registroEntrada.getRegistroDetalle().setAnexos(null);
-
-
-            // 15.- Creamos el Registro de Entrada
+            // 13.- Creamos el Registro de Entrada
             try{
                 registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
                 numRegFormat = registroEntrada.getNumeroRegistroFormateado();
@@ -289,117 +238,115 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 asientoRegistral.setNumeroRegistroFormateado(numRegFormat);
                 asientoRegistral.setFechaRegistro(registroEntrada.getFecha());
 
-
             }catch (Exception e){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
                 throw new I18NException("registro.nuevo.error");
             }
-
 
             // 14.- Integracion
             peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
             peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
-
+            if (distribuir) {
+                //todo DISTRIBUIR registro
+            }
 
         }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_salida()){
 
+            // Comprobar PERMISO_REGISTRO_SALIDA de usuario
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA)) {
+                throw new I18NException("registro.usuario.permisos", asientoRegistral.getCodigoUsuario(), libro.getCodigo());
 
-                // 10.- Comprobar que el Organismo Origen está vigente
-                Organismo origen = organismoEjb.findByCodigoEntidad(asientoRegistral.getUnidadTramitacionOrigenCodigo(), entidadActiva.getId());
+            }
 
-                if (origen == null) { //Si no existe todo: Hay que agregar origenes externos?
-                    throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionOrigenCodigo());
+            // 10.- Comprobar que el Organismo Origen está vigente
+            Organismo origen = organismoEjb.findByCodigoEntidad(asientoRegistral.getUnidadTramitacionOrigenCodigo(), entidadActiva.getId());
 
-                } else if (!origen.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-                    throw new I18NException("registro.organismo.extinguido", origen.getNombreCompleto());
-                }
+            if (origen == null) {
+                throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionOrigenCodigo());
 
-                //11.- Convertir a registro de Salida
-                RegistroSalida registroSalida = AsientoRegistralConverter.getRegistroSalida(
-                   asientoRegistral, usuario, libro, oficina, origen,
-                   codigoAsuntoEjb, tipoAsuntoEjb);
+            } else if (!origen.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
+                throw new I18NException("registro.organismo.extinguido", origen.getNombreCompleto());
+            }
 
-                // 12.- Validar el RegistroSalida
-                validateRegistroSalida(registroSalida);
+            //11.- Convertir a registro de Salida
+            RegistroSalida registroSalida = AsientoRegistralConverter.getRegistroSalida(
+               asientoRegistral, usuario, libro, oficina, origen,
+               codigoAsuntoEjb, tipoAsuntoEjb);
 
-
-                // 13.- Asignamos los interesados
-                registroSalida.getRegistroDetalle().setInteresados(null);
-
-                // 14.- Asignamos los anexos
-                //registroSalida.getRegistroDetalle().setAnexos(null);
+            // 12.- Validar el RegistroSalida
+            validateRegistroSalida(registroSalida);
 
 
-                // 15.- Creamos el Registro de Salida
-                try {
-                    registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull);
+            // 13.- Creamos el Registro de Salida
+            try {
+                registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull);
 
-                    numRegFormat = registroSalida.getNumeroRegistroFormateado();
-                    asientoRegistral.setNumeroRegistro(registroSalida.getNumeroRegistro());
-                    asientoRegistral.setNumeroRegistroFormateado(numRegFormat);
-                    asientoRegistral.setFechaRegistro(registroSalida.getFecha());
-
-
-                } catch (Exception e) {
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
-                    throw new I18NException("registro.nuevo.error");
-                }
+                numRegFormat = registroSalida.getNumeroRegistroFormateado();
+                asientoRegistral.setNumeroRegistro(registroSalida.getNumeroRegistro());
+                asientoRegistral.setNumeroRegistroFormateado(numRegFormat);
+                asientoRegistral.setFechaRegistro(registroSalida.getFecha());
 
 
-                // Integracion
-                peticion.append("oficina: ").append(registroSalida.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
-                peticion.append("registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
-                integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            } catch (Exception e) {
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+                throw new I18NException("registro.nuevo.error");
+            }
 
-                try{
-                    if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) { //Si es una notificación
-                        //Creamos el justificante y actualizamos los estados del registroSalida y del Asiento Registral
-                        justificanteEstadoAsientoRegistral(registroSalida,asientoRegistral, REGISTRO_DISTRIBUIDO);
+            // Integracion
+            peticion.append("oficina: ").append(registroSalida.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+            peticion.append("registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
-                    }else if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)){
-                        //Si es una comunicación dependerá de los interesados destinatarios (solo hay un interesado)
-                        for(InteresadoWs interesadoWs: asientoRegistral.getInteresados()){
-                            //Si el interesado es una persona física o jurídica es como el caso de notificación
-                            if(TIPO_INTERESADO_PERSONA_FISICA.equals(interesadoWs.getInteresado().getTipoInteresado())
-                               || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesadoWs.getInteresado().getTipoInteresado())){
+            try{
+                if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) { //Si es una Notificación
+                    //Creamos el justificante y marcamos como DISTRIBUIDO el registroSalida y el Asiento Registral
+                    justificanteEstadoAsientoRegistral(registroSalida,asientoRegistral, REGISTRO_DISTRIBUIDO);
+
+                }else if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)){
+                    //Si es una Comunicación dependerá de los interesados destinatarios (solo hay un interesado)
+                    for(InteresadoWs interesadoWs: asientoRegistral.getInteresados()){
+                        //Si el interesado es una persona física o jurídica es como el caso de notificación
+                        if(TIPO_INTERESADO_PERSONA_FISICA.equals(interesadoWs.getInteresado().getTipoInteresado())
+                           || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesadoWs.getInteresado().getTipoInteresado())){
+                            //Creamos el justificante y actualizamos los estados del registroSalida y del Asiento Registral
+                            justificanteEstadoAsientoRegistral(registroSalida,asientoRegistral,REGISTRO_DISTRIBUIDO);
+
+                        }else if(TIPO_INTERESADO_ADMINISTRACION.equals(interesadoWs.getInteresado().getTipoInteresado())){//Si el interesado es una administración
+                            //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
+                            List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(oficina)));
+                            //Si el interesado es una administración y no está integrada en SIR
+                            if(oficinasSIR.isEmpty()){ //Si no hay oficinas SIR, se marca como oficio externo y el identificador intercambio se marca a -1
+                                //TODO hay que crear el oficio externo???
                                 //Creamos el justificante y actualizamos los estados del registroSalida y del Asiento Registral
-                                justificanteEstadoAsientoRegistral(registroSalida,asientoRegistral,REGISTRO_DISTRIBUIDO);
-
-                            }else if(TIPO_INTERESADO_ADMINISTRACION.equals(interesadoWs.getInteresado().getTipoInteresado())){//Si el interesado es una administración
-                                //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
-                                List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(oficina)));
-                                //Si el interesado es una administración y no está integrada en SIR
-                                if(oficinasSIR.isEmpty()){ //Si no hay oficinas SIR, se marca como oficio externo y el identificador intercambio se marca a -1
-                                    //TODO hay que crear el oficio externo???
-                                    //Creamos el justificante y actualizamos los estados del registroSalida y del Asiento Registral
-                                    justificanteEstadoAsientoRegistral(registroSalida,asientoRegistral, REGISTRO_OFICIO_EXTERNO);
-                                    asientoRegistral.setIdentificadorIntercambio("-1");
-                                }else{ //Si el interesado es una administración y está integrada en SIR
-                                    try {
-                                        //Se envia el registro via SIR.
-                                        OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(REGISTRO_SALIDA_ESCRITO, registroSalida.getId(),
-                                           registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
-                                        registroSalidaEjb.cambiarEstado(registroSalida.getId(), REGISTRO_OFICIO_SIR);
-                                        asientoRegistral.setEstado(REGISTRO_OFICIO_SIR);
-                                        asientoRegistral.setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
-                                    }catch (Exception e){
-                                        throw new I18NException("registroSir.error.envio");
-                                    }
-
+                                justificanteEstadoAsientoRegistral(registroSalida,asientoRegistral, REGISTRO_OFICIO_EXTERNO);
+                                asientoRegistral.setIdentificadorIntercambio("-1");
+                            }else{ //Si el interesado es una administración y está integrada en SIR
+                                try {
+                                    //Se envia el registro via SIR.
+                                    OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(REGISTRO_SALIDA_ESCRITO, registroSalida.getId(),
+                                       registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+                                    registroSalidaEjb.cambiarEstado(registroSalida.getId(), REGISTRO_OFICIO_SIR);
+                                    asientoRegistral.setEstado(REGISTRO_OFICIO_SIR);
+                                    asientoRegistral.setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
+                                }catch (Exception e){
+                                    throw new I18NException("registroSir.error.envio");
                                 }
 
                             }
+
                         }
                     }
-                }catch (Exception e){
-                    integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
-                    throw new I18NException("registro.nuevo.error");
                 }
+            }catch (Exception e){
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+                throw new I18NException("registro.nuevo.error");
+            }
         }else{
             throw new I18NException("registro.usuario.rol", UsuarioAplicacionCache.get().getUsuario().getIdentificador());
         }
+
         return asientoRegistral;
     }
 
@@ -806,9 +753,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         // 1.- Validar campo obligatorio entidad
-        if(StringUtils.isEmpty(entidad)){
-            throw new I18NException("error.valor.requerido.ws", "entidad");
-        }
+        Entidad entidadActiva = validarEntidad(entidad);
 
         // 2.- Validar campo obligatorio documento
         if(StringUtils.isEmpty(documento)){
@@ -817,21 +762,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
 
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-
-        // 2.- Comprobar que la entidad existe y está activa
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
-
-        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario " + UsuarioAplicacionCache.get().getUsuario().getNombreCompleto() + " no pertenece a la entidad.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }
 
         List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
 

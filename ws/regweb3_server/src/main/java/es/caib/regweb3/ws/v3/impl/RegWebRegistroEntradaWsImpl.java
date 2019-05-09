@@ -175,25 +175,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
         // 1.- Validar campo obligatorio entidad
-        if(StringUtils.isEmpty(entidad)){
-            throw new I18NException("error.valor.requerido.ws", "entidad");
-        }
-
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-
-        // 2.- Comprobar que la entidad existe y está activa
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
-
-        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }
+        Entidad entidadActiva = validarEntidad(entidad);
 
         // 4.- Comprobar que el Organismo destino está vigente
         Organismo destinoInterno = organismoEjb.findByCodigoEntidad(registroEntradaWs.getDestino(), entidadActiva.getId());
@@ -217,24 +199,10 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 5.- Comprobar que la Oficina está vigente
-        Oficina oficina = oficinaEjb.findByCodigoEntidad(registroEntradaWs.getOficina(), entidadActiva.getId());
-
-        if (oficina == null) { //No existe
-            throw new I18NException("registro.oficina.noExiste", registroEntradaWs.getOficina());
-
-        } else if (!oficina.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
-            throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
-        }
+        Oficina oficina = validarOficina(registroEntradaWs.getOficina(), entidadActiva.getId());
 
         // 6.- Comprobar que el Libro está vigente
-        Libro libro = libroEjb.findByCodigoEntidad(registroEntradaWs.getLibro(), entidadActiva.getId());
-
-        if (libro == null) { //No existe
-            throw new I18NException("registro.libro.noExiste", registroEntradaWs.getLibro());
-
-        } else if (!libro.getActivo()) { //Si está extinguido
-            throw new I18NException("registro.libro.inactivo", registroEntradaWs.getLibro());
-        }
+        Libro libro = validarLibro(registroEntradaWs.getLibro(), entidadActiva.getId());
 
         // 7.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
         // Nos pueden enviar el username en mayusculas
@@ -558,7 +526,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     public IdentificadorWs obtenerRegistroEntradaID(
        @WebParam(name = "anyo") int anyo,
        @WebParam(name = "numeroRegistro") int numeroRegistro,
-       @WebParam(name = "libro") String libro,
+       @WebParam(name = "libro") String codigoLibro,
        @WebParam(name = "usuario") String usuario,
        @WebParam(name = "entidad") String entidad)
        throws Throwable, WsI18NException {
@@ -573,7 +541,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throw new I18NException("error.valor.requerido.ws", "numeroRegistro");
         }
 
-        if (StringUtils.isEmpty(libro)) {
+        if (StringUtils.isEmpty(codigoLibro)) {
             throw new I18NException("error.valor.requerido.ws", "libro");
         }
 
@@ -594,22 +562,19 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 3.- Existe libro
-        Libro libroObj = libroEjb.findByCodigoEntidad(libro, usuarioEntidad.getEntidad().getId());
-        if (libroObj == null) {
-            throw new I18NException("registro.libro.noExiste", libro);
-        }
+        Libro libro = validarLibro(codigoLibro, usuarioEntidad.getEntidad().getId());
 
         // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), libroObj.getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA)) {
+        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), libro.getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA)) {
             throw new I18NException("registroEntrada.usuario.permisos", usuario);
         }
 
         // 3.- Obtenemos el registro
         RegistroEntrada registro;
-        registro = registroEntradaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, libro);
+        registro = registroEntradaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro
-               + "/" + anyo + " (" + libro + ")");
+               + "/" + anyo + " (" + codigoLibro + ")");
         }
 
         // LOPD
