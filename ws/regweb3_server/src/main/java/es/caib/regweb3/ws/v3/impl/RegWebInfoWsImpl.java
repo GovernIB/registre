@@ -5,7 +5,6 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.*;
-import es.caib.regweb3.ws.utils.AuthenticatedBaseWsImpl;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -43,7 +42,7 @@ import java.util.Set;
     + "Service", endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebInfoWs")
 @WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebInfoWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
 //@Component
-public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebInfoWs {
+public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebInfoWs {
 
   protected final Logger log = Logger.getLogger(getClass());
 
@@ -417,17 +416,13 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
         throw new I18NException("error.autorizacion");
       }
 
-      Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
+      // 1.-Validar campo obligatorio entidad
+      Entidad entidad = validarEntidad(entidadCodigoDir3);
+
       UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
-      Oficina oficina = CommonConverter.getOficina(oficinaCodigoDir3, oficinaEjb);
 
-      // Comprobar que la Oficina está vigente
-      if(oficina == null){ //No existe
-        throw new I18NException("registro.oficina.noExiste", oficinaCodigoDir3);
-
-      }else if(!oficina.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)){ //Si está extinguido
-        throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
-      }
+      // 2.- Comprobar que la Oficina está vigente
+      Oficina oficina = validarOficina(oficinaCodigoDir3, entidad.getId());
 
       // Obtenemos los organismos funcionales a la que da servicio al Oficina seleccionada
       Set<Long> organismos = oficina.getOrganismosFuncionalesId();
@@ -448,37 +443,19 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
   @Override
   @WebMethod
   @RolesAllowed({ RegwebConstantes.RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
-  public LibroWs listarLibroOrganismo(@WebParam(name = "entidad") String entidad,
+  public LibroWs listarLibroOrganismo(@WebParam(name = "entidad") String entidadCodigo,
                                     @WebParam(name = "organismo") String organismo) throws Throwable, WsI18NException {
 
     // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidad)){
-      throw new I18NException("error.valor.requerido.ws", "entidad");
-    }
+    Entidad entidadActiva = validarEntidad(entidadCodigo);
 
     if(StringUtils.isEmpty(organismo)){
       throw new I18NException("error.valor.requerido.ws", "organismo");
     }
 
-    Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-
-    // 2.- Comprobar que la entidad existe y está activa
-    if(entidadActiva == null){
-      log.info("La entidad "+entidad+" no existe.");
-      throw new I18NException("registro.entidad.noExiste", entidad);
-    }else if(!entidadActiva.getActivo()){
-      throw new I18NException("registro.entidad.inactiva", entidad);
-    }
-
-    // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-    if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-      log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-      throw new I18NException("registro.entidad.noExiste", entidad);
-    }
-
     Organismo organismoActivo = organismoEjb.findByCodigoEntidad(organismo, entidadActiva.getId());
 
-    // 4. Comprobar que el Organismo existe y está vigente
+    // 2. Comprobar que el Organismo existe y está vigente
     if(organismoActivo == null){ //No existe
       throw new I18NException("registro.organismo.noExiste", organismo);
 
@@ -503,13 +480,9 @@ public class RegWebInfoWsImpl extends AuthenticatedBaseWsImpl implements RegWebI
       throws Throwable, WsI18NException {
 
     // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidadCodigoDir3)){
-      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-    }
+    Entidad entidad = validarEntidad(entidadCodigoDir3);
 
-    Entidad entidadObj = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-
-    List<Organismo> listOrganismo = organismoEjb.getAllByEntidad(entidadObj.getId());
+    List<Organismo> listOrganismo = organismoEjb.getAllByEntidad(entidad.getId());
 
     List<OrganismoWs> listOrganismoWs = new ArrayList<OrganismoWs>(listOrganismo.size());
 

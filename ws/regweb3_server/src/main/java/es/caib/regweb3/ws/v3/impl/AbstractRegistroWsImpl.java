@@ -1,9 +1,6 @@
 package es.caib.regweb3.ws.v3.impl;
 
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -215,23 +212,82 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         }
 
         // 2.- Comprobar que la entidad existe y está activa
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
-
-        if(entidadActiva == null){
-            log.info("La entidad "+entidad+" no existe.");
-            throw new I18NException("registro.entidad.noExiste", entidad);
-        }else if(!entidadActiva.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", entidad);
-        }
-
-        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
-        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidadActiva)) {
-            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
-            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), entidad);
-        }
+        validarEntidad(entidad);
 
     }
 
+    /**
+     * Valida la obligatoriedad del parámetro Entidad
+     * @param codigoEntidad
+     * @throws org.fundaciobit.genapp.common.i18n.I18NException
+     */
+    protected Entidad validarEntidad(String codigoEntidad) throws  I18NException, Exception{
+
+        // 1.- Comprobar que la entidad existe y está activa
+        if(StringUtils.isEmpty(codigoEntidad)){
+            throw new I18NException("error.valor.requerido.ws", "entidad");
+        }
+
+        Entidad entidad = entidadEjb.findByCodigoDir3(codigoEntidad);
+
+        if(entidad == null){
+            log.info("La entidad "+codigoEntidad+" no existe.");
+            throw new I18NException("registro.entidad.noExiste", codigoEntidad);
+        }else if(!entidad.getActivo()){
+            throw new I18NException("registro.entidad.inactiva", codigoEntidad);
+        }
+
+        // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
+        if (!UsuarioAplicacionCache.get().getEntidades().contains(entidad)) {
+            log.info("El usuario "+UsuarioAplicacionCache.get().getUsuario().getNombreCompleto()+" no pertenece a la entidad.");
+            throw new I18NException("registro.usuario.entidad",UsuarioAplicacionCache.get().getUsuario().getNombreCompleto(), codigoEntidad);
+        }
+
+        return entidad;
+
+    }
+
+    /**
+     * Valida el CódigoLibro indicado
+     * @param codigoLibro
+     * @param idEntidad
+     * @throws I18NException
+     * @throws Exception
+     */
+    protected Libro validarLibro(String codigoLibro, Long idEntidad) throws  I18NException, Exception{
+
+        Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, idEntidad);
+
+        if (libro == null) { //No existe
+            throw new I18NException("registro.libro.noExiste", codigoLibro);
+
+        } else if (!libro.getActivo()) { //Si está inactivo
+            throw new I18NException("registro.libro.inactivo", codigoLibro);
+        }
+
+        return libro;
+    }
+
+    /**
+     * Valida la Oficina indicada
+     * @param codigoOficina
+     * @param idEntidad
+     * @throws I18NException
+     * @throws Exception
+     */
+    protected Oficina validarOficina(String codigoOficina, Long idEntidad) throws  I18NException, Exception{
+
+        Oficina oficina = oficinaEjb.findByCodigoEntidad(codigoOficina, idEntidad);
+
+        if (oficina == null) { //No existe
+            throw new I18NException("registro.oficina.noExiste", codigoOficina);
+
+        } else if (!oficina.getEstado().getCodigoEstadoEntidad().equals(ESTADO_ENTIDAD_VIGENTE)) { //Si está extinguido
+            throw new I18NException("registro.oficina.extinguido", oficina.getNombreCompleto());
+        }
+
+        return oficina;
+    }
 
 
     /**
