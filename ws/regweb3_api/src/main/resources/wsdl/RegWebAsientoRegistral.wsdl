@@ -233,6 +233,7 @@
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="asientoRegistral" type="tns:asientoRegistralWs"/>
       <xs:element minOccurs="0" name="tipoOperacion" type="xs:long"/>
+      <xs:element minOccurs="0" name="distribuir" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="crearAsientoRegistralResponse">
