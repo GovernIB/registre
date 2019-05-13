@@ -183,13 +183,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("interesado.registro.obligatorio");
         }
 
-
         // 9.- Validar los Anexos
         List<AnexoFull> anexosFull = null;
         if (asientoRegistral.getAnexos() != null && asientoRegistral.getAnexos().size() > 0) {
             anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId());
         }
-
 
         // Convertir RegWebAsientoRegistralWs a RegistroEntrada
         if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_entrada()){
@@ -249,7 +247,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
             if (distribuir) {
-                //todo DISTRIBUIR registro
+
+                distribuirAsientoRegistral(entidad,registroEntrada.getNumeroRegistroFormateado());
             }
 
         }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_salida()){
