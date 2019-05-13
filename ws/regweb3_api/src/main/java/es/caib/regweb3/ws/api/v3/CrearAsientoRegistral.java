@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="asientoRegistral" type="{http://impl.v3.ws.regweb3.caib.es/}asientoRegistralWs" minOccurs="0"/>
  *         &lt;element name="tipoOperacion" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
+ *         &lt;element name="distribuir" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,13 +32,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "crearAsientoRegistral", propOrder = {
     "entidad",
     "asientoRegistral",
-    "tipoOperacion"
+    "tipoOperacion",
+    "distribuir"
 })
 public class CrearAsientoRegistral {
 
     protected String entidad;
     protected AsientoRegistralWs asientoRegistral;
     protected Long tipoOperacion;
+    protected Boolean distribuir;
 
     /**
      * Obtiene el valor de la propiedad entidad.
@@ -109,6 +112,30 @@ public class CrearAsientoRegistral {
      */
     public void setTipoOperacion(Long value) {
         this.tipoOperacion = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad distribuir.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isDistribuir() {
+        return distribuir;
+    }
+
+    /**
+     * Define el valor de la propiedad distribuir.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setDistribuir(Boolean value) {
+        this.distribuir = value;
     }
 
 }
