@@ -2,10 +2,7 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -38,6 +35,9 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     private TipoAsuntoLocal tipoAsuntoEjb;
@@ -97,7 +97,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
             String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
-            Long idLibro = registroEntradaEjb.getLibro(Long.valueOf(idRegistroEntrada));
+            Long idLibro = registroEntradaConsultaEjb.getLibro(Long.valueOf(idRegistroEntrada));
 
             if(idLibro != null){
                 if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA)){
@@ -199,7 +199,7 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         if(url.contains("reenviar")){
             String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/reenviar", ""); //Obtenemos el id a partir de la url
 
-            RegistroBasico registroEntrada = registroEntradaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
+            RegistroBasico registroEntrada = registroEntradaConsultaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
 
             // Comprobamos que está Rechazado
             if(!(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) || registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO))){

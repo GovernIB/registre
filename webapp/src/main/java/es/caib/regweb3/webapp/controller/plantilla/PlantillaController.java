@@ -2,7 +2,8 @@ package es.caib.regweb3.webapp.controller.plantilla;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
+import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -38,14 +39,6 @@ public class PlantillaController extends BaseController {
     @EJB(mappedName = "regweb3/PlantillaEJB/local")
     private PlantillaLocal plantillaEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
     @Autowired
     private PlantillaValidator plantillaValidator;

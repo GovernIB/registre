@@ -46,7 +46,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @EJB private LibroLocal libroEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private OrganismoLocal organismoEjb;
@@ -769,9 +771,9 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public OficioRemision getByNumeroRegistroFormateado(String numeroRegistroFormateado, String entidad) throws Exception {
 
         Query q;
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
         if (registroEntrada == null) {
-            RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
             if (registroSalida == null) {
                 return null;
             } else {

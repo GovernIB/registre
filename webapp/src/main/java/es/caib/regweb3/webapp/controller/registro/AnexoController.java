@@ -3,7 +3,10 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -59,12 +62,6 @@ public class AnexoController extends BaseController {
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
-
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
 
@@ -73,9 +70,6 @@ public class AnexoController extends BaseController {
 
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     private ScanWebModuleLocal scanWebModuleEjb;
-
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
-    private IntegracionLocal integracionEjb;
 
 
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
@@ -527,11 +521,11 @@ public class AnexoController extends BaseController {
      */
     private List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
         if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFullLigero(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
 
         } else {
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullLigero(idRegistro);
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFullLigero(idRegistro);
             return registroSalida.getRegistroDetalle().getAnexosFull();
 
         }

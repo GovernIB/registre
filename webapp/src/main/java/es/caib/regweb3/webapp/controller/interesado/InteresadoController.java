@@ -6,8 +6,6 @@ import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -49,12 +47,6 @@ public class InteresadoController extends BaseController{
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
 
     /**
@@ -938,9 +930,9 @@ public class InteresadoController extends BaseController{
 
 
         if(tipoRegistro.equals("entrada")){
-            return  registroEntradaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+            return  registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
         }else{
-            return registroSalidaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+            return registroSalidaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
         }
     }
 

@@ -2,8 +2,6 @@ package es.caib.regweb3.webapp.controller.libro;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEditor;
@@ -42,11 +40,6 @@ public class LibroController extends BaseController {
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
     /**
      * Listado de libros de un Organismo
@@ -295,8 +288,8 @@ public class LibroController extends BaseController {
 
         try {
 
-            Long registrosEntrada = registroEntradaEjb.getTotalByLibro(idLibro);
-            Long registrosSalida = registroSalidaEjb.getTotalByLibro(idLibro);
+            Long registrosEntrada = registroEntradaConsultaEjb.getTotalByLibro(idLibro);
+            Long registrosSalida = registroSalidaConsultaEjb.getTotalByLibro(idLibro);
 
             // Comprueba que los contadores del libro están a cero y no tiene registros de entrada ni de salida
             if(registrosEntrada==0 && registrosSalida==0){

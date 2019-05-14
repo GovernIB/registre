@@ -82,9 +82,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
     //Caches
     private Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
     private Map<Long, CatComunidadAutonoma> cacheComunidadAutonoma = new TreeMap<Long, CatComunidadAutonoma>();

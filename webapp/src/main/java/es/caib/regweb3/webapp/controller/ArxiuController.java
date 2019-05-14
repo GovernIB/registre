@@ -11,7 +11,9 @@ import es.caib.arxiudigital.apirest.facade.resultados.Resultado;
 import es.caib.arxiudigital.apirest.facade.resultados.ResultadoBusqueda;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.ArxiuLocal;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
@@ -49,11 +51,6 @@ public class ArxiuController extends BaseController {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
@@ -147,14 +144,14 @@ public class ArxiuController extends BaseController {
                             expedienteArxiu.setNumeroRegistroFormateado(getNumeroRegistroFormateado(exp));
 
                             if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                                RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
+                                RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
 
                                 if(registroEntrada != null){
                                     expedienteArxiu.setJustificante(registroEntrada.getRegistroDetalle().getTieneJustificante());
                                 }
 
                             }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
-                                RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
+                                RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), expedienteArxiu.getNumeroRegistroFormateado());
 
                                 if(registroSalida != null){
                                     expedienteArxiu.setJustificante(registroSalida.getRegistroDetalle().getTieneJustificante());
@@ -241,7 +238,7 @@ public class ArxiuController extends BaseController {
                     if(StringUtils.isNotEmpty(tipoRegistro) && StringUtils.isNotEmpty(codigoLibro)){
 
                         if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
-                            registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
+                            registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
 
                             if(registroEntrada != null){
                                 registroDetalle = registroEntrada.getRegistroDetalle();
@@ -252,7 +249,7 @@ public class ArxiuController extends BaseController {
                             }
 
                         }else{
-                            registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
+                            registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad.getCodigoDir3(), numeroRegistroFormateado);
 
                             if(registroSalida != null){
                                 registroDetalle = registroSalida.getRegistroDetalle();

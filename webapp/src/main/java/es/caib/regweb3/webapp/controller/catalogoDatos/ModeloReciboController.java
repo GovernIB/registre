@@ -1,7 +1,9 @@
 package es.caib.regweb3.webapp.controller.catalogoDatos;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.ArchivoLocal;
+import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
+import es.caib.regweb3.persistence.ejb.ModeloReciboLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -44,12 +46,7 @@ public class ModeloReciboController extends BaseController {
    
    @EJB(mappedName = "regweb3/ModeloReciboEJB/local")
    private ModeloReciboLocal modeloReciboEjb;
-   
-   @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-   private RegistroSalidaLocal registroSalidaEjb;
 
-   @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-   private RegistroEntradaLocal registroEntradaEjb;
    
   /**
    * Listado de todos los Modelos de Recibo
