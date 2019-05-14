@@ -37,6 +37,7 @@ public class DistribucionBean implements DistribucionLocal{
    protected final Logger log = Logger.getLogger(getClass());
 
    @EJB private RegistroEntradaLocal registroEntradaEjb;
+   @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
    @EJB private JustificanteLocal justificanteEjb;
    @EJB private IntegracionLocal integracionEjb;
    @EJB private PluginLocal pluginEjb;
@@ -178,7 +179,7 @@ public class DistribucionBean implements DistribucionLocal{
             try {
 
                //Obtenemos el registro de entrada que se debe distribuir
-               RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
+               RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(elemento.getIdObjeto());
 
                //Montamos la petición de la integración
                peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));

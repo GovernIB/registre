@@ -157,7 +157,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -225,7 +225,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registro.getLibro().getId()));
         model.addAttribute("puedeEditar", puedeEditar);
         model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO));
-        model.addAttribute("isDistribuir", registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
+        model.addAttribute("isDistribuir", registroEntradaConsultaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismosOficinaActiva)));
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
@@ -439,7 +439,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_RESERVA);
+            Paginacion paginacion = registroEntradaConsultaEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.REGISTRO_RESERVA);
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.reservas"));
             mav.addObject("url", "reservas");
@@ -459,7 +459,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaEjb.pendientesDistribuir(pageNumber,oficinaActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.pendientesDistribuir(pageNumber,oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesDistribuir"));
             mav.addObject("url", "pendientesDistribuir");
@@ -479,7 +479,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroEntradaEjb.getSirRechazadosReenviadosPaginado(pageNumber,oficinaActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.getSirRechazadosReenviadosPaginado(pageNumber,oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroEntrada.listado.pendientesSir"));
             mav.addObject("url", "pendientesSir");
@@ -500,8 +500,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         if((librosAdministrados!= null && librosAdministrados.size() > 0)) {
 
-            List<RegistroEntrada> registrosEntrada = registroEntradaEjb.getByLibrosEstado((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-            Long totalVisarEntrada = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            List<RegistroEntrada> registrosEntrada = registroEntradaConsultaEjb.getByLibrosEstado((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            Long totalVisarEntrada = registroEntradaConsultaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             Paginacion paginacion = new Paginacion(totalVisarEntrada.intValue(), pageNumber);
 
             mav.addObject("titulo",getMessage("registroEntrada.pendientesVisar"));
@@ -677,7 +677,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
 
-        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
 
@@ -700,7 +700,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
+        if (!registroEntradaConsultaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
             response.setStatus("FAIL_NOISDISTRIBUIR");
             response.setError(getMessage("registroEntrada.distribuir.error.noIsdistribuir"));
             response.setResult(respuesta);
@@ -808,7 +808,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             synchronized (this) {
 
-                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+                RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro

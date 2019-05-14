@@ -154,7 +154,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroSalidaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -405,7 +405,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         if(isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = registroSalidaEjb.getSirRechazadosReenviadosPaginado(pageNumber,oficinaActiva.getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.getSirRechazadosReenviadosPaginado(pageNumber,oficinaActiva.getId());
 
             mav.addObject("titulo", getMessage("registroSalida.listado.pendientesSir"));
             mav.addObject("url", "pendientesSir");
@@ -425,8 +425,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         if((librosAdministrados!= null && librosAdministrados.size() > 0)) {
 
-            List<RegistroSalida> registrosSalida = registroSalidaEjb.getByLibrosEstado((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-            Long totalVisarSalida = registroSalidaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            List<RegistroSalida> registrosSalida = registroSalidaConsultaEjb.getByLibrosEstado((pageNumber-1)* BaseEjbJPA.RESULTADOS_PAGINACION, librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            Long totalVisarSalida = registroSalidaConsultaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             Paginacion paginacion = new Paginacion(totalVisarSalida.intValue(), pageNumber);
 
             mav.addObject("titulo",getMessage("registroSalida.pendientesVisar"));
@@ -612,7 +612,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             synchronized (this) {
 
-                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
+                RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro

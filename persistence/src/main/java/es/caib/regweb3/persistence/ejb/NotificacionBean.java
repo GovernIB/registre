@@ -34,8 +34,8 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
     @EJB private OficinaLocal oficinaEjb;
     @EJB private RegistroSirLocal registroSirEjb;
-    @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
     @Override
     public Notificacion getReference(Long id) throws Exception {
@@ -233,7 +233,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         for (Oficina oficina : oficinasSir) {
 
             // Registros entrada Rechazados o Devueltos al origen
-            if(registroEntradaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
+            if(registroEntradaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
                 log.info("Conunicaciones Entradas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
                 LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
 
@@ -253,7 +253,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
             }
 
             // Registros salida Rechazados o Devueltos al origen
-            if(registroSalidaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
+            if(registroSalidaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
                 log.info("Conunicaciones Salidas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
                 LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
 

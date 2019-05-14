@@ -49,6 +49,9 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
@@ -375,16 +378,17 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     public String rectificar(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
         RegistroSalida registroSalidaRectificado;
 
-        // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA)) {
-            Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
-            return "redirect:/registroSalida/"+idRegistro+"/detalle";
-        }
-
         try{
+
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(idRegistro);
+
+            // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA)) {
+                Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
+                return "redirect:/registroSalida/"+idRegistro+"/detalle";
+            }
 
             List<Long> isRectificar = new ArrayList<Long>();
             Collections.addAll(isRectificar, RegwebConstantes.REGISTRO_RECHAZADO, RegwebConstantes.REGISTRO_ANULADO);
@@ -392,17 +396,20 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
             // Si el Registro se puede rectificar y el usuario tiene permisos sobre el libro
             if(isRectificar.contains(registroSalida.getEstado())){
 
-                registroSalidaRectificado = registroSalidaEjb.rectificar(idRegistro, usuarioEntidad);
+                registroSalidaRectificado = registroSalidaEjb.rectificar(registroSalida, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("registro.rectificar.ok"));
                 return "redirect:/registroSalida/"+registroSalidaRectificado.getId()+"/detalle";
             }else{
 
-                log.info("Este registro no se puede rectificar");
                 Mensaje.saveMessageError(request, getMessage("registro.rectificar.no"));
             }
 
         }catch (Exception e){
+            log.info("Error al rectificar el registro");
+            e.printStackTrace();
+            Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));
+        } catch (I18NException e) {
             log.info("Error al rectificar el registro");
             e.printStackTrace();
             Mensaje.saveMessageError(request, getMessage("registro.rectificar.error"));

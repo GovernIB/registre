@@ -92,6 +92,9 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
 
@@ -297,7 +300,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
         if (registroEntrada == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -380,7 +383,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 3.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
 
         if (registroEntrada == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -427,7 +430,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 3.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
 
         if (registroEntrada == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -444,7 +447,8 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 6.- Generamos el justificante del RegistroEntrada
-        registroEntrada = registroEntradaEjb.generarJustificanteRegistroEntrada(registroEntrada, usuarioEntidad);
+        justificanteEjb.crearJustificante(usuarioEntidad,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
+        //registroEntrada = registroEntradaEjb.generarJustificanteRegistroEntrada(registroEntrada, usuarioEntidad);
 
 
         // 7.- Tramitamos el RegistroEntrada
@@ -466,7 +470,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
 
         if (registroEntrada == null) {
@@ -482,7 +486,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina()));
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
+        if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
             throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
@@ -512,7 +516,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     /**
      * @param anyo
      * @param numeroRegistro
-     * @param libro
+     * @param codigoLibro
      * @param usuario
      * @param entidad
      * @return
@@ -571,7 +575,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 3.- Obtenemos el registro
         RegistroEntrada registro;
-        registro = registroEntradaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
+        registro = registroEntradaConsultaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro
                + "/" + anyo + " (" + codigoLibro + ")");
@@ -612,7 +616,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registro = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+        RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);

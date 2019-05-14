@@ -92,7 +92,7 @@ public class DistribucionController extends BaseController {
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            Paginacion paginacion = registroEntradaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, "", "", "", "", null, false, "", null, entidad.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, "", "", "", "", null, false, "", null, entidad.getId());
 
             busqueda.setPageNumber(1);
 
@@ -119,7 +119,7 @@ public class DistribucionController extends BaseController {
     @ResponseBody
     JsonResponse redistribuirRegistro(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
 
-        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 

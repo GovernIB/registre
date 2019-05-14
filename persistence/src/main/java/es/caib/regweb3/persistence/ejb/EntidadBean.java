@@ -37,7 +37,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private TipoAsuntoLocal tipoAsuntoEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PersonaLocal personaEjb;
@@ -313,7 +315,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Boolean puedoEliminarlo(Long idUsuarioEntidad) throws Exception {
 
-        return !registroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
+        return !registroEntradaConsultaEjb.obtenerPorUsuario(idUsuarioEntidad) && !registroSalidaConsultaEjb.obtenerPorUsuario(idUsuarioEntidad)
            && !historicoRegistroEntradaEjb.obtenerPorUsuario(idUsuarioEntidad) && !historicoRegistroSalidaEjb.obtenerPorUsuario(idUsuarioEntidad)
            && !plantillaEjb.obtenerPorUsuario(idUsuarioEntidad) && !lopdEjb.obtenerPorUsuario(idUsuarioEntidad);
     }

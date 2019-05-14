@@ -87,6 +87,9 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+
     @EJB(mappedName = "regweb3/LopdEJB/local")
     private LopdLocal lopdEjb;
 
@@ -266,7 +269,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroSalida
-        RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
         if (registroSalida == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -343,7 +346,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
 
         // 5.- Obtenemos el RegistroSalida
-        RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro);
 
         if (registroSalida == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
@@ -397,7 +400,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 4.- Obtenemos el RegistroSalida
-        RegistroSalida registro = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro);
+        RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
@@ -492,7 +495,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
         // 3.- Obtenemos el registro
         RegistroSalida registro;
-        registro = registroSalidaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
+        registro = registroSalidaConsultaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro
                     + "/" + anyo + " (" + libro + ")");

@@ -78,8 +78,14 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     private RegistroEntradaLocal registroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
     @EJB(mappedName = "regweb3/LopdEJB/local")
     private LopdLocal lopdEjb;
@@ -380,13 +386,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("registroEntrada.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad);
         }
 
-
         AsientoRegistralWs asientoRegistral = null;
-
 
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 5.- Obtenemos el RegistroEntrada
-            RegistroEntrada registro = registroEntradaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+            RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
             if (registro == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
@@ -415,9 +419,10 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // 8.- LOPD
             lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
+
         }else if(REGISTRO_SALIDA.equals(tipoRegistro)){
             // 5.- Obtenemos el RegistroSalida
-            RegistroSalida registro = registroSalidaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+            RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
 
             if (registro == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -486,7 +491,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         SignatureCustody sc = null;
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 4.- Obtenemos el RegistroEntrada
-            RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
             if (registroEntrada == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -543,7 +548,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         } else if(REGISTRO_SALIDA.equals(tipoRegistro)){
 
             // 4.- Obtenemos el RegistroSalida
-            RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
             if (registroSalida == null) {
                 throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -620,16 +625,19 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
 
-
         try{
             JustificanteReferencia jref = asientoRegistralEjb.obtenerReferenciaJustificante(numeroRegistroFormateado, entidadActiva);
 
             log.info("CSV: " + jref.getCsv());
             log.info("URL: " + jref.getUrl());
 
+            // Integracion
+            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
+
             return new JustificanteReferenciaWs(jref.getCsv(), jref.getUrl());
 
         }catch (Exception e){
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
             throw new I18NException("error.ws.general");
         }
 
@@ -650,7 +658,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
 
         if (registroEntrada == null) {
@@ -666,7 +674,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina()));
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
+        if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
             throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
@@ -766,8 +774,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         try{
 
-            List<RegistroEntrada> entradas = registroEntradaEjb.getByDocumento(entidadActiva.getId(),documento);
-            List<RegistroSalida> salidas = registroSalidaEjb.getByDocumento(entidadActiva.getId(),documento);
+            List<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento);
+            List<RegistroSalida> salidas = registroSalidaConsultaEjb.getByDocumento(entidadActiva.getId(),documento);
 
 
             for (RegistroEntrada entrada : entradas) {

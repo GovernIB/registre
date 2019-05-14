@@ -55,6 +55,12 @@ public class BaseController {
     @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
     public RegistroEntradaLocal registroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
+    public RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    public RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+
     @EJB(mappedName = "regweb3/NotificacionEJB/local")
     private NotificacionLocal notificacionBean;
 

@@ -30,12 +30,7 @@ public class InformeBean implements InformeLocal {
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB
-    public RegistroEntradaLocal registroEntradaEjb;
-    @EJB
-    public RegistroSalidaLocal registroSalidaEjb;
-    @EJB
-    public OrganismoLocal organismoEjb;
+    @EJB public OrganismoLocal organismoEjb;
 
 
     @Override

@@ -43,12 +43,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
     @EJB(mappedName = "regweb3/LopdEJB/local")
     private LopdLocal lopdEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
-    
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
     @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
     private TipoAsuntoLocal tipoAsuntoEjb;
     

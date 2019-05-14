@@ -48,30 +48,15 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    private OficioRemisionLocal oficioRemisionEjb;
-
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    private TrazabilidadLocal trazabilidadEjb;
-
-    @EJB(name = "OficinaEJB")
-    private OficinaLocal oficinaEjb;
-
-    @EJB(name = "CatEstadoEntidadEJB")
-    private CatEstadoEntidadLocal catEstadoEntidadEjb;
-
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
-    private JustificanteLocal justificanteEjb;
-
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private TrazabilidadLocal trazabilidadEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
+    @EJB private JustificanteLocal justificanteEjb;
 
 
     @Override
@@ -573,7 +558,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         for (RegistroEntrada registro : registros) {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registro.getId());
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(registro.getId());
 
             //Justificante, Si no tiene generado el Justificante, lo hacemos
             if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
@@ -618,7 +603,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Recorremos los RegistroEntrada del Oficio
         for (OficioPendienteLlegada oficio : oficios) {
 
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getIdRegistro());
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(oficio.getIdRegistro());
             List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());

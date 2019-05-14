@@ -22,14 +22,10 @@ import java.util.List;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 
-   @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-   public RegistroSalidaLocal registroSalidaEjb;
-
-   @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-   public RegistroEntradaLocal registroEntradaEjb;
-
-   @EJB(mappedName = "regweb3/AnexoEJB/local")
-   public AnexoLocal anexoEjb;
+   @EJB private RegistroSalidaLocal registroSalidaEjb;
+   @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+   @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+   @EJB private AnexoLocal anexoEjb;
 
 
    @Override
@@ -45,8 +41,8 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
    @Override
    public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
 
-      RegistroEntrada registroEntrada = registroEntradaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(),numeroRegistroformateado);
-      RegistroSalida registroSalida = registroSalidaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(),numeroRegistroformateado);
+      RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(),numeroRegistroformateado);
+      RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(),numeroRegistroformateado);
 
       if (registroEntrada != null) {
 

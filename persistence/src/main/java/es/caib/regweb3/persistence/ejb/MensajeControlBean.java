@@ -49,7 +49,6 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
     @EJB private IntegracionLocal integracionEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
-    @EJB private AnexoLocal anexoEjb;
     @EJB private OficinaLocal oficinaEjb;
 
 

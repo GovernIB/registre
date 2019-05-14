@@ -47,32 +47,16 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
-    private OficioRemisionLocal oficioRemisionEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
-
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
-    @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
-    private TrazabilidadLocal trazabilidadEjb;
-
-    @EJB(name = "OficinaEJB")
-    private OficinaLocal oficinaEjb;
-
-    @EJB(name = "CatEstadoEntidadEJB")
-    private CatEstadoEntidadLocal catEstadoEntidadEjb;
-
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
-    private JustificanteLocal justificanteEjb;
+    @EJB private OficioRemisionLocal oficioRemisionEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private TrazabilidadLocal trazabilidadEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
+    @EJB private JustificanteLocal justificanteEjb;
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -460,7 +444,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         for (RegistroSalida registro : registros) {
 
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registro.getId());
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(registro.getId());
 
             //Justificante, Si no tiene generado el Justificante, lo hacemos
             if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
@@ -503,7 +487,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         for (OficioPendienteLlegada oficio : oficios) {
 
             // Creamos un Nuevo RegistroEntrada
-            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getIdRegistro());
+            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(oficio.getIdRegistro());
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());

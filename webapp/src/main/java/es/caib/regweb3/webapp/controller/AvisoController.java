@@ -4,7 +4,9 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
+import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import org.springframework.stereotype.Controller;
@@ -29,12 +31,6 @@ public class AvisoController extends BaseController {
     
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
-    
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
     private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
@@ -71,14 +67,14 @@ public class AvisoController extends BaseController {
 
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                pendientesVisarEntrada = registroEntradaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                pendientesVisarSalida = registroSalidaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+                pendientesVisarEntrada = registroEntradaConsultaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+                pendientesVisarSalida = registroSalidaConsultaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             }
             mav.addObject("pendientesVisarEntrada", pendientesVisarEntrada);
             mav.addObject("pendientesVisarSalida", pendientesVisarSalida);
 
             /*Reserva de número*/
-            mav.addObject("reservas", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA));
+            mav.addObject("reservas", registroEntradaConsultaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA));
 
             /*Pendientes de distribuir*/
             //mav.addObject("validos", registroEntradaEjb.getByOficinaEstadoCount(oficinaActiva.getId(), RegwebConstantes.REGISTRO_VALIDO));
@@ -107,8 +103,8 @@ public class AvisoController extends BaseController {
 
             // Registros de Entrada Rechazados o Reenviados por SIR
             if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                mav.addObject("entradasRechazadosReenviados", registroEntradaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
-                mav.addObject("salidasRechazadasReenviadas", registroSalidaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
+                mav.addObject("entradasRechazadosReenviados", registroEntradaConsultaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
+                mav.addObject("salidasRechazadasReenviadas", registroSalidaConsultaEjb.getSirRechazadosReenviadosCount(oficinaActiva.getId()));
             }
 
         }

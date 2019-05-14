@@ -43,8 +43,8 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
+    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
+    private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -97,7 +97,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
             String idRegistroSalida =  url.replace("/registroSalida/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
-            Long idLibro = registroSalidaEjb.getLibro(Long.valueOf(idRegistroSalida));
+            Long idLibro = registroSalidaConsultaEjb.getLibro(Long.valueOf(idRegistroSalida));
 
             if(idLibro != null){
                 if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA)){
@@ -198,7 +198,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
         if(url.contains("reenviar")){
             String idRegistroEntrada =  url.replace("/registroSalida/","").replace("/reenviar", ""); //Obtenemos el id a partir de la url
 
-            RegistroBasico registroSalida = registroSalidaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
+            RegistroBasico registroSalida = registroSalidaConsultaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
 
             // Comprobamos que está Rechazado
             if(!(registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) || registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO))){
