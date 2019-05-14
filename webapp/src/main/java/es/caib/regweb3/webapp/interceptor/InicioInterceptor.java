@@ -188,12 +188,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                 }
 
-                if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
-
-
-
-                }
-
 
                 // Validamos las propiedades de dir3 para poder atacar a dir3caib
                 if (request.getRequestURI().equals("/regweb3/dir3/datosCatalogo")) {

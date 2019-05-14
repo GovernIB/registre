@@ -202,6 +202,9 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "tipoOperacion"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"), java.lang.Long.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "distribuir"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"), java.lang.Boolean.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "asientoRegistralWs"));
         oper.setReturnClass(es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
@@ -665,7 +668,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs crearAsientoRegistral(java.lang.String entidad, es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs asientoRegistral, java.lang.Long tipoOperacion) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs crearAsientoRegistral(java.lang.String entidad, es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs asientoRegistral, java.lang.Long tipoOperacion, java.lang.Boolean distribuir) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -681,7 +684,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, asientoRegistral, tipoOperacion});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, asientoRegistral, tipoOperacion, distribuir});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
