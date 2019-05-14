@@ -30,7 +30,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
 
 
-   // @Test
+    @Test
     public void crearAsientoRegistral() throws Exception {
 
         for (int i = 0; i < 1; i++) {
@@ -98,6 +98,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             try {
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false);
+
+                asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
             } catch (WsI18NException e) {
