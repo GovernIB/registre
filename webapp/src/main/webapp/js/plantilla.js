@@ -109,6 +109,16 @@ function nuevaPlantilla(){
     var tipoRegistro = $('#tipoRegistro').val();
     var url = $("#plantillaForm").attr("action").concat('/' + tipoRegistro);
 
+    // Interesados
+    var interesado = $('#interesados tr:eq(1)').attr('id');
+    if(interesado!=null && interesado.indexOf("organismo") >= 0){
+        interesado = interesado.replace('organismo','');
+        var interesadoDenominacion = $('#interesados tr:eq(1) td')[0].innerHTML;
+        interesado = interesado + "+" + interesadoDenominacion;
+    }else{
+        interesado="";
+    }
+
     var json = {
         "nombreRepro": $('#nombrePlantilla').val(),
         "idLibro": $('#libro\\.id').val(),
@@ -126,7 +136,8 @@ function nuevaPlantilla(){
         "oficinaDenominacion": $('#registroDetalle\\.oficinaOrigen\\.codigo option:selected').text(),
         "numeroRegistroOrigen": $('#registroDetalle\\.numeroRegistroOrigen').val(),
         "fechaOrigen": $('#registroDetalle\\.fechaOrigen').val(),
-        "codigoSia": $('#registroDetalle\\.codigoSia').val()};
+        "codigoSia": $('#registroDetalle\\.codigoSia').val(),
+        "interesado": interesado};
 
     if(tipoRegistro == 1){ // RegistroEntrada
         json['destinoCodigo'] = $('#destino\\.codigo option:selected').val();
@@ -168,7 +179,11 @@ function nuevaPlantilla(){
  */
 function rellenarFormulario(idPlantilla,tipoRegistro){
 
-    //Obtenemos los datos de la Plantilla
+    //Eliminamos datos previos de interesados
+    quitarErroresPlantilla();
+    eliminarInteresados();
+    $('#interesados').hide();
+
     $.ajax({
         url: urlObtenerPlantilla,
         data: { idPlantilla: idPlantilla },
@@ -206,6 +221,13 @@ function rellenarFormulario(idPlantilla,tipoRegistro){
 
             $('#registroDetalle\\.codigoAsunto\\.id').trigger("chosen:updated");
             $('#registroDetalle\\.transporte').trigger("chosen:updated");
+
+            // Interesado
+            if (plantilla.interesado.length>0){
+                var interesadoCodigo = plantilla.interesado.substr(0, plantilla.interesado.indexOf('+'));
+                var interesadoDenominacion = plantilla.interesado.substr(plantilla.interesado.indexOf('+') + 1);
+                addOrganismoInteresadoPlantilla(tradorganismo['interesado.administracion'], '', interesadoCodigo, interesadoDenominacion);
+            }
 
             //Oficina origen
             if (plantilla.oficinaCodigo != null) {
