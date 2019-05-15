@@ -17,6 +17,20 @@ function addOrganismoInteresado(tipo,idRegistroDetalle){
 }
 
 /**
+ * Añade el Organismo de la plantilla, y lo pinta en la tabla de interesados.
+ * @param tipo
+ * @param idRegistroDetalle
+ * @param codigoDir3
+ * @param denominacion
+ */
+function addOrganismoInteresadoPlantilla(tipo,idRegistroDetalle, codigoDir3, denominacion){
+
+    if(codigoDir3 != '-1'){
+        restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo);
+    }
+}
+
+/**
  * Realiza una petición REST para procesar el Organimo seleccionado
  * @param codigoDir3
  * @param denominacion
@@ -36,7 +50,7 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
         success: function(result) {
             if(result==true){
                 if(tipoRegistro=="salida"){ //Si es una salida eliminamos los anteriores
-                    eliminarTodosOrganismos();
+                    eliminarTodosInteresados();
                 }
                 addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
 
@@ -51,9 +65,12 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
 /**
  * Elimina todos los Organismos de la tabla Interesados
  */
-function eliminarTodosOrganismos(){
+function eliminarTodosInteresados(){
     $('#interesados > tbody  > tr').each(function() {
         if($(this).attr('id').startsWith("organismo")){
+            $(this).remove();
+        }
+        if($(this).attr('id').startsWith("persona")){
             $(this).remove();
         }
     });
@@ -76,8 +93,10 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
     $('#interesados').append(fila);
 
     // Mostramos mensaje de información
-    if (mensaje && idRegistroDetalle.length > 0) {
-        mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
+    if(idRegistroDetalle != null) {
+        if (mensaje && idRegistroDetalle.length > 0) {
+            mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
+        }
     }
 
     mostrarOcultarTabla();
@@ -113,6 +132,30 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
                 if (idRegistroDetalle.length > 0) {
                     mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
                 }
+            } else {
+                mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
+            }
+        }
+    });
+
+}
+
+/**
+ * Elimina todos los organismos y personas de la Sesion, y los quita en la tabla de interesados.
+ * @param idRegistroDetalle
+ */
+function eliminarInteresados(){
+
+    $.ajax({
+        url: urlEliminarInteresados,
+        type: 'GET',
+        dataType: 'json',
+        data: { idRegistroDetalle: '' },
+        contentType: 'application/json',
+
+        success: function(result) {
+            if(result==true){
+                eliminarTodosInteresados();
             } else {
                 mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
             }
