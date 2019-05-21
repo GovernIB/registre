@@ -51,6 +51,7 @@ public class DistribucionBean implements DistribucionLocal{
       RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
       //Información a guardar de la integración
+      Date inicio = new Date();
       StringBuilder peticion = new StringBuilder();
       long tiempo = System.currentTimeMillis();
       String descripcion = "Distribución Registro";
@@ -84,7 +85,7 @@ public class DistribucionBean implements DistribucionLocal{
          }
 
          // Distribuimos el registro
-         Boolean distribuido = distribuirRegistroEntrada(re,distribucionPlugin, descripcion, tiempo, peticion);
+         Boolean distribuido = distribuirRegistroEntrada(re,distribucionPlugin, inicio, descripcion, tiempo, peticion);
 
          respuestaDistribucion.setEnviado(distribuido);
 
@@ -115,8 +116,21 @@ public class DistribucionBean implements DistribucionLocal{
       return respuestaDistribucion;
    }
 
-   @Override
-   public Boolean distribuirRegistroEntrada(RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, String descripcion, long tiempo, StringBuilder peticion) throws Exception, I18NValidationException, I18NException {
+   /**
+    * Método que distribuye un registro de entrada de manera atómica generando el justificante
+    *  e invocando al webservice de distribucion
+    * @param registroEntrada
+    * @param distribucionPlugin
+    * @param inicio
+    * @param descripcion
+    * @param tiempo
+    * @param peticion
+    * @return
+    * @throws Exception
+    * @throws I18NValidationException
+    * @throws I18NException
+    */
+   private Boolean distribuirRegistroEntrada(RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, Date inicio, String descripcion, long tiempo, StringBuilder peticion) throws Exception, I18NValidationException, I18NException {
 
       log.info("------------------------------------------------------------");
       log.info("Distribuyendo el registro: " + registroEntrada.getNumeroRegistroFormateado());
@@ -132,7 +146,7 @@ public class DistribucionBean implements DistribucionLocal{
       if(distribucionPlugin == null){
          //Tramitamos el registro de entrada directamente
          registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
-         integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
+         integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
          return true;
       }else{
          //Gestionamos los anexos sir antes de distribuir
@@ -140,7 +154,7 @@ public class DistribucionBean implements DistribucionLocal{
          boolean distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale("ca"));
          if (distribuido) { //Si ha ido bien lo marcamos como distribuido
             registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
          }
 
          return distribuido;
@@ -175,6 +189,7 @@ public class DistribucionBean implements DistribucionLocal{
          log.info("Hay "+elementosADistribuir.size()+" elementos que se van a distribuir en esta iteracion");
 
          for (Cola elemento : elementosADistribuir) {
+            Date inicio = new Date();
             StringBuilder peticion = new StringBuilder();
             try {
 
@@ -190,7 +205,7 @@ public class DistribucionBean implements DistribucionLocal{
                }
 
                //Distribuimos el registro de entrada.
-               Boolean distribuido = distribuirRegistroEntrada(registroEntrada,distribucionPlugin, descripcion, tiempo, peticion);
+               Boolean distribuido = distribuirRegistroEntrada(registroEntrada,distribucionPlugin, inicio, descripcion, tiempo, peticion);
 
                if (distribuido) { //Si la distribución ha ido bien
 

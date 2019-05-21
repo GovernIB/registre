@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -31,20 +30,6 @@ public interface DistribucionLocal  {
    * @throws I18NException
    */
   RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException;
-
-
-
-  /**
-   * Método que distribuye un registro de entrada de manera atómica generando el justificante
-   * e invocando al webservice de distribucion
-   * @param registroEntrada
-   * @param distribucionPlugin
-   * @return
-   * @throws Exception
-   * @throws I18NValidationException
-   * @throws I18NException
-   */
-  Boolean distribuirRegistroEntrada(RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, String descripcion, long tiempo, StringBuilder peticion) throws Exception, I18NValidationException, I18NException;
 
   /**
    *

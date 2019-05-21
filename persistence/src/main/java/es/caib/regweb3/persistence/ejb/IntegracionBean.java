@@ -201,9 +201,9 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     }
 
     @Override
-    public void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
+    public void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numRegFormat) throws Exception{
 
-        persist(new Integracion(tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad, numRegFormat));
+        persist(new Integracion(inicio, tipo, RegwebConstantes.INTEGRACION_ESTADO_OK, descripcion, peticion, tiempo, idEntidad, numRegFormat));
     }
 
     @Override

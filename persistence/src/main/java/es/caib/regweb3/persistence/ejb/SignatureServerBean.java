@@ -75,7 +75,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         doc.setName("justificante.pdf");
 
         return signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
-                reason, idEntidadActiva, peticion, numeroRegistro);
+                reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
 
     }
 
@@ -456,7 +456,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
         SignatureCustody sc = signFile(docToSign, signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad, new StringBuilder(), numeroRegistro);
+                signaturePlugin, locale, reason, idEntidad, new Date(), new StringBuilder(), numeroRegistro);
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -554,7 +554,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
         SignatureCustody sc = signFile(documentToSign, signType, signMode, epes,
-                signaturePlugin, locale, reason, idEntidad, new StringBuilder(), numeroRegistro);
+                signaturePlugin, locale, reason, idEntidad, new Date(), new StringBuilder(), numeroRegistro);
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -584,7 +584,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws I18NException
      */
     protected SignatureCustody signFile(AnnexCustody doc, String signType,
-                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro)
+                                        int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, Date inicio, StringBuilder peticion, String numeroRegistro)
             throws I18NException {
 
         File source = null;
@@ -698,7 +698,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                     sc.setAttachedDocument(attachedDocument);
 
                     // Integracion
-                    integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
 
                     return sc;
 

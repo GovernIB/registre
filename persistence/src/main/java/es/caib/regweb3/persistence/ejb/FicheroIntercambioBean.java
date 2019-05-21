@@ -51,6 +51,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
         RespuestaRecepcionSir respuesta = new RespuestaRecepcionSir();
         RegistroSir registroSir = null;
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         String descripcion = "Recepción SIR: " + TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName();
@@ -308,7 +309,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
         if(registroSir != null){
             peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(" (").append(registroSir.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(" (").append(registroSir.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
         }
 
         respuesta.setRegistroSir(registroSir);
