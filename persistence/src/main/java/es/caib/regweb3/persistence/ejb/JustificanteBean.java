@@ -57,6 +57,7 @@ public class JustificanteBean implements JustificanteLocal {
         boolean error = false;
         IDocumentCustodyPlugin documentCustodyPlugin = null;
         long tiempo = System.currentTimeMillis();
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         String numRegFormat = "";
         Locale locale = new Locale(idioma);
@@ -172,7 +173,7 @@ public class JustificanteBean implements JustificanteLocal {
             log.info("------------------------------------------------------------");
 
             // Integracion
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, "Crear Justificante", peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
 
             return anexoFull;
 

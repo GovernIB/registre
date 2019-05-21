@@ -43,6 +43,7 @@ public class ArxiuBean implements ArxiuLocal{
     @Override
     public void cerrarExpediente(Expediente expediente, ApiArchivoDigital apiArxiu, Long idEntidad) throws Exception {
 
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         int reintents = 10;
@@ -73,7 +74,7 @@ public class ArxiuBean implements ArxiuLocal{
             if (!this.hiHaError(errorCodi)) {
                 log.info("Se ha cerrado correctamente el Expediente: " +expediente.getName());
                 // Integracion
-                integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Cerrar expediente", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, expediente.getName());
                 break;
             }
 
@@ -100,6 +101,7 @@ public class ArxiuBean implements ArxiuLocal{
 
     public void cerrarExpedientesScheduler(Long idEntidad, String fechaInicio) throws Exception{
 
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
 
@@ -152,7 +154,7 @@ public class ArxiuBean implements ArxiuLocal{
 
             }
 
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, "");
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CERRAR_EXPEDIENTE, "Scheduler: Cerrar expedientes", peticion.toString(),System.currentTimeMillis() - tiempo, idEntidad, "");
 
         }catch (I18NException e) {
             e.printStackTrace();

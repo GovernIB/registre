@@ -209,6 +209,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         // Comprobamos que el destino pertenece a alguna de las Entidades configuradas
         Entidad entidad = comprobarEntidadMensajeControl(mensaje.getCodigoEntidadRegistralDestino());
 
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         String descripcion = "Recepción MensajeControl: " + TipoMensaje.getTipoMensaje(mensaje.getTipoMensaje()).getName();
@@ -272,7 +273,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
         persist(mensaje);
 
         // Integración
-        integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), mensaje.getIdentificadorIntercambio());
 
     }
 

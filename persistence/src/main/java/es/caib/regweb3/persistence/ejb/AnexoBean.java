@@ -105,6 +105,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     public AnexoFull getAnexoFullLigero(Long anexoID, Long idEntidad) throws I18NException {
 
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         String descripcion = "Descarga anexo";
@@ -149,7 +150,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             }
 
             // Integracion
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidad, "");
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidad, "");
 
             return anexoFull;
 
@@ -234,6 +235,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         boolean error = false;
         final boolean isNew = true;
 
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         Long tiempo = System.currentTimeMillis();
         String descripcion = "Nuevo anexo ";
@@ -339,7 +341,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setAnexo(anexo);
 
             // Integracion
-            integracionEjb.addIntegracionOk(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
 
             return anexoFull;
 

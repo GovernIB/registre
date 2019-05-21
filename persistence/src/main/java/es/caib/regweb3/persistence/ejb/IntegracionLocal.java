@@ -5,6 +5,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,7 +62,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @param numregformat
      * @throws Exception
      */
-    void addIntegracionOk(Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+    void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 
     /**
      *
