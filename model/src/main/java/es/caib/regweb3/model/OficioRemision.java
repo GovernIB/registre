@@ -53,6 +53,10 @@ public class OficioRemision implements Serializable {
 
   private String contactosEntidadRegistralDestino;
 
+  public OficioRemision() {
+  }
+
+
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "generator")
   @Column(name = "ID")

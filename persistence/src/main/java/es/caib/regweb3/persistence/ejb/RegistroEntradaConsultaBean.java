@@ -661,7 +661,8 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Query q;
 
-        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
+        q = em.createQuery("Select re.id, re.fecha, re.registroDetalle.decodificacionEntidadRegistralDestino," +
+                " re.estado, re.registroDetalle.decodificacionTipoAnotacion from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
                 "and (re.estado = :rechazado or re.estado = :reenviado) order by re.fecha desc");
 
         q.setMaxResults(total);
@@ -669,7 +670,22 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
-        return q.getResultList();
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada();
+            registroEntrada.setId((Long) object[0]);
+            registroEntrada.setFecha((Date) object[1]);
+            registroEntrada.getRegistroDetalle().setDecodificacionEntidadRegistralDestino((String) object[2]);
+            registroEntrada.setEstado((Long) object[3]);
+            registroEntrada.getRegistroDetalle().setDecodificacionTipoAnotacion((String) object[4]);
+
+            registros.add(registroEntrada);
+
+        }
+
+        return registros;
     }
 
     @Override

@@ -260,14 +260,12 @@
                                                             <col width="80">
                                                             <col>
                                                             <col>
-                                                            <col>
                                                             <col width="51">
                                                         </colgroup>
                                                         <thead>
                                                         <tr>
                                                             <th><spring:message code="regweb.numero"/></th>
                                                             <th><spring:message code="registroEntrada.fecha"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
                                                             <th><spring:message code="registroEntrada.extracto"/></th>
                                                             <th class="center"></th>
                                                         </tr>
@@ -278,7 +276,6 @@
                                                             <tr>
                                                                 <td>${registroEntrada.numeroRegistroFormateado}</td>
                                                                 <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                <td>${registroEntrada.libro}</td>
                                                                 <td>${registroEntrada.registroDetalle.extracto}</td>
                                                                 <td class="center">
                                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>

@@ -414,15 +414,29 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @SuppressWarnings(value = "unchecked")
     public List<RegistroSir> getUltimosPendientesProcesar(String oficinaSir, Integer total) throws Exception{
 
-        Query q = em.createQuery("Select registroSir from RegistroSir as registroSir " +
-                "where registroSir.codigoEntidadRegistral = :oficinaSir and registroSir.estado = :idEstado " +
-                "order by registroSir.fechaRecepcion desc");
+        Query q = em.createQuery("Select r.id, r.decodificacionEntidadRegistralOrigen, r.fechaRecepcion, r.resumen, r.documentacionFisica from RegistroSir as r " +
+                "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
+                "order by r.fechaRecepcion desc");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
 
-        return  q.getResultList();
+        List<RegistroSir> registros = new ArrayList<RegistroSir>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroSir registroSir = new RegistroSir();
+            registroSir.setId((Long) object[0]);
+            registroSir.setDecodificacionEntidadRegistralOrigen((String) object[1]);
+            registroSir.setFechaRecepcion((Date) object[2]);
+            registroSir.setResumen((String) object[3]);
+            registroSir.setDocumentacionFisica((String) object[4]);
+
+            registros.add(registroSir);
+        }
+
+        return registros;
     }
 
 
