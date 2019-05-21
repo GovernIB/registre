@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroSalidaWebValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -86,12 +87,11 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Cargamos la entida activa
         Entidad entidadActiva = getEntidadActiva(request);
 
-        // Cargamos los datos de la Plantilla en el Registro Entrada
-        RegistroSalida registroSalida = cargarPlantillaRegistroSalida(plantilla, oficinaActiva, entidadActiva, oficinasOrigen);
-
         //Eliminamos los posibles interesados de la Sesion
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
+        // Cargamos los datos de la Plantilla en el Registro Entrada
+        RegistroSalida registroSalida = cargarPlantillaRegistroSalida(plantilla, oficinaActiva, entidadActiva, oficinasOrigen, request.getSession());
 
         model.addAttribute(entidadActiva);
         model.addAttribute(getUsuarioAutenticado(request));
@@ -499,11 +499,10 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
      * @return
      * @throws Exception
      */
-    private RegistroSalida cargarPlantillaRegistroSalida(Plantilla plantilla, Oficina oficinaActiva, Entidad entidadActiva, LinkedHashSet<Oficina> oficinasOrigen) throws Exception {
+    private RegistroSalida cargarPlantillaRegistroSalida(Plantilla plantilla, Oficina oficinaActiva, Entidad entidadActiva, LinkedHashSet<Oficina> oficinasOrigen, HttpSession session) throws Exception {
 
         RegistroSalida registroSalida =  new RegistroSalida();
-        RegistroDetalle registroDetalle = new RegistroDetalle();
-        registroDetalle.setPresencial(true);
+        registroSalida.getRegistroDetalle().setPresencial(true);
 
         // Recuperamos los valores de la Plantilla
         PlantillaJson plantillaJson = RegistroUtils.desSerilizarPlantillaXml(plantilla.getRepro());
@@ -517,37 +516,54 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         // Oficina
         registroSalida.setOficina(oficinaActiva);
         // Extracto
-        registroDetalle.setExtracto(plantillaJson.getExtracto());
+        registroSalida.getRegistroDetalle().setExtracto(plantillaJson.getExtracto());
         // Tipo Asunto
         TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdTipoAsunto()));
-        registroDetalle.setTipoAsunto(tipoAsunto);
+        registroSalida.getRegistroDetalle().setTipoAsunto(tipoAsunto);
         // Código Asunto
         if(plantillaJson.getIdCodigoAsunto()!=null && !plantillaJson.getIdCodigoAsunto().equals("")) {
             CodigoAsunto codigoAsunto = codigoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdCodigoAsunto()));
-            registroDetalle.setCodigoAsunto(codigoAsunto);
+            registroSalida.getRegistroDetalle().setCodigoAsunto(codigoAsunto);
         }
         // Idioma
-        registroDetalle.setIdioma(Long.parseLong(plantillaJson.getIdIdioma()));
+        registroSalida.getRegistroDetalle().setIdioma(Long.parseLong(plantillaJson.getIdIdioma()));
         // Referencia externa
-        registroDetalle.setReferenciaExterna(plantillaJson.getReferenciaExterna());
+        registroSalida.getRegistroDetalle().setReferenciaExterna(plantillaJson.getReferenciaExterna());
         // Expediente
-        registroDetalle.setExpediente(plantillaJson.getExpediente());
+        registroSalida.getRegistroDetalle().setExpediente(plantillaJson.getExpediente());
         // Transporte
-        registroDetalle.setTransporte(Long.parseLong(plantillaJson.getIdTransporte()));
+        registroSalida.getRegistroDetalle().setTransporte(Long.parseLong(plantillaJson.getIdTransporte()));
         // Número transporte
-        registroDetalle.setNumeroTransporte(plantillaJson.getNumeroTransporte());
+        registroSalida.getRegistroDetalle().setNumeroTransporte(plantillaJson.getNumeroTransporte());
         // Observaciones
-        registroDetalle.setObservaciones(plantillaJson.getObservaciones());
+        registroSalida.getRegistroDetalle().setObservaciones(plantillaJson.getObservaciones());
         // Número Registro Origen
-        registroDetalle.setNumeroRegistroOrigen(plantillaJson.getNumeroRegistroOrigen());
+        registroSalida.getRegistroDetalle().setNumeroRegistroOrigen(plantillaJson.getNumeroRegistroOrigen());
         // Código Sia
-        if(!plantillaJson.getCodigoSia().equals("")) {
-            registroDetalle.setCodigoSia(Long.parseLong(plantillaJson.getCodigoSia()));
+        if(plantillaJson.getCodigoSia()!=null) {
+            if (!plantillaJson.getCodigoSia().isEmpty()) {
+                registroSalida.getRegistroDetalle().setCodigoSia(Long.parseLong(plantillaJson.getCodigoSia()));
+            }
         }
+        // Interesado Administración
+        if(StringUtils.isNotEmpty(plantillaJson.getInteresado())) {
+
+            String interesado = plantillaJson.getInteresado();
+            String codigoDIR3 = interesado.substring(0, interesado.indexOf('+'));
+            String denominacion = interesado.substring(interesado.indexOf('+') + 1);
+
+            List<Interesado> interesados = new ArrayList<Interesado>();
+
+            Interesado organismo = new Interesado(codigoDIR3,denominacion);
+
+            interesados.add(organismo);
+            session.setAttribute(RegwebConstantes.SESSION_INTERESADOS_SALIDA, interesados);
+        }
+
         // Fecha origen
         if(!plantillaJson.getFechaOrigen().equals("")) {
             Date fechaOrigen = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(plantillaJson.getFechaOrigen());
-            registroDetalle.setFechaOrigen(fechaOrigen);
+            registroSalida.getRegistroDetalle().setFechaOrigen(fechaOrigen);
         }
 
         // Comprobamos la unidad origen
@@ -568,7 +584,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                     Oficina oficinaExterna = new Oficina();
                     oficinaExterna.setCodigo(oficinaOrigen.getCodigo());
                     oficinaExterna.setDenominacion(oficinaOrigen.getDenominacion());
-                    registroDetalle.setOficinaOrigen(oficinaExterna);
+                    registroSalida.getRegistroDetalle().setOficinaOrigen(oficinaExterna);
                     oficinasOrigen.add(oficinaExterna); // Añadimos la oficina al listado
                 }
             }
@@ -576,12 +592,9 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         }else{// Comprobamos en REGWEB3 si está vigente
             Oficina oficinaOrigen = oficinaEjb.findByCodigoVigente(plantillaJson.getOficinaCodigo());
             if(oficinaOrigen != null){
-                registroDetalle.setOficinaOrigen(oficinaOrigen);
+                registroSalida.getRegistroDetalle().setOficinaOrigen(oficinaOrigen);
             }
         }
-
-        // Guardam el Registro Detalle
-        registroSalida.setRegistroDetalle(registroDetalle);
 
         return registroSalida;
     }

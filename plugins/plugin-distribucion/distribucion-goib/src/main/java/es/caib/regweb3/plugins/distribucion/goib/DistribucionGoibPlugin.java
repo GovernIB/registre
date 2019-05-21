@@ -127,9 +127,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             String password = getPropertyPassword();
 
             BustiaV1 client = es.caib.distribucio.ws.client.BustiaV1WsClientFactory.getWsClient(
-                    endpoint,
-                    usuario,
-                    password);
+               endpoint,
+               usuario,
+               password);
 
             client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
 
@@ -179,7 +179,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         //Idioma
         registreAnotacio.setIdiomaCodi(re.getRegistroDetalle().getIdioma().toString());
-       // registreAnotacio.setIdiomaDescripcio(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(re.getRegistroDetalle().getIdioma()));
+        // registreAnotacio.setIdiomaDescripcio(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(re.getRegistroDetalle().getIdioma()));
         registreAnotacio.setIdiomaDescripcio(I18NCommonUtils.tradueix(language, "idioma." + re.getRegistroDetalle().getIdioma()));
 
         // Documentación Física
@@ -409,8 +409,10 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             //transformamos el perfil y la firma que obtenemos de la validación del plugin a los valores que espera RIPEA
             transformarPerfilTipoFirma(anexoFull.getAnexo(),firma);
 
-            //Añadimos el objeto firma al registreAnnex.
-            registreAnnex.getFirmes().add(firma);
+            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
+                //Añadimos el objeto firma al registreAnnex.
+                registreAnnex.getFirmes().add(firma);
+            }
 
         }
         //Caso Anexo FIRMA DETACHED
@@ -436,8 +438,10 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             //transformamos el perfil y la firma que obtenemos de la validación del plugin a los valores que espera RIPEA
             transformarPerfilTipoFirma(anexoFull.getAnexo(),firma);
 
-            //Añadimos el objeto firma al registreAnnex.
-            registreAnnex.getFirmes().add(firma);
+            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
+                //Añadimos el objeto firma al registreAnnex.
+                registreAnnex.getFirmes().add(firma);
+            }
         }
 
         return registreAnnex;
@@ -455,16 +459,16 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         //anexoFull.getAnexo().getSignType() y anexoFull.getAnexo().getSignFormat();
 
         if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexo.getSignType()) &&
-                (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF02
+           (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF02
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_XADES_DETACHED_SIGNATURE));
         }else if (ValidateSignatureConstants.SIGNTYPE_XAdES.equals(anexo.getSignType()) &&
-                ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexo.getSignFormat())) { //TF03
+           ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexo.getSignFormat())) { //TF03
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_XADES_ENVELOPE_SIGNATURE));
         }else if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexo.getSignType()) &&
-                (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF04
+           (ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_DETACHED.equals(anexo.getSignFormat()) || ValidateSignatureConstants.SIGNFORMAT_EXPLICIT_EXTERNALLY_DETACHED.equals(anexo.getSignFormat()))) {//TF04
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_DETACHED_EXPLICIT_SIGNATURE));
         } else if (ValidateSignatureConstants.SIGNTYPE_CAdES.equals(anexo.getSignType()) &&
-                ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexo.getSignFormat())) { //TF05
+           ValidateSignatureConstants.SIGNFORMAT_IMPLICIT_ENVELOPING_ATTACHED.equals(anexo.getSignFormat())) { //TF05
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_CADES_ATTACHED_IMPLICIT_SIGNAUTRE));
         } else if (ValidateSignatureConstants.SIGNTYPE_PAdES.equals(anexo.getSignType())) {//TF06
             firma.setTipus(RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_PADES));
@@ -504,10 +508,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         log.info("Firma Perfil " + firma.getPerfil());
         log.info("Firma Tipo " + firma.getTipus());
-
-        if(firma.getTipus() == null || firma.getPerfil() == null){
-            log.info("Anexo: " + anexo.getTitulo());
-            throw new Exception("Error: Tipus Firma o Perfil Firma no poden ser buits");
-        }
+        
     }
 }

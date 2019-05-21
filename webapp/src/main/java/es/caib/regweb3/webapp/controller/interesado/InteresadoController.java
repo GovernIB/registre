@@ -680,6 +680,29 @@ public class InteresadoController extends BaseController{
         return false;
     }
 
+    /**
+     * Elimina todos los Organismos de la variable de sesion que almacena los interesados
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/{tipoRegistro}/eliminarInteresados", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean eliminarInteresados(@PathVariable String tipoRegistro, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
+
+        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+
+        HttpSession session = request.getSession();
+
+        try {
+            if(StringUtils.isEmpty(idRegistroDetalle)) { // Se trata de un nuevo Registro, lo eliminamos de la sesion
+                return eliminarInteresadosSesion(session, variableSesion);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
 
     /**
@@ -752,6 +775,24 @@ public class InteresadoController extends BaseController{
 
         return false;
     }
+
+    /**
+     * Elimina todos los Organismos del listado de Interesados de la sesion
+     * @param session
+     * @throws Exception
+     */
+    @SuppressWarnings("unchecked")
+    private Boolean eliminarInteresadosSesion(HttpSession session, String variableSesion) throws Exception{
+
+        List<Interesado> interesados = (List<Interesado>) session.getAttribute(variableSesion);
+
+        if(interesados!=null){
+            session.setAttribute(variableSesion, null);
+        }
+
+        return true;
+    }
+
 
     /**
      * Elimina un Organismo del listado de Interesados de la bbdd

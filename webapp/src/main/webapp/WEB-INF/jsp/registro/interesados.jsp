@@ -161,6 +161,7 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     var tipoRegistro = '${param.tipoRegistro}';
     var urlAddOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addOrganismo"/>';
     var urlEliminarOrganismoInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarOrganismo"/>';
+    var urlEliminarInteresados = '<c:url value="/interesado/${param.tipoRegistro}/eliminarInteresados"/>';
     var urlAddPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/addPersona"/>';
     var urlEliminarPersonaInteresado = '<c:url value="/interesado/${param.tipoRegistro}/eliminarPersona"/>';
     var urlAddRepresentante = '<c:url value="/interesado/${param.tipoRegistro}/addRepresentante"/>';

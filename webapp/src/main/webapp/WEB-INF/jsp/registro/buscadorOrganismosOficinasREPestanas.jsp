@@ -214,6 +214,7 @@ que se le indica -->
     tradorganismo['organismo.estado.anulado'] = "<spring:message code='unidad.estado.A' javaScriptEscape='true' />";
     tradorganismo['organismo.estado.transitorio'] = "<spring:message code='unidad.estado.T' javaScriptEscape='true' />";
     tradorganismo['organismo.buscador.error'] = "<spring:message code='organismo.buscador.error' javaScriptEscape='true' />";
+    tradorganismo['interesado.administracion'] = "<spring:message code='interesado.administracion' javaScriptEscape='true' />";
 
     function actualizarLocalidadDestinatarios(paramTipo) {
 

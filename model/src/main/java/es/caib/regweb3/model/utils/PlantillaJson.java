@@ -62,6 +62,8 @@ public class PlantillaJson implements Serializable {
     private String fechaOrigen;
     @XmlElement
     private String codigoSia;
+    @XmlElement
+    private String interesado;
 
     public PlantillaJson() {
     }
@@ -238,9 +240,7 @@ public class PlantillaJson implements Serializable {
         return numeroRegistroOrigen;
     }
 
-    public void setNumeroRegistroOrigen(String numeroRegistroOrigen) {
-        this.numeroRegistroOrigen = numeroRegistroOrigen;
-    }
+    public void setNumeroRegistroOrigen(String numeroRegistroOrigen) { this.numeroRegistroOrigen = numeroRegistroOrigen; }
 
     public String getFechaOrigen() {
         return fechaOrigen;
@@ -254,8 +254,12 @@ public class PlantillaJson implements Serializable {
         return codigoSia;
     }
 
-    public void setCodigoSia(String codigoSia) {
-        this.codigoSia = codigoSia;
+    public void setCodigoSia(String codigoSia) { this.codigoSia = codigoSia; }
+
+    public String getInteresado() {
+        return interesado;
     }
+
+    public void setInteresado(String interesado) { this.interesado = interesado; }
 }
 
