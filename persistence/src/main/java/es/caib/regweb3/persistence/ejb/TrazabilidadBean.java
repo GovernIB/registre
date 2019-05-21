@@ -221,7 +221,8 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
             organismosWhere = " and t.registroEntradaDestino.destino.id in (:organismos) ";
         }
 
-        Query q = em.createQuery("Select t.registroEntradaDestino from Trazabilidad as t " +
+        Query q = em.createQuery("Select t.registroEntradaDestino.id, t.registroEntradaDestino.numeroRegistroFormateado, " +
+                "t.registroEntradaDestino.fecha, t.registroEntradaDestino.registroDetalle.extracto from Trazabilidad as t " +
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
                 "t.registroEntradaDestino.destino != null and " +
                 "t.registroEntradaDestino.oficina.id = :idOficina and " +
@@ -241,7 +242,21 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
             q.setMaxResults(total);
         }
 
-        return q.getResultList();
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+            RegistroEntrada registroEntrada = new RegistroEntrada();
+            registroEntrada.setId((Long) object[0]);
+            registroEntrada.setNumeroRegistroFormateado((String) object[1]);
+            registroEntrada.setFecha((Date) object[2]);
+            registroEntrada.getRegistroDetalle().setExtracto((String) object[3]);
+
+            registros.add(registroEntrada);
+
+        }
+
+        return registros;
     }
 
     @Override
