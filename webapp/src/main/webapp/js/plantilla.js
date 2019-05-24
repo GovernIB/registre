@@ -223,10 +223,12 @@ function rellenarFormulario(idPlantilla,tipoRegistro){
             $('#registroDetalle\\.transporte').trigger("chosen:updated");
 
             // Interesado
-            if (plantilla.interesado.length>0){
-                var interesadoCodigo = plantilla.interesado.substr(0, plantilla.interesado.indexOf('+'));
-                var interesadoDenominacion = plantilla.interesado.substr(plantilla.interesado.indexOf('+') + 1);
-                addOrganismoInteresadoPlantilla(tradorganismo['interesado.administracion'], '', interesadoCodigo, interesadoDenominacion);
+            if (plantilla.interesado != null) {
+                if (plantilla.interesado.length > 0) {
+                    var interesadoCodigo = plantilla.interesado.substr(0, plantilla.interesado.indexOf('+'));
+                    var interesadoDenominacion = plantilla.interesado.substr(plantilla.interesado.indexOf('+') + 1);
+                    addOrganismoInteresadoPlantilla(tradorganismo['interesado.administracion'], '', interesadoCodigo, interesadoDenominacion);
+                }
             }
 
             //Oficina origen
