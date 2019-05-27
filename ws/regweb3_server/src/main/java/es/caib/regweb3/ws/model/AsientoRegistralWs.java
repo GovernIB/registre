@@ -69,6 +69,13 @@ public class AsientoRegistralWs {
     private String motivo; //Motivo rechazo o reenvio
 
 
+    public AsientoRegistralWs() {
+    }
+
+    public AsientoRegistralWs(Long tipoRegistro) {
+        this.tipoRegistro = tipoRegistro;
+    }
+
     public Long getId() {
         return id;
     }
