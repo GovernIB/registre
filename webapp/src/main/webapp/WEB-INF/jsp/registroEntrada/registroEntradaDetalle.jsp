@@ -151,7 +151,7 @@
 
                                                 <!-- Si es Documentación en papel (ROJO) -->
                                                 <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                                                    <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.rojo" htmlEscape="true"/>", "<spring:message code="regweb.informacion.importante" htmlEscape="true"/>","<spring:message code="regweb.seguir" htmlEscape="true"/>","<spring:message code="regweb.seguir.no" htmlEscape="true"/>",${!tieneJustificante})' href="javascript:void(0);" class="btn btn-success btn-sm btn-block">
+                                                    <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.rojo" htmlEscape="true"/>", "<spring:message code="regweb.informacion.importante" htmlEscape="true"/>","<spring:message code="regweb.seguir" htmlEscape="true"/>","<spring:message code="regweb.seguir.no" htmlEscape="true"/>",${!tieneJustificante})' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
                                                         <spring:message code="registroEntrada.enviar.sir"/>
                                                     </button>
                                                 </c:if>
