@@ -304,7 +304,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 
-        RegistroEntrada re = em.find(RegistroEntrada.class, id);
+        RegistroEntrada re = findById(id);
 
         return cargarAnexosFull(re);
     }
