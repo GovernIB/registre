@@ -51,6 +51,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
         RespuestaRecepcionSir respuesta = new RespuestaRecepcionSir();
         RegistroSir registroSir = null;
+        OficioRemision oficioRemision = null;
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
@@ -106,7 +107,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
 
             // Buscamos si el Registro recibido ya existe en el sistema
             registroSir = registroSirEjb.getRegistroSir(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
+            oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
             // Registro Sir: Lo hemos recibido de SIR
             if (registroSir != null) { // Ya existe en el sistema
@@ -140,6 +141,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     trazabilidadSir.setContactoUsuario(ficheroIntercambio.getContactoUsuario());
                     trazabilidadSir.setObservaciones(ficheroIntercambio.getDescripcionTipoAnotacion());
                     trazabilidadSirEjb.persist(trazabilidadSir);
+
+                    peticion.append("Motivo: ").append(ficheroIntercambio.getDescripcionTipoAnotacion()).append(System.getProperty("line.separator"));
 
                     log.info("El registroSir existia en el sistema, se ha vuelto a recibir: " + registroSir.getIdentificadorIntercambio());
 
@@ -194,6 +197,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
 
+                    peticion.append("Motivo: ").append(ficheroIntercambio.getDescripcionTipoAnotacion()).append(System.getProperty("line.separator"));
+
                     log.info("El oficio de remision existia en el sistema, nos lo han renviado: " + oficioRemision.getIdentificadorIntercambio());
 
                 }else if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_DEVUELTO){
@@ -216,7 +221,7 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             log.info("El ficheroIntercambio recibido es un RECHAZO");
 
             // Buscamos si el FicheroIntercambio ya existe en el sistema
-            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
+            oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
 
             // Oficio Remision: Ha sido enviado por nosotros a SIR
             if(oficioRemision != null) { // Existe en el sistema
@@ -255,6 +260,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                     oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_RECHAZADO);
                     oficioRemision.setFechaEstado(new Date());
                     oficioRemisionEjb.merge(oficioRemision);
+
+                    peticion.append("Motivo: ").append(ficheroIntercambio.getDescripcionTipoAnotacion()).append(System.getProperty("line.separator"));
 
                     log.info("El oficio de remision existia en el sistema, nos lo han rechazado: " + oficioRemision.getIdentificadorIntercambio());
 
@@ -296,6 +303,8 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         trazabilidadSir.setContactoUsuario(ficheroIntercambio.getContactoUsuario());
                         trazabilidadSir.setObservaciones(ficheroIntercambio.getDescripcionTipoAnotacion());
                         trazabilidadSirEjb.persist(trazabilidadSir);
+
+                        peticion.append("Motivo: ").append(ficheroIntercambio.getDescripcionTipoAnotacion()).append(System.getProperty("line.separator"));
                     }
                 }else{
                     log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
@@ -310,6 +319,10 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
             peticion.append("Origen: ").append(registroSir.getDecodificacionEntidadRegistralOrigen()).append(" (").append(registroSir.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(" (").append(registroSir.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+        }else if(oficioRemision != null){
+            peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
+            peticion.append("Destino: ").append(ficheroIntercambio.getDescripcionEntidadRegistralDestino()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), oficioRemision.getIdentificadorIntercambio());
         }
 
         respuesta.setRegistroSir(registroSir);
