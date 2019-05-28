@@ -252,7 +252,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Obtenemos el Plugin de Custodia correspondiente
             if (anexo.isJustificante()) {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                descripcion = "Nuevo justificante";
+                descripcion = "Nuevo anexo justificante";
             } else {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA);
             }
