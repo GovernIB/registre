@@ -92,7 +92,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
     public List<Integracion> getByEntidadNumReg(Long idEntidad, String numeroRegistro) throws Exception{
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where " +
-                "integracion.entidad.id = :idEntidad and integracion.numRegFormat =:numeroRegistro order by integracion.id");
+                "integracion.entidad.id = :idEntidad and integracion.numRegFormat =:numeroRegistro order by integracion.fecha desc");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("numeroRegistro",numeroRegistro);
@@ -146,7 +146,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
                 count++;
             }
             q2 = em.createQuery(query.toString().replaceAll("Select integracion from Integracion as integracion ", "Select count(integracion.id) from Integracion as integracion "));
-            query.append("order by integracion.id desc");
+            query.append("order by integracion.fecha desc");
             q = em.createQuery(query.toString());
 
             for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -156,7 +156,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         } else {
             q2 = em.createQuery(query.toString().replaceAll("Select integracion from Integracion as integracion ", "Select count(integracion.id) from Integracion as integracion "));
-            query.append("order by integracion.id desc");
+            query.append("order by integracion.fecha desc");
             q = em.createQuery(query.toString());
         }
 
@@ -185,7 +185,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where " +
                 "integracion.entidad.id = :idEntidad and integracion.estado =:estado and " +
-                "integracion.fecha >= :fecha order by integracion.id desc");
+                "integracion.fecha >= :fecha order by integracion.fecha desc");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",RegwebConstantes.INTEGRACION_ESTADO_ERROR);
