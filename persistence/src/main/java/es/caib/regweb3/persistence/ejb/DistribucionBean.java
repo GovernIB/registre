@@ -194,7 +194,7 @@ public class DistribucionBean implements DistribucionLocal{
             try {
 
                //Obtenemos el registro de entrada que se debe distribuir
-               RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(elemento.getIdObjeto());
+               RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
 
                //Montamos la petición de la integración
                peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));

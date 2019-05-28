@@ -205,26 +205,6 @@ public interface RegistroEntradaConsultaLocal {
     RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
 
     /**
-     * Método que devuelve un registro de entrada completo, con los anexos completos
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
-
-
-    /**
-     * Cargamos los anexos del registro de entrada que nos pasan.
-     * @param registroEntrada
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException;
-
-    /**
      * Obtiene un Registro de Entrada a partir de su IdentificadorIntercambio
      *
      * @param identificadorIntercambio

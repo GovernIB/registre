@@ -94,6 +94,17 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     RegistroSalida rectificar(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception;
 
+
+    /**
+     * Método que devuelve un registro de salida completo, con los anexos completos
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+
     /**
      * Metodo que llama al plugin de postproceso cuando creamos un registro de salida.
      * @param rs

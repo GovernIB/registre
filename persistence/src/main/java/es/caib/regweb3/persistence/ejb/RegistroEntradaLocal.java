@@ -119,6 +119,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     void actualizarDestinoExtinguido(Long idOrganismoExtinguido, Long idOrganismo) throws Exception;
 
     /**
+     * Método que devuelve un registro de entrada completo, con los anexos completos
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
+
+    /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re

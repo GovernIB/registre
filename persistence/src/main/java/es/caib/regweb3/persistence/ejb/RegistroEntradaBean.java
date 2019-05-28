@@ -24,6 +24,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -298,6 +299,35 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         q.executeUpdate();
 
+    }
+
+    @Override
+    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
+
+        RegistroEntrada re = em.find(RegistroEntrada.class, id);
+
+        return cargarAnexosFull(re);
+    }
+
+    /**
+     * Carga los Anexos Completos al RegistroEntrada pasado por parámetro
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
+        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
+
+        List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFull(anexo.getId(), idEntidad);
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
+        return registroEntrada;
     }
 
     @Override

@@ -105,7 +105,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
 
-                RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(idRegistro);
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
                 peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -158,7 +158,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             } else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
 
-                RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(idRegistro);
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
                 RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
                 peticion.append("Número registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -552,7 +552,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 oficioRemision.setRegistrosSalida(null);
 
                 // Transformamos el RegistroEntrada en un RegistroSir
-                registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
+                registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
                 registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
             }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
@@ -585,7 +585,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 oficioRemision.setRegistrosEntrada(null);
 
                 // Transformamos el RegistroSalida en un RegistroSir
-                registroSalida = registroSalidaConsultaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
+                registroSalida = registroSalidaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
                 registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
 
             }
@@ -861,7 +861,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 log.info("Reintentando envio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino() + " ("+oficio.getCodigoEntidadRegistralDestino()+")");
 
                 // Transformamos el RegistroEntrada en un RegistroSir
-                RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
                 RegistroSir registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
                 // Enviamos el Registro al Componente CIR
@@ -880,7 +880,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 log.info("Reintentando envio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino() + " ("+oficio.getCodigoEntidadRegistralDestino()+")");
 
                 // Transformamos el RegistroSalida en un RegistroSir
-                RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
                 RegistroSir registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
 
                 // Enviamos el Registro al Componente CIR

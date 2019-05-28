@@ -558,7 +558,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         for (RegistroEntrada registro : registros) {
 
-            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(registro.getId());
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(registro.getId());
 
             //Justificante, Si no tiene generado el Justificante, lo hacemos
             if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
@@ -603,7 +603,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         // Recorremos los RegistroEntrada del Oficio
         for (OficioPendienteLlegada oficio : oficios) {
 
-            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(oficio.getIdRegistro());
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getIdRegistro());
             List<Interesado> interesados = registroEntrada.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroEntrada.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());

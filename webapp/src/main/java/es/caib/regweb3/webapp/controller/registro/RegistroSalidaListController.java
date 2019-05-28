@@ -612,7 +612,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
             synchronized (this) {
 
-                RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(idRegistro);
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro

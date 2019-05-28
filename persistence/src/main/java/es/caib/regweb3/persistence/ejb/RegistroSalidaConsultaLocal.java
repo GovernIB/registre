@@ -131,15 +131,7 @@ public interface RegistroSalidaConsultaLocal{
      * @throws I18NException
      */
     RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException;
-    /**
-     * Método que devuelve un registro de salida completo, con los anexos completos
-     *
-     * @param id
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException;
+
 
     /**
      *

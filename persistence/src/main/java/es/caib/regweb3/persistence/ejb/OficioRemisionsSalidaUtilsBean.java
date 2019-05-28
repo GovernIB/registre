@@ -444,7 +444,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         for (RegistroSalida registro : registros) {
 
-            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(registro.getId());
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(registro.getId());
 
             //Justificante, Si no tiene generado el Justificante, lo hacemos
             if (!registroSalida.getRegistroDetalle().getTieneJustificante()) {
@@ -487,7 +487,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         for (OficioPendienteLlegada oficio : oficios) {
 
             // Creamos un Nuevo RegistroEntrada
-            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFull(oficio.getIdRegistro());
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getIdRegistro());
             List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
             List<AnexoFull> anexos = registroSalida.getRegistroDetalle().getAnexosFull();
             Libro libro = libroEjb.findById(oficio.getIdLibro());
