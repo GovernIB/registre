@@ -596,14 +596,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     }
 
     @Override
-    public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
-
-        RegistroEntrada re = em.find(RegistroEntrada.class, id);
-
-        return cargarAnexosFull(re);
-    }
-
-    @Override
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception {
 
@@ -711,8 +703,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
      * @throws Exception
      * @throws I18NException
      */
-    @Override
-    public RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
+    private RegistroEntrada cargarAnexosFull(RegistroEntrada registroEntrada) throws Exception, I18NException {
         Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
 
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();

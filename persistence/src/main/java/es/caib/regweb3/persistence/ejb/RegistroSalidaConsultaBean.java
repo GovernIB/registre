@@ -402,12 +402,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         return rs;
     }
 
-    @Override
-    public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
 
-        RegistroSalida registroSalida = em.find(RegistroSalida.class, id);
-        return cargarAnexosFull(registroSalida);
-    }
 
 
     @Override

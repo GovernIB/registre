@@ -119,7 +119,7 @@ public class DistribucionController extends BaseController {
     @ResponseBody
     JsonResponse redistribuirRegistro(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
 
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFull(idRegistro);
+        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
 
