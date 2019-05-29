@@ -43,9 +43,6 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     @EJB private OrganismoLocal organismoEjb;
 
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
-
     @Override
     @SuppressWarnings("unchecked")
     public RegistroBasico findByIdLigero(Long idRegistroSalida) throws Exception{
