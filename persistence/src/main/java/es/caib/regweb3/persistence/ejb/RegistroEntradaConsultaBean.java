@@ -43,8 +43,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @EJB private AnexoLocal anexoEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private PluginLocal pluginEjb;
-
 
 
     @SuppressWarnings("unchecked")
