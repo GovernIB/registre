@@ -94,7 +94,6 @@
                                         </td>
 
                                         <%--TAMAÑO--%>
-                                        <td>
                                             <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexo.purgado}">
                                                 <c:if test="${anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
                                                     <c:set var="tamanyAnexo"
@@ -104,9 +103,10 @@
                                                     <c:set var="tamanyAnexo"
                                                            value="${reg:getSizeOfSignatureCustody(anexo.custodiaID,param.idEntidad)}"/>
                                                 </c:if>
+                                                    <td>
+                                                        ${tamanyAnexo } KB
+                                                    </td>
                                             </c:if>
-                                                ${tamanyAnexo } KB
-                                        </td>
 
                                         <%--ANEXO FIRMA DETACHED--%>
                                         <c:if test="${anexo.modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED}">
