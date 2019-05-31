@@ -165,25 +165,31 @@ public class AnexoFull {
     @Transient
     public String getSignaturaTituloCorto(){
 
-        String tituloCorto = getSignatureCustody().getName();
+        if(getSignatureCustody()!= null) {
+            String tituloCorto = getSignatureCustody().getName();
 
-        if (tituloCorto.length() > 100) {
-            tituloCorto = getSignatureCustody().getName().substring(0, 100) + "...";
+            if (tituloCorto.length() > 100) {
+                tituloCorto = getSignatureCustody().getName().substring(0, 100) + "...";
+            }
+            return tituloCorto;
+        }else{
+            return "";
         }
-
-        return tituloCorto;
     }
 
     @Transient
     public String getDocumentTituloCorto(){
 
-        String tituloCorto = getDocumentoCustody().getName();
+        if(getDocumentoCustody()!= null) {
+            String tituloCorto = getDocumentoCustody().getName();
 
-        if (tituloCorto.length() > 100) {
-            tituloCorto = getDocumentoCustody().getName().substring(0, 100) + "...";
+            if (tituloCorto.length() > 100) {
+                tituloCorto = getDocumentoCustody().getName().substring(0, 100) + "...";
+            }
+            return tituloCorto;
+        }else{
+            return "";
         }
-
-        return tituloCorto;
     }
 
 }
