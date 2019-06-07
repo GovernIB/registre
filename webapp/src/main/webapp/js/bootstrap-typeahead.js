@@ -24,7 +24,8 @@
         }
 		
         // html content to display when no results are found
-        options.resultNotFoundMsgBody = "<div><p>Sorry! We've got no result for your query</p></div>";
+        //options.resultNotFoundMsgBody = "<div><p>Sorry! We've got no result for your query</p></div>";
+        options.resultNotFoundMsgBody = "<div><p>"+tradsinteresado['interesado.noresultados']+"</p></div>";
 
         var that = this;
         that.$element = $(element);
@@ -209,7 +210,9 @@
             // Manipulate objects
             items = that.grepper(that.ajax.data) || [];
             if (!items.length) {
-                return that.shown ? that.hide() : that;
+                //return that.shown ? that.hide() : that;
+                items[0] = {'id': -1, 'nombre': that.options.resultNotFoundMsgBody};
+                return that.render(items.slice(0, that.options.items), false).show();
             }
 
             that.ajax.xhr = null;
