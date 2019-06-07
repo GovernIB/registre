@@ -261,7 +261,7 @@ public class LoginService {
         if(loginInfo.getEntidadActiva().getSir()){
 
             //Obtenemos los Libros donde el UsuarioEntidad tenga permiso SIR
-            List<Libro> librosSIR = permisoLibroUsuarioEjb.getLibrosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_SIR);
+            List<Libro> librosSIR = permisoLibroUsuarioEjb.getLibrosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_SIR,false);
             log.info("Libros SIR usuario: " + Arrays.toString(librosSIR.toArray()));
 
             //Obtenemos las Oficinas que pueden operar con los Libros anteriores

@@ -249,7 +249,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     }
 
     // Obtenemos los Libros de Registro donde el usuario puede registrar
-    List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), tipoRegistro);
+    List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), tipoRegistro, true);
 
     ArrayList<LibroOficinaWs> librosOficinas = new ArrayList<LibroOficinaWs>();
 
@@ -317,7 +317,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     }
 
     // Obtenemos los Libros de Registro donde el usuario puede registrar
-    List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), tipoRegistro);
+    List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), tipoRegistro, true);
 
     ArrayList<LibroOficinaWs> librosOficinas = new ArrayList<LibroOficinaWs>();
 
@@ -372,7 +372,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
-        List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), autorizacion);
+        List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), autorizacion, true);
 
         Set<Oficina> oficinasRegistro = new HashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 

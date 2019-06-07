@@ -291,7 +291,7 @@ public class LibroController extends BaseController {
             Long registrosEntrada = registroEntradaConsultaEjb.getTotalByLibro(idLibro);
             Long registrosSalida = registroSalidaConsultaEjb.getTotalByLibro(idLibro);
 
-            // Comprueba que los contadores del libro están a cero y no tiene registros de entrada ni de salida
+            // Comprueba no tiene registros de entrada ni de salida
             if(registrosEntrada==0 && registrosSalida==0){
 
                 // Elimina el Libro

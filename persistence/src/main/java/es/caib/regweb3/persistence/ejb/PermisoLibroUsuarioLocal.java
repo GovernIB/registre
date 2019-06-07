@@ -91,10 +91,11 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      * Retorna los {@link es.caib.regweb3.model.Libro} a los que un UsuarioEntidad
      * @param idUsuarioEntidad
      * @param idPermiso
+     * @param activos Indica si queremos solo los libros activos o por el contrario Todos
      * @return
      * @throws Exception
      */
-    List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception;
+    List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso, Boolean activos) throws Exception;
 
     /**
      * Retorna los {@link es.caib.regweb3.model.Libro} a los que un UsuarioEntidad

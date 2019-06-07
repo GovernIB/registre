@@ -199,7 +199,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre, plu.libro.organismo.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
-                "plu.libro.activo = true and plu.activo = true and (plu.permiso=:consultaEntrada or plu.permiso=:consultaSalida)" +
+                "plu.activo = true and (plu.permiso=:consultaEntrada or plu.permiso=:consultaSalida)" +
                 " order by plu.libro.organismo.id");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
@@ -249,11 +249,16 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception{
+    public List<Libro> getLibrosPermiso(Long idUsuarioEntidad, Long idPermiso, Boolean activos) throws Exception{
+
+        String queryActivos="";
+        if(activos){
+            queryActivos=" plu.libro.activo = true and ";
+        }
 
         Query q = em.createQuery("Select distinct plu.libro from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
-                "plu.libro.activo = true and (plu.permiso = :idPermiso and plu.activo = true)");
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " + queryActivos +
+                "(plu.permiso = :idPermiso and plu.activo = true)");
 
         q.setParameter("idPermiso",idPermiso);
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
