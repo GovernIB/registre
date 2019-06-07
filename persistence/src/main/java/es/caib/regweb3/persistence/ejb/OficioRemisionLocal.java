@@ -64,6 +64,14 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     List<OficioRemision> oficiosPendientesLlegada(Set<Organismo> organismos, Integer total) throws Exception;
 
     /**
+     * Actualiza el destino extinguido de los Oficios pendientes de llegada por el Organismo que le sustituye
+     * @param idOrganismoExtinguido
+     * @param idOrganismoSustituto
+     * @throws Exception
+     */
+    void actualizarDestinoPendientesLlegada(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws Exception;
+
+    /**
      * Devuelve los Oficios de Remisión de los organismos seleccionados según su estado
      * @param organismos
      * @param oficioRemision
