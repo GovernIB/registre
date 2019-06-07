@@ -48,7 +48,6 @@ public class BaseController {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
 
-
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     public RegistroSalidaLocal registroSalidaEjb;
 
@@ -251,7 +250,7 @@ public class BaseController {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        return permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        return permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA, false);
     }
 
     /**
@@ -321,7 +320,7 @@ public class BaseController {
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        return permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+        return permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA, false);
     }
 
     /**

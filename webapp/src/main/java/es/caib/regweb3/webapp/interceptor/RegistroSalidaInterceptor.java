@@ -84,7 +84,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al listado de RegistroSalida
         if(url.equals("/registroSalida/list")){
 
-            if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA).size() == 0){
+            if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA,false).size() == 0){
                 log.info("Aviso: No hay ningún libro con permisos para consultar");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.consultaRegistro"));
                 response.sendRedirect("/regweb3/aviso");
