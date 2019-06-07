@@ -383,6 +383,17 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     }
 
     @Override
+    public void actualizarDestinoPendientesLlegada(Long idOrganismoExtinguido, Long idOrganismoSustituto) throws Exception {
+
+        Query q = em.createQuery("update OficioRemision set organismoDestinatario = :idOrganismoSustituto where organismoDestinatario = :idOrganismoExtinguido and estado = :pendienteLlegada");
+        q.setParameter("idOrganismoSustituto", idOrganismoSustituto);
+        q.setParameter("idOrganismoExtinguido", idOrganismoExtinguido);
+        q.setParameter("pendienteLlegada", RegwebConstantes.OFICIO_INTERNO_ENVIADO);
+
+        q.executeUpdate();
+    }
+
+    @Override
     @SuppressWarnings(value = "unchecked")
     public Paginacion oficiosBusqueda(Set<Organismo> organismos, Integer pageNumber,OficioRemision oficioRemision, Long tipoOficioRemision, int estado) throws Exception {
 
