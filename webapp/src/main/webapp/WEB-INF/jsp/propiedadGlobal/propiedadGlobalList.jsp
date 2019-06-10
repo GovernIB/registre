@@ -53,7 +53,7 @@
                                         <div class="col-xs-8">
                                             <form:select path="tipo" cssClass="chosen-select" onchange="doForm('#propiedadGlobalBusqueda')">
                                                 <form:option value="">...</form:option>
-                                                <c:forEach items="${tipos}" var="tipo">
+                                                <c:forEach items="${tiposPropiedad}" var="tipo">
                                                     <form:option value="${tipo}"><spring:message code="propiedadGlobal.tipo.${tipo}" /></form:option>
                                                 </c:forEach>
                                             </form:select>

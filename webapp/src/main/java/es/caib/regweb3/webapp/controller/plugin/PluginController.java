@@ -233,9 +233,9 @@ public class PluginController extends BaseController {
         return "redirect:/plugin/list";
     }
 
-    @ModelAttribute("tipos")
+    @ModelAttribute("tiposPlugin")
     public
-    Long[] configuraciones() throws Exception {
+    Long[] tiposPlugin() throws Exception {
         return RegwebConstantes.TIPOS_PLUGIN;
     }
 

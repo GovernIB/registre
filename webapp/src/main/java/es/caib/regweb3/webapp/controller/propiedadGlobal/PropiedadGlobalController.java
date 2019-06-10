@@ -233,8 +233,8 @@ public class PropiedadGlobalController extends BaseController {
         return "redirect:/propiedadGlobal/list";
     }
 
-    @ModelAttribute("tipos")
-    public long[] configuraciones() throws Exception {
+    @ModelAttribute("tiposPropiedad")
+    public long[] tiposPropiedad() throws Exception {
         return RegwebConstantes.TIPOS_PROPIEDAD_GLOBAL;
     }
 

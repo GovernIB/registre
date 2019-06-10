@@ -4,6 +4,7 @@ import es.caib.dir3caib.ws.api.oficina.ContactoTF;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import org.apache.log4j.Logger;
@@ -614,5 +615,15 @@ public class BaseController {
         }
 
         return 0L;
+    }
+
+    @ModelAttribute("tiposIntegracion")
+    public
+    Long[] tiposIntegracion() {
+        if(Configuracio.isCAIB()){
+            return RegwebConstantes.INTEGRACION_TIPOS_CAIB;
+        }else{
+            return RegwebConstantes.INTEGRACION_TIPOS;
+        }
     }
 }

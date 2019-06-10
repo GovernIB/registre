@@ -154,9 +154,9 @@ public class ColaController extends BaseController {
 
 
 
-    @ModelAttribute("tipos")
+    @ModelAttribute("tiposCola")
     public
-    Long[] tipos() {
+    Long[] tiposCola() {
         return RegwebConstantes.COLA_TIPOS;
     }
 

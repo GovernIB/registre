@@ -66,7 +66,15 @@
             <spring:message code="menu.monitorizacion"/> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li class="submenu-complet"><a href="<c:url value="/integracion/list/0"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.integraciones"/></a></li>
+            <li class="dropdown-submenu-left toggle-left">
+                <a href="<c:url value="/integracion/list/0"/>"><i class="fa fa-chevron-left"></i> <spring:message code="integracion.integraciones"/></a>
+                <ul class="dropdown-menu">
+                    <c:forEach items="${tiposIntegracion}" var="tipoIntegracion">
+                        <li><a href="<c:url value="/integracion/list/${tipoIntegracion}"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.tipo.${tipoIntegracion}" /></a></li>
+                    </c:forEach>
+
+                </ul>
+            </li>
             <li class="divider"></li>
             <li class="dropdown-submenu-left toggle-left">
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.distribucion"/></a>
