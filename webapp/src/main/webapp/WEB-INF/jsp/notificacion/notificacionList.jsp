@@ -244,7 +244,7 @@
                                                         <label class="col-sm-2" for="tipo"><spring:message code="notificacion.tipo"/></label>
                                                         <div class="col-sm-10">
                                                             <select id="tipo" class="chosen-select">
-                                                                <c:forEach items="${tipos}" var="tipo">
+                                                                <c:forEach items="${tiposNotificacion}" var="tipo">
                                                                     <option value="${tipo}"><spring:message code="notificacion.tipo.${tipo}" /></option>
                                                                 </c:forEach>
                                                             </select>

@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="col-xs-10">
                                     <form:select path="tipo" cssClass="chosen-select">
-                                        <c:forEach items="${tipos}" var="tipo">
+                                        <c:forEach items="${tiposPlugin}" var="tipo">
                                             <form:option value="${tipo}"><spring:message code="plugin.tipo.${tipo}" /></form:option>
                                         </c:forEach>
                                     </form:select>

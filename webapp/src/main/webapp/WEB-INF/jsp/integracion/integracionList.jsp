@@ -32,7 +32,7 @@
 
                     <ul class="nav nav-tabs nav-justified" role="tablist">
 
-                        <c:forEach items="${tipos}" var="tipoIntegracion">
+                        <c:forEach items="${tiposIntegracion}" var="tipoIntegracion">
                             <li <c:if test="${tipo == tipoIntegracion}">class="active"</c:if>><a href="<c:url value="/integracion/list/${tipoIntegracion}"/>"><i class="fa fa-file-o"></i> <spring:message code="integracion.tipo.${tipoIntegracion}" /></a></li>
                         </c:forEach>
 

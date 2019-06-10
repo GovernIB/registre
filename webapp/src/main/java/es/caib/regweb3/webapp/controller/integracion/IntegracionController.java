@@ -97,7 +97,7 @@ public class IntegracionController extends BaseController {
     }
     
 
-    @ModelAttribute("tipos")
+    @ModelAttribute("tiposIntegracion")
     public
     Long[] tipos() {
         if(Configuracio.isCAIB()){

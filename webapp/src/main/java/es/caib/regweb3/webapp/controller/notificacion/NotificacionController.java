@@ -197,8 +197,8 @@ public class NotificacionController extends BaseController {
         return organismoEjb.findByEntidadLibros(entidad.getId());
     }
 
-    @ModelAttribute("tipos")
-    public Long[] tipos() throws Exception {
+    @ModelAttribute("tiposNotificacion")
+    public Long[] tiposNotificacion() throws Exception {
         return RegwebConstantes.NOTIFICACION_TIPOS;
     }
 
