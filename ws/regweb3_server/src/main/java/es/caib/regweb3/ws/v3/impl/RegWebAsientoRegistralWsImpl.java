@@ -7,9 +7,9 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
-import es.caib.regweb3.persistence.utils.ResultadoBusqueda;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -756,7 +756,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public ResultadoBusqueda obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException{
+    public ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
@@ -782,18 +782,18 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
 
 
-        ResultadoBusqueda<AsientoRegistralWs> resultado = new ResultadoBusqueda<AsientoRegistralWs>();
+        ResultadoBusquedaWs<AsientoRegistralWs> resultado = new ResultadoBusquedaWs<AsientoRegistralWs>();
 
         try{
 
             // Obtenemos los Registros de Entrada de un ciudadano
-            ResultadoBusqueda<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
+            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
             resultado.setTotalResults(entradas.getTotalResults());
             resultado.setPageNumber(pageNumber);
 
             // Transformamos los Registros de Entrada en AsientoRegistralWs
             List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
-            for (RegistroEntrada entrada : entradas.getResults()) {
+            for (RegistroEntrada entrada : (List<RegistroEntrada>)entradas.getListado()) {
 
                 asientos.add(AsientoRegistralConverter.getAsientoRegistralBean(entrada,
                         UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb));

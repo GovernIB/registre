@@ -9,7 +9,6 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.ResultadoBusqueda;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -719,7 +718,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public ResultadoBusqueda getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
+    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
 
         Query q1;
         Query q2;
@@ -742,13 +741,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q2.setFirstResult(inicio);
         q2.setMaxResults(RESULTADOS_PAGINACION);
 
-        ResultadoBusqueda<RegistroEntrada> registros = new ResultadoBusqueda<RegistroEntrada>();
+        Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
 
-        registros.setTotalResults(total.intValue());
-        registros.setPageNumber(pageNumber);
-        registros.setResults(q2.getResultList());
+        paginacion.setListado(q2.getResultList());
 
-        return registros;
+        return paginacion;
     }
 
 }

@@ -1,11 +1,12 @@
 package es.caib.regweb3.ws.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @XmlRootElement
-public class AsientoRegistralWs {
+public class AsientoRegistralWs implements Serializable {
 
     private Long id;
 
