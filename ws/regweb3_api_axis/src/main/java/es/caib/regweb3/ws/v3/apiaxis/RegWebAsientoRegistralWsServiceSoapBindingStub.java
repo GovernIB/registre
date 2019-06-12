@@ -172,8 +172,11 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "documento"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
         param.setOmittable(true);
         oper.addParameter(param);
-        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "asientoRegistralWs"));
-        oper.setReturnClass(es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[].class);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "pageNumber"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"), java.lang.Integer.class, false, false);
+        param.setOmittable(true);
+        oper.addParameter(param);
+        oper.setReturnType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "resultadoBusquedaWs"));
+        oper.setReturnClass(es.caib.regweb3.ws.v3.apiaxis.ResultadoBusquedaWs.class);
         oper.setReturnQName(new javax.xml.namespace.QName("", "return"));
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -269,9 +272,37 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "crearAsientoRegistral");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.CrearAsientoRegistral.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "crearAsientoRegistralResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.CrearAsientoRegistralResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "datosInteresadoWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb3.ws.v3.apiaxis.DatosInteresadoWs.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "distribuirAsientoRegistral");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.DistribuirAsientoRegistral.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "distribuirAsientoRegistralResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.DistribuirAsientoRegistralResponse.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -297,9 +328,86 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientoRegistral");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerAsientoRegistral.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientoRegistralResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerAsientoRegistralResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientosCiudadano");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerAsientosCiudadano.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerAsientosCiudadanoResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerAsientosCiudadanoResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificante");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerJustificante.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerJustificanteResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerJustificanteResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerOficioExterno");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerOficioExterno.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerOficioExternoResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerOficioExternoResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerReferenciaJustificante");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerReferenciaJustificante.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "obtenerReferenciaJustificanteResponse");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ObtenerReferenciaJustificanteResponse.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
             qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "oficioWs");
             cachedSerQNames.add(qName);
             cls = es.caib.regweb3.ws.v3.apiaxis.OficioWs.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(beansf);
+            cachedDeserFactories.add(beandf);
+
+            qName = new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "resultadoBusquedaWs");
+            cachedSerQNames.add(qName);
+            cls = es.caib.regweb3.ws.v3.apiaxis.ResultadoBusquedaWs.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -623,7 +731,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 }
     }
 
-    public es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[] obtenerAsientosCiudadano(java.lang.String entidad, java.lang.String documento) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
+    public es.caib.regweb3.ws.v3.apiaxis.ResultadoBusquedaWs obtenerAsientosCiudadano(java.lang.String entidad, java.lang.String documento, java.lang.Integer pageNumber) throws java.rmi.RemoteException, es.caib.regweb3.ws.v3.apiaxis.WsValidationErrors, es.caib.regweb3.ws.v3.apiaxis.WsI18NError {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -639,7 +747,7 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
 
         setRequestHeaders(_call);
         setAttachments(_call);
- try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, documento});
+ try {        java.lang.Object _resp = _call.invoke(new java.lang.Object[] {entidad, documento, pageNumber});
 
         if (_resp instanceof java.rmi.RemoteException) {
             throw (java.rmi.RemoteException)_resp;
@@ -647,9 +755,9 @@ public class RegWebAsientoRegistralWsServiceSoapBindingStub extends org.apache.a
         else {
             extractAttachments(_call);
             try {
-                return (es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[]) _resp;
+                return (es.caib.regweb3.ws.v3.apiaxis.ResultadoBusquedaWs) _resp;
             } catch (java.lang.Exception _exception) {
-                return (es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[]) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs[].class);
+                return (es.caib.regweb3.ws.v3.apiaxis.ResultadoBusquedaWs) org.apache.axis.utils.JavaUtils.convert(_resp, es.caib.regweb3.ws.v3.apiaxis.ResultadoBusquedaWs.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

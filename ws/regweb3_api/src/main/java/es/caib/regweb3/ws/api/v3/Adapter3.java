@@ -1,8 +1,8 @@
 
 package es.caib.regweb3.ws.api.v3;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.sql.Time;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class Adapter3
     extends XmlAdapter<String, Time>

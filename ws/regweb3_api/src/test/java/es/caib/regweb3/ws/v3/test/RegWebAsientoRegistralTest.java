@@ -269,9 +269,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientosCiudadano() {
 
         try {
-            List<AsientoRegistralWs> asientosCiudadano = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"");
+            ResultadoBusquedaWs asientosCiudadano = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"",1);
 
-            System.out.println("Asientos encontrados: " +asientosCiudadano.size());
+            System.out.println("Asientos encontrados: " +asientosCiudadano.getTotalResults());
 
         } catch (WsValidationException e) {
             e.printStackTrace();
