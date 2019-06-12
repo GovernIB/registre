@@ -1,11 +1,7 @@
 package es.caib.regweb3.ws.v3.impl;
 
 
-import es.caib.regweb3.persistence.utils.ResultadoBusqueda;
-import es.caib.regweb3.ws.model.AsientoRegistralWs;
-import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
-import es.caib.regweb3.ws.model.JustificanteWs;
-import es.caib.regweb3.ws.model.OficioWs;
+import es.caib.regweb3.ws.model.*;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
 
@@ -124,5 +120,5 @@ public interface RegWebAsientoRegistralWs {
      * @throws WsValidationException
      */
     @WebMethod
-    ResultadoBusqueda obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException;
+    ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException;
 }

@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.ResultadoBusqueda;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
@@ -250,6 +249,6 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    ResultadoBusqueda getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception;
+    Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception;
 
 }
