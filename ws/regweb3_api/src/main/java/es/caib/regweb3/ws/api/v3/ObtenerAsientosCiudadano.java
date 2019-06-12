@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="documento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="pageNumber" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -29,12 +30,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "obtenerAsientosCiudadano", propOrder = {
     "entidad",
-    "documento"
+    "documento",
+    "pageNumber"
 })
 public class ObtenerAsientosCiudadano {
 
     protected String entidad;
     protected String documento;
+    protected Integer pageNumber;
 
     /**
      * Obtiene el valor de la propiedad entidad.
@@ -82,6 +85,30 @@ public class ObtenerAsientosCiudadano {
      */
     public void setDocumento(String value) {
         this.documento = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad pageNumber.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getPageNumber() {
+        return pageNumber;
+    }
+
+    /**
+     * Define el valor de la propiedad pageNumber.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setPageNumber(Integer value) {
+        this.pageNumber = value;
     }
 
 }

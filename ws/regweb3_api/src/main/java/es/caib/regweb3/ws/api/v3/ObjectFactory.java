@@ -264,6 +264,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link ResultadoBusquedaWs }
+     * 
+     */
+    public ResultadoBusquedaWs createResultadoBusquedaWs() {
+        return new ResultadoBusquedaWs();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link ObtenerOficioExternoResponse }{@code >}}
      * 
      */
