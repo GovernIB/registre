@@ -9,6 +9,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.ResultadoBusqueda;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -718,17 +719,36 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws Exception {
+    public ResultadoBusqueda getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
 
-        Query q;
+        Query q1;
+        Query q2;
 
-        q = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+        // Obtenemos el total de registros del ciudadano
+        q1 = em.createQuery("Select DISTINCT count(re.id )from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
+        q1.setParameter("idEntidad", idEntidad);
+        q1.setParameter("documento", documento.trim());
+        Long total = (Long) q1.getSingleResult();
+
+        // Obtenemos solo los paginados
+        q2 = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
                 "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
 
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("documento", documento.trim());
+        q2.setParameter("idEntidad", idEntidad);
+        q2.setParameter("documento", documento.trim());
 
-        return q.getResultList();
+        int inicio = pageNumber * RESULTADOS_PAGINACION;
+        q2.setFirstResult(inicio);
+        q2.setMaxResults(RESULTADOS_PAGINACION);
+
+        ResultadoBusqueda<RegistroEntrada> registros = new ResultadoBusqueda<RegistroEntrada>();
+
+        registros.setTotalResults(total.intValue());
+        registros.setPageNumber(pageNumber);
+        registros.setResults(q2.getResultList());
+
+        return registros;
     }
 
 }
