@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.persistence.utils.ResultadoBusqueda;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroEntradaValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
@@ -755,7 +756,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public List<AsientoRegistralWs> obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento) throws Throwable, WsI18NException, WsValidationException{
+    public ResultadoBusqueda obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
@@ -773,32 +774,35 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("error.valor.requerido.ws", "documento");
         }
 
+        // 2.- Validar obligatorio pageNumber
+        if(pageNumber == null){
+            pageNumber = 0;
+        }
+
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
 
 
-        List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
+        ResultadoBusqueda<AsientoRegistralWs> resultado = new ResultadoBusqueda<AsientoRegistralWs>();
 
         try{
 
-            List<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento);
-            List<RegistroSalida> salidas = registroSalidaConsultaEjb.getByDocumento(entidadActiva.getId(),documento);
+            // Obtenemos los Registros de Entrada de un ciudadano
+            ResultadoBusqueda<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
+            resultado.setTotalResults(entradas.getTotalResults());
+            resultado.setPageNumber(pageNumber);
 
-
-            for (RegistroEntrada entrada : entradas) {
+            // Transformamos los Registros de Entrada en AsientoRegistralWs
+            List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
+            for (RegistroEntrada entrada : entradas.getResults()) {
 
                 asientos.add(AsientoRegistralConverter.getAsientoRegistralBean(entrada,
                         UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb));
 
             }
+            resultado.setResults(asientos);
 
-            for (RegistroSalida salida : salidas) {
-
-                asientos.add(AsientoRegistralConverter.getAsientoRegistralBean(salida,
-                        UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb));
-
-            }
-
-            log.info("Asientos totales: " + asientos.size());
+            log.info("Asientos totales: " + resultado.getTotalResults());
+            log.info("Asientos parciales: " + resultado.getResults().size());
 
             // Alta en la tabla de LOPD
 //            lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
@@ -810,8 +814,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("error.ws.general");
         }
 
-
-        return asientos;
+        return resultado;
     }
 
 
