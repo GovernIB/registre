@@ -570,6 +570,8 @@ public class EntidadController extends BaseController {
         JsonResponse jsonResponse = new JsonResponse();
 
         try {
+            //Marcamos la entidad de mantenimiento
+            entidadEjb.marcarEntidadMantenimiento(entidadId,true);
 
             Descarga ultimaDescarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadId);
             Timestamp fechaUltimaActualizacion = null;
@@ -586,6 +588,7 @@ public class EntidadController extends BaseController {
 
             int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
             if (actualizados == -1) {
+                entidadEjb.marcarEntidadMantenimiento(entidadId,false);
                 log.info("No se puede actualizar regweb hasta que no se haya actualizado dir3caib previamente");
                 jsonResponse.setError(getMessage("regweb.actualizacion.imposible"));
                 jsonResponse.setStatus("NOTALLOWED");
@@ -595,7 +598,6 @@ public class EntidadController extends BaseController {
             // actualizamos nombre y codigo de la entidad, si la unidad raiz a la que representa se ha extinguido.
             actualizarEntidadExtincionUnidadRaiz(entidadId, request);
             // via ajax s'en va a "entidad/pendientesprocesar"
-
             jsonResponse.setStatus("SUCCESS");
 
         } catch (Exception e) {
@@ -622,7 +624,10 @@ public class EntidadController extends BaseController {
         JsonResponse jsonResponse = new JsonResponse();
 
         try {
+            //Marcamos la entidad en mantenimiento
+            entidadEjb.marcarEntidadMantenimiento(entidadId,true);
 
+            //Iniciamos proceso sincronización
             int sincronizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, null, null);
             if (sincronizados == -1) {
                 log.info("No se puede sincronizar regweb hasta que no se haya actualizado dir3caib previamente");
@@ -632,6 +637,7 @@ public class EntidadController extends BaseController {
                 jsonResponse.setError(getMessage("regweb.sincronizados.numero") + sincronizados);
                 jsonResponse.setStatus("SUCCESS");
             }
+            entidadEjb.marcarEntidadMantenimiento(entidadId,false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -853,7 +859,8 @@ public class EntidadController extends BaseController {
         //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
         /* Preparamos todos los organismos a procesar (extinguidos, anulados, transitorios,vigentes)*/
-        List<Pendiente> pendientesDeProcesar = pendienteEjb.findPendientesProcesar();
+        Entidad entidad = getEntidadActiva(request);
+        List<Pendiente> pendientesDeProcesar = pendienteEjb.findPendientesProcesar(entidad.getId());
         //log.info("Pendientes procesar " + pendientesDeProcesar.size());
         if (!pendientesDeProcesar.isEmpty()) {
             List<Organismo> organismosExtinguidos = new ArrayList<Organismo>();// Organismos extinguidos a procesar por usuario
@@ -904,7 +911,6 @@ public class EntidadController extends BaseController {
                                 log.info("Libros del organismo: " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo() + "han sido reasigandos al organismo:  " + orgSustituye.getDenominacion() + ":" + orgSustituye.getCodigo());
                                 // Añadimos todos los organimos procesados automáticamente
                                 extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), orgSustituye);
-
                             }
                             //actualizar pendiente
                             pendiente.setProcesado(true);
@@ -936,22 +942,23 @@ public class EntidadController extends BaseController {
                 model.addAttribute("organismosAProcesar", organismosExtinguidos);
                 model.addAttribute("organismosConError", organismosConError);
                 if (organismosConError.size() > 0) {
-                    Entidad entidad = getEntidadActiva(request);
                     List<Organismo> organismosEntidadVigentes = organismoEjb.organismosConOficinas(entidad.getId());
                     model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
                 }
             } else {
+                entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
                 log.info("no hay organismos a procesar ");
                 Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
                 return "redirect:/organismo/list";
             }
-            Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
+           // Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
             log.info("organismosAProcesar: " + organismosExtinguidos.size());
             log.info("organismosConError: " + organismosConError.size());
             //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
             model.addAttribute("esPendiente", true);
         } else {
+            entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
             log.debug("else no pendientes de procesar");
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
@@ -1017,6 +1024,7 @@ public class EntidadController extends BaseController {
             organismoJson.setLibroOrganismos(nombresLibrosOrganismos);
 
             jsonResponse.setResult(organismoJson);
+            entidadEjb.marcarEntidadMantenimiento(getEntidadActiva(request).getId(),false);
         } catch (Exception e) {
             jsonResponse.setStatus("FAIL");
             e.printStackTrace();

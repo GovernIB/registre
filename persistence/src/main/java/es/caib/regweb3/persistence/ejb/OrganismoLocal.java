@@ -180,7 +180,19 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @return List
      * @throws Exception
      */
-   LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception;
+   LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva,String estado) throws Exception;
+
+
+   /**
+    * Método que obtiene todos los organismo de la oficina activa sin generar OficioRemisión.
+    * Este método permitirá mostrar el botón distribuir en caso de que el organismo esté extinguido,
+    * anulado o transitorio, además de vigente
+    *
+    * @param oficinaActiva
+    * @return List
+    * @throws Exception
+    */
+   LinkedHashSet<Organismo> getAllByOficinaActiva(Oficina oficinaActiva) throws Exception;
 
   /**
    * Método que nos devuelve los códigos DIR3 de las oficinas SIR de un organismo

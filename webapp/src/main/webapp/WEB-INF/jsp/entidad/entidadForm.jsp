@@ -97,6 +97,17 @@
                                             <form:select path="entidad.propietario.id" items="${propietarios}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/> <form:errors path="entidad.propietario.id" cssClass="help-block" element="span"/>
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="col-xs-12">
+                                        <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                <form:label path="entidad.mantenimiento"><spring:message code="entidad.mantenimiento"/></form:label>
+                                            </div>
+                                            <div class="col-xs-8">
+                                                <form:checkbox path="entidad.mantenimiento"/>
+                                            </div>
+                                        </div>
                                 </div>
 
                                 </sec:authorize>
@@ -171,6 +182,16 @@
                                                     </div>
                                                     <div class="col-xs-8">
                                                         <form:checkbox path="entidad.sir"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.mantenimiento"><spring:message code="entidad.mantenimiento"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.mantenimiento"/>
                                                     </div>
                                                 </div>
                                             </div>

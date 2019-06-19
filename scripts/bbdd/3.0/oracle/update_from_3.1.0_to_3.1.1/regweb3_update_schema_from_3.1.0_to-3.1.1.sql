@@ -8,3 +8,6 @@ alter table RWE_INTERESADO add (CODIGODIRE varchar2(15 char));
 ALTER TABLE RWE_USUARIO add (RWE_WS_ENTRADA number(10,0) DEFAULT 0 not null);
 ALTER TABLE RWE_USUARIO add (RWE_WS_SALIDA number(10,0) DEFAULT 0 not null);
 ALTER TABLE RWE_USUARIO add (RWE_WS_CIUDADANO number(10,0) DEFAULT 0 not null);
+
+--Nueva propiedad para indicar que la entidad está en mantenimiento
+alter table RWE_ENTIDAD add (MANTENIMIENTO number(1,0) DEFAULT 0);

@@ -259,8 +259,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         // Integraciones
         Date inicio = new Date();
@@ -389,8 +388,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistro,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistro,entidad);
 
         // Integraciones
         Date inicio = new Date();

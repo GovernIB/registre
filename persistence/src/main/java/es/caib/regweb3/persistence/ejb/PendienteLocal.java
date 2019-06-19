@@ -35,7 +35,7 @@ public interface PendienteLocal extends BaseEjb<Pendiente, Long>  {
    * @return
    * @throws Exception
    */
-  List<Pendiente> findPendientesProcesar() throws Exception;
+  List<Pendiente> findPendientesProcesar(Long idEntidad) throws Exception;
 
 
 }

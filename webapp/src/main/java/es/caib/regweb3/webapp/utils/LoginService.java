@@ -310,7 +310,7 @@ public class LoginService {
             loginInfo.setOficinaActiva(oficinaNueva);
 
             // Guardamos  los Organismos OficiaActiva
-            loginInfo.setOrganismosOficinaActiva(organismoEjb.getByOficinaActiva(loginInfo.getOficinaActiva()));
+            loginInfo.setOrganismosOficinaActiva(organismoEjb.getByOficinaActiva(loginInfo.getOficinaActiva(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
             if(loginInfo.getEntidadActiva().getSir()){
                 // Comprobamos si la Oficina está integrada en SIR

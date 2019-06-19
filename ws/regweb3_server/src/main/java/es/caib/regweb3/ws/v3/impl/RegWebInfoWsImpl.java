@@ -92,17 +92,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
           WsI18NException {
 
-    // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidadCodigoDir3)){
-      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-    }
-
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-
-    // 4.- Comprobaciones entidad existente
-    if(entidad == null){
-      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
-    }
+    // 1.- Comprobaciones de entidad
+    Entidad entidad = validarEntidad(entidadCodigoDir3);
 
 
     List<TipoDocumental> tipos = tipoDocumentalEjb.getByEntidad(entidad.getId());
@@ -132,17 +123,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
       WsI18NException {
 
-    // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidadCodigoDir3)){
-      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-    }
-
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-
-    // 2.- Comprobaciones entidad existente
-    if(entidad == null){
-      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
-    }
+    // 1.- Comprobaciones de entidad
+    Entidad entidad = validarEntidad(entidadCodigoDir3);
 
     List<TipoAsunto> tipos = tipoAsuntoEjb.getActivosEntidad(entidad.getId());
 
@@ -171,17 +153,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
       WsI18NException {
 
-    // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidadCodigoDir3)){
-      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-    }
-
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-
-    // 2.- Comprobaciones entidad existente
-    if(entidad == null){
-      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
-    }
+    // 1.- Comprobaciones de entidad
+    Entidad entidad = validarEntidad(entidadCodigoDir3);
 
     // 3.- Comprobaciones de parámetros obligatórios
     if(StringUtils.isEmpty(codigoTipoAsunto)){
@@ -219,10 +192,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<LibroOficinaWs> obtenerLibrosOficina(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,@WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException {
 
-    // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidadCodigoDir3)){
-      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-    }
+    // 1.- Comprobaciones de entidad
+    Entidad entidad = validarEntidad(entidadCodigoDir3);
 
     // 2.- Comprobaciones de parámetros obligatórios
     if(tipoRegistro == null){
@@ -234,13 +205,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
       throw new I18NException("error.autorizacion");
     }
 
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadCodigoDir3);
-
-    // 4.- Comprobaciones entidad existente
-    if(entidad == null){
-      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
-    }
+    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
     // 5.- Comprobaciones usuarioEntidad existente
     if(usuarioEntidad == null){//No existe
@@ -253,29 +218,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     ArrayList<LibroOficinaWs> librosOficinas = new ArrayList<LibroOficinaWs>();
 
-    // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
-    for (Libro libro : librosRegistro) {
-      LibroWs libroWs = new LibroWs(libro.getCodigo(),libro.getNombre(), libro.getNombreCompleto() ,null);
-
-      Long idOrganismo = libro.getOrganismo().getId();
-
-      // Obtenemos las Oficinas cuyo Organismo responsable es al que pertenece el Libro
-      for(Oficina oficina: oficinaEjb.findByOrganismoResponsable(idOrganismo) ){
-        OficinaWs oficinaWs = new OficinaWs(oficina.getCodigo(),oficina.getDenominacion());
-
-        LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
-        librosOficinas.add(libroOficinaWs);
-      }
-
-      // Obtenemos las Oficinas que dan servicio al Organismo que pertenece el Libro
-      for(Oficina oficina: relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo) ){
-        OficinaWs oficinaWs = new OficinaWs(oficina.getCodigo(),oficina.getDenominacion());
-
-        LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
-        librosOficinas.add(libroOficinaWs);
-      }
-
-    }
+    recorrerLibrosRegistro(librosRegistro, librosOficinas);
 
 
     return librosOficinas;
@@ -287,10 +230,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   @RolesAllowed({ RegwebConstantes.RWE_USUARI})
   public List<LibroOficinaWs> obtenerLibrosOficinaUsuario(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "usuario") String usuario, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException {
 
-    // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidadCodigoDir3)){
-      throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-    }
+    // 1.- Comprobaciones de entidad
+    Entidad entidad = validarEntidad(entidadCodigoDir3);
 
     // 2.- Comprobaciones de parámetros obligatórios
     if(tipoRegistro == null){
@@ -302,13 +243,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
       throw new I18NException("error.valor.requerido.ws", "usuario");
     }
 
-    Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
-    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(usuario, entidadCodigoDir3);
-
-    // 4.- Comprobaciones entidad existente
-    if(entidad == null){
-      throw new I18NException("registro.entidad.noExiste", entidadCodigoDir3);
-    }
+    UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(usuario, entidad.getCodigoDir3());
 
     // 5.- Comprobaciones usuarioEntidad existente
     if(usuarioEntidad == null){//No existe
@@ -321,30 +256,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     ArrayList<LibroOficinaWs> librosOficinas = new ArrayList<LibroOficinaWs>();
 
-    // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
-    for (Libro libro : librosRegistro) {
-      LibroWs libroWs = new LibroWs(libro.getCodigo(),libro.getNombre(), libro.getNombreCompleto() ,null);
-
-      Long idOrganismo = libro.getOrganismo().getId();
-
-      // Obtenemos las Oficinas cuyo Organismo responsable es al que pertenece el Libro
-      for(Oficina oficina: oficinaEjb.findByOrganismoResponsable(idOrganismo) ){
-        OficinaWs oficinaWs = new OficinaWs(oficina.getCodigo(),oficina.getDenominacion());
-
-        LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
-        librosOficinas.add(libroOficinaWs);
-      }
-
-      // Obtenemos las Oficinas que dan servicio al Organismo que pertenece el Libro
-      for(Oficina oficina: relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo) ){
-        OficinaWs oficinaWs = new OficinaWs(oficina.getCodigo(),oficina.getDenominacion());
-
-        LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
-        librosOficinas.add(libroOficinaWs);
-      }
-
-    }
-
+    recorrerLibrosRegistro(librosRegistro, librosOficinas);
 
     return librosOficinas;
 
@@ -356,10 +268,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                           @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
-      // 1.- Comprobaciones de parámetros obligatórios
-      if(StringUtils.isEmpty(entidadCodigoDir3)){
-        throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-      }
+    // 1.- Comprobaciones de entidad
+      Entidad entidad = validarEntidad(entidadCodigoDir3);
 
       if(autorizacion == null){
         throw new I18NException("error.valor.requerido.ws", "autorizacion");
@@ -369,7 +279,6 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
         throw new I18NException("error.autorizacion");
       }
 
-        Entidad entidad = CommonConverter.getEntidad(entidadCodigoDir3, entidadEjb);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
         List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), autorizacion, true);
@@ -399,10 +308,8 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
         @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
-      // 1.- Comprobaciones de parámetros obligatórios
-      if(StringUtils.isEmpty(entidadCodigoDir3)){
-        throw new I18NException("error.valor.requerido.ws", "entidadCodigoDir3");
-      }
+      // 1.- Comprobaciones de entidad
+      Entidad entidad = validarEntidad(entidadCodigoDir3);
 
       if(StringUtils.isEmpty(oficinaCodigoDir3)){
         throw new I18NException("error.valor.requerido.ws", "oficinaCodigoDir3");
@@ -415,9 +322,6 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
       if(!validarAutorizacion(autorizacion)){
         throw new I18NException("error.autorizacion");
       }
-
-      // 1.-Validar campo obligatorio entidad
-      Entidad entidad = validarEntidad(entidadCodigoDir3);
 
       UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findByIdentificadorCodigoEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidad.getCodigoDir3());
 
@@ -494,22 +398,6 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   }
 
   /**
-   * Valida la obligatoriedad de los campos
-   * @param numeroRegistro
-   * @param usuario
-   * @param entidad
-   * @throws I18NException
-   */
-  private void validarObligatorios(String numeroRegistro, String usuario, String entidad) throws  I18NException, Exception{
-
-    // 1.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(entidad)){
-      throw new I18NException("error.valor.requerido.ws", "entidad");
-    }
-
-  }
-
-  /**
    * Valida la tipoRegistro recibida entre las disponibles
    * @param tipoRegistro
    * @return
@@ -521,8 +409,38 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
   }
 
+  /**
+   * Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
+   * @param librosRegistro
+   * @param librosOficinas
+   * @throws Exception
+   */
+  private void recorrerLibrosRegistro(List<Libro> librosRegistro, List<LibroOficinaWs> librosOficinas) throws Exception{
 
+    for (Libro libro : librosRegistro) {
+      LibroWs libroWs = new LibroWs(libro.getCodigo(),libro.getNombre(), libro.getNombreCompleto() ,null);
 
+      Long idOrganismo = libro.getOrganismo().getId();
+
+      // Obtenemos las Oficinas cuyo Organismo responsable es al que pertenece el Libro
+      for(Oficina oficina: oficinaEjb.findByOrganismoResponsable(idOrganismo) ){
+        OficinaWs oficinaWs = new OficinaWs(oficina.getCodigo(),oficina.getDenominacion());
+
+        LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
+        librosOficinas.add(libroOficinaWs);
+      }
+
+      // Obtenemos las Oficinas que dan servicio al Organismo que pertenece el Libro
+      for(Oficina oficina: relacionOrganizativaOfiLocalEjb.getOficinasByOrganismo(idOrganismo) ){
+        OficinaWs oficinaWs = new OficinaWs(oficina.getCodigo(),oficina.getDenominacion());
+
+        LibroOficinaWs libroOficinaWs = new LibroOficinaWs(libroWs,oficinaWs);
+        librosOficinas.add(libroOficinaWs);
+      }
+
+    }
+
+  }
   
 
 }

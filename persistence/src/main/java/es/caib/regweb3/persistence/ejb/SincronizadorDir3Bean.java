@@ -192,6 +192,11 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
             }
         }
+        //Si no hay pendientes de procesar desactivamos el mantenimiento de la entidad
+        // porque ya ha acabado el proceso de sincronización
+        if(pendienteEjb.findPendientesProcesar(entidadId).size()==0){
+            entidadEjb.marcarEntidadMantenimiento(entidadId,false);
+        }
 
         log.info(" REGWEB3 ORGANISMOS ACTUALIZADOS:  " + arbol.size());
         log.info(" REGWEB3 OFICINAS ACTUALIZADAS:  " + oficinasActualizadas);
@@ -630,9 +635,6 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
             if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(estado)
                     || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(estado)
                     || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(estado)) {
-
-                // TODO Actualizamos los Registros cuyo destino ha sido extinguido por el que lo sustituye
-                //registroEntradaEjb.actualizarDestinoExtinguido(organismo.getId(), organismo.getHistoricoUO().);
 
                 // Creamos un registro en la tabla RWE_PENDIENTE
                 if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {

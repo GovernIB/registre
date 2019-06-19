@@ -52,6 +52,9 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
     public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
+    @EJB(mappedName = "regweb3/PendienteEJB/local")
+    public PendienteLocal pendienteEjb;
+
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
     InteresadoValidator<Interesado> interesadoValidator = new InteresadoValidator<Interesado>();
@@ -200,7 +203,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
      * @param entidad
      * @throws org.fundaciobit.genapp.common.i18n.I18NException
      */
-    protected void validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
+    protected Entidad validarObligatorios(String numeroRegistro, String entidad) throws  I18NException, Exception{
 
         // 1.- Comprobaciones de parámetros obligatórios
         if(StringUtils.isEmpty(entidad)){
@@ -212,7 +215,7 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         }
 
         // 2.- Comprobar que la entidad existe y está activa
-        validarEntidad(entidad);
+        return validarEntidad(entidad);
 
     }
 
@@ -235,6 +238,13 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             throw new I18NException("registro.entidad.noExiste", codigoEntidad);
         }else if(!entidad.getActivo()){
             throw new I18NException("registro.entidad.inactiva", codigoEntidad);
+        }else if(entidad.getMantenimiento()){
+            throw new I18NException("registro.entidad.mantenimiento", codigoEntidad);
+        }
+
+        //Si quedan libros pendientes de procesar no se puede registrar
+        if(pendienteEjb.findPendientesProcesar(entidad.getId()).size()>0){
+            throw new I18NException("registro.entidad.mantenimiento", codigoEntidad);
         }
 
         // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada

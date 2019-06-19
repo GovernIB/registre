@@ -513,19 +513,43 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * @throws Exception
      */
     @Override
-    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva) throws Exception {
+    public LinkedHashSet<Organismo> getByOficinaActiva(Oficina oficinaActiva,String estado) throws Exception {
 
         // Añadimos los organismos a los que da servicio la Oficina (Directos y Funcionales)
-        LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales();
+        LinkedHashSet<Organismo> organismos = oficinaActiva.getOrganismosFuncionales(estado);
 
         // Añadimos todos los hijos de los Organismos obtenidos anteriormetne
         LinkedHashSet<Organismo> hijosTotales = new LinkedHashSet<Organismo>();
-        obtenerHijosOrganismos(organismos, hijosTotales);
+        obtenerHijosOrganismos(organismos, hijosTotales,estado);
         organismos.addAll(hijosTotales);
 
         return organismos;
 
     }
+
+    /**
+     * Método que obtiene todos los organismo de la oficina activa sin generar OficioRemisión.
+     * Este método permitirá mostrar el botón distribuir en caso de que el organismo esté extinguido,
+     * anulado o transitorio, además de vigente
+     *
+     * @param oficinaActiva
+     * @return List
+     * @throws Exception
+     */
+    @Override
+    public LinkedHashSet<Organismo> getAllByOficinaActiva(Oficina oficinaActiva) throws Exception {
+
+        LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
+
+        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
+        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_ANULADO));
+        organismos.addAll(getByOficinaActiva(oficinaActiva, RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO));
+
+        return organismos;
+
+    }
+
 
     /**
      * Metodo que recursivamente obtiene todos los hijos de una lista de organismos
@@ -535,15 +559,15 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
      * @throws Exception
      */
     @SuppressWarnings(value = "unchecked")
-    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales) throws Exception {
+    private void obtenerHijosOrganismos(LinkedHashSet<Organismo> organismosPadres, LinkedHashSet<Organismo> totales, String estado) throws Exception {
 
         // recorremos para todos los organismos Padres
         for (Organismo org : organismosPadres) {
 
             Query q = em.createQuery("select organismo.id,organismo.codigo, organismo.denominacion, organismo.edp from Organismo as organismo where organismo.organismoSuperior.id =:idOrganismoSuperior " +
-                    "and organismo.estado.codigoEstadoEntidad =:vigente and organismo.edp =:edp");
+                    "and organismo.estado.codigoEstadoEntidad =:estado and organismo.edp =:edp");
             q.setParameter("idOrganismoSuperior", org.getId());
-            q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            q.setParameter("estado", estado);
 
             // Si el organismo padre es EDP, buscamos sus hijos EDP
             if(org.getEdp()){
@@ -564,7 +588,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             totales.addAll(hijos);
 
             // Hijos de cada organismo
-            obtenerHijosOrganismos(hijos, totales);
+            obtenerHijosOrganismos(hijos, totales,estado);
 
 
         }

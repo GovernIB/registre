@@ -287,8 +287,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     public JustificanteWs obtenerJustificante(@WebParam(name = "entidad") String entidad, @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         // Integraciones
         Date inicio = new Date();
@@ -466,8 +465,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
     public void distribuirRegistroEntrada(@WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "entidad") String entidad) throws Throwable, WsI18NException, WsValidationException {
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
@@ -485,7 +483,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         //6.- Obtenemos los organismos de la oficina en la que se ha realizado el registro que hace de oficinaActiva
-        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina()));
+        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
@@ -602,8 +600,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
        throws Throwable, WsI18NException, WsValidationException {
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         // Integraciones
         Date inicio = new Date();

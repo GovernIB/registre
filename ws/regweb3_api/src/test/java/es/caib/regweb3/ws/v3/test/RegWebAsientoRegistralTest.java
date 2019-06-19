@@ -6,8 +6,6 @@ import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.List;
-
 
 /**
  * Created by earrivi on 06/05/19.
@@ -97,9 +95,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             //asientoRegistralWs.getAnexos().addAll(getAnexos());
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,true);
 
-                asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
+                //asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
             } catch (WsI18NException e) {

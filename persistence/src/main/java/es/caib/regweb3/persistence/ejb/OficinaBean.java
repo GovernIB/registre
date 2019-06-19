@@ -537,7 +537,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         LinkedHashSet<UsuarioEntidad> usuarios = new LinkedHashSet<UsuarioEntidad>();
 
         //Obtener los usuarios que registran en esa oficina
-        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(findById(idOficina));
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(findById(idOficina),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
         // Obtenemos los libros de cada Organismo
         for (Organismo organismo : organismos) {

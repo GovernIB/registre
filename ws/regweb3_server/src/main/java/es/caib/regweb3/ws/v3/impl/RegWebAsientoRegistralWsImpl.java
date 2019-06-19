@@ -322,7 +322,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                         }else if(TIPO_INTERESADO_ADMINISTRACION.equals(interesadoWs.getInteresado().getTipoInteresado())){//Si el interesado es una administración
                             //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
-                            List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(oficina)));
+                            List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
                             //Si el interesado es una administración y no está integrada en SIR
                             if(oficinasSIR.isEmpty()){ //Si no hay oficinas SIR, se marca como oficio externo y el identificador intercambio se marca a -1
                                 //TODO hay que crear el oficio externo???
@@ -370,8 +370,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
        @WebParam(name = "conAnexos") boolean conAnexos) throws  Throwable, WsI18NException, WsValidationException{
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         // Integraciones
         Date inicio = new Date();
@@ -472,8 +471,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         // Integraciones
         Date inicio = new Date();
@@ -620,8 +618,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva =  validarObligatorios(numeroRegistroFormateado,entidad);
 
         // Integraciones
         Date inicio = new Date();
@@ -658,8 +655,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
        @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
         //1.- Validar obligatorios
-        validarObligatorios(numeroRegistroFormateado,entidad);
-        Entidad entidadActiva = entidadEjb.findByCodigoDir3(entidad);
+        Entidad entidadActiva= validarObligatorios(numeroRegistroFormateado,entidad);
 
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
@@ -677,7 +673,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         //6.- Obtenemos los organismos de la oficina en la que se ha realizado el registro que hace de oficinaActiva
-        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina()));
+        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getAllByOficinaActiva(registroEntrada.getOficina()));
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
@@ -716,12 +712,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
        @WebParam(name = "entidad") String entidad,
        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException{
 
-        validarObligatorios(numeroRegistroFormateado,entidad);
+        Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
         //Averiguamos si existe un oficio de remisión para el número de registro indicado.
         OficioRemision oficio = oficioRemisionEjb.getByNumeroRegistroFormateado(numeroRegistroFormateado,entidad);
         if(oficio == null){
-            throw new I18NException("oficio.noExiste", numeroRegistroFormateado);
+            throw new I18NException("oficioRemision.noExiste", numeroRegistroFormateado);
         }
 
         List<String> registrosEntrada = new ArrayList<String>();
@@ -737,7 +733,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         //Obtenemos los modelos de oficio de remisión de la entidad indicada.
-        List<ModeloOficioRemision> modelos = modeloOficioRemisionEjb.getByEntidad(entidadEjb.findByCodigoDir3(entidad).getId());
+        List<ModeloOficioRemision> modelos = modeloOficioRemisionEjb.getByEntidad(entidadActiva.getId());
 
 
         if(modelos.size()>0) {// Si la entidad tiene modelo de remisión

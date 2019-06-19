@@ -7,6 +7,7 @@ function procesarOrganismo(organismoAProcesar) {
     var url = $("#organismoAProcesarForm"+organismoAProcesar).attr("action");
     var total =  $('#total'+organismoAProcesar).val(); // valor total de libros
     var array = [];
+    var i;
 
 
     // Montamos los pares libro-organismo en función del total de libros
@@ -25,7 +26,9 @@ function procesarOrganismo(organismoAProcesar) {
             xhr.setRequestHeader("Accept", "application/json");
             xhr.setRequestHeader("Content-Type", "application/json");
         },
+
         success: function(respuesta) {
+            alert("Hemos llegado");
             var idPanel = '#panel'+organismoAProcesar;
             if(respuesta.status == 'FAIL'){
                   mostrarMensaje('#pendientes', trads['mensajeprocesadoerror'] + " " + organismoAProcesar);
