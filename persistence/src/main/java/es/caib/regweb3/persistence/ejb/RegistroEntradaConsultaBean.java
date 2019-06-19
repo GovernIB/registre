@@ -725,14 +725,14 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         // Obtenemos el total de registros del ciudadano
         q1 = em.createQuery("Select DISTINCT count(re.id )from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad order by re.fecha desc");
         q1.setParameter("idEntidad", idEntidad);
         q1.setParameter("documento", documento.trim());
         Long total = (Long) q1.getSingleResult();
 
         // Obtenemos solo los paginados
         q2 = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad order by re.fecha desc");
 
         q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("documento", documento.trim());
