@@ -69,7 +69,7 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @return
      * @throws Exception
      */
-    public List<Entidad> getEntidadesActivas() throws Exception;
+     List<Entidad> getEntidadesActivas() throws Exception;
 
     /**
      * Comprueba si el codigoDir3 dado existe en alguna entidad excepto la selccionado.
@@ -141,4 +141,13 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
      * @throws Exception
      */
     void eliminarEntidad(Long idEntidad) throws Exception, I18NException;
+
+    /**
+     * Marca/Desmarca una entidad que está en mantenimiento durante el proceso de sincronización
+     * @param entidadId
+     * @param mantenimiento
+     * @throws Exception
+     */
+    void marcarEntidadMantenimiento(Long entidadId, Boolean mantenimiento) throws Exception;
+
 }

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.persistence.ejb.PendienteLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
@@ -45,6 +46,9 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
 
+    @EJB(mappedName = "regweb3/PendienteEJB/local")
+    private PendienteLocal pendienteEjb;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -81,7 +85,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                         }
 
                         // Si no tiene idioma por defecto, se lo ponemos
-                        if(usuario.getIdioma() == null){
+                        if (usuario.getIdioma() == null) {
                             usuario.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
                             usuarioEjb.merge(usuario);
                         }
@@ -116,14 +120,30 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     }
                 }
+                //Obtenemos si la entidad tiene libros pendientes de procesar
+                boolean tienePendientesDeProcesar = false;
+                if(loginInfo.getEntidadActiva()!=null) {
+                    tienePendientesDeProcesar = pendienteEjb.findPendientesProcesar(loginInfo.getEntidadActiva().getId()).size() > 0;
+                }
 
                 // Rutas que se saltarán las comprobaciones
-                if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")) {
+                if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")
+                   || request.getRequestURI().startsWith("/regweb3/cambioEntidad") || request.getRequestURI().startsWith("/regweb3/entidad/pendientesprocesar")
+                   || request.getRequestURI().startsWith("/regweb3/entidad/procesarlibroorganismo")) {
+
                     return true;
                 }
 
                 // Comprobaciones de Configuración obligatoria de la aplicación
                 if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_USUARI)) {
+
+                    //No permitir que se hagan registros si la entidad está en mantenimiento
+                    if (loginInfo.getEntidadActiva().getMantenimiento() || tienePendientesDeProcesar) {
+                        log.info("Tareas de Mantenimiento");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tareasmantenimiento"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
 
                     //Plugin Generación Justificante
                     if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
@@ -165,21 +185,21 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
 
                     // Dir3Caib Server
-                    if(PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()){
+                    if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {
                         log.info("La propiedad Dir3CaibServer no está definida");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
                         response.sendRedirect("/regweb3/aviso");
                         return false;
                     }
                     // Dir3Caib Username
-                    if(PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()){
+                    if (PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()) {
                         log.info("La propiedad Dir3CaibUsername no está definida");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
                         response.sendRedirect("/regweb3/aviso");
                         return false;
                     }
                     // Dir3Caib Password
-                    if(PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()){
+                    if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
                         log.info("La propiedad Dir3CaibPassword no está definida");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
                         response.sendRedirect("/regweb3/aviso");
@@ -187,6 +207,14 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
 
                 }
+
+                //Si es administrador entidad y no ha asignado todos los libros le redirige a la pagina de nuevo para procesarlos
+                if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_ADMIN) && tienePendientesDeProcesar) {
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sincronizacion.librospendientes"));
+                    response.sendRedirect("/regweb3/entidad/pendientesprocesar");
+                    return false;
+                }
+
 
 
                 // Validamos las propiedades de dir3 para poder atacar a dir3caib

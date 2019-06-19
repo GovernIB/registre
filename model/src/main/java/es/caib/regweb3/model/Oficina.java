@@ -207,16 +207,16 @@ public class Oficina implements Serializable{
      * Retorna todos los Organismos a los que la Oficina da servicio
      */
     @Transient
-    public LinkedHashSet<Organismo> getOrganismosFuncionales() {
+    public LinkedHashSet<Organismo> getOrganismosFuncionales(String estado) {
 
         LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
 
         // Añadimos el Organismo responsable de la OficinaActiva
         organismos.add(this.getOrganismoResponsable());
 
-        // Añadimos solo los Organismos que estan Vigentes
+        // Añadimos solo los Organismos del estado que nos indican
         for(RelacionOrganizativaOfi relacionOrganizativaOfi:this.getOrganizativasOfi()){
-            if(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
+            if(estado.equals(relacionOrganizativaOfi.getEstado().getCodigoEstadoEntidad())) {
                 organismos.add(relacionOrganizativaOfi.getOrganismo());
             }
         }
@@ -228,7 +228,7 @@ public class Oficina implements Serializable{
     @Transient
     public Set<Long> getOrganismosFuncionalesId() {
 
-        Set<Organismo> organismos = getOrganismosFuncionales();
+        Set<Organismo> organismos = getOrganismosFuncionales(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         Set<Long> organismosId = new HashSet<Long>();
 
         for(Organismo organismo:organismos){

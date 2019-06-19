@@ -152,10 +152,9 @@ public class OficioRemisionController extends BaseController {
         OficioPendienteBusquedaForm oficioPendienteBusquedaForm = new OficioPendienteBusquedaForm(registroEntrada, 1);
 
         model.addAttribute("librosRegistro", librosRegistroEntrada);
-        model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request)), null));
+        model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, organismoEjb.getAllByOficinaActiva(oficinaActiva)), null));
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("anys", getAnys());
-
 
         return mav;
     }
@@ -175,14 +174,31 @@ public class OficioRemisionController extends BaseController {
         registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // Fijamos el Estado válido por defecto
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-        // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
+        // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Remisión, agrupados según su Organismos destinatario.
         OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva, registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(request, organismosOficinaActiva), entidadActiva);
+        //Si el organismo escogido no está vigente
+        if(!oficiosRemisionOrganismo.getVigente()){
+            log.info("Destino extinguido " + registroEntrada.getDestino().getCodigo());
+            Organismo destinoExtinguido = organismoEjb.findByCodigoEntidadSinEstadoLigero(registroEntrada.getDestino().getCodigo(),entidadActiva.getId());
+            Set<Organismo> historicosFinales = new HashSet<Organismo>();
+            Set<Organismo> sustitutos = new HashSet<Organismo>();
+            //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
+            organismoEjb.obtenerHistoricosFinales(destinoExtinguido.getId(),historicosFinales);
+            for(Organismo organismo: historicosFinales){
+                //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
+                if(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)){
+                    sustitutos.add(organismo);
+                }
+            }
+            mav.addObject("sustitutos", sustitutos);
+        }
+
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
         mav.addObject("librosRegistro", librosRegistroEntrada);
-        mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, getOrganismosOficinaActiva(request)), null));
+        mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(request, organismoEjb.getAllByOficinaActiva(oficinaActiva)), null));
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA));
         mav.addObject("anys", getAnys());
@@ -296,6 +312,7 @@ public class OficioRemisionController extends BaseController {
             // Creamos el OficioRemisión con los registros que se ha generado su Justificante
             if(correctos.size() > 0){
                 if (interno) { //Oficio interno
+                    log.info("Nuevo organismos sustituto: " + oficioRemisionForm.getIdOrganismo());
                     oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(correctos,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
                             oficioRemisionForm.getIdLibro());

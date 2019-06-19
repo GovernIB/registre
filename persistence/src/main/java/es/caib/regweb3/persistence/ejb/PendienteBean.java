@@ -1,13 +1,16 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.Pendiente;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +27,9 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
+
+    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -60,11 +66,22 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Pendiente> findPendientesProcesar() throws Exception {
+    public List<Pendiente> findPendientesProcesar(Long idEntidad) throws Exception {
+
 
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
 
-        return q.getResultList();
+        List<Pendiente> pendientes = q.getResultList();
+        List<Pendiente> pendientesEntidad= new ArrayList<Pendiente>();
+        for(Pendiente pendiente: pendientes){
+            Organismo organismo = organismoEjb.findById(pendiente.getIdOrganismo());
+            if(idEntidad.equals(organismo.getEntidad().getId())){
+                pendientesEntidad.add(pendiente);
+            }
+        }
+        return pendientesEntidad;
+
+
     }
 
 

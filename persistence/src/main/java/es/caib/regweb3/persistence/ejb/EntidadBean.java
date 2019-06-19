@@ -452,5 +452,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     }
 
+    @Override
+    public void marcarEntidadMantenimiento(Long entidadId, Boolean mantenimiento) throws Exception{
+
+        Entidad entidad = findById(entidadId);
+        entidad.setMantenimiento(mantenimiento);
+        merge(entidad);
+
+    }
+
 
 }

@@ -69,6 +69,8 @@ public class Entidad implements Serializable {
     private Boolean oficioRemision = true;
     @XmlTransient
     private Boolean activo = true;
+    @XmlTransient
+    private Boolean mantenimiento = false;
     
     /**  IMPORTANT: Ja no s'utilitza. Es mante per si en un futur a
      *  l'Administrador d'Entitat se i permet tenir varis Plugins donats d'alta i
@@ -344,6 +346,15 @@ public class Entidad implements Serializable {
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    @Column(name="MANTENIMIENTO",nullable= false)
+    public Boolean getMantenimiento() {
+        return mantenimiento;
+    }
+
+    public void setMantenimiento(Boolean mantenimiento) {
+        this.mantenimiento = mantenimiento;
     }
 
     @Column(name="POSXSELLO",length = 3)
