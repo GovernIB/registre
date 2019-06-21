@@ -512,7 +512,7 @@
 
                                         <div id="pendientesRemEnt" class="panel panel-success">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision"/> internos</strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision.internos"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -558,7 +558,7 @@
 
                                         <div id="pendientesRemEnt" class="panel panel-success">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>" class="success"><strong> oficios salida Externos</strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision.externos"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -604,7 +604,7 @@
 
                                         <div id="pendientesRemEnt" class="panel panel-primary">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/4"/>" class="success"><strong>SIR oficios entrada</strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/4"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision.sir"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -650,7 +650,7 @@
 
                                         <div id="pendientesRemSal" class="panel panel-success">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>" class="success"><strong>Salida oficios internos</strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>" class="success"><strong><spring:message code="registroSalida.oficiosRemision.internos"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -696,7 +696,7 @@
 
                                         <div id="pendientesRemSal" class="panel panel-success">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>" class="success"><strong>Salida oficios Externos</strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>" class="success"><strong><spring:message code="registroSalida.oficiosRemision.externos"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -742,7 +742,7 @@
 
                                         <div id="pendientesRemSal" class="panel panel-primary">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/4"/>" class="success"><strong>SIR: Salida oficios SIR</strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/4"/>" class="success"><strong><spring:message code="registroSalida.oficiosRemision.sir"/></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
