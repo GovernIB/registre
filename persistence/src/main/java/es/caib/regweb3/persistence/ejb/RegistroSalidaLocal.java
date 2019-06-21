@@ -56,6 +56,14 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      *
+     * @param idRegistro
+     * @param entidadActiva
+     * @throws Exception
+     */
+    void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws Exception;
+
+    /**
+     *
      * @param entidad
      * @throws Exception
      */
