@@ -302,13 +302,11 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         Query q;
         q = em.createQuery("Select rs from RegistroSalida as rs where " +
                 "rs.oficina.organismoResponsable.entidad.id = :idEntidad and rs.evento is null " +
-                "and rs.estado = :valido or rs.estado = :anulado or rs.estado = :pendienteVisar order by fecha desc");
+                "and rs.estado = :valido order by fecha desc");
 
         // Parámetros
         q.setParameter("idEntidad", entidad.getId());
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
         q.setMaxResults(100);
 
         List<RegistroSalida> registros = q.getResultList();
@@ -347,6 +345,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Modificamos el estado del RegistroSalida
         cambiarEstadoHistorico(registroSalida, RegwebConstantes.REGISTRO_PENDIENTE_VISAR, usuarioEntidad);
+
+        // Asignamos su evento
+        if(registroSalida.getEvento() != null){
+            Long evento = proximoEventoSalida(findById(registroSalida.getId()), usuarioEntidad.getEntidad());
+            registroSalida.setEvento(evento);
+            merge(registroSalida);
+        }
 
     }
 
