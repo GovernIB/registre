@@ -274,22 +274,24 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q = em.createQuery("Select t.registroEntradaDestino from Trazabilidad as t " +
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
                 "t.registroEntradaDestino.destino != null and " + oficinaWhere +
-                "t.registroEntradaDestino.estado = :registro_valido " +
+                "t.registroEntradaDestino.estado = :registro_valido and t.registroEntradaDestino.evento = :distribuir " +
                 " order by t.fecha desc");
 
         q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         if (idOficina != null) q.setParameter("idOficina", idOficina);
 
         q2 = em.createQuery("Select count(t.registroEntradaDestino.id) from Trazabilidad as t " +
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
                 "t.registroEntradaDestino.destino != null and " + oficinaWhere +
-                "t.registroEntradaDestino.estado = :registro_valido ");
+                "t.registroEntradaDestino.estado = :registro_valido and t.registroEntradaDestino.evento = :distribuir ");
 
         q2.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q2.setParameter("idEntidad", idEntidad);
         q2.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+        q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         if (idOficina != null) q2.setParameter("idOficina", idOficina);
 
 
