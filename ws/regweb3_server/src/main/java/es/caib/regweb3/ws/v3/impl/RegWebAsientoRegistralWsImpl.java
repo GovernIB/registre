@@ -322,7 +322,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                         }else if(TIPO_INTERESADO_ADMINISTRACION.equals(interesadoWs.getInteresado().getTipoInteresado())){//Si el interesado es una administración
                             //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
-                            List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                            List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
                             //Si el interesado es una administración y no está integrada en SIR
                             if(oficinasSIR.isEmpty()){ //Si no hay oficinas SIR, se marca como oficio externo y el identificador intercambio se marca a -1
                                 //TODO hay que crear el oficio externo???

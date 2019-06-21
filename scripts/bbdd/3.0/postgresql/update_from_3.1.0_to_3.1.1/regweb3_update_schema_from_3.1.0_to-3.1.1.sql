@@ -11,3 +11,7 @@ ALTER TABLE RWE_USUARIO add RWE_WS_CIUDADANO bool DEFAULT FALSE;
 
 --Nueva propiedad para indicar que la entidad está en mantenimiento
 ALTER TABLE RWE_ENTIDAD add MANTENIMIENTO bool DEFAULT FALSE;
+
+--Nuevo campo "evento" en Registro entrada y salida
+alter table RWE_REGISTRO_ENTRADA add EVENTO int8;
+alter table RWE_REGISTRO_SALIDA add EVENTO int8;

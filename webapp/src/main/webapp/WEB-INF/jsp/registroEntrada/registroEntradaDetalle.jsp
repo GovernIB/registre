@@ -110,99 +110,103 @@
 
                         <%--Botón Distribuir y Oficio Remision--%>
                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
-                            <c:if test="${(isDistribuir && puedeDistribuir) || oficio.oficioRemision}">
+
+                            <%--ES UNA DISTRIBUCIÓN--%>
+                            <c:if test="${(registro.evento == RegwebConstantes.EVENTO_DISTRIBUIR && puedeDistribuir)}">
                                 <div class="panel-footer center">
-                                    <c:if test="${isDistribuir && puedeDistribuir}">
 
-                                        <c:if test="${distribuirRipea}">
-                                            <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
-                                                    class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                        </c:if>
-
-                                        <c:if test="${not distribuirRipea}">
-                                            <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.manualmente" htmlEscape="true"/>")'
-                                                    class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
-                                        </c:if>
-
+                                    <c:if test="${distribuirRipea}">
+                                        <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
+                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                     </c:if>
 
-                                    <c:if test="${oficio.oficioRemision}">
-
-                                        <c:if test="${oficio.interno || oficio.externo}">
-                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                                <spring:message code="oficioRemision.boton.crear"/>
-                                            </button>
-                                        </c:if>
-
-                                        <%--<c:if test="${oficio.interno}">
-                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                                <spring:message code="oficioRemision.boton.crear.interno"/>
-                                            </button>
-                                        </c:if>
-                                        <c:if test="${oficio.externo}">
-                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                                <spring:message code="oficioRemision.boton.crear.externo"/>
-                                            </button>
-                                        </c:if>--%>
-
-                                        <c:if test="${oficio.sir && loginInfo.oficinaActiva.sirEnvio}">
-
-                                            <c:if test="${empty erroresAnexosSir}">
-
-                                                <!-- Si es Documentación en papel (ROJO) -->
-                                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                                                    <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.rojo" htmlEscape="true"/>", "<spring:message code="regweb.informacion.importante" htmlEscape="true"/>","<spring:message code="regweb.seguir" htmlEscape="true"/>","<spring:message code="regweb.seguir.no" htmlEscape="true"/>",${!tieneJustificante})' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
-                                                        <spring:message code="registroEntrada.enviar.sir"/>
-                                                    </button>
-                                                </c:if>
-
-                                                <!-- Si es Documentación en papel y digitalizada (AMARILLO) -->
-                                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                                                    <c:if test="${fn:length(anexos)==0 && tieneJustificante==false}">
-                                                        <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.amarillo" htmlEscape="true"/>", "<spring:message code="regweb.anexos.vacio" htmlEscape="true"/>","<spring:message code="regweb.enviar" htmlEscape="true"/>","<spring:message code="regweb.anexos.añadir" htmlEscape="true"/>",true)' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
-                                                            <spring:message code="registroEntrada.enviar.sir"/>
-                                                        </button>
-                                                    </c:if>
-                                                    <c:if test="${fn:length(anexos)!=0 || tieneJustificante==true}">
-                                                        <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
-                                                            <spring:message code="registroEntrada.enviar.sir"/>
-                                                        </button>
-                                                    </c:if>
-                                                </c:if>
-
-                                                <!-- Si es Documentación digitalizada (VERDE) -->
-                                                <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                                    <c:if test="${fn:length(anexos) == 0 && tieneJustificante==false}">
-                                                        <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.verde" htmlEscape="true"/>", "<spring:message code="regweb.anexos.vacio" htmlEscape="true"/>","<spring:message code="regweb.enviar" htmlEscape="true"/>","<spring:message code="regweb.anexos.añadir" htmlEscape="true"/>", true)' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
-                                                            <spring:message code="registroEntrada.enviar.sir"/>
-                                                        </button>
-                                                    </c:if>
-                                                    <c:if test="${fn:length(anexos) != 0 || tieneJustificante==true}">
-                                                        <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-primary btn-sm btn-block">
-                                                            <spring:message code="registroEntrada.enviar.sir"/>
-                                                        </button>
-                                                    </c:if>
-                                                </c:if>
-
-                                            </c:if>
-
-                                            <c:if test="${not empty erroresAnexosSir}">
-                                                <button type="button" class="btn btn-success btn-sm btn-block disabled">
-                                                    <spring:message code="registroEntrada.enviar.sir"/>
-                                                </button>
-                                            </c:if>
-                                        </c:if>
-                                        <c:if test="${oficio.sir && !loginInfo.oficinaActiva.sirEnvio}">
-                                            <p class="text-danger">El <strong>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</strong> <spring:message code="oficioRemision.noSIR.1"/> ${loginInfo.oficinaActiva.denominacion} <spring:message code="oficioRemision.noSIR.2"/></p>
-                                            <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                                <spring:message code="oficioRemision.boton.crear.externo"/>
-                                            </button>
-                                        </c:if>
-
+                                    <c:if test="${not distribuirRipea}">
+                                        <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.manualmente" htmlEscape="true"/>")'
+                                                class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                     </c:if>
 
                                 </div>
                             </c:if>
+
+                            <%--ES UN OFICIO DE REMISIÓN--%>
+                            <c:if test="${registro.evento != RegwebConstantes.EVENTO_DISTRIBUIR}">
+
+                                <div class="panel-footer center">
+
+                                    <%--OFICIO DE REMISIÓN INTERNO--%>
+                                    <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_INTERNO}">
+                                        <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                            <spring:message code="oficioRemision.boton.crear.interno"/>
+                                        </button>
+                                    </c:if>
+
+                                    <%--OFICIO DE REMISIÓN EXTERNO--%>
+                                    <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_EXTERNO}">
+                                        <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                            <spring:message code="oficioRemision.boton.crear.externo"/>
+                                        </button>
+                                    </c:if>
+
+                                    <%--OFICIO DE REMISIÓN SIR--%>
+                                    <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR && loginInfo.oficinaActiva.sirEnvio}">
+
+                                        <c:if test="${empty erroresAnexosSir}">
+
+                                            <!-- Si es Documentación en papel (ROJO) -->
+                                            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.rojo" htmlEscape="true"/>", "<spring:message code="regweb.informacion.importante" htmlEscape="true"/>","<spring:message code="regweb.seguir" htmlEscape="true"/>","<spring:message code="regweb.seguir.no" htmlEscape="true"/>",${!tieneJustificante})' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
+                                                    <spring:message code="registroEntrada.enviar.sir"/>
+                                                </button>
+                                            </c:if>
+
+                                            <!-- Si es Documentación en papel y digitalizada (AMARILLO) -->
+                                            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                <c:if test="${fn:length(anexos)==0 && tieneJustificante==false}">
+                                                    <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.amarillo" htmlEscape="true"/>", "<spring:message code="regweb.anexos.vacio" htmlEscape="true"/>","<spring:message code="regweb.enviar" htmlEscape="true"/>","<spring:message code="regweb.anexos.añadir" htmlEscape="true"/>",true)' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
+                                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                                    </button>
+                                                </c:if>
+                                                <c:if test="${fn:length(anexos)!=0 || tieneJustificante==true}">
+                                                    <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">
+                                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                                    </button>
+                                                </c:if>
+                                            </c:if>
+
+                                            <!-- Si es Documentación digitalizada (VERDE) -->
+                                            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                <c:if test="${fn:length(anexos) == 0 && tieneJustificante==false}">
+                                                    <button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroEntrada/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.SIR.verde" htmlEscape="true"/>", "<spring:message code="regweb.anexos.vacio" htmlEscape="true"/>","<spring:message code="regweb.enviar" htmlEscape="true"/>","<spring:message code="regweb.anexos.añadir" htmlEscape="true"/>", true)' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
+                                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                                    </button>
+                                                </c:if>
+                                                <c:if test="${fn:length(anexos) != 0 || tieneJustificante==true}">
+                                                    <button type="button" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/enviarSir"/>')" class="btn btn-primary btn-sm btn-block">
+                                                        <spring:message code="registroEntrada.enviar.sir"/>
+                                                    </button>
+                                                </c:if>
+                                            </c:if>
+
+                                        </c:if>
+
+                                        <c:if test="${not empty erroresAnexosSir}">
+                                            <button type="button" class="btn btn-success btn-sm btn-block disabled">
+                                                <spring:message code="registroEntrada.enviar.sir"/>
+                                            </button>
+                                        </c:if>
+                                    </c:if>
+
+                                    <%--OFICIO DE REMISIÓN SIR, PERO NO ESTÁ ACTIVA LA OFICINA ACTIVA--%>
+                                    <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR && !loginInfo.oficinaActiva.sirEnvio}">
+                                        <p class="text-danger">El <strong>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</strong> <spring:message code="oficioRemision.noSIR.1"/> ${loginInfo.oficinaActiva.denominacion} <spring:message code="oficioRemision.noSIR.2"/></p>
+                                        <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                            <spring:message code="oficioRemision.boton.crear.externo"/>
+                                        </button>
+                                    </c:if>
+
+                                </div>
+                            </c:if>
+
                         </c:if>
                     </c:if>
 

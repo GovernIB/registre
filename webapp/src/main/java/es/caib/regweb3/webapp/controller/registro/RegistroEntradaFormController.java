@@ -7,7 +7,6 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -20,7 +19,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -407,16 +405,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                     }
                 }
 
-                // Obtenemos el RE antes de guardarlos, para crear el histórico
-                RegistroEntrada registroEntradaAntiguo = registroEntradaEjb.findById(registroEntrada.getId());
-
                 // Actualizamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.merge(registroEntrada);
-
-                // Creamos el Historico RegistroEntrada
-                historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(),"registro.modificacion.datos" ),true);
-                registroEntradaEjb.postProcesoActualizarRegistro(registroEntrada,entidadActiva.getId());
-
+                registroEntrada = registroEntradaEjb.actualizar(registroEntrada, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
             } catch(I18NException i18ne) {

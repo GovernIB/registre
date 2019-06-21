@@ -23,6 +23,7 @@ public class RegistroSalida implements IRegistro {
 
     @XmlAttribute
     private Long id;
+    private Long evento;
     @XmlElement
     private UsuarioEntidad usuario;
     @XmlElement
@@ -119,6 +120,15 @@ public class RegistroSalida implements IRegistro {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Column(name="EVENTO")
+    public Long getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Long evento) {
+        this.evento = evento;
     }
 
     @ManyToOne(optional = false)

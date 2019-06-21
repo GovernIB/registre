@@ -1,20 +1,19 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.NumeroRegistro;
-import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.*;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -22,10 +21,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 
 /**
@@ -57,6 +53,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private InteresadoLocal interesadoEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PluginLocal pluginEjb;
+    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -99,16 +96,21 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 registroEntrada.getRegistroDetalle().setInteresados(interesados);
             }
 
-            // TODO Controlar custodyID y si hay fallo borrar todos los Custody
+            // Procesamos los Anexos
             if (anexosFull != null && anexosFull.size() != 0) {
                 final Long registroID = registroEntrada.getId();
-                for (AnexoFull anexoFull : anexosFull) {
 
+                for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
                     anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, "entrada", true);
-
                 }
             }
+
+            // Obtenemos el próximo evento del Registro
+            Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad());
+            log.info("Evento: " + evento);
+            registroEntrada.setEvento(evento);
+
             //Llamamos al plugin de postproceso
             postProcesoNuevoRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
 
@@ -132,6 +134,208 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             ejbContext.setRollbackOnly();
             throw e;
         }
+
+    }
+
+    @Override
+    public RegistroEntrada actualizar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
+
+        // Obtenemos el RE antes de guardarlos, para crear el histórico
+        RegistroEntrada registroEntradaAntiguo = findById(registroEntrada.getId());
+
+        registroEntrada = merge(registroEntrada);
+
+        // Obtenemos el próximo evento del Registro
+        Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad());
+        log.info("Evento actualizado: " + evento);
+        registroEntrada.setEvento(evento);
+
+        // Creamos el Historico RegistroEntrada
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(),"registro.modificacion.datos" ),true);
+        postProcesoActualizarRegistro(registroEntrada,usuarioEntidad.getEntidad().getId());
+
+        return registroEntrada;
+    }
+
+    @Override
+    public Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception{
+
+        Oficio oficio = new Oficio();
+
+        if(isOficioRemisionExterno(idRegistro)){ // Externo
+
+            oficio.setOficioRemision(true);
+
+            List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
+
+            if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
+                oficio.setSir(true);
+
+            }else{
+                oficio.setExterno(true);
+            }
+
+        }else{
+
+            Boolean interno = isOficioRemisionInterno(idRegistro, organismos);
+
+            oficio.setOficioRemision(interno);
+            oficio.setInterno(interno);
+        }
+
+        return oficio;
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
+
+        // Si el array de organismos está vacío, no incluimos la condición.
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = " and re.destino.id not in (:organismos)";
+        }
+
+        Query q;
+
+        q = em.createQuery("Select re.id from RegistroEntrada as re where " +
+                "re.id = :idRegistro and re.estado = :valido and " +
+                "re.destino != null " + organismosWhere);
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        if (organismos.size() > 0) {
+            q.setParameter("organismos", organismos);
+        }
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception {
+
+        Query q;
+        q = em.createQuery("Select re.id from RegistroEntrada as re where " +
+                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception {
+
+        Query q;
+        q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
+                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+
+        List<String> result = q.getResultList();
+
+        if(result.size() > 0){
+
+            String codigoDir3 = result.get(0);
+            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+
+            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva) throws Exception{
+
+
+        if(isOficioRemisionExterno(registroEntrada.getId())){ // Externo
+
+            List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId());
+
+            if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
+                return RegwebConstantes.EVENTO_OFICIO_SIR;
+
+            }else{
+
+                return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+            }
+
+        }else {
+
+            // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
+            LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(registroEntrada.getOficina(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            Set<Long> organismosId = new HashSet<Long>();
+
+            for (Organismo organismo : organismos) {
+                organismosId.add(organismo.getId());
+
+            }
+
+            if(isOficioRemisionInterno(registroEntrada.getId(), organismosId)){
+                return RegwebConstantes.EVENTO_OFICIO_INTERNO;
+            }
+
+        }
+
+        return RegwebConstantes.EVENTO_DISTRIBUIR;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
+        long start = System.currentTimeMillis();
+        Query q;
+        q = em.createQuery("Select re.id, re.oficina from RegistroEntrada as re where " +
+                "re.oficina.organismoResponsable.entidad.id = :idEntidad and re.evento is null " +
+                "and re.estado = :valido or re.estado = :anulado or re.estado = :pendienteVisar  order by fecha desc");
+
+        // Parámetros
+        q.setParameter("idEntidad", entidad.getId());
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+        q.setMaxResults(100);
+
+        List<Object[]> result = q.getResultList();
+
+        log.info("");
+        log.info("Total registros de entrada a buscar evento: " + result.size());
+        log.info("");
+
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+
+        for (Object[] object : result) {
+            RegistroEntrada registro = new RegistroEntrada();
+            registro.setId((Long) object[0]);
+            registro.setOficina((Oficina) object[1]);
+            registros.add(registro);
+        }
+
+
+        for (RegistroEntrada registroEntrada:registros) {
+            Long evento = proximoEventoEntrada(registroEntrada, entidad);
+            log.info("Evento: " + evento);
+
+            Query q1 = em.createQuery("update RegistroEntrada set evento=:evento where id = :idRegistro");
+            q1.setParameter("evento", evento);
+            q1.setParameter("idRegistro", registroEntrada.getId());
+            q1.executeUpdate();
+
+        }
+
+        log.info("");
+        log.info("Tiempo total actualizarRegistrosSinEvento: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
 
     }
 

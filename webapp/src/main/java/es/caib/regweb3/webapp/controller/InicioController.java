@@ -6,7 +6,6 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.form.BasicForm;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,9 +74,11 @@ public class InicioController extends BaseController{
                 if(librosRegistroEntrada.size() > 0) {
 
                     // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
-                    long tiempo = System.currentTimeMillis();
-                    mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(request, organismosOficinaActiva), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                    log.info("Total organismosOficioRemisionEntrada: " + TimeUtils.formatElapsedTime(System.currentTimeMillis()-tiempo));
+                    //mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(organismosOficinaActiva), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+
+                    mav.addObject("organismosOficioRemisionEntradaInternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                    mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                    mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada,RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
                     // Obtenemos los Oficios pendientes de Llegada
                     mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
@@ -86,7 +87,10 @@ public class InicioController extends BaseController{
                 if(librosRegistroSalida.size() > 0) {
 
                     // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-                    mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId(), 10));
+                    //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId(), 10));
+                    mav.addObject("organismosOficioRemisionSalidaInternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_INTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                    mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                    mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 }
             }
 
@@ -95,7 +99,7 @@ public class InicioController extends BaseController{
                 mav.addObject("pendientesProcesarSir", registroSirEjb.getUltimosPendientesProcesar(oficinaActiva.getCodigo(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("entradasRechazadosReenviados", registroEntradaConsultaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaConsultaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                mav.addObject("pendientesDistribuir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),getOrganismosOficioRemision(request,organismosOficinaActiva),RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("pendientesDistribuir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),getOrganismosOficioRemision(organismosOficinaActiva),RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
 
         }

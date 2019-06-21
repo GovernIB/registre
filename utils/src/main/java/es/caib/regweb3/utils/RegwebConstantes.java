@@ -789,4 +789,17 @@ public interface RegwebConstantes {
             TIPO_OPERACION_NOTIFICACION,
             TIPO_OPERACION_COMUNICACION
     };
+
+    /* -------------- PRÓXIMAS EVENTO POSIBLES REGISTRO --------------*/
+    Long EVENTO_DISTRIBUIR = 1L;
+    Long EVENTO_OFICIO_INTERNO = 2L;
+    Long EVENTO_OFICIO_EXTERNO = 3L;
+    Long EVENTO_OFICIO_SIR = 4L;
+
+    Long[] EVENTOS_REGISTRO = {
+            EVENTO_DISTRIBUIR,
+            EVENTO_OFICIO_INTERNO,
+            EVENTO_OFICIO_EXTERNO,
+            EVENTO_OFICIO_SIR
+    };
 }

@@ -16,6 +16,18 @@ public interface SchedulerLocal {
      *
      * @throws Exception
      */
+    void actualizarProximoEventoRegistrosEntrada() throws Exception;
+
+    /**
+     *
+     * @throws Exception
+     */
+    void actualizarProximoEventoRegistrosSalida() throws Exception;
+
+    /**
+     *
+     * @throws Exception
+     */
     void purgarIntegraciones() throws Exception;
 
     /**

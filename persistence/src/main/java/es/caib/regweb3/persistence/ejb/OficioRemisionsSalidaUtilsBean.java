@@ -50,7 +50,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
-    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private LibroLocal libroEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
@@ -58,7 +57,59 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
     @EJB private JustificanteLocal justificanteEjb;
 
+
+
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, List<Libro> libros, Long tipoOficio, Integer total) throws Exception {
+
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " and rs.fecha >= :fecha";
+        }
+
+        // Obtenemos los Registros de Salida que son Oficio de remisión
+        Query q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
+                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and rs.evento = :tipoOficio" + queryFecha);
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
+        q.setParameter("tipoOficio", tipoOficio);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q.setParameter("fecha", sdf.parse(fecha));
+        }
+
+        if(total != null){
+            q.setMaxResults(total);
+        }
+
+        List<Long> registros = q.getResultList(); // Registros de salida que son Oficios de Remision
+
+        // Obtenemos los destinatarios de tipo administración de los registros anteriores
+        Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.tipo = :administracion and " +
+                "  i.registroDetalle.id in (:registros)");
+
+        // Parámetros
+        q1.setParameter("registros", registros);
+        q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+
+        List<Object[]> destinos = q1.getResultList();
+
+        LinkedHashSet<Organismo> organismosDestino =  new LinkedHashSet<Organismo>();
+        for (Object[] object : destinos) {
+            organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
+        }
+
+        return organismosDestino;
+    }
+
+
+        @Override
     @SuppressWarnings(value = "unchecked")
     public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
 
@@ -546,109 +597,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         return registros;
 
-    }
-
-
-
-    @Override
-    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception{
-
-        Oficio oficio = new Oficio();
-
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida(); // Fecha a partir de la cual se generarán oficios de salida
-
-        if((StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))) && registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
-
-            if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
-                oficio.setOficioRemision(true);
-
-                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismos);
-
-                if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
-                    oficio.setSir(true);
-                }else{
-                    oficio.setExterno(true);
-                }
-
-            }else{
-                Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
-
-                oficio.setOficioRemision(interno);
-                oficio.setInterno(interno);
-            }
-        }
-
-        return oficio;
-    }
-
-
-    @Override
-    public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
-
-        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
-
-        if(StringUtils.isNotEmpty(codigoDir3)){
-            Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
-            return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) != null;
-        }
-
-        return false;
-    }
-
-    @Override
-    public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
-
-        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
-
-        if(StringUtils.isNotEmpty(codigoDir3)){
-            Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
-            return organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoDir3, idEntidad) == null;
-        }
-
-        return false;
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
-
-        // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
-        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
-
-        // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
-        if(StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)){
-
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-
-            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
-        }
-
-        return null;
-    }
-
-    /**
-     * Comprueba si el RegistroSalida es un Oficio de Remisión y obtiene el códigoDir3 del
-     * Interesado tipo administración asociado al registro.
-     * @param registroSalida
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    private String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
-
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-
-        for (Interesado interesado : interesados) {
-            if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-
-                if(!organismos.contains(interesado.getCodigoDir3())){
-
-                    return interesado.getCodigoDir3();
-                }
-            }
-        }
-
-        return null;
     }
 
 }
