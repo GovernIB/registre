@@ -1,15 +1,19 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.Oficio;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -30,6 +34,68 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Actualiza un Registro salida
+     * @param registroSalida
+     * @param usuarioEntidad
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    RegistroSalida actualizar(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+
+    /**
+     * Obtiene el próximo evento que habrá que realizar con el Registro
+     * @param registroSalida
+     * @param entidadActiva
+     * @return
+     * @throws Exception
+     */
+    Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception;
+
+    /**
+     *
+     * @param entidad
+     * @throws Exception
+     */
+    void actualizarRegistrosSinEvento(Entidad entidad) throws Exception;
+
+    /**
+     * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision externo o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
+    /**
+     * Comprueba si un RegistroSalida se considera un OficioRemision SIR o no
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
 
     /**

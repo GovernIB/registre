@@ -4,7 +4,6 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -196,16 +195,11 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-        Oficio oficio = new Oficio(false,false, false, false);
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
         model.addAttribute("entidadActiva", entidadActiva);
         model.addAttribute("anularForm", new AnularForm());
-
-        // Modelo Recibo
-        //model.addAttribute("modeloRecibo", new ModeloForm());
-        //model.addAttribute("modelosRecibo", modeloReciboEjb.getByEntidad(entidadActiva.getId()));
 
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
@@ -219,12 +213,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Oficio Remision
         if(entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))){
-            oficio = oficioRemisionSalidaUtilsEjb.isOficio(registro, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva);
-            if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+
+            if(registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                 initMensajeNotaInformativaAnexos(entidadActiva, model);
             }
         }
-        model.addAttribute("oficio", oficio);
+
 
         // Anexos completo
         Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))&& oficinaRegistral && puedeEditar && !tieneJustificante;
@@ -234,7 +228,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
 
             // Si es SIR, se validan los tamaños y tipos de anexos
-            if(oficio.getSir()){
+            if(registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)){
 
                 model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
             }
@@ -293,7 +287,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
         }
 
-        List<OficinaTF> oficinasSIR = oficioRemisionSalidaUtilsEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+        List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
 
         if(oficinasSIR.isEmpty()){
             log.info("Este registro no se puede enviar via SIR, no tiene oficinas");

@@ -4,7 +4,10 @@ import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -213,8 +216,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         //obtiene todos los organismos de la oficina Activa(Vigentes,Extinguidos,Anulados y Transitorios
         LinkedHashSet<Organismo> todosOrganismosOficinaActiva = new LinkedHashSet<Organismo>(organismoEjb.getAllByOficinaActiva(oficinaActiva));
 
-        Oficio oficio = new Oficio(false,false, false, false);
-
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
         model.addAttribute("entidadActiva", entidadActiva);
@@ -229,7 +230,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registro.getLibro().getId()));
         model.addAttribute("puedeEditar", puedeEditar);
         model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO));
-        model.addAttribute("isDistribuir", registroEntradaConsultaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request,organismoEjb.getAllByOficinaActiva(oficinaActiva))));
         model.addAttribute("tieneJustificante", tieneJustificante);
         model.addAttribute("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(entidadActiva.getId()));
 
@@ -238,13 +238,11 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Oficio Remision
             if(entidadActiva.getOficioRemision() && (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))){
-                oficio = oficioRemisionEntradaUtilsEjb.isOficio(idRegistro, getOrganismosOficioRemision(request, todosOrganismosOficinaActiva), entidadActiva);
-                if(oficio.getSir()) { // Mensajes de limitaciones anexos si es oficio de remisión sir
+
+                if(registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) { // Mensajes de limitaciones anexos si es oficio de remisión sir
                     initMensajeNotaInformativaAnexos(entidadActiva, model);
                 }
             }
-            model.addAttribute("oficio", oficio);
-
 
             // ANULAR DISTRIBUIR TEMPORAL POR MOTIVO DE FIRMA XSIG NO VALIDABLE
             if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
@@ -273,7 +271,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
                 initScanAnexos(entidadActiva, model, request, registro.getId()); // Inicializa los atributos para escanear anexos
 
                 // Si es SIR, se validan los tamaños y tipos de anexos
-                if(oficio.getSir()){
+                if(registro.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)){
 
                     model.addAttribute("erroresAnexosSir", AnexoUtils.validarAnexosSir(anexos));
                 }
@@ -331,7 +329,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             return new ModelAndView("redirect:/registroEntrada/" + idRegistro + "/detalle");
         }
 
-        List<OficinaTF> oficinasSIR = oficioRemisionEntradaUtilsEjb.isOficioRemisionSir(idRegistro);
+        List<OficinaTF> oficinasSIR = registroEntradaEjb.isOficioRemisionSir(idRegistro);
 
         if(oficinasSIR.isEmpty()){
             log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
@@ -704,7 +702,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaConsultaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(request, organismosOficinaActiva))) {
+        if (!registroEntradaConsultaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(organismosOficinaActiva))) {
             response.setStatus("FAIL_NOISDISTRIBUIR");
             response.setError(getMessage("registroEntrada.distribuir.error.noIsdistribuir"));
             response.setResult(respuesta);

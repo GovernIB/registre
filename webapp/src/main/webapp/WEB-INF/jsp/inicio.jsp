@@ -506,13 +506,13 @@
                                     </div>
                                 </c:if>
 
-                                <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN--%>
-                                <c:if test="${not empty organismosOficioRemisionEntrada}">
+                                <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN INTERNOS--%>
+                                <c:if test="${not empty organismosOficioRemisionEntradaInternos}">
                                     <div class="col-xs-6 filas">
 
                                         <div id="pendientesRemEnt" class="panel panel-success">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision"/></strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>" class="success"><strong><spring:message code="registroEntrada.oficiosRemision"/> internos</strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -532,11 +532,195 @@
                                                         </thead>
 
                                                         <tbody>
-                                                        <c:forEach var="organismo" items="${organismosOficioRemisionEntrada}">
+                                                        <c:forEach var="organismo" items="${organismosOficioRemisionEntradaInternos}">
                                                             <tr>
                                                                 <td>${organismo.denominacion}</td>
                                                                 <td class="center">
-                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/entradasPendientesRemision"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </c:if>
+
+                                <%--OFICIOS DE ENTRADA PENDIENTES DE EXTERNOS--%>
+                                <c:if test="${not empty organismosOficioRemisionEntradaExternos}">
+                                    <div class="col-xs-6 filas">
+
+                                        <div id="pendientesRemEnt" class="panel panel-success">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>" class="success"><strong> oficios salida Externos</strong></a> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table table-hover table-striped marg-bot0">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col width="51">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th><spring:message code="organismo.destino"/></th>
+                                                            <th class="center"></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <c:forEach var="organismo" items="${organismosOficioRemisionEntradaExternos}">
+                                                            <tr>
+                                                                <td>${organismo.denominacion}</td>
+                                                                <td class="center">
+                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </c:if>
+
+                                <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN SIR--%>
+                                <c:if test="${not empty organismosOficioRemisionEntradaSir}">
+                                    <div class="col-xs-6 filas">
+
+                                        <div id="pendientesRemEnt" class="panel panel-primary">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/entradasPendientesRemision/4"/>" class="success"><strong>SIR oficios entrada</strong></a> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table table-hover table-striped marg-bot0">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col width="51">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th><spring:message code="organismo.destino"/></th>
+                                                            <th class="center"></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <c:forEach var="organismo" items="${organismosOficioRemisionEntradaSir}">
+                                                            <tr>
+                                                                <td>${organismo.denominacion}</td>
+                                                                <td class="center">
+                                                                    <a class="btn btn-primary btn-sm" href="<c:url value="/oficioRemision/entradasPendientesRemision/4"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </c:if>
+
+                                <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN INTERNOS--%>
+                                <c:if test="${not empty organismosOficioRemisionSalidaInternos}">
+                                    <div class="col-xs-6 filas">
+
+                                        <div id="pendientesRemSal" class="panel panel-success">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>" class="success"><strong>Salida oficios internos</strong></a> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table table-hover table-striped marg-bot0">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col width="51">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th><spring:message code="organismo.destino"/></th>
+                                                            <th class="center"></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <c:forEach var="organismo" items="${organismosOficioRemisionSalidaInternos}">
+                                                            <tr>
+                                                                <td>${organismo.denominacion}</td>
+                                                                <td class="center">
+                                                                    <a class="btn btn-danger btn-sm" href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                                </td>
+                                                            </tr>
+                                                        </c:forEach>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </c:if>
+
+                                <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN EXTERNOS--%>
+                                <c:if test="${not empty organismosOficioRemisionSalidaExternos}">
+                                    <div class="col-xs-6 filas">
+
+                                        <div id="pendientesRemSal" class="panel panel-success">
+                                            <div class="panel-heading">
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>" class="success"><strong>Salida oficios Externos</strong></a> </h3>
+                                            </div>
+
+                                            <div class="panel-body">
+
+                                                <div class="table-responsive-inici">
+
+                                                    <table class="table table-hover table-striped marg-bot0">
+                                                        <colgroup>
+                                                            <col>
+                                                            <col width="51">
+                                                        </colgroup>
+                                                        <thead>
+                                                        <tr>
+                                                            <th><spring:message code="organismo.destino"/></th>
+                                                            <th class="center"></th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <c:forEach var="organismo" items="${organismosOficioRemisionSalidaExternos}">
+                                                            <tr>
+                                                                <td>${organismo.denominacion}</td>
+                                                                <td class="center">
+                                                                    <a class="btn btn-danger btn-sm" href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>
@@ -553,12 +737,12 @@
                                 </c:if>
 
                                 <%--OFICIOS DE SALIDA PENDIENTES DE REMISIÓN--%>
-                                <c:if test="${not empty organismosOficioRemisionSalida}">
+                                <c:if test="${not empty organismosOficioRemisionSalidaSir}">
                                     <div class="col-xs-6 filas">
 
-                                        <div id="pendientesRemSal" class="panel panel-success">
+                                        <div id="pendientesRemSal" class="panel panel-primary">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>" class="success"><strong><spring:message code="registroSalida.oficiosRemision"/></strong></a> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-mail-forward"></i> <a href="<c:url value="/oficioRemision/salidasPendientesRemision/4"/>" class="success"><strong>SIR: Salida oficios SIR</strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -578,11 +762,11 @@
                                                         </thead>
 
                                                         <tbody>
-                                                        <c:forEach var="organismo" items="${organismosOficioRemisionSalida}">
+                                                        <c:forEach var="organismo" items="${organismosOficioRemisionSalidaSir}">
                                                             <tr>
                                                                 <td>${organismo.denominacion}</td>
                                                                 <td class="center">
-                                                                    <a class="btn btn-danger btn-sm" href="<c:url value="/oficioRemision/salidasPendientesRemision"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
+                                                                    <a class="btn btn-primary btn-sm" href="<c:url value="/oficioRemision/salidasPendientesRemision/4"/>" title="<spring:message code="oficioRemision.buscador"/>"><span class="fa fa-search"></span></a>
                                                                 </td>
                                                             </tr>
                                                         </c:forEach>

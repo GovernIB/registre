@@ -109,27 +109,25 @@
                     <%--Botón Oficio Remision--%>
                     <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
 
-                        <c:if test="${oficio.oficioRemision}">
+                        <c:if test="${registro.evento != RegwebConstantes.EVENTO_DISTRIBUIR}">
                             <div class="panel-footer center">
 
-                                <c:if test="${oficio.interno || oficio.externo}">
-                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
-                                        <spring:message code="oficioRemision.boton.crear"/>
-                                    </button>
-                                </c:if>
-
-                                <%--<c:if test="${oficio.interno}">
+                                <%--OFICIO DE REMISIÓN INTERNO--%>
+                                <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_INTERNO}">
                                     <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.interno"/>
                                     </button>
                                 </c:if>
-                                <c:if test="${oficio.externo}">
+
+                                <%--OFICIO DE REMISIÓN EXTERNO--%>
+                                <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_EXTERNO}">
                                     <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>
-                                </c:if>--%>
+                                </c:if>
 
-                                <c:if test="${oficio.sir && loginInfo.oficinaActiva.sirEnvio}">
+                               <%--OFICIO DE REMISIÓN SIR--%>
+                                <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR && loginInfo.oficinaActiva.sirEnvio}">
 
                                     <c:if test="${empty erroresAnexosSir}">
 
@@ -171,26 +169,15 @@
                                     </c:if>
 
 
-                                    <%--<c:if test="${empty erroresAnexosSir}">--%>
-                                        <%--<c:if test="${empty anexos}">--%>
-                                            <%--<button type="button" onclick='javascript:confirmEnvioSinAnexos("<c:url value="/registroSalida/${registro.id}/enviarSir"/>","<spring:message code="regweb.confirmar.envioSIR" htmlEscape="true"/>", "<spring:message code="regweb.anexos.vacio" htmlEscape="true"/>","<spring:message code="regweb.enviar" htmlEscape="true"/>","<spring:message code="regweb.anexos.añadir" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-success btn-sm btn-block">--%>
-                                                <%--<spring:message code="registroEntrada.enviar.sir"/>--%>
-                                            <%--</button>--%>
-                                        <%--</c:if>--%>
-                                        <%--<c:if test="${not empty anexos}">--%>
-                                            <%--<button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/enviarSir"/>')" class="btn btn-success btn-sm btn-block">--%>
-                                                <%--<spring:message code="registroEntrada.enviar.sir"/>--%>
-                                            <%--</button>--%>
-                                        <%--</c:if>--%>
-                                    <%--</c:if>--%>
-
                                     <c:if test="${not empty erroresAnexosSir}">
                                         <button type="button" class="btn btn-success btn-sm btn-block disabled">
                                             <spring:message code="registroEntrada.enviar.sir"/>
                                         </button>
                                     </c:if>
                                 </c:if>
-                                <c:if test="${oficio.sir && !loginInfo.oficinaActiva.sirEnvio}">
+
+                                <%--OFICIO DE REMISIÓN SIR, PERO NO ESTÁ ACTIVA LA OFICINA ACTIVA--%>
+                                <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR && !loginInfo.oficinaActiva.sirEnvio}">
                                     <p class="text-danger">El <strong><spring:message code="notificacion.destinatario"/></strong> <spring:message code="oficioRemision.noSIR.1"/> ${loginInfo.oficinaActiva.denominacion} <spring:message code="oficioRemision.noSIR.2"/></p>
                                     <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.externo"/>

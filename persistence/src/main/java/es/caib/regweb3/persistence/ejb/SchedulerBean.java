@@ -56,6 +56,38 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
 
+    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
+    private RegistroEntradaLocal registroEntradaEjb;
+
+    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
+    private RegistroSalidaLocal registroSalidaEjb;
+
+
+    @Override
+    public void actualizarProximoEventoRegistrosEntrada() throws Exception{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- Actualizando proximos eventos de los registros de entrada de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            registroEntradaEjb.actualizarRegistrosSinEvento(entidad);
+        }
+    }
+
+    @Override
+    public void actualizarProximoEventoRegistrosSalida() throws Exception{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for(Entidad entidad: entidades) {
+            log.info(" ");
+            log.info("------------- Actualizando proximos eventos de los registros de salida de " + entidad.getNombre() + " -------------");
+            log.info(" ");
+            registroSalidaEjb.actualizarRegistrosSinEvento(entidad);
+        }
+    }
 
     @Override
     public void purgarIntegraciones() throws Exception{

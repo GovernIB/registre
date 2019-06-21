@@ -362,15 +362,13 @@ public class BaseController {
      * Se eliminando los Organismos que están marcados como Entidad de Derecho Público o
      * a los que la OficiaActiva da servicio.
      *
-     * @param request
+     * @param organismos
      * @return
      * @throws Exception
      */
-    public Set<Long> getOrganismosOficioRemision(HttpServletRequest request, Set<Organismo> organismos) throws Exception {
+    public Set<Long> getOrganismosOficioRemision(Set<Organismo> organismos) throws Exception {
 
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        // Creamos un Set solo con los identificadores
+            // Creamos un Set solo con los identificadores
         Set<Long> organismosId = new HashSet<Long>();
 
         for (Organismo organismo : organismos) {
@@ -385,7 +383,7 @@ public class BaseController {
     }
 
     /**
-     * Obtiene el Id de los Organismos de la OficinaActiva en los cuales no se generará OficioRemisión.
+     * Obtiene el Codigo de los Organismos de la OficinaActiva en los cuales no se generará OficioRemisión.
      * Se eliminando los Organismos que están marcados como Entidad de Derecho Público o
      * a los que la OficiaActiva da servicio.
      *

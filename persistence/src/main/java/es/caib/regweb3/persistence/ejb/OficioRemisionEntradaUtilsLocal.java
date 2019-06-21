@@ -1,10 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.OficioPendienteLlegada;
-import es.caib.regweb3.persistence.utils.Oficio;
 import es.caib.regweb3.persistence.utils.OficiosRemisionOrganismo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -25,6 +23,13 @@ import java.util.Set;
 @Local
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface OficioRemisionEntradaUtilsLocal {
+
+
+    List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception;
+
+    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoOficio, Integer total) throws Exception;
+
+
 
     /**
      * Obtiene los Organimos destino de los Registros de Entrada que están considerados Oficios de Remisión
@@ -60,41 +65,6 @@ public interface OficioRemisionEntradaUtilsLocal {
      */
     OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
 
-
-    /**
-     * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
-     * @param idRegistro
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception;
-
-    /**
-     * Comprueba si un RegistroEntrada se considera un OficioRemision interno o no
-     *
-     * @param idRegistro
-     * @param organismos Lista con los Destinatarios que no se consideran Oficio de Remisión
-     * @return
-     * @throws Exception
-     */
-    Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception;
-
-    /**
-     * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no
-     * @param idRegistro
-     * @return
-     * @throws Exception
-     */
-    Boolean isOficioRemisionExterno(Long idRegistro) throws Exception;
-
-    /**
-     * Comprueba si un RegistroEntrada se considera un OficioRemision SIR o no
-     * @param idRegistro
-     * @return
-     * @throws Exception
-     */
-    List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
 
     /**
      * @param registrosEntrada

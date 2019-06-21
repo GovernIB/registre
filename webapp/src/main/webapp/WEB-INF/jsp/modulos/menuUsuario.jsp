@@ -53,8 +53,11 @@
             <li class="divider"></li>
             <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
             <li class="divider"></li>
-            <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroEntrada.oficiosRemision"/></a></li>
-            <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSalida.oficiosRemision"/></a></li>
+            <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroEntrada.oficiosRemision"/> interno</a></li>
+            <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroEntrada.oficiosRemision"/> externo</a></li>
+            <li class="divider"></li>
+            <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSalida.oficiosRemision"/> interno</a></li>
+            <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSalida.oficiosRemision"/> externo</a></li>
 
         </ul>
     </div>
@@ -72,6 +75,9 @@
             </c:if>
             <c:if test="${loginInfo.oficinaActiva.sirEnvio}">
                 <li><a href="<c:url value="/registroSir/enviados"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSir.enviados"/></a></li>
+                <li class="divider"></li>
+                <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/4"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroEntrada.oficiosRemision"/></a></li>
+                <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/4"/>"><i class="fa fa-mail-forward"></i> <spring:message code="registroSalida.oficiosRemision"/></a></li>
             </c:if>
             <li class="divider"></li>
             <c:if test="${loginInfo.oficinaActiva.sirRecepcion}">

@@ -49,7 +49,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private OrganismoLocal organismoEjb;
     @EJB private LibroLocal libroEjb;
@@ -57,6 +56,71 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @EJB private OficinaLocal oficinaEjb;
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
     @EJB private JustificanteLocal justificanteEjb;
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception {
+
+        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
+        Query q;
+
+        q = em.createQuery("Select distinct re.destino.codigo, re.destino.denominacion from RegistroEntrada as re where " +
+                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.destino != null and re.evento = :oficio_interno ");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
+        q.setParameter("oficio_interno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
+
+        if(total != null){
+            q.setMaxResults(total);
+        }
+
+        List<Object[]> organismosInternos = q.getResultList();
+
+        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
+        for (Object[] organismoInterno : organismosInternos){
+            Organismo organismo = new Organismo(null,(String) organismoInterno[0], (String) organismoInterno[1]);
+
+            organismosDestino.add(organismo);
+        }
+
+        return organismosDestino;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoOficio, Integer total) throws Exception {
+
+        // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
+        Query q;
+        q = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
+                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.destino is null and re.evento = :tipoOficio ");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
+        q.setParameter("tipoOficio", tipoOficio);
+
+        if(total != null){
+            q.setMaxResults(total);
+        }
+
+        List<Object[]> organismosExternos = q.getResultList();
+
+        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
+        for (Object[] organismoExterno : organismosExternos){
+            Organismo organismo = new Organismo(null,(String) organismoExterno[0], (String) organismoExterno[1]);
+
+            organismosDestino.add(organismo);
+        }
+
+        return organismosDestino;
+    }
 
 
     @Override
@@ -310,103 +374,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         return paginacion;
     }
 
-    @Override
-    public Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception{
 
-        Oficio oficio = new Oficio();
-
-        if(isOficioRemisionExterno(idRegistro)){ // Externo
-
-            oficio.setOficioRemision(true);
-
-            List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
-
-            if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
-                oficio.setSir(true);
-
-            }else{
-                oficio.setExterno(true);
-            }
-
-        }else{
-
-            Boolean interno = isOficioRemisionInterno(idRegistro, organismos);
-
-            oficio.setOficioRemision(interno);
-            oficio.setInterno(interno);
-        }
-
-        return oficio;
-    }
-
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemisionInterno(Long idRegistro, Set<Long> organismos) throws Exception {
-
-        // Si el array de organismos está vacío, no incluimos la condición.
-        String organismosWhere = "";
-        if (organismos.size() > 0) {
-            organismosWhere = " and re.destino.id not in (:organismos)";
-        }
-
-        Query q;
-
-        q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-           "re.id = :idRegistro and re.estado = :valido and " +
-           "re.destino != null " + organismosWhere);
-
-        // Parámetros
-        q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-
-        if (organismos.size() > 0) {
-            q.setParameter("organismos", organismos);
-        }
-
-        return q.getResultList().size() > 0;
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception {
-
-        Query q;
-        q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
-
-        // Parámetros
-        q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-
-
-        return q.getResultList().size() > 0;
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception {
-
-        Query q;
-        q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.destino is null and re.estado = :valido");
-
-        // Parámetros
-        q.setParameter("idRegistro", idRegistro);
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-
-        List<String> result = q.getResultList();
-
-        if(result.size() > 0){
-
-            String codigoDir3 = result.get(0);
-            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-
-            return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
-        }
-
-        return null;
-    }
 
 
     @SuppressWarnings(value = "unchecked")

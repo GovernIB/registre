@@ -23,6 +23,44 @@ public class Regweb3Scheduler {
     @EJB(mappedName = "regweb3/SchedulerEJB/local")
     private SchedulerLocal schedulerEjb;
 
+
+    /**
+     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
+     * Cuando lo hace: cada 4 minutos
+     */
+    @Scheduled(cron = "0 0/4 * * * *")
+    public void actualizarProximoEventoRegistrosEntrada(){
+
+        try {
+
+            schedulerEjb.actualizarProximoEventoRegistrosEntrada();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosEntrada --");
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
+     * Cuando lo hace: cada 6 minutos
+     */
+    @Scheduled(cron = "0 0/6 * * * *")
+    public void actualizarProximoEventoRegistrosSalida(){
+
+        try {
+
+            schedulerEjb.actualizarProximoEventoRegistrosSalida();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosSalida --");
+            e.printStackTrace();
+        }
+
+    }
+
+
     /**
      * Qué hace: Realiza tareas administrativas generales de la aplicación
      * Cuando lo hace: Todos días, a las 01:00 h.
