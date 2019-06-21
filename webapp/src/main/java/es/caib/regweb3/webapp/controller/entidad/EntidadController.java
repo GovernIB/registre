@@ -957,6 +957,7 @@ public class EntidadController extends BaseController {
             log.info("organismosConError: " + organismosConError.size());
             //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
             model.addAttribute("esPendiente", true);
+            entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
         } else {
             entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
             log.debug("else no pendientes de procesar");
