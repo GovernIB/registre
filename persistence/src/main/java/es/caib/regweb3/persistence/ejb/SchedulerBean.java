@@ -69,10 +69,14 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getAll();
 
         for(Entidad entidad: entidades) {
-            log.info(" ");
-            log.info("------------- Actualizando proximos eventos de los registros de entrada de " + entidad.getNombre() + " -------------");
-            log.info(" ");
-            registroEntradaEjb.actualizarRegistrosSinEvento(entidad);
+
+            if(PropiedadGlobalUtil.getActualizarProximoEvento(entidad.getId())){
+                log.info(" ");
+                log.info("------------- Actualizando proximos eventos de los Registros de Entrada de " + entidad.getNombre() + " -------------");
+                log.info(" ");
+                registroEntradaEjb.actualizarRegistrosSinEvento(entidad);
+            }
+
         }
     }
 
@@ -82,10 +86,14 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getAll();
 
         for(Entidad entidad: entidades) {
-            log.info(" ");
-            log.info("------------- Actualizando proximos eventos de los registros de salida de " + entidad.getNombre() + " -------------");
-            log.info(" ");
-            registroSalidaEjb.actualizarRegistrosSinEvento(entidad);
+
+            if(PropiedadGlobalUtil.getActualizarProximoEvento(entidad.getId())){
+                log.info(" ");
+                log.info("------------- Actualizando proximos eventos de los Registros de Salida de " + entidad.getNombre() + " -------------");
+                log.info(" ");
+                registroSalidaEjb.actualizarRegistrosSinEvento(entidad);
+            }
+
         }
     }
 

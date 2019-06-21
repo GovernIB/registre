@@ -509,6 +509,16 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return q.getResultList().size() > 0;
     }
 
+    @Override
+    public Long queryCount(String query) throws Exception {
+
+        Query q;
+
+        q = em.createQuery(query);
+
+        return (Long) q.getSingleResult();
+    }
+
     /**
      * Convierte los resultados de una query en una lista de {@link RegistroBasico}
      *

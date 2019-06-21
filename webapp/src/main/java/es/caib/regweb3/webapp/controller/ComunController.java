@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Plantilla;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -43,9 +42,29 @@ public class ComunController extends BaseController {
     @EJB(mappedName = "regweb3/PlantillaEJB/local")
     private PlantillaLocal plantillaEjb;
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
 
+    @RequestMapping(value = "/eventos")
+    public ModelAndView eventos(HttpServletRequest request) throws Exception{
+
+        ModelAndView mav = new ModelAndView("eventos");
+
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        mav.addObject("totalEntradas",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("totalSalidas",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("entradasPendientes",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and estado=1 and usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("salidasPendientes",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and estado=1 and usuario.entidad.id = "+entidadActiva.getId()));
+
+
+        return mav;
+    }
 
     @RequestMapping(value = "/noAutorizado")
     public ModelAndView noautorizado(HttpServletRequest request, HttpServletResponse response) {
