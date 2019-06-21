@@ -114,14 +114,14 @@
 
                                 <%--OFICIO DE REMISIÓN INTERNO--%>
                                 <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_INTERNO}">
-                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision/2"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.interno"/>
                                     </button>
                                 </c:if>
 
                                 <%--OFICIO DE REMISIÓN EXTERNO--%>
                                 <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_EXTERNO}">
-                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision/3"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>
                                 </c:if>
@@ -179,7 +179,7 @@
                                 <%--OFICIO DE REMISIÓN SIR, PERO NO ESTÁ ACTIVA LA OFICINA ACTIVA--%>
                                 <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR && !loginInfo.oficinaActiva.sirEnvio}">
                                     <p class="text-danger">El <strong><spring:message code="notificacion.destinatario"/></strong> <spring:message code="oficioRemision.noSIR.1"/> ${loginInfo.oficinaActiva.denominacion} <spring:message code="oficioRemision.noSIR.2"/></p>
-                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision"/>')" class="btn btn-success btn-sm btn-block">
+                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/salidasPendientesRemision/3"/>')" class="btn btn-success btn-sm btn-block">
                                         <spring:message code="oficioRemision.boton.crear.externo"/>
                                     </button>
                                 </c:if>

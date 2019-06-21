@@ -22,7 +22,19 @@
                     <c:import url="../modulos/migadepan.jsp">
                         <c:param name="avisos" value="${loginInfo.mostrarAvisos}"/>
                     </c:import>
-                    <li class="active"><i class="fa fa-list-ul"></i> <strong><spring:message code="registroEntrada.oficiosRemision"/></strong></li>
+                    <li class="active"><i class="fa fa-list-ul"></i>
+                        <strong>
+                            <c:if test="${param.tipoOficio == 2}">
+                                <spring:message code="registroEntrada.oficiosRemision.internos"/>
+                            </c:if>
+                            <c:if test="${param.tipoOficio == 3}">
+                                <spring:message code="registroEntrada.oficiosRemision.externos"/>
+                            </c:if>
+                            <c:if test="${param.tipoOficio == 4}">
+                                <spring:message code="registroEntrada.oficiosRemision.sir"/>
+                            </c:if>
+                        </strong>
+                    </li>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -38,7 +50,20 @@
                 <div class="panel panel-success">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.buscador.oficiosRemision"/></strong></h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i>
+                            <strong>
+                                <spring:message code="registroEntrada.buscador.oficiosRemision"/>
+                                <c:if test="${param.tipoOficio == 2}">
+                                    <spring:message code="registroEntrada.oficiosRemision.internos"/>
+                                </c:if>
+                                <c:if test="${param.tipoOficio == 3}">
+                                    <spring:message code="registroEntrada.oficiosRemision.externos"/>
+                                </c:if>
+                                <c:if test="${param.tipoOficio == 4}">
+                                    <spring:message code="registroEntrada.oficiosRemision.sir"/>
+                                </c:if>
+                            </strong>
+                        </h3>
                     </div>
                     <div class="panel-body">
 
