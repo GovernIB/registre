@@ -361,6 +361,33 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Devuelve el valor de la propiedad que indica si se han de actualizar el evento de los Registros
+     *
+     * @return
+     */
+    public static Boolean getActualizarProximoEvento(Long idEntidad) {
+        final String partialPropertyName = "evento.actualizar";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+
+    }
+
+    /**
+     * Devuelve el valor de la propiedad que indica cuantos registros se actualizan por bloque
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getTotalActualizarProximoEvento(Long idEntidad) {
+        final String partialPropertyName = "evento.total.registros";
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+
+
+        if (valor == null) {
+            valor = 100;
+        }
+        return valor;
+    }
+
+    /**
      * Devuelve el valor de la propiedad con la fechaInicio para cerar los expedientes
      *
      * @return

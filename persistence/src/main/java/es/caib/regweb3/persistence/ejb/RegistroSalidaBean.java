@@ -307,7 +307,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         // Parámetros
         q.setParameter("idEntidad", entidad.getId());
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setMaxResults(100);
+        q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
 
         List<RegistroSalida> registros = q.getResultList();
 

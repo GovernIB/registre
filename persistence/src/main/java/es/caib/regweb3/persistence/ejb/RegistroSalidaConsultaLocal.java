@@ -168,4 +168,12 @@ public interface RegistroSalidaConsultaLocal{
      */
     List<RegistroSalida> getByDocumento(Long idEntidad, String documento) throws Exception;
 
+    /**
+     *
+     * @param query
+     * @return
+     * @throws Exception
+     */
+    Long queryCount(String query) throws Exception;
+
 }

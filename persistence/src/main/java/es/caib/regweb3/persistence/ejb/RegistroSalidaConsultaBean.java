@@ -507,6 +507,17 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         return q.getResultList();
     }
 
+    @Override
+    public Long queryCount(String query) throws Exception {
+
+        Query q;
+
+        q = em.createQuery(query);
+
+        return (Long) q.getSingleResult();
+    }
+
+
     /**
      * Carga los Anexos Completos al RegistroSalida pasado por parámetro
      * @param registroSalida

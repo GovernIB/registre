@@ -167,6 +167,14 @@ public interface RegistroEntradaConsultaLocal {
     Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception;
 
     /**
+     *
+     * @param query
+     * @return
+     * @throws Exception
+     */
+    Long queryCount(String query) throws Exception;
+
+    /**
      * Busca los Registros de Entrada de un Libro.
      *
      * @param idLibro
