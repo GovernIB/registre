@@ -305,19 +305,20 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q2;
 
         q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado and re.registroDetalle.tipoDocumentacionFisica = :tipoDoc order by re.fecha desc");
+                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.tipoDocumentacionFisica = :tipoDoc order by re.fecha desc");
 
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("tipoDoc", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+        q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
 
         q2 = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
-                "and re.estado = :idEstado and re.registroDetalle.tipoDocumentacionFisica = :tipoDoc");
+                "and re.estado = :idEstado and re.evento = :distribuir and re.registroDetalle.tipoDocumentacionFisica = :tipoDoc");
 
         q2.setParameter("idOficinaActiva", idOficinaActiva);
         q2.setParameter("idEstado", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("tipoDoc", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
-
+        q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
 
         Paginacion paginacion;
 
