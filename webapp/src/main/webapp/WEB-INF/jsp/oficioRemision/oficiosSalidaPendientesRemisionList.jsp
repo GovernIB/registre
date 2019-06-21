@@ -25,13 +25,13 @@
                     <li class="active">
                         <i class="fa fa-list-ul"></i>
                         <strong>
-                            <c:if test="${param.tipoOficio == 2}">
+                            <c:if test="${tipoOficio == 2}">
                                 <spring:message code="registroSalida.oficiosRemision.internos"/>
                             </c:if>
-                            <c:if test="${param.tipoOficio == 3}">
+                            <c:if test="${tipoOficio == 3}">
                                 <spring:message code="registroSalida.oficiosRemision.externos"/>
                             </c:if>
-                            <c:if test="${param.tipoOficio == 4}">
+                            <c:if test="${tipoOficio == 4}">
                                 <spring:message code="registroSalida.oficiosRemision.sir"/>
                             </c:if>
                         </strong>
@@ -54,13 +54,13 @@
                         <h3 class="panel-title"><i class="fa fa-search"></i>
                             <strong>
                                 <spring:message code="registroSalida.buscador.oficiosRemision"/>
-                                <c:if test="${param.tipoOficio == 2}">
+                                <c:if test="${tipoOficio == 2}">
                                     <spring:message code="registroSalida.oficiosRemision.internos"/>
                                 </c:if>
-                                <c:if test="${param.tipoOficio == 3}">
+                                <c:if test="${tipoOficio == 3}">
                                     <spring:message code="registroSalida.oficiosRemision.externos"/>
                                 </c:if>
-                                <c:if test="${param.tipoOficio == 4}">
+                                <c:if test="${tipoOficio == 4}">
                                     <spring:message code="registroSalida.oficiosRemision.sir"/>
                                 </c:if>
                             </strong>
