@@ -300,7 +300,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
         long start = System.currentTimeMillis();
         Query q;
-        q = em.createQuery("Select rs.id, rs.oficina from RegistroSalida as rs where " +
+        q = em.createQuery("Select rs.id, rs.oficina, rs.fecha, rs.estado, rs.registroDetalle.interesados from RegistroSalida as rs where " +
                 "rs.oficina.organismoResponsable.entidad.id = :idEntidad and rs.evento is null " +
                 "and rs.estado = :valido or rs.estado = :anulado or rs.estado = :pendienteVisar order by fecha desc");
 
@@ -323,6 +323,9 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             RegistroSalida registro = new RegistroSalida();
             registro.setId((Long) object[0]);
             registro.setOficina((Oficina) object[1]);
+            registro.setFecha((Date) object[2]);
+            registro.setEstado((Long) object[3]);
+            registro.getRegistroDetalle().setInteresados((List<Interesado>) object[4]);
             registros.add(registro);
         }
 
