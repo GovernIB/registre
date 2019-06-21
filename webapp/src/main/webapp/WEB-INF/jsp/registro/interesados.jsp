@@ -213,6 +213,8 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
     var urlObtenerInteresado = '<c:url value="/interesado/${param.tipoRegistro}/obtenerInteresado"/>';
     var urlBusquedaPersonasFisicas = '<c:url value="/rest/busquedaPersonas/2"/>';
     var urlBusquedaPersonasJuridicas = '<c:url value="/rest/busquedaPersonas/3"/>';
+    var urlActualizarEventoRegistroSalida = '<c:url value="/registroSalida/actualizarEvento"/>';
+    var idRegistroSalida = '${registro.id}';
 
 <c:import url="../registro/addInteresadosBbdd.jsp"/>
 

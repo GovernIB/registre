@@ -274,7 +274,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         }
 
-
         if((StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))) && registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
 
             if(isOficioRemisionExterno(registroSalida, organismosCodigo)){ // Externo
@@ -293,6 +292,20 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
 
         return RegwebConstantes.EVENTO_DISTRIBUIR;
+    }
+
+    @Override
+    public void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws Exception{
+
+        RegistroSalida registroSalida = findById(idRegistro);
+
+        log.info("Antiguo evento: " + registroSalida.getEvento());
+        Long evento = proximoEventoSalida(registroSalida,entidadActiva);
+
+        log.info("Nuevo evento: " + evento);
+        registroSalida.setEvento(evento);
+
+        merge(registroSalida);
     }
 
     @Override

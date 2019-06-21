@@ -96,6 +96,11 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
     if(idRegistroDetalle != null) {
         if (mensaje && idRegistroDetalle.length > 0) {
             mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
+
+            // Actualizamos el evento del registro de salida
+            if(tipoRegistro === "salida"){
+                actualizarEventoRegistroSalida(idRegistroSalida);
+            }
         }
     }
 
@@ -131,6 +136,11 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
                 // Mostramos mensaje de información
                 if (idRegistroDetalle.length > 0) {
                     mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
+
+                    // Actualizamos el evento del registro de salida
+                    if(tipoRegistro === "salida"){
+                        actualizarEventoRegistroSalida(idRegistroSalida);
+                    }
                 }
             } else {
                 mensajeError("#mensajes", tradsinteresado['interesado.eliminar.ultimo']);
@@ -1216,4 +1226,21 @@ function limpiarInteresadoDetalle(){
     $('#codigoDire').html('');
     $('#direccionElectronica').html('');
     $('#observaciones').html('');
+}
+
+/**
+ *
+ * @param idRegistroSalida
+ */
+function actualizarEventoRegistroSalida(idRegistroSalida){
+
+    //Obtenemos los datos de la Persona a editar
+    $.ajax({
+        url: urlActualizarEventoRegistroSalida,
+        data: { idRegistroSalida: idRegistroSalida},
+        type: "GET",
+        success: function(result) {
+
+        }
+    });
 }

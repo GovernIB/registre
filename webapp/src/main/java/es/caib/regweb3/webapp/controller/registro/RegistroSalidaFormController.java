@@ -48,12 +48,6 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
-    private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
-
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-
     @EJB(mappedName = "regweb3/PlantillaEJB/local")
     private PlantillaLocal plantillaEjb;
 
@@ -411,6 +405,19 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
 
     }
 
+    /**
+     *
+     */
+    @RequestMapping(value = "/actualizarEvento", method = RequestMethod.GET)
+    public @ResponseBody
+    void actualizarEvento(@RequestParam Long idRegistroSalida, HttpServletRequest request) throws Exception {
+
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        registroSalidaEjb.actualizarEvento(idRegistroSalida,entidadActiva);
+
+    }
+
 
     /**
      * Procesa las opciones de comunes de un RegistroSalida, lo utilizamos en la creación y modificación.
@@ -592,7 +599,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
     }
 
 
-        @InitBinder("registroSalida")
+    @InitBinder("registroSalida")
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("id");
         binder.setDisallowedFields("registroDetalle.id");
