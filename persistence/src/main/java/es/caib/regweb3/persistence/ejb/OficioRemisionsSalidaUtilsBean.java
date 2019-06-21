@@ -90,19 +90,23 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         List<Long> registros = q.getResultList(); // Registros de salida que son Oficios de Remision
 
-        // Obtenemos los destinatarios de tipo administración de los registros anteriores
-        Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.tipo = :administracion and " +
-                "  i.registroDetalle.id in (:registros)");
-
-        // Parámetros
-        q1.setParameter("registros", registros);
-        q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-
-        List<Object[]> destinos = q1.getResultList();
-
         LinkedHashSet<Organismo> organismosDestino =  new LinkedHashSet<Organismo>();
-        for (Object[] object : destinos) {
-            organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
+
+        if(registros.size() > 0){
+            // Obtenemos los destinatarios de tipo administración de los registros anteriores
+            Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.tipo = :administracion and " +
+                    "  i.registroDetalle.id in (:registros)");
+
+            // Parámetros
+            q1.setParameter("registros", registros);
+            q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+
+            List<Object[]> destinos = q1.getResultList();
+
+
+            for (Object[] object : destinos) {
+                organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
+            }
         }
 
         return organismosDestino;
