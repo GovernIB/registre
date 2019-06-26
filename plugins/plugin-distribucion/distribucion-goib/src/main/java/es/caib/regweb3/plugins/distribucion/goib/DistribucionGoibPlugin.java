@@ -408,12 +408,12 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             firma.setTipusMime(anexoFull.getSignatureCustody().getMime());
             //transformamos el perfil y la firma que obtenemos de la validación del plugin a los valores que espera RIPEA
             transformarPerfilTipoFirma(anexoFull.getAnexo(),firma);
-            registreAnnex.getFirmes().add(firma);
+           // registreAnnex.getFirmes().add(firma);
 
-            /*if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
+            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
                 //Añadimos el objeto firma al registreAnnex.
                 registreAnnex.getFirmes().add(firma);
-            }*/
+            }
 
         }
         //Caso Anexo FIRMA DETACHED
@@ -438,13 +438,13 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
             //transformamos el perfil y la firma que obtenemos de la validación del plugin a los valores que espera RIPEA
             transformarPerfilTipoFirma(anexoFull.getAnexo(),firma);
-            registreAnnex.getFirmes().add(firma);
+          //  registreAnnex.getFirmes().add(firma);
 
             //todo Descomentar cuando funcione distribución
-           /* if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
+            if(anexoFull.getAnexo().getSignType()!= null && anexoFull.getAnexo().getSignProfile() != null) {
                 //Añadimos el objeto firma al registreAnnex.
                 registreAnnex.getFirmes().add(firma);
-            }*/
+            }
         }
 
         return registreAnnex;
@@ -512,9 +512,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         log.info("Firma Perfil " + firma.getPerfil());
         log.info("Firma Tipo " + firma.getTipus());
 
-        if(firma.getTipus() == null || firma.getPerfil() == null){
+       /* if(firma.getTipus() == null || firma.getPerfil() == null){
             log.info("Anexo: " + anexo.getTitulo());
             throw new Exception("Error: Tipus Firma o Perfil Firma no poden ser buits");
-        }
+        }*/
     }
 }
