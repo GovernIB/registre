@@ -51,8 +51,8 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
             if(result==true){
                 if(tipoRegistro=="salida"){ //Si es una salida eliminamos los anteriores
                     eliminarTodosInteresados();
+                    actualizarEventoRegistroSalida(idRegistroSalida,codigoDir3, denominacion, tipo, idRegistroDetalle);
                 }
-                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
 
             }else{
                 mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
@@ -85,25 +85,25 @@ function eliminarTodosInteresados(){
  * @param mensaje true o false para mostrar un mensaje aviso
  */
 function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, mensaje) {
+    alert("entro en addOrganismo");
 
     var fila = "<tr id=\"organismo"+codigoDir3+"\"><td>"+denominacion+"</td><td>"+tipo+"</td><td><span class=\"label label-danger\">No</span></td>"+
         "<td class=\"center\">"+
         "<a class=\"btn btn-danger btn-default btn-sm\"  onclick=\"eliminarOrganisnoInteresado('"+codigoDir3+"','"+idRegistroDetalle+"')\" href=\"javascript:void(0);\" title=\"Eliminar\"><span class=\"fa fa-eraser\"></span></a></td></tr>";
 
     $('#interesados').append(fila);
-
     // Mostramos mensaje de información
     if(idRegistroDetalle != null) {
         if (mensaje && idRegistroDetalle.length > 0) {
             mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
 
+
             // Actualizamos el evento del registro de salida
-            if(tipoRegistro === "salida"){
-                actualizarEventoRegistroSalida(idRegistroSalida);
-            }
+            /*if(tipoRegistro === "salida"){
+             actualizarEventoRegistroSalida(idRegistroSalida);
+             }*/
         }
     }
-
     mostrarOcultarTabla();
 
     // Recargamos la página cuando editemos una salida, lo hacemos por si se añade un Organismos SIR
@@ -1232,15 +1232,18 @@ function limpiarInteresadoDetalle(){
  *
  * @param idRegistroSalida
  */
-function actualizarEventoRegistroSalida(idRegistroSalida){
+function actualizarEventoRegistroSalida(idRegistroSalida,codigoDir3,denominacion,tipo,idRegistroDetalle){
 
     //Obtenemos los datos de la Persona a editar
     $.ajax({
         url: urlActualizarEventoRegistroSalida,
         data: { idRegistroSalida: idRegistroSalida},
         type: "GET",
+        beforeSend: function(objeto){
+            waitingDialog.show('Processant destinatari', {dialogSize: 'm', progressType: 'info'});
+        },
         success: function(result) {
-
+            addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true)
         }
     });
 }
