@@ -85,7 +85,6 @@ function eliminarTodosInteresados(){
  * @param mensaje true o false para mostrar un mensaje aviso
  */
 function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, mensaje) {
-    alert("entro en addOrganismo");
 
     var fila = "<tr id=\"organismo"+codigoDir3+"\"><td>"+denominacion+"</td><td>"+tipo+"</td><td><span class=\"label label-danger\">No</span></td>"+
         "<td class=\"center\">"+
