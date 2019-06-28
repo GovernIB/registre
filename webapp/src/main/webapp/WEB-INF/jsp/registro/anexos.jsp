@@ -29,6 +29,7 @@
                                 <spring:message code="anexo.nuevo"/> <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu anexoDropdown-${color}">
+
                                 <li class="submenu-complet">
                                     <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.archivo"/></a>
                                 </li>
@@ -374,7 +375,7 @@
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
-        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexo/nou/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />");
     }
 
 
@@ -394,7 +395,7 @@
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
-        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexoFichero/ficheros/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />");
     }
 
 
@@ -409,7 +410,7 @@
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
-        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${oficio.sir}" />");
+        loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />");
     }
 
 
@@ -429,7 +430,7 @@
         // Posa el títol al modal
         $('#anexoTitulo').html('<spring:message code="anexo.editar"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
-        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo + "/${oficio.sir}");
+        loadiframe("<c:url value="/anexo/editar/"/>" + idRegistroDetalle + "/" + tipoRegistro + "/" + idRegistro + "/" + idAnexo + "/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}");
     }
 
 
