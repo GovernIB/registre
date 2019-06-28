@@ -51,8 +51,8 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
             if(result==true){
                 if(tipoRegistro=="salida"){ //Si es una salida eliminamos los anteriores
                     eliminarTodosInteresados();
-                    actualizarEventoRegistroSalida(idRegistroSalida,codigoDir3, denominacion, tipo, idRegistroDetalle);
                 }
+                addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
 
             }else{
                 mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
@@ -96,11 +96,10 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
         if (mensaje && idRegistroDetalle.length > 0) {
             mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
 
-
             // Actualizamos el evento del registro de salida
-            /*if(tipoRegistro === "salida"){
+            if(tipoRegistro === "salida"){
              actualizarEventoRegistroSalida(idRegistroSalida);
-             }*/
+             }
         }
     }
     mostrarOcultarTabla();
@@ -1238,11 +1237,16 @@ function actualizarEventoRegistroSalida(idRegistroSalida,codigoDir3,denominacion
         url: urlActualizarEventoRegistroSalida,
         data: { idRegistroSalida: idRegistroSalida},
         type: "GET",
-        beforeSend: function(objeto){
-            waitingDialog.show('Processant destinatari', {dialogSize: 'm', progressType: 'info'});
-        },
         success: function(result) {
-            addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true)
         }
     });
+}
+
+function sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+        if ((new Date().getTime() - start) > milliseconds){
+            break;
+        }
+    }
 }

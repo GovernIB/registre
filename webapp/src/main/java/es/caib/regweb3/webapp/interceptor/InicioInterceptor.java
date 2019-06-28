@@ -76,7 +76,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     Usuario usuario = usuarioEjb.findByIdentificador(identificador);
 
                     if (usuario != null) { // El usuario existe en REGWEB3
-
                         // Si el usuario es de tipo aplicación, no puede acceder.
                         if (usuario.getTipoUsuario().equals(RegwebConstantes.TIPO_USUARIO_APLICACION)) {
                             log.info(usuario.getNombreCompleto() + " es un usuario de tipo aplicación y no tiene acceso a REGWEB3.");
@@ -95,8 +94,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     } else { // El usuario NO existe en REGWEB3
 
-                        log.info("El usuario " + identificador + " no existe en REGWEB3, lo crearemos.");
-
                         Usuario nuevoUsuario = loginService.crearUsuario(identificador);
 
                         if (nuevoUsuario != null) {
@@ -111,6 +108,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                             // Configuramos en la sesion el usuario, sus roles, oficinas, etc..
                             loginInfo = loginService.configurarUsuario(nuevoUsuario, request);
+
                         } else {
 
                             log.info("No está autorizado: " + identificador);
@@ -120,6 +118,8 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     }
                 }
+
+
                 //Obtenemos si la entidad tiene libros pendientes de procesar
                 boolean tienePendientesDeProcesar = false;
                 if(loginInfo.getEntidadActiva()!=null) {
@@ -214,8 +214,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     response.sendRedirect("/regweb3/entidad/pendientesprocesar");
                     return false;
                 }
-
-
 
                 // Validamos las propiedades de dir3 para poder atacar a dir3caib
                 if (request.getRequestURI().equals("/regweb3/dir3/datosCatalogo")) {
