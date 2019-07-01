@@ -77,7 +77,7 @@ public class InteresadoController extends BaseController{
 
                     String organismoCodigo = hayOrganismoInteresado(session);
                     if(StringUtils.isNotEmpty(organismoCodigo)){
-                        log.info("Ya hay un Destinatario Organismo asociado en la sesion, lo sustituimos por el nuevo");
+                        //log.info("Ya hay un Destinatario Organismo asociado en la sesion, lo sustituimos por el nuevo");
                         eliminarOrganismoSesion(organismoCodigo, session, variableSesion);
                     }
 
