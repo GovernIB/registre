@@ -28,7 +28,6 @@ function procesarOrganismo(organismoAProcesar) {
         },
 
         success: function(respuesta) {
-            alert("Hemos llegado");
             var idPanel = '#panel'+organismoAProcesar;
             if(respuesta.status == 'FAIL'){
                   mostrarMensaje('#pendientes', trads['mensajeprocesadoerror'] + " " + organismoAProcesar);
