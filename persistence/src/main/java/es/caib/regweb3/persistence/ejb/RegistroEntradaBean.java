@@ -16,6 +16,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
@@ -297,6 +298,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
 
         Date inicio = new Date();
@@ -320,7 +322,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
-            peticion.append("Total registros: ").append(registros.size()).append(System.getProperty("line.separator"));
+            peticion.append("Total registros: ").append(result.size()).append(System.getProperty("line.separator"));
 
             for (Object[] object : result) {
                 RegistroEntrada registro = new RegistroEntrada();
@@ -339,12 +341,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             }
 
+            // Integración
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), "");
         }
-
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
     }
 
