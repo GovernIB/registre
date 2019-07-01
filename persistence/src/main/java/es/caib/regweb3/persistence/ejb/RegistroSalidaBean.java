@@ -16,6 +16,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
@@ -303,10 +304,8 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         RegistroSalida registroSalida = findById(idRegistro);
 
-        log.info("Antiguo evento: " + registroSalida.getEvento());
         Long evento = proximoEventoSalida(registroSalida,entidadActiva);
 
-        log.info("Nuevo evento: " + evento);
         registroSalida.setEvento(evento);
 
         merge(registroSalida);
@@ -314,6 +313,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
 
         Date inicio = new Date();
@@ -336,6 +336,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             List<RegistroSalida> registros = q.getResultList();
 
             peticion.append("Total registros: ").append(registros.size()).append(System.getProperty("line.separator"));
+
             for (RegistroSalida registroSalida:registros) {
                 Long evento = proximoEventoSalida(registroSalida, entidad);
 
@@ -346,12 +347,13 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             }
 
+            // Integración
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de salidas", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
+
         }catch (Exception e){
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), "");
         }
-
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de salidas", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
     }
 

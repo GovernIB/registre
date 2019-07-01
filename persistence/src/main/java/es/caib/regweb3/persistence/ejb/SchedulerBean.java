@@ -64,6 +64,7 @@ public class SchedulerBean implements SchedulerLocal{
 
 
     @Override
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void actualizarProximoEventoRegistrosEntrada() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
@@ -81,6 +82,7 @@ public class SchedulerBean implements SchedulerLocal{
     }
 
     @Override
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void actualizarProximoEventoRegistrosSalida() throws Exception{
 
         List<Entidad> entidades = entidadEjb.getAll();
