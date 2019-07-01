@@ -35,6 +35,7 @@ function addOrganismoInteresadoPlantilla(tipo,idRegistroDetalle, codigoDir3, den
  * @param codigoDir3
  * @param denominacion
  * @param idRegistroDetalle
+ * @param tipo
  */
 function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, tipo){
 
@@ -902,13 +903,9 @@ function mostrarPersonaFisica(){
     ocultaPersonaJuridica();
 
     // Mostramos Persona Juridica
-    //$('#personaFisica').removeAttr("disabled","disabled");
     $('#personaFisica').show();
-    //$('#personaFisica_chosen').show();
     $('#personaFisicaLabel').show();
-    //$('#addPersonaFisica').show();
     $('#buscarPersonaFisica').show();
-    //$('#personaFisica').trigger("chosen:updated");
 
 }
 
@@ -926,13 +923,9 @@ function mostrarPersonaJuridica(){
     ocultaPersonaFisica();
 
     // Mostramos Persona Juridica
-    //$('#personaJuridica').removeAttr("disabled","disabled");
     $('#personaJuridica').show();
-    //$('#personaJuridica_chosen').show();
     $('#personaJuridicaLabel').show();
-    //$('#addPersonaJuridica').show();
     $('#buscarPersonaJuridica').show();
-    //$('#personaJuridica').trigger("chosen:updated");
 
 }
 
@@ -1114,7 +1107,6 @@ function actualizarCanalNotificacionInicio() {
  */
 function tiposDocumentoPersonaFisica(){
 
-    //$('#tipoDocumentoIdentificacion').val("0");
     $('#tipoDocumentoIdentificacion option[value="1"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="2"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="3"]').removeAttr("disabled");
@@ -1133,7 +1125,6 @@ function tiposDocumentoPersonaFisica(){
  */
 function tiposDocumentoPersonaJuridica(){
 
-    //$('#tipoDocumentoIdentificacion').val("0");
     $('#tipoDocumentoIdentificacion option[value="1"]').attr("disabled", "disabled");
     $('#tipoDocumentoIdentificacion option[value="2"]').removeAttr("disabled");
     $('#tipoDocumentoIdentificacion option[value="3"]').attr("disabled", "disabled");
@@ -1230,23 +1221,15 @@ function limpiarInteresadoDetalle(){
  *
  * @param idRegistroSalida
  */
-function actualizarEventoRegistroSalida(idRegistroSalida,codigoDir3,denominacion,tipo,idRegistroDetalle){
+function actualizarEventoRegistroSalida(idRegistroSalida){
 
     //Obtenemos los datos de la Persona a editar
     $.ajax({
         url: urlActualizarEventoRegistroSalida,
+        async: false,
         data: { idRegistroSalida: idRegistroSalida},
         type: "GET",
         success: function(result) {
         }
     });
-}
-
-function sleep(milliseconds) {
-    var start = new Date().getTime();
-    for (var i = 0; i < 1e7; i++) {
-        if ((new Date().getTime() - start) > milliseconds){
-            break;
-        }
-    }
 }
