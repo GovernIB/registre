@@ -13,13 +13,15 @@ public class RegistrarForm {
     private Long idLibro;
     private Long idIdioma;
     private Long idTipoAsunto;
+    private String codigoSustituto; //Organismo Sustituto escogido
 
     private List<CamposNTI> camposNTIs;
 
-    public RegistrarForm(Long idLibro, Long idIdioma, Long idTipoAsunto) {
+    public RegistrarForm(Long idLibro, Long idIdioma, Long idTipoAsunto,String codigoSustituto) {
         this.idLibro = idLibro;
         this.idIdioma = idIdioma;
         this.idTipoAsunto = idTipoAsunto;
+        this.codigoSustituto = codigoSustituto;
     }
 
     public RegistrarForm() {
@@ -48,6 +50,14 @@ public class RegistrarForm {
 
     public void setIdTipoAsunto(Long idTipoAsunto) {
         this.idTipoAsunto = idTipoAsunto;
+    }
+
+    public String getCodigoSustituto() {
+        return codigoSustituto;
+    }
+
+    public void setCodigoSustituto(String codigoSustituto) {
+        this.codigoSustituto = codigoSustituto;
     }
 
     public List<CamposNTI> getCamposNTIs() {
