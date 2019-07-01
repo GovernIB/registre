@@ -7,7 +7,10 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.*;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
-import es.caib.regweb3.utils.*;
+import es.caib.regweb3.utils.Configuracio;
+import es.caib.regweb3.utils.Dir3CaibUtils;
+import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -54,6 +57,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private IntegracionLocal integracionEjb;
 
 
     @Override
@@ -294,46 +298,53 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     @SuppressWarnings(value = "unchecked")
     public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
-        long start = System.currentTimeMillis();
-        Query q;
-        q = em.createQuery("Select re.id, re.oficina from RegistroEntrada as re where " +
-                "re.oficina.organismoResponsable.entidad.id = :idEntidad and re.evento is null " +
-                "and re.estado = :valido order by fecha desc");
 
-        // Parámetros
-        q.setParameter("idEntidad", entidad.getId());
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        peticion.append("setMaxResults: ").append(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId())).append(System.getProperty("line.separator"));
 
-        List<Object[]> result = q.getResultList();
+        try{
 
-        log.info("");
-        log.info("Total registros de entrada a buscar evento: " + result.size());
-        log.info("");
+            Query q;
+            q = em.createQuery("Select re.id, re.oficina from RegistroEntrada as re where " +
+                    "re.oficina.organismoResponsable.entidad.id = :idEntidad and re.evento is null " +
+                    "and re.estado = :valido order by fecha desc");
 
-        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+            // Parámetros
+            q.setParameter("idEntidad", entidad.getId());
+            q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+            q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
 
-        for (Object[] object : result) {
-            RegistroEntrada registro = new RegistroEntrada();
-            registro.setId((Long) object[0]);
-            registro.setOficina((Oficina) object[1]);
-            registros.add(registro);
+            List<Object[]> result = q.getResultList();
+
+            List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+
+            peticion.append("Total registros: ").append(registros.size()).append(System.getProperty("line.separator"));
+
+            for (Object[] object : result) {
+                RegistroEntrada registro = new RegistroEntrada();
+                registro.setId((Long) object[0]);
+                registro.setOficina((Oficina) object[1]);
+                registros.add(registro);
+            }
+
+            for (RegistroEntrada registroEntrada:registros) {
+                Long evento = proximoEventoEntrada(registroEntrada, entidad);
+
+                Query q1 = em.createQuery("update RegistroEntrada set evento=:evento where id = :idRegistro");
+                q1.setParameter("evento", evento);
+                q1.setParameter("idRegistro", registroEntrada.getId());
+                q1.executeUpdate();
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entrada", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), "");
         }
 
-
-        for (RegistroEntrada registroEntrada:registros) {
-            Long evento = proximoEventoEntrada(registroEntrada, entidad);
-            log.info("Evento: " + evento);
-
-            Query q1 = em.createQuery("update RegistroEntrada set evento=:evento where id = :idRegistro");
-            q1.setParameter("evento", evento);
-            q1.setParameter("idRegistro", registroEntrada.getId());
-            q1.executeUpdate();
-
-        }
-
-        log.info("");
-        log.info("Tiempo total actualizarRegistrosSinEvento: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entrada", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
     }
 

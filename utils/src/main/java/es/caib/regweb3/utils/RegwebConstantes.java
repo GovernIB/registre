@@ -692,6 +692,7 @@ public interface RegwebConstantes {
     Long INTEGRACION_SIR = 4L;
     Long INTEGRACION_JUSTIFICANTE = 5L;
     Long INTEGRACION_CERRAR_EXPEDIENTE = 6L;
+    Long INTEGRACION_ACTUALIZAR_EVENTO = 7L;
 
     Long[] INTEGRACION_TIPOS = {
             INTEGRACION_CUSTODIA,
@@ -699,7 +700,8 @@ public interface RegwebConstantes {
             INTEGRACION_FIRMA,
             INTEGRACION_DISTRIBUCION,
             INTEGRACION_WS,
-            INTEGRACION_SIR
+            INTEGRACION_SIR,
+            INTEGRACION_ACTUALIZAR_EVENTO
     };
 
     Long[] INTEGRACION_TIPOS_CAIB = {
@@ -709,7 +711,8 @@ public interface RegwebConstantes {
             INTEGRACION_DISTRIBUCION,
             INTEGRACION_WS,
             INTEGRACION_CERRAR_EXPEDIENTE,
-            INTEGRACION_SIR
+            INTEGRACION_SIR,
+            INTEGRACION_ACTUALIZAR_EVENTO
     };
 
     /* -------------- ESTADO INTEGRACION --------------*/
