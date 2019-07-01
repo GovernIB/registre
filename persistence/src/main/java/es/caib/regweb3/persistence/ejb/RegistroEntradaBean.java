@@ -341,10 +341,10 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         }catch (Exception e){
             e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entrada", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), "");
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), "");
         }
 
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entrada", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(),System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
     }
 
