@@ -209,12 +209,16 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException, I18NValidationException {
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
+
+        if(registro.getEvento() == null){
+            Mensaje.saveMessageError(request, getMessage("aviso.registro.evento"));
+            return "redirect:/inici";
+        }
+
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-        //obtiene todos los organismos de la oficina Activa(Vigentes,Extinguidos,Anulados y Transitorios
-        LinkedHashSet<Organismo> todosOrganismosOficinaActiva = new LinkedHashSet<Organismo>(organismoEjb.getAllByOficinaActiva(oficinaActiva));
 
         model.addAttribute("registro",registro);
         model.addAttribute("oficina", oficinaActiva);
