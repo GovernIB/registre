@@ -68,6 +68,7 @@
                                             <tr>
                                                 <th><spring:message code="oficina.denominacion"/></th>
                                                 <th><spring:message code="oficina.codigo"/></th>
+                                                <th><spring:message code="oficina.organismoResponsable"/></th>
                                             </tr>
                                             </thead>
 
@@ -76,6 +77,7 @@
                                                 <tr>
                                                     <td>${oficina.denominacion}</td>
                                                     <td>${oficina.codigo}</td>
+                                                    <td>${oficina.organismoResponsable.denominacion} - ${oficina.organismoResponsable.codigo}</td>
                                                 </tr>
                                             </c:forEach>
                                             </tbody>

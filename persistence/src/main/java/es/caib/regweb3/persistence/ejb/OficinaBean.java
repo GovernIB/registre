@@ -204,7 +204,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             oficinaVirtualWhere = " and :oficinaVirtual not in elements(oficina.servicios)";
         }
 
-        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion as nombre, oficina.organismoResponsable.id from Oficina as oficina where " +
+        Query q = em.createQuery("Select oficina.id, oficina.codigo, oficina.denominacion as nombre, oficina.organismoResponsable.id, oficina.organismoResponsable.codigo, oficina.organismoResponsable.denominacion from Oficina as oficina where " +
                 "oficina.organismoResponsable.id =:idOrganismo and " +
                 "oficina.estado.codigoEstadoEntidad=:vigente  " +
                 oficinaVirtualWhere);
@@ -220,7 +220,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
+            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3],(String)object[4], (String)object[5]);
 
             oficinas.add(oficina);
         }

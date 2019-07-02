@@ -119,7 +119,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
             oficinaVirtualWhere = " and :oficinaVirtual not in elements(roo.oficina.servicios)";
         }
 
-        Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.codigo, roo.oficina.denominacion, oficina.organismoResponsable.id  from RelacionOrganizativaOfi as roo " +
+        Query q = em.createQuery("Select distinct roo.oficina.id,roo.oficina.codigo, roo.oficina.denominacion, roo.oficina.organismoResponsable.id, roo.oficina.organismoResponsable.codigo, roo.oficina.organismoResponsable.denominacion  from RelacionOrganizativaOfi as roo " +
                 "where roo.organismo.id = :idOrganismo and roo.estado.codigoEstadoEntidad = :vigente " +
                 oficinaVirtualWhere);
 
@@ -134,7 +134,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result){
-            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3]);
+            Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3],(String)object[4],(String)object[5]);
 
             oficinas.add(oficina);
         }
