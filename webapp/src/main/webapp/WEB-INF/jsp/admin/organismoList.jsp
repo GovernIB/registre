@@ -46,7 +46,7 @@
                                 <div class="col-xs-4 pull-left align-right"><spring:message
                                         code="entidad.entidad"/></div>
                                 <div class="col-xs-8">
-                                    <form:select path="entidad" items="${loginInfo.entidades}" itemValue="id" itemLabel="nombre"
+                                    <form:select path="entidad" items="${entidades}" itemValue="id" itemLabel="nombre"
                                                  cssClass="chosen-select"/>
                                 </div>
                             </div>
