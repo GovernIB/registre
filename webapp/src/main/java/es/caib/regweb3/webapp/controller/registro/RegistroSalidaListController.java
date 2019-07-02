@@ -191,6 +191,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     public String detalleRegistroSalida(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
 
         RegistroSalida registro = registroSalidaEjb.findById(idRegistro);
+
+        if(registro.getEvento() == null){
+            Mensaje.saveMessageError(request, getMessage("aviso.registro.evento"));
+            return "redirect:/inici";
+        }
+
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
