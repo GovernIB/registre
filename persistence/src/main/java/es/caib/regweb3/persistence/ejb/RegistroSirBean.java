@@ -1520,7 +1520,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
+    public RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs, String codigoSustituto)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1531,12 +1531,16 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
         registroEntrada.setLibro(libro);
 
-        // Organismo destino
+        // Determinamos el organismo destino en función de lo que se indique
         Organismo organismoDestino;
-        if(registroSir.getCodigoUnidadTramitacionDestino() != null){
+        // Si han indicado órgano sustituto es porque el organismo destino está extinguido y se debe coger el sustituto
+        if(!codigoSustituto.isEmpty()){
+            organismoDestino = organismoEjb.findByCodigoEntidad(codigoSustituto,usuario.getEntidad().getId());
+            registroEntrada.setDestino(organismoDestino);
+        }else if(registroSir.getCodigoUnidadTramitacionDestino() != null){ //El organismo destino no está extinguido y está informado
             organismoDestino = organismoEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionDestino(),usuario.getEntidad().getId());
             registroEntrada.setDestino(organismoDestino);
-        }else{
+        }else{ // el destino no está informado, se coge el organismo responsable de la oficina indicada.
             Oficina oficina = oficinaEjb.findByCodigoEntidad(registroSir.getCodigoEntidadRegistral(),usuario.getEntidad().getId());
             organismoDestino = organismoEjb.findByCodigoEntidad(oficina.getOrganismoResponsable().getCodigo(),usuario.getEntidad().getId());
         }

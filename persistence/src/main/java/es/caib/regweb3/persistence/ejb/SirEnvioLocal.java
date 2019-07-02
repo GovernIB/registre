@@ -80,7 +80,7 @@ public interface SirEnvioLocal {
      * @param camposNTIs
      * @return
      */
-    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs, String codigoSustituto) throws Exception, I18NException, I18NValidationException;
 
 
     /**
