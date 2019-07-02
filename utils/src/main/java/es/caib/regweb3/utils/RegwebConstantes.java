@@ -794,6 +794,7 @@ public interface RegwebConstantes {
     };
 
     /* -------------- PRÓXIMAS EVENTO POSIBLES REGISTRO --------------*/
+    Long EVENTO_PROCESADO = 0L;
     Long EVENTO_DISTRIBUIR = 1L;
     Long EVENTO_OFICIO_INTERNO = 2L;
     Long EVENTO_OFICIO_EXTERNO = 3L;

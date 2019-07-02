@@ -38,11 +38,17 @@
                         </div>
 
                         <div class="panel-body">
-                            <p>Registros de entrada totales: ${totalEntradas}</p>
-                            <p>Registros de salida totales: ${totalSalidas}</p>
+                            <p>Registros de entrada <b>totales:</b> ${totalEntradas}</p>
+                            <p>Registros de salida <b>totales:</b> ${totalSalidas}</p>
                             <br>
-                            <p>Registros de entrada válidos sin evento: ${entradasPendientes}</p>
-                            <p>Registros de salida válidos sin evento: ${salidasPendientes}</p>
+                            <p>Registros de <b>entrada</b> válidos o pendiente de visar sin evento: ${entradasPendientes}</p>
+                            <p>Registros de <b>salida</b> válidos  o pendiente de visar sin evento: ${salidasPendientes}</p>
+                            <br>
+                            <p>Registros de <b>entrada</b> con evento asignado: ${entradasEvento}</p>
+                            <p>Registros de <b>salida</b> con evento asignado: ${salidasEvento}</p>
+                            <br>
+                            <p>Registros de <b>entrada</b> con evento 0: ${entradasProcesadas}</p>
+                            <p>Registros de <b>salida</b> con evento 0: ${salidasProcesadas}</p>
                         </div>
                     </div>
 

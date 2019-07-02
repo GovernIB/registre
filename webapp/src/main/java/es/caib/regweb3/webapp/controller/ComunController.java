@@ -57,10 +57,22 @@ public class ComunController extends BaseController {
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where usuario.entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("entradasPendientes",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and estado=1 and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and estado=1 or estado=3 and usuario.entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasPendientes",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and estado=1 and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and estado=1 or estado=3 and usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("entradasEvento",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento!=0 and usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("salidasEvento",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento!=0 and usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("entradasProcesadas",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("salidasProcesadas",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
 
 
         return mav;

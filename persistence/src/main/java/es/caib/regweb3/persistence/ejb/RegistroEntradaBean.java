@@ -311,11 +311,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             Query q;
             q = em.createQuery("Select re.id, re.oficina from RegistroEntrada as re where " +
                     "re.oficina.organismoResponsable.entidad.id = :idEntidad and re.evento is null " +
-                    "and re.estado = :valido order by fecha desc");
+                    "and re.estado = :valido or re.estado = :pendienteVisar order by fecha desc");
 
             // Parámetros
             q.setParameter("idEntidad", entidad.getId());
             q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+            q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
 
             List<Object[]> result = q.getResultList();
