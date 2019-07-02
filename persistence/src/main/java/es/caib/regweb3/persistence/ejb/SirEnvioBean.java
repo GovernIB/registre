@@ -268,7 +268,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws Exception
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs)
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs, String codigoSustituto)
             throws Exception, I18NException, I18NValidationException  {
 
         Date inicio = new Date();
@@ -287,7 +287,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         RegistroEntrada registroEntrada;
 
         try {
-            registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs);
+            registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, idTipoAsunto, camposNTIs, codigoSustituto);
 
             // Creamos la TrazabilidadSir
             TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);

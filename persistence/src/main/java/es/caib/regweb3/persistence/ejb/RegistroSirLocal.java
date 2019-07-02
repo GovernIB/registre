@@ -182,7 +182,7 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs, String codigoSustituto) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param registroSir

@@ -78,6 +78,7 @@
                 ${registroSir.decodificacionUnidadTramitacionDestino} -
             </c:if>
                 ${registroSir.codigoUnidadTramitacionDestino}
+            <c:if test="${estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"><span class="label label-danger"><spring:message code="unidad.estado.${estadoDestino.codigoEstadoEntidad}" /></span></c:if>
         </dd>
     </c:if>
 
