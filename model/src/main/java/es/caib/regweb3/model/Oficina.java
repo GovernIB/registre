@@ -100,6 +100,13 @@ public class Oficina implements Serializable{
         this.organismoResponsable = new Organismo(organismoResponsable);
     }
 
+    public Oficina(Long id, String codigo, String denominacion,  Long organismoResponsable, String organismoResponsableCodigo, String organismoResponsableDenominacion) {
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.organismoResponsable = new Organismo(organismoResponsable,organismoResponsableCodigo,organismoResponsableDenominacion );
+    }
+
     public Oficina(Oficina o) {
       super();
       this.id = o.id;
