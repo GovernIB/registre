@@ -401,60 +401,6 @@
                                 </c:if>
 
 
-                                <%--REGISTROS DE ENTRADA PENDIENTES DE VISAR--%>
-                                <%--<c:set var="avisos" value="${avisos+1}"/>
-                                    <div class="col-xs-6 centrat">
-                                        <div class="panel panel-primary">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="registroEntrada.pendientesVisar"/></strong> </h3>
-                                            </div>
-
-                                            <div class="panel-body">
-
-                                                <div class="table-responsive-inici">
-
-                                                    <table class="table table-hover table-striped marg-bot0">
-                                                        <colgroup>
-                                                            <col width="80">
-                                                            <col>
-                                                            <col>
-                                                            <col>
-                                                            <col>
-                                                            <col width="51">
-                                                        </colgroup>
-                                                        <thead>
-                                                        <tr>
-                                                            <th><spring:message code="regweb.numero"/></th>
-                                                            <th><spring:message code="registroEntrada.fecha"/></th>
-                                                            <th><spring:message code="registroEntrada.libro.corto"/></th>
-                                                            <th><spring:message code="registroEntrada.usuario"/></th>
-                                                            <th><spring:message code="registroEntrada.extracto"/></th>
-                                                            <th class="center"><spring:message code="regweb3.acciones"/></th>
-                                                        </tr>
-                                                        </thead>
-
-                                                        <tbody>
-                                                        <c:forEach var="registroEntrada" items="${pendientesVisar}" varStatus="status">
-                                                            <tr>
-                                                                <td>${registroEntrada.numeroRegistroFormateado}</td>
-                                                                <td><fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                                <td>${registroEntrada.libro}</td>
-                                                                <td>${registroEntrada.usuario}</td>
-                                                                <td>${registroEntrada.extracto}</td>
-                                                                <td class="center">
-                                                                    <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                                </td>
-                                                            </tr>
-                                                        </c:forEach>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:if>
-                                --%>
-
                                 <%--OFICIOS PENDIENTES DE LLEGADA--%>
                                 <c:if test="${not empty oficiosPendientesLlegada}">
                                     <div class="col-xs-6 filas">
