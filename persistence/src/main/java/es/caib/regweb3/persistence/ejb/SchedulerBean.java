@@ -76,6 +76,8 @@ public class SchedulerBean implements SchedulerLocal{
                 log.info("------------- Actualizando proximos eventos de los Registros de Entrada de " + entidad.getNombre() + " -------------");
                 log.info(" ");
                 registroEntradaEjb.actualizarRegistrosSinEvento(entidad);
+                log.info(" ");
+                log.info("------------- FIN Actualizando proximos eventos de los Registros de Entrada de " + entidad.getNombre() + " -------------");
             }
 
         }
@@ -94,6 +96,8 @@ public class SchedulerBean implements SchedulerLocal{
                 log.info("------------- Actualizando proximos eventos de los Registros de Salida de " + entidad.getNombre() + " -------------");
                 log.info(" ");
                 registroSalidaEjb.actualizarRegistrosSinEvento(entidad);
+                log.info(" ");
+                log.info("------------- FIN Actualizando proximos eventos de los Registros de Salida de " + entidad.getNombre() + " -------------");
             }
 
         }
