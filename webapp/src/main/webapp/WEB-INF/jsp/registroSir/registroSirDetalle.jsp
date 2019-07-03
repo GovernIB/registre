@@ -125,25 +125,27 @@
                                 </div>
 
                                 <%--Organismos Sustitutos del Extinguido--%>
-                            <c:if test="${estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
-                            <div class="form-group col-xs-12">
-                                <span class="text-vermell ">
-                                    <spring:message code="registroSir.organismo.destino.extinguido"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>
-                                    <spring:message code="registroSir.organismo.destino.extinguido2"/>
-                                </span>
-                            </div>
-
+                            <c:if test="${registroSir.codigoUnidadTramitacionDestino != null}">
+                                <c:if test="${estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
                                 <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="codigoSustituto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino.sustituto"/></label>
-                                    </div>
-                                    <div class="col-xs-7 no-pad-right" id="idSustituto">
-                                        <form:select path="codigoSustituto" cssClass="chosen-select">
-                                            <form:options items="${sustitutos}" itemValue="codigo" itemLabel="denominacion"/>
-                                        </form:select>
-                                        <span class="errors"></span>
-                                    </div>
+                                    <span class="text-vermell ">
+                                        <spring:message code="registroSir.organismo.destino.extinguido"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>
+                                        <spring:message code="registroSir.organismo.destino.extinguido2"/>
+                                    </span>
                                 </div>
+
+                                    <div class="form-group col-xs-12">
+                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="codigoSustituto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino.sustituto"/></label>
+                                        </div>
+                                        <div class="col-xs-7 no-pad-right" id="idSustituto">
+                                            <form:select path="codigoSustituto" cssClass="chosen-select">
+                                                <form:options items="${sustitutos}" itemValue="codigo" itemLabel="denominacion"/>
+                                            </form:select>
+                                            <span class="errors"></span>
+                                        </div>
+                                    </div>
+                                </c:if>
                             </c:if>
 
                                 <div class="row">

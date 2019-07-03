@@ -1534,7 +1534,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         // Determinamos el organismo destino en función de lo que se indique
         Organismo organismoDestino;
         // Si han indicado órgano sustituto es porque el organismo destino está extinguido y se debe coger el sustituto
-        if(!codigoSustituto.isEmpty()){
+        if(codigoSustituto != null && !codigoSustituto.isEmpty()){
             organismoDestino = organismoEjb.findByCodigoEntidad(codigoSustituto,usuario.getEntidad().getId());
             registroEntrada.setDestino(organismoDestino);
         }else if(registroSir.getCodigoUnidadTramitacionDestino() != null){ //El organismo destino no está extinguido y está informado

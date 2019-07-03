@@ -95,6 +95,10 @@ public class EntidadController extends BaseController {
     @EJB(mappedName = "regweb3/NotificacionEJB/local")
     private NotificacionLocal notificacionEjb;
 
+    @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
+    private OficioRemisionLocal oficioRemisionEjb;
+
+
     /**
      * Listado de todas las Entidades
      */
@@ -911,6 +915,8 @@ public class EntidadController extends BaseController {
                                 log.info("Libros del organismo: " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo() + "han sido reasigandos al organismo:  " + orgSustituye.getDenominacion() + ":" + orgSustituye.getCodigo());
                                 // Añadimos todos los organimos procesados automáticamente
                                 extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), orgSustituye);
+                                //Actualizamos todos los oficios pendientes de llegada por el organismo que los sustituye
+                                oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(),orgSustituye.getId());
                             }
                             //actualizar pendiente
                             pendiente.setProcesado(true);
@@ -927,7 +933,8 @@ public class EntidadController extends BaseController {
                                 pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                                 pendienteEjb.merge(pendiente);
                             }
-
+                            Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
+                            oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(),orgSustituye.getId());
                         }
                     }
                 } else {  // ANULADOS
