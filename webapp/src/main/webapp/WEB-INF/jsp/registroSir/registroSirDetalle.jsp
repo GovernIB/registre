@@ -125,8 +125,8 @@
                                 </div>
 
                                 <%--Organismos Sustitutos del Extinguido--%>
-                            <c:if test="${registroSir.codigoUnidadTramitacionDestino != null}">
-                                <c:if test="${estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
+                            <c:if test="${registroSir.codigoUnidadTramitacionDestino != null && not empty sustitutos}">
+                                <c:if test="${not  empty estadoDestino and estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
                                 <div class="form-group col-xs-12">
                                     <span class="text-vermell ">
                                         <spring:message code="registroSir.organismo.destino.extinguido"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>
