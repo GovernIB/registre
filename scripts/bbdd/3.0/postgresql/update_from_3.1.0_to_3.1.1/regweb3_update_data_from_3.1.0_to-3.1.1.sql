@@ -14,5 +14,5 @@ update RWE_REGISTRO_DETALLE set presencial=false where id in(select rs.registro_
 update RWE_REGISTRO_DETALLE set presencial=false where id in(select re.REGISTRO_DETALLE from RWE_TRAZABILIDAD_SIR tsir, RWE_REGISTRO_ENTRADA re where tsir.TIPO=4 and tsir.REGISTRO_ENTRADA=re.ID);
 
 -- Marcamos el evento a 0 de los registros que no son Válidos ni Pendientes de Visar
-update RWE_REGISTRO_ENTRADA set evento=0 where evento is null and estado != 1 and estado != 3;
-update RWE_REGISTRO_SALIDA set evento=0 where evento is null and estado != 1 and estado != 3;
+update RWE_REGISTRO_ENTRADA set evento=0 where evento is null and (estado != 1 and estado != 3);
+update RWE_REGISTRO_SALIDA set evento=0 where evento is null and (estado != 1 and estado != 3);
