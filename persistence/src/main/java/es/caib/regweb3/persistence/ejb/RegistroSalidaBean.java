@@ -326,7 +326,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             Query q;
             q = em.createQuery("Select rs from RegistroSalida as rs where " +
                     "rs.oficina.organismoResponsable.entidad.id = :idEntidad and rs.evento is null " +
-                    "and rs.estado = :valido or rs.estado = :pendienteVisar order by fecha desc");
+                    "and (rs.estado = :valido or rs.estado = :pendienteVisar) order by fecha desc");
 
             // Parámetros
             q.setParameter("idEntidad", entidad.getId());
