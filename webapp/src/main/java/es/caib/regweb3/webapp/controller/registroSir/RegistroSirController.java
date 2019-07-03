@@ -225,23 +225,26 @@ public class RegistroSirController extends BaseController {
                 if(registroSir.getCodigoUnidadTramitacionDestino()!=null){
                     UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
                     Organismo organismoDestino = organismoEjb.findByCodigoEntidadSinEstadoLigero(registroSir.getCodigoUnidadTramitacionDestino(),usuarioEntidad.getEntidad().getId());
-                    CatEstadoEntidad estado = organismoDestino.getEstado();
-                    //Si el órgano está extinguido obtenemos sus órganos sustitutos
-                    if(!RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(estado.getCodigoEstadoEntidad())){
-                        Set<Organismo> historicosFinales = new HashSet<Organismo>();
-                        Set<Organismo> sustitutos = new HashSet<Organismo>();
-                        //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
-                        organismoEjb.obtenerHistoricosFinales(organismoDestino.getId(),historicosFinales);
+                    if(organismoDestino!=null) {
+                        CatEstadoEntidad estado = organismoDestino.getEstado();
+                        //Si el órgano está extinguido obtenemos sus órganos sustitutos
+                        if (!RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(estado.getCodigoEstadoEntidad())) {
+                            Set<Organismo> historicosFinales = new HashSet<Organismo>();
+                            Set<Organismo> sustitutos = new HashSet<Organismo>();
+                            //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
+                            organismoEjb.obtenerHistoricosFinales(organismoDestino.getId(), historicosFinales);
 
-                        for(Organismo organismo: historicosFinales){
-                            //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
-                            if(oficinaEjb.tieneOficinasServicio(organismoDestino.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)){
-                                sustitutos.add(organismo);
+                            for (Organismo organismo : historicosFinales) {
+                                //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
+                                if (oficinaEjb.tieneOficinasServicio(organismoDestino.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)) {
+                                    sustitutos.add(organismo);
+                                }
                             }
+                            model.addAttribute("sustitutos", sustitutos);
                         }
-                        model.addAttribute("sustitutos", sustitutos);
+                        model.addAttribute("estadoDestino", estado);
                     }
-                    model.addAttribute("estadoDestino", estado);
+
                 }
             }else{
                 Mensaje.saveMessageError(request, getMessage("registroSir.error.destino"));
