@@ -326,11 +326,10 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
         for (OficinaTF oficinaTF : oficinas) {
 
             if (oficinaTF != null) {
+                Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
 
                 // OficinaResponsable
                 if (oficinaTF.getCodOfiResponsable() != null) {
-
-                    Oficina oficina = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodigo(), idEntidad);
                     Oficina oficinaResponsable = oficinaEjb.findByCodigoEntidadSinEstado(oficinaTF.getCodOfiResponsable(), idEntidad);
                     if (oficinaResponsable != null) {
                         oficina.setOficinaResponsable(oficinaResponsable);
@@ -338,8 +337,10 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     } else {
                         log.info("TIENE OFICINA RESPONSABLE, PERO NO LA ENCUENTRA: " + oficinaTF.getCodOfiResponsable());
                     }
+                }else{
+                    oficina.setOficinaResponsable(null);
+                    oficinaEjb.merge(oficina);
                 }
-
             }
         }
     }
