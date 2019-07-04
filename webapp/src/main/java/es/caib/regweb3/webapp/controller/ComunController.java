@@ -78,6 +78,43 @@ public class ComunController extends BaseController {
         return mav;
     }
 
+    @RequestMapping(value = "/eventoOficioInterno/{idOficina}")
+    public String actualizarEventoOficioInterno(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+            Oficina oficina = oficinaEjb.findById(idOficina);
+
+            Integer total = registroEntradaEjb.actualizarEventoOficioInterno(oficina);
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a OficioInterno de entrada de la oficina " +oficina.getDenominacion());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    @RequestMapping(value = "/eventoDistribuir/{idOficina}")
+    public String actualizarEventoDistribuir(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+
+            Oficina oficina = oficinaEjb.findById(idOficina);
+
+            Integer total = registroEntradaEjb.actualizarEventoDistribuir(oficina);
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a Distribuir de la oficina " +oficina.getDenominacion());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
     @RequestMapping(value = "/noAutorizado")
     public ModelAndView noautorizado(HttpServletRequest request, HttpServletResponse response) {
         return new ModelAndView("noAutorizado");

@@ -221,6 +221,79 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
+    public Integer actualizarEventoOficioInterno(Oficina oficina) throws Exception{
+
+        // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        Set<Long> organismosId = new HashSet<Long>();
+
+        for (Organismo organismo : organismos) {
+            organismosId.add(organismo.getId());
+
+        }
+
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = " and destino.id not in (:organismosId)";
+        }
+
+        Query q = em.createQuery("update RegistroEntrada set evento=:evento " +
+                "where oficina.id = :idOficina and evento is null and (estado = :valido or estado = :pendienteVisar) and destino != null" + organismosWhere);
+
+        q.setParameter("evento", RegwebConstantes.EVENTO_OFICIO_INTERNO);
+        q.setParameter("idOficina", oficina.getId());
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+
+        if (organismosId.size() > 0) {
+            q.setParameter("organismosId", organismosId);
+        }
+        Integer total = q.executeUpdate();
+
+        log.info("Total actualizados: " + total);
+
+        return total;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
+    public Integer actualizarEventoDistribuir(Oficina oficina) throws Exception{
+
+        // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        Set<Long> organismosId = new HashSet<Long>();
+
+        for (Organismo organismo : organismos) {
+            organismosId.add(organismo.getId());
+        }
+
+        String organismosWhere = "";
+        if (organismos.size() > 0) {
+            organismosWhere = " and destino.id in (:organismosId)";
+        }
+
+        Query q = em.createQuery("update RegistroEntrada set evento=:evento " +
+                "where oficina.id = :idOficina and evento is null and (estado = :valido or estado = :pendienteVisar) and destino != null" + organismosWhere);
+
+        q.setParameter("evento", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q.setParameter("idOficina", oficina.getId());
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+
+        if (organismosId.size() > 0) {
+            q.setParameter("organismosId", organismosId);
+        }
+        Integer total = q.executeUpdate();
+
+        log.info("Total actualizados: " + total);
+
+        return total;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public Boolean isOficioRemisionExterno(Long idRegistro) throws Exception {
 
         Query q;
