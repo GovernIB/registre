@@ -117,7 +117,7 @@
                                                 <colgroup>
                                                     <col>
                                                     <col>
-                                                    <col width="50">
+                                                    <col width="151">
                                                 </colgroup>
                                                 <thead>
                                                 <tr>
@@ -137,6 +137,14 @@
                                                             <a class="btn btn-warning btn-sm"
                                                                href="<c:url value="/admin/oficina/${oficina.id}/edit"/>"
                                                                title="<spring:message code="regweb.editar"/>"><span
+                                                                    class="fa fa-pencil"></span></a>
+                                                            <a class="btn btn-success btn-sm" target="_blank"
+                                                               href="<c:url value="/eventoOficioInterno/${oficina.id}"/>"
+                                                               title="Evento Oficio Interno"><span
+                                                                    class="fa fa-pencil"></span></a>
+                                                            <a class="btn btn-info btn-sm" target="_blank"
+                                                               href="<c:url value="/eventoDistribuir/${oficina.id}"/>"
+                                                               title="Evento Distribuir"><span
                                                                     class="fa fa-pencil"></span></a>
                                                         </td>
                                                     </tr>
