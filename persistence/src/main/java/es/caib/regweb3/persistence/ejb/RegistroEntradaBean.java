@@ -249,11 +249,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (organismosId.size() > 0) {
             q.setParameter("organismosId", organismosId);
         }
-        Integer total = q.executeUpdate();
 
-        log.info("Total actualizados: " + total);
-
-        return total;
+        return q.executeUpdate();
     }
 
     @Override
@@ -285,11 +282,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (organismosId.size() > 0) {
             q.setParameter("organismosId", organismosId);
         }
-        Integer total = q.executeUpdate();
 
-        log.info("Total actualizados: " + total);
-
-        return total;
+        return q.executeUpdate();
     }
 
     @Override
