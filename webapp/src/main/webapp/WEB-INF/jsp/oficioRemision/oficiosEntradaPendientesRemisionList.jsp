@@ -219,7 +219,7 @@
                                                     <input type="hidden" id="idOrganismo" name="idOrganismo" value="${oficiosRemisionOrganismo.organismo.id}"/>
                                                 </c:if>
 
-                                                <c:if test="${oficiosRemisionOrganismo.externo}">
+                                                <c:if test="${oficiosRemisionOrganismo.externo && oficiosRemisionOrganismo.vigente}">
                                                     <input type="hidden" id="organismoExternoCodigo"
                                                            name="organismoExternoCodigo"
                                                            value="${oficiosRemisionOrganismo.organismo.codigo}"/>
@@ -239,7 +239,6 @@
                                                         <col>
                                                         <col>
                                                         <col>
-                                                        <%--<col>--%>
                                                         <col width="50">
                                                     </colgroup>
                                                     <thead>
@@ -250,7 +249,6 @@
                                                             <th><spring:message code="oficina.origen"/></th>
                                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                                             <th><spring:message code="registroEntrada.extracto"/></th>
-                                                            <%--<th><spring:message code="registroEntrada.interesados"/></th>--%>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
                                                     </thead>
