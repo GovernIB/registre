@@ -197,11 +197,11 @@
                                             <form:form action="${urlFormulario}" id="oficio" modelAttribute="oficioRemisionForm" method="post" cssClass="form-horizontal">
 
                                                 <input type="hidden" id="tipoOficioRemision" name="tipoOficioRemision" value="${oficioRemisionForm.tipoOficioRemision}"/>
-                                                <c:if test="${!oficiosRemisionOrganismo.externo}">
+                                                <c:if test="${!oficiosRemisionOrganismo.externo && oficiosRemisionOrganismo.vigente}">
                                                     <input type="hidden" id="idOrganismo" name="idOrganismo" value="${oficiosRemisionOrganismo.organismo.id}"/>
                                                 </c:if>
 
-                                                <c:if test="${oficiosRemisionOrganismo.externo}">
+                                                <c:if test="${oficiosRemisionOrganismo.externo && oficiosRemisionOrganismo.vigente}">
                                                     <input type="hidden" id="organismoExternoCodigo"
                                                            name="organismoExternoCodigo"
                                                            value="${oficiosRemisionOrganismo.organismo.codigo}"/>
@@ -220,7 +220,6 @@
                                                         <col>
                                                         <col>
                                                         <col>
-                                                        <%--<col>--%>
                                                         <col width="50">
                                                     </colgroup>
                                                     <thead>
@@ -231,7 +230,6 @@
                                                         <th><spring:message code="oficina.origen"/></th>
                                                         <th><spring:message code="registroSalida.origen"/></th>
                                                         <th><spring:message code="registroSalida.extracto"/></th>
-                                                        <%--<th><spring:message code="registroSalida.destinatarios"/></th>--%>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                     </tr>
                                                     </thead>
@@ -247,12 +245,6 @@
                                                             </td>
                                                             <td>${registroSalida.origen.denominacion}</td>
                                                             <td><c:out value="${registroSalida.registroDetalle.extracto}" escapeXml="true"/></td>
-                                                            <%--<td class="center">
-                                                                <label class="no-bold representante"
-                                                                        rel="popupAbajo"
-                                                                        data-content="<c:out value="${registroSalida.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
-                                                                        data-toggle="popover">${registroSalida.registroDetalle.totalInteresados}</label>
-                                                            </td>--%>
                                                             <td class="center">
                                                                 <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registroSalida.id}/detalle"/>"
                                                                    title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
@@ -287,7 +279,7 @@
                                                     <c:param name="entidad" value="registroSalida"/>
                                                 </c:import>
 
-                                            </form:form>
+
 
                                             <!-- Botonera Oficio Remision Interno-->
                                             <c:if test="${oficiosRemisionOrganismo.externo == false}">
@@ -389,6 +381,7 @@
 
                                                 </div>
                                             </c:if>
+                                            </form:form>
 
                                         </div>
                                     </c:if>

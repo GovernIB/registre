@@ -309,18 +309,17 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
             if(unidadTF != null){
                 Organismo organismoExterno = new Organismo(null,codigoOrganismo,unidadTF.getDenominacion());
+                oficios.setOrganismo(organismoExterno);
 
                 if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                     organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                     oficios.setVigente(true);
-                    oficios.setOrganismo(organismoExterno);
 
                 }else{// Organismo externo extinguido, obtenemos los organismos sustitutos
 
                     log.info("Organismo externo extinguido, buscamos sustitutos");
                     organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
                     oficios.setVigente(false);
-                    oficios.setOrganismo(organismoExterno);
 
                     Set<Organismo> sustitutos = new HashSet<Organismo>();
                     for(String sustituto: unidadTF.getHistoricosUO()){
