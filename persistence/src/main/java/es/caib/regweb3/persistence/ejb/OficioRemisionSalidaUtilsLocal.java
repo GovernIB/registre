@@ -27,7 +27,7 @@ public interface OficioRemisionSalidaUtilsLocal {
 
 
 
-    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, List<Libro> libros, Long tipoOficio, Integer total) throws Exception;
+    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
 
 
     /**
@@ -61,7 +61,7 @@ public interface OficioRemisionSalidaUtilsLocal {
      * @return
      * @throws Exception
      */
-    OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
+    OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva, Long tipoEvento) throws Exception;
 
     /**
      * @param registrosSalida

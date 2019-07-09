@@ -137,8 +137,8 @@ public class OficioRemisionController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/entradasPendientesRemision/{tipoOficio}", method = RequestMethod.GET)
-    public ModelAndView entradasPendientesRemision(@PathVariable Long tipoOficio, Model model, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/entradasPendientesRemision/{tipoEvento}", method = RequestMethod.GET)
+    public ModelAndView entradasPendientesRemision(@PathVariable Long tipoEvento, Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosEntradaPendientesRemisionList");
         List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
@@ -153,15 +153,14 @@ public class OficioRemisionController extends BaseController {
 
         List<Organismo> organismosDestino = new ArrayList<Organismo>();
 
-        if(tipoOficio.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
+        if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
             organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, null);
 
         }else{
-            organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, tipoOficio, null);
+            organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, tipoEvento, null);
         }
 
         model.addAttribute("librosRegistro", librosRegistroEntrada);
-        //model.addAttribute("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(organismoEjb.getAllByOficinaActiva(oficinaActiva)), null));
         model.addAttribute("organismosDestino", organismosDestino);
         model.addAttribute("registroEntradaBusqueda", oficioPendienteBusquedaForm);
         model.addAttribute("anys", getAnys());
@@ -172,8 +171,8 @@ public class OficioRemisionController extends BaseController {
     /**
      * Realiza la busqueda de Listado de Registro de Entrada para realizar un Oficio de Remisión Interno según los parametros del formulario
      */
-    @RequestMapping(value = "/entradasPendientesRemision/{tipoOficio}", method = RequestMethod.POST)
-    public ModelAndView entradasPendientesRemision(@ModelAttribute OficioPendienteBusquedaForm busqueda, @PathVariable Long tipoOficio, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/entradasPendientesRemision/{tipoEvento}", method = RequestMethod.POST)
+    public ModelAndView entradasPendientesRemision(@ModelAttribute OficioPendienteBusquedaForm busqueda, @PathVariable Long tipoEvento, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosEntradaPendientesRemisionList");
         List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
@@ -185,46 +184,27 @@ public class OficioRemisionController extends BaseController {
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Remisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva, registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(organismosOficinaActiva), entidadActiva);
-        //Si el organismo escogido no está vigente
-        if(!oficiosRemisionOrganismo.getVigente()){
-            log.info("Destino extinguido " + registroEntrada.getDestino().getCodigo());
-            Organismo destinoExtinguido = organismoEjb.findByCodigoEntidadSinEstadoLigero(registroEntrada.getDestino().getCodigo(),entidadActiva.getId());
-            Set<Organismo> historicosFinales = new HashSet<Organismo>();
-            Set<Organismo> sustitutos = new HashSet<Organismo>();
-            //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
-            organismoEjb.obtenerHistoricosFinales(destinoExtinguido.getId(),historicosFinales);
-            for(Organismo organismo: historicosFinales){
-                //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
-                if(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)){
-                    sustitutos.add(organismo);
-                }
-            }
-            mav.addObject("sustitutos", sustitutos);
-        }
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(tipoEvento, busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva, registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(organismosOficinaActiva), entidadActiva);
 
         List<Organismo> organismosDestino = new ArrayList<Organismo>();
 
-        if(tipoOficio.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
+        if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
             organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, null);
 
         }else{
-            organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, tipoOficio, null);
+            organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, tipoEvento, null);
         }
-
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
         mav.addObject("librosRegistro", librosRegistroEntrada);
-        //mav.addObject("organismosDestino", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemision(organismoEjb.getAllByOficinaActiva(oficinaActiva)), null));
         mav.addObject("organismosDestino", organismosDestino);
         mav.addObject("registroEntradaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA));
         mav.addObject("anys", getAnys());
 
         return mav;
-
     }
 
     /**
@@ -233,8 +213,8 @@ public class OficioRemisionController extends BaseController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/salidasPendientesRemision/{tipoOficio}", method = RequestMethod.GET)
-    public ModelAndView oficiosSalidaPendientesRemision(@PathVariable Long tipoOficio, Model model, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/salidasPendientesRemision/{tipoEvento}", method = RequestMethod.GET)
+    public ModelAndView oficiosSalidaPendientesRemision(@PathVariable Long tipoEvento, Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosSalidaPendientesRemisionList");
         List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
@@ -247,8 +227,7 @@ public class OficioRemisionController extends BaseController {
         registroSalida.setOficina(oficinaActiva);
 
         model.addAttribute("librosRegistro", librosRegistroSalida);
-        //model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(getOrganismosOficinaActiva(request)), entidadActiva.getId(), null));
-        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, tipoOficio, null));
+        model.addAttribute("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, tipoEvento, null));
         model.addAttribute("registroSalidaBusqueda", new OficioSalidaPendienteBusquedaForm(registroSalida, 1));
         model.addAttribute("anys", getAnys());
 
@@ -259,8 +238,8 @@ public class OficioRemisionController extends BaseController {
     /**
      * Realiza la busqueda de Listado de Registro de Salida para realizar un Oficio de Remisión según los parametros del formulario
      */
-    @RequestMapping(value = "/salidasPendientesRemision/{tipoOficio}", method = RequestMethod.POST)
-    public ModelAndView oficiosSalidaPendientesRemision(@ModelAttribute OficioSalidaPendienteBusquedaForm busqueda, @PathVariable Long tipoOficio, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/salidasPendientesRemision/{tipoEvento}", method = RequestMethod.POST)
+    public ModelAndView oficiosSalidaPendientesRemision(@ModelAttribute OficioSalidaPendienteBusquedaForm busqueda, @PathVariable Long tipoEvento, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosSalidaPendientesRemisionList");
         List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
@@ -269,17 +248,15 @@ public class OficioRemisionController extends BaseController {
 
         RegistroSalida registroSalida = new RegistroSalida();
         registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO); // Fijamos el Estado válido por defecto
-        //LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Salida, pendientes de tramitar por medio de un Oficio de Revisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(), oficinaActiva, busqueda.getRegistroSalida().getLibro().getId(), busqueda.getDestinatario().getCodigo(), entidadActiva);
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemision(busqueda.getPageNumber(), busqueda.getAnyo(), oficinaActiva, busqueda.getRegistroSalida().getLibro().getId(), busqueda.getDestinatario().getCodigo(), entidadActiva, tipoEvento);
 
         busqueda.setPageNumber(1);
         mav.addObject("oficiosRemisionOrganismo", oficiosRemisionOrganismo);
         mav.addObject("paginacion", oficiosRemisionOrganismo.getPaginacion());
         mav.addObject("librosRegistro", librosRegistroSalida);
-        //mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada, getOrganismosOficioRemisionSalida(getOrganismosOficinaActiva(request)), entidadActiva.getId(), null));
-        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, tipoOficio, null));
+        mav.addObject("organismosDestino", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, tipoEvento, null));
         mav.addObject("registroSalidaBusqueda", busqueda);
         mav.addObject("oficioRemisionForm", new OficioRemisionForm(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA));
         mav.addObject("anys", getAnys());
@@ -325,7 +302,7 @@ public class OficioRemisionController extends BaseController {
             // Comprobamos que al menos haya seleccionado algún RegistroEntrada
             if (registrosEntrada.size() == 0) {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                return "redirect:/oficioRemision/entradasPendientesRemision";
+                return "redirect:/oficioRemision/entradasPendientesRemision/2";
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
@@ -347,18 +324,18 @@ public class OficioRemisionController extends BaseController {
 
             }else{
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
-                return ("redirect:/oficioRemision/entradasPendientesRemision");
+                return ("redirect:/oficioRemision/entradasPendientesRemision/2");
             }
 
 
         }  catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-            return ("redirect:/oficioRemision/entradasPendientesRemision");
+            return ("redirect:/oficioRemision/entradasPendientesRemision/2");
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-            return ("redirect:/oficioRemision/entradasPendientesRemision");
+            return ("redirect:/oficioRemision/entradasPendientesRemision/2");
         }
 
         log.info("");
@@ -413,7 +390,7 @@ public class OficioRemisionController extends BaseController {
             // Comprobamos que al menos haya seleccionado algún RegistroSalida
             if (registrosSalida.size() == 0) {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                return "redirect:/oficioRemision/salidasPendientesRemision";
+                return "redirect:/oficioRemision/salidasPendientesRemision/2";
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
@@ -434,18 +411,18 @@ public class OficioRemisionController extends BaseController {
 
             }else{
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
-                return ("redirect:/oficioRemision/salidasPendientesRemision");
+                return ("redirect:/oficioRemision/salidasPendientesRemision/2");
             }
 
 
         }  catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-            return ("redirect:/oficioRemision/salidasPendientesRemision");
+            return ("redirect:/oficioRemision/salidasPendientesRemision/2");
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-            return ("redirect:/oficioRemision/salidasPendientesRemision");
+            return ("redirect:/oficioRemision/salidasPendientesRemision/2");
         }
 
         log.info("");
@@ -478,7 +455,7 @@ public class OficioRemisionController extends BaseController {
         if (!entidadActual.getSir()) {
             log.error("Aviso: La entidad no está en SIR");
             Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+            return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision/4");
         }
 
         try {
@@ -493,7 +470,7 @@ public class OficioRemisionController extends BaseController {
                         RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
                     log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de entrada");
                     Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision/4");
                 }
 
                 // Buscamos todos los registros de entrada seleccionados para crear un Oficio de Remisión
@@ -509,7 +486,7 @@ public class OficioRemisionController extends BaseController {
                 // Comprobamos que al menos haya seleccionado algún RegistroEntrada
                 if (registrosEntrada.size() == 0) {
                     Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision");
+                    return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision/4");
 
                 } else { // Creamos el OficioRemisión a partir de los registros de entrada seleccionados.
 
@@ -535,7 +512,7 @@ public class OficioRemisionController extends BaseController {
                         RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
                     log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de salida");
                     Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
-                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision/4");
                 }
 
                 // Buscamos todos los registros de salida seleccionados para crear un Oficio de Remisión
@@ -551,7 +528,7 @@ public class OficioRemisionController extends BaseController {
                 // Comprobamos que al menos haya seleccionado algún RegistroSalida
                 if (registrosSalida.size() == 0) {
                     Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision");
+                    return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision/4");
 
                 } else { // Creamos el OficioRemisión a partir de los registros de salida seleccionados.
 

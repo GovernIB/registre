@@ -27,7 +27,7 @@ public interface OficioRemisionEntradaUtilsLocal {
 
     List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception;
 
-    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoOficio, Integer total) throws Exception;
+    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
 
 
 
@@ -53,6 +53,7 @@ public interface OficioRemisionEntradaUtilsLocal {
 
     /**
      * Obtiene todos los Registros de Entrada que están considerados Oficios de Remisión de un Organismo destinatario en concreto
+     * @param tipoEvento
      * @param pageNumber
      * @param any
      * @param oficinaActiva Oficina activa
@@ -63,7 +64,7 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @return
      * @throws Exception
      */
-    OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
+    OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
 
 
     /**
