@@ -26,10 +26,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -92,19 +89,19 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoOficio, Integer total) throws Exception {
+    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception {
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino is null and re.evento = :tipoOficio ");
+                "re.destino is null and re.evento = :tipoEvento ");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
-        q.setParameter("tipoOficio", tipoOficio);
+        q.setParameter("tipoEvento", tipoEvento);
 
         if(total != null){
             q.setMaxResults(total);
@@ -236,11 +233,104 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
-
         Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
+
+        if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
+
+            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
+            oficios.setOrganismo(organismo);
+            oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
+
+            if(!oficios.getVigente()){ // Organismo extinguido, obtenemos los organismos sustitutos
+                log.info("Organismo interno extinguido, buscamos sustitutos");
+                Set<Organismo> historicosFinales = new HashSet<Organismo>();
+                Set<Organismo> sustitutos = new HashSet<Organismo>();
+                //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
+                organismoEjb.obtenerHistoricosFinales(organismo.getId(),historicosFinales);
+                for(Organismo historico: historicosFinales){
+                    //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
+                    if(oficinaEjb.tieneOficinasServicio(historico.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)){
+                        sustitutos.add(historico);
+                    }
+                }
+
+                oficios.setSustitutos(sustitutos);
+            }
+
+            // Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
+            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, oficinaActiva.getId(), idLibro));
+
+
+        } else if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO) || tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR)){
+
+            oficios.setExterno(true);
+
+            // Obtenemos el Organismo externo de Dir3Caib
+            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+            UnidadTF unidadTF = unidadesService.buscarUnidad(codigoOrganismo);
+
+            if(unidadTF != null){
+
+                Organismo organismoExterno = new Organismo(null,codigoOrganismo,unidadTF.getDenominacion());
+                oficios.setOrganismo(organismoExterno);
+
+                if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+
+                    organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+                    oficios.setVigente(true);
+                    oficios.setOrganismo(organismoExterno);
+
+                }else{ // Organismo externo extinguido, obtenemos los organismos sustitutos
+                    log.info("Organismo externo extinguido, buscamos sustitutos");
+                    organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
+                    oficios.setVigente(false);
+                    oficios.setOrganismo(organismoExterno);
+
+                    Set<Organismo> sustitutos = new HashSet<Organismo>();
+                    for(String sustituto: unidadTF.getHistoricosUO()){
+                         sustitutos.add(new Organismo(null,sustituto,sustituto));
+                    }
+
+                    oficios.setSustitutos(sustitutos);
+
+                }
+                // Averiguamos si el Organismo Externo está en SIR y tiene Oficinas SIR
+                if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR) && entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
+
+                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
+                    if (oficinasSIR.size() > 0) {
+                        oficios.setSir(true);
+                        oficios.setOficinasSIR(oficinasSIR);
+                        log.info("El organismo externo " + organismoExterno + " TIENE oficinas Sir: " + oficinasSIR.size());
+                    } else {
+                        oficios.setOficinasSIR(null);
+                        log.info("El organismo externo " + organismoExterno + " no tiene oficinas Sir");
+                    }
+
+                }else {
+                    oficios.setSir(false);
+                    oficios.setOficinasSIR(null);
+                    log.info("Nuestra entidad no esta en SIR, se creara un oficio de remision tradicional");
+                }
+
+                //Buscamos los Registros de Entrada externos, pendientes de tramitar mediante un Oficio de Remision
+                if (oficio.getExterno()) {
+                    oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro, tipoEvento));
+                }else if(oficio.getEdpExterno()){
+                    oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
+                }
+
+            }
+
+        }
+
+
+        /*Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
 
         if(oficio.getInterno()) { // Destinatario organismo interno
 
@@ -300,7 +390,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
             }
 
-        }
+        }*/
 
         return oficios;
     }
@@ -319,7 +409,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
                 " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
-                "and re.destino.id = :idOrganismo and re.estado = :valido ");
+                "and re.destino.id = :idOrganismo and re.estado = :valido and re.evento = :eventoInterno ");
 
         q2 = em.createQuery(query.toString().replaceAll("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.registroDetalle.extracto", "Select count(re.id)"));
         query.append(" order by re.fecha desc ");
@@ -335,10 +425,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
         q2.setParameter("idOrganismo", idOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q2.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
 
         Paginacion paginacion;
 
@@ -364,7 +456,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             re.setDestino((Organismo) object[4]);
             re.setRegistroDetalle(new RegistroDetalle());
             re.getRegistroDetalle().setExtracto((String) object[5]);
-            //re.getRegistroDetalle().setInteresados((List<Interesado>) object[6]);
 
             registros.add(re);
         }
@@ -378,7 +469,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro, Long tipoEvento) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -387,7 +478,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
                 " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
-                " and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido ");
+                " and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido and re.evento = :tipoEvento");
 
         Query q;
         Query q2;
@@ -405,10 +496,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("tipoEvento", tipoEvento);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q2.setParameter("tipoEvento", tipoEvento);
 
         Paginacion paginacion;
 
