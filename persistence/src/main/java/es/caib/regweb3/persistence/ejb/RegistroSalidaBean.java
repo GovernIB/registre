@@ -358,6 +358,113 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     }
 
+    /**
+     * Obtiene los Registros de Salida que son DISTRIBUCIÓN
+     * @param oficina
+     * @param entidad
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings(value = "unchecked")
+    public Integer actualizarEventoDistribuirSalidas(Oficina oficina, Entidad entidad) throws Exception{
+
+        // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        // Creamos un Set solo con los codigos
+        Set<String> organismosCodigo = new HashSet<String>();
+        for (Organismo organismo : organismos) {
+            organismosCodigo.add(organismo.getCodigo());
+        }
+
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " rs.fecha >= :fecha and ";
+        }
+
+        // Obtenemos los Registros de Salida que son Oficio de remisión
+        Query q = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where " +
+                "rs.estado = :valido and evento is null and rs.oficina.id = :idOficina and " + queryFecha +
+                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 in (:organismos)) ");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", oficina.getId());
+        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+        q.setParameter("organismos", organismosCodigo);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q.setParameter("fecha", sdf.parse(fecha));
+        }
+
+        //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
+
+        List<Long> registros = q.getResultList();
+
+        log.info("Total actualizarEventoDistribuirSalidas: " + registros.size());
+
+        for (Long idRegistro:registros) {
+
+            Query q1 = em.createQuery("update RegistroSalida set evento=:evento where id = :idRegistro and evento is null");
+            q1.setParameter("evento", RegwebConstantes.EVENTO_DISTRIBUIR);
+            q1.setParameter("idRegistro", idRegistro);
+            q1.executeUpdate();
+
+        }
+
+        return registros.size();
+    }
+
+    /**
+     * Obtiene los Registros de Salida que son DISTRIBUCIÓN
+     * @param oficina
+     * @param entidad
+     * @return
+     * @throws Exception
+     */
+    @SuppressWarnings(value = "unchecked")
+    public Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws Exception{
+
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
+
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " rs.fecha >= :fecha and ";
+        }
+
+        // Obtenemos los Registros de Salida que son Oficio de remisión
+        Query q = em.createQuery("Select distinct(rs.id) from RegistroSalida as rs where " +
+                "rs.estado = :valido and evento is null and rs.oficina.id = :idOficina and " + queryFecha +
+                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo != :administracion ) ");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", oficina.getId());
+        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q.setParameter("fecha", sdf.parse(fecha));
+        }
+
+        //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
+
+        List<Long> registros = q.getResultList();
+
+        log.info("Total actualizarEventoDistribuirSalidasPersona: " + registros.size());
+
+        for (Long idRegistro:registros) {
+
+            Query q1 = em.createQuery("update RegistroSalida set evento=:evento where id = :idRegistro and evento is null");
+            q1.setParameter("evento", RegwebConstantes.EVENTO_DISTRIBUIR);
+            q1.setParameter("idRegistro", idRegistro);
+            q1.executeUpdate();
+
+        }
+
+        return registros.size();
+    }
+
 
     @Override
     public void anularRegistroSalida(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad, String observacionesAnulacion) throws Exception {
