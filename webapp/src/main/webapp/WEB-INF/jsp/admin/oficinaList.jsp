@@ -138,6 +138,14 @@
                                                                href="<c:url value="/admin/oficina/${oficina.id}/edit"/>"
                                                                title="<spring:message code="regweb.editar"/>"><span
                                                                     class="fa fa-pencil"></span></a>
+                                                            <a class="btn btn-success btn-sm" target="_blank"
+                                                               href="<c:url value="/eventoDistribuirSalidas/${oficina.id}"/>"
+                                                               title="eventoDistribuirSalidas"><span
+                                                                    class="fa fa-eye"></span></a>
+                                                            <a class="btn btn-info btn-sm" target="_blank"
+                                                               href="<c:url value="/eventoDistribuirSalidasPersonas/${oficina.id}"/>"
+                                                               title="eventoDistribuirSalidasPersonas"><span
+                                                                    class="fa fa-address-book"></span></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>

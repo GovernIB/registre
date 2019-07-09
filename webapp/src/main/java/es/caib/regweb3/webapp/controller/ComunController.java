@@ -86,9 +86,10 @@ public class ComunController extends BaseController {
             Entidad entidadActiva = getEntidadActiva(request);
             List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
             Integer total = 0;
+            Integer parcial = 0;
             for (Oficina oficina : oficinas) {
-                total = registroEntradaEjb.actualizarEventoOficioInterno(oficina);
-                total = total +total;
+                parcial = registroEntradaEjb.actualizarEventoOficioInterno(oficina);
+                total = total + parcial;
             }
 
             Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a OficioInterno de entrada de la entidad ");
@@ -108,12 +109,93 @@ public class ComunController extends BaseController {
             Entidad entidadActiva = getEntidadActiva(request);
             List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
             Integer total = 0;
+            Integer parcial =0;
             for (Oficina oficina : oficinas) {
-                total = registroEntradaEjb.actualizarEventoDistribuir(oficina);
-                total = total +total;
+                parcial = registroEntradaEjb.actualizarEventoDistribuir(oficina);
+                total = total + parcial;
             }
 
             Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a Distribuir de la entidad");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    @RequestMapping(value = "/eventoDistribuirSalidas/{idOficina}")
+    public String actualizarEventoDistribuirSalidas(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+
+            Oficina oficina = oficinaEjb.findById(idOficina);
+            Integer total = registroSalidaEjb.actualizarEventoDistribuirSalidas(oficina, oficina.getOrganismoResponsable().getEntidad());
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de salida a Distribuir de la oficina " + oficina.getDenominacion());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    @RequestMapping(value = "/eventoDistribuirSalidas")
+    public String actualizarEventoDistribuirSalidas(HttpServletRequest request) {
+
+        try {
+
+            Entidad entidadActiva = getEntidadActiva(request);
+            List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
+            Integer total = 0;
+            Integer parcial = 0;
+            for (Oficina oficina : oficinas) {
+                parcial = registroSalidaEjb.actualizarEventoDistribuirSalidas(oficina, oficina.getOrganismoResponsable().getEntidad());
+                total = total + parcial;
+            }
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de salida a Distribuir de la entidad ");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    @RequestMapping(value = "/eventoDistribuirSalidasPersonas/{idOficina}")
+    public String eventoDistribuirSalidasPersonas(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+
+            Oficina oficina = oficinaEjb.findById(idOficina);
+            Integer total = registroSalidaEjb.actualizarEventoDistribuirSalidasPersona(oficina, oficina.getOrganismoResponsable().getEntidad());
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de salida a Distribuir de la oficina " + oficina.getDenominacion());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    @RequestMapping(value = "/eventoDistribuirSalidasPersonas")
+    public String eventoDistribuirSalidasPersonas(HttpServletRequest request) {
+
+        try {
+
+            Entidad entidadActiva = getEntidadActiva(request);
+            List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
+            Integer total = 0;
+            Integer parcial = 0;
+            for (Oficina oficina : oficinas) {
+                parcial = registroSalidaEjb.actualizarEventoDistribuirSalidasPersona(oficina, oficina.getOrganismoResponsable().getEntidad());
+                total = total + parcial;
+            }
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de salida a Distribuir de la entidad ");
 
         } catch (Exception e) {
             e.printStackTrace();
