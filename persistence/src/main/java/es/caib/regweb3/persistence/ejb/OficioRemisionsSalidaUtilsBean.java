@@ -293,6 +293,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
                     //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
                     if(oficinaEjb.tieneOficinasServicio(historico.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)){
                         sustitutos.add(historico);
+                        oficios.setOficinas(true);
                     }
                 }
 

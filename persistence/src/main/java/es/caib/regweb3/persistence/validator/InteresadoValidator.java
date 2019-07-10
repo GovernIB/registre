@@ -77,6 +77,12 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                     rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
                             "error.valor.requerido", "El camp és obligatori");
                 }
+
+                // Validaciones si es ADMINISTRACION
+                if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+                    rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
+                            "error.valor.requerido", "El camp és obligatori");
+                }
             }
         }
 
