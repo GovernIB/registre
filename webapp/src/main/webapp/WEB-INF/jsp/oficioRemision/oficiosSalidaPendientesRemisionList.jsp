@@ -292,7 +292,7 @@
                                                 </c:if>
 
                                                 <%--Organismo extinguido, con sustitutos--%>
-                                                <c:if test="${oficiosRemisionOrganismo.vigente == false && fn:length(oficiosRemisionOrganismo.sustitutos) > 0}">
+                                                <c:if test="${oficiosRemisionOrganismo.vigente == false && fn:length(oficiosRemisionOrganismo.sustitutos) > 0 && oficiosRemisionOrganismo.oficinas}">
                                                     <div class="col-xs-12">
                                                         <div class="col-xs-6 espaiLinies">
                                                             <div class="col-xs-4 pull-left etiqueta_regweb">
@@ -311,7 +311,7 @@
                                                 </c:if>
 
                                                 <%--Organismo extinguido, sin sustitutos--%>
-                                                <c:if test="${oficiosRemisionOrganismo.vigente == false && empty oficiosRemisionOrganismo.sustitutos}">
+                                                <c:if test="${(oficiosRemisionOrganismo.vigente == false && empty oficiosRemisionOrganismo.sustitutos) || oficiosRemisionOrganismo.oficinas == false}">
                                                     <button type="button" class="btn btn-sm btn-success disabled"><spring:message code="oficioRemision.boton.crear.interno"/></button>
                                                 </c:if>
 
