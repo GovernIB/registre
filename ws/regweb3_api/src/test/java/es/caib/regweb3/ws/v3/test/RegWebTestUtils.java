@@ -72,6 +72,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return testProperties.getProperty("test_destinocodigodir3");
     }
 
+    public static String getTestOrigenCodigoDir3() {
+        return testProperties.getProperty("test_origen_codigodir3");
+    }
+
     public static String getTestOficinaOrigenCodigoDir3() {
         return testProperties.getProperty("test_oficina_origen_codigodir3");
     }
