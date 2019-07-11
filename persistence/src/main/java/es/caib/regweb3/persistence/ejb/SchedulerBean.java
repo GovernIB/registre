@@ -186,14 +186,14 @@ public class SchedulerBean implements SchedulerLocal{
             List<Entidad> entidades = entidadEjb.getEntidadesActivas();
 
             for (Entidad entidad : entidades) {
-                log.info(" ");
-                log.info("------------- Inicio Distribucion registros en Cola" + entidad.getNombre() + " -------------");
-                log.info(" ");
-
-                distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
-
-                log.info(" ");
-                log.info("------------- Fin Distribucion registros en Cola " + entidad.getNombre() + " -------------");
+                if(!PropiedadGlobalUtil.pararDistribucion(entidad.getId())) {
+                    log.info(" ");
+                    log.info("------------- Inicio Distribucion registros en Cola" + entidad.getNombre() + " -------------");
+                    log.info(" ");
+                    distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
+                    log.info(" ");
+                    log.info("------------- Fin Distribucion registros en Cola " + entidad.getNombre() + " -------------");
+                }
             }
 
         }catch (Exception e){

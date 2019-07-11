@@ -481,6 +481,11 @@ public class PropiedadGlobalUtil {
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 
+    public static boolean pararDistribucion(Long idEntidad){
+        final String partialPropertyName = "parar.cola.distribucion";
+        return getBooleanByEntidad(idEntidad, partialPropertyName);
+    }
+
     /**
      * Propiedad que permite mostrar un enlace en le menú a la instalación de DIR3CAIB
      * @param idEntidad
