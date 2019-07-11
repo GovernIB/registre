@@ -165,8 +165,7 @@ public class Regweb3Scheduler {
      * Qué hace: Distribuye los registros que hay en la cola
      * Cuando lo hace: cada 30 minutos
      */
-    // @Scheduled(cron = "0 0/30 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
-     @Scheduled(cron = "0 0/3 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
+    @Scheduled(cron = "0 0/30 * * * *") // {0 0 * * * * Cada hora, cada día} -  {*/60 * * * * * cada 60 secs }
     public void distribuirRegistrosEnCola(){
 
         try {
