@@ -113,7 +113,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             // Obtenemos el próximo evento del Registro
             Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad());
-            log.info("Evento: " + evento);
             registroEntrada.setEvento(evento);
 
             //Llamamos al plugin de postproceso
