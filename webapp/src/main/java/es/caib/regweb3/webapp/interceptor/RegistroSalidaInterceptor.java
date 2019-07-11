@@ -100,7 +100,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             Long idLibro = registroSalidaConsultaEjb.getLibro(Long.valueOf(idRegistroSalida));
 
             if(idLibro != null){
-                if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA)){
+                if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA, false)){
                     log.info("Aviso: No tiene permisos para consultar este registro");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.consultaRegistro"));
                     response.sendRedirect("/regweb3/aviso");
@@ -177,7 +177,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Comprobamos que el UsuarioActivo pueda editar ese registro de salida
-            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
+            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar"));
                 response.sendRedirect("/regweb3/aviso");

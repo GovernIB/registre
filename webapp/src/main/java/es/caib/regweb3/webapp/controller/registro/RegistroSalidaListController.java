@@ -158,7 +158,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
             mav.addObject("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registroSalida.getLibro().getId()));
-            mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA));
+            mav.addObject("puedeEditar", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true));
 
             // Alta en tabla LOPD
             lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
@@ -210,7 +210,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Permisos
         Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
-        Boolean puedeEditar = permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA);
+        Boolean puedeEditar = permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true);
         model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(),registro.getLibro().getId()));
         model.addAttribute("puedeEditar", puedeEditar);
@@ -461,7 +461,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
 
             // Comprobamos que el usuario dispone del permiso para Modificar el Registro
-            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
+            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
 
@@ -506,7 +506,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
 
             // Comprobamos que el usuario dispone del permiso para Modificar el Registro
-            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
+            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)){
                 log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
 
@@ -616,7 +616,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Dispone de permisos para Editar el registro
-                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
+                if (permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true) && !registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
                     // Creamos el anexo justificante y lo firmamos
                     AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroSalida, RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(), idioma);
