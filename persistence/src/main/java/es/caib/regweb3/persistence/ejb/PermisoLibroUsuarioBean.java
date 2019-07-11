@@ -382,11 +382,15 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean tienePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception {
+    public Boolean tienePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso, Boolean libroActivo) throws Exception {
+
+        String queryLibroActivo="";
+        if(libroActivo){
+            queryLibroActivo = " plu.libro.activo = true and ";
+        }
 
         Query q = em.createQuery("Select plu.id from PermisoLibroUsuario as plu where " +
-                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro and " +
-                "plu.libro.activo = true and " +
+                "plu.usuario.id = :idUsuarioEntidad and plu.libro.id = :idLibro and " + queryLibroActivo +
                 "(plu.permiso = :idPermiso and plu.activo = true)");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);

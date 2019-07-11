@@ -155,10 +155,11 @@ public interface PermisoLibroUsuarioLocal extends BaseEjb<PermisoLibroUsuario, L
      * @param idUsuarioEntidad
      * @param idLibro
      * @param idPermiso
+     * @param libroActivo
      * @return true si tiene el Permiso, false si no lo tiene.
      * @throws Exception
      */
-    Boolean tienePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso) throws Exception;
+    Boolean tienePermiso(Long idUsuarioEntidad, Long idLibro, Long idPermiso, Boolean libroActivo) throws Exception;
 
     /**
      * Retorna la lista de {@link es.caib.regweb3.model.UsuarioEntidad} que tienen permisos en una lista de libros

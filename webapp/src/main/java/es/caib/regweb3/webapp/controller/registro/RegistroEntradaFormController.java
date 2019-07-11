@@ -449,7 +449,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
 
             // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA)) {
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA, true)) {
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 return "redirect:/registroEntrada/"+idRegistro+"/detalle";
             }

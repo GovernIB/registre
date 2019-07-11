@@ -285,7 +285,7 @@ public class OficioRemisionController extends BaseController {
 
         try{
             // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)) {
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
                 return "redirect:/oficioRemision/entradasPendientesRemision";
             }
@@ -373,7 +373,7 @@ public class OficioRemisionController extends BaseController {
 
         try{
             // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
                 return "redirect:/oficioRemision/salidasPendientesRemision";
             }
@@ -467,7 +467,7 @@ public class OficioRemisionController extends BaseController {
 
                 // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
                 if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
-                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)) {
+                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)) {
                     log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de entrada");
                     Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
                     return new ModelAndView("redirect:/oficioRemision/entradasPendientesRemision/4");
@@ -509,7 +509,7 @@ public class OficioRemisionController extends BaseController {
 
                 // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
                 if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(),
-                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)) {
+                        RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
                     log.info("Aviso: No dispone de los permisos necesarios para crear el oficio de remisión de salida");
                     Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
                     return new ModelAndView("redirect:/oficioRemision/salidasPendientesRemision/4");
