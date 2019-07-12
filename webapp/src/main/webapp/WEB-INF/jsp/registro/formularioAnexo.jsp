@@ -174,6 +174,7 @@
                                         <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
                                                 ${anexoForm.documentTituloCorto}
                                         </a>
+
                                     </c:if>
                                     <c:if test="${not empty anexoForm.anexo.id}">
                                         <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
@@ -181,7 +182,16 @@
                                     </c:if>
                                 </div>
                             </div>
+                            <div class="col-xs-6" >
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.mime.documento"/></label>
+                                </div>
+                                <div class="col-xs-9 campFormText">
+                                     ${anexoForm.docMime}
+                                </div>
+                            </div>
                         </div>
+
                     </c:if>
                     <!--FIN ANEXO-->
 
@@ -192,7 +202,7 @@
                                 <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                    <label for="firmaFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombreFirma"/>" data-toggle="popover"><spring:message code="anexo.firma"/></label>
                                 </div>
-                                <div class="col-xs-8 campFormText">
+                                <div class="col-xs-9 campFormText">
                                 <c:if test="${empty anexoForm.anexo.id}">
                                     <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
                                             ${anexoForm.signaturaTituloCorto}</a>
@@ -201,6 +211,14 @@
                                     <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">
                                             ${anexoForm.signaturaTituloCorto}</a>
                                 </c:if>
+                                </div>
+                            </div>
+                            <div class="col-xs-6" >
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                    <label><spring:message code="anexo.mime.firma"/></label>
+                                </div>
+                                <div class="col-xs-9 campFormText">
+                                        ${anexoForm.signMime}
                                 </div>
                             </div>
                         </div>
