@@ -86,6 +86,8 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         if(total != null){
             q.setMaxResults(total);
+        }else{
+            q.setMaxResults(999);
         }
 
         List<Long> registros = q.getResultList(); // Registros de salida que son Oficios de Remision
