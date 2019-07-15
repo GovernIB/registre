@@ -282,13 +282,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             if(isOficioRemisionExterno(registroSalida, organismosCodigo)){ // Externo
 
-                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismosCodigo);
+                // Si la entidad está en SIR y la Oficina está activada para Envío Sir
+                if(entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroSalida.getOficina().getId())){
+                    List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismosCodigo);
 
-                if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
-                    return RegwebConstantes.EVENTO_OFICIO_SIR;
-                }else{
-                    return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+                    if(!oficinasSIR.isEmpty()){
+                        return RegwebConstantes.EVENTO_OFICIO_SIR;
+                    }
                 }
+
+                return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
             }else if (isOficioRemisionInterno(registroSalida, organismosCodigo)){
                 return RegwebConstantes.EVENTO_OFICIO_INTERNO;
