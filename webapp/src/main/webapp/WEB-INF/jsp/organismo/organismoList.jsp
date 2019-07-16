@@ -88,9 +88,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group col-xs-6">
-                            </div>
-
                             <div class="form-group col-xs-12">
                                <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
                                <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
