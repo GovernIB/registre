@@ -57,20 +57,27 @@
 
                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="organismo.estado.id"><span class="text-danger">*</span> <spring:message code="organismo.estado"/></form:label>
+                                        <form:label path="organismo.codigo"><spring:message code="organismo.buscador.codigo"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-
-                                        <form:select path="organismo.estado.id"  cssClass="chosen-select">
-                                            <%--<form:option value="-1">...</form:option>--%>
-                                            <form:options items="${estados}" itemValue="id" itemLabel="descripcionEstadoEntidad"/>
-                                        </form:select>
-                                        <form:errors path="organismo.estado.id" cssClass="help-block" element="span"/>
+                                        <form:input path="organismo.codigo" cssClass="form-control"/>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-xs-12">
+                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                        <form:label path="organismo.estado.id"><span class="text-danger">*</span> <spring:message code="organismo.estado"/></form:label>
+                                    </div>
+                                    <div class="col-xs-8">
+
+                                        <form:select path="organismo.estado.id"  cssClass="chosen-select">
+                                            <form:options items="${estados}" itemValue="id" itemLabel="descripcionEstadoEntidad"/>
+                                        </form:select>
+                                        <form:errors path="organismo.estado.id" cssClass="help-block" element="span"/>
+                                    </div>
+                                </div>
                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                         <form:label path="libros"><spring:message code="organismo.buscador.libros"/></form:label>
