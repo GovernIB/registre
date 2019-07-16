@@ -96,7 +96,7 @@ public class OrganismoController extends BaseController {
       Organismo organismo = busqueda.getOrganismo();
       Entidad entidad = getEntidadActiva(request);
 
-      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), null, organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
+      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), organismo.getCodigo(), organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
 
       // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
       Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());

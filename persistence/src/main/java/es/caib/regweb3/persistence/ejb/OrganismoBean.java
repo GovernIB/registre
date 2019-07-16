@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -436,10 +437,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         StringBuilder query = new StringBuilder("Select organismo from Organismo as organismo ");
 
-        if (codigo != null && codigo.length() > 0) {
+        if (StringUtils.isNotEmpty(codigo)) {
             where.add(DataBaseUtils.like("organismo.codigo", "codigo", parametros, codigo));
         }
-        if (denominacion != null && denominacion.length() > 0) {
+        if (StringUtils.isNotEmpty(denominacion)) {
             where.add(DataBaseUtils.like("organismo.denominacion", "denominacion", parametros, denominacion));
         }
         if (idCatEstadoEntidad != null && idCatEstadoEntidad > 0) {
