@@ -121,4 +121,17 @@ public interface RegWebAsientoRegistralWs {
      */
     @WebMethod
     ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException;
+
+    /**
+     * Obtiene el AsiendoRegistral de un ciudadano a partir de su número de registro
+     * @param entidad
+     * @param documento
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
+    @WebMethod
+    AsientoRegistralWs obtenerAsientoCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 }
