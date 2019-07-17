@@ -173,6 +173,11 @@ public class Libro implements Serializable {
         return getOrganismo().getDenominacion() + " - " + getNombre();
     }
 
+    @Transient
+    public String getCodigoNombre(){
+        return getCodigo() + " - " + getNombre();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
