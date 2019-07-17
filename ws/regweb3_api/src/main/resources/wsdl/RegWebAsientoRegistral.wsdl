@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb3.caib.es/">
   <xs:element name="anexoWs" type="tns:anexoWs"/>
@@ -12,6 +14,8 @@
   <xs:element name="interesadoWs" type="tns:interesadoWs"/>
   <xs:element name="justificanteReferenciaWs" type="tns:justificanteReferenciaWs"/>
   <xs:element name="justificanteWs" type="tns:justificanteWs"/>
+  <xs:element name="obtenerAsientoCiudadano" type="tns:obtenerAsientoCiudadano"/>
+  <xs:element name="obtenerAsientoCiudadanoResponse" type="tns:obtenerAsientoCiudadanoResponse"/>
   <xs:element name="obtenerAsientoRegistral" type="tns:obtenerAsientoRegistral"/>
   <xs:element name="obtenerAsientoRegistralResponse" type="tns:obtenerAsientoRegistralResponse"/>
   <xs:element name="obtenerAsientosCiudadano" type="tns:obtenerAsientosCiudadano"/>
@@ -198,6 +202,18 @@
       <xs:element minOccurs="0" name="tipoInteresado" type="xs:long"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="obtenerAsientoCiudadano">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="documento" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerAsientoCiudadanoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:asientoRegistralWs"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="obtenerReferenciaJustificante">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
@@ -285,6 +301,14 @@
     <wsdl:part name="parameters" element="tns:obtenerAsientoRegistralResponse">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="obtenerAsientoCiudadanoResponse">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadanoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientoCiudadano">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadano">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="crearAsientoRegistral">
     <wsdl:part name="parameters" element="tns:crearAsientoRegistral">
     </wsdl:part>
@@ -360,6 +384,16 @@
       <wsdl:input name="obtenerAsientoRegistral" message="tns:obtenerAsientoRegistral">
     </wsdl:input>
       <wsdl:output name="obtenerAsientoRegistralResponse" message="tns:obtenerAsientoRegistralResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerAsientoCiudadano">
+      <wsdl:input name="obtenerAsientoCiudadano" message="tns:obtenerAsientoCiudadano">
+    </wsdl:input>
+      <wsdl:output name="obtenerAsientoCiudadanoResponse" message="tns:obtenerAsientoCiudadanoResponse">
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
@@ -450,6 +484,21 @@
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="obtenerAsientoRegistralResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerAsientoCiudadano">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerAsientoCiudadano">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerAsientoCiudadanoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
       <wsdl:fault name="WsValidationException">
