@@ -797,9 +797,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }
             resultado.setResults(asientos);
 
-            log.info("Asientos totales: " + resultado.getTotalResults());
-            log.info("Asientos parciales: " + resultado.getResults().size());
-
             // Alta en la tabla de LOPD
 //            lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
 
@@ -811,6 +808,58 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         return resultado;
+    }
+
+    @RolesAllowed({RWE_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public AsientoRegistralWs obtenerAsientoCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable{
+
+        // Definimos la petición que se guardá en el monitor de integración
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String numRegFormat = "";
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
+        // 1.- Validar campo obligatorio entidad
+        Entidad entidadActiva = validarEntidad(entidad);
+
+        // 2.- Validar campo obligatorio documento
+        if(StringUtils.isEmpty(documento)){
+            throw new I18NException("error.valor.requerido.ws", "documento");
+        }
+
+        // 2.- Validar obligatorio numeroRegistroFormateado
+        if(StringUtils.isEmpty(numeroRegistroFormateado)){
+            throw new I18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
+        }
+
+        peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
+
+        try{
+
+            // Obtenemos el Registro de Entrada de un ciudadano
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getByDocumentoNumeroRegistro(entidadActiva.getId(),documento, numeroRegistroFormateado);
+
+            if(registroEntrada != null){
+
+                // Transformamos el Registro de Entrada en AsientoRegistralWs
+                AsientoRegistralWs asiento = AsientoRegistralConverter.getAsientoRegistralBean(registroEntrada, UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb);
+
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+
+                return asiento;
+            }
+
+
+        }catch (Exception e){
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            throw new I18NException("error.ws.general");
+        }
+
+        return null;
     }
 
 

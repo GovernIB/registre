@@ -759,4 +759,25 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return paginacion;
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public RegistroEntrada getByDocumentoNumeroRegistro(Long idEntidad, String documento, String numeroRegistroFormateado) throws Exception, I18NException {
+
+        Query q = em.createQuery("Select re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.numeroRegistroFormateado = :numeroRegistroFormateado " +
+                "and re.usuario.entidad.id = :idEntidad");
+
+        q.setParameter("documento", documento);
+        q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
+        q.setParameter("idEntidad", idEntidad);
+
+        List<RegistroEntrada> registros = q.getResultList();
+
+        if (registros.size() == 1) {
+            return cargarAnexosFull(registros.get(0));
+        } else {
+            return null;
+        }
+    }
+
 }

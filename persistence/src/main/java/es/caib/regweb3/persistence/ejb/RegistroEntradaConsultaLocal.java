@@ -250,7 +250,7 @@ public interface RegistroEntradaConsultaLocal {
 
 
     /**
-     *
+     * Obtiene los registros de un ciudadano
      * @param idEntidad
      * @param documento
      * @param pageNumber
@@ -258,5 +258,15 @@ public interface RegistroEntradaConsultaLocal {
      * @throws Exception
      */
     Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception;
+
+    /**
+     * Obtiene un Registro a partir de su número y el documento del Ciudadano
+     * @param idEntidad
+     * @param documento
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Exception
+     */
+    RegistroEntrada getByDocumentoNumeroRegistro(Long idEntidad, String documento, String numeroRegistroFormateado) throws Exception, I18NException;
 
 }
