@@ -764,7 +764,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     public RegistroEntrada getByDocumentoNumeroRegistro(Long idEntidad, String documento, String numeroRegistroFormateado) throws Exception, I18NException {
 
         Query q = em.createQuery("Select re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.numeroRegistroFormateado = :numeroRegistroFormateado " +
+                "where UPPER(interessat.documento)=UPPER(:documento) and re.numeroRegistroFormateado = :numeroRegistroFormateado " +
                 "and re.usuario.entidad.id = :idEntidad");
 
         q.setParameter("documento", documento);
