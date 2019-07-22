@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -17,6 +14,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -292,7 +290,10 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         List<Oficina> oficinas = new ArrayList<Oficina>();
 
         for (Object[] object : result) {
-            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3]);
+
+            Long idOficina = (Long) object[0];
+
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], null, (Long) object[3], isSIR(idOficina));
 
             oficinas.add(oficina);
         }
@@ -314,7 +315,9 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         List<Oficina> oficinas = new ArrayList<Oficina>();
 
         for (Object[] object : result) {
-            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4]);
+            Long idOficina = (Long) object[0];
+
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4], isSIR(idOficina));
 
             oficinas.add(oficina);
         }
@@ -380,6 +383,20 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("idOficina",idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("envioSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public Boolean isSIR(Long idOficina) throws Exception {
+
+        Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
+                "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
+                ":sir in elements(oficina.servicios)");
+
+        q.setParameter("idOficina",idOficina);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
 
         return q.getResultList().size() > 0;
     }
