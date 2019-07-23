@@ -846,11 +846,15 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             if(registroEntrada != null){
 
                 // Transformamos el Registro de Entrada en AsientoRegistralWs
-                AsientoRegistralWs asiento = AsientoRegistralConverter.getAsientoRegistralBean(registroEntrada, UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb);
+                AsientoRegistralWs asiento = AsientoRegistralConverter.getAsientoRegistralBeanConAnexos(registroEntrada,
+                        UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, anexoEjb, trazabilidadSirEjb);
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
                 return asiento;
+
+            }else{
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
             }
 
 
@@ -859,7 +863,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("error.ws.general");
         }
 
-        return null;
     }
 
 
