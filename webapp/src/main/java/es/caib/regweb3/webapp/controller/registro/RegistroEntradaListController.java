@@ -706,7 +706,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         }
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaConsultaEjb.isDistribuir(idRegistro, getOrganismosOficioRemision(organismosOficinaActiva))) {
+        if (!registroEntradaConsultaEjb.isDistribuir(idRegistro)) {
             response.setStatus("FAIL_NOISDISTRIBUIR");
             response.setError(getMessage("registroEntrada.distribuir.error.noIsdistribuir"));
             response.setResult(respuesta);
