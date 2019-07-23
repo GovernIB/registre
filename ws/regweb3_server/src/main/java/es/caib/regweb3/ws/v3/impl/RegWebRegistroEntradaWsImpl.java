@@ -486,7 +486,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
-        if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId(), getOrganismosOficioRemision(organismosOficinaRegistro))) {
+        if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
             throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 

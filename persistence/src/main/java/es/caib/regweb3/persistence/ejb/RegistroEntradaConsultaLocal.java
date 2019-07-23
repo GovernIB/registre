@@ -10,7 +10,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -160,11 +159,10 @@ public interface RegistroEntradaConsultaLocal {
      * Comprueba si un Registro de Entrada se puede tramitar o no
      *
      * @param idRegistro
-     * @param organismos
      * @return
      * @throws Exception
      */
-    Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception;
+    Boolean isDistribuir(Long idRegistro) throws Exception;
 
     /**
      *

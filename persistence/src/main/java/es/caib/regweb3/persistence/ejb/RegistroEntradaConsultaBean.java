@@ -486,25 +486,16 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean isDistribuir(Long idRegistro, Set<Long> organismos) throws Exception {
-
-        // Si el array de organismos está vacío, no incluimos la condición.
-        String organismosWhere = "";
-        if (organismos.size() > 0) {
-            organismosWhere = " and re.destino.id in (:organismos) ";
-        }
+    public Boolean isDistribuir(Long idRegistro) throws Exception {
 
         Query q;
         q = em.createQuery("Select re.id from RegistroEntrada as re where " +
-                "re.id = :idRegistro and re.estado = :valido and re.destino != null " + organismosWhere );
+                "re.id = :idRegistro and re.estado = :valido and re.evento = :distribuir " );
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-
-        if (organismos.size() > 0) {
-            q.setParameter("organismos", organismos);
-        }
+        q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
 
         return q.getResultList().size() > 0;
     }
