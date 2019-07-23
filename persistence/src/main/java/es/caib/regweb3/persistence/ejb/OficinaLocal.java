@@ -192,6 +192,14 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     Boolean isSIREnvio(Long idOficina) throws Exception;
 
     /**
+     * Consulta si una Oficina es SIR
+     * @param idOficina
+     * @return
+     * @throws Exception
+     */
+    Boolean isSIR(Long idOficina) throws Exception;
+
+    /**
      * Elimina las Oficinas de una Entidad
      * @param idEntidad
      * @return

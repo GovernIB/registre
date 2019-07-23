@@ -37,6 +37,7 @@
 <div class="btn-group pad-left">
 <button type="button" id="infoCopy" class="btn btn-default btn-xs" disabled style="cursor:default"><i class="fa fa-info-circle colophon">  <spring:message code="organismo.arbol.copiar"/></i></button>
 </div>
+<!-- LEYENDA -->
 <div class="col-xs-2 button-right">
 <div class="panel panel-warning leyenda">
 <div class="panel-heading">
@@ -108,6 +109,7 @@
 <span class="panel-heading btn-edp vuitanta-percent" id="govern" style="cursor:copy" onclick="copyToClipboard(this)"><i class=""></i> ${organismo1.codigo} - ${organismo1.denominacion}</span>
 </c:if>
 <ul>
+<!-- **** Entra si algún Organismo de primer nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoPrimerNivel}">
 <c:if test="${libroOrganismo.value == organismo1.id}">
 <li>
@@ -120,17 +122,16 @@
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo1.id}">
 <li>
 <a href="javascript:void(0);"><span class="panel-heading btn-warning vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo1.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
-<a href="javascript:void(0);"><span class="panel-heading btn-ofsir vuitanta-percent" style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+<c:if test="${oficinaPrincipal.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
@@ -139,6 +140,12 @@
 class="panel-heading btn-ofaux vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo1.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -168,6 +175,7 @@ class="fa fa-home"></i> ${oficinasAuxiliar2.codigo} - ${oficinasAuxiliar2.denomi
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo1.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -180,18 +188,7 @@ class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}
 </c:if>
 </c:if>
 </c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo1.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo1.id}">
-<li>
-<a href="javascript:void(0);"><span
-class="panel-heading btn-ofsir vuitanta-percent"
-style="cursor:copy" onclick="copyToClipboard(this)"><i
-class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
-</li>
-</c:if>
-</c:if>
-</c:forEach>
+<!-- **** Oficinas Sir ***-->
 <c:forEach var="organismo2" items="${organismosSegundoNivel}">
 <c:if test="${organismo2.organismoSuperior.id == organismo1.id}">
 <li>
@@ -209,6 +206,7 @@ class=""></i> ${organismo2.codigo} - ${organismo2.denominacion}</span>
 </c:if>
 <c:set var="contadorPrimer" value="${contadorPrimer+1}"></c:set>
 <ul>
+<!-- **** Entra si algún Organismo de segundo nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoSegundoNivel}">
 <c:if test="${libroOrganismo.value == organismo2.id}">
 <li>
@@ -221,6 +219,7 @@ class=""></i> ${organismo2.codigo} - ${organismo2.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo2.id}">
 <li>
@@ -228,15 +227,11 @@ class=""></i> ${organismo2.codigo} - ${organismo2.denominacion}</span>
 class="panel-heading btn-warning vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo2.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+<c:if test="${oficinaPrincipal.sir}">
 <a href="javascript:void(0);"><span
 class="panel-heading btn-ofsir vuitanta-percent"
 style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
@@ -245,6 +240,11 @@ style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt
 class="panel-heading btn-ofaux vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo2.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -274,6 +274,7 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo2.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -286,18 +287,7 @@ class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}
 </c:if>
 </c:if>
 </c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo2.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo2.id}">
-<li>
-<a href="javascript:void(0);"><span
-class="panel-heading btn-ofsir vuitanta-percent"
-style="cursor:copy" onclick="copyToClipboard(this)"><i
-class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
-</li>
-</c:if>
-</c:if>
-</c:forEach>
+<!-- **** Oficinas Sir ***-->
 <c:forEach var="organismo3" items="${organismosTercerNivel}">
 <c:if test="${organismo3.organismoSuperior.id == organismo2.id}">
 <li>
@@ -315,6 +305,7 @@ class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
 </c:if>
 <c:set var="contadorSegon" value="${contadorSegon+1}"></c:set>
 <ul>
+<!-- **** Entra si algún Organismo de tercer nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoTercerNivel}">
 <c:if test="${libroOrganismo.value == organismo3.id}">
 <li>
@@ -327,6 +318,7 @@ class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo3.id}">
 <li>
@@ -334,15 +326,11 @@ class=""></i> ${organismo3.codigo} - ${organismo3.denominacion}</span>
 class="panel-heading btn-warning vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo3.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+<c:if test="${oficinaPrincipal.sir}">
 <a href="javascript:void(0);"><span
 class="panel-heading btn-ofsir vuitanta-percent"
 style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
@@ -351,6 +339,11 @@ style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt
 class="panel-heading btn-ofaux vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo3.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -380,6 +373,7 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo3.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -392,18 +386,7 @@ class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}
 </c:if>
 </c:if>
 </c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo3.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo3.id}">
-<li>
-<a href="javascript:void(0);"><span
-class="panel-heading btn-ofsir vuitanta-percent"
-style="cursor:copy" onclick="copyToClipboard(this)"><i
-class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
-</li>
-</c:if>
-</c:if>
-</c:forEach>
+<!-- **** Oficinas Sir ***-->
 <c:forEach var="organismo4" items="${organismosCuartoNivel}">
 <c:if test="${organismo4.organismoSuperior.id == organismo3.id}">
 <li>
@@ -421,6 +404,7 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </c:if>
 <c:set var="contadorTercer" value="${contadorTercer+1}"></c:set>
 <ul>
+<!-- **** Entra si algún Organismo de cuarto nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoCuartoNivel}">
 <c:if test="${libroOrganismo.value == organismo4.id}">
 <li>
@@ -433,22 +417,26 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo4.id}">
 <li>
 <a href="javascript:void(0);"><span class="panel-heading btn-warning vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo4.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
-<a href="javascript:void(0);"><span class="panel-heading btn-ofsir vuitanta-percent" style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+<c:if test="${oficinaPrincipal.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
 <li>
 <a href="javascript:void(0);"><span class="panel-heading btn-ofaux vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo4.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -470,6 +458,7 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo4.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -477,13 +466,7 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </c:if>
 </c:if>
 </c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo4.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo4.id}">
-<li><a href="javascript:void(0);"><span class="panel-heading btn-ofsir vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a></li>
-</c:if>
-</c:if>
-</c:forEach>
+<!-- **** Oficinas Sir ***-->
 <c:forEach var="organismo5" items="${organismosQuintoNivel}">
 <c:if test="${organismo5.organismoSuperior.id == organismo4.id}">
 <li>
@@ -495,6 +478,7 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </c:if>
 <c:set var="contadorQuart" value="${contadorQuart+1}"></c:set>
 <ul>
+<!-- **** Entra si algún Organismo de quinto nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoQuintoNivel}">
 <c:if test="${libroOrganismo.value == organismo5.id}">
 <li>
@@ -507,19 +491,16 @@ class=""></i> ${organismo4.codigo} - ${organismo4.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo5.id}">
 <li>
 <a href="javascript:void(0);"><span class="panel-heading btn-warning vuitanta-percent" style="cursor:copy" onclick="copyToClipboard(this)"><i class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo5.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+<c:if test="${oficinaPrincipal.sir}">
 <a href="javascript:void(0);"><span
 class="panel-heading btn-ofsir vuitanta-percent"
 style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
@@ -528,6 +509,11 @@ style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt
 class="panel-heading btn-ofaux vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo5.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -557,6 +543,7 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo5.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -569,18 +556,7 @@ class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}
 </c:if>
 </c:if>
 </c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo5.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo5.id}">
-<li>
-<a href="javascript:void(0);"><span
-class="panel-heading btn-ofsir vuitanta-percent"
-style="cursor:copy" onclick="copyToClipboard(this)"><i
-class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
-</li>
-</c:if>
-</c:if>
-</c:forEach>
+<!-- **** Oficinas Sir ***-->
 <c:forEach var="organismo6" items="${organismosSextoNivel}">
 <c:if test="${organismo6.organismoSuperior.id == organismo5.id}">
 <li>
@@ -598,6 +574,7 @@ class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
 </c:if>
 <c:set var="contadorCinque" value="${contadorCinque+1}"></c:set>
 <ul>
+<!-- **** Entra si algún Organismo de sexto nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoSextoNivel}">
 <c:if test="${libroOrganismo.value == organismo6.id}">
 <li>
@@ -610,6 +587,7 @@ class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo6.id}">
 <li>
@@ -617,15 +595,11 @@ class=""></i> ${organismo6.codigo} - ${organismo6.denominacion}</span>
 class="panel-heading btn-warning vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo6.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+<c:if test="${oficinaPrincipal.sir}">
 <a href="javascript:void(0);"><span
 class="panel-heading btn-ofsir vuitanta-percent"
 style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
@@ -634,6 +608,11 @@ style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt
 class="panel-heading btn-ofaux vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo6.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -663,6 +642,7 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo6.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -671,18 +651,6 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 class="panel-heading btn-success vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
-</li>
-</c:if>
-</c:if>
-</c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo6.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo6.id}">
-<li>
-<a href="javascript:void(0);"><span
-class="panel-heading btn-ofsir vuitanta-percent"
-style="cursor:copy" onclick="copyToClipboard(this)"><i
-class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </li>
 </c:if>
 </c:if>
@@ -704,6 +672,7 @@ class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
 </c:if>
 <c:set var="contadorSise" value="${contadorSise+1}"></c:set>
 <ul>
+<!-- **** Entra si algún Organismo de septimo nivel tiene libros ***-->
 <c:forEach var="libroOrganismo" items="${librosOrganismoSeptimoNivel}">
 <c:if test="${libroOrganismo.value == organismo7.id}">
 <li>
@@ -716,6 +685,7 @@ class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas ***-->
 <c:forEach var="oficinaPrincipal" items="${oficinasPrincipales}">
 <c:if test="${oficinaPrincipal.organismoResponsable.id == organismo7.id}">
 <li>
@@ -723,15 +693,11 @@ class=""></i> ${organismo7.codigo} - ${organismo7.denominacion}</span>
 class="panel-heading btn-warning vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaPrincipal.codigo} - ${oficinaPrincipal.denominacion}</span></a>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo7.id}">
-<c:if test="${oficinaPrincipal.id == relacionSirOfi.oficina.id}">
+<c:if test="${oficinaPrincipal.sir}">
 <a href="javascript:void(0);"><span
 class="panel-heading btn-ofsir vuitanta-percent"
 style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </c:if>
-</c:if>
-</c:forEach>
 <ul>
 <c:forEach var="oficinaAuxiliar" items="${oficinasAuxiliares}">
 <c:if test="${oficinaAuxiliar.oficinaResponsable.id == oficinaPrincipal.id}">
@@ -740,6 +706,11 @@ style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt
 class="panel-heading btn-ofaux vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-home"></i> ${oficinaAuxiliar.codigo} - ${oficinaAuxiliar.denominacion}</span></a>
+<c:if test="${oficinaAuxiliar.sir}">
+<a href="javascript:void(0);"><span
+class="panel-heading btn-ofsir vuitanta-percent"
+style="cursor:copy"><img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
+</c:if>
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo7.id}">
 <c:if test="${oficinaAuxiliar.id == relacionOrganizativaOfi.oficina.id}">
@@ -769,6 +740,7 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 </li>
 </c:if>
 </c:forEach>
+<!-- **** Oficinas Funcionales/Organizativas ***-->
 <c:forEach var="relacionOrganizativaOfi" items="${relacionesOrganizativaOfi}">
 <c:if test="${relacionOrganizativaOfi.organismo.id == organismo7.id}">
 <c:if test="${relacionOrganizativaOfi.organismo.organismoRaiz.id == relacionOrganizativaOfi.oficina.organismoResponsable.id}">
@@ -777,18 +749,6 @@ class="fa fa-home"></i> ${oficinaAuxiliar2.codigo} - ${oficinaAuxiliar2.denomina
 class="panel-heading btn-success vuitanta-percent"
 style="cursor:copy" onclick="copyToClipboard(this)"><i
 class="fa fa-institution"></i> ${relacionOrganizativaOfi.oficina.nombreCompleto}</span></a>
-</li>
-</c:if>
-</c:if>
-</c:forEach>
-<c:forEach var="relacionSirOfi" items="${relacionesSirOfi}">
-<c:if test="${relacionSirOfi.organismo.id == organismo7.id}">
-<c:if test="${relacionSirOfi.oficina.organismoResponsable.id != organismo7.id}">
-<li>
-<a href="javascript:void(0);"><span
-class="panel-heading btn-ofsir vuitanta-percent"
-style="cursor:copy" onclick="copyToClipboard(this)"><i
-class="fa fa-exchange"></i> ${relacionSirOfi.oficina.nombreCompleto} <img src="<c:url value="/img/logo-SIR.png"/>" width="20" alt="SIR" title="SIR"/></span></a>
 </li>
 </c:if>
 </c:if>

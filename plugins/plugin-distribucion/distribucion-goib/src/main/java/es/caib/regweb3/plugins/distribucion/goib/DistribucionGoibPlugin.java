@@ -259,6 +259,11 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         registreAnotacio.setUsuariContacte(re.getUsuario().getUsuario().getEmail());
         registreAnotacio.setUsuariNom(re.getUsuario().getNombreCompleto());
 
+        //Codi SIA
+        if(re.getRegistroDetalle().getCodigoSia()!= null) {
+            registreAnotacio.setProcedimentCodi(re.getRegistroDetalle().getCodigoSia().toString());
+        }
+
         return registreAnotacio;
 
     }
@@ -300,16 +305,19 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         CatPais pais = interesado.getPais();
         if (pais != null) {
             registreInteressat.setPais(pais.getDescripcionPais());
+            registreInteressat.setPaisCodi(pais.getCodigoPais().toString());
         }
         //Provincia
         CatProvincia provincia = interesado.getProvincia();
         if (provincia != null) {
             registreInteressat.setProvincia(provincia.getDescripcionProvincia());
+            registreInteressat.setProvinciaCodi(provincia.getCodigoProvincia().toString());
         }
         //Localitat
         CatLocalidad localidad = interesado.getLocalidad();
         if (localidad != null) {
             registreInteressat.setMunicipi(localidad.getNombre());
+            registreInteressat.setMunicipiCodi(localidad.getCodigoLocalidad().toString());
         }
 
         //Dirección
