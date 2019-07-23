@@ -70,6 +70,8 @@ public class Oficina implements Serializable{
     private Boolean isSirRecepcion = false;
     @Transient
     private Boolean isSirEnvio = false;
+    @Transient
+    private Boolean isSir = false;
 
     public Oficina() {
       super();
@@ -77,6 +79,10 @@ public class Oficina implements Serializable{
 
     public Oficina(Long id) {
         this.id = id;
+    }
+
+    public Oficina(String codigo) {
+        this.codigo = codigo;
     }
 
     public Oficina(Long id, String codigo, String denominacion) {
@@ -98,6 +104,15 @@ public class Oficina implements Serializable{
         this.denominacion = denominacion;
         this.oficinaResponsable = new Oficina(oficinaResponsable);
         this.organismoResponsable = new Organismo(organismoResponsable);
+    }
+
+    public Oficina(Long id, String codigo, String denominacion, Long oficinaResponsable, Long organismoResponsable, Boolean isSir) {
+        this.id = id;
+        this.codigo = codigo;
+        this.denominacion = denominacion;
+        this.oficinaResponsable = new Oficina(oficinaResponsable);
+        this.organismoResponsable = new Organismo(organismoResponsable);
+        this.isSir = isSir;
     }
 
     public Oficina(Long id, String codigo, String denominacion,  Long organismoResponsable, String organismoResponsableCodigo, String organismoResponsableDenominacion) {
@@ -336,6 +351,15 @@ public class Oficina implements Serializable{
 
     public void setSirRecepcion(Boolean sirRecepcion) {
         isSirRecepcion = sirRecepcion;
+    }
+
+    @Transient
+    public Boolean getSir() {
+        return isSir;
+    }
+
+    public void setSir(Boolean sir) {
+        isSir = sir;
     }
 
     @Transient
