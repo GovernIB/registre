@@ -290,9 +290,12 @@ public class CommonConverter {
 
         for (Interesado interesado : interesados) {
 
-            InteresadoWs interesadoWs = DatosInteresadoConverter.getInteresadoWs(interesado);
+            if(!interesado.getIsRepresentante()){ // Solo si es Interesado
+                InteresadoWs interesadoWs = DatosInteresadoConverter.getInteresadoWs(interesado);
 
-            interesadosWs.add(interesadoWs);
+                interesadosWs.add(interesadoWs);
+            }
+
         }
 
         return interesadosWs;
