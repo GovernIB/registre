@@ -31,7 +31,17 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @return
      * @throws Exception
      */
-    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
+    List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
+
+    /**
+     * Busca un elemento de la cola por IdObjeto y por entidad
+     * @param idObjeto
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws Exception;
+
 
 
 
@@ -43,7 +53,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @return
      * @throws Exception
      */
-    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
+    List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
 
     /**
      * Realiza la busqueda de los elementos de la cola por entidad
@@ -62,7 +72,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
+    boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Vuelve a activar los elementos en la cola poniendo el contador a 0 para que se puedan volver a enviar

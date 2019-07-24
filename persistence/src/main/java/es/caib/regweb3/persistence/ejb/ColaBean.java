@@ -71,6 +71,23 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         
     }
 
+    @Override
+    public Cola findByIdObjeto(Long idObjeto,Long idEntidad) throws Exception{
+
+
+        Query query = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
+        query.setParameter("idObjeto", idObjeto);
+        query.setParameter("idEntidad", idEntidad);
+
+
+        if(query.getResultList().size()>0){
+            return (Cola)query.getResultList().get(0);
+        }else{
+            return null;
+        }
+
+    }
+
 
 
     @Override
@@ -202,26 +219,32 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         try {
-            //Creamos un elemento nuevo de la cola de distribución
-            Cola cola = new Cola();
-            cola.setIdObjeto(re.getId());
-            cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
-            cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
-            cola.setUsuarioEntidad(usuarioEntidad);
-            cola.setDenominacionOficina(re.getOficina().getDenominacion());
+            //Comprobamos que el objeto no esté ya en cola. Ha ocurrido alguna vez de ver en cola el mismo registro 2 veces
+            if(findByIdObjeto(re.getId(),usuarioEntidad.getEntidad().getId())==null){
+                //Creamos un elemento nuevo de la cola de distribución
+                Cola cola = new Cola();
+                cola.setIdObjeto(re.getId());
+                cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
+                cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
+                cola.setUsuarioEntidad(usuarioEntidad);
+                cola.setDenominacionOficina(re.getOficina().getDenominacion());
 
-            persist(cola);
+                persist(cola);
 
-            log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
-            registroEntradaEjb.cambiarEstadoHistorico(re,RegwebConstantes.REGISTRO_DISTRIBUYENDO, usuarioEntidad);
-
+                log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
+                registroEntradaEjb.cambiarEstadoHistorico(re,RegwebConstantes.REGISTRO_DISTRIBUYENDO, usuarioEntidad);
+                return true;
+            }else{ // Si ya existe, no se incluye en la cola
+                log.error("El registre ja es troba a la coa; No es tornarà a afegir");
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
     }
 
 
