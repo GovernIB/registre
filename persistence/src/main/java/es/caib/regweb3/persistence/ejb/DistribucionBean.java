@@ -76,9 +76,11 @@ public class DistribucionBean implements DistribucionLocal{
             ConfiguracionDistribucion conf = distribucionPlugin.configurarDistribucion();
 
             if(conf.isEnvioCola() && !forzarEnvio){ //Si esta configurado para enviarlo a la cola
-               colaEjb.enviarAColaDistribucion(re,usuarioEntidad);
-               respuestaDistribucion.setEnviadoCola(true);
-
+               if(colaEjb.enviarAColaDistribucion(re,usuarioEntidad)) { //si se ha enviado a la cola
+                  respuestaDistribucion.setEnviadoCola(true);
+               }else{ //si no se ha enviado a la cola
+                  respuestaDistribucion.setEnviadoCola(false);
+               }
                return respuestaDistribucion;
             }
 
