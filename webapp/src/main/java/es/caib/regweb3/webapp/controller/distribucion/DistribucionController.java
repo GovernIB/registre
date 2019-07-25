@@ -186,6 +186,33 @@ public class DistribucionController extends BaseController {
         return respuesta;
     }
 
+    /**
+     * Función que se encarga de distribuir un elemento de la cola de distribución de manera individual y
+     * sin esperar a la próxima ejecución del scheduler
+     * @param idRegistro
+     * @param tipo
+     * @param request
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    @RequestMapping(value = "/{idRegistro}/distribuirelementocola/{tipo}", method = RequestMethod.GET)
+    public String distribuirElementoEnCola(@PathVariable Long idRegistro, @PathVariable Long tipo, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(idRegistro, usuarioEntidad.getEntidad().getId());
+
+        if(distribuido){
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
+        }else{
+            Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
+        }
+        return "redirect:/cola/list/"+tipo;
+
+    }
+
+
     @InitBinder("registroEntradaBusqueda")
     public void registroEntradaBusqueda(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

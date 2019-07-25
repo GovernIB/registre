@@ -98,7 +98,7 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col width="140">
+                                            <col width="160">
                                         </colgroup>
                                         <thead>
                                         <tr>
@@ -129,6 +129,7 @@
                                                     <a class="btn btn-danger btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_VALIDO}"/>","<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.eliminar"/>"><span class="fa fa-eraser"></span></a>
                                                     <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/delete/${tipo}/${RegwebConstantes.REGISTRO_DISTRIBUIDO}"/>","<spring:message code="regweb.confirmar.distribuido" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.marcardistribuido"/>"><span class="fa fa-share-square-o"></span></a>
                                                     <a class="btn btn-success btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/reiniciar/${tipo}"/>","<spring:message code="cola.reiniciar.elemento" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.reiniciar"/>"><span class="fa fa-repeat"></span></a>
+                                                    <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/distribucion/${cola.idObjeto}/distribuirelementocola/${tipo}"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-refresh"></span></a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
@@ -184,11 +185,13 @@
 
     <c:import url="../modulos/pie.jsp"/>
 
-    <script type="text/javascript" src="<c:url value="/js/cola.js"/>"></script>
     <script type="text/javascript">
 
-            var urlobtenerCola = '<c:url value="/rest/obtenerCola"/>';
+        var urlobtenerCola = '<c:url value="/rest/obtenerCola"/>';
 
     </script>
+
+    <script type="text/javascript" src="<c:url value="/js/cola.js"/>"></script>
+
    </body>
 </html>

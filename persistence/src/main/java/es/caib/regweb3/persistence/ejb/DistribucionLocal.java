@@ -32,9 +32,20 @@ public interface DistribucionLocal  {
   RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException;
 
   /**
-   *
+   * Distribuye los registros(varios) que estan en la cola
    * @param idEntidad
    * @throws Exception
    */
   void distribuirRegistrosEnCola(Long idEntidad) throws Exception;
+
+
+  /**
+   * Distribuye un registro de la cola de manera individual
+   * @param idObjeto
+   * @param idEntidad
+   * @return
+   * @throws Exception
+   * @throws I18NException
+   */
+  Boolean distribuirRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception, I18NException;
 }
