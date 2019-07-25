@@ -24,226 +24,215 @@ import java.util.Calendar;
  * @author anadal
  */
 public class AnexoConverter extends CommonConverter {
-  
-  
-  public static final Logger log = Logger.getLogger(AnexoConverter.class);
-
-  /**
-   * Convierte un {@link es.caib.regweb3.ws.model.AnexoWs} en un {@link es.caib.regweb3.model.Anexo}
-   * @param anexoWs
-   * @return
-   * @throws Exception
-   * @throws I18NException
-   */
-
-   public static AnexoFull getAnexoFull(AnexoWs anexoWs, Long idEntidad,TipoDocumentalLocal tipoDocumentalEjb
-
-       ) throws Exception, I18NException {
-
-        if (anexoWs == null){
-            return  null;
-        }
 
 
-        Anexo anexo = procesarAnexo(anexoWs, idEntidad,tipoDocumentalEjb);
-        
-        AnexoFull anexoFull = new AnexoFull(anexo);
+   public static final Logger log = Logger.getLogger(AnexoConverter.class);
 
-        
-        // Si validez Documento --> Copia no se admite firma
-       if (RegwebConstantes.ANEXO_TIPOVALIDEZDOCUMENTO_COPIA.equals(anexoWs.getValidezDocumento()) && anexoWs.getNombreFirmaAnexada() != null && anexoWs.getFirmaAnexada() != null) {
-           throw new Exception("Si la validez del documento es  cópia = 01"
-                   + " no se admite firma");
-       }
+   /**
+    * Convierte un {@link es.caib.regweb3.ws.model.AnexoWs} en un {@link es.caib.regweb3.model.Anexo}
+    * @param anexoWs
+    * @return
+    * @throws Exception
+    * @throws I18NException
+    */
 
-       final int modoFirma = anexoWs.getModoFirma();
-       DocumentCustody doc = null;
+   public static AnexoFull getAnexoFull(AnexoWs anexoWs, Long idEntidad,TipoDocumentalLocal tipoDocumentalEjb) throws Exception, I18NException {
 
-       //Documento
-       if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado() != null && anexoWs.getFicheroAnexado().length > 0)) {
-           doc = new DocumentCustody();
-           doc.setData(anexoWs.getFicheroAnexado());
-           doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
-           doc.setName(anexoWs.getNombreFicheroAnexado());
-       }
-       anexoFull.setDocumentoCustody(doc);
-       anexoFull.setDocumentoFileDelete(false);
+      if (anexoWs == null){return  null;}
 
 
-       //Firma
-       SignatureCustody sign = null;
-       if (StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)) {
-           sign = new SignatureCustody();
-           sign.setData(anexoWs.getFirmaAnexada());
-           sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
-           sign.setName(anexoWs.getNombreFirmaAnexada());
-       }
+      Anexo anexo = procesarAnexo(anexoWs, idEntidad,tipoDocumentalEjb);
 
-       switch (modoFirma) {
-           // Document amb firma adjunta
-           case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
-               // TODO Emprar mètode per descobrir tipus de signatura
-               // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
-               sign = new SignatureCustody();
-               sign.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
-               sign.setAttachedDocument(null);
+      AnexoFull anexoFull = new AnexoFull(anexo);
+
+      final int modoFirma = anexoWs.getModoFirma();
+      DocumentCustody doc = null;
+
+      //Documento
+      if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado() != null && anexoWs.getFicheroAnexado().length > 0)) {
+         doc = new DocumentCustody();
+         doc.setData(anexoWs.getFicheroAnexado());
+         doc.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+         doc.setName(anexoWs.getNombreFicheroAnexado());
+      }
+      anexoFull.setDocumentoCustody(doc);
+      anexoFull.setDocumentoFileDelete(false);
+
+
+      //Firma
+      SignatureCustody sign = null;
+      if (StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)) {
+         sign = new SignatureCustody();
+         sign.setData(anexoWs.getFirmaAnexada());
+         sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+         sign.setName(anexoWs.getNombreFirmaAnexada());
+      }
+
+      switch (modoFirma) {
+         // Document amb firma adjunta
+         case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
+            // TODO Emprar mètode per descobrir tipus de signatura
+            // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
+            sign = new SignatureCustody();
+            sign.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
+            sign.setAttachedDocument(null);
                /*  Inicialmente nos enviaban el documento con firma adjunta en "FicheroAnexado".
                    Ahora soportamos los dos casos, que venga en uno o en otro, pero a partir de la versión 3.1 de regweb3,
                    se especifica en la documentación  que debe ser en "firmaAnexada" donde venga el documento.
                */
-               anexoFull.setDocumentoCustody(null);
-               if(StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)){
-                   sign.setData(anexoWs.getFirmaAnexada());
-                   sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
-                   sign.setName(anexoWs.getNombreFirmaAnexada());
-               }else{
-                   if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
-                       sign.setData(anexoWs.getFicheroAnexado());
-                       sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
-                       sign.setName(anexoWs.getNombreFicheroAnexado());
-                   } else {
-                       throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada y 'nombreFicheroAnexado' o 'ficheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
-                   }
+            anexoFull.setDocumentoCustody(null);
+            if(StringUtils.isNotEmpty(anexoWs.getNombreFirmaAnexada()) && (anexoWs.getFirmaAnexada()!=null && anexoWs.getFirmaAnexada().length >0)){
+               sign.setData(anexoWs.getFirmaAnexada());
+               sign.setMime(anexoWs.getTipoMIMEFirmaAnexada());
+               sign.setName(anexoWs.getNombreFirmaAnexada());
+            }else{
+               if (StringUtils.isNotEmpty(anexoWs.getNombreFicheroAnexado()) && (anexoWs.getFicheroAnexado()!=null && anexoWs.getFicheroAnexado().length >0)) {
+                  sign.setData(anexoWs.getFicheroAnexado());
+                  sign.setMime(anexoWs.getTipoMIMEFicheroAnexado());
+                  sign.setName(anexoWs.getNombreFicheroAnexado());
+               } else {
+                  throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada y 'nombreFicheroAnexado' o 'ficheroAnexado' no pueden estar vacios caso FIRMA ATTACHED");
                }
-               break;
+            }
+            break;
 
-           // Firma en document separat
-           case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
-               // TODO Emprar mètode per descobrir tipus de signatura
-               // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
-               if (StringUtils.isEmpty(anexoWs.getNombreFirmaAnexada()) || anexoWs.getFirmaAnexada() == null || anexoWs.getFirmaAnexada().length ==0) {
-                   throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada' no pueden estar vacios caso FIRMA DETACHED");
-               }
-               sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
-               sign.setAttachedDocument(false);
-               if (doc == null) {
-                   throw new Exception("El documento no se envia y el modo de firma "
-                           + " es 'Firma en documento separado'");
-               }
-               break;
+         // Firma en document separat
+         case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
+            // TODO Emprar mètode per descobrir tipus de signatura
+            // TODO  Intentar obtenir tipus firma a partir de mime, nom o contingut
+            if (StringUtils.isEmpty(anexoWs.getNombreFirmaAnexada()) || anexoWs.getFirmaAnexada() == null || anexoWs.getFirmaAnexada().length ==0) {
+               throw new Exception("Los campos 'nombreFirmaAnexada' o 'FirmaAnexada' no pueden estar vacios caso FIRMA DETACHED");
+            }
+            sign.setSignatureType(SignatureCustody.OTHER_SIGNATURE_WITH_DETACHED_DOCUMENT);
+            sign.setAttachedDocument(false);
+            if (doc == null) {
+               throw new Exception("El documento no se envia y el modo de firma "
+                  + " es 'Firma en documento separado'");
+            }
+            break;
 
-       }
+      }
 
 
-        anexoFull.setSignatureCustody(sign);
-        anexoFull.setSignatureFileDelete(false);
+      anexoFull.setSignatureCustody(sign);
+      anexoFull.setSignatureFileDelete(false);
 
-        return  anexoFull;
+      return  anexoFull;
    }
 
    /**
-   * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
-   * @param anexoEjb
-   * @param anexoFull
-   * @return
-   * @throws Exception
-   * @throws I18NException
-   */
+    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
+    * @param anexoEjb
+    * @param anexoFull
+    * @return
+    * @throws Exception
+    * @throws I18NException
+    */
    public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
-       throws Exception, I18NException {
+      throws Exception, I18NException {
 
-        if (anexoFull == null || anexoFull.getAnexo() == null){
-            return  null;
-        }
+      if (anexoFull == null || anexoFull.getAnexo() == null){
+         return  null;
+      }
 
-       return procesarAnexoWs(anexoFull, anexoEjb, idEntidad);
+      return procesarAnexoWs(anexoFull, anexoEjb, idEntidad);
 
-    }
+   }
 
 
-  /**
-   * Convierte un {@link es.caib.regweb3.ws.model.AnexoWs } en un {@link es.caib.regweb3.model.Anexo}
-   * @param anexoWs
-   * @param tipoDocumentalEjb
-   * @return
-   * @throws Exception
-   */
-  private static Anexo procesarAnexo(AnexoWs anexoWs, Long idEntidad, 
-      TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
+   /**
+    * Convierte un {@link es.caib.regweb3.ws.model.AnexoWs } en un {@link es.caib.regweb3.model.Anexo}
+    * @param anexoWs
+    * @param tipoDocumentalEjb
+    * @return
+    * @throws Exception
+    */
+   private static Anexo procesarAnexo(AnexoWs anexoWs, Long idEntidad,
+                                      TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
 
-       Anexo anexo = new Anexo();
+      Anexo anexo = new Anexo();
 
-       if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
+      if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
 
-       if(anexoWs.getTipoDocumental()!= null) {
-         
+      if(anexoWs.getTipoDocumental()!= null) {
+
          String tdws = anexoWs.getTipoDocumental();
          TipoDocumental td = getTipoDocumental(tdws, idEntidad, tipoDocumentalEjb);
          if (td == null) {
-           log.warn("Se ha pasdo por parametro el tipoDocumental con ID '" 
-              + tdws + "' pero el sistema no ha encontrado ninguno con este código.");
+            log.warn("Se ha pasdo por parametro el tipoDocumental con ID '"
+               + tdws + "' pero el sistema no ha encontrado ninguno con este código.");
          }
          anexo.setTipoDocumental(td);
-       }
-       if(anexoWs.getValidezDocumento()!= null) {
+      }
+      if(anexoWs.getValidezDocumento()!= null) {
          anexo.setValidezDocumento(getTipoValidezDocumento(anexoWs.getValidezDocumento()));
-       }
-       if(anexoWs.getTipoDocumento()!= null) {
+      }
+      if(anexoWs.getTipoDocumento()!= null) {
          anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_BY_CODIGO_NTI.get(anexoWs.getTipoDocumento()));
-       }
-       if(StringUtils.isNotEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
-       if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
-       
-       if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
+      }
+      if(StringUtils.isNotEmpty(anexoWs.getObservaciones())){anexo.setObservaciones(anexoWs.getObservaciones());}
+      if(anexoWs.getOrigenCiudadanoAdmin()!=null){anexo.setOrigenCiudadanoAdmin(anexoWs.getOrigenCiudadanoAdmin());}
 
-       if(anexoWs.getFechaCaptura()!= null){anexo.setFechaCaptura(anexoWs.getFechaCaptura().getTime());}
+      if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
 
-       // Part de firma Anexada
-       if(anexoWs.getModoFirma()!=null){anexo.setModoFirma(anexoWs.getModoFirma());}
+      if(anexoWs.getFechaCaptura()!= null){anexo.setFechaCaptura(anexoWs.getFechaCaptura().getTime());}
 
-        return anexo;
+      // Part de firma Anexada
+      if(anexoWs.getModoFirma()!=null){anexo.setModoFirma(anexoWs.getModoFirma());}
 
-  }
+      return anexo;
+
+   }
 
 
-  /**
-   * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
-   * @param anexoFull
-   * @param anexoEjb
-   * @return
-   * @throws Exception
-   */
-  private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
+   /**
+    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
+    * @param anexoFull
+    * @param anexoEjb
+    * @return
+    * @throws Exception
+    */
+   private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
       throws Exception, I18NException {
 
-       AnexoWs anexoWs = new AnexoWs();
+      AnexoWs anexoWs = new AnexoWs();
 
-       Anexo anexo = anexoFull.getAnexo();
+      Anexo anexo = anexoFull.getAnexo();
 
-       if(StringUtils.isNotEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
+      if(StringUtils.isNotEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
 
-       if(anexo.getTipoDocumental()!= null){anexoWs.setTipoDocumental(anexo.getTipoDocumental().getCodigoNTI());}
-       if(anexo.getValidezDocumento()!= null) {
+      if(anexo.getTipoDocumental()!= null){anexoWs.setTipoDocumental(anexo.getTipoDocumental().getCodigoNTI());}
+      if(anexo.getValidezDocumento()!= null) {
          anexoWs.setValidezDocumento(anexo.getValidezDocumento().toString());
-       }
-       if(anexo.getTipoDocumento()!= null) {
+      }
+      if(anexo.getTipoDocumento()!= null) {
          anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
-       }
-       if(StringUtils.isNotEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
-       if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
-       
-       if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
+      }
+      if(StringUtils.isNotEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
+      if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
 
-       
-       String custodyID = anexo.getCustodiaID();
-       
-       if (custodyID == null) {
+      if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
+
+
+      String custodyID = anexo.getCustodiaID();
+
+      if (custodyID == null) {
          if (custodyID == null) {
-           log.error("El anexo con id " + anexo.getId() 
+            log.error("El anexo con id " + anexo.getId()
                + " de un registro no tiene identificador de custodia", new Exception());
          }
-       } else {
-       
+      } else {
+
          // Firma Fichero Anexado
          if (anexoFull.getSignatureCustody() != null) {
-           SignatureCustody sign = anexoFull.getSignatureCustody();
-           anexoWs.setNombreFirmaAnexada(sign.getName());
-           anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-           anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
+            SignatureCustody sign = anexoFull.getSignatureCustody();
+            anexoWs.setNombreFirmaAnexada(sign.getName());
+            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
+            anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
          }
-         
-         
-  
+
+
+
          // Documento fichero Anexado
          if (anexoFull.getDocumentoCustody() != null) {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
@@ -251,21 +240,21 @@ public class AnexoConverter extends CommonConverter {
             anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
             anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
          }
-       }
-       
+      }
 
-       // Transformamos de Date a Calendar
-       Calendar calendar = Calendar.getInstance();
-       calendar.setTime(anexo.getFechaCaptura());
-       if(anexo.getFechaCaptura()!= null){anexoWs.setFechaCaptura(calendar);}
 
-       // Part de firma Anexada
-       if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
+      // Transformamos de Date a Calendar
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(anexo.getFechaCaptura());
+      if(anexo.getFechaCaptura()!= null){anexoWs.setFechaCaptura(calendar);}
+
+      // Part de firma Anexada
+      if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
 
 
       return anexoWs;
 
-  }
+   }
 
 
 
