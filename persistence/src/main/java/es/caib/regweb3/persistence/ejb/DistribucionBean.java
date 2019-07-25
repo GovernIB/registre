@@ -248,6 +248,94 @@ public class DistribucionBean implements DistribucionLocal{
 
 
    /**
+    * Distribuye un registro de la cola de manera individual
+    * @param idObjeto
+    * @param idEntidad
+    * @return
+    * @throws Exception
+    * @throws I18NException
+    */
+   @Override
+   public Boolean distribuirRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception, I18NException{
+
+      Boolean distribuido = false;
+      try {
+
+         //Obtenemos todos los administradores de la entidad
+         List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(idEntidad);
+
+         //Petición: Construimos los mensajes para guardar la información de la integración
+         long tiempo = System.currentTimeMillis();
+         String descripcion = "Distribución desde Cola";
+         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()) + "</b>&nbsp;&nbsp;&nbsp;";
+
+         //Obtenermos plugin distribución
+         IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
+
+         //Obtenemos el numero máximo de reintentos de una propiedad global
+         Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);
+
+         //Elemento de la cola
+         Cola elemento = colaEjb.findByIdObjeto(idObjeto, idEntidad);
+
+         Date inicio = new Date();
+         StringBuilder peticion = new StringBuilder();
+         try {
+
+            //Obtenemos el registro de entrada que se debe distribuir
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idObjeto);
+
+            //Montamos la petición de la integración
+            peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+            peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+            if(distribucionPlugin != null){
+               peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
+            }
+
+            //Distribuimos el registro de entrada.
+            distribuido = distribuirRegistroEntrada(registroEntrada,distribucionPlugin, inicio, descripcion, tiempo, peticion);
+
+            if (distribuido) { //Si la distribución ha ido bien
+
+               colaEjb.remove(elemento); //Eliminamos el elemento de la cola
+               log.info("Distribucion satisfactoria registro: " + registroEntrada.getNumeroRegistroFormateado());
+
+            } else { //No ha ido bien, el plugin nos dice que no ha ido bien
+               log.info("Distribucion erronea registro: " + registroEntrada.getNumeroRegistroFormateado());
+               //Actualizamos los diferentes datos del elemento a distribuir(incremento de intentos, envio de mails, etc)
+               colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, "ca", null, administradores, maxReintentos);
+            }
+
+         } catch (Exception e) {
+            log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
+            e.printStackTrace();
+            colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, "ca", e, administradores, maxReintentos);
+         } catch (I18NException e) {
+            log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
+            e.printStackTrace();
+            colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, "ca", e, administradores, maxReintentos);
+         } catch (I18NValidationException e) {
+            log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
+            e.printStackTrace();
+            colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, "ca", e, administradores, maxReintentos);
+         } catch (Throwable t) {
+            log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
+            t.printStackTrace();
+            colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, "ca", t, administradores, maxReintentos);
+         }
+
+
+      } catch (I18NException e) {
+         log.info("Error iniciando la Cola de distribucion");
+         e.printStackTrace();
+      }
+
+      return distribuido;
+
+   }
+
+   /**
     *  Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
     *  Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
     *
