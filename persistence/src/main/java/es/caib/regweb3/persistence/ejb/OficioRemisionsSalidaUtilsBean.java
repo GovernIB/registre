@@ -72,7 +72,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
         // Obtenemos los Registros de Salida que son Oficio de remisión
         Query q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and rs.evento = :tipoEvento" + queryFecha);
+                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and rs.evento = :tipoEvento" + queryFecha +" order by rs.registroDetalle.id desc");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
