@@ -659,7 +659,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
-        // 4.- Obtenemos el RegistroEntrada
+        // 2.- Obtenemos el RegistroEntrada
         RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
 
@@ -667,21 +667,18 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
-        // 5.- Comprobamos que el usuario tiene permisos para Distribuir el registro
+        // 3.- Comprobamos que el usuario tiene permisos para Distribuir el registro
         if(!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
             throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
 
-        //6.- Obtenemos los organismos de la oficina en la que se ha realizado el registro que hace de oficinaActiva
-        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getAllByOficinaActiva(registroEntrada.getOficina()));
-
-        // Comprobamos que el RegistroEntrada se puede Distribuir
+        // 4.- Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
             throw new I18NException("registroEntrada.distribuir.noPermitido");
         }
 
         try{
-            // 7.- Distribuimos el registro de entrada
+            // 5.- Distribuimos el registro de entrada
             RespuestaDistribucion respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuario, false);
 
             if(!respuestaDistribucion.getEnviadoCola() && !respuestaDistribucion.getEnviado()){ //Cuando hay plugin y no ha llegado a destino
