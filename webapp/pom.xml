@@ -169,8 +169,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-scanweb-api</artifactId>
+      <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+      <artifactId>pluginsib-scanweb-api</artifactId>
       <type>jar</type>
       <version>${scanweb.api.version}</version>
       <scope>provided</scope>

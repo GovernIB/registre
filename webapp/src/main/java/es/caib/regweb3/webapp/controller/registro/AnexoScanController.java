@@ -16,7 +16,7 @@ import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
 import org.fundaciobit.plugins.scanweb.api.ScanWebMode;
 import org.fundaciobit.plugins.scanweb.api.ScannedDocument;
-import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -172,7 +172,7 @@ public class AnexoScanController extends AnexoController {
             request.setAttribute("lang", languageUI);
 
             // Utilitzam l'ID del registre per escanejar
-            final long scanWebID = registroID;
+            final String scanWebID = String.valueOf(registroID);
 
             String urlToPluginWebPage = initializeScan(request, entitatID, scanWebID, languageUI);
 
@@ -191,7 +191,7 @@ public class AnexoScanController extends AnexoController {
      * @throws Exception
      * @throws I18NException
      */
-    private String initializeScan(HttpServletRequest request, long entitatID, final long scanWebID,
+    private String initializeScan(HttpServletRequest request, long entitatID, final String scanWebID,
                                   String languageUI) throws Exception, I18NException {
 
 
@@ -262,9 +262,15 @@ public class AnexoScanController extends AnexoController {
         SignatureCustody sc = null;
 
 
-        final Long scanWebID = registroID;
+        final String scanWebID = String.valueOf(registroID);
 
         ScanWebConfigRegWeb config = scanWebModuleEjb.getScanWebConfig(request, scanWebID);
+
+
+        log.info("Error detectat REGWEB3: " + config.getStatus().getErrorMsg());
+        if(config.getStatus().getErrorMsg()!= null){
+            throw new I18NException("anexo.perfilscan.error");
+        }
 
 
         //Tratamiento de los documentos obtenidos del scanner

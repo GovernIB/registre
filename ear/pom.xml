@@ -242,8 +242,8 @@
     <!-- ============================================ -->
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-scanweb-api</artifactId>
+      <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+      <artifactId>pluginsib-scanweb-api</artifactId>
       <version>${scanweb.api.version}</version>
     </dependency>
 
@@ -433,8 +433,17 @@
         </exclusion>-->
       </exclusions>
     </dependency>
-    
-  
+
+    <!-- ================================================= -->
+    <!-- ======== API DE PLUGIN DE SCANWEB =========== -->
+    <!-- ================================================= -->
+
+    <dependency>
+      <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+      <artifactId>pluginsib-scanweb-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
 
     <!-- ============================================ -->
     <!-- =============    FINAL PLUGINS   =========== -->
@@ -624,9 +633,9 @@
       <id>iecisascanweb</id>
       <dependencies>
         <dependency>
-          <groupId>org.fundaciobit.plugins</groupId>
-          <artifactId>plugin-scanweb-iecisascanweb-plugin</artifactId>
-          <version>2.0.5</version>
+          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+          <artifactId>pluginsib-scanweb-iecisascanweb-plugin</artifactId>
+          <version>3.0.2</version>
         </dependency>
       </dependencies>
     </profile>
@@ -637,9 +646,9 @@
       <id>dwtscanweb</id>
       <dependencies>
         <dependency>
-          <groupId>org.fundaciobit.plugins</groupId>
-          <artifactId>plugin-scanweb-dynamicwebtwain</artifactId>
-          <version>2.0.5</version>
+          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+          <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
+          <version>3.0.0</version>
         </dependency>
       </dependencies>
     </profile>

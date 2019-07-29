@@ -98,8 +98,8 @@
         </dependency>
         
         <dependency>
-            <groupId>org.fundaciobit.plugins</groupId>
-            <artifactId>plugin-scanweb-api</artifactId>
+            <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+            <artifactId>pluginsib-scanweb-api</artifactId>
             <version>${scanweb.api.version}</version>
         </dependency>
 
