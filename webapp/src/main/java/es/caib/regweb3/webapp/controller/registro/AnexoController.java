@@ -176,7 +176,7 @@ public class AnexoController extends BaseController {
             }
         }
 
-        final long scanWebID = registroID;
+        final String scanWebID = String.valueOf(registroID);
         scanWebModuleEjb.closeScanWebProcess(request, scanWebID);
 
         model.addAttribute("anexoForm", anexoForm);

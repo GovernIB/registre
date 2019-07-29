@@ -20,7 +20,7 @@
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <documentcustody.api.version>3.0.0</documentcustody.api.version>
-    <scanweb.api.version>2.0.3</scanweb.api.version>
+    <scanweb.api.version>3.0.0</scanweb.api.version>
     <itext.version>5.4.3</itext.version>
     <bouncycastle.version>1.51</bouncycastle.version>
     <plugin-documentcustody-arxiudigitalcaib.version>3.0.14</plugin-documentcustody-arxiudigitalcaib.version>

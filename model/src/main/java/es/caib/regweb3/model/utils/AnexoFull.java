@@ -5,7 +5,7 @@ import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.Metadata;
 
 import javax.persistence.Transient;
 import java.util.List;

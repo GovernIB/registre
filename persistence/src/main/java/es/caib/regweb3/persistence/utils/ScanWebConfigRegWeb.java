@@ -1,11 +1,11 @@
 package es.caib.regweb3.persistence.utils;
 
-import java.util.List;
-import java.util.Set;
-
 import org.fundaciobit.plugins.scanweb.api.ScanWebConfig;
 import org.fundaciobit.plugins.scanweb.api.ScanWebMode;
-import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.Metadata;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -18,9 +18,9 @@ public class ScanWebConfigRegWeb extends ScanWebConfig {
 
   protected final long expiryTransaction;
 
-  public ScanWebConfigRegWeb(long scanWebID, String scanType, Set<String> flags,
-      List<Metadata> metadades, ScanWebMode mode, String languageUI, String urlFinal,
-      long expiryTransaction) {
+  public ScanWebConfigRegWeb(String scanWebID, String scanType, Set<String> flags,
+                             List<Metadata> metadades, ScanWebMode mode, String languageUI, String urlFinal,
+                             long expiryTransaction) {
     super(scanWebID, scanType, flags, metadades, mode, languageUI, urlFinal);
     this.expiryTransaction = expiryTransaction;
   }

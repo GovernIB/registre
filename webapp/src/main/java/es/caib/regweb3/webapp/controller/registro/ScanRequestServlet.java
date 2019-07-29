@@ -7,6 +7,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 
+import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,6 +25,7 @@ import java.io.IOException;
  */
 // @Controller és només per carrergar els EJB
 @Controller
+@RunAs("RWE_SUPERADMIN")
 public class ScanRequestServlet extends HttpServlet { 
 
   @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
@@ -87,7 +89,7 @@ public class ScanRequestServlet extends HttpServlet {
       log.info("query = " + query);
     }
     
-    long scanWebID = Long.parseLong(idStr);
+    String scanWebID = idStr;
         
     try {
       requestPlugin(request, response, scanWebID, query, isPost);
@@ -126,7 +128,7 @@ public class ScanRequestServlet extends HttpServlet {
   
 
   protected void requestPlugin(HttpServletRequest request, HttpServletResponse response,
-      long scanWebID, String query, boolean isPost)
+      String scanWebID, String query, boolean isPost)
       throws Exception, I18NException {
 
     String absoluteRequestPluginBasePath = getAbsoluteRequestPluginBasePath(request,
@@ -145,7 +147,7 @@ public class ScanRequestServlet extends HttpServlet {
 
 
   public static String getAbsoluteRequestPluginBasePath(HttpServletRequest request,
-      String webContext, long scanWebID) {
+      String webContext, String scanWebID) {
     
     String absoluteURLBase = PropiedadGlobalUtil.getScanWebAbsoluteURL();
     if (absoluteURLBase==null || absoluteURLBase.trim().isEmpty()) {
@@ -157,7 +159,7 @@ public class ScanRequestServlet extends HttpServlet {
   }
 
   public static String getRelativeRequestPluginBasePath(HttpServletRequest request,
-      String webContext, long scanWebID) {
+      String webContext, String scanWebID) {
 
     return request.getContextPath()  + webContext +  scanWebID;
   }

@@ -38,7 +38,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
   @Override
   public String scanDocument(HttpServletRequest request, String absolutePluginRequestPath,
-      String relativePluginRequestPath, long scanWebID) throws Exception, I18NException {
+      String relativePluginRequestPath, String scanWebID) throws Exception, I18NException {
 
     ScanWebConfigRegWeb scanWebConfig = getScanWebConfig(request, scanWebID);
 
@@ -69,7 +69,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
    */
   public void requestPlugin(HttpServletRequest request, HttpServletResponse response,
       String absoluteRequestPluginBasePath, String relativeRequestPluginBasePath,
-      long scanWebID, String query, boolean isPost) throws Exception, I18NException {
+                            String scanWebID, String query, boolean isPost) throws Exception, I18NException {
 
     ScanWebConfigRegWeb ss = getScanWebConfig(request, scanWebID);
     
@@ -111,7 +111,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
   // -------------------------------------------------------------------------
 
   @Override
-  public void closeScanWebProcess(HttpServletRequest request, long scanWebID) {
+  public void closeScanWebProcess(HttpServletRequest request, String scanWebID) {
 
     ScanWebConfigRegWeb pss = getScanWebConfig(request, scanWebID);
 
@@ -123,7 +123,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     closeScanWebProcess(request, scanWebID, pss);
   }
 
-  private void closeScanWebProcess(HttpServletRequest request, long scanWebID,
+  private void closeScanWebProcess(HttpServletRequest request, String scanWebID,
       ScanWebConfigRegWeb pss) {
 
     Long entitatID = pss.getEntitatID();
@@ -156,7 +156,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     scanWebConfigMap.remove(scanWebID);
   }
 
-  private static final Map<Long, ScanWebConfigRegWeb> scanWebConfigMap = new HashMap<Long, ScanWebConfigRegWeb>();
+  private static final Map<String, ScanWebConfigRegWeb> scanWebConfigMap = new HashMap<String, ScanWebConfigRegWeb>();
 
   private static long lastCheckScanProcessCaducades = 0;
 
@@ -166,7 +166,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
    * @param scanWebID
    * @return
    */
-  public ScanWebConfigRegWeb getScanWebConfig(HttpServletRequest request, long scanWebID) {
+  public ScanWebConfigRegWeb getScanWebConfig(HttpServletRequest request, String scanWebID) {
     // Fer net peticions caducades
     // Check si existeix algun proces de escaneig caducat s'ha d'esborrar
     // Com a mínim cada minut es revisa si hi ha caducats
@@ -176,10 +176,10 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
     if (now + un_minut_en_ms > lastCheckScanProcessCaducades) {
       lastCheckScanProcessCaducades = now;
-      Map<Long, ScanWebConfigRegWeb> keysToDelete = new HashMap<Long, ScanWebConfigRegWeb>();
+      Map<String, ScanWebConfigRegWeb> keysToDelete = new HashMap<String, ScanWebConfigRegWeb>();
 
-      Set<Long> ids = scanWebConfigMap.keySet();
-      for (Long id : ids) {
+      Set<String> ids = scanWebConfigMap.keySet();
+      for (String id : ids) {
         ScanWebConfigRegWeb ss = scanWebConfigMap.get(id);
         if (now > ss.getExpiryTransaction()) {
           keysToDelete.put(id, ss);
@@ -193,7 +193,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
       if (keysToDelete.size() != 0) {
         synchronized (scanWebConfigMap) {
 
-          for (Entry<Long, ScanWebConfigRegWeb> pss : keysToDelete.entrySet()) {
+          for (Entry<String, ScanWebConfigRegWeb> pss : keysToDelete.entrySet()) {
             closeScanWebProcess(request, pss.getKey(), pss.getValue());
           }
         }
@@ -205,7 +205,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
   @Override
   public void registerScanWebProcess(HttpServletRequest request, ScanWebConfigRegWeb scanWebConfig) {
-    final long scanWebID = scanWebConfig.getScanWebID();
+    final String scanWebID = scanWebConfig.getScanWebID();
     
     ScanWebConfigRegWeb tmp = getScanWebConfig(request, scanWebID);
     if (tmp != null) {
