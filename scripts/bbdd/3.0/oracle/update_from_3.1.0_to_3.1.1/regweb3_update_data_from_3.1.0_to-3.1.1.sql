@@ -16,3 +16,6 @@ update RWE_REGISTRO_DETALLE set presencial=0 where id in(select re.REGISTRO_DETA
 -- Marcamos el evento a 0 de los registros que no son Válidos ni Pendientes de Visar
 update RWE_REGISTRO_ENTRADA set evento=0 where evento is null and (estado != 1 and estado != 3);
 update RWE_REGISTRO_SALIDA set evento=0 where evento is null and (estado != 1 and estado != 3);
+
+--Pasar la entidad de los tipos asunto a los codigos asunto
+UPDATE RWE_CODIGOASUNTO as codigoasunto SET entidad = tipoasunto.entidad FROM  RWE_TIPOASUNTO as tipoasunto WHERE codigoasunto.tipoasunto = tipoasunto.id;

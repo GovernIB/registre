@@ -1,9 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CodigoAsunto;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.TipoAsunto;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,6 +26,11 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
+
+    @EJB  private TipoAsuntoLocal tipoAsuntoEjb;
+
+    @EJB  private EntidadLocal entidadEjb;
+
 
 
     @Override
@@ -157,6 +165,27 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
 
         return codigos.size();
+
+    }
+
+    /**
+     * Método de utilidad que asigna la entidad de un tipoAsunto a un código Asunto.
+     * Refactorización : Eliminación del tipoAsunto.
+     * @throws Exception
+     */
+    @Override
+    public void actualizarEntidadCodigosAsunto() throws Exception{
+
+        for(Entidad entidad: entidadEjb.getAll()){
+            List<TipoAsunto> tiposAsuntos=  tipoAsuntoEjb.getAll(entidad.getId());
+            for(TipoAsunto tipoAsunto: tiposAsuntos){
+                List<CodigoAsunto> codigoAsuntos = getByTipoAsunto(tipoAsunto.getId());
+                for(CodigoAsunto codigoAsunto: codigoAsuntos){
+                    codigoAsunto.setEntidad(tipoAsunto.getEntidad());
+                    merge(codigoAsunto);
+                }
+            }
+        }
 
     }
 

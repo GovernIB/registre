@@ -15,3 +15,6 @@ alter table RWE_ENTIDAD add (MANTENIMIENTO number(1,0) DEFAULT 0);
 --Nuevo campo "evento" en Registro entrada y salida
 alter table RWE_REGISTRO_ENTRADA add (EVENTO number(19,0));
 alter table RWE_REGISTRO_SALIDA add (EVENTO number(19,0));
+
+--Nuevo campo entidad en codigo asunto
+alter table RWE_CODIGOASUNTO add entidad number(19,0);
