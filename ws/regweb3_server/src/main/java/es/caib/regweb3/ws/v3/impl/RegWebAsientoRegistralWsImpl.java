@@ -127,9 +127,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
     private AsientoRegistralLocal asientoRegistralEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
-    private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
-
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 

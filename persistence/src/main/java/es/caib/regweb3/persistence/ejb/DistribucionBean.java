@@ -37,7 +37,6 @@ public class DistribucionBean implements DistribucionLocal{
    protected final Logger log = Logger.getLogger(getClass());
 
    @EJB private RegistroEntradaLocal registroEntradaEjb;
-   @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
    @EJB private JustificanteLocal justificanteEjb;
    @EJB private IntegracionLocal integracionEjb;
    @EJB private PluginLocal pluginEjb;
