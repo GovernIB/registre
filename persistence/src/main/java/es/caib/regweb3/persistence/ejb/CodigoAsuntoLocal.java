@@ -74,4 +74,11 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
 
+    /**
+     * Método de utilidad que asigna la entidad de un tipoAsunto a un código Asunto.
+     * Refactorización : Eliminación del tipoAsunto.
+     * @throws Exception
+     */
+    void actualizarEntidadCodigosAsunto() throws Exception;
+
 }
