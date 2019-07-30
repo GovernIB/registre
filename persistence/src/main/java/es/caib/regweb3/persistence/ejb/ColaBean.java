@@ -235,7 +235,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 persist(cola);
 
                 log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
-                registroEntradaEjb.cambiarEstadoHistorico(re,RegwebConstantes.REGISTRO_DISTRIBUYENDO, usuarioEntidad);
+                registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
                 return true;
             }else{ // Si ya existe, no se incluye en la cola
                 log.error("El registre ja es troba a la coa; No es tornarà a afegir");
