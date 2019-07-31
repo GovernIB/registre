@@ -35,8 +35,6 @@ public class AsientoRegistralWs implements Serializable {
     private String libroCodigo;
     private String resumen; //extracto
     private Long tipoDocumentacionFisicaCodigo;
-    private String tipoAsunto;
-    private String tipoAsuntoDenominacion;
     private String codigoAsunto;
     private String codigoAsuntoDenominacion;
     private Long idioma;
@@ -235,22 +233,6 @@ public class AsientoRegistralWs implements Serializable {
 
     public void setTipoDocumentacionFisicaCodigo(Long tipoDocumentacionFisicaCodigo) {
         this.tipoDocumentacionFisicaCodigo = tipoDocumentacionFisicaCodigo;
-    }
-
-    public String getTipoAsunto() {
-        return tipoAsunto;
-    }
-
-    public void setTipoAsunto(String tipoAsunto) {
-        this.tipoAsunto = tipoAsunto;
-    }
-
-    public String getTipoAsuntoDenominacion() {
-        return tipoAsuntoDenominacion;
-    }
-
-    public void setTipoAsuntoDenominacion(String tipoAsuntoDenominacion) {
-        this.tipoAsuntoDenominacion = tipoAsuntoDenominacion;
     }
 
     public String getCodigoAsunto() {

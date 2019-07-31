@@ -3,9 +3,9 @@ package es.caib.regweb3.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.*;
 
-import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +19,7 @@ import java.util.Map;
  * Date: 19/03/14
  */
 @Entity
-@Table(name = "RWE_CODIGOASUNTO",
-        uniqueConstraints= @UniqueConstraint(columnNames={"CODIGO", "TIPOASUNTO"}))
-@org.hibernate.annotations.Table(appliesTo = "RWE_CODIGOASUNTO", indexes = {
-    @Index(name="RWE_CODASU_TASUN_FK_I", columnNames = {"TIPOASUNTO"})
-})
+@Table(name = "RWE_CODIGOASUNTO", uniqueConstraints= @UniqueConstraint(columnNames={"CODIGO"}))
 @SequenceGenerator(name="generator",sequenceName = "RWE_ALL_SEQ", allocationSize = 1)
 @XmlRootElement(name = "codigoAsunto")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -32,7 +28,7 @@ public class CodigoAsunto extends Traducible {
     @XmlAttribute
     private Long id;
     @XmlTransient
-    private TipoAsunto tipoAsunto;
+    private Entidad entidad;
     @XmlElement
     private String codigo;
     @XmlElement
@@ -57,12 +53,11 @@ public class CodigoAsunto extends Traducible {
     public CodigoAsunto(CodigoAsunto ta) {
 
       this.id = ta.id;
-      this.tipoAsunto = (ta.tipoAsunto == null) ? null : new TipoAsunto(ta.tipoAsunto);
+      this.entidad = ta.entidad;
       this.codigo = ta.codigo;
       this.activo = ta.activo;
       this.traducciones = new HashMap<String, Traduccion>(ta.getTraducciones());
     }
-
 
 
     @Id
@@ -76,16 +71,15 @@ public class CodigoAsunto extends Traducible {
         this.id = id;
     }
 
-    @ManyToOne()
-    @JoinColumn(name = "TIPOASUNTO")
-    @ForeignKey(name = "RWE_CODASUNTO_TIPOASUNTO_FK")
-    @JsonIgnore
-    public TipoAsunto getTipoAsunto() {
-        return tipoAsunto;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "ENTIDAD")
+    @ForeignKey(name = "RWE_CODASUNTO_ENTIDAD_FK")
+    public Entidad getEntidad() {
+        return entidad;
     }
 
-    public void setTipoAsunto(TipoAsunto tipoAsunto) {
-        this.tipoAsunto = tipoAsunto;
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
     }
 
     @Column(name = "CODIGO", length = 16, nullable = false)
@@ -112,7 +106,7 @@ public class CodigoAsunto extends Traducible {
     @LazyCollection(value= LazyCollectionOption.FALSE)
     @JoinTable(name="RWE_TRA_CODIGOASUNTO",joinColumns={@JoinColumn(name="IDCODIGOASUNTO")})
     @org.hibernate.annotations.MapKey(columns={@Column(name="LANG",length=2)})
-    @ForeignKey(name="RWE_CODASUNTO_TRACODASUNTO_FK", inverseName = "RWE_TRACODASUNTO_COD   ASUNTO_FK")
+    @ForeignKey(name="RWE_CODASUNTO_TRACODASUNTO_FK", inverseName = "RWE_TRACODASUNTO_CODASUNTO_FK")
     @Override
     @XmlTransient
     public Map<String,Traduccion> getTraducciones() {

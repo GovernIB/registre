@@ -637,6 +637,10 @@ public class Sicres3XML {
 
         Assert.notNull(fichero.getSolicita(), "El campo 'solicita' del SegmentoFormularioGenerico, no puede ser null");
 
+        Assert.isTrue(StringUtils.length(fichero.getExpone()) <= 4000,"El campo 'expone' del SegmentoFormularioGenerico, tiene mas de 4000 caracteres");
+
+        Assert.isTrue(StringUtils.length(fichero.getSolicita()) <= 4000,"El campo 'solicita' del SegmentoFormularioGenerico, tiene mas de 4000 caracteres");
+
         if(StringUtils.isNotEmpty(fichero.getExpone())){
             Assert.hasText(fichero.getSolicita(), "El campo 'solicita' del SegmentoFormularioGenerico, no puedo estar vacio");
         }

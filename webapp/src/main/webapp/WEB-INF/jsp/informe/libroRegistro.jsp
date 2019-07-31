@@ -93,7 +93,7 @@
                                                 <form:option value="data" selected="selected"><spring:message code="registroEntrada.dataRegistre"/></form:option>
                                                 <form:option value="numRe" selected="selected"><spring:message code="registroEntrada.numeroRegistro"/></form:option>
                                                 <form:option value="extra" selected="selected"><spring:message code="registroEntrada.extracto"/></form:option>
-                                                <form:option value="tipAs" selected="selected"><spring:message code="registroEntrada.tipoAsunto"/></form:option>
+                                                <%--<form:option value="tipAs" selected="selected"><spring:message code="registroEntrada.tipoAsunto"/></form:option>--%>
                                                 <form:option value="nomIn" selected="selected"><spring:message code="registroEntrada.interesados"/></form:option>
                                                 <form:option value="orgOr" selected="selected"><spring:message code="registroEntrada.oficinaOrigen"/></form:option>
                                                 <form:option value="numOr" selected="selected"><spring:message code="registroEntrada.numeroRegistroOrigen"/></form:option>
@@ -302,21 +302,6 @@
                                                     <c:forEach items="${usuariosEntidad}" var="usuarioEntidad">
                                                         <option value="${usuarioEntidad.usuario.identificador}" <c:if test="${usuario == usuarioEntidad.usuario.identificador}">selected="selected"</c:if>>${usuarioEntidad.usuario.identificador}</option>
                                                     </c:forEach>
-                                                </form:select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-12">
-                                        <div class="col-xs-6 espaiLinies">
-                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                <label for="idTipoAsunto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto.libroRegistro"/>" data-toggle="popover"><spring:message code="registroEntrada.tipoAsunto"/></label>
-                                            </div>
-                                            <div class="col-xs-8">
-                                                <form:select path="idTipoAsunto" cssClass="chosen-select">
-                                                    <form:option value="-1" label="..."/>
-                                                    <form:options items="${tiposAsunto}" itemValue="id"
-                                                                  itemLabel="traducciones['${pageContext.response.locale}'].nombre"/>
                                                 </form:select>
                                             </div>
                                         </div>

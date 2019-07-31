@@ -26,9 +26,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     private EntityManager em;
 
     @EJB  private TipoAsuntoLocal tipoAsuntoEjb;
-
     @EJB  private EntidadLocal entidadEjb;
-
 
 
     @Override
@@ -81,14 +79,26 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<CodigoAsunto> getPagination(int inicio, Long idTipoAsunto) throws Exception {
+    public List<CodigoAsunto> getPagination(int inicio, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto order by codigoAsunto.id");
-        q.setParameter("idTipoAsunto", idTipoAsunto);
+        Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.entidad.id = :idEntidad order by codigoAsunto.id");
+
+        q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Long getTotalEntidad(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select count(codigoAsunto.id) from CodigoAsunto as codigoAsunto " +
+                "where codigoAsunto.entidad.id = :idEntidad");
+
+        q.setParameter("idEntidad",idEntidad);
+
+        return (Long) q.getSingleResult();
     }
 
     @Override
@@ -101,6 +111,19 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<CodigoAsunto> getActivosEntidad(Long idEntidad) throws Exception {
+
+        Query q =  em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.activo = true " +
+                "and codigoAsunto.entidad.id = :idEntidad order by codigoAsunto.id ");
+
+        q.setParameter("idEntidad",idEntidad);
+        return q.getResultList();
+
+
     }
 
     @Override
@@ -134,10 +157,24 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     }
 
     @Override
+    public Boolean existeCodigoEdit(String codigo, Long idCodigoAsunto, Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select codigoAsunto.id from CodigoAsunto as codigoAsunto where " +
+                "codigoAsunto.id != :idCodigoAsunto and codigoAsunto.codigo = :codigo and codigoAsunto.entidad.id = :idEntidad");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idCodigoAsunto", idCodigoAsunto);
+        q.setParameter("idEntidad", idEntidad);
+
+        return q.getResultList().size() > 0;
+
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public CodigoAsunto findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
-        Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo and codigoAsunto.tipoAsunto.entidad.id = :idEntidad");
+        Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo and codigoAsunto.entidad.id = :idEntidad");
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);

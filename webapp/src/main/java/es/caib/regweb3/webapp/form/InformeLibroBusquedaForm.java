@@ -32,12 +32,11 @@ public class InformeLibroBusquedaForm {
     private String numeroRegistroFormateado;
     private Long estado;
     private Long idOficina;
-    private Long idTipoAsunto;
 
     public InformeLibroBusquedaForm(Date fechaInicio, Date fechaFin, Long tipo, String formato, Set<String> campos, String usuario,
                                     List<Libro> libros, Boolean anexos, String interessatNom, String interessatLli1, String interessatLli2,
                                     String interessatDoc, String organDestinatari, String organDestinatariNom, String observaciones,
-                                    String extracto, String numeroRegistroFormateado, Long estado, Long idOficina, Long idTipoAsunto) {
+                                    String extracto, String numeroRegistroFormateado, Long estado, Long idOficina) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.tipo = tipo;
@@ -57,7 +56,6 @@ public class InformeLibroBusquedaForm {
         this.numeroRegistroFormateado = numeroRegistroFormateado;
         this.estado = estado;
         this.idOficina = idOficina;
-        this.idTipoAsunto = idTipoAsunto;
     }
 
     public InformeLibroBusquedaForm() {
@@ -164,7 +162,4 @@ public class InformeLibroBusquedaForm {
 
     public void setIdOficina(Long idOficina) { this.idOficina = idOficina; }
 
-    public Long getIdTipoAsunto() { return idTipoAsunto; }
-
-    public void setIdTipoAsunto(Long idTipoAsunto) { this.idTipoAsunto = idTipoAsunto; }
 }

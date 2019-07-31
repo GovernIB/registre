@@ -55,7 +55,6 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         String observaciones = (String) model.get("observaciones");
         String usuario = (String) model.get("usuario");
         String organDest = (String) model.get("organDest");
-        String tipoAsunto = (String) model.get("tipoAsunto");
 
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
@@ -123,9 +122,9 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         //Tabla criterios de busqueda
         String[] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
                 "informe.estat", "informe.nombreInteresado", "informe.apell1Interesado", "informe.apell2Interesado", "informe.docInteresado",
-                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario", "informe.tipAsun", "informe.organDest"};
+                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario", "informe.organDest"};
         String[] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
-                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario, tipoAsunto, organDest};
+                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario, organDest};
 
         if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)) {
             nomCriteris = (String[]) ArrayUtils.removeElement(nomCriteris, "informe.organDest");
@@ -210,11 +209,6 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
                         cell8.setBackgroundColor(BaseColor.LIGHT_GRAY);
                         cell8.setHorizontalAlignment(Element.ALIGN_CENTER);
                         table.addCell(cell8);
-                    }else if (valorCamp.equals("tipAs")) {
-                        PdfPCell cell9 = new PdfPCell(new Paragraph(getMessage("informe.tipoAsunto"), font10Bold));
-                        cell9.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                        cell9.setHorizontalAlignment(Element.ALIGN_CENTER);
-                        table.addCell(cell9);
                     }else if (valorCamp.equals("obser")) {
                         PdfPCell cell10 = new PdfPCell(new Paragraph(getMessage("informe.observaciones"), font10Bold));
                         cell10.setBackgroundColor(BaseColor.LIGHT_GRAY);

@@ -21,8 +21,8 @@ import java.util.List;
 public abstract class AbstractRegistroCommonFormController extends BaseController {
 
 
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
+    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    private CodigoAsuntoLocal codigoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
     private CatProvinciaLocal catProvinciaEjb;
@@ -37,11 +37,11 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
     private CatNivelAdministracionLocal catNivelAdministracionEjb;
 
 
-    @ModelAttribute("tiposAsunto")
-    public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
+    @ModelAttribute("codigosAsunto")
+    public List<CodigoAsunto> codigosAsunto(HttpServletRequest request) throws Exception {
 
         Entidad entidadActiva = getEntidadActiva(request);
-        return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
+        return codigoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
     }
 
     @ModelAttribute("tiposPersona")

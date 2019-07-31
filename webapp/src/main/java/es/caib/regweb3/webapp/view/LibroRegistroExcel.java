@@ -55,7 +55,6 @@ public class LibroRegistroExcel extends AbstractExcelView {
         String observaciones = (String) model.get("observaciones");
         String usuario = (String) model.get("usuario");
         String organDest = (String) model.get("organDest");
-        String tipoAsunto = (String) model.get("tipoAsunto");
 
         Set<String> campos = (Set<String>) model.get("campos");
         ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
@@ -162,9 +161,9 @@ public class LibroRegistroExcel extends AbstractExcelView {
         //Tabla criterios de busqueda
         String[] nomCriteris = {"informe.tipo", "informe.fechaInicio", "informe.fechaFin", "informe.numRegistro", "informe.extracte",
                 "informe.estat", "informe.nombreInteresado", "informe.apell1Interesado", "informe.apell2Interesado", "informe.docInteresado",
-                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario", "informe.tipAsun", "informe.organDest"};
+                "informe.oficinaReg", "informe.anexos", "informe.observacions", "informe.usuario", "informe.organDest"};
         String[] valorCriteris = {tipoRegistro, fechaInicio, fechaFin, numRegistro, extracto, estadoRegistro, nombreInteresado, apell1Interesado,
-                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario, tipoAsunto, organDest};
+                apell2Interesado, docInteresado, oficinaReg, tieneAnexos, observaciones, usuario, organDest};
 
         if(tipo.equals(RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA)) {
             nomCriteris = (String[]) ArrayUtils.removeElement(nomCriteris, "informe.organDest");
@@ -234,9 +233,6 @@ public class LibroRegistroExcel extends AbstractExcelView {
                     h = h + 1;
                 }else if (valorCamp.equals("ofici")) {
                     columnas[h] = getMessage("informe.oficina");
-                    h = h + 1;
-                }else if (valorCamp.equals("tipAs")) {
-                    columnas[h] = getMessage("informe.tipoAsunto");
                     h = h + 1;
                 }else if (valorCamp.equals("obser")) {
                     columnas[h] = getMessage("informe.observaciones");

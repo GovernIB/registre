@@ -595,8 +595,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // Extracto
         registroEntrada.getRegistroDetalle().setExtracto(plantillaJson.getExtracto());
         // Tipo Asunto
-        TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdTipoAsunto()));
-        registroEntrada.getRegistroDetalle().setTipoAsunto(tipoAsunto);
+        /*TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdTipoAsunto()));
+        registroEntrada.getRegistroDetalle().setTipoAsunto(tipoAsunto);*/
         // Código Asunto
         if(plantillaJson.getIdCodigoAsunto()!=null && !plantillaJson.getIdCodigoAsunto().equals("")) {
             CodigoAsunto codigoAsunto = codigoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdCodigoAsunto()));

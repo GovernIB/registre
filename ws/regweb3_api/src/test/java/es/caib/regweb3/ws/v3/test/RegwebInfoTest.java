@@ -45,7 +45,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
   @Test
   public void testTiposAsuntos(){
     String usuario = "earrivi";
-    String codigoEntidadDir3 = "A04006741";
+    String codigoEntidadDir3 = "A04019281";
 
     try {
       List<TipoAsuntoWs> tas= infoApi.listarTipoAsunto(codigoEntidadDir3);
@@ -66,7 +66,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
   @Test
   public void testCodigosAsuntos(){
     String usuario = "earrivi";
-    String codigoEntidadDir3 = "A04006741";
+    String codigoEntidadDir3 = "A04019281";
 
     try {
       List<TipoAsuntoWs> tas= infoApi.listarTipoAsunto(codigoEntidadDir3);
@@ -76,7 +76,9 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
       List<CodigoAsuntoWs> cas = infoApi.listarCodigoAsunto(codigoEntidadDir3, tasws.getCodigo());
       System.out.println("cas num: " + cas.size());
-      System.out.println("CA nombre "+ cas.get(0).getNombre());
+      for(CodigoAsuntoWs codigoAsuntoWs:cas){
+        System.out.println("cas: " + codigoAsuntoWs.getCodigo() +" - "+codigoAsuntoWs.getNombre());
+      }
 
     } catch (WsI18NException i18ne) {
       System.err.println(WsClientUtils.toString(i18ne));

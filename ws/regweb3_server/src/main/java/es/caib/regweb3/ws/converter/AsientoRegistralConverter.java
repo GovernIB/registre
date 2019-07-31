@@ -60,7 +60,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroEntrada.setLibro(libro);
       registroDetalle.setExtracto(asientoRegistral.getResumen()); //Extracto
       registroDetalle.setTipoDocumentacionFisica(new Long(asientoRegistral.getTipoDocumentacionFisicaCodigo()));
-      registroDetalle.setTipoAsunto(getTipoAsunto(asientoRegistral.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
+      //registroDetalle.setTipoAsunto(getTipoAsunto(asientoRegistral.getTipoAsunto(),usuario.getEntidad().getId(), tipoAsuntoEjb));
       registroDetalle.setIdioma(asientoRegistral.getIdioma());
       registroDetalle.setCodigoSia(asientoRegistral.getCodigoSia());
 
@@ -112,7 +112,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       registroSalida.setLibro(libro);
       registroDetalle.setExtracto(asientoRegistral.getResumen());
       registroDetalle.setTipoDocumentacionFisica(new Long(asientoRegistral.getTipoDocumentacionFisicaCodigo()));
-      registroDetalle.setTipoAsunto(getTipoAsunto(asientoRegistral.getTipoAsunto(), usuario.getEntidad().getId(), tipoAsuntoEjb));
+      //registroDetalle.setTipoAsunto(getTipoAsunto(asientoRegistral.getTipoAsunto(), usuario.getEntidad().getId(), tipoAsuntoEjb));
       registroDetalle.setIdioma(asientoRegistral.getIdioma());
       registroDetalle.setCodigoSia(asientoRegistral.getCodigoSia());
 
@@ -308,9 +308,9 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setTipoDocumentacionFisicaCodigo(registroDetalle.getTipoDocumentacionFisica());
 
       // Tipo Asunto
-      TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
-      asientoRegistral.setTipoAsunto(registroDetalle.getTipoAsunto().getCodigo());
-      asientoRegistral.setTipoAsuntoDenominacion(traduccionTipoAsunto.getNombre());
+      //TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
+      //asientoRegistral.setTipoAsunto(registroDetalle.getTipoAsunto().getCodigo());
+      //asientoRegistral.setTipoAsuntoDenominacion(traduccionTipoAsunto.getNombre());
 
       asientoRegistral.setIdioma(registroDetalle.getIdioma());
 

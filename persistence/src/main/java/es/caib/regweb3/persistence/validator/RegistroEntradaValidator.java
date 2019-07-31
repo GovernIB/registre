@@ -55,11 +55,6 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
         }
 
 
-        // TipoAsunto obligatorio
-        if(registroDetalle.getTipoAsunto() == null || registroDetalle.getTipoAsunto().getId() == null || registroDetalle.getTipoAsunto().getId().equals((long) -1) ){
-          rejectValue(errors, "registroDetalle.tipoAsunto.id", "error.valor.requerido", "El camp és obligatori");
-        }
-
         if (StringUtils.isEmpty(registroEntrada.getDestinoExternoCodigo())) {
             if (registroEntrada.getDestino() == null || registroEntrada.getDestino().getCodigo() == null || "".equals(registroEntrada.getDestino().getCodigo())) {
                 rejectValue(errors, "destino.codigo", "error.valor.requerido", "El camp és obligatori");

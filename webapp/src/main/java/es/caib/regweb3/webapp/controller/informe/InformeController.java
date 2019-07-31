@@ -42,9 +42,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
     
     @EJB(mappedName = "regweb3/LopdEJB/local")
     private LopdLocal lopdEjb;
-
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
     
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
@@ -80,8 +77,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
         // Obtenemos los usuarios de la Entidad
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         model.addAttribute("usuariosEntidad", usuariosEntidad);
-        model.addAttribute("tiposAsunto", tipoAsuntoEjb.getActivosEntidad(getEntidadActiva(request).getId()));
-//        model.addAttribute(getOficinaActiva(request));
 
         return "informe/libroRegistro";
     }
@@ -131,21 +126,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
             }
         }
 
-        //Guardamos las Traducciones del Tipo Asunto para que sea más rápido
-        List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getActivosEntidad(getEntidadActiva(request).getId());
-        Map<Long,String> traduccionTiposAsunto = new HashMap<Long,String>();
-        for (TipoAsunto i : tiposAsunto){
-            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) i.getTraduccion();
-            traduccionTiposAsunto.put(i.getId(),traduccionTipoAsunto.getNombre());
-        }
-
-        //Buscamos la traducción de la búsqueda de Tipo Asunto
-        Long idTipoAsunto = informeLibroBusquedaForm.getIdTipoAsunto();
-        String tipoAsunto = "";
-        if(idTipoAsunto != -1) {
-            tipoAsunto = traduccionTiposAsunto.get(idTipoAsunto);
-        }
-
         Boolean mostraInteressats = false;
         for (String valorCamp : campos) {
             if (valorCamp.equals("nomIn")) {
@@ -162,7 +142,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+                    informeLibroBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
             Long end = System.currentTimeMillis();
             log.info("Tiempo informeEjb.buscaLibroRegistroEntradas: " + TimeUtils.formatElapsedTime(end - start));
 
@@ -218,14 +198,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if (valorCamp.equals("tipAs")) {
-                        if (registroEntrada.getRegistroDetalle().getTipoAsunto() != null) {
-                            String nombre = traduccionTiposAsunto.get(registroEntrada.getRegistroDetalle().getTipoAsunto().getId());
-                            registrosLibro.get(i).add(nombre);
-                        } else {
-                            registrosLibro.get(i).add("");
-                        }
-                    } else if (valorCamp.equals("obser")) {
+                    }  else if (valorCamp.equals("obser")) {
                         if (registroEntrada.getRegistroDetalle().getObservaciones() != null) {
                             registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getObservaciones());
                         } else {
@@ -368,7 +341,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                     informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
                     informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
                     informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, idTipoAsunto, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+                    informeLibroBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
 
 
             for (int i = 0; i < registrosSalida.size(); i++) {
@@ -425,14 +398,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         } else {
                             registrosLibro.get(i).add("");
                         }
-                    } else if (valorCamp.equals("tipAs")) {
-                        if (registroSalida.getRegistroDetalle().getTipoAsunto() != null) {
-                            String nombre = traduccionTiposAsunto.get(registroSalida.getRegistroDetalle().getTipoAsunto().getId());
-                            registrosLibro.get(i).add(nombre);
-                        } else {
-                            registrosLibro.get(i).add("");
-                        }
-                    } else if (valorCamp.equals("obser")) {
+                    }  else if (valorCamp.equals("obser")) {
                         if (registroSalida.getRegistroDetalle().getObservaciones() != null) {
                             registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getObservaciones());
                         } else {
@@ -588,7 +554,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
         mav.addObject("observaciones", informeLibroBusquedaForm.getObservaciones());
         mav.addObject("usuario", informeLibroBusquedaForm.getUsuario());
         mav.addObject("organDest", nomOrganismeDest);
-        mav.addObject("tipoAsunto", tipoAsunto);
 
         return mav;
     }
@@ -619,7 +584,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
         String formato = informeIndicadoresBusquedaForm.getFormato();
         Long calendario = informeIndicadoresBusquedaForm.getCampoCalendario();
         Integer tipoLibro = informeIndicadoresBusquedaForm.getTipo().intValue();
-        List<TipoAsunto> tiposAsunto = tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
         List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
         List<Organismo> organismos = organismoEjb.findByEntidadReduce(entidadActiva.getId());
 
@@ -679,10 +643,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 totalRegistresEntradaOrganismo(mav,dataInici,dataFi,organismos);
                 totalRegistresSalidaOrganismo(mav,dataInici,dataFi,organismos);
 
-                // Busca los registros totales por Tipos de Asunto de Entrada y Salida entre las fechas
-                totalRegistresEntradaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
-                totalRegistresSalidaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
-
                 // Busca los registros totales por Libro de Entrada y Salida entre las fechas
                 totalRegistresEntradaLibro(mav,dataInici,dataFi,organismos);
                 totalRegistresSalidaLibro(mav,dataInici,dataFi,organismos);
@@ -721,9 +681,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
                 // Busca los registros totales por Organismo de Entrada entre las fechas
                 totalRegistresEntradaOrganismo(mav,dataInici,dataFi,organismos);
 
-                // Busca los registros totales por Tipos de Asunto de Entrada entre las fechas
-                totalRegistresEntradaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
-
                 // Busca los registros totales por Libro de Entrada entre las fechas
                 totalRegistresEntradaLibro(mav,dataInici,dataFi,organismos);
 
@@ -760,9 +717,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
                 // Busca los registros totales por Organismo de Salida entre las fechas
                 totalRegistresSalidaOrganismo(mav,dataInici,dataFi,organismos);
-
-                // Busca los registros totales por Tipos de Asunto de Salida entre las fechas
-                totalRegistresSalidaTipoAsunto(mav,dataInici,dataFi,tiposAsunto,entidadActiva.getId());
 
                 // Busca los registros totales por Libro de Salida entre las fechas
                 totalRegistresSalidaLibro(mav,dataInici,dataFi,organismos);

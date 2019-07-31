@@ -43,7 +43,7 @@
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="entidad.catalogoDatos"/></a>
                 <ul class="dropdown-menu">
                     <li><a href="<c:url value="/tipoDocumental/list/"/>"><i class="fa fa-file-text-o"></i> <spring:message code="menu.tipoDocumental"/></a></li>
-                    <li><a href="<c:url value="/tipoAsunto/list/"/>"><i class="fa fa-database"></i> <spring:message code="menu.tipoAsunto"/></a></li>
+                    <li><a href="<c:url value="/codigoAsunto/list/"/>"><i class="fa fa-database"></i> <spring:message code="menu.codigoAsunto"/></a></li>
                     <li><a href="<c:url value="/modeloOficioRemision/list/"/>"><i class="fa fa-file-code-o"></i> <spring:message code="menu.modeloOficioRemision"/></a></li>
                 </ul>
             </li>

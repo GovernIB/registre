@@ -51,9 +51,6 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   public static final String NAME_WS = NAME + "Ws";
 
 
-  @EJB(mappedName = "regweb3/EntidadEJB/local")
-  private EntidadLocal entidadEjb;
-
   @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
   private TipoAsuntoLocal tipoAsuntoEjb;
 
@@ -126,15 +123,22 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     // 1.- Comprobaciones de entidad
     Entidad entidad = validarEntidad(entidadCodigoDir3);
 
-    List<TipoAsunto> tipos = tipoAsuntoEjb.getActivosEntidad(entidad.getId());
+    //List<TipoAsunto> tipos = tipoAsuntoEjb.getActivosEntidad(entidad.getId());
 
     List<TipoAsuntoWs> tiposWs = new ArrayList<TipoAsuntoWs>();
 
-    final String idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(UsuarioAplicacionCache.get().getUsuario().getIdioma());
+    TipoAsuntoWs tipoAsuntoWs = new TipoAsuntoWs();
+    tipoAsuntoWs.setActivo(true);
+    tipoAsuntoWs.setCodigo("01");
+    tipoAsuntoWs.setNombre("Deprecated");
 
-    for (TipoAsunto tipoAsunto : tipos) {
+    tiposWs.add(tipoAsuntoWs);
+
+    //final String idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(UsuarioAplicacionCache.get().getUsuario().getIdioma());
+
+    /*for (TipoAsunto tipoAsunto : tipos) {
       tiposWs.add(CommonConverter.getTipoAsuntoWs(tipoAsunto, idioma));
-    }
+    }*/
 
     return tiposWs;
 
@@ -157,7 +161,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     Entidad entidad = validarEntidad(entidadCodigoDir3);
 
     // 3.- Comprobaciones de parámetros obligatórios
-    if(StringUtils.isEmpty(codigoTipoAsunto)){
+    /*if(StringUtils.isEmpty(codigoTipoAsunto)){
       throw new I18NException("error.valor.requerido.ws", "codigoTipoAsunto");
     }
 
@@ -171,9 +175,9 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
     // 5. Comprobación TipoAsunto Activo
     if(!tipoAsunto.getActivo()){
       throw new I18NException("error.tipoAsunto.inactivo", codigoTipoAsunto);
-    }
+    }*/
 
-    List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getByTipoAsunto(tipoAsunto.getId());
+    List<CodigoAsunto> codigoAsuntos = codigoAsuntoEjb.getActivosEntidad(entidad.getId());
 
     List<CodigoAsuntoWs> codigosWs = new ArrayList<CodigoAsuntoWs>();
 
