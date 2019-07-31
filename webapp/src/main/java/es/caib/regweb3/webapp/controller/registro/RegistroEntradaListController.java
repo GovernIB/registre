@@ -689,8 +689,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         JsonResponse response = new JsonResponse();
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
             response.setStatus("FAIL_NOVALIDO");
