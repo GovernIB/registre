@@ -19,8 +19,12 @@ alter table RWE_REGISTRO_SALIDA add EVENTO int8;
 --Añadir campo entidad a codigo asunto
 alter table RWE_CODIGOASUNTO add entidad bigint;
 
---Eliminar tabla tipoasunto T
+--TODO pendiente de probar
+--Eliminar tabla tipoasunto
 --drop table RWE_TIPOASUNTO CASCADE CONSTRAINTS;
 
 --Eliminar tipoAsunto de registro detalle (OJO DE MOMENTO NO LO ELIMINAMOS).
 --drop column tipoasunto from RWE_REGISTRO_DETALLE CASCADE CONSTRAINTS;
+
+--Eliminar campo tipoasunto de la tabla RWE_CODIGOASUNTO
+--drop column tipoasunto from RWE_CODIGOASUNTO cascade constraints;

@@ -18,3 +18,14 @@ alter table RWE_REGISTRO_SALIDA add (EVENTO number(19,0));
 
 --Nuevo campo entidad en codigo asunto
 alter table RWE_CODIGOASUNTO add entidad number(19,0);
+
+
+--TODO PENDIENTE PROBAR
+--Eliminar tabla tipoasunto
+--drop table RWE_TIPOASUNTO CASCADE CONSTRAINTS;
+
+--Eliminar tipoAsunto de registro detalle (OJO DE MOMENTO NO LO ELIMINAMOS).
+--drop column tipoasunto from RWE_REGISTRO_DETALLE CASCADE CONSTRAINTS;
+
+--Eliminar campo tipoasunto de la tabla RWE_CODIGOASUNTO
+--drop column tipoasunto from RWE_CODIGOASUNTO cascade constraints;
