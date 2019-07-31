@@ -785,6 +785,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 }
 
             }
+            //TODO REVISAR METADATAS
 
             // fechaDeEntradaEnElSistema
             if (updateDate) {

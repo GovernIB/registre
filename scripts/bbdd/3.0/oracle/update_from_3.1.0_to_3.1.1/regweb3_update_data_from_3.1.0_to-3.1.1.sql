@@ -18,5 +18,4 @@ update RWE_REGISTRO_ENTRADA set evento=0 where evento is null and (estado != 1 a
 update RWE_REGISTRO_SALIDA set evento=0 where evento is null and (estado != 1 and estado != 3);
 
 --Pasar la entidad de los tipos asunto a los codigos asunto
-UPDATE RWE_CODIGOASUNTO T1 SET
-T1.entidad = (SELECT T2.entidad FROM RWE_TIPOASUNTO T2 WHERE T2.id = T1.tipoasunto);
+UPDATE RWE_CODIGOASUNTO CA SET CA.entidad = (SELECT TA.entidad FROM RWE_TIPOASUNTO TA WHERE TA.id = CA.tipoasunto);

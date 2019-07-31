@@ -175,14 +175,13 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @param oficinaActiva
      * @param idLibro
      * @param idIdioma
-     * @param idTipoAsunto
      * @param camposNTIs
      * @return
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs, String codigoSustituto) throws Exception, I18NException, I18NValidationException;
+    RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, String codigoSustituto) throws Exception, I18NException, I18NValidationException;
 
     /**
      * @param registroSir
@@ -190,12 +189,11 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      * @param oficinaActiva
      * @param idLibro
      * @param idIdioma
-     * @param idTipoAsunto
      * @param camposNTIs
      * @return
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
-    RegistroSalida transformarRegistroSirSalida(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
+    RegistroSalida transformarRegistroSirSalida(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException;
 }

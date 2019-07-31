@@ -111,7 +111,7 @@
 
                                 <%--TipoAsunto--%>
 
-                                <div class="form-group col-xs-12">
+                                <%--<div class="form-group col-xs-12">
                                     <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
                                         <label for="idTipoAsunto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
                                     </div>
@@ -122,7 +122,7 @@
                                         </form:select>
                                         <span class="errors"></span>
                                     </div>
-                                </div>
+                                </div>--%>
 
                                 <%--Organismos Sustitutos del Extinguido--%>
                             <c:if test="${registroSir.codigoUnidadTramitacionDestino != null && not empty sustitutos}">

@@ -1513,14 +1513,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param oficinaActiva
      * @param idLibro
      * @param idIdioma
-     * @param idTipoAsunto
      * @return
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs, String codigoSustituto)
+    public RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, String codigoSustituto)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1550,7 +1549,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroEntrada.setDestinoExternoDenominacion(null);
 
         // RegistroDetalle
-        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, idTipoAsunto));
+        registroEntrada.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
@@ -1573,14 +1572,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param oficinaActiva
      * @param idLibro
      * @param idIdioma
-     * @param idTipoAsunto
      * @return
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
-    public RegistroSalida transformarRegistroSirSalida(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, Long idTipoAsunto, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException {
+    public RegistroSalida transformarRegistroSirSalida(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
 
@@ -1602,7 +1600,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSalida.setOrigenExternoDenominacion(null);
 
         // RegistroDetalle
-        registroSalida.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma, idTipoAsunto));
+        registroSalida.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
 
         // Interesados
         List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
@@ -1622,11 +1620,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * Obtiene un {@link RegistroDetalle} a partir de los datos de un RegistroSir
      * @param registroSir
      * @param idIdioma
-     * @param idTipoAsunto
      * @return
      * @throws Exception
      */
-    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma, Long idTipoAsunto) throws Exception{
+    private RegistroDetalle getRegistroDetalle(RegistroSir registroSir, Long idIdioma) throws Exception{
 
         RegistroDetalle registroDetalle = new RegistroDetalle();
 
@@ -1634,7 +1631,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroDetalle.setExtracto(registroSir.getResumen());
         registroDetalle.setTipoDocumentacionFisica(Long.valueOf(registroSir.getDocumentacionFisica()));
         registroDetalle.setIdioma(idIdioma);
-        registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
+       // registroDetalle.setTipoAsunto(new TipoAsunto(idTipoAsunto));
         registroDetalle.setCodigoAsunto(null);
 
         if(registroSir.getTipoTransporte() != null){

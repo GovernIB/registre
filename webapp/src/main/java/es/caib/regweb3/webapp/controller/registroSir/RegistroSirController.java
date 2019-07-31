@@ -286,7 +286,7 @@ public class RegistroSirController extends BaseController {
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getIdTipoAsunto(), registrarForm.getCamposNTIs(), registrarForm.getCodigoSustituto());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getCodigoSustituto());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
@@ -388,12 +388,12 @@ public class RegistroSirController extends BaseController {
         return RegwebConstantes.IDIOMAS_REGISTRO;
     }
 
-    @ModelAttribute("tiposAsunto")
+   /* @ModelAttribute("tiposAsunto")
     public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
 
         Entidad entidadActiva = getEntidadActiva(request);
         return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
-    }
+    }*/
 
     @ModelAttribute("tiposValidezDocumento")
     public Long[] validezDocumento() throws Exception {
