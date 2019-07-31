@@ -35,10 +35,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
     private ArrayList<String> entradaConselleriaNombre = new ArrayList<String>();
     private ArrayList<String> salidaConselleriaValor = new ArrayList<String>();
     private ArrayList<String> salidaConselleriaNombre = new ArrayList<String>();
-    private ArrayList<String> entradaAsuntoValor = new ArrayList<String>();
-    private ArrayList<String> entradaAsuntoNombre = new ArrayList<String>();
-    private ArrayList<String> salidaAsuntoValor = new ArrayList<String>();
-    private ArrayList<String> salidaAsuntoNombre = new ArrayList<String>();
     private ArrayList<String> entradaLibroValor = new ArrayList<String>();
     private ArrayList<String> entradaLibroNombre = new ArrayList<String>();
     private ArrayList<String> salidaLibroValor = new ArrayList<String>();
@@ -273,35 +269,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 tableConselleriesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                 tableConselleriesEntrada.addCell(new Paragraph(registrosEntrada.toString(),font10));
                 document.add(tableConselleriesEntrada);
-                document.add(new Paragraph(" "));
-            }
-
-            //Muestra Tipos de Asunto
-            if(entradaAsuntoNombre.size() > 0){
-                PdfPTable seccion14 = new PdfPTable(1);
-                seccion14.setWidthPercentage(100);
-                seccion14.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-                seccion14.getDefaultCell().setBorder(0);
-                seccion14.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion14.addCell(new Paragraph(getMessage("informe.porTiposAsunto"), font10Bold));
-                document.add(seccion14);
-                document.add(new Paragraph(" "));
-
-                PdfPTable tableAssumptesEntrada = new PdfPTable(2);
-                tableAssumptesEntrada.setWidthPercentage(100);
-
-                for(int i=0;i<entradaAsuntoNombre.size();i++){
-                    tableAssumptesEntrada.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-                    tableAssumptesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String nomAsunto = entradaAsuntoNombre.get(i);
-                    tableAssumptesEntrada.addCell(new Paragraph(nomAsunto,font10));
-                    tableAssumptesEntrada.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-                    tableAssumptesEntrada.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorAsunto = entradaAsuntoValor.get(i);
-                    tableAssumptesEntrada.addCell(new Paragraph(valorAsunto,font10));
-                    document.add(tableAssumptesEntrada);
-                    tableAssumptesEntrada.deleteBodyRows();
-                }
                 document.add(new Paragraph(" "));
             }
 
@@ -545,35 +512,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
                 document.add(new Paragraph(" "));
             }
 
-            //Muestra Tipos de Asunto
-            if(salidaAsuntoNombre.size() > 0){
-                PdfPTable seccion24 = new PdfPTable(1);
-                seccion24.setWidthPercentage(100);
-                seccion24.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-                seccion24.getDefaultCell().setBorder(0);
-                seccion24.getDefaultCell().setHorizontalAlignment(Element.ALIGN_LEFT);
-                seccion24.addCell(new Paragraph(getMessage("informe.porTiposAsunto"), font10Bold));
-                document.add(seccion24);
-                document.add(new Paragraph(" "));
-
-                PdfPTable tableAssumptesSalida = new PdfPTable(2);
-                tableAssumptesSalida.setWidthPercentage(100);
-
-                for(int i=0;i<salidaAsuntoNombre.size();i++){
-                    tableAssumptesSalida.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
-                    tableAssumptesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String nomAsunto = salidaAsuntoNombre.get(i);
-                    tableAssumptesSalida.addCell(new Paragraph(nomAsunto,font10));
-                    tableAssumptesSalida.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-                    tableAssumptesSalida.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    String valorAsunto = salidaAsuntoValor.get(i);
-                    tableAssumptesSalida.addCell(new Paragraph(valorAsunto,font10));
-                    document.add(tableAssumptesSalida);
-                    tableAssumptesSalida.deleteBodyRows();
-                }
-                document.add(new Paragraph(" "));
-            }
-
             //Muestra Libros de Registro
             if(salidaLibroNombre.size() > 0){
                 PdfPTable seccion25 = new PdfPTable(1);
@@ -698,8 +636,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
         entradaMesesNombre = (ArrayList<String>) model.get("entradaMesesNombre");
         entradaConselleriaValor = (ArrayList<String>) model.get("entradaConselleriaValor");
         entradaConselleriaNombre = (ArrayList<String>) model.get("entradaConselleriaNombre");
-        entradaAsuntoValor = (ArrayList<String>) model.get("entradaAsuntoValor");
-        entradaAsuntoNombre = (ArrayList<String>) model.get("entradaAsuntoNombre");
         entradaLibroValor = (ArrayList<String>) model.get("entradaLibroValor");
         entradaLibroNombre = (ArrayList<String>) model.get("entradaLibroNombre");
         entradaOficinaValor = (ArrayList<String>) model.get("entradaOficinaValor");
@@ -721,8 +657,6 @@ public class IndicadoresPdf extends AbstractIText5PdfView{
         salidaMesesNombre = (ArrayList<String>) model.get("salidaMesesNombre");
         salidaConselleriaValor = (ArrayList<String>) model.get("salidaConselleriaValor");
         salidaConselleriaNombre = (ArrayList<String>) model.get("salidaConselleriaNombre");
-        salidaAsuntoValor = (ArrayList<String>) model.get("salidaAsuntoValor");
-        salidaAsuntoNombre = (ArrayList<String>) model.get("salidaAsuntoNombre");
         salidaLibroValor = (ArrayList<String>) model.get("salidaLibroValor");
         salidaLibroNombre = (ArrayList<String>) model.get("salidaLibroNombre");
         salidaOficinaValor = (ArrayList<String>) model.get("salidaOficinaValor");

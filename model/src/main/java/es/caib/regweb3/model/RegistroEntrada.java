@@ -89,7 +89,7 @@ public class RegistroEntrada implements IRegistro {
      * Constructor para Informe LibroRegistro
      */
     public RegistroEntrada(Long idRegistro, Long idLibro, String nombreLibro, Long idOficina, String denominacionOficina, Date fecha,
-                           Integer numeroRegistro, String extracto, Long idTipoAsunto, Long idOficinaOrigen, String denominacionOficinaOrigen,
+                           Integer numeroRegistro, String extracto, Long idOficinaOrigen, String denominacionOficinaOrigen,
                            String numeroRegistroOrigen, Date fechaOrigen, String destinoExternoDenominacion, Long idDestino,
                            String denominacionDestino, Long tipoDocumentacionFisica, Long idioma, String observaciones, Long estado,
                            String expediente, Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte,
@@ -102,7 +102,7 @@ public class RegistroEntrada implements IRegistro {
         this.destinoExternoCodigo = destinoExternoCodigo;
         this.destinoExternoDenominacion = destinoExternoDenominacion;
         this.destino = new Organismo(idDestino, denominacionDestino);
-        this.registroDetalle = new RegistroDetalle(idRegistroDetalle, extracto, idTipoAsunto, idOficinaOrigen, denominacionOficinaOrigen,
+        this.registroDetalle = new RegistroDetalle(idRegistroDetalle, extracto, idOficinaOrigen, denominacionOficinaOrigen,
                 numeroRegistroOrigen, fechaOrigen, tipoDocumentacionFisica, idioma, observaciones, expediente, idCodigoAsunto,
                 referenciaExterna, transporte, numeroTransporte, interesados);
         this.libro = new Libro(idLibro, nombreLibro, null, null, null);

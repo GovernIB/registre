@@ -56,10 +56,6 @@ public class IndicadoresExcel extends AbstractExcelView {
         ArrayList<String> entradaConselleriaNombre = (ArrayList<String>) model.get("entradaConselleriaNombre");
         ArrayList<String> salidaConselleriaValor = (ArrayList<String>) model.get("salidaConselleriaValor");
         ArrayList<String> salidaConselleriaNombre = (ArrayList<String>) model.get("salidaConselleriaNombre");
-        ArrayList<String> entradaAsuntoValor = (ArrayList<String>) model.get("entradaAsuntoValor");
-        ArrayList<String> entradaAsuntoNombre = (ArrayList<String>) model.get("entradaAsuntoNombre");
-        ArrayList<String> salidaAsuntoValor = (ArrayList<String>) model.get("salidaAsuntoValor");
-        ArrayList<String> salidaAsuntoNombre = (ArrayList<String>) model.get("salidaAsuntoNombre");
         ArrayList<String> entradaLibroValor = (ArrayList<String>) model.get("entradaLibroValor");
         ArrayList<String> entradaLibroNombre = (ArrayList<String>) model.get("entradaLibroNombre");
         ArrayList<String> salidaLibroValor = (ArrayList<String>) model.get("salidaLibroValor");
@@ -317,37 +313,6 @@ public class IndicadoresExcel extends AbstractExcelView {
             //Espai buit
             rowNum = rowNum + 1;
 
-            //Muestra Tipos de Asunto
-            if(entradaAsuntoNombre.size() > 0){
-                HSSFRow asuntoRowTitle = sheet.createRow(rowNum++);
-                asuntoRowTitle.setHeightInPoints(15);
-                HSSFCell asuntoCell = asuntoRowTitle.createCell(0);
-                asuntoCell.setCellValue(getMessage("informe.porTiposAsunto"));
-                asuntoCell.setCellStyle(tituloSeccion);
-                sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
-                //Espai buit
-                rowNum = rowNum + 1;
-
-                HSSFRow asuntoNom = sheet.createRow(rowNum++);
-                for (int i = 0; i < entradaAsuntoNombre.size(); i++){
-                    HSSFCell asuntoNomCol = asuntoNom.createCell(i);
-                    asuntoNomCol.setCellValue(entradaAsuntoNombre.get(i));
-                    asuntoNomCol.setCellStyle(cabecera);
-                }
-                HSSFRow asuntoValor = sheet.createRow(rowNum++);
-                for(int i=0;i<entradaAsuntoValor.size();i++){
-                    HSSFCell asuntoValorCol = asuntoValor.createCell(i);
-                    asuntoValorCol.setCellValue(entradaAsuntoValor.get(i));
-                    asuntoValorCol.setCellStyle(fila);
-                }
-                if(entradaAsuntoNombre.size() > tamanyMaxColum){
-                    tamanyMaxColum = entradaAsuntoNombre.size();
-                }
-            }
-
-            //Espai buit
-            rowNum = rowNum + 1;
-
             //Muestra Libros de Registro
             if(entradaLibroNombre.size() > 0){
                 HSSFRow libroRowTitle = sheet.createRow(rowNum++);
@@ -562,37 +527,6 @@ public class IndicadoresExcel extends AbstractExcelView {
                 }
                 if(salidaConselleriaNombre.size() > tamanyMaxColum){
                     tamanyMaxColum = salidaConselleriaNombre.size();
-                }
-            }
-
-            //Espai buit
-            rowNum = rowNum + 1;
-
-            //Muestra Tipos de Asunto
-            if(salidaAsuntoNombre.size() > 0){
-                HSSFRow asuntoSalRowTitle = sheet.createRow(rowNum++);
-                asuntoSalRowTitle.setHeightInPoints(15);
-                HSSFCell asuntoSalCell = asuntoSalRowTitle.createCell(0);
-                asuntoSalCell.setCellValue(getMessage("informe.porTiposAsunto"));
-                asuntoSalCell.setCellStyle(tituloSeccion);
-                sheet.addMergedRegion(CellRangeAddress.valueOf("$A$"+rowNum+":$G$"+rowNum));
-                //Espai buit
-                rowNum = rowNum + 1;
-
-                HSSFRow asuntoSalNom = sheet.createRow(rowNum++);
-                for (int i = 0; i < salidaAsuntoNombre.size(); i++){
-                    HSSFCell asuntoSalNomCol = asuntoSalNom.createCell(i);
-                    asuntoSalNomCol.setCellValue(salidaAsuntoNombre.get(i));
-                    asuntoSalNomCol.setCellStyle(cabecera);
-                }
-                HSSFRow asuntoSalValor = sheet.createRow(rowNum++);
-                for(int i=0;i<salidaAsuntoValor.size();i++){
-                    HSSFCell asuntoSalValorCol = asuntoSalValor.createCell(i);
-                    asuntoSalValorCol.setCellValue(salidaAsuntoValor.get(i));
-                    asuntoSalValorCol.setCellStyle(fila);
-                }
-                if(salidaAsuntoNombre.size() > tamanyMaxColum){
-                    tamanyMaxColum = salidaAsuntoNombre.size();
                 }
             }
 

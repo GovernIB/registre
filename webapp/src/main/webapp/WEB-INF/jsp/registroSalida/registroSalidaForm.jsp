@@ -142,7 +142,7 @@
                         <!-- Fin de gestión de organismo origen -->
                     </div>
 
-                    <div class="form-group col-xs-12">
+                    <%--<div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                             <label for="registroDetalle.tipoAsunto.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
                         </div>
@@ -155,7 +155,7 @@
                             </form:select>
                             <form:errors path="registroDetalle.tipoAsunto.id" cssClass="help-block" element="span"/>
                         </div>
-                    </div>
+                    </div>--%>
 
                     <div class="form-group col-xs-12">
                         <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
@@ -215,7 +215,12 @@
                             <label for="registroDetalle.codigoAsunto.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.codigoAsunto"/>" data-toggle="popover"><spring:message code="registroEntrada.codigoAsunto"/></label>
                         </div>
                         <div class="col-xs-10">
-                            <form:select path="registroDetalle.codigoAsunto.id" disabled="true" cssClass="chosen-select"/> <form:errors path="registroDetalle.codigoAsunto.id" cssClass="help-block" element="span"/>
+
+                            <form:select path="registroDetalle.codigoAsunto.id"  cssClass="chosen-select" >
+                                <form:option value="-1">...</form:option>
+                                <form:options items="${codigosAsunto}" itemValue="id"
+                                              itemLabel="traducciones['${pageContext.response.locale}'].nombre"/>
+                            </form:select>
                         </div>
                     </div>
 
@@ -392,9 +397,6 @@
 
     $(window).load(function() {
 
-        actualizarCodigosAsunto();
-
-
         // CARGA DE INTERESADOS REGISTRO ENTRADA DESDE LA SESION
         <c:if test="${empty registroSalida.id}">
         <c:import url="../registro/addInteresadosSesion.jsp">
@@ -405,11 +407,6 @@
         actualizarColorTipoDocumentacion();
 
     });
-
-    function actualizarCodigosAsunto(){
-        <c:url var="codigosAsunto" value="/rest/obtenerCodigosAsunto" />
-        actualizarSelectTraduccion('${codigosAsunto}', '#registroDetalle\\.codigoAsunto\\.id', $('#registroDetalle\\.tipoAsunto\\.id option:selected').val(), '${registroSalida.registroDetalle.codigoAsunto.id}', true, '${pageContext.response.locale}');
-    }
 
     function actualizarLocalidad(){
         <c:url var="obtenerLocalidades" value="/rest/obtenerLocalidades" />

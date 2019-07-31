@@ -2,7 +2,10 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -36,9 +39,6 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
-
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
@@ -138,13 +138,6 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
             if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
                 log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-            if(tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId()).size()==0){
-                log.info("Aviso: No hay ningún Tipo Asunto activo para la Entidad Activa");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoAsunto"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }

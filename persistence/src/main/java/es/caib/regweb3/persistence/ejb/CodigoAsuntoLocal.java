@@ -27,11 +27,19 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
     /**
      *
      * @param inicio
-     * @param idTipoAsunto
+     * @param idEntidad
      * @return
      * @throws Exception
      */
-    List<CodigoAsunto> getPagination(int inicio, Long idTipoAsunto) throws Exception;
+    List<CodigoAsunto> getPagination(int inicio, Long idEntidad) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Long getTotalEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los CodigoAsunto pertenecientes a un TipoAsunto
@@ -40,6 +48,14 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @throws Exception
      */
     List<CodigoAsunto> getByTipoAsunto(Long idTipoAsunto) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    List<CodigoAsunto> getActivosEntidad(Long idEntidad) throws Exception;
 
     /**
      * Obtiene los CodigoAsunto Activos pertenecientes a un TipoAsunto
@@ -56,6 +72,16 @@ public interface CodigoAsuntoLocal extends BaseEjb<CodigoAsunto, Long> {
      * @throws Exception
      */
     CodigoAsunto findByCodigo(String codigo) throws Exception;
+
+    /**
+     *
+     * @param codigo
+     * @param idCodigoAsunto
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Boolean existeCodigoEdit(String codigo, Long idCodigoAsunto, Long idEntidad) throws Exception;
 
     /**
      * Comprueba que el {@link es.caib.regweb3.model.CodigoAsunto} codigo de asunto ya no existe para una Entidad.

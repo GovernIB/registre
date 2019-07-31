@@ -119,7 +119,6 @@ public class RegistroDetalle implements Serializable {
       this.id = rd.id;
       this.extracto = rd.extracto;
       this.tipoDocumentacionFisica = rd.tipoDocumentacionFisica;
-      this.tipoAsunto = rd.tipoAsunto == null? null : new TipoAsunto(rd.tipoAsunto);
       this.idioma = rd.idioma;
       this.codigoAsunto = rd.codigoAsunto == null? null : new CodigoAsunto(rd.codigoAsunto);
       this.referenciaExterna = rd.referenciaExterna;
@@ -153,7 +152,7 @@ public class RegistroDetalle implements Serializable {
     /**
      * Constructro para Informe LibroRegistro
      */
-    public RegistroDetalle(Long idRegistroDetalle, String extracto, Long idTipoAsunto, Long idOficinaOrigen, String denominacionOficinaOrigen,
+    public RegistroDetalle(Long idRegistroDetalle, String extracto, Long idOficinaOrigen, String denominacionOficinaOrigen,
                            String numeroRegistroOrigen, Date fechaOrigen, Long tipoDocumentacionFisica, Long idioma, String observaciones, String expediente,
                            Long idCodigoAsunto, String referenciaExterna, Long transporte, String numeroTransporte, List<Interesado> interesados) {
 
@@ -165,7 +164,6 @@ public class RegistroDetalle implements Serializable {
         this.idioma = idioma;
         this.observaciones = observaciones;
         this.expediente = expediente;
-        this.tipoAsunto = new TipoAsunto(idTipoAsunto);
         this.oficinaOrigen = new Oficina(idOficinaOrigen, null, denominacionOficinaOrigen);
         this.codigoAsunto = new CodigoAsunto(idCodigoAsunto);
         this.referenciaExterna = referenciaExterna;

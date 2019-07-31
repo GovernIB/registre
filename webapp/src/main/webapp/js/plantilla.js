@@ -124,7 +124,7 @@ function nuevaPlantilla(){
         "idLibro": $('#libro\\.id').val(),
         "extracto": $('#registroDetalle\\.extracto').val(),
         "idTipoDocumentacionFisica": $('#registroDetalle\\.tipoDocumentacionFisica').val(),
-        "idTipoAsunto": $('#registroDetalle\\.tipoAsunto\\.id').val(),
+        //"idTipoAsunto": $('#registroDetalle\\.tipoAsunto\\.id').val(),
         "idIdioma": $('#registroDetalle\\.idioma').val(),
         "idCodigoAsunto": $('#registroDetalle\\.codigoAsunto\\.id').val(),
         "referenciaExterna": $('#registroDetalle\\.referenciaExterna').val(),
@@ -199,8 +199,8 @@ function rellenarFormulario(idPlantilla,tipoRegistro){
             $('#registroDetalle\\.tipoDocumentacionFisica').val(plantilla.idTipoDocumentacionFisica);
             actualizarColorTipoDocumentacion();
 
-            $('#registroDetalle\\.tipoAsunto\\.id').val(plantilla.idTipoAsunto);
-            $('#registroDetalle\\.tipoAsunto\\.id').trigger("chosen:updated");
+            //$('#registroDetalle\\.tipoAsunto\\.id').val(plantilla.idTipoAsunto);
+            //$('#registroDetalle\\.tipoAsunto\\.id').trigger("chosen:updated");
             actualizarCodigosAsunto();
             $('#registroDetalle\\.idioma').val(plantilla.idIdioma);
             $('#registroDetalle\\.idioma').trigger("chosen:updated");

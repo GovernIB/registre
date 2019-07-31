@@ -35,7 +35,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -49,7 +49,6 @@ public class InformeBean implements InformeLocal {
                 "registroEntrada.fecha, " +
                 "registroEntrada.numeroRegistro, " +
                 "registroDetalle.extracto, " +
-                "registroDetalle.tipoAsunto.id, " +
                 "registroDetalle.oficinaOrigen.id, " +
                 "registroDetalle.oficinaOrigen.denominacion, " +
                 "registroDetalle.numeroRegistroOrigen, " +
@@ -70,8 +69,7 @@ public class InformeBean implements InformeLocal {
                 "registroEntrada.destinoExternoCodigo " +
                 "from RegistroEntrada as registroEntrada, RegistroDetalle as registroDetalle " +
                 "left outer join registroDetalle.oficinaOrigen as oficinaOrigen " +
-                "left outer join registroEntrada.destino as destino " +
-                "left outer join registroDetalle.codigoAsunto as codigoAsunto ");
+                "left outer join registroEntrada.destino as destino ");
 
 
         // Afegim condició necessària pels joins
@@ -118,12 +116,6 @@ public class InformeBean implements InformeLocal {
         if (idOficina != -1) {
             where.add(" registroEntrada.oficina.id = :idOficina ");
             parametros.put("idOficina", idOficina);
-        }
-
-        // Tipo Asunto
-        if (idTipoAsunto != -1) {
-            where.add(" registroEntrada.registroDetalle.tipoAsunto.id = :idTipoAsunto ");
-            parametros.put("idTipoAsunto", idTipoAsunto);
         }
 
         // Intervalo fechas
@@ -175,7 +167,7 @@ public class InformeBean implements InformeLocal {
 
             // Obté identificadors del resultat de la query
             long idRE = (Long) object[0];
-            long idDetalle = (Long) object[25];
+            long idDetalle = (Long) object[24];
 
             List<Interesado> interesados = new ArrayList<Interesado>();
 
@@ -255,10 +247,10 @@ public class InformeBean implements InformeLocal {
             }
 
             RegistroEntrada registroEntrada = new RegistroEntrada(idRE, (Long) object[1], (String) object[2],
-                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (Long) object[8],
-                    (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
-                    (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
-                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
+                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7],
+                    (Long) object[8], (String) object[9], (String) object[10], (Date) object[11], (String) object[12], (Long) object[13],
+                    (String) object[14], (Long) object[15], (Long) object[16], (String) object[17], (Long) object[18], (String) object[19],
+                    (Long) object[20], (String) object[21], (Long) object[22], (String) object[23], (Long) object[24], (String) object[25], interesados);
 
 
             registrosEntrada.add(registroEntrada);
@@ -271,7 +263,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, Long idTipoAsunto, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -285,7 +277,6 @@ public class InformeBean implements InformeLocal {
                 "registroSalida.fecha, " +
                 "registroSalida.numeroRegistro, " +
                 "registroDetalle.extracto, " +
-                "registroDetalle.tipoAsunto.id, " +
                 "registroDetalle.oficinaOrigen.id, " +
                 "registroDetalle.oficinaOrigen.denominacion, " +
                 "registroDetalle.numeroRegistroOrigen, " +
@@ -306,8 +297,7 @@ public class InformeBean implements InformeLocal {
                 "registroSalida.origenExternoCodigo " +
                 "from RegistroSalida as registroSalida, RegistroDetalle as registroDetalle " +
                 "left outer join registroDetalle.oficinaOrigen as oficinaOrigen " +
-                "left outer join registroSalida.origen as origen " +
-                "left outer join registroDetalle.codigoAsunto as codigoAsunto ");
+                "left outer join registroSalida.origen as origen ");
 
 
         // Afegim condició necessària pels joins
@@ -356,12 +346,6 @@ public class InformeBean implements InformeLocal {
         if (idOficina != -1) {
             where.add(" registroSalida.oficina.id = :idOficina ");
             parametros.put("idOficina", idOficina);
-        }
-
-        // Tipo Asunto
-        if (idTipoAsunto != -1) {
-            where.add(" registroSalida.registroDetalle.tipoAsunto.id = :idTipoAsunto ");
-            parametros.put("idTipoAsunto", idTipoAsunto);
         }
 
         // Intervalo fechas
@@ -413,7 +397,7 @@ public class InformeBean implements InformeLocal {
 
             // Obté identificadors del resultat de la query
             long idRS = (Long) object[0];
-            long idDetalle = (Long) object[25];
+            long idDetalle = (Long) object[24];
 
             List<Interesado> interesados = new ArrayList<Interesado>();
 
@@ -495,10 +479,10 @@ public class InformeBean implements InformeLocal {
             }
 
             RegistroSalida registroSalida = new RegistroSalida(idRS, (Long) object[1], (String) object[2],
-                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (Long) object[8],
-                    (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
-                    (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
-                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
+                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7],
+                    (Long) object[8], (String) object[9], (String) object[10], (Date) object[11], (String) object[12], (Long) object[13],
+                    (String) object[14], (Long) object[15], (Long) object[16], (String) object[17], (Long) object[18], (String) object[19],
+                    (Long) object[20], (String) object[21], (Long) object[22], (String) object[23], (Long) object[24], (String) object[25], interesados);
 
             registrosSalida.add(registroSalida);
 

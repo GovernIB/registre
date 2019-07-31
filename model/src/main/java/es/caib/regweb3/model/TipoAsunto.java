@@ -2,14 +2,11 @@ package es.caib.regweb3.model;
 
 import org.hibernate.annotations.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,8 +28,6 @@ public class TipoAsunto extends Traducible {
     private Entidad entidad;
     @XmlElement
     private String codigo;
-    @XmlElement
-    private List<CodigoAsunto> codigosAsunto;
     @XmlElement
     private Boolean activo = true;
 
@@ -93,17 +88,6 @@ public class TipoAsunto extends Traducible {
         this.codigo = codigo;
     }
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tipoAsunto")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OrderColumn(name = "id")
-    @OrderBy("activo desc,codigo")
-    public List<CodigoAsunto> getCodigosAsunto() {
-        return codigosAsunto;
-    }
-
-    public void setCodigosAsunto(List<CodigoAsunto> codigosAsunto) {
-        this.codigosAsunto = codigosAsunto;
-    }
 
     @Column(name="ACTIVO", nullable= false)
     public Boolean getActivo() {
