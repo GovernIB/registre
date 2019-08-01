@@ -1,15 +1,11 @@
 
 package es.caib.regweb3.ws.api.v3;
 
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
@@ -60,8 +56,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *         &lt;element name="referenciaExterna" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="resumen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="solicita" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="tipoAsunto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="tipoAsuntoDenominacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="tipoDocumentacionFisicaCodigo" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="tipoEnvioDocumentacion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="tipoRegistro" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
@@ -119,8 +113,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "referenciaExterna",
     "resumen",
     "solicita",
-    "tipoAsunto",
-    "tipoAsuntoDenominacion",
     "tipoDocumentacionFisicaCodigo",
     "tipoEnvioDocumentacion",
     "tipoRegistro",
@@ -182,8 +174,6 @@ public class AsientoRegistralWs {
     protected String referenciaExterna;
     protected String resumen;
     protected String solicita;
-    protected String tipoAsunto;
-    protected String tipoAsuntoDenominacion;
     protected Long tipoDocumentacionFisicaCodigo;
     protected String tipoEnvioDocumentacion;
     protected Long tipoRegistro;
@@ -1106,54 +1096,6 @@ public class AsientoRegistralWs {
      */
     public void setSolicita(String value) {
         this.solicita = value;
-    }
-
-    /**
-     * Obtiene el valor de la propiedad tipoAsunto.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTipoAsunto() {
-        return tipoAsunto;
-    }
-
-    /**
-     * Define el valor de la propiedad tipoAsunto.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTipoAsunto(String value) {
-        this.tipoAsunto = value;
-    }
-
-    /**
-     * Obtiene el valor de la propiedad tipoAsuntoDenominacion.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTipoAsuntoDenominacion() {
-        return tipoAsuntoDenominacion;
-    }
-
-    /**
-     * Define el valor de la propiedad tipoAsuntoDenominacion.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTipoAsuntoDenominacion(String value) {
-        this.tipoAsuntoDenominacion = value;
     }
 
     /**

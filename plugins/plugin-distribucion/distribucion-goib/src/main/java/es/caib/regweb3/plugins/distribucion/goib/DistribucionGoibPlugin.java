@@ -114,7 +114,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             }
 
             //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
-            //TODO Definir bien los criterios de distribución (organismo destinatario, codigoasunto, tipoasunto
             String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
             log.info("entidadCodigo " + entidadCodigo);
             String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
@@ -173,9 +172,10 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         registreAnotacio.setExtracte(re.getRegistroDetalle().getExtracto());
 
         //Tipo Asunto
-        registreAnotacio.setAssumpteTipusCodi(re.getRegistroDetalle().getTipoAsunto().getCodigo());
-        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) re.getRegistroDetalle().getTipoAsunto().getTraduccion();
-        registreAnotacio.setAssumpteTipusDescripcio(traduccionTipoAsunto.getNombre());
+        //TODO eliminar cuando hayan adaptado modelo de distribució
+        registreAnotacio.setAssumpteTipusCodi("01");
+        //TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) re.getRegistroDetalle().getTipoAsunto().getTraduccion();
+        registreAnotacio.setAssumpteTipusDescripcio("Deprecated");
 
         //Idioma
         registreAnotacio.setIdiomaCodi(re.getRegistroDetalle().getIdioma().toString());

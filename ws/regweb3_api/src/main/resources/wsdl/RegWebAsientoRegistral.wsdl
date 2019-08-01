@@ -142,8 +142,6 @@
       <xs:element minOccurs="0" name="referenciaExterna" type="xs:string"/>
       <xs:element minOccurs="0" name="resumen" type="xs:string"/>
       <xs:element minOccurs="0" name="solicita" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipoAsunto" type="xs:string"/>
-      <xs:element minOccurs="0" name="tipoAsuntoDenominacion" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoDocumentacionFisicaCodigo" type="xs:long"/>
       <xs:element minOccurs="0" name="tipoEnvioDocumentacion" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoRegistro" type="xs:long"/>

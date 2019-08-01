@@ -51,7 +51,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
             asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
             asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
-            asientoRegistralWs.setTipoAsunto(getTestTipoAsunto());
 
 
             // Interesados
@@ -135,7 +134,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
             asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
             asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
-            asientoRegistralWs.setTipoAsunto(getTestTipoAsunto());
 
 
             // Interesados
