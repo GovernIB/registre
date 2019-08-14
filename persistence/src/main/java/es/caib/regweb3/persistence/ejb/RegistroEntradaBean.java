@@ -112,7 +112,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             // Obtenemos el próximo evento del Registro
-            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad());
             registroEntrada.setEvento(evento);
 
             //Llamamos al plugin de postproceso
@@ -150,7 +150,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
-        Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+        Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad());
 
         registroEntrada.setEvento(evento);
 
@@ -327,13 +327,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception{
+    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva/*, Long idOficina*/) throws Exception{
 
 
         if(isOficioRemisionExterno(registroEntrada.getId())){ // Externo
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
-            if(entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)){
+            if(entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroEntrada.getOficina().getId())){
                 List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId());
 
                 if(!oficinasSIR.isEmpty()){
@@ -345,8 +345,11 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         }else {
 
+            //Añadido marilen, si no se busca antes da un lazy al intentar cargar las relacionesOrganizativasOfi en el método getByOficinaActiva
+            Oficina oficina = oficinaEjb.findById(registroEntrada.getOficina().getId());
+
             // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
-            LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(registroEntrada.getOficina(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
             Set<Long> organismosId = new HashSet<Long>();
 
             for (Organismo organismo : organismos) {
@@ -400,7 +403,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             for (RegistroEntrada registroEntrada:registros) {
-                Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
+                Long evento = proximoEventoEntrada(registroEntrada, entidad);
 
                 Query q1 = em.createQuery("update RegistroEntrada set evento=:evento where id = :idRegistro");
                 q1.setParameter("evento", evento);
@@ -476,7 +479,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Asignamos su evento
         if(registroEntrada.getEvento() != null){
-            Long evento = proximoEventoEntrada(findById(registroEntrada.getId()), usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+            Long evento = proximoEventoEntrada(findById(registroEntrada.getId()), usuarioEntidad.getEntidad());
             registroEntrada.setEvento(evento);
             merge(registroEntrada);
         }
