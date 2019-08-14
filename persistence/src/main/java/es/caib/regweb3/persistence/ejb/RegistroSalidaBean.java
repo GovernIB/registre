@@ -268,8 +268,11 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida(); // Fecha a partir de la cual se generarán oficios de salida
 
 
+        //Añadido marilen, si no se busca antes da un lazy al intentar cargar las relacionesOrganizativasOfi en el método getByOficinaActiva
+        Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
+
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
-        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(registroSalida.getOficina(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         // Creamos un Set solo con los codigos
         Set<String> organismosCodigo = new HashSet<String>();
 
