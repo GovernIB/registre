@@ -61,7 +61,16 @@
                                     <label for="registroEntrada.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:select path="registroEntrada.libro.id" items="${librosConsulta}" itemLabel="nombreCompleto" itemValue="id" cssClass="chosen-select"/>
+                                    <form:select path="registroEntrada.libro.id" cssClass="chosen-select" id="llibre">
+                                        <c:forEach var="libro" items="${librosConsulta}">
+                                            <c:if test="${libro.activo}">
+                                                <form:option value="${libro.id}" cssClass="verde">${libro.nombreCompleto}</form:option>
+                                            </c:if>
+                                            <c:if test="${!libro.activo}">
+                                                <form:option value="${libro.id}" cssClass="rojo">${libro.nombreCompleto}</form:option>
+                                            </c:if>
+                                        </c:forEach>
+                                    </form:select>
                                 </div>
                             </div>
                             <div class="col-xs-6 espaiLinies">
@@ -541,6 +550,20 @@
     });
 </script>
 
+<!-- Añade el color del libro activo o no activo -->
+<script type="text/javascript">
+    // Añade el color al libro al iniciar la pagina
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#llibre_chosen").find("span").addClass($("#llibre option:selected").attr('class'));
+    }, false);
+
+    //Ejecuta cambio de colores al cambiar el libro del select
+    $(document).on('change', '#llibre', function(event) {
+        $("#llibre_chosen").find("span").removeClass("verde");
+        $("#llibre_chosen").find("span").removeClass("rojo");
+        $("#llibre_chosen").find("span").addClass($("#llibre option:selected").attr('class'));
+    });
+</script>
 
 </body>
 </html>
