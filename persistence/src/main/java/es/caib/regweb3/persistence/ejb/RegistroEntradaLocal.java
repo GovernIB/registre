@@ -101,7 +101,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @return
      * @throws Exception
      */
-    Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva) throws Exception;
+    Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception;
 
     /**
      *

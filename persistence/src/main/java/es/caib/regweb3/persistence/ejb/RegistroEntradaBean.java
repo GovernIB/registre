@@ -112,7 +112,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             // Obtenemos el próximo evento del Registro
-            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad());
+            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(),registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
 
             //Llamamos al plugin de postproceso
@@ -150,7 +150,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         registroEntrada = merge(registroEntrada);
 
         // Obtenemos el próximo evento del Registro
-        Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad());
+        Long evento = proximoEventoEntrada(registroEntrada,usuarioEntidad.getEntidad(),registroEntrada.getOficina().getId());
 
         registroEntrada.setEvento(evento);
 
@@ -327,13 +327,13 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva/*, Long idOficina*/) throws Exception{
+    public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception{
 
 
         if(isOficioRemisionExterno(registroEntrada.getId())){ // Externo
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
-            if(entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroEntrada.getOficina().getId())){
+            if(entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)){
                 List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroEntrada.getId());
 
                 if(!oficinasSIR.isEmpty()){
@@ -403,7 +403,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             for (RegistroEntrada registroEntrada:registros) {
-                Long evento = proximoEventoEntrada(registroEntrada, entidad);
+                Long evento = proximoEventoEntrada(registroEntrada, entidad,registroEntrada.getOficina().getId());
 
                 Query q1 = em.createQuery("update RegistroEntrada set evento=:evento where id = :idRegistro");
                 q1.setParameter("evento", evento);
@@ -479,7 +479,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Asignamos su evento
         if(registroEntrada.getEvento() != null){
-            Long evento = proximoEventoEntrada(findById(registroEntrada.getId()), usuarioEntidad.getEntidad());
+            Long evento = proximoEventoEntrada(findById(registroEntrada.getId()), usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
             registroEntrada.setEvento(evento);
             merge(registroEntrada);
         }
