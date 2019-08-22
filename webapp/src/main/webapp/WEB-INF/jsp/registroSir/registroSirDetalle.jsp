@@ -129,8 +129,8 @@
                                 <c:if test="${not  empty estadoDestino and estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
                                 <div class="form-group col-xs-12">
                                     <span class="text-vermell ">
-                                        <spring:message code="registroSir.organismo.destino.extinguido"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>
-                                        <spring:message code="registroSir.organismo.destino.extinguido2"/>
+                                        <strong><spring:message code="registroSir.organismo.destino.extinguido"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>
+                                        <spring:message code="registroSir.organismo.destino.extinguido2"/></strong>
                                     </span>
                                 </div>
 
