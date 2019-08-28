@@ -64,7 +64,7 @@
                                     <form:select path="registroEntrada.libro.id" cssClass="chosen-select" id="llibre">
                                         <c:forEach var="libro" items="${librosConsulta}">
                                             <c:if test="${libro.activo}">
-                                                <form:option value="${libro.id}" cssClass="verde">${libro.nombreCompleto}</form:option>
+                                                <form:option value="${libro.id}">${libro.nombreCompleto}</form:option>
                                             </c:if>
                                             <c:if test="${!libro.activo}">
                                                 <form:option value="${libro.id}" cssClass="rojo">${libro.nombreCompleto}</form:option>
@@ -559,7 +559,6 @@
 
     //Ejecuta cambio de colores al cambiar el libro del select
     $(document).on('change', '#llibre', function(event) {
-        $("#llibre_chosen").find("span").removeClass("verde");
         $("#llibre_chosen").find("span").removeClass("rojo");
         $("#llibre_chosen").find("span").addClass($("#llibre option:selected").attr('class'));
     });
