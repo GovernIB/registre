@@ -523,7 +523,7 @@ public class BaseController {
     }
 
     /**
-     * Retorna el libro de cuyo OrganismoRespnsable coincide con el de la OficinaActiva
+     * Retorna el libro de cuyo OrganismoRespnsable coincide con el de la OficinaActiva y está activo
      * @param request
      * @param libros
      * @return
@@ -533,8 +533,8 @@ public class BaseController {
 
         Oficina oficinaActiva = getOficinaActiva(request);
         for (Libro libro:libros){
-            if(libro.getOrganismo().equals(oficinaActiva.getOrganismoResponsable())){
-                return  libro;
+            if(libro.getActivo() && libro.getOrganismo().equals(oficinaActiva.getOrganismoResponsable())){
+                return libro;
             }
         }
         return null;
