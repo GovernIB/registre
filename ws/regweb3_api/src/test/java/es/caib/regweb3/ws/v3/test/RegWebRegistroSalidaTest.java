@@ -42,9 +42,11 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
     public void obtenerRegistroSalida() {
 
         try {
-            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("SALU-S-20/2018", "earrivi","A04019281");
+            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("SALU-S-103/2019", "earrivi",getTestEntidadCodigoDir3());
             System.out.printf("Idioma: " + registroSalidaWs.getIdiomaCodigo() + "\n");
             System.out.printf("Idioma: " + registroSalidaWs.getIdiomaDescripcion() + "\n");
+            System.out.printf("CodigoAsunto: " + registroSalidaWs.getCodigoAsuntoCodigo() + "\n");
+            System.out.printf("CodigoAsunto desc: " + registroSalidaWs.getCodigoAsuntoDescripcion() + "\n");
             System.out.printf("TipoAsunto: " + registroSalidaWs.getTipoAsuntoCodigo() + "\n");
             System.out.printf("TipoAsunto: " + registroSalidaWs.getTipoAsuntoDescripcion() + "\n");
             System.out.printf("TipoTransporte: " + registroSalidaWs.getTipoTransporteCodigo() + "\n");
@@ -97,7 +99,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
     @Test
     public void crearRegistroSalida() throws Exception{
 
-        for(int i=0;i<100;i++){
+        for(int i=0;i<1;i++){
 
 
         RegistroSalidaWs registroSalidaWs = new RegistroSalidaWs();
@@ -109,7 +111,9 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         registroSalidaWs.setExtracto(System.currentTimeMillis() + " probando ws");
         registroSalidaWs.setDocFisica((long) 1);
         registroSalidaWs.setIdioma("es");
-        registroSalidaWs.setTipoAsunto(getTestTipoAsunto());
+        //registroSalidaWs.setTipoAsunto(getTestTipoAsunto());
+        registroSalidaWs.setTipoAsunto(null);
+        registroSalidaWs.setCodigoAsunto("23");
 
         registroSalidaWs.setAplicacion("WsTest");
         registroSalidaWs.setVersion("1");
@@ -122,7 +126,6 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
         registroSalidaWs.setObservaciones("");
 
         registroSalidaWs.setRefExterna("");
-        registroSalidaWs.setCodigoAsunto(null);
         registroSalidaWs.setTipoTransporte("");
 
         registroSalidaWs.setExpone("expone");
