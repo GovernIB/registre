@@ -110,9 +110,11 @@ public class RegistroSalidaConverter extends CommonConverter {
         registroWs.setDocFisicaCodigo(registroDetalle.getTipoDocumentacionFisica().toString());
         registroWs.setDocFisicaDescripcion(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica()));
 
-        TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
-        registroWs.setTipoAsuntoCodigo(registroDetalle.getTipoAsunto().getCodigo());
-        registroWs.setTipoAsuntoDescripcion(traduccionTipoAsunto.getNombre());
+        if(registroDetalle.getTipoAsunto() != null){
+            TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
+            registroWs.setTipoAsuntoCodigo(registroDetalle.getTipoAsunto().getCodigo());
+            registroWs.setTipoAsuntoDescripcion(traduccionTipoAsunto.getNombre());
+        }
 
         registroWs.setIdiomaCodigo(RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(registroDetalle.getIdioma()));
         registroWs.setIdiomaDescripcion(I18NLogicUtils.tradueix(new Locale(idioma), "idioma." + registroDetalle.getIdioma()));
