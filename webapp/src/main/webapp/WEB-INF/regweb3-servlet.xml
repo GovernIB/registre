@@ -142,6 +142,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
             <bean class="es.caib.regweb3.webapp.interceptor.AdminInterceptor"/>
         </mvc:interceptor>
 
+        <!--Interceptor para Admin Entidad-->
+        <mvc:interceptor>
+            <mvc:mapping path="/adminEntidad/**"/>
+            <bean class="es.caib.regweb3.webapp.interceptor.AdminEntidadInterceptor"/>
+        </mvc:interceptor>
+
         <!--Interceptor para el RegistroSir-->
         <mvc:interceptor>
             <mvc:mapping path="/registroSir/**"/>
