@@ -20,6 +20,9 @@
         <sec:intercept-url pattern="/anexo/scanwebresource/**" access="permitAll"/>
         <sec:intercept-url pattern="/anexo/scanwebresource2/**" access="permitAll"/>
 
+        <!--Admin Entidad-->
+        <sec:intercept-url pattern="/adminEntidad/**" access="hasRole('RWE_ADMIN')"/>
+
         <!--Entidad-->
         <sec:intercept-url pattern="/entidad/new" access="hasRole('RWE_SUPERADMIN')"/>
         <sec:intercept-url pattern="/entidad/list" access="hasRole('RWE_SUPERADMIN')"/>
