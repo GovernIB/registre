@@ -34,6 +34,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         for (int i = 0; i < 1; i++) {
 
             AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
+            asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
 
             asientoRegistralWs.setAplicacion("REGWEB3");
             asientoRegistralWs.setAplicacionTelematica("REGWEB3");
@@ -41,16 +42,18 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             asientoRegistralWs.setCodigoSia(getTestCodigoSia());
             asientoRegistralWs.setCodigoUsuario(getTestUserName());
             asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
+
             asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
             asientoRegistralWs.setExpone("Expone");
             asientoRegistralWs.setSolicita("Solicita");
             asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
             asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
             asientoRegistralWs.setPresencial(false);
-            asientoRegistralWs.setResumen("Prueba via RegwebAsientoRegistralTest");
+            asientoRegistralWs.setResumen("Registro test Ws");
+            asientoRegistralWs.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
             asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-            asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
             asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+            //asientoRegistralWs.setTipoAsunto(getTestTipoAsunto());
 
 
             // Interesados
@@ -83,18 +86,20 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             asientoRegistralWs.getInteresados().add(interesadoWs);
 
-            /* InteresadoWs interesadoWs2 = new InteresadoWs();
+             InteresadoWs interesadoWs2 = new InteresadoWs();
             DatosInteresadoWs organismo = new DatosInteresadoWs();
             organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
-            organismo.setNombre("Presidencia Govern de les Illes Balears");
+            organismo.setTipoDocumentoIdentificacion("O");
+            organismo.setRazonSocial("Ayuntamiento de Alaior");
+            organismo.setDocumento("L01070027");
             interesadoWs2.setInteresado(organismo);
 
-            asientoRegistralWs.getInteresados().add(interesadoWs2);*/
+           // asientoRegistralWs.getInteresados().add(interesadoWs2);
 
             //asientoRegistralWs.getAnexos().addAll(getAnexos());
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false);
 
                 //asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
@@ -198,9 +203,11 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientoregistral() throws Exception{
 
         try {
-            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),"PRES-E-2/2019", RegwebConstantes.REGISTRO_ENTRADA,false);
+            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),"SALU-S-103/2019", RegwebConstantes.REGISTRO_SALIDA,false);
 
             System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
+            System.out.println("Codigo Asunto: " + asientoRegistralWs.getCodigoAsunto());
+            System.out.println("Codigo Asunto " + asientoRegistralWs.getCodigoAsuntoDenominacion());
         } catch (WsValidationException e) {
             e.printStackTrace();
         } catch (WsI18NException e) {
@@ -265,9 +272,33 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientosCiudadano() {
 
         try {
-            ResultadoBusquedaWs asientosCiudadano = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"",1);
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"43146650F",0);
 
-            System.out.println("Asientos encontrados: " +asientosCiudadano.getTotalResults());
+            System.out.println("Asientos encontrados: " +asientos.getTotalResults());
+
+            for (Object asiento : asientos.getResults()) {
+                AsientoRegistralWs asientoRegistralWs = (AsientoRegistralWs) asiento;
+                System.out.println("Numero: " + asientoRegistralWs.getNumeroRegistroFormateado());
+            }
+
+        } catch (WsValidationException e) {
+            e.printStackTrace();
+        } catch (WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void obtenerAsientoCiudadano() {
+
+        try {
+            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoCiudadano(getTestEntidadCodigoDir3(),"43146650F","SALU-E-169/2019");
+
+
+            System.out.println("Numero: " + asientoRegistralWs.getNumeroRegistroFormateado());
+            System.out.println("Extracto: " + asientoRegistralWs.getResumen());
+            System.out.println("Anexos: " + asientoRegistralWs.getAnexos().size());
+
 
         } catch (WsValidationException e) {
             e.printStackTrace();
