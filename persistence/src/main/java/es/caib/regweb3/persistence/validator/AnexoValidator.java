@@ -68,9 +68,12 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
     }
 
 
-    if(anexo.getOrigenCiudadanoAdmin() == null && anexo.getOrigenCiudadanoAdmin()!= 0 && anexo.getOrigenCiudadanoAdmin() != 1){
+    if(anexo.getOrigenCiudadanoAdmin() == null){
        rejectValue(errors,"origenCiudadanoAdmin", "error.valor.requerido", "El camp és obligatori");
+    }else if(anexo.getOrigenCiudadanoAdmin()!= 0 && anexo.getOrigenCiudadanoAdmin() != 1){
+       rejectValue(errors,"origenCiudadanoAdmin", "error.valor.inesperado.origen", "El valor del camp no és l'esperat. Ha de ser 0 o 1");
     }
+
 
     //if (anexo.getTitulo() == null || anexo.getTitulo().trim().length() == 0) {
     //  rejectValue(errors,"titulo", "error.valor.requerido", "El camp és obligatori");
