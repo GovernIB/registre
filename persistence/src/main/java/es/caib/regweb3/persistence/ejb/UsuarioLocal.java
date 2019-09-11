@@ -21,6 +21,15 @@ import java.util.List;
 public interface UsuarioLocal extends BaseEjb<Usuario, Long> {
 
     /**
+     * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
+     * datos personales de la bbdd de Seycon.
+     * @param identificador
+     * @return
+     * @throws Exception
+     */
+    Usuario crearUsuario(String identificador) throws Exception, I18NException;
+
+    /**
      * Retorna el {@link es.caib.regweb3.model.Usuario} asociado a un identificador.
      * @param identificador
      * @return

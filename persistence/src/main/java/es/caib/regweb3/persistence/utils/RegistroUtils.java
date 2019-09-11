@@ -146,7 +146,7 @@ public class RegistroUtils{
      */
     public static  String numeroRegistroFormateado(RegistroEntrada registroEntrada, Libro libro, Oficina oficina) throws Exception{
 
-        String formatNumRegistre = registroEntrada.getUsuario().getEntidad().getNumRegistro();
+        String formatNumRegistre = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getNumRegistro();
         if(formatNumRegistre != null){
             SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
             SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
@@ -204,19 +204,5 @@ public class RegistroUtils{
 
         return fecha;
     }
-
-
-   /* *//**
-     * Comprueba la firma de un Anexo es válida
-     * @param perfil
-     * @param tipo
-     * @return
-     *//*
-    public static boolean validaTipoPerfilFirmaSir(String perfil, String tipo) {
-        return !SIGNPROFILE_BES.equals(perfil)
-                && !SIGNPROFILE_PADES_BASIC.equals(perfil)
-                && (SIGNTYPE_CAdES.equals(tipo) || SIGNTYPE_XAdES.equals(tipo)
-                || SIGNTYPE_PAdES.equals(tipo) || SIGNTYPE_ODF.equals(tipo));
-    }*/
 
 }

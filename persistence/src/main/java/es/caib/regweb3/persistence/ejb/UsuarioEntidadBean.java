@@ -7,8 +7,10 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +35,8 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
+
+    @EJB private UsuarioLocal usuarioEjb;
 
 
     @Override
@@ -98,6 +102,26 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
+
+        UsuarioEntidad usuarioEntidad = findByIdentificadorEntidad(identificador, idEntidad);
+
+        if(usuarioEntidad == null){
+
+            log.info("Usuario no existe en la entidad, lo buscamos en el sistema de autentificación");
+
+            // Creamos el Usuario en el sistema
+            Usuario usuario = usuarioEjb.crearUsuario(identificador);
+            if(usuario != null){
+                return persist(new UsuarioEntidad(null, usuario, idEntidad));
+            }
+        }
+
+        return usuarioEntidad;
     }
 
     @Override

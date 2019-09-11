@@ -148,7 +148,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
-        // 1.-Validar campo obligatorio entidad
+        // 1.-Validar la entidad y el usuario que realiza la petición
         Entidad entidadActiva = validarEntidad(entidad);
 
         // 2.- Comprobar que la Oficina está vigente
@@ -157,16 +157,23 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // 3.- Comprobar que el Libro está vigente
         Libro libro = validarLibro(asientoRegistral.getLibroCodigo(), entidadActiva.getId());
 
-        // 4.- Comprobar que el usuario tiene permisos para realizar el registro de entrada
-        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
+        // 4.- Obtener el usuario aplicación que ha realizado la petición
+        UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
+        if (usuarioAplicacion == null) { //No existe
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+        }
+
+        // 5.- Comprobar que el Usuario Entidad persona existe en el sistema, si no existe, se intenta crear
+        UsuarioEntidad usuario = usuarioEntidadEjb.comprobarUsuarioEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
             throw new I18NException("registro.usuario.noExiste", asientoRegistral.getCodigoUsuario(), entidadActiva.getNombre());
-
         }
 
         // 7.- Recuperamos el username correcto
         asientoRegistral.setCodigoUsuario(usuario.getUsuario().getIdentificador());
+
         //asientoRegistral.setAplicacion(CODIGO_APLICACION); todo REPENSAR setAplicacionTelematica
         //asientoRegistral.setVersion(Versio.VERSIO);
 
@@ -197,10 +204,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Convertir RegWebAsientoRegistralWs a RegistroEntrada
         if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_entrada()){
 
-            // Comprobar PERMISO_REGISTRO_ENTRADA de usuario
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_ENTRADA, true)) {
-                throw new I18NException("registro.usuario.permisos", asientoRegistral.getCodigoUsuario(), libro.getCodigo());
-
+            // Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_ENTRADA, true)) {
+                throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
             }
 
             // 10.- Comprobar que el Organismo destino está vigente
@@ -251,17 +257,21 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
-            if (distribuir) {
+            try{
+                if (distribuir) {
 
-                distribuirAsientoRegistral(entidad,registroEntrada.getNumeroRegistroFormateado());
+                    distribuirAsientoRegistral(entidad,registroEntrada.getNumeroRegistroFormateado());
+                }
+
+            }catch (Exception e){
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, "distribuirAsientoRegistral", peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
             }
 
         }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_salida()){
 
-            // Comprobar PERMISO_REGISTRO_SALIDA de usuario
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
+            // Comprobar PERMISO_REGISTRO_SALIDA de usuario aplicación
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
                 throw new I18NException("registro.usuario.permisos", asientoRegistral.getCodigoUsuario(), libro.getCodigo());
-
             }
 
             // 10.- Comprobar que el Organismo Origen está vigente
@@ -770,7 +780,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
-
 
         ResultadoBusquedaWs<AsientoRegistralWs> resultado = new ResultadoBusquedaWs<AsientoRegistralWs>();
 
