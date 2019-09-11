@@ -30,6 +30,14 @@ import java.util.Set;
  */
 public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
+    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
+    public TipoAsuntoLocal tipoAsuntoEjb;
+
+    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
+    public CodigoAsuntoLocal codigoAsuntoEjb;
+
+    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    public OrganismoLocal organismoEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     public TipoDocumentalLocal tipoDocumentalEjb;
@@ -54,6 +62,30 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
 
     @EJB(mappedName = "regweb3/PendienteEJB/local")
     public PendienteLocal pendienteEjb;
+
+    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
+    public CatProvinciaLocal catProvinciaEjb;
+
+    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
+    public CatLocalidadLocal catLocalidadEjb;
+
+    @EJB(mappedName = "regweb3/CatPaisEJB/local")
+    public CatPaisLocal catPaisEjb;
+
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    public InteresadoLocal interesadoEjb;
+
+    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    public PersonaLocal personaEjb;
+
+    @EJB(mappedName = "regweb3/IntegracionEJB/local")
+    public IntegracionLocal integracionEjb;
+
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    public JustificanteLocal justificanteEjb;
+
+    @EJB(mappedName = "regweb3/LopdEJB/local")
+    public LopdLocal lopdEjb;
 
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 

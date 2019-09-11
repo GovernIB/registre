@@ -4,12 +4,16 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
 import org.fundaciobit.plugins.userinformation.RolesInfo;
+import org.fundaciobit.plugins.userinformation.UserInfo;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -35,8 +39,10 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB private RolLocal rolEjb;
+    @Autowired private RolUtils rolUtils;
 
+    @EJB private PluginLocal pluginEjb;
+    @EJB private RolLocal rolEjb;
 
     @Override
     public Usuario getReference(Long id) throws Exception {
@@ -75,6 +81,81 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
         q.setMaxResults(RESULTADOS_PAGINACION);
 
         return q.getResultList();
+    }
+
+    /**
+     * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
+     * datos personales de la bbdd de Seycon.
+     * @param identificador
+     * @return
+     * @throws Exception
+     */
+    public Usuario crearUsuario(String identificador) throws Exception, I18NException {
+
+        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
+        UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
+
+        if(regwebUserInfo != null){ // Si el documento no existe en REGWEB3
+
+            Usuario usuario = new Usuario();
+            usuario.setNombre(regwebUserInfo.getName());
+
+            //Idioma por defecto
+            Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
+            usuario.setIdioma(idioma);
+
+            if(regwebUserInfo.getSurname1() != null){
+                usuario.setApellido1(regwebUserInfo.getSurname1());
+            }else{
+                usuario.setApellido1("");
+            }
+
+            if(regwebUserInfo.getSurname2() != null){
+                usuario.setApellido2(regwebUserInfo.getSurname2());
+            } else {
+                usuario.setApellido2("");
+            }
+
+            usuario.setDocumento(regwebUserInfo.getAdministrationID());
+            usuario.setIdentificador(identificador);
+
+            // Email
+            if(regwebUserInfo.getEmail() != null){
+                usuario.setEmail(regwebUserInfo.getEmail());
+            }else{
+                usuario.setEmail("no hi ha email");
+            }
+
+            // Tipo Usuario
+            if(identificador.startsWith("$")){
+                usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_APLICACION);
+            }else{
+                usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_PERSONA);
+            }
+
+            // Roles
+            RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
+
+            if(rolesInfo != null && rolesInfo.getRoles().length > 0){
+                List<String> roles = new ArrayList<String>();
+                Collections.addAll(roles, rolesInfo.getRoles());
+
+                if(roles.size() > 0){
+                    usuario.setRoles(rolEjb.getByRol(roles));
+                }
+            }else{
+                log.info("El usuario " + identificador + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
+            }
+
+            // Guardamos el nuevo Usuario
+            usuario = persist(usuario);
+            log.info("Usuario " + usuario.getNombreCompleto() + " creado correctamente");
+            return usuario;
+        }else{
+            log.info("Usuario " + identificador + " no encontrado en el sistema de usuarios");
+            return null;
+        }
+
     }
 
     @Override

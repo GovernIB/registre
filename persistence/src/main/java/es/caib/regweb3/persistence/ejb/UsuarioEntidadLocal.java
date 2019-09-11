@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -35,6 +36,16 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @throws Exception
      */
     Long getTotal(Long idEntidad) throws Exception;
+
+    /**
+     * Crea un UsuarioEntidad, a partir de un identificador y la Entidad
+     * @param identificador
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException;
 
     /**
      * Retorna el {@link es.caib.regweb3.model.UsuarioEntidad} asociado a un identificador.

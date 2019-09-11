@@ -2,7 +2,8 @@ package es.caib.regweb3.ws.v3.impl;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroSalidaLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.validator.RegistroSalidaBeanValidator;
 import es.caib.regweb3.persistence.validator.RegistroSalidaValidator;
@@ -64,59 +65,11 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
 
     RegistroSalidaValidator<RegistroSalida> validator = new RegistroSalidaValidator<RegistroSalida>();
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-
-    @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
-    private UsuarioEntidadLocal usuarioEntidadEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
-
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
-    private CodigoAsuntoLocal codigoAsuntoEjb;
-
     @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
     private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
-
-    @EJB(mappedName = "regweb3/LopdEJB/local")
-    private LopdLocal lopdEjb;
-
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    private InteresadoLocal interesadoEjb;
-
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
-    private PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    private CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    private CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    private CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
-
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
-    private IntegracionLocal integracionEjb;
-
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
-    private JustificanteLocal justificanteEjb;
 
 
     @Override
@@ -166,7 +119,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         // 1.- Comprobaciones de parámetros obligatórios
         Entidad entidadActiva = validarEntidad(entidad);
 
-        // 1.- Comprobar que el Organismo destino está vigente
+        // 2.- Comprobar que el Organismo destino está vigente
         Organismo origen = organismoEjb.findByCodigoEntidad(registroSalidaWs.getOrigen(), entidadActiva.getId());
 
         if (origen == null) { //Si no existe todo: Hay que agregar origenes externos?
@@ -176,20 +129,29 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             throw new I18NException("registro.organismo.extinguido", origen.getNombreCompleto());
         }
 
-        // 2.- Comprobar que la Oficina está vigente
+        // 3.- Comprobar que la Oficina está vigente
         Oficina oficina = validarOficina(registroSalidaWs.getOficina(), entidadActiva.getId());
 
-        // 3.- Comprobar que el Libro está vigente
+        // 4.- Comprobar que el Libro está vigente
         Libro libro = validarLibro(registroSalidaWs.getLibro(), entidadActiva.getId());
 
-        // 4.- Comprobar que el usuario tiene permisos para realizar el registro de salida
-        UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(registroSalidaWs.getCodigoUsuario(), entidadActiva.getId());
+        // 5.- Obtener el usuario aplicación que ha realizado la petición
+        UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
+        if (usuarioAplicacion == null) { //No existe
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+        }
+
+        // 6.- Comprobar que el Usuario Entidad persona existe en el sistema, si no existe, se intenta crear
+        UsuarioEntidad usuario = usuarioEntidadEjb.comprobarUsuarioEntidad(registroSalidaWs.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
             throw new I18NException("registro.usuario.noExiste", registroSalidaWs.getCodigoUsuario(), entidadActiva.getNombre());
+        }
 
-        } else if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
-            throw new I18NException("registro.usuario.permisos", registroSalidaWs.getCodigoUsuario(), libro.getCodigo());
+        // 7.- Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
+        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
+            throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
         }
 
         // Recuperamos el username correcto
