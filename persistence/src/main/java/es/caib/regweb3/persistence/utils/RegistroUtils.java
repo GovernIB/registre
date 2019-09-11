@@ -170,7 +170,7 @@ public class RegistroUtils{
      */
     public static String numeroRegistroFormateado(RegistroSalida registroSalida, Libro libro, Oficina oficina) throws Exception{
 
-        String formatNumRegistre = registroSalida.getUsuario().getEntidad().getNumRegistro();
+        String formatNumRegistre = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getNumRegistro();
         if(formatNumRegistre != null){
             SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
             SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
