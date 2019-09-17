@@ -503,9 +503,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     protected void crearHistorico(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
                                   Long registroID, String tipoRegistro, boolean isNew) throws Exception, I18NException {
-        Entidad entidadActiva = usuarioEntidad.getEntidad();
+
         if ("entrada".equals(tipoRegistro)) {
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroID);
+            Entidad entidadActiva = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
             Long dias = RegistroUtils.obtenerDiasRegistro(registroEntrada.getFecha());
 
@@ -532,6 +533,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         } else {
             RegistroSalida registroSalida = registroSalidaEjb.findById(registroID);
+            Entidad entidadActiva = registroSalida.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
             Long dias = RegistroUtils.obtenerDiasRegistro(registroSalida.getFecha());
 
