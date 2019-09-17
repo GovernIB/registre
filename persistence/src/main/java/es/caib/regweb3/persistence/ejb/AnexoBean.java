@@ -240,6 +240,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Long tiempo = System.currentTimeMillis();
         String descripcion = "Nuevo anexo ";
         String numRegFormat = "";
+        Entidad entidad = null;
 
         try {
 
@@ -249,12 +250,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             IRegistro registro = getIRegistro(registroID, tipoRegistro);
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
 
+            //Obtenemos la Entidad
+            entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
+
             // Obtenemos el Plugin de Custodia correspondiente
             if (anexo.isJustificante()) {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
                 descripcion = "Nuevo anexo justificante";
             } else {
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_CUSTODIA);
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA);
             }
 
             // Integración
@@ -271,7 +275,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getTipoDocumento())) {
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
-                    signatureServerEjb.checkDocument(anexoFull, usuarioEntidad.getEntidad().getId(),
+                    signatureServerEjb.checkDocument(anexoFull, entidad.getId(),
                        new Locale("es"), force);
                 }
             }
@@ -341,7 +345,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setAnexo(anexo);
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
 
             return anexoFull;
 
@@ -349,7 +353,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             error = true;
             log.info("Error creant un anexe: " + i18n.getMessage(), i18n);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), i18n,null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), i18n,null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -359,7 +363,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             error = true;
             log.info("Error creant un anexe: " + e.getMessage(), e);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
             } catch (Exception ex) {
                 e.printStackTrace();
             }
