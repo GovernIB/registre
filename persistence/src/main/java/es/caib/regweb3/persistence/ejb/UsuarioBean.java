@@ -92,70 +92,78 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
      */
     public Usuario crearUsuario(String identificador) throws Exception, I18NException {
 
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
-        UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
+        // Comprobamos si el Usuario ya existe en RWE_USUARIO
+        Usuario usuario = findByIdentificador(identificador);
 
-        if(regwebUserInfo != null){ // Si el documento no existe en REGWEB3
+        // Si no existe, lo creamos
+        if(usuario == null){
 
-            Usuario usuario = new Usuario();
-            usuario.setNombre(regwebUserInfo.getName());
+            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null,RegwebConstantes.PLUGIN_USER_INFORMATION);
+            UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(identificador);
 
-            //Idioma por defecto
-            Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
-            usuario.setIdioma(idioma);
+            if(regwebUserInfo != null){ // Si el documento existe en el Sistema de autentificación
 
-            if(regwebUserInfo.getSurname1() != null){
-                usuario.setApellido1(regwebUserInfo.getSurname1());
-            }else{
-                usuario.setApellido1("");
-            }
+                usuario = new Usuario();
+                usuario.setNombre(regwebUserInfo.getName());
 
-            if(regwebUserInfo.getSurname2() != null){
-                usuario.setApellido2(regwebUserInfo.getSurname2());
-            } else {
-                usuario.setApellido2("");
-            }
+                //Idioma por defecto
+                Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(Configuracio.getDefaultLanguage());
+                usuario.setIdioma(idioma);
 
-            usuario.setDocumento(regwebUserInfo.getAdministrationID());
-            usuario.setIdentificador(identificador);
-
-            // Email
-            if(regwebUserInfo.getEmail() != null){
-                usuario.setEmail(regwebUserInfo.getEmail());
-            }else{
-                usuario.setEmail("no hi ha email");
-            }
-
-            // Tipo Usuario
-            if(identificador.startsWith("$")){
-                usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_APLICACION);
-            }else{
-                usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_PERSONA);
-            }
-
-            // Roles
-            RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
-
-            if(rolesInfo != null && rolesInfo.getRoles().length > 0){
-                List<String> roles = new ArrayList<String>();
-                Collections.addAll(roles, rolesInfo.getRoles());
-
-                if(roles.size() > 0){
-                    usuario.setRoles(rolEjb.getByRol(roles));
+                if(regwebUserInfo.getSurname1() != null){
+                    usuario.setApellido1(regwebUserInfo.getSurname1());
+                }else{
+                    usuario.setApellido1("");
                 }
-            }else{
-                log.info("El usuario " + identificador + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
-            }
 
-            // Guardamos el nuevo Usuario
-            usuario = persist(usuario);
-            log.info("Usuario " + usuario.getNombreCompleto() + " creado correctamente");
-            return usuario;
-        }else{
-            log.info("Usuario " + identificador + " no encontrado en el sistema de usuarios");
-            return null;
+                if(regwebUserInfo.getSurname2() != null){
+                    usuario.setApellido2(regwebUserInfo.getSurname2());
+                } else {
+                    usuario.setApellido2("");
+                }
+
+                usuario.setDocumento(regwebUserInfo.getAdministrationID());
+                usuario.setIdentificador(identificador);
+
+                // Email
+                if(regwebUserInfo.getEmail() != null){
+                    usuario.setEmail(regwebUserInfo.getEmail());
+                }else{
+                    usuario.setEmail("no hi ha email");
+                }
+
+                // Tipo Usuario
+                if(identificador.startsWith("$")){
+                    usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_APLICACION);
+                }else{
+                    usuario.setTipoUsuario(RegwebConstantes.TIPO_USUARIO_PERSONA);
+                }
+
+                // Roles
+                RolesInfo rolesInfo = loginPlugin.getRolesByUsername(identificador);
+
+                if(rolesInfo != null && rolesInfo.getRoles().length > 0){
+                    List<String> roles = new ArrayList<String>();
+                    Collections.addAll(roles, rolesInfo.getRoles());
+
+                    if(roles.size() > 0){
+                        usuario.setRoles(rolEjb.getByRol(roles));
+                    }
+                }else{
+                    log.info("El usuario " + identificador + " no dispone de ningun Rol de REGWEB3 en el sistema de autentificacion");
+                }
+
+                // Guardamos el nuevo Usuario
+                usuario = persist(usuario);
+                log.info("Usuario " + usuario.getNombreCompleto() + " creado correctamente");
+                return usuario;
+            }else{
+                log.info("Usuario " + identificador + " no encontrado en el sistema de usuarios");
+                return null;
+            }
         }
 
+        return usuario;
     }
 
     @Override
