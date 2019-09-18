@@ -112,7 +112,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         if(usuarioEntidad == null){
 
-            log.info("Usuario no existe en la entidad, lo buscamos en el sistema de autentificación");
+            log.info("Usuario " +identificador+" no existe en la entidad, lo buscamos en el sistema de autentificación");
 
             // Creamos el Usuario en el sistema
             Usuario usuario = usuarioEjb.crearUsuario(identificador);
