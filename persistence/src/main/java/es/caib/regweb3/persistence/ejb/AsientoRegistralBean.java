@@ -15,7 +15,8 @@ import java.util.List;
 
 /**
  * Created by mgonzalez on 06/03/2019.
- * Clase que representa un asiento Registral
+ * Ejb con TransactionAttributeType.REQUIRES_NEW para permitir la creación
+ * de un Registro y generar el justificante conjuntamente.
  */
 @Stateless(name = "AsientoRegistralEJB")
 @SecurityDomain("seycon")
@@ -23,19 +24,34 @@ import java.util.List;
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 
    @EJB private RegistroSalidaLocal registroSalidaEjb;
+   @EJB private RegistroEntradaLocal registroEntradaEjb;
+   @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
    @EJB private AnexoLocal anexoEjb;
 
+   @Override
+   public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException{
+      return  usuarioEntidadEjb.comprobarUsuarioEntidad(identificador, idEntidad);
+   }
 
    @Override
-   //TODO se deberá refactorizar para trabajar con asiento registral.
    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
       throws Exception, I18NException, I18NValidationException {
 
       registroSalida = registroSalidaEjb.registrarSalida(registroSalida,usuarioEntidad,interesados,anexos);
       return registroSalida;
+   }
+
+   @Override
+   public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+                                         UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+           throws Exception, I18NException, I18NValidationException {
+
+      registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada,usuarioEntidad,interesados,anexos);
+
+      return registroEntrada;
    }
 
    @Override
