@@ -720,38 +720,18 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
+    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
 
-        Query q1;
-        Query q2;
-        log.info("antes" );
-        // Obtenemos el total de registros del ciudadano
-        q1 = em.createQuery("Select DISTINCT count(re.id )from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
-        q1.setParameter("idEntidad", idEntidad);
-        q1.setParameter("documento", documento.trim());
-        Long total = (Long) q1.getSingleResult();
-
-        // Obtenemos solo los paginados
-        q2 = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+        Query q;
+        q = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
                 "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad order by re.fecha desc");
 
-        q2.setParameter("idEntidad", idEntidad);
-        q2.setParameter("documento", documento.trim());
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("documento", documento.trim());
 
-        int inicio = pageNumber * RESULTADOS_PAGINACION;
-        //q2.setFirstResult(inicio);
-        //q2.setMaxResults(RESULTADOS_PAGINACION);
+        List<RegistroEntrada> registros = q.getResultList();
 
-
-        List<RegistroEntrada> registros = q2.getResultList();
-        log.info("Resultados: " + registros.size());
-        Paginacion paginacion = new Paginacion(registros.size(), pageNumber);
-
-
-        paginacion.setListado(registros);
-
-        return paginacion;
+        return registros;
     }
 
     @Override
