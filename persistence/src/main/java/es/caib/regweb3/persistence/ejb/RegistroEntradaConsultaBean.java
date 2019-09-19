@@ -1,7 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -721,7 +724,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Query q1;
         Query q2;
-
+        log.info("antes" );
         // Obtenemos el total de registros del ciudadano
         q1 = em.createQuery("Select DISTINCT count(re.id )from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
                 "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad");
@@ -730,7 +733,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Long total = (Long) q1.getSingleResult();
 
         // Obtenemos solo los paginados
-        q2 = em.createQuery("Select re.fecha, re.numeroRegistroFormateado, re.oficina, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+        q2 = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
                 "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad order by re.fecha desc");
 
         q2.setParameter("idEntidad", idEntidad);
@@ -741,29 +744,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         //q2.setMaxResults(RESULTADOS_PAGINACION);
 
 
+        List<RegistroEntrada> registros = q2.getResultList();
+        log.info("Resultados: " + registros.size());
+        Paginacion paginacion = new Paginacion(registros.size(), pageNumber);
 
-        List<Object[]> result = q2.getResultList();
-
-        log.info("Resultados: " + result.size());
-
-        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
-        Paginacion paginacion = new Paginacion(result.size(), pageNumber);
-
-        for (Object[] object : result) {
-
-            RegistroEntrada registroEntrada = new RegistroEntrada();
-            registroEntrada.setFecha((Date) object[0]);
-            registroEntrada.setNumeroRegistroFormateado((String) object[1]);
-            registroEntrada.setOficina((Oficina) object[2]);
-            if(object[3] != null){
-                registroEntrada.setDestino((Organismo) object[3]);
-            }else{
-                registroEntrada.setDestinoExternoCodigo((String) object[4]);
-                registroEntrada.setDestinoExternoDenominacion((String) object[5]);
-            }
-
-            registros.add(registroEntrada);
-        }
 
         paginacion.setListado(registros);
 
