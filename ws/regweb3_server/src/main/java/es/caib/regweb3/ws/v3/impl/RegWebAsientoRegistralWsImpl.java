@@ -7,7 +7,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
-import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
@@ -786,13 +785,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             // Obtenemos los Registros de Entrada de un ciudadano
-            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
-            resultado.setTotalResults(entradas.getTotalResults());
+            List<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
+            resultado.setTotalResults(entradas.size());
             resultado.setPageNumber(pageNumber);
 
             // Transformamos los Registros de Entrada en AsientoRegistralWs
             List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
-            for (RegistroEntrada entrada : (List<RegistroEntrada>)entradas.getListado()) {
+            for (RegistroEntrada entrada : (List<RegistroEntrada>)entradas) {
 
                 asientos.add(AsientoRegistralConverter.getAsientoRegistralBean(entrada,
                         UsuarioAplicacionCache.get().getIdioma(),oficioRemisionEjb, trazabilidadSirEjb));
