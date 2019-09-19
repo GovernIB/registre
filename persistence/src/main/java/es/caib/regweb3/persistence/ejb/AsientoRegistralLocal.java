@@ -1,9 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Interesado;
-import es.caib.regweb3.model.RegistroSalida;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -24,7 +21,17 @@ import java.util.List;
 public interface AsientoRegistralLocal {
 
     /**
-     * Método que crea un registro de Salida a partir de un Asiento Registral.
+     * Cra un neuvo UsuarioEntidad haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+     * @param identificador
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException;
+
+    /**
+     * Registra una salida haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
      * @param registroSalida
      * @param usuarioEntidad
      * @param interesados
@@ -37,6 +44,21 @@ public interface AsientoRegistralLocal {
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
        throws Exception, I18NException, I18NValidationException;
+
+    /**
+     * Registra una entrada haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+     * @param registroEntrada
+     * @param usuarioEntidad
+     * @param interesados
+     * @param anexos
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     * @throws I18NValidationException
+     */
+    RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+            throws Exception, I18NException, I18NValidationException;
 
     /**
      * Obtiene la referencia del justificante de un Registro

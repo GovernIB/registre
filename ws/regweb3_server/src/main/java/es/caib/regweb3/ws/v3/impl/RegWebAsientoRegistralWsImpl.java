@@ -165,7 +165,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         // 5.- Comprobar que el Usuario Entidad persona existe en el sistema, si no existe, se intenta crear
-        UsuarioEntidad usuario = usuarioEntidadEjb.comprobarUsuarioEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
+        UsuarioEntidad usuario = asientoRegistralEjb.comprobarUsuarioEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
 
         if (usuario == null) {//No existe
             throw new I18NException("registro.usuario.noExiste", asientoRegistral.getCodigoUsuario(), entidadActiva.getNombre());
@@ -241,7 +241,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // 13.- Creamos el Registro de Entrada
             try{
-                registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
+                registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
                 numRegFormat = registroEntrada.getNumeroRegistroFormateado();
                 asientoRegistral.setNumeroRegistro(registroEntrada.getNumeroRegistro());
                 asientoRegistral.setNumeroRegistroFormateado(numRegFormat);
