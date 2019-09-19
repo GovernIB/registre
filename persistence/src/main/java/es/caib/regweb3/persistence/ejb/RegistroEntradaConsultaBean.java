@@ -740,13 +740,13 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         //q2.setFirstResult(inicio);
         //q2.setMaxResults(RESULTADOS_PAGINACION);
 
-        Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
+
 
         List<Object[]> result = q2.getResultList();
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+        Paginacion paginacion = new Paginacion(result.size(), pageNumber);
 
-        if(result.size() == 1){
-            Object[] object = result.get(0);
+        for (Object[] object : result) {
 
             RegistroEntrada registroEntrada = new RegistroEntrada();
             registroEntrada.setFecha((Date) object[0]);
