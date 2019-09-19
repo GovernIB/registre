@@ -743,6 +743,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
 
         List<Object[]> result = q2.getResultList();
+
+        log.info("Resultados: " + result.size());
+
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
         Paginacion paginacion = new Paginacion(result.size(), pageNumber);
 
