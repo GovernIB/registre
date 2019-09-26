@@ -15,10 +15,11 @@
             <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
             <li class="divider"></li>
             <li class="dropdown-submenu-left toggle-left">
-                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="organismo.organismos"/></a>
+                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="organismo.organigrama"/></a>
                 <ul class="dropdown-menu">
                     <li><a href="<c:url value="/organismo/list"/>"><i class="fa fa-search"></i> <spring:message code="organismo.listado"/></a></li>
-                    <li><a href="<c:url value="/organismo/arbolList"/>"><i class="fa fa-sitemap"></i> <spring:message code="organismo.organigrama"/></a></li>
+                    <li><a href="<c:url value="/oficina/list"/>"><i class="fa fa-search"></i> <spring:message code="oficina.listado"/></a></li>
+                    <li><a href="<c:url value="/organismo/arbolList"/>"><i class="fa fa-sitemap"></i> <spring:message code="regweb.organigrama"/></a></li>
                     <li class="divider"></li>
                     <li><a href="<c:url value="/libro/list"/>"><i class="fa fa-list-ol"></i> <spring:message code="libro.listado"/></a></li>
                     <li><a href="<c:url value="/entidad/librosCambiar"/>"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a></li>
