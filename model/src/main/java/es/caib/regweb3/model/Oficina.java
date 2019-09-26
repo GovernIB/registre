@@ -72,6 +72,8 @@ public class Oficina implements Serializable{
     private Boolean isSirEnvio = false;
     @Transient
     private Boolean isSir = false;
+    @Transient
+    private Boolean isOficinaSir = false;
 
     public Oficina() {
       super();
@@ -369,6 +371,19 @@ public class Oficina implements Serializable{
 
     public void setSirEnvio(Boolean sirEnvio) {
         isSirEnvio = sirEnvio;
+    }
+
+    @Transient
+    public Boolean getOficinaSir() {
+
+        for (CatServicio servicio : servicios) {
+            if(servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO) ||
+                    servicio.getCodServicio().equals(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
