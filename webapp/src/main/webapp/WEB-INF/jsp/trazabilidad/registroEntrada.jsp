@@ -5,7 +5,13 @@
 <div class="timeline-panel <c:if test="${param.activo == true}">timeline-panel-activo-re</c:if>">
     <div class="timeline-heading">
         <h4 class="timeline-title">
-            <a href="<c:url value="/registroEntrada/${registroEntrada.id}/detalle"/>">${titulo}</a>
+            <c:if test="${param.adminEntidad == false}">
+                <c:url value="/registroEntrada/${registroEntrada.id}/detalle" var="urlRegistroEntrada"/>
+            </c:if>
+            <c:if test="${param.adminEntidad == true}">
+                <c:url value="/adminEntidad/registroEntrada/${registroEntrada.id}/detalle" var="urlRegistroEntrada"/>
+            </c:if>
+            <a href="${urlRegistroEntrada}">${titulo}</a>
         </h4>
         <p>
             <small class="text-muted"><i class="fa fa-clock-o"></i> <strong><spring:message code="registroEntrada.fechaRegistro"/>:</strong> <fmt:formatDate value="${registroEntrada.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></small><br>
