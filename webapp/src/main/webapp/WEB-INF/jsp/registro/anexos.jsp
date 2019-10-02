@@ -233,7 +233,7 @@
 
                                 <td class="center">
                                     <c:if test="${!anexoFull.anexo.justificante}">
-                                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && oficinaRegistral && puedeEditar}">
+                                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
                                             <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalAnexos"
                                                onclick="editarAnexoFull('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}')"
                                                title="Editar"><span class="fa fa-pencil"></span></a>
@@ -241,7 +241,7 @@
                                                onclick="eliminarAnexo('${anexoFull.anexo.id}','${registro.id}','${registro.registroDetalle.id}','${param.tipoRegistro}', '<spring:message code="anexo.confirmar.eliminar" javaScriptEscape='true'/>')" href="#"
                                                title="Eliminar"><span class="fa fa-eraser"></span></a>
                                         </c:if>
-                                        <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !oficinaRegistral || !puedeEditar}">
+                                        <c:if test="${(registro.estado != RegwebConstantes.REGISTRO_VALIDO && registro.estado != RegwebConstantes.REGISTRO_RESERVA && registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR) || !puedeEditar}">
                                             <a class="btn btn-warning disabled btn-sm" href="javascript:void(0);"
                                                title="Editar"><span class="fa fa-pencil"></span></a>
                                             <a class="btn btn-danger disabled btn-sm" href="javascript:void(0);"
