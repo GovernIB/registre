@@ -201,7 +201,7 @@ function rellenarFormulario(idPlantilla,tipoRegistro){
 
             //$('#registroDetalle\\.tipoAsunto\\.id').val(plantilla.idTipoAsunto);
             //$('#registroDetalle\\.tipoAsunto\\.id').trigger("chosen:updated");
-            actualizarCodigosAsunto();
+            // actualizarCodigosAsunto();
             $('#registroDetalle\\.idioma').val(plantilla.idIdioma);
             $('#registroDetalle\\.idioma').trigger("chosen:updated");
             $('#registroDetalle\\.codigoAsunto\\.id').val(plantilla.idCodigoAsunto);
@@ -245,7 +245,7 @@ function rellenarFormulario(idPlantilla,tipoRegistro){
             // Destino u Origen
             if(tipoRegistro == 1){ // RegistroEntrada
                 if(plantilla.destinoCodigo == null){
-                    mensajeError("#mensajes","La unitat destino seleccionada ja no està vigent, i s'ha eliminat de la seva Plantilla.");
+                    mensajeError("#mensajes","La plantilla no té unitat destí seleccionada.");
                 }else{
 
                     var destino= '';

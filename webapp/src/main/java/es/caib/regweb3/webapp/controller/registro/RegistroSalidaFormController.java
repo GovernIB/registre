@@ -566,10 +566,20 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         }
 
         // Comprobamos la unidad origen
-        if(!(plantillaJson.getDestinoCodigo()!= null && plantillaJson.isDestinoExterno())){ // Comprobamos en REGWEB3 si está vigente
-            Organismo organismoDestino = organismoEjb.findByCodigoEntidad(plantillaJson.getDestinoCodigo(), entidadActiva.getId());
-            if(organismoDestino != null){ // Ya no es vigente
-                registroSalida.setOrigen(organismoDestino);
+        if(plantillaJson.getOrigenCodigo()!= null && !plantillaJson.isOrigenExterno()){ // Comprobamos en REGWEB3 si está vigente
+            Organismo organismoOrigen = organismoEjb.findByCodigoEntidadSinEstado(plantillaJson.getOrigenCodigo(), entidadActiva.getId());
+            if(organismoOrigen.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){ // Es vigente
+                registroSalida.setOrigen(organismoOrigen);
+            }else{ // Ya no es vigente
+                Set<Organismo> organismoHistoricosFinales = new HashSet<Organismo>();
+                organismoEjb.obtenerHistoricosFinales(organismoOrigen.getId(), organismoHistoricosFinales);
+                Organismo organismoVigente = organismoHistoricosFinales.iterator().next();
+                registroSalida.setOrigen(organismoVigente);
+                //Guarda el nuevo organismo en la plantilla
+                plantillaJson.setOrigenCodigo(organismoVigente.getCodigo());
+                plantillaJson.setOrigenDenominacion(organismoVigente.getDenominacion());
+                plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                plantillaEjb.merge(plantilla);
             }
         }
 
