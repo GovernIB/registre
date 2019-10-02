@@ -226,11 +226,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("anularForm", new AnularForm());
 
         // Permisos
-        Boolean oficinaRegistral = registro.getOficina().getId().equals(oficinaActiva.getId()) || (registro.getOficina().getOficinaResponsable() != null && registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()));
         Boolean tieneJustificante = registro.getRegistroDetalle().getTieneJustificante();
         Boolean puedeEditar = permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true);
 
-        model.addAttribute("oficinaRegistral", oficinaRegistral);
         model.addAttribute("isAdministradorLibro", permisoLibroUsuarioEjb.isAdministradorLibro(getUsuarioEntidadActivo(request).getId(), registro.getLibro().getId()));
         model.addAttribute("puedeEditar", puedeEditar);
         model.addAttribute("puedeDistribuir", permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true));
@@ -268,7 +266,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
 
             // Anexos
-            Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))&& oficinaRegistral && puedeEditar && !tieneJustificante;
+            Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR))&& puedeEditar && !tieneJustificante;
             if(anexosCompleto) { // Si se muestran los anexos completo
 
                 List<AnexoFull> anexos = anexoEjb.getByRegistroEntrada(registro); //Inicializamos los anexos del registro de entrada.
@@ -285,7 +283,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             model.addAttribute("anexosCompleto" , anexosCompleto);
 
             // Interesados
-            if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && oficinaRegistral && !tieneJustificante){
+            if(registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && puedeEditar && !tieneJustificante){
 
                 initDatosInteresados(model, organismosOficinaActiva);
             }
