@@ -22,7 +22,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -339,14 +341,17 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                     }
 
                 }else{ // Comprobamos en REGWEB3 si está vigente
-                    Organismo organismoDestino = organismoEjb.findByCodigoEntidad(plantillaJson.getDestinoCodigo(), entidad.getId());
-
-                    if(organismoDestino == null){ // Ya no es vigente
-                        plantillaJson.setDestinoExterno(null);
-                        plantillaJson.setDestinoCodigo(null);
-                        plantillaJson.setDestinoDenominacion(null);
-                        plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
-                        merge(plantilla);
+                    Organismo organismoDestino = organismoEjb.findByCodigoEntidadSinEstado(plantillaJson.getDestinoCodigo(), entidad.getId());
+                    if(organismoDestino != null) {
+                        if (!organismoDestino.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { // Ya no es vigente
+                            Set<Organismo> organismoHistoricosFinales = new HashSet<Organismo>();
+                            organismoEjb.obtenerHistoricosFinales(organismoDestino.getId(), organismoHistoricosFinales);
+                            Organismo organismoVigente = organismoHistoricosFinales.iterator().next();
+                            plantillaJson.setDestinoCodigo(organismoVigente.getCodigo());
+                            plantillaJson.setDestinoDenominacion(organismoVigente.getDenominacion());
+                            plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                            merge(plantilla);
+                        }
                     }
                 }
                 break;
@@ -367,13 +372,17 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                     }
 
                 }else{ // Comprobamos en REGWEB3 si está vigente
-                    Organismo organismoOrigen = organismoEjb.findByCodigoEntidad(plantillaJson.getOrigenCodigo(), entidad.getId());
-                    if(organismoOrigen == null){ // Ya no es vigente
-                        plantillaJson.setOrigenExterno(null);
-                        plantillaJson.setOrigenCodigo(null);
-                        plantillaJson.setOrigenDenominacion(null);
-                        plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
-                        merge(plantilla);
+                    Organismo organismoOrigen = organismoEjb.findByCodigoEntidadSinEstado(plantillaJson.getOrigenCodigo(), entidad.getId());
+                    if(organismoOrigen != null) {
+                        if (!organismoOrigen.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) { // Ya no es vigente
+                            Set<Organismo> organismoHistoricosFinales = new HashSet<Organismo>();
+                            organismoEjb.obtenerHistoricosFinales(organismoOrigen.getId(), organismoHistoricosFinales);
+                            Organismo organismoVigente = organismoHistoricosFinales.iterator().next();
+                            plantillaJson.setOrigenCodigo(organismoVigente.getCodigo());
+                            plantillaJson.setOrigenDenominacion(organismoVigente.getDenominacion());
+                            plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                            merge(plantilla);
+                        }
                     }
                 }
 

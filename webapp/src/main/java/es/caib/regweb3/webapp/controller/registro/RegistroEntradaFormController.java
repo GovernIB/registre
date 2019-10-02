@@ -655,11 +655,21 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                     organismosOficinaActiva.add(organismoExterno); // Añadimos la unidad al listado
                 }
             }
-            // Interna
+         // Interna
         }else{ // Comprobamos en REGWEB3 si está vigente
-            Organismo organismoDestino = organismoEjb.findByCodigoEntidad(plantillaJson.getDestinoCodigo(), entidadActiva.getId());
-            if(organismoDestino != null){ // Ya no es vigente
+            Organismo organismoDestino = organismoEjb.findByCodigoEntidadSinEstado(plantillaJson.getDestinoCodigo(), entidadActiva.getId());
+            if(organismoDestino.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){ // Es vigente
                 registroEntrada.setDestino(organismoDestino);
+            }else{ // Ya no es vigente
+                Set<Organismo> organismoHistoricosFinales = new HashSet<Organismo>();
+                organismoEjb.obtenerHistoricosFinales(organismoDestino.getId(), organismoHistoricosFinales);
+                Organismo organismoVigente = organismoHistoricosFinales.iterator().next();
+                registroEntrada.setDestino(organismoVigente);
+                //Guarda el nuevo organismo en la plantilla
+                plantillaJson.setDestinoCodigo(organismoVigente.getCodigo());
+                plantillaJson.setDestinoDenominacion(organismoVigente.getDenominacion());
+                plantilla.setRepro(RegistroUtils.serilizarXml(plantillaJson));
+                plantillaEjb.merge(plantilla);
             }
         }
 
