@@ -58,56 +58,52 @@
 
                     <%--BOTONERA--%>
 
-                    <%--Si no nos encontramos en la misma Oficia en la que se creó el Registro o en su Oficina Responsable, no podemos hacer nada con el--%>
-                    <c:if test="${oficinaRegistral}">
+                    <%--Botones Justificante y Sello--%>
+                    <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
+                        <div class="panel-footer center">
 
-                        <%--Botones Justificante y Sello--%>
-                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_PENDIENTE_VISAR && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
-                            <div class="panel-footer center">
+                            <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>
+                            <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <spring:message code="justificante.boton"/> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroSalida/${idRegistro}/justificante/ca"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.catalan"/></a></li>
+                                        <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroSalida/${idRegistro}/justificante/es"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.castellano"/></a></li>
+                                    </ul>
+                                </div>
+                            </c:if>
 
-                                <%--Si no se ha generado el justificante y el registro es VÁLIDO, muestra el boton para generarlo --%>
-                                <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                            <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
+                            <c:if test="${tieneJustificante}">
+                                <%-- Si no tiene urlValidación solo podrá descargar el original --%>
+                                <c:if test="${!tieneUrlValidacion}">
+                                    <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                </c:if>
+
+                                <%-- Si tiene urlValidación se podrá descargar el original o con el csv incrustado --%>
+                                <c:if test="${tieneUrlValidacion}">
                                     <div class="btn-group">
-                                        <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <spring:message code="justificante.boton"/> <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroSalida/${idRegistro}/justificante/ca"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.catalan"/></a></li>
-                                            <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/registroSalida/${idRegistro}/justificante/es"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.castellano"/></a></li>
+                                            <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.original"/></a></li>
+                                            <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/false"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.concsv"/></a></li>
                                         </ul>
                                     </div>
                                 </c:if>
+                            </c:if>
 
-                                <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
-                                <c:if test="${tieneJustificante}">
-                                    <%-- Si no tiene urlValidación solo podrá descargar el original --%>
-                                    <c:if test="${!tieneUrlValidacion}">
-                                        <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
-                                    </c:if>
+                            <%-- Botón de sello --%>
+                            <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
 
-                                    <%-- Si tiene urlValidación se podrá descargar el original o con el csv incrustado --%>
-                                    <c:if test="${tieneUrlValidacion}">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                <spring:message code="justificante.boton"/> <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu">
-                                                <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.original"/></a></li>
-                                                <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/false"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.concsv"/></a></li>
-                                            </ul>
-                                        </div>
-                                    </c:if>
-                                </c:if>
-
-
-                                <%-- Botón de sello --%>
-                                <div class="btn-group"><button type="button" data-toggle="modal" data-target="#selloModal" class="btn btn-warning btn-sm"><spring:message code="sello.imprimir"/></button></div>
-
-                            </div>
-                        </c:if>
+                        </div>
+                    </c:if>
 
                     <%--Botón Oficio Remision--%>
-                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+                    <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
 
                         <c:if test="${registro.evento != RegwebConstantes.EVENTO_DISTRIBUIR}">
                             <div class="panel-footer center">
@@ -168,7 +164,6 @@
 
                                     </c:if>
 
-
                                     <c:if test="${not empty erroresAnexosSir}">
                                         <button type="button" class="btn btn-success btn-sm btn-block disabled">
                                             <spring:message code="registroEntrada.enviar.sir"/>
@@ -184,53 +179,46 @@
                                     </button>
                                 </c:if>
 
-
                             </div>
                         </c:if>
                     </c:if>
 
-                    </c:if>
 
                     <div class="panel-footer center">
 
                         <%--Botón Nueva Salida--%>
                         <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSalida/new"/>')" class="btn btn-danger btn-sm"><spring:message code="registro.boton.nuevo"/></button></div>
 
-                        <%--Si estamos en la Oficina donde se hizo el registro, podemos operar con el--%>
-                        <c:if test="${oficinaRegistral}">
+                        <%--Botón Editar Registro--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
+                            <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/edit"/>')" class="btn btn-warning btn-sm"><spring:message code="registro.boton.editar"/></button></div>
+                        </c:if>
 
-                            <%--Botón Editar Registro--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
-                                <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSalida/${registro.id}/edit"/>')" class="btn btn-warning btn-sm"><spring:message code="registro.boton.editar"/></button></div>
-                            </c:if>
+                        <%--Botón Activar--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm"><spring:message code="regweb.activar"/></button></div>
+                        </c:if>
 
-                            <%--Botón Activar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO && puedeEditar}">
-                                <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/activar"/>","<spring:message code="regweb.confirmar.activar" htmlEscape="true"/>")' class="btn btn-primary btn-sm"><spring:message code="regweb.activar"/></button></div>
-                            </c:if>
+                        <%--Botón Visar--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="regweb.visar"/></button></div>
+                        </c:if>
 
-                            <%--Botón Visar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">
-                                <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="regweb.visar"/></button></div>
-                            </c:if>
+                        <%--Botón Anular--%>
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
+                            <div class="btn-group">
+                                <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></a>
+                            </div>
+                        </c:if>
 
-                            <%--Botón Anular--%>
-                            <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
-                                <div class="btn-group">
-                                    <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><spring:message code="regweb.anular"/></a>
-                                </div>
-                            </c:if>
+                        <%--Botón reenviar--%>
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO) && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroSalida/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
+                        </c:if>
 
-                            <%--Botón reenviar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_RECHAZADO || registro.estado == RegwebConstantes.REGISTRO_REENVIADO}">
-                                <div class="btn-group"><button type="button" onclick='javascript:goTo("<c:url value="/registroSalida/${registro.id}/reenviar"/>")' class="btn btn-success btn-sm"><spring:message code="registro.boton.reenviar"/></button></div>
-                            </c:if>
-
-                            <%--Botón rectificar--%>
-                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO}">
-                                <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/rectificar"/>","<spring:message code="regweb.confirmar.rectificar" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="registro.boton.rectificar"/></button></div>
-                            </c:if>
-
+                        <%--Botón rectificar--%>
+                        <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_ANULADO || registro.estado == RegwebConstantes.REGISTRO_RECHAZADO) && puedeEditar}">
+                            <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/rectificar"/>","<spring:message code="regweb.confirmar.rectificar" htmlEscape="true"/>")' class="btn btn-danger btn-sm"><spring:message code="registro.boton.rectificar"/></button></div>
                         </c:if>
 
                     </div>
@@ -276,8 +264,8 @@
                             </c:if>
                         </c:if>
 
-                            <%--INTERESADOS--%>
-                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && oficinaRegistral && puedeEditar && !tieneJustificante}">
+                        <%--INTERESADOS--%>
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
                             <c:import url="../registro/interesados.jsp">
                                 <c:param name="tipoRegistro" value="salida"/>
                                 <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
@@ -285,14 +273,14 @@
                             </c:import>
                         </c:if>
 
-                            <%--INTERESADOS SOLO LECTURA--%>
-                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_VALIDO || !oficinaRegistral || !puedeEditar || tieneJustificante}">
+                        <%--INTERESADOS SOLO LECTURA--%>
+                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_VALIDO || !puedeEditar || tieneJustificante}">
                             <c:import url="../registro/interesadosLectura.jsp">
                                 <c:param name="tipoRegistro" value="salida"/>
                             </c:import>
                         </c:if>
 
-                            <%--EXPONE - SOLICITA--%>
+                        <%--EXPONE - SOLICITA--%>
                         <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
                             <c:import url="../registro/exponeSolicita.jsp">
                                 <c:param name="tipoRegistro" value="salida"/>
@@ -301,7 +289,7 @@
 
                     </div>
 
-                        <%--TRAZABILIDAD--%>
+                    <%--TRAZABILIDAD--%>
                     <c:if test="${not empty trazabilidades}">
 
                         <div class="tab-pane" id="trazabilidad">
@@ -310,6 +298,7 @@
 
                         </div>
                     </c:if>
+
                     <!-- MODIFICACIONES REGISTRO -->
                     <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                         <div class="tab-pane" id="modificaciones">
