@@ -47,6 +47,7 @@
                         <fmt:message key="registroEntrada.aceptado" var="titulo" scope="request"/>
                         <c:import url="../trazabilidad/registroEntrada.jsp">
                             <c:param name="activo" value="true"/>
+                            <c:param name="adminEntidad" value="false"/>
                         </c:import>
                     </li>
                 </c:if>
@@ -87,6 +88,7 @@
                                 <fmt:message key="registroEntrada.origen" var="titulo" scope="request"/>
                                 <c:import url="../trazabilidad/registroEntrada.jsp">
                                     <c:param name="activo" value="false"/>
+                                    <c:param name="adminEntidad" value="false"/>
                                 </c:import>
                             </li>
                         </c:if>
@@ -104,6 +106,7 @@
                             <fmt:message key="registroEntrada.aceptado" var="titulo" scope="request"/>
                             <c:import url="../trazabilidad/registroEntrada.jsp">
                                 <c:param name="activo" value="true"/>
+                                <c:param name="adminEntidad" value="false"/>
                             </c:import>
 
                         </li>
@@ -135,6 +138,7 @@
                         <fmt:message key="registroEntrada.aceptado" var="titulo" scope="request"/>
                         <c:import url="../trazabilidad/registroEntrada.jsp">
                             <c:param name="activo" value="true"/>
+                            <c:param name="adminEntidad" value="false"/>
                         </c:import>
                     </li>
 
@@ -153,6 +157,7 @@
                         <fmt:message key="registroEntrada.rectificado" var="titulo" scope="request"/>
                         <c:import url="../trazabilidad/registroEntrada.jsp">
                             <c:param name="activo" value="false"/>
+                            <c:param name="adminEntidad" value="false"/>
                         </c:import>
                     </li>
 
@@ -162,6 +167,7 @@
                         <fmt:message key="registroEntrada.aceptado" var="titulo" scope="request"/>
                         <c:import url="../trazabilidad/registroEntrada.jsp">
                             <c:param name="activo" value="true"/>
+                            <c:param name="adminEntidad" value="false"/>
                         </c:import>
                     </li>
 
