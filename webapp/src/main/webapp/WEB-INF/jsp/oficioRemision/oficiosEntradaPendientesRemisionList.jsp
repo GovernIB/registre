@@ -345,7 +345,7 @@
                                                         <input type="hidden" id="organismoExternoCodigo" name="organismoExternoCodigo" value="${(oficiosRemisionOrganismo.sustitutos[0]).codigo}"/>
                                                     </c:if>
 
-                                                    <!--Organismo externo extinguido, con sustitutos-->
+                                                    <!--Organismo externo extinguido, con sustitutos sir-->
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false && fn:length(oficiosRemisionOrganismo.sustitutos) > 1}">
                                                         <div class="col-xs-12">
 
@@ -353,14 +353,24 @@
                                                                 <label for="organismoExternoCodigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino.sustituto"/></label>
                                                             </div>
                                                             <div class="col-xs-9">
-                                                                <form:select path="organismoExternoCodigo" items="${oficiosRemisionOrganismo.sustitutos}"
-                                                                             itemValue="codigo" itemLabel="denominacion"
-                                                                             cssClass="chosen-select"
-                                                                             onchange="actualizarOficinasSIROficios()"/>
+                                                                <!-- Organismo externo sir, cargaremos sus oficinas SIR-->
+                                                                <c:if test="${oficiosRemisionOrganismo.sir}">
+                                                                    <form:select path="organismoExternoCodigo" items="${oficiosRemisionOrganismo.sustitutos}"
+                                                                                     itemValue="codigo" itemLabel="denominacion"
+                                                                                     cssClass="chosen-select"
+                                                                                     onchange="actualizarOficinasSIROficios()"/>
+                                                                </c:if>
+                                                                <!-- Organismo externo no sir-->
+                                                                <c:if test="${!oficiosRemisionOrganismo.sir}">
+                                                                    <form:select path="organismoExternoCodigo" items="${oficiosRemisionOrganismo.sustitutos}"
+                                                                                 itemValue="codigo" itemLabel="denominacion"
+                                                                                 cssClass="chosen-select"/>
+                                                                </c:if>
                                                             </div>
-
                                                         </div>
                                                     </c:if>
+
+
 
 
                                                     <!-- Oficina Sir destinataria -->
