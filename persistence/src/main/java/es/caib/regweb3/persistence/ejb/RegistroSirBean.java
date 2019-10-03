@@ -1990,21 +1990,35 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                 // Si el IdentificadorDocumentoFirmado es igual al IdentificadorFichero, es una Firma Attached
                 if(anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
-                    log.info("Documento con firma attached: " + anexoSir.getIdentificadorFichero());
-                    //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
-                    anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-                    sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
-                    anexoFull.setDocumentoCustody(null);
-                    anexoFull.setSignatureCustody(sc);
-                    anexoFull.setAnexo(anexo);
+                    /** PARCHE ESPU*/
+                    if(RegwebConstantes.APLICACION_SIR_ESPU.equals(aplicacion)){
+                        log.info("Documento con firma attached aplicación ESPU: " + anexoSir.getIdentificadorFichero());
+                        //En este caso se guarda como un no firmado
+                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
+                        dc = getDocumentCustody(anexoSir);
+                        anexoFull.setAnexo(anexo);
+                        anexoFull.setDocumentoCustody(dc);
+                    }else{
+                        log.info("Documento con firma attached: " + anexoSir.getIdentificadorFichero());
+                        //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
+                        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+                        sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
+                        anexoFull.setDocumentoCustody(null);
+                        anexoFull.setSignatureCustody(sc);
+                        anexoFull.setAnexo(anexo);
+                    }
+
                 }
 
             } else { // El anexo no es firma de nadie
                 log.info("Documento sin firma: " + anexoSir.getIdentificadorFichero());
                 anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
 
+                /** PARCHE GREG PROBLEMA: El campo  firma que se informa es más grande que 255 y al intentar hacer el insert peta por superar longitud
+                 * De momento cortamos el campo, pero se debe informar a MADRID de este caso concreto */
                 if (anexoSir.getFirma() != null) { // Anexo con Firma CSV
-                    anexo.setCsv(anexoSir.getFirma());
+                    anexo.setCsv(anexoSir.getFirma().substring(0,254));
+
                     //TODO Metadada a custodia pel csv.
                 }
                 dc = getDocumentCustody(anexoSir);
