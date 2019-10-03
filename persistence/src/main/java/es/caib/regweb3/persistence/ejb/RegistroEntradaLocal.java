@@ -45,15 +45,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     RegistroEntrada actualizar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
-     * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
-     * @param idRegistro
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception;
-
-    /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision interno o no
      *
      * @param idRegistro
@@ -77,6 +68,14 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @throws Exception
      */
     Integer actualizarEventoDistribuir(Oficina oficina) throws Exception;
+
+    /**
+     *
+     * @param oficina
+     * @return
+     * @throws Exception
+     */
+    Integer actualizarEventoOficioExterno(Oficina oficina) throws Exception;
 
     /**
      * Comprueba si un RegistroEntrada se considera un OficioRemision externo o no

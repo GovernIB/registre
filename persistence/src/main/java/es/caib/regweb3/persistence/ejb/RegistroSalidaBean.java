@@ -151,7 +151,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Obtenemos el próximo evento del Registro
         Long evento = proximoEventoSalida(registroSalida,usuarioEntidad.getEntidad());
-        log.info("Evento actualizado: " + evento);
+
         registroSalida.setEvento(evento);
 
         // Creamos el Historico RegistroEntrada
@@ -159,38 +159,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         postProcesoActualizarRegistro(registroSalida,usuarioEntidad.getEntidad().getId());
 
         return registroSalida;
-    }
-
-
-    @Override
-    public Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception{
-
-        Oficio oficio = new Oficio();
-
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida(); // Fecha a partir de la cual se generarán oficios de salida
-
-        if((StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))) && registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
-
-            if(isOficioRemisionExterno(registroSalida, organismos)){ // Externo
-                oficio.setOficioRemision(true);
-
-                List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismos);
-
-                if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
-                    oficio.setSir(true);
-                }else{
-                    oficio.setExterno(true);
-                }
-
-            }else{
-                Boolean interno = isOficioRemisionInterno(registroSalida, organismos);
-
-                oficio.setOficioRemision(interno);
-                oficio.setInterno(interno);
-            }
-        }
-
-        return oficio;
     }
 
 
