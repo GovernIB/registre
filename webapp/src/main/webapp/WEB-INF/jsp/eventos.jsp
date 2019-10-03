@@ -23,12 +23,12 @@
                             <c:import url="modulos/migadepan.jsp"/>
                         </ol>
 
+                        <c:import url="modulos/mensajes.jsp"/>
+
                     </div>
                 </div>
 
                 <div class="row">
-
-                    <c:import url="modulos/mensajes.jsp"/>
 
                     <!-- Panel Lateral -->
                     <div class="col-xs-5">
@@ -44,14 +44,17 @@
                                     <dt>Registros de entrada totales:</dt> <dd> ${totalEntradas}</dd>
                                     <dt>Registros de salida totales:</dt> <dd> ${totalSalidas}</dd>
                                     <hr class="divider-warning">
-                                    <dt class="text-danger">Registros de entradas sin evento:</dt> <dd> ${entradasPendientes}</dd>
-                                    <dt class="text-danger">Registros de salidas sin evento:</dt> <dd> ${salidasPendientes}</dd>
+                                    <dt class="text-danger">Registros de entradas sin evento asignado:</dt> <dd> ${entradasPendientes}</dd>
+                                    <dt class="text-danger">Registros de salidas sin evento asignado:</dt> <dd> ${salidasPendientes}</dd>
                                     <hr class="divider-warning">
-                                    <dt class="text-success">Entradas con evento asignado:</dt> <dd> ${entradasEvento}</dd>
-                                    <dt class="text-success">Salidas con evento asignado:</dt> <dd> ${salidasEvento}</dd>
+                                    <dt class="text-success">Registros de entradas con evento asignado:</dt> <dd> ${entradasEventoAsignado}</dd>
+                                    <dt class="text-success">Registros de salidas con evento asignado:</dt> <dd> ${salidasEventoAsignado}</dd>
                                     <hr class="divider-warning">
-                                    <dt>Entradas con evento 'Procesado':</dt> <dd> ${entradasProcesadas}</dd>
-                                    <dt>Salidas con evento 'Procesado':</dt> <dd> ${salidasProcesadas}</dd>
+                                    <dt class="text-warning">Registros de entrada sin evento:</dt> <dd> ${entradasSinEvento}</dd>
+                                    <dt class="text-warning">Registros de salida sin evento:</dt> <dd> ${salidasSinEvento}</dd>
+                                    <%--<hr class="divider-warning">
+                                    <dt>Entradas con evento 'Procesado':</dt> <dd> ${entradasEventoProcesado}</dd>
+                                    <dt>Salidas con evento 'Procesado':</dt> <dd> ${salidasEventoProcesado}</dd>--%>
                                 </dl>
 
                             </div>
@@ -82,48 +85,37 @@
 
                                     <tbody>
                                         <tr>
-                                            <td>Distribuir entradas</td>
+                                            <td>Marcar entradas 'Oficio interno' de la Entidad</td>
                                             <td class="center">
-                                                <a class="btn btn-warning btn-sm" href="<c:url value="/eventoDistribuirEntradas"/>" title="eventoDistribuirEntradas"><span class="fa fa-eye"></span></a>
+                                                <a class="btn btn-success btn-sm" href="<c:url value="/eventoOficioInternoEntradas"/>" title="Marcar entradas como 'Oficio interno'"><span class="fa fa-eye"></span></a>
+                                            </td>
+                                        </tr>
+                                        <%--<c:if test="${!loginInfo.entidadActiva.sir}">--%>
+                                            <tr>
+                                                <td>Marcar entradas 'Oficio externo' de la Entidad</td>
+                                                <td class="center">
+                                                    <a class="btn btn-info btn-sm" href="<c:url value="/eventoOficioExternoEntradas"/>" title="Marcar entradas como 'Oficio externo'"><span class="fa fa-eye"></span></a>
+                                                </td>
+                                            </tr>
+                                        <%--</c:if>--%>
+                                        <tr>
+                                            <td>Marcar entradas 'Distribuir' de la Entidad</td>
+                                            <td class="center">
+                                                <a class="btn btn-warning btn-sm" href="<c:url value="/eventoDistribuirEntradas"/>" title="Marcar entradas como 'Distribuir'"><span class="fa fa-eye"></span></a>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Distribuir salidas</td>
+                                            <td>Marcar salidas (a una Administración) 'Distribuir' de la Entidad</td>
                                             <td class="center">
-                                                <a class="btn btn-warning btn-sm" href="<c:url value="/eventoDistribuirSalidas"/>" title="eventoDistribuirSalidas"><span class="fa fa-eye"></span></a>
-                                                <a class="btn btn-info btn-sm" href="<c:url value="/eventoDistribuirSalidasPersonas"/>" title="eventoDistribuirSalidasPersonas"><span class="fa fa-eye"></span></a>
+                                                <a class="btn btn-danger btn-sm" href="<c:url value="/eventoDistribuirSalidas"/>" title="Marcar salidas a una administración como 'Distribuir'"><span class="fa fa-eye"></span></a>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td>Oficio interno entradas</td>
+                                            <td>Marcar salidas (a un ciudadano) 'Distribuir' de la Entidad</td>
                                             <td class="center">
-                                                <a class="btn btn-warning btn-sm" href="<c:url value="/eventoOficioInternoEntradas"/>" title="eventoOficioInternoEntradas"><span class="fa fa-eye"></span></a>
+                                                <a class="btn btn-danger btn-sm" href="<c:url value="/eventoDistribuirSalidasPersonas"/>" title="Marcar salidas a un ciudadano como 'Distribuir'"><span class="fa fa-user"></span></a>
                                             </td>
                                         </tr>
-                                        <c:if test="${!loginInfo.entidadActiva.sir}">
-                                            <tr>
-                                                <td>Oficio externo entradas</td>
-                                                <td class="center">
-                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/eventoOficioExternoEntradas"/>"><span class="fa fa-eye"></span></a>
-                                                </td>
-                                            </tr>
-                                        </c:if>
-
-                                        <c:if test="${loginInfo.entidadActiva.sir}">
-                                            <tr>
-                                                <td>Oficio sir entradas</td>
-                                                <td class="center">
-                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/"/>"><span class="fa fa-eye"></span></a>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Oficio sir salidas</td>
-                                                <td class="center">
-                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/"/>"><span class="fa fa-eye"></span></a>
-                                                </td>
-                                            </tr>
-                                        </c:if>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -158,21 +150,25 @@
                                         <tr>
                                             <td>${oficina.denominacion}</td>
                                             <td class="center">
-                                                <a class="btn btn-warning btn-sm"
-                                                   href="<c:url value="//${oficina.id}/edit"/>"
-                                                   title=""><span class="fa fa-eye"></span></a>
+                                                <a class="btn btn-success btn-sm"
+                                                   href="<c:url value="/eventoOficioInternoEntradas/${oficina.id}"/>"
+                                                   title="Marcar entradas 'Oficio interno'"><span class="fa fa-eye"></span></a>
 
                                                 <a class="btn btn-info btn-sm"
-                                                   href="<c:url value="//${oficina.id}/edit"/>"
-                                                   title=""><span class="fa fa-eye"></span></a>
+                                                   href="<c:url value="/eventoOficioExternoEntradas/${oficina.id}"/>"
+                                                   title="Marcar entradas 'Oficio externo'"><span class="fa fa-eye"></span></a>
+
+                                                <a class="btn btn-warning btn-sm"
+                                                   href="<c:url value="/eventoDistribuirEntradas/${oficina.id}"/>"
+                                                   title="Marcar entradas 'Distribuir'"><span class="fa fa-eye"></span></a>
 
                                                 <a class="btn btn-danger btn-sm"
-                                                   href="<c:url value="//${oficina.id}/edit"/>"
-                                                   title=""><span class="fa fa-eye"></span></a>
+                                                   href="<c:url value="/eventoDistribuirSalidas/${oficina.id}"/>"
+                                                   title="Marcar salidas a una administración 'Distribuir'"><span class="fa fa-eye"></span></a>
 
-                                                <a class="btn btn-success btn-sm"
-                                                   href="<c:url value="//${oficina.id}/edit"/>"
-                                                   title=""><span class="fa fa-eye"></span></a>
+                                                <a class="btn btn-danger btn-sm"
+                                                   href="<c:url value="/eventoDistribuirSalidasPersonas/${oficina.id}"/>"
+                                                   title="Marcar salidas a un ciudadano 'Distribuir'"><span class="fa fa-user"></span></a>
                                             </td>
                                         </tr>
                                     </c:forEach>

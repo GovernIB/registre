@@ -6,7 +6,10 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.utils.*;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.NumeroRegistro;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -376,8 +379,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         List<Long> registros = q.getResultList();
 
-        log.info("Total actualizarEventoDistribuirSalidas: " + registros.size());
-
         for (Long idRegistro:registros) {
 
             Query q1 = em.createQuery("update RegistroSalida set evento=:evento where id = :idRegistro and evento is null");
@@ -424,8 +425,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
 
         List<Long> registros = q.getResultList();
-
-        log.info("Total actualizarEventoDistribuirSalidasPersona: " + registros.size());
 
         for (Long idRegistro:registros) {
 

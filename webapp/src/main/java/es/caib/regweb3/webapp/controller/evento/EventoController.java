@@ -2,25 +2,15 @@ package es.caib.regweb3.webapp.controller.evento;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Plantilla;
-import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.ejb.PlantillaLocal;
-import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -54,17 +44,23 @@ public class EventoController extends BaseController {
         mav.addObject("salidasPendientes",
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado=1 or estado=3) and usuario.entidad.id = "+entidadActiva.getId()));
 
-        mav.addObject("entradasEvento",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento!=0 and usuario.entidad.id = "+entidadActiva.getId()));
+        mav.addObject("entradasEventoAsignado",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento!=0 and evento != null and usuario.entidad.id = "+entidadActiva.getId()));
 
-        mav.addObject("salidasEvento",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento!=0 and usuario.entidad.id = "+entidadActiva.getId()));
+        mav.addObject("salidasEventoAsignado",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento!=0 and evento != null and usuario.entidad.id = "+entidadActiva.getId()));
 
-        mav.addObject("entradasProcesadas",
+        mav.addObject("entradasSinEvento",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));
+
+        mav.addObject("salidasSinEvento",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));
+
+        /*mav.addObject("entradasEventoProcesado",
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
 
-        mav.addObject("salidasProcesadas",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
+        mav.addObject("salidasEventoProcesado",
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));*/
 
 
         mav.addObject("oficinas", oficinaEjb.findByEntidad(entidadActiva.getId()));
@@ -86,7 +82,24 @@ public class EventoController extends BaseController {
                 total = total + parcial;
             }
 
-            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a OficioInterno de entrada de la entidad ");
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a 'Oficio Interno' de la entidad ");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/eventos";
+    }
+
+    @RequestMapping(value = "/eventoOficioInternoEntradas/{idOficina}")
+    public String eventoOficioInternoEntradas(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+
+            Oficina oficina = oficinaEjb.findById(idOficina);
+            Integer total = registroEntradaEjb.actualizarEventoOficioInterno(oficina);
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a 'Oficio Interno' de la oficina " + oficina.getDenominacion());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -118,6 +131,23 @@ public class EventoController extends BaseController {
         return "redirect:/eventos";
     }
 
+    @RequestMapping(value = "/eventoOficioExternoEntradas/{idOficina}")
+    public String eventoOficioExternoEntradas(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+
+            Oficina oficina = oficinaEjb.findById(idOficina);
+            Integer total = registroEntradaEjb.actualizarEventoOficioExterno(oficina);
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a 'Oficio Externo' de la oficina " + oficina.getDenominacion());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/eventos";
+    }
+
     @RequestMapping(value = "/eventoDistribuirEntradas")
     public String actualizarEventoDistribuir(HttpServletRequest request) {
 
@@ -133,6 +163,23 @@ public class EventoController extends BaseController {
             }
 
             Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de entrada a Distribuir de la entidad");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return "redirect:/eventos";
+    }
+
+    @RequestMapping(value = "/eventoDistribuirEntradas/{idOficina}")
+    public String eventoDistribuirEntradas(@PathVariable Long idOficina, HttpServletRequest request) {
+
+        try {
+
+            Oficina oficina = oficinaEjb.findById(idOficina);
+            Integer total = registroEntradaEjb.actualizarEventoDistribuir(oficina);
+
+            Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de salida a 'Distribuir' de la oficina " + oficina.getDenominacion());
 
         } catch (Exception e) {
             e.printStackTrace();
