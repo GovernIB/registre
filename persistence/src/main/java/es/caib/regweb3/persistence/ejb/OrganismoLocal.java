@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
@@ -235,4 +236,32 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
      * @throws Exception
      */
     Libro obtenerLibroRegistro(Long idOrganismo) throws Exception;
+
+
+   /**
+    * Obtiene la UnidadTF de dir3caib a partir del código indicado
+    * @param codigo
+    * @return
+    * @throws Exception
+    */
+    UnidadTF obtenerDestinoExterno(String codigo) throws Exception;
+
+
+   /**
+    * Dado un código dir3 obtiene los sustitutos a los que se puede enviar mediante SIR
+    * @param codigo
+    * @return
+    * @throws Exception
+    */
+   List<UnidadTF> obtenerSustitutosExternosSIR(String codigo) throws Exception;
+
+   /**
+    * Dado un código dir3 obtiene todos sus sustitutos.
+    * @param codigo
+    * @return
+    * @throws Exception
+    */
+   List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception;
+
+
 }

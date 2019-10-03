@@ -1,8 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -697,6 +701,35 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }else{
             return obtenerLibroRegistro(organismo.getOrganismoSuperior().getId());
         }
+    }
+
+
+
+    @Override
+    public UnidadTF obtenerDestinoExterno(String codigo) throws Exception{
+
+        //Buscamos el destino externo a partir de su código
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        return unidadesService.buscarUnidad(codigo);
+    }
+
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<UnidadTF> obtenerSustitutosExternosSIR(String codigo) throws Exception {
+
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        return unidadesService.obtenerHistoricosFinalesSIR(codigo);
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<UnidadTF> obtenerSustitutosExternos(String codigo) throws Exception {
+
+        Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        return unidadesService.obtenerHistoricosFinales(codigo);
+
     }
 
 

@@ -3,9 +3,8 @@ package es.caib.regweb3.persistence.utils;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.Organismo;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Bean para almacenar Registros, de un mismo Organismo,
@@ -19,7 +18,7 @@ public class OficiosRemisionOrganismo {
     private Boolean oficinas = false;
     private Boolean vigente = false;
     private Paginacion paginacion;
-    private Set<Organismo> sustitutos = new HashSet<Organismo>();
+    private List<Organismo> sustitutos = new ArrayList<Organismo>(); //Organismos que sustituyen al organismo indicado cuando está extinguido
     private Boolean sir = false;
     private List<OficinaTF> oficinasSIR;
 
@@ -82,11 +81,11 @@ public class OficiosRemisionOrganismo {
         this.oficinas = oficinas;
     }
 
-    public Set<Organismo> getSustitutos() {
+    public List<Organismo> getSustitutos() {
         return sustitutos;
     }
 
-    public void setSustitutos(Set<Organismo> sustitutos) {
+    public void setSustitutos(List<Organismo> sustitutos) {
         this.sustitutos = sustitutos;
     }
 }

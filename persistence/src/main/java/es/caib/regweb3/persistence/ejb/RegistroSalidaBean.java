@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
@@ -245,7 +246,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
      * @return
      * @throws Exception
      */
-    private String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
+    public String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception{
 
         List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
 
@@ -600,6 +601,79 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             registroSalida.getRegistroDetalle().setAnexos(null);
 
             registroSalida.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroSalida.getNumeroRegistroFormateado());
+
+
+            //Para evitar lazy.
+            Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
+
+            LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+            // Creamos un Set solo con los codigos
+            Set<String> organismosCodigo = new HashSet<String>();
+
+            for (Organismo organismo : organismos) {
+                organismosCodigo.add(organismo.getCodigo());
+
+            }
+
+            //Obtenemos el codigo dir3 del interesado que es tipo administración
+            String codigoDir3="";
+            Interesado interesadoAdministracion = null;
+            for (Interesado interesado : interesados) {
+                if(interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+
+                    interesadoAdministracion = interesado;
+
+                }
+            }
+
+            /* En el caso de rectificar se escoge el primer sustituto de la lista que nos devuelven y se cambia de manera transparente para el usuario */
+            if(!interesadoAdministracion.getCodigoDir3().isEmpty()) {
+                Organismo organismo = organismoEjb.findByCodigoEntidad(codigoDir3, registroSalida.getUsuario().getEntidad().getId());
+                if (organismo != null) { //Destino interno
+                    if (!organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                        Set<Organismo> historicosFinales = new HashSet<Organismo>();
+                        organismoEjb.obtenerHistoricosFinales(organismo.getId(), historicosFinales);
+
+                        // si tiene sustitutos, modificamos el interesado de tipo administración con los datos del sustituto.
+                        if (historicosFinales.size() > 0) {
+                            interesadoAdministracion.setCodigoDir3(historicosFinales.iterator().next().getCodigo());
+                            interesadoAdministracion.setDocumento(historicosFinales.iterator().next().getCodigo());
+                            interesadoAdministracion.setRazonSocial(historicosFinales.iterator().next().getDenominacion());
+
+                        } else {
+                            log.info("No hay sustitutos, se calculará mal el próximo evento");
+                        }
+                    }
+
+                }else {
+
+                    UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(interesadoAdministracion.getCodigoDir3());
+                    //Si está extinguido
+                    if(!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                        //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
+                        if (registroSalida.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+                            List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo());
+                            if (destinosExternosSIR.size() > 0) {
+                                interesadoAdministracion.setCodigoDir3(destinosExternosSIR.get(0).getCodigo());
+                                interesadoAdministracion.setDocumento(destinosExternosSIR.get(0).getCodigo());
+                                interesadoAdministracion.setRazonSocial(destinosExternosSIR.get(0).getDenominacion());
+                            }else{
+                                log.info("No hay sustitutos SIR, se calculará mal el próximo evento");
+                            }
+
+                        } else { //Si no es SIR, obtenemos sus sustitutos y asignamos el primero.
+                            List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo());
+                            if (destinosExternos.size() > 0) {
+                                interesadoAdministracion.setCodigoDir3(destinosExternos.get(0).getCodigo());
+                                interesadoAdministracion.setDocumento(destinosExternos.get(0).getCodigo());
+                                interesadoAdministracion.setRazonSocial(destinosExternos.get(0).getDenominacion());
+                            }else{
+                                log.info("No hay sustitutos externos, se calculará mal el próximo evento");
+                            }
+                        }
+                    }
+                }
+            }
 
             // Registramos el nuevo registro
             rectificado = registrarSalida(registroSalida, usuarioEntidad,interesados, anexos);

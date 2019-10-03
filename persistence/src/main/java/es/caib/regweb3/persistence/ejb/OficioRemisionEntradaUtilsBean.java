@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -245,8 +244,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
-            if(!oficios.getVigente()){ // Organismo extinguido, obtenemos los organismos sustitutos
-                log.info("Organismo interno extinguido, buscamos sustitutos");
+            // Organismo extinguido, obtenemos los organismos sustitutos
+            if(!oficios.getVigente()){
                 Set<Organismo> historicosFinales = new HashSet<Organismo>();
                 Set<Organismo> sustitutos = new HashSet<Organismo>();
                 //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
@@ -258,8 +257,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                         oficios.setOficinas(true);
                     }
                 }
-
-                oficios.setSustitutos(sustitutos);
+                //Asignamos los sustitutos a los oficios
+                oficios.setSustitutos(new ArrayList<Organismo>(sustitutos));
             }
 
             // Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
@@ -271,47 +270,88 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficios.setExterno(true);
 
             // Obtenemos el Organismo externo de Dir3Caib
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            UnidadTF unidadTF = unidadesService.buscarUnidad(codigoOrganismo);
+            UnidadTF unidadTF = organismoEjb.obtenerDestinoExterno(codigoOrganismo);
 
             if(unidadTF != null){
 
                 Organismo organismoExterno = new Organismo(null,codigoOrganismo,unidadTF.getDenominacion());
                 oficios.setOrganismo(organismoExterno);
 
-                if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                //Oficio Externo
+                if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)){
+                    //Organismo externo vigente
+                    if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                        log.info("Organismo externo vigente");
+                        organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+                        oficios.setVigente(true);
 
-                    organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-                    oficios.setVigente(true);
+                    }else{ // Organismo externo extinguido, obtenemos los organismos sustitutos
+                        log.info("Organismo externo extinguido, buscamos sustitutos");
+                        organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
+                        oficios.setVigente(false);
 
-                }else{ // Organismo externo extinguido, obtenemos los organismos sustitutos
-                    log.info("Organismo externo extinguido, buscamos sustitutos");
-                    organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
-                    oficios.setVigente(false);
+                        //Obtenemos los sustitutos de dir3caib del organismo externo indicado
+                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternos(organismoExterno.getCodigo());
 
-                    Set<Organismo> sustitutos = new HashSet<Organismo>();
-                    for(String sustituto: unidadTF.getHistoricosUO()){
-                         sustitutos.add(new Organismo(null,sustituto,sustituto));
+                        //Convertimos los sustitutos a organismos de regweb3
+                        List<Organismo> sustitutos = new ArrayList<Organismo>();
+                        for(UnidadTF sustituto: sustitutosExternos){
+                            sustitutos.add(new Organismo(null,sustituto.getCodigo(),sustituto.getDenominacion()));
+                        }
+
+                        oficios.setSustitutos(sustitutos);
+
                     }
-
-                    oficios.setSustitutos(sustitutos);
-
                 }
+
+
                 // Averiguamos si el Organismo Externo está en SIR y tiene Oficinas SIR
                 if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR) && entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
 
-                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
-                    if (oficinasSIR.size() > 0) {
-                        oficios.setSir(true);
-                        oficios.setOficinasSIR(oficinasSIR);
-                        log.info("El organismo externo " + organismoExterno + " TIENE oficinas Sir: " + oficinasSIR.size());
-                    } else {
-                        oficios.setOficinasSIR(null);
-                        log.info("El organismo externo " + organismoExterno + " no tiene oficinas Sir");
-                    }
+                    //Oficio SIR - Organismo Externo Vigente
+                    if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                        log.info("Organismo externo SIR vigente");
+                        organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+                        oficios.setVigente(true);
 
-                }else {
+                        //Obtenemos de dir3caib las oficinas SIR del organismo externo
+                        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                        List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
+                        if (oficinasSIR.size() > 0) {
+                            oficios.setSir(true);
+                            oficios.setOficinasSIR(oficinasSIR);
+                            log.info("El organismo externo " + organismoExterno + " TIENE oficinas Sir: " + oficinasSIR.size());
+                        } else {
+                            oficios.setOficinasSIR(null);
+                            log.info("El organismo externo " + organismoExterno + " no tiene oficinas Sir");
+                        }
+
+
+                    }else { // Organismo externo extinguido, obtenemos los organismos sustitutos
+
+                        log.info("Organismo externo SIR extinguido, buscamos sustitutos");
+                        organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
+                        oficios.setVigente(false);
+
+                        // Obtenemos los sustitutos de dir3caib
+                        List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternosSIR(organismoExterno.getCodigo());
+                        //Si solo hay un sustituto, se obtienen sus oficinas SIR y se mandan.
+                        if(sustitutosExternos.size() == 1){
+                            Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+                            List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(sustitutosExternos.get(0).getCodigo());
+                            oficios.setOficinasSIR(oficinasSIR);
+                        }
+
+                        //Transformamos los sustitutos
+                        List<Organismo> sustitutos = new ArrayList<Organismo>();
+                        for (UnidadTF sustituto : sustitutosExternos) {
+                            sustitutos.add(new Organismo(null, sustituto.getCodigo(), sustituto.getDenominacion()));
+                        }
+                        oficios.setSustitutos(sustitutos);
+                    }
+                    oficios.setSir(true);
+
+                }else { //Oficio de Remisión Tradicional
                     oficios.setSir(false);
                     oficios.setOficinasSIR(null);
                     log.info("Nuestra entidad no esta en SIR, se creara un oficio de remision tradicional");
@@ -327,69 +367,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             }
 
         }
-
-
-        /*Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
-
-        if(oficio.getInterno()) { // Destinatario organismo interno
-
-            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
-            oficios.setOrganismo(organismo);
-            oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-            oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
-
-            //Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, oficinaActiva.getId(), idLibro));
-
-        }else if (oficio.getExterno() || oficio.getEdpExterno()) { // Destinatario organismo externo
-
-            oficios.setExterno(true);
-
-            // Obtenemos el Organismo externo de Dir3Caib
-            Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-            UnidadTF unidadTF = unidadesService.obtenerUnidad(codigoOrganismo,null,null);
-
-            if(unidadTF != null){
-                Organismo organismoExterno = new Organismo(null,codigoOrganismo,unidadTF.getDenominacion());
-                organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-                oficios.setVigente(true);
-                oficios.setOrganismo(organismoExterno);
-
-                // Comprueba si la Entidad Actual está en SIR
-                //Boolean isSir = (Boolean) em.createQuery("select e.sir from Entidad as e where e.id = :id").setParameter("id", idEntidadActiva).getSingleResult();
-                if (entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                    // Averiguamos si el Organismo Externo está en Sir o no
-                    Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
-                    List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(organismoExterno.getCodigo());
-                    if (oficinasSIR.size() > 0) {
-                        oficios.setSir(true);
-                        oficios.setOficinasSIR(oficinasSIR);
-                        log.info("El organismo externo " + organismoExterno + " TIENE oficinas Sir: " + oficinasSIR.size());
-                    } else {
-                        oficios.setOficinasSIR(null);
-                        log.info("El organismo externo " + organismoExterno + " no tiene oficinas Sir");
-                    }
-
-                }else {
-                    oficios.setSir(false);
-                    oficios.setOficinasSIR(null);
-                    log.info("Nuestra entidad no esta en SIR, se creara un oficio de remision tradicional");
-                }
-
-            }else{
-                log.info("Organismo externo extinguido");
-                oficios.setVigente(false);
-                oficios.setOrganismo(new Organismo(null,codigoOrganismo,null));
-            }
-
-            //Buscamos los Registros de Entrada externos, pendientes de tramitar mediante un Oficio de Remision
-            if (oficio.getExterno()) {
-                oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro));
-            }else if(oficio.getEdpExterno()){
-                oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
-            }
-
-        }*/
 
         return oficios;
     }

@@ -779,6 +779,7 @@ public interface RegwebConstantes {
     String APLICACION_SIR_REGISTROELECTRONICO = "REC2";
     String APLICACION_SIR_DEFENSORPUEBLO = "DEFP";
     String APLICACION_SIR_ORVE = "ORVE";
+    String APLICACION_SIR_ESPU = "ESPU";
 
     /*--------------- NOMBRES ARCHIVOS PROBLEMATICOS SIR----------------*/
     String FICHERO_REGISTROELECTRONICO = "XMLResumenSolicitudENI.xml";

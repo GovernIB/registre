@@ -1,3 +1,4 @@
+<%@ page import="es.caib.regweb3.persistence.utils.PropiedadGlobalUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
@@ -13,7 +14,19 @@
 <dt><i class="fa fa-book"></i> <spring:message code="libro.libro"/>: </dt> <dd> ${registro.libro.nombre}</dd>
 <c:if test="${param.tipoRegistro == 'entrada'}">
     <c:if test="${not empty registro.destino}"> <dt><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>: </dt> <dd>${registro.destino.denominacion} - ${registro.destino.codigo} <c:if test="${registro.destino.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"><span class="label label-danger"><spring:message code="unidad.estado.${registro.destino.estado.codigoEstadoEntidad}" /></span></c:if> </dd></c:if>
-    <c:if test="${not empty registro.destinoExternoCodigo}"> <dt><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>: </dt> <dd>${registro.destinoExternoDenominacion} - ${registro.destinoExternoCodigo}</dd></c:if>
+    <c:if test="${not empty registro.destinoExternoCodigo}">
+
+        <dt><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>: </dt>
+        <dd> <div id="estadoExterno">${registro.destinoExternoDenominacion} - ${registro.destinoExternoCodigo} </div>
+        </dd>
+        <!-- Funcionalidad para consultar via rest a dir3caib el estado de un organismo externo y se muestra en el div "estadoExterno"-->
+        <script type="text/javascript">
+            $(document).ready(function(){
+                var urlCompleta= '<%=PropiedadGlobalUtil.getDir3CaibServer()%>'+ '/rest/GET/unidad/estado';
+                obtenerEstadoOrganismoExterno(urlCompleta, '${registro.destinoExternoCodigo}','estadoExterno');
+            });
+        </script>
+    </c:if>
 </c:if>
 <c:if test="${param.tipoRegistro == 'salida'}">
     <dt><i class="fa fa-institution"></i> <spring:message code="registroSalida.origen"/>: </dt> <dd>${registro.origen.denominacion} - ${registro.origen.codigo} <c:if test="${registro.origen.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"><span class="label label-danger"><spring:message code="unidad.estado.${registro.origen.estado.codigoEstadoEntidad}" /></span></c:if></dd>

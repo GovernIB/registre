@@ -53,10 +53,10 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
-                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino}<spring:message code="registroSir.mediante"/></strong>
+                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}<spring:message code="registroSir.mediante"/></strong>
                             </c:if>
                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
-                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino}<spring:message code="registroSir.mediante"/></strong>
+                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}<spring:message code="registroSir.mediante"/></strong>
                             </c:if>
 
                         </h3>
@@ -84,34 +84,73 @@
                                         <strong><spring:message code="oficina.destino"/></strong>
                                     </div>
                                     <div class="panel-body">
-                                        <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino}</p>
+                                        <p><strong><i class="fa fa-institution"></i> <spring:message code="registroEntrada.organismoDestino"/>:</strong> ${destino.denominacion} <c:if test="${destino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}"><span class="label label-danger"><spring:message code="unidad.estado.${destino.codigoEstadoEntidad}" /></span></c:if></p>
 
-                                            <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
+                                        <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
 
-                                            <!-- Oficina Sir destinataria -->
-                                            <c:if test="${fn:length(oficinasSIR) == 1}">
-                                                <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong> ${oficinasSIR[0].denominacion}</p>
-                                                <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${oficinasSIR[0].codigo}"/>
-                                            </c:if>
-                                            <c:if test="${fn:length(oficinasSIR) > 1}">
-                                                <div class="form-group">
-                                                    <div class="col-xs-4"><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong></div>
-                                                    <div class="col-xs-8">
+                                        <!-- Gestión de sustitutos --!>
+                                        <!-- Si hay sustitutos es que el organismo al que va dirigido está extinguido -->
+                                        <c:if test="${fn:length(sustitutos) > 1}">
+                                            <p><span class="text-vermell ">
+                                                    <strong><spring:message code="registroSir.organismo.destino.extinguido"/> ${destino.denominacion}
+                                                    <spring:message code="registroSir.organismo.destino.extinguido2"/></strong>
+                                            </span></p>
+                                        </c:if>
 
-                                                        <form:select path="oficinaSIRCodigo" items="${oficinasSIR}"
-                                                                     itemLabel="denominacion"
-                                                                     itemValue="codigo"
-                                                                     class="form-control"/>
-                                                    </div>
+                                        <!-- Sustitutos -->
+                                        <c:if test="${fn:length(sustitutos) == 1}">
+                                            <p><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.organismoDestino.sustituto"/>:</strong> ${sustitutos[0].denominacion}</p>
+                                            <input type="hidden" id="destinoSIRCodigo" name="destinoSIRCodigo" value="${sustitutos[0].codigo}"/>
+                                        </c:if>
+                                        <c:if test="${fn:length(sustitutos) > 1}">
+                                            <div class="form-group">
+                                                <div class="col-xs-3"><strong><i class="fa fa-home"></i> <spring:message code="registroEntrada.organismoDestino.sustituto"/>:</strong></div>
+                                                <div class="col-xs-9">
+
+                                                    <form:select path="destinoSIRCodigo" items="${sustitutos}"
+                                                                 itemLabel="denominacion"
+                                                                 itemValue="codigo"
+                                                                 class="form-control"
+                                                                 onchange="actualizarOficinasSIR()"/>
                                                 </div>
-                                            </c:if>
+                                            </div>
+                                        </c:if>
 
+
+                                        <!-- Oficina Sir destinataria -->
+                                        <!-- Una sola oficina SIR -->
+                                        <c:if test="${fn:length(oficinasSIR) == 1}">
+                                               <p><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong> ${oficinasSIR[0].denominacion}</p>
+                                               <input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="${oficinasSIR[0].codigo}"/>
+                                        </c:if>
+                                        <!-- Más de 1 Oficina SIR -->
+                                        <c:if test="${fn:length(oficinasSIR) > 1}">
+                                            <div class="form-group">
+                                                <div class="col-xs-3"><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong></div>
+                                                <div class="col-xs-9">
+                                                    <form:select path="oficinaSIRCodigo" items="${oficinasSIR}"
+                                                                 itemLabel="denominacion"
+                                                                 itemValue="codigo"
+                                                                 class="form-control"/>
+                                                </div>
+                                            </div>
+                                        </c:if>
+
+                                        <!-- Div de oficinas SIR  que se monta via js cuando hay más de un órgano sustituto y lo escogen-->
+                                        <div class="form-group" id="ofSIR">
+                                            <div class="col-xs-3" ><strong><i class="fa fa-home"></i> <spring:message code="oficina.destino"/>:</strong></div>
+                                            <div id="oficinaSIR"><c:if test="${fn:length(oficinasSIR) == 0}">
+                                                <spring:message code="registroSir.error.sinoficinas"/>
+                                            </c:if></div>
+                                        </div>
+                                        <!-- Fin Gestión sustitutos -->
                                     </div>
                                 </div>
                             </div>
 
+
                             <div class="form-actions col-xs-12">
-                                <input type="button" id="enviar" value="<spring:message code="regweb.enviar"/>" class="btn btn-${color} btn-sm"/>
+                                <input type="button" id="enviar" value="<spring:message code="regweb.enviar"/>" class="btn btn-${color} btn-sm" <c:if test="${fn:length(oficinasSIR)==0}">disabled</c:if>/>
 
                                 <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
                                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
@@ -121,13 +160,10 @@
                                 </c:if>
 
                             </div>
-
                           </form:form>
                         </div>
-
                     </div>
                 </div>
-
             </div>
 
             <div class="col-xs-8 col-xs-offset">
@@ -149,6 +185,8 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+        //Ocultamos el div ofSIR que se monta via js cuando hay sustitutos
+        $('#ofSIR').hide();
 
         $('#enviar').click(function(){
 
@@ -188,6 +226,24 @@
 
         });
     });
+
+
+    /** Mensajes para la funcionalidad para cargar las oficinas SIR del destino indicado*/
+    var mensaje = "<spring:message code='registroSir.error.sinoficinas' javaScriptEscape='true' />";
+    var mensaje2 = "<spring:message code='registroSir.obtener.oficinasSIR' javaScriptEscape='true' />";
+
+    /**
+     * Función para actualizar las oficinas SIR desde el select de los sustitutos cuando el destino está extinguido
+     */
+    function actualizarOficinasSIR(){
+        <c:url var="obtenerOficinasSIR" value="/rest/obtenerOficinasSIR" />
+        var codigoDestinoSIR = $('#destinoSIRCodigo option:selected').val();
+        if(codigoDestinoSIR !== '-1'){
+            //En función del codigoDestinoSIR indicado cargamos sus Oficinas SIR
+            cargarOficinasSIR('${obtenerOficinasSIR}',codigoDestinoSIR,'oficinaSIRCodigo','0',false, mensaje,mensaje2,'form-control','#enviar');
+
+        }
+    }
 </script>
 
 
