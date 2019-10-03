@@ -3,6 +3,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.*;
@@ -326,6 +327,29 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return null;
     }
 
+
+
+    @Override
+    public String obtenerDestinoExternoRE(Long idRegistro) throws Exception{
+
+        Query q;
+        q = em.createQuery("Select re.destinoExternoCodigo from RegistroEntrada as re where " +
+           "re.id = :idRegistro and re.destino is null ");
+
+
+        // Parámetros
+        q.setParameter("idRegistro", idRegistro);
+
+
+        if(q.getResultList().size()>0) {
+            return (String)q.getResultList().get(0);
+        }else{
+            return null;
+        }
+
+    }
+
+
     @Override
     public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception{
 
@@ -552,6 +576,45 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             registroEntrada.getRegistroDetalle().setAnexos(null);
 
             registroEntrada.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroEntrada.getNumeroRegistroFormateado());
+
+            //Gestión Organo destino extinguido
+            if(registroEntrada.getDestino()!=null){ // Destino interno
+                //Si está extinguido, obtenemos sus sustitutos y asignamos el primero.
+                if(!registroEntrada.getDestino().getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                    Set<Organismo> historicosFinales = new HashSet<Organismo>();
+                    organismoEjb.obtenerHistoricosFinales(registroEntrada.getDestino().getId(), historicosFinales);
+                    if (historicosFinales.size() > 0) {
+                        registroEntrada.setDestino(historicosFinales.iterator().next());
+                    }else{
+                        log.info("No hay sustitutos, se calculará mal el próximo evento");
+                    }
+                }
+            }else{ //destino externo
+                //UnidadTF destinoExterno = obtenerDestinoExternoRE(idRegistro);
+                UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(registroEntrada.getDestinoExternoCodigo());
+                //Si está extinguido
+                if(!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                    //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
+                    if (registroEntrada.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
+                        List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo());
+                        if (destinosExternosSIR.size() > 0) {
+                            registroEntrada.setDestinoExternoCodigo(destinosExternosSIR.get(0).getCodigo());
+                            registroEntrada.setDestinoExternoDenominacion(destinosExternosSIR.get(0).getDenominacion());
+                        }else{
+                            log.info("No hay sustitutos SIR, se calculará mal el próximo evento");
+                        }
+
+                    } else { //Si no es SIR, obtenemos sus sustitutos y asignamos el primero.
+                        List<UnidadTF> destinosExternos = organismoEjb.obtenerSustitutosExternos(destinoExterno.getCodigo());
+                        if (destinosExternos.size() > 0) {
+                            registroEntrada.setDestinoExternoCodigo(destinosExternos.get(0).getCodigo());
+                            registroEntrada.setDestinoExternoDenominacion(destinosExternos.get(0).getDenominacion());
+                        }else{
+                            log.info("No hay sustitutos externos, se calculará mal el próximo evento");
+                        }
+                    }
+                }
+            }
 
             // Registramos el nuevo registro
             rectificado = registrarEntrada(registroEntrada, usuarioEntidad,interesados, anexos);

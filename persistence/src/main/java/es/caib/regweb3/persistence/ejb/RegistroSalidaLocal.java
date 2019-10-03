@@ -210,4 +210,14 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
+    /**
+     * Comprueba si el RegistroSalida es un Oficio de Remisión y obtiene el códigoDir3 del
+     * Interesado tipo administración asociado al registro.
+     * @param registroSalida
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
+
 }

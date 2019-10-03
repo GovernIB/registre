@@ -94,6 +94,15 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     List<OficinaTF> isOficioRemisionSir(Long idRegistro) throws Exception;
 
+
+    /**
+     * Obtiene el destino externo del registro de entrada de dir3caib
+     * @param idRegistro
+     * @return
+     * @throws Exception
+     */
+    String obtenerDestinoExternoRE(Long idRegistro) throws Exception;
+
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
      * @param registroEntrada

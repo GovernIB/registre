@@ -1,9 +1,13 @@
 package es.caib.regweb3.webapp.controller;
 
+import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
@@ -282,4 +286,18 @@ public class RestController {
 
         return colaEjb.findById(idCola);
     }
+
+    /**
+     * Obtiene las oficinas SIR del codigo del organismo indicado
+     */
+    @RequestMapping(value = "/obtenerOficinasSIR", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    List<OficinaTF> obtenerOficinasSIR(@RequestParam String codigoDestinoSIR) throws Exception {
+
+        log.info("obtenerOficinasSIR");
+        Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
+        return oficinasService.obtenerOficinasSIRUnidad(codigoDestinoSIR);
+    }
+
 }

@@ -426,6 +426,75 @@ function actualizarSelect(url, idSelect, seleccion, valorSelected, todos, async)
 
 }
 
+
+/**
+ * Carga las oficinas SIR del codigoDestinoSIR que nos indican en idElemento en un select y activa o desactiva el botón indicado.
+ *
+ * @param url donde hacer la petición ajax
+ * @param idElemento código del destino SIR indicado
+ * @param idSelect select que queremos cargar
+ * @param valorSelected valor que se quiere seleccionar.
+ * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
+ * @param mensaje mensaje de que no se han encontrado oficinas
+ * @param mensaje2 mensaje del waiting dialog
+ * @param claseselect atributo class del select.
+ * @param boton  boton a activar/desactivar.
+ */
+function cargarOficinasSIR(url,idElemento,idSelect, valorSelected, todos, mensaje,mensaje2,claseselect,boton){
+    var html = '';
+    jQuery.ajax({
+        crossDomain: true,
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        data: { codigoDestinoSIR: idElemento },
+        beforeSend: function(objeto){
+            waitingDialog.show(mensaje2, {dialogSize: 'm', progressType: 'primary'});
+        },
+        success: function(result) {
+
+            if(todos){html = '<option value="-1">...</option>';}
+            var len = result.length;
+            var selected='';
+            //Montamos opciones del select
+            for ( var i = 0; i < len; i++) {
+                selected='';
+                if(valorSelected != null && result[i].codigo == valorSelected){
+                    selected = 'selected="selected"';
+                }
+                html += '<option '+selected+' value="' + result[i].codigo + '">'
+                    + result[i].denominacion + '</option>';
+            }
+
+
+            if(len !== 0) {
+                if (len === 1) { // solo se muestra el nombre de la oficina
+                    html = '<p>' + result[len - 1].denominacion + '</p>' + '<input type="hidden" id="oficinaSIRCodigo" name="oficinaSIRCodigo" value="' + result[len - 1].codigo + '"/>';
+                    $('#oficinaSIR').html(html);
+                    $('#' + idSelect).html('');
+                } else { // se monta el select con las oficinas encontradas
+                    var html2 = '<div class="col-xs-8">';
+                    html2 += '<select id="' + idSelect + '" name="' + idSelect + '" class="' + claseselect + '">';
+                    html2 += html;
+                    html2 += '</select>';
+                    html2 += '</div>';
+                    $('#oficinaSIR').html(html2);
+                }
+                //Se activa el botón indicado (Enviar)
+                if (boton != '') {$(boton).removeAttr("disabled", "disabled");}
+            }else if(len===0){ // se muestra el mensaje de que no hay oficinas.
+                $('#oficinaSIR').html(mensaje);
+                // No hay oficinas, se desactiva el botón (Enviar).
+                if (boton != '') {$(boton).attr("disabled", "disabled");}
+            }
+            $('#ofSIR').show();
+            $('#'+idSelect).trigger("chosen:updated");
+            waitingDialog.hide();
+        }
+    });
+
+}
+
 /**
  * Carga de valores un Select dependiente de otro
  * @param url donde hacer la petición ajax

@@ -1,6 +1,7 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
+import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
@@ -292,19 +293,37 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
         }
 
-        List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+        //List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
 
-        if(oficinasSIR.isEmpty()){
-            log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio.oficinas"));
-            return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
+        //Obtenemos el destino externo de dir3caib que nos han indicado para ver si está extinguido
+        String codigoDir3 = registroSalidaEjb.organismoOficioRemision(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+        log.info("codigoDir3 " + codigoDir3);
+        //Consultamos el estado del destino externo
+        if(codigoDir3 != null ) {
+            UnidadTF destino = organismoEjb.obtenerDestinoExterno(codigoDir3);
+            mav.addObject("destino", destino);
+            List<OficinaTF> oficinasSIR = new ArrayList<OficinaTF>();
+            //Si está extinguido obtenemos sus sustitutos(con oficinas SIR) de dir3caib
+            if (destino.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO)) {
+                List<UnidadTF> sustitutos = organismoEjb.obtenerSustitutosExternosSIR(destino.getCodigo());
+                if (sustitutos.size() == 1) {
+                    //obtenemos sus oficinas SIR
+                    oficinasSIR = oficinaEjb.obtenerOficinasSir(sustitutos.get(0).getCodigo());
+                }
+                mav.addObject("sustitutos", sustitutos);
+            } else { //Obtenemos las oficinas SIR desde dir3caib
+                oficinasSIR = oficinaEjb.obtenerOficinasSir(destino.getCodigo());
+                if (oficinasSIR.isEmpty()) {
+                    log.info("Este registro no se puede enviar via SIR, no tiene oficinas");
+                    Mensaje.saveMessageError(request, getMessage("registroSir.error.envio.oficinas"));
+                    return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
+                }
+            }
+            mav.addObject("oficinasSIR", oficinasSIR);
         }
-
         mav.addObject("tipoRegistro", RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO);
         mav.addObject("envioSirForm", new EnvioSirForm());
         mav.addObject("registro", registroSalida);
-        mav.addObject("oficinasSIR", oficinasSIR);
-        mav.addObject("destino", organismoOficioRemision(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva)));
 
         return mav;
     }

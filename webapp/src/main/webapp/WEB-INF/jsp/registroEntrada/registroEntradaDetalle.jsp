@@ -374,6 +374,14 @@
     traddistribuir['distribuir.noenviado'] = "<spring:message code='registroEntrada.distribuir.error.noEnviado' javaScriptEscape='true' />";
     traddistribuir['distribuir.error.plugin'] = "<spring:message code='registroEntrada.distribuir.error.plugin' javaScriptEscape='true' />";
     traddistribuir['distribuir.distribuyendo'] ="<spring:message code="registroEntrada.distribuyendo" javaScriptEscape="true"/>";
+
+
+    var tradestado = new Array();
+    tradestado['estado.E'] = "<spring:message code="unidad.estado.E" javaScriptEscape='true' />";
+    tradestado['estado.V'] = "<spring:message code="unidad.estado.V" javaScriptEscape='true' />";
+    tradestado['estado.A'] = "<spring:message code="unidad.estado.A" javaScriptEscape='true' />";
+    tradestado['estado.T'] = "<spring:message code="unidad.estado.T" javaScriptEscape='true' />";
+
 </script>
 
 
@@ -421,18 +429,39 @@
                     waitingDialog.show('<spring:message code="justificante.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'info'});
                 },
                 success:function(respuesta){
-
                     if(respuesta.status == 'SUCCESS'){
                         goTo('<c:url value="/registroEntrada/${idRegistro}/detalle?justificante=true"/>');
-
                     }else if(respuesta.status == 'FAIL') {
                         mensajeError('#mensajes', respuesta.error);
                         waitingDialog.hide();
                     }
-
                 }
             });
 
+    }
+
+
+    /**
+     * Obtiene el estado de un organismo externo
+     * @param url donde hacer la petición ajax
+     * @param id
+     * @param elemento
+     * @return Texto con la traducción del elmento solicitado
+     */
+    function obtenerEstadoOrganismoExterno(url, codigo,elemento){
+
+        jQuery.ajax({
+            url: url,
+            data: { codigo: codigo },
+            type: 'GET',
+            success: function(result) {
+                var html;
+                if(result != 'V') {
+                    html ='${registro.destinoExternoDenominacion}' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
+                }
+                $('#'+elemento).html(html);
+            }
+        }) ;
     }
 
 </script>

@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.UsuarioEntidad;
@@ -233,4 +234,12 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     Long obtenerEntidad(String codigo) throws Exception;
+
+    /**
+     * Obtiene las oficinas SIR desde dir3caib(via WS) de la unidad indicada en el código
+     * @param codigo
+     * @return
+     * @throws Exception
+     */
+    List<OficinaTF> obtenerOficinasSir(String codigo) throws Exception;
 }
