@@ -724,14 +724,13 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         Query q;
         q = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad order by re.fecha desc");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("documento", documento.trim());
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
 
-        List<RegistroEntrada> registros = q.getResultList();
-
-        return registros;
+        return q.getResultList();
     }
 
     @Override

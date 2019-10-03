@@ -162,35 +162,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return registroEntrada;
     }
 
-    @Override
-    public Oficio isOficio(Long idRegistro, Set<Long> organismos, Entidad entidadActiva) throws Exception{
-
-        Oficio oficio = new Oficio();
-
-        if(isOficioRemisionExterno(idRegistro)){ // Externo
-
-            oficio.setOficioRemision(true);
-
-            List<OficinaTF> oficinasSIR = isOficioRemisionSir(idRegistro);
-
-            if(!oficinasSIR.isEmpty() && entidadActiva.getSir()){
-                oficio.setSir(true);
-
-            }else{
-                oficio.setExterno(true);
-            }
-
-        }else{
-
-            Boolean interno = isOficioRemisionInterno(idRegistro, organismos);
-
-            oficio.setOficioRemision(interno);
-            oficio.setInterno(interno);
-        }
-
-        return oficio;
-    }
-
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -282,6 +253,23 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         if (organismosId.size() > 0) {
             q.setParameter("organismosId", organismosId);
         }
+
+        return q.executeUpdate();
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
+    public Integer actualizarEventoOficioExterno(Oficina oficina) throws Exception{
+
+
+        Query q = em.createQuery("update RegistroEntrada set evento=:evento " +
+                "where destino is null and oficina.id = :idOficina and evento is null and (estado = :valido or estado = :pendienteVisar)");
+
+        q.setParameter("evento", RegwebConstantes.EVENTO_OFICIO_EXTERNO);
+        q.setParameter("idOficina", oficina.getId());
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
 
         return q.executeUpdate();
     }

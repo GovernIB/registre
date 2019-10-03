@@ -85,15 +85,6 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
     Integer actualizarEventoDistribuirSalidasPersona(Oficina oficina, Entidad entidad) throws Exception;
 
     /**
-     * Comprueba si el Registro es considerado como un OficioRemision y de que tipo
-     * @param registroSalida
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    Oficio isOficio(RegistroSalida registroSalida, Set<String> organismos, Entidad entidadActiva) throws Exception;
-
-    /**
      * Comprueba si un RegistroSalida se considera un OficioRemision interno o no
      * @param registroSalida
      * @param organismos
