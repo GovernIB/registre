@@ -44,9 +44,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
-     * Cuando lo hace: cada 6 minutos
+     * Cuando lo hace: cada 4 minutos
      */
-    @Scheduled(cron = "0 0/6 * * * *")
+    @Scheduled(cron = "0 0/4 * * * *")
     public void actualizarProximoEventoRegistrosSalida(){
 
         try {
