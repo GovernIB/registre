@@ -201,7 +201,7 @@
                                         </div>
 
                                         <%--Resultados--%>
-                                        <div class="table-responsive">
+                                        <div class="table-responsive overVisible">
 
                                             <%--Url Formulario--%>
                                             <c:if test="${oficiosRemisionOrganismo.sir == false}">
@@ -330,7 +330,7 @@
 
                                             <!-- Oficio Remision Externo y SIR-->
                                             <c:if test="${oficiosRemisionOrganismo.externo == true}">
-                                                <div class="btn-group">
+                                                <div class="btn-group col-xs-12">
 
                                                     <!--Organismo externo extinguido, con 1 sustituto-->
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false && fn:length(oficiosRemisionOrganismo.sustitutos) == 1}">
@@ -404,7 +404,7 @@
                                                             </div>
                                                         </c:if>
                                                         <!-- Div de oficinas SIR  que se monta via js cuando hay más de un organo sustituto y lo escogen-->
-                                                        <div class="col-xs-12" id="ofSIR">
+                                                        <div class="col-xs-12 btn-group" id="ofSIR">
                                                             <div class="col-xs-3 pull-left etiqueta_regweb control-label textEsq">
                                                                 <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficinaSir"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="oficioRemision.oficinaSir"/></label>
                                                             </div>
@@ -419,14 +419,18 @@
                                                     <c:if test="${oficiosRemisionOrganismo.vigente}">
 
                                                         <c:if test="${oficiosRemisionOrganismo.sir == false}">
+                                                        <div class="col-xs-6 peu">
                                                             <button type="button" onclick="crearOficioRemision('<spring:message code="oficioRemision.generando.externo" javaScriptEscape='true'/>')" class="btn btn-sm btn-success dropdown-toggle">
                                                                 <spring:message code="oficioRemision.boton.crear.externo"/>
                                                             </button>
+                                                        </div>
                                                         </c:if>
                                                         <c:if test="${oficiosRemisionOrganismo.sir == true}">
+                                                        <div class="col-xs-6 peu">
                                                             <button type="button" onclick="crearOficioRemision('<spring:message code="oficioRemision.generando.sir" javaScriptEscape='true'/>')" class="btn btn-sm btn-primary dropdown-toggle">
                                                                 <spring:message code="oficioRemision.boton.crear.sir"/>
                                                             </button>
+                                                        </div>
                                                         </c:if>
                                                     </c:if>
 
@@ -434,14 +438,18 @@
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false && not empty oficiosRemisionOrganismo.sustitutos}">
 
                                                         <c:if test="${oficiosRemisionOrganismo.sir == false}">
+                                                        <div class="col-xs-6 peu">
                                                             <button type="button" onclick="crearOficioRemision('<spring:message code="oficioRemision.generando.externo" javaScriptEscape='true'/>')" class="btn btn-sm btn-success dropdown-toggle">
                                                                 <spring:message code="oficioRemision.boton.crear.externo"/>
                                                             </button>
+                                                        </div>
                                                         </c:if>
                                                         <c:if test="${oficiosRemisionOrganismo.sir == true}">
+                                                        <div class="col-xs-6 peu">
                                                             <button type="button" onclick="crearOficioRemision('<spring:message code="oficioRemision.generando.sir" javaScriptEscape='true'/>')" class="btn btn-sm btn-primary dropdown-toggle">
                                                                 <spring:message code="oficioRemision.boton.crear.sir"/>
                                                             </button>
+                                                        </div>
                                                         </c:if>
 
                                                     </c:if>
@@ -451,15 +459,19 @@
                                                     <c:if test="${oficiosRemisionOrganismo.vigente == false && empty oficiosRemisionOrganismo.sustitutos}">
 
                                                         <c:if test="${oficiosRemisionOrganismo.sir == false}">
+                                                        <div class="col-xs-6 peu">
                                                             <button type="button" class="btn btn-sm btn-success disabled">
                                                                 <spring:message code="oficioRemision.boton.crear.externo"/>
                                                             </button>
+                                                        </div>
                                                         </c:if>
 
                                                         <c:if test="${oficiosRemisionOrganismo.sir == true}">
+                                                        <div class="col-xs-6 peu">
                                                             <button type="button" class="btn btn-sm btn-primary disabled">
                                                                 <spring:message code="oficioRemision.boton.crear.sir"/>
                                                             </button>
+                                                        </div>
                                                         </c:if>
 
                                                     </c:if>
