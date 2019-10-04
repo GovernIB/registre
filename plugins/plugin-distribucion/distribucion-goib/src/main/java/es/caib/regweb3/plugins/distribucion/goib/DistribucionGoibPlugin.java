@@ -164,6 +164,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         RegistreAnotacio registreAnotacio = new RegistreAnotacio();
         GregorianCalendar c = new GregorianCalendar();
 
+        //Tipo Anotacio
+        registreAnotacio.setTipusES("E");
+
         //Libro
         registreAnotacio.setLlibreCodi(re.getLibro().getCodigo());
         registreAnotacio.setLlibreDescripcio(re.getLibro().getNombre());
@@ -264,6 +267,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             registreAnotacio.setProcedimentCodi(re.getRegistroDetalle().getCodigoSia().toString());
         }
 
+        //Presencial
+        registreAnotacio.setPresencial(re.getRegistroDetalle().getPresencial());
+
         return registreAnotacio;
 
     }
@@ -335,6 +341,11 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         //Tipo
         if(interesado.getTipo()!=null) {
             registreInteressat.setTipus(interesado.getTipo().toString());
+        }
+
+        //CodigoDIRe
+        if(interesado.getCodigoDire()!=null){
+            registreInteressat.setCodiDire(interesado.getCodigoDire());
         }
 
         return registreInteressat;
