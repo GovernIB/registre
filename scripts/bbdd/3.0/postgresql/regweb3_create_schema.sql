@@ -1,5 +1,5 @@
 
-      create table RWE_ANEXO (
+    create table RWE_ANEXO (
         ID int8 not null,
         CERTIFICADO bytea,
         CSV varchar(255),
@@ -132,9 +132,9 @@
         ID int8 not null,
         ACTIVO bool not null,
         CODIGO varchar(16) not null,
-        TIPOASUNTO int8,
+        ENTIDAD int8 not null,
         primary key (ID),
-        unique (CODIGO, TIPOASUNTO)
+        unique (CODIGO)
     );
 
     create table RWE_COLA (
@@ -185,6 +185,7 @@
         CONFIGPERSONA int8,
         DESCRIPCION varchar(4000) not null,
         DIASVISADO int4,
+        MANTENIMIENTO bool not null,
         NOMBRE varchar(255) not null,
         NUMREGISTRO varchar(4000),
         OFICIOREMISION bool not null,
@@ -257,6 +258,7 @@
         APELLIDO2 varchar(255),
         CANALNOTIF int8,
         CODIGODIR3 varchar(255),
+        CODIGODIRE varchar(15),
         CP varchar(5),
         DIRECCION varchar(160),
         DIRELECTRONICA varchar(160),
@@ -557,6 +559,7 @@
         ID int8 not null,
         APLICACION varchar(255),
         COD_ENT_REG_DEST varchar(21),
+        CODIGOSIA int8,
         DEC_ENT_REG_DEST varchar(80),
         DEC_T_ANOTACION varchar(80),
         EXPEDIENTE varchar(80),
@@ -571,11 +574,13 @@
         OBSERVACIONES varchar(50),
         OFICINAEXTERNO varchar(9),
         DENOMOFIORIGEXT varchar(300),
+        PRESENCIAL bool,
         REFEXT varchar(16),
         RESERVA varchar(4000),
         SOLICITA varchar(4000),
         TIPO_ANOTACION varchar(2),
         TIPODOCFISICA int8,
+        TIPOENVIODOC varchar(255),
         TRANSPORTE int8,
         VERSION varchar(255),
         CODASUNTO int8,
@@ -589,6 +594,7 @@
         DESTEXTCOD varchar(9),
         DESTEXTDEN varchar(300),
         ESTADO int8 not null,
+        EVENTO int8,
         FECHA timestamp not null,
         NUMREGISTRO int4 not null,
         NUMREGFORMAT varchar(255) not null,
@@ -641,6 +647,7 @@
     create table RWE_REGISTRO_SALIDA (
         ID int8 not null,
         ESTADO int8 not null,
+        EVENTO int8,
         FECHA timestamp not null,
         NUMREGISTRO int4 not null,
         NUMREGFORMAT varchar(255) not null,
@@ -811,6 +818,9 @@
         RWE_ADMIN bool not null,
         RWE_SUPERADMIN bool not null,
         RWE_USUARI bool not null,
+        RWE_WS_CIUDADANO bool not null,
+        RWE_WS_ENTRADA bool not null,
+        RWE_WS_SALIDA bool not null,
         TIPOUSUARIO int8,
         primary key (ID)
     );
@@ -876,12 +886,10 @@
         foreign key (COMUNIDADAUTONOMA)
         references RWE_CATCOMUNIDADAUTONOMA;
 
-    create index RWE_CODASU_TASUN_FK_I on RWE_CODIGOASUNTO (TIPOASUNTO);
-
     alter table RWE_CODIGOASUNTO
-        add constraint RWE_CODASUNTO_TIPOASUNTO_FK
-        foreign key (TIPOASUNTO)
-        references RWE_TIPOASUNTO;
+        add constraint RWE_CODASUNTO_ENTIDAD_FK
+        foreign key (ENTIDAD)
+        references RWE_ENTIDAD;
 
     alter table RWE_COLA
         add constraint RWE_COLA_USUENTI_FK
