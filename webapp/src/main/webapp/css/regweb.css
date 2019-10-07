@@ -1381,3 +1381,12 @@ pre {
     color: #DB534F;
     font-style: italic;
 }
+
+.selectSirDest{
+    border-radius: 4px;
+    font-size: 13px;
+    color: #444;
+    padding-left: 5px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

@@ -515,7 +515,7 @@
         <c:url var="obtenerOficinasSIR" value="/rest/obtenerOficinasSIR" />
         var codigoDestinoSIR = $('#organismoExternoCodigo option:selected').val();
         if(codigoDestinoSIR !== '-1'){
-            cargarOficinasSIR('${obtenerOficinasSIR}',codigoDestinoSIR,'oficinaSIRCodigo','0',false, mensaje,mensaje2,'chosen-select','');
+            cargarOficinasSIR('${obtenerOficinasSIR}',codigoDestinoSIR,'oficinaSIRCodigo','0',false, mensaje,mensaje2,'chosen-select col-xs-12 selectSirDest','');
         }
     }
 </script>
