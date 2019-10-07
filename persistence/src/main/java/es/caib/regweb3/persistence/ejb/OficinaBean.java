@@ -398,11 +398,13 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
-                ":sir in elements(oficina.servicios)");
+                "(:sir in elements(oficina.servicios) or :sirEnvio in elements(oficina.servicios) or :sirRecepcion in elements(oficina.servicios)) ");
 
         q.setParameter("idOficina",idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+        q.setParameter("sirEnvio", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
+        q.setParameter("sirRecepcion", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
 
         return q.getResultList().size() > 0;
     }
