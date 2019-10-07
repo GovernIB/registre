@@ -473,7 +473,7 @@ function cargarOficinasSIR(url,idElemento,idSelect, valorSelected, todos, mensaj
                     $('#oficinaSIR').html(html);
                     $('#' + idSelect).html('');
                 } else { // se monta el select con las oficinas encontradas
-                    var html2 = '<div class="col-xs-8">';
+                    var html2 = '<div class="col-xs-9">';
                     html2 += '<select id="' + idSelect + '" name="' + idSelect + '" class="' + claseselect + '">';
                     html2 += html;
                     html2 += '</select>';
