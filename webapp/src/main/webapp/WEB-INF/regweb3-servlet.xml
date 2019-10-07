@@ -145,6 +145,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
         <!--Interceptor para Admin Entidad-->
         <mvc:interceptor>
             <mvc:mapping path="/adminEntidad/**"/>
+            <mvc:mapping path="/eventos/**"/>
             <bean class="es.caib.regweb3.webapp.interceptor.AdminEntidadInterceptor"/>
         </mvc:interceptor>
 

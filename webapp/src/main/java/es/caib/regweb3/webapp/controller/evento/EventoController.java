@@ -50,17 +50,17 @@ public class EventoController extends BaseController {
         mav.addObject("salidasEventoAsignado",
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento!=0 and evento != null and usuario.entidad.id = "+entidadActiva.getId()));
 
-        mav.addObject("entradasSinEvento",
+        /*mav.addObject("entradasSinEvento",
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasSinEvento",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento is null and (estado!=1 or estado!=3) and usuario.entidad.id = "+entidadActiva.getId()));*/
 
-        /*mav.addObject("entradasEventoProcesado",
+        mav.addObject("entradasEventoProcesado",
                 registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroEntrada where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
 
         mav.addObject("salidasEventoProcesado",
-                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));*/
+                registroEntradaConsultaEjb.queryCount("Select count(id) from RegistroSalida where evento=0 and usuario.entidad.id = "+entidadActiva.getId()));
 
 
         mav.addObject("oficinas", oficinaEjb.findByEntidad(entidadActiva.getId()));
@@ -216,7 +216,9 @@ public class EventoController extends BaseController {
             Integer parcial = 0;
             for (Oficina oficina : oficinas) {
                 parcial = registroSalidaEjb.actualizarEventoDistribuirSalidas(oficina, oficina.getOrganismoResponsable().getEntidad());
-                total = total + parcial;
+                total += parcial;
+                parcial = registroSalidaEjb.actualizarEventoDistribuirSalidasPersona(oficina, oficina.getOrganismoResponsable().getEntidad());
+                total += parcial;
             }
 
             Mensaje.saveMessageInfo(request, "Se han actualizado " +total+" registros de salida a Distribuir de la entidad ");
