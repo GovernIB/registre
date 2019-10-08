@@ -11,7 +11,6 @@ import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -26,29 +25,26 @@ import java.util.Set;
 public interface OficioRemisionSalidaUtilsLocal {
 
 
-
-    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
-
-
     /**
-     * Obtiene los Organimos destino de los Registros de Salida que están considerados Oficios de Remisión
+     *
      * @param idOficina
      * @param libros
-     * @param organismos
+     * @param tipoEvento
+     * @param total
      * @return
      * @throws Exception
      */
-    LinkedHashSet<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva, Integer total) throws Exception;
+    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
      * @param idOficina
      * @param libros
-     * @param organismos
+     * @param tipoEvento
      * @return
      * @throws Exception
      */
-    Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception;
+    Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Long tipoEvento) throws Exception;
 
     /**
      * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto

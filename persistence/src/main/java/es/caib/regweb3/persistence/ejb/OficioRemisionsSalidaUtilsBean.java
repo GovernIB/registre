@@ -113,71 +113,33 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     }
 
 
-        @Override
-    @SuppressWarnings(value = "unchecked")
-    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva) throws Exception {
-
-        Long total = 0L;
-
-        // Registros de salida que son Oficios de Remision
-        List<Long> registros = registrosSalidaPendientesRemision(idOficina, libros, organismos, null);
-
-        if(registros.size() > 0){
-
-            // Obtenemos los destinatarios de tipo de Adminitración de un conjunto de Registros
-            List<Object[]> destinos = destinatariosAdministracion(registros, false);
-
-            for (Object[] object : destinos) {
-                Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero((String) object[0], entidadActiva);
-
-                if(organismo != null){ // Interno
-
-                    // Solo los internos vigentes
-                    if(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
-                        total = total + 1;
-                    }
-                }else{ // Externo
-
-                    total = total + 1;
-                }
-            }
-        }
-
-        return total;
-    }
-
     @Override
     @SuppressWarnings(value = "unchecked")
-    public LinkedHashSet<Organismo> organismosSalidaPendientesRemision(Long idOficina, List<Libro> libros, Set<String> organismos, Long entidadActiva, Integer total) throws Exception {
+    public Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Long tipoEvento) throws Exception {
 
-        LinkedHashSet<Organismo> organismosDestino =  new LinkedHashSet<Organismo>(); // LinkedHashSet No permite duplicados
+        String queryFecha="";
+        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
 
-        // Registros de salida que son Oficios de Remision
-        List<Long> registros = registrosSalidaPendientesRemision(idOficina, libros, organismos, total);
-
-        if(registros.size() > 0){
-
-            // Obtenemos los destinatarios de tipo de Adminitración de un conjunto de Registros
-            List<Object[]> destinos = destinatariosAdministracion(registros, true);
-
-            // Solo incluimos los organismos vigentes
-            for (Object[] object : destinos) {
-                Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero((String) object[0], entidadActiva);
-
-                if(organismo != null){ // Interno
-
-                    // Solo los internos vigentes
-                    if(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
-                        organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
-                    }
-                }else{ // Externo
-
-                    organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
-                }
-            }
+        if(StringUtils.isNotEmpty(fecha)){
+            queryFecha = " and rs.fecha >= :fecha";
         }
 
-        return organismosDestino;
+        // Obtenemos los Registros de Salida que son Oficio de remisión
+        Query q = em.createQuery("Select count(rs.registroDetalle.id) from RegistroSalida as rs where " +
+                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and rs.evento = :tipoEvento" + queryFecha +" order by rs.registroDetalle.id desc");
+
+        // Parámetros
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
+        q.setParameter("tipoEvento", tipoEvento);
+        if(StringUtils.isNotEmpty(fecha)){
+            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
+            q.setParameter("fecha", sdf.parse(fecha));
+        }
+
+        return (Long)  q.getSingleResult();
+
     }
 
     /**
@@ -225,48 +187,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         destinos.addAll(q2.getResultList());
 
         return destinos;
-    }
-
-    /**
-     * Obtiene los Registros de Salida que son Oficio de remisión
-     * @param idOficina
-     * @param libros
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    @SuppressWarnings(value = "unchecked")
-    private List<Long> registrosSalidaPendientesRemision(Long idOficina, List<Libro> libros,Set<String> organismos, Integer total) throws Exception{
-
-        String queryFecha="";
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida();
-
-        if(StringUtils.isNotEmpty(fecha)){
-            queryFecha = " rs.fecha >= :fecha and ";
-        }
-
-        // Obtenemos los Registros de Salida que son Oficio de remisión
-        Query q = em.createQuery("Select distinct(rs.registroDetalle.id) from RegistroSalida as rs where " +
-                "rs.estado = :valido and rs.oficina.id = :idOficina and rs.libro in (:libros) and " + queryFecha +
-                " rs.registroDetalle.id in (select i.registroDetalle.id from Interesado as i where i.registroDetalle.id = rs.registroDetalle.id and i.tipo = :administracion and codigoDir3 not in (:organismos)) ");
-
-        // Parámetros
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("libros", libros);
-        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-        q.setParameter("organismos", organismos);
-        if(StringUtils.isNotEmpty(fecha)){
-            SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
-            q.setParameter("fecha", sdf.parse(fecha));
-        }
-
-        if(total != null){
-            q.setMaxResults(total);
-        }
-
-        return q.getResultList(); // Registros de salida que son Oficios de Remision
-
     }
 
     @Override

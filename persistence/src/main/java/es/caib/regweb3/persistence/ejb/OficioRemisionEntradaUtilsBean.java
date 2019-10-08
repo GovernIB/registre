@@ -185,7 +185,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     }
 
     @Override
-    public Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
+    public Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
 
         Long total;
 
@@ -211,21 +211,24 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             q.setParameter("organismos", organismos);
         }
 
-        total = (Long) q.getSingleResult();
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public Long oficiosEntradaExternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws Exception {
 
         // Total oficios externos
-        Query q1;
-        q1 = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
+        Query q;
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
                 "re.destino is null ");
 
-        q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q1.setParameter("idOficina", idOficina);
-        q1.setParameter("libros", libros);
+        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("idOficina", idOficina);
+        q.setParameter("libros", libros);
 
-        total = total +  (Long) q1.getSingleResult();
+        return  (Long) q.getSingleResult();
 
-        return total;
     }
 
 
