@@ -62,8 +62,10 @@ public class AvisoController extends BaseController {
 
             Long pendientesVisarEntrada = (long) 0;
             Long pendientesVisarSalida = (long) 0;
-            Long oficiosEntradaPendientesRemision = (long) 0;
-            Long oficiosSalidaPendientesRemision = (long) 0;
+            Long oficiosEntradaInternosPendientesRemision = (long) 0;
+            Long oficiosEntradaExternosPendientesRemision = (long) 0;
+            Long oficiosSalidaInternosPendientesRemision = (long) 0;
+            Long oficiosSalidaExternosPendientesRemision = (long) 0;
 
             /*Registros Pendientes de Visar*/
             if(librosAdministrados!= null && librosAdministrados.size() > 0){
@@ -85,17 +87,21 @@ public class AvisoController extends BaseController {
                 // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
                 if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
 
-                    oficiosEntradaPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada, getOrganismosOficioRemision(organismosOficinaActiva));
+                    oficiosEntradaInternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaInternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada, getOrganismosOficioRemision(organismosOficinaActiva));
+                    oficiosEntradaExternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaExternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada);
                 }
 
                 // OFICIOS PENDIENTES DE REMISIÓN SALIDA
                 if(librosRegistroSalida!= null && librosRegistroSalida.size() > 0){
 
-                    oficiosSalidaPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId());
+                    oficiosSalidaInternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_INTERNO);
+                    oficiosSalidaExternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_EXTERNO);
                 }
 
-                mav.addObject("oficiosEntradaPendientesRemision", oficiosEntradaPendientesRemision);
-                mav.addObject("oficiosSalidaPendientesRemision", oficiosSalidaPendientesRemision);
+                mav.addObject("oficiosEntradaInternosPendientesRemision", oficiosEntradaInternosPendientesRemision);
+                mav.addObject("oficiosEntradaExternosPendientesRemision", oficiosEntradaExternosPendientesRemision);
+                mav.addObject("oficiosSalidaInternosPendientesRemision", oficiosSalidaInternosPendientesRemision);
+                mav.addObject("oficiosSalidaExternosPendientesRemision", oficiosSalidaExternosPendientesRemision);
 
                 // OFICIOS PENDIENTES DE LLEGADA
                 mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegadaCount(organismosOficinaActiva));

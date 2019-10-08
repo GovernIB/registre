@@ -14,7 +14,7 @@
                 </a>
 
                 <ul class="dropdown-menu pull-right">
-                    <c:if test="${validos > 0}">
+                    <%--<c:if test="${validos > 0}">
                         <li>
                             <a href="<c:url value="/registroEntrada/pendientesDistribuir/list/1"/>">
                                 <div>
@@ -23,7 +23,7 @@
                             </a>
                         </li>
                         <li class="divider"></li>
-                    </c:if>
+                    </c:if>--%>
 
                     <c:if test="${pendientesVisarEntrada > 0}">
                         <li>
@@ -58,22 +58,44 @@
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${oficiosEntradaPendientesRemision > 0}">
+                    <c:if test="${oficiosEntradaInternosPendientesRemision > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/entradasPendientesRemision"/>">
+                            <a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>">
                                 <div>
-                                    <i class="fa fa-mail-forward"></i> <spring:message code="registroEntrada.oficiosRemision"/> (${oficiosEntradaPendientesRemision})
+                                    <i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.internos"/> (${oficiosEntradaInternosPendientesRemision})
                                 </div>
                             </a>
                         </li>
                         <li class="divider"></li>
                     </c:if>
 
-                    <c:if test="${oficiosSalidaPendientesRemision > 0}">
+                    <c:if test="${oficiosEntradaExternosPendientesRemision > 0}">
                         <li>
-                            <a href="<c:url value="/oficioRemision/salidasPendientesRemision"/>">
+                            <a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>">
                                 <div>
-                                    <i class="fa fa-mail-forward"></i> <spring:message code="registroSalida.oficiosRemision"/> (${oficiosSalidaPendientesRemision})
+                                    <i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.externos"/> (${oficiosEntradaExternosPendientesRemision})
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    </c:if>
+
+                    <c:if test="${oficiosSalidaInternosPendientesRemision > 0}">
+                        <li>
+                            <a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>">
+                                <div>
+                                    <i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.internos"/> (${oficiosSalidaInternosPendientesRemision})
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                    </c:if>
+
+                    <c:if test="${oficiosSalidaExternosPendientesRemision > 0}">
+                        <li>
+                            <a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>">
+                                <div>
+                                    <i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.externos"/> (${oficiosSalidaExternosPendientesRemision})
                                 </div>
                             </a>
                         </li>

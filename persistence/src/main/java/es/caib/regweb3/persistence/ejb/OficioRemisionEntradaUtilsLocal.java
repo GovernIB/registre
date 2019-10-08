@@ -42,14 +42,23 @@ public interface OficioRemisionEntradaUtilsLocal {
     List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos, Integer total) throws Exception;
 
     /**
-     * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión
+     * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión internos
      * @param idOficina
      * @param libros
      * @param organismos
      * @return
      * @throws Exception
      */
-    Long oficiosEntradaPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+    Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+
+    /**
+     * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión externos
+     * @param idOficina
+     * @param libros
+     * @return
+     * @throws Exception
+     */
+    Long oficiosEntradaExternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws Exception;
 
     /**
      * Obtiene todos los Registros de Entrada que están considerados Oficios de Remisión de un Organismo destinatario en concreto

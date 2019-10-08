@@ -219,7 +219,6 @@ public class OficioRemisionController extends BaseController {
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosSalidaPendientesRemisionList");
         List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request); // Obtenemos los Libros donde el Usuario puede Registrar de la Oficina Activa
         Oficina oficinaActiva = getOficinaActiva(request);
-        Entidad entidadActiva = getEntidadActiva(request);
 
         // Fijamos la oficina activa como la seleccionada por defecto
         RegistroSalida registroSalida = new RegistroSalida();
