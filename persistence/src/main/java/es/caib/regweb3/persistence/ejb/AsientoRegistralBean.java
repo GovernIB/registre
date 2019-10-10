@@ -1,8 +1,10 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -11,7 +13,11 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  * Created by mgonzalez on 06/03/2019.
@@ -29,6 +35,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
    @EJB private AnexoLocal anexoEjb;
+   @EJB private SirEnvioLocal sirEnvioEjb;
+   @EJB private JustificanteLocal justificanteEjb;
+   @EJB private OrganismoLocal organismoEjb;
 
    @Override
    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException{
@@ -84,6 +93,90 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
       }
 
       return null;
+   }
 
+   @Override
+   public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException {
+
+      // Es una Notificación
+      if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
+         //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
+         crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
+         registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
+
+      // Es una Comunicación
+      }else if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)){
+
+         //Si es una Comunicación dependerá de los interesados destinatarios (solo hay un interesado)
+         for(Interesado interesado: registroSalida.getRegistroDetalle().getInteresados()){
+
+            //Interesado es una persona física o jurídica es como el caso de notificación
+            if(TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo())
+                    || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())){
+               //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
+               crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
+               registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
+
+             // Interesado es una administración
+            }else if(TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())){
+               //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
+               List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+               //No tiene oficinas en SIR
+               if(oficinasSIR.isEmpty()){
+                  //TODO hay que crear el oficio externo???
+                  //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_OFICIO_EXTERNO
+                  crearJustificanteCambioEstado(registroSalida, REGISTRO_OFICIO_EXTERNO);
+                  registroSalida.setEstado(REGISTRO_OFICIO_EXTERNO);
+                  registroSalida.getRegistroDetalle().setIdentificadorIntercambio("-1");
+
+               }else{ //Tiene oficinas en SIR, se envia el registro via SIR.
+
+                  try {
+
+                     OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(REGISTRO_SALIDA_ESCRITO, registroSalida.getId(),
+                             registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+                     registroSalidaEjb.cambiarEstado(registroSalida.getId(), REGISTRO_OFICIO_SIR);
+
+                     registroSalida.setEstado(REGISTRO_OFICIO_SIR);
+                     registroSalida.getRegistroDetalle().setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
+
+                  }catch (Exception e){
+                     throw new I18NException("registroSir.error.envio");
+                  }
+               }
+            }
+         }
+      }
+
+      return registroSalida;
+   }
+
+   /**
+    * Transforma un conjunto de organismos a un conjunto de strings con los códigos de los organismos
+    *
+    * @return
+    * @throws Exception
+    */
+   private Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws Exception {
+
+      // Creamos un Set solo con los codigos
+      Set<String> organismosCodigo = new HashSet<String>();
+
+      for (Organismo organismo : organismos) {
+         organismosCodigo.add(organismo.getCodigo());
+
+      }
+      return organismosCodigo;
+   }
+
+   /**
+    * Método que crea el justiifcante del registro de salida y actualiza su estado
+    */
+   private void crearJustificanteCambioEstado(RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
+      //Crear Justificante
+      justificanteEjb.crearJustificante(registroSalida.getUsuario(),registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO,"ca" );
+
+      //Cambiar estado
+      registroSalidaEjb.cambiarEstado(registroSalida.getId(),estado);
    }
 }

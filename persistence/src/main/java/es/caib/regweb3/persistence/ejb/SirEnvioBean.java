@@ -50,9 +50,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
-    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private OficioRemisionLocal oficioRemisionEjb;
     @EJB private TrazabilidadLocal trazabilidadEjb;
