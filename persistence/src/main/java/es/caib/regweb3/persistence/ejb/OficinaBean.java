@@ -299,7 +299,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
             Long idOficina = (Long) object[0];
 
-            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], null, (Long) object[3], isSIR(idOficina));
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], null, (Long) object[3], isSIRCompleto(idOficina));
 
             oficinas.add(oficina);
         }
@@ -323,17 +323,12 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         for (Object[] object : result) {
             Long idOficina = (Long) object[0];
 
-            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4], isSIR(idOficina));
+            Oficina oficina = new Oficina((Long) object[0], (String) object[1], (String) object[2], (Long) object[3], (Long) object[4], isSIRCompleto(idOficina));
 
             oficinas.add(oficina);
         }
 
         return oficinas;
-
-
-        /*for(Oficina oficina:oficinas){
-          Hibernate.initialize(oficina.getOrganizativasOfi());
-        }*/
     }
 
     @Override
@@ -393,8 +388,23 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         return q.getResultList().size() > 0;
     }
 
+
     @Override
     public Boolean isSIR(Long idOficina) throws Exception {
+
+        Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
+           "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
+           ":sir in elements(oficina.servicios)");
+
+        q.setParameter("idOficina",idOficina);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+
+        return q.getResultList().size() > 0;
+    }
+
+    @Override
+    public Boolean isSIRCompleto(Long idOficina) throws Exception {
 
         Query q = em.createQuery("Select oficina.id from Oficina as oficina where " +
                 "oficina.id =:idOficina and oficina.estado.codigoEstadoEntidad=:vigente and " +
