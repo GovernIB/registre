@@ -141,13 +141,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
-
-            if(tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId()).size()==0){
-                log.info("Aviso: No hay ningún Tipo Asunto activo para la Entidad Activa");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoAsunto"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
         }
 
         // Comprobaciones previas a la edición de un RegistroEntrada
