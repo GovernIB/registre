@@ -69,5 +69,16 @@ public interface AsientoRegistralLocal {
      * @throws I18NException
      */
     JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException;
+
+    /**
+     * Procesa el Registro de Salida creado según el TipoOperación indicado
+     * @param tipoOperacion
+     * @param registroSalida
+     * @return
+     * @throws I18NException
+     * @throws Exception
+     * @throws I18NValidationException
+     */
+    RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException;
 }
 
