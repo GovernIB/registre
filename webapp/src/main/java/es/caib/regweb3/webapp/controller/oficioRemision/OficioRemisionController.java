@@ -277,6 +277,9 @@ public class OficioRemisionController extends BaseController {
         OficioRemision oficioRemision = null;
         List<RegistroEntrada> correctos;
 
+        //Calculamos el evento
+        Long evento = interno?RegwebConstantes.EVENTO_OFICIO_INTERNO:RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+
         log.info(" ");
         log.info("-------------------------------------------");
         log.info("Registrando Oficio Remision de Entrada");
@@ -301,7 +304,7 @@ public class OficioRemisionController extends BaseController {
             // Comprobamos que al menos haya seleccionado algún RegistroEntrada
             if (registrosEntrada.size() == 0) {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                return "redirect:/oficioRemision/entradasPendientesRemision/2";
+                return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
@@ -323,18 +326,18 @@ public class OficioRemisionController extends BaseController {
 
             }else{
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
-                return ("redirect:/oficioRemision/entradasPendientesRemision/2");
+                return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
             }
 
 
         }  catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-            return ("redirect:/oficioRemision/entradasPendientesRemision/2");
+            return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-            return ("redirect:/oficioRemision/entradasPendientesRemision/2");
+            return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
         }
 
         log.info("");
@@ -364,6 +367,9 @@ public class OficioRemisionController extends BaseController {
         OficioRemision oficioRemision = null;
         List<RegistroSalida> correctos;
 
+        //Calculamos el evento
+        Long evento = interno?RegwebConstantes.EVENTO_OFICIO_INTERNO:RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+
         log.info(" ");
         log.info("-------------------------------------------");
         log.info("Registrando Oficio Remision de Salida");
@@ -389,7 +395,7 @@ public class OficioRemisionController extends BaseController {
             // Comprobamos que al menos haya seleccionado algún RegistroSalida
             if (registrosSalida.size() == 0) {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                return "redirect:/oficioRemision/salidasPendientesRemision/2";
+                return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
@@ -410,18 +416,18 @@ public class OficioRemisionController extends BaseController {
 
             }else{
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
-                return ("redirect:/oficioRemision/salidasPendientesRemision/2");
+                return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
             }
 
 
         }  catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-            return ("redirect:/oficioRemision/salidasPendientesRemision/2");
+            return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
             Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-            return ("redirect:/oficioRemision/salidasPendientesRemision/2");
+            return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
         }
 
         log.info("");
