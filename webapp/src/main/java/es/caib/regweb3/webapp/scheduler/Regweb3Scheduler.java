@@ -102,9 +102,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: Genera las comunicaciones automáticas a los usuarios
-     * Cuando lo hace: cada Domingo a las 01:00h
+     * Cuando lo hace: Cada primer día de mes
      */
-    @Scheduled(cron = "0 0 1 * * SUN")
+    @Scheduled(cron = "0 0 0 1 * ?")
     public void generarComunicaciones(){
 
         try {
