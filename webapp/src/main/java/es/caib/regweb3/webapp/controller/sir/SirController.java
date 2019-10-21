@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller.sir;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
+import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -149,6 +150,7 @@ public class SirController extends BaseController {
 
         RegistroSirBusquedaForm registroSirBusquedaForm = new RegistroSirBusquedaForm(new RegistroSir(),1);
         model.addAttribute("estados", EstadoRegistroSir.values());
+        model.addAttribute("tipos", TipoRegistro.values());
         model.addAttribute("registroSirBusqueda", registroSirBusquedaForm);
         model.addAttribute("anys", getAnys());
         model.addAttribute("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
@@ -173,6 +175,7 @@ public class SirController extends BaseController {
         busqueda.setPageNumber(1);
 
         mav.addObject("estados", EstadoRegistroSir.values());
+        mav.addObject("tipos", TipoRegistro.values());
         mav.addObject("paginacion", paginacion);
         mav.addObject("registroSirBusqueda", busqueda);
         mav.addObject("anys", getAnys());

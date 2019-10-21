@@ -72,6 +72,31 @@
                             </div>
 
                             <div class="col-xs-12">
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.tipoRegistro" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="registroMigrado.tipoRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:select path="registroSir.tipoRegistro" cssClass="chosen-select">
+                                            <form:option value="" label="..."/>
+                                            <c:forEach var="tipo" items="${tipos}">
+                                                <form:option value="${tipo}"><spring:message code="registroSir.tipoRegistro.${tipo.value}"/></form:option>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="registroSir.numeroRegistro" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroRegistro.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.numeroRegistro"/></label>
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <form:input path="registroSir.numeroRegistro" cssClass="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12">
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
@@ -173,9 +198,9 @@
                                                 <th class="center"><spring:message code="registroSir.identificadorIntercambio"/></th>
                                                 <th><spring:message code="registroSir.fechaRecepcion"/></th>
                                                 <th class="center"><spring:message code="regweb.tipo"/></th>
-                                                <th class="center"><spring:message code="registroSir.aplicacion"/></th>
                                                 <th class="center"><spring:message code="regweb.origen"/></th>
                                                 <th class="center"><spring:message code="registroSir.oficinaDestino"/></th>
+                                                <th class="center"><spring:message code="registroSir.aplicacion"/></th>
                                                 <th class="center"><spring:message code="registroSir.estado"/></th>
                                                 <th>Doc</th>
                                                 <th><spring:message code="oficioRemision.reintentos"/></th>
@@ -198,9 +223,9 @@
                                                             <span class="label label-danger"><spring:message code="registroSir.salida"/></span>
                                                         </c:if>
                                                     </td>
-                                                    <td>${registroSir.aplicacion}</td>
                                                     <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralOrigen}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralInicio}</label></td>
                                                     <td><label class="no-bold" rel="popupAbajo" data-content="${registroSir.codigoEntidadRegistralDestino}" data-toggle="popover">${registroSir.decodificacionEntidadRegistralDestino}</label></td>
+                                                    <td>${registroSir.aplicacion}</td>
                                                     <td class="center">
                                                         <c:import url="../registroSir/estadosRegistroSir.jsp" />
                                                     </td>
