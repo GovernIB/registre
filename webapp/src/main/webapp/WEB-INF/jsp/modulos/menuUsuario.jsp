@@ -132,6 +132,9 @@
         <c:if test="${loginInfo.enlaceDir3}">
             <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="<%=PropiedadGlobalUtil.getDir3CaibServer()%>"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
+            <c:if test="${not empty ayudaUrl}">
+                <li class="submenu-complet"><a href="<c:url value="${ayudaUrl}"/>" target="_blank"><i class="fa fa-home"></i> <spring:message code="menu.ayudaUrl"/></a></li>
+            </c:if>
         </c:if>
 
         <li class="divider"></li>
