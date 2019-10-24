@@ -13,7 +13,6 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
-import org.apache.axis.utils.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -40,9 +39,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
 /**
  * Created 3/06/14 14:22
- *
+ * <p>
  * Controller para gestionar la parte común de los anexos
  *
  * @author mgonzalez
@@ -53,7 +54,6 @@ import java.util.List;
 @RequestMapping(value = "/anexo")
 @SessionAttributes(types = {AnexoForm.class})
 public class AnexoController extends BaseController {
-
 
     @Autowired
     private AnexoWebValidator anexoValidator;
@@ -103,7 +103,7 @@ public class AnexoController extends BaseController {
 
             try {
                 anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
-                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), false);
+                        anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), null, false);
 
                 model.addAttribute("closeAndReload", "true");
                 return "registro/formularioAnexo";
@@ -130,7 +130,6 @@ public class AnexoController extends BaseController {
 
         return "registro/formularioAnexo";
 
-
     }
 
 
@@ -141,7 +140,7 @@ public class AnexoController extends BaseController {
             method = RequestMethod.GET)
     public String editarAnexoGet(HttpServletRequest request,
                                  HttpServletResponse response, @PathVariable Long registroDetalleID,
-                                 @PathVariable String tipoRegistro, @PathVariable Long registroID,
+                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID,
                                  @PathVariable Long anexoID, @PathVariable boolean isOficioRemisionSir, Model model) throws I18NException, Exception {
 
         final boolean debug = log.isDebugEnabled();
@@ -239,7 +238,7 @@ public class AnexoController extends BaseController {
      */
     @RequestMapping(value = "/delete/{registroDetalleID}/{tipoRegistro}/{registroID}/{anexoID}", method = RequestMethod.GET)
     public String eliminarAnexo(@PathVariable Long registroDetalleID,
-                                @PathVariable String tipoRegistro, @PathVariable Long registroID,
+                                @PathVariable Long tipoRegistro, @PathVariable Long registroID,
                                 @PathVariable Long anexoID, HttpServletRequest request) {
 
         try {
@@ -260,9 +259,9 @@ public class AnexoController extends BaseController {
     /**
      * Método que monta la url a donde ir después de eliminar un anexo
      */
-    protected String getRedirectURL2(HttpServletRequest request, String tipoRegistro,
+    protected String getRedirectURL2(HttpServletRequest request, Long tipoRegistro,
                                      Long registroID) {
-        if (StringUtils.isEmpty(tipoRegistro)) {
+        if (tipoRegistro == null) {
 
             return request.getContextPath();
 
@@ -279,9 +278,13 @@ public class AnexoController extends BaseController {
     }
 
 
-    protected String getNombreCompletoTipoRegistro(String tipoRegistro) {
-        return "registro" + Character.toUpperCase(tipoRegistro.charAt(0))
-                + tipoRegistro.substring(1);
+    protected String getNombreCompletoTipoRegistro(Long tipoRegistro) {
+
+        if(tipoRegistro.equals(REGISTRO_ENTRADA)){
+            return "registroEntrada";
+        }else{
+            return "registroSalida";
+        }
     }
 
 
@@ -296,7 +299,7 @@ public class AnexoController extends BaseController {
 
         AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getMime(),
-                anexoFull.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(),false);
+                anexoFull.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(), false);
     }
 
     /**
@@ -312,10 +315,10 @@ public class AnexoController extends BaseController {
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(),original);
+                    anexo.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(), original);
         } else {
             fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), true, response, getEntidadActiva(request).getId(),original);
+                    anexo.getAnexo().isJustificante(), true, response, getEntidadActiva(request).getId(), original);
         }
 
     }
@@ -353,11 +356,11 @@ public class AnexoController extends BaseController {
                     data = dc.getData();
 
                 } else {   // Si és firma d'un arxiu
-                    if(original){
+                    if (original) {
                         SignatureCustody dc = anexoEjb.getFirma(custodiaID, isJustificante, idEntidad);
                         filename = dc.getName();
                         data = dc.getData();
-                    }else{
+                    } else {
                         SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante, idEntidad);
                         data = sc.getData();
                         filename = sc.getName();
@@ -436,7 +439,7 @@ public class AnexoController extends BaseController {
     Método que muestra y carga un archivo a partir del nombre del archivo y de su byte[]
      */
     private void fullDownload(String filename, String contentType, byte[] data,
-                             HttpServletResponse response) {
+                              HttpServletResponse response) {
 
         OutputStream output;
         MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
@@ -479,6 +482,7 @@ public class AnexoController extends BaseController {
 
     /**
      * Guarda en sesión los datos asociados al ultimo anexo
+     *
      * @param request
      * @param registroDetalleID
      * @param registroID
@@ -487,7 +491,7 @@ public class AnexoController extends BaseController {
      * @param isOficioRemisionSir
      */
     protected void saveLastAnnexoAction(HttpServletRequest request, Long registroDetalleID,
-                                        Long registroID, String tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
+                                        Long registroID, Long tipoRegistro, Long anexoID, boolean isOficioRemisionSir) {
         HttpSession session = request.getSession();
         session.setAttribute("LAST_registroDetalleID", registroDetalleID);
         session.setAttribute("LAST_tipoRegistro", tipoRegistro);
@@ -499,6 +503,7 @@ public class AnexoController extends BaseController {
 
     /**
      * Se cargan los atributos comunes de los anexos
+     *
      * @param request
      * @param model
      * @throws Exception
@@ -513,14 +518,15 @@ public class AnexoController extends BaseController {
 
     /**
      * Obtiene los anexos completos del registro indicado
+     *
      * @param idRegistro
      * @param tipoRegistro
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    private List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, String tipoRegistro)  throws Exception, I18NException {
-        if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO.toLowerCase())) {
+    private List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, Long tipoRegistro) throws Exception, I18NException {
+        if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
             RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFullLigero(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
 
@@ -536,26 +542,26 @@ public class AnexoController extends BaseController {
      * Método que verifica si el anexo que se está creando no supera el tamano establecido por las propiedades SIR
      * y tiene una extensión de documento dentro de las permitidas
      *
-     * @param registroID  identificador del registro al que se quiere asociar el anexo
-     * @param tipoRegistro si es "entrada" o "salida
-     * @param docSize tamaño del documento a anexar
-     * @param firmaSize tamaño de la firma a anexar
-     * @param docExtension extensión del documento a anexar
+     * @param registroID     identificador del registro al que se quiere asociar el anexo
+     * @param tipoRegistro   si es "entrada" o "salida
+     * @param docSize        tamaño del documento a anexar
+     * @param firmaSize      tamaño de la firma a anexar
+     * @param docExtension   extensión del documento a anexar
      * @param firmaExtension extensión de la firma a anexar
      * @param result
-     * @param scan true si viene de scan, false si no viene de scan
+     * @param scan           true si viene de scan, false si no viene de scan
      * @throws Exception
      * @throws I18NException
      */
-    public void validarLimitacionesSIRAnexos(Long registroID, String tipoRegistro, long docSize,
+    public void validarLimitacionesSIRAnexos(Long registroID, Long tipoRegistro, long docSize,
                                              long firmaSize, String docExtension, String firmaExtension,
-                                              BindingResult result, boolean scan) throws Exception, I18NException{
+                                             BindingResult result, boolean scan) throws Exception, I18NException {
 
         // Obtenemos los anexos del registro para validar que no exceda el máximo de MB establecido
         List<AnexoFull> anexosFull = obtenerAnexosFullByRegistro(registroID, tipoRegistro);
 
         //Se suman las distintas medidas de los anexos que tiene el registro hasta el momento.
-        long  tamanyoTotalAnexos= AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
+        long tamanyoTotalAnexos = AnexoUtils.obtenerTamanoTotalAnexos(anexosFull);
 
         // Comprobamos que el nuevo anexo no supere el tamaño máximo.
         Long tamanyoMaximoTotalAnexos = PropiedadGlobalUtil.getTamanoMaxTotalAnexosSir();
@@ -564,9 +570,9 @@ public class AnexoController extends BaseController {
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
                 String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
                 String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
-                if(!scan) {
+                if (!scan) {
                     result.rejectValue("documentoFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-                }else{
+                } else {
                     throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
                 }
             }
@@ -575,9 +581,9 @@ public class AnexoController extends BaseController {
             if (tamanyoTotalAnexos > tamanyoMaximoTotalAnexos) {
                 String totalAnexos = tamanyoTotalAnexos / (1024 * 1024) + " Mb";
                 String maxTotalAnexos = tamanyoMaximoTotalAnexos / (1024 * 1024) + " Mb";
-                if(!scan) {
+                if (!scan) {
                     result.rejectValue("firmaFile", "tamanymaxtotalsuperat", new Object[]{totalAnexos, maxTotalAnexos}, I18NUtils.tradueix("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos));
-                }else{
+                } else {
                     throw new I18NException("tamanymaxtotalsuperat", totalAnexos, maxTotalAnexos);
                 }
             }
@@ -586,7 +592,7 @@ public class AnexoController extends BaseController {
 
         //Validamos que las extensiones del documento y la firma esten dentro de los formatos permitidos.
         String extensionesPermitidas = PropiedadGlobalUtil.getFormatosAnexosSir();
-        if(!docExtension.isEmpty()) {
+        if (!docExtension.isEmpty()) {
             if (!extensionesPermitidas.contains(docExtension)) {
                 if (!scan) {
                     result.rejectValue("documentoFile", "formatonopermitido", new Object[]{docExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", docExtension, extensionesPermitidas));
@@ -594,7 +600,7 @@ public class AnexoController extends BaseController {
                     throw new I18NException("formatonopermitido", docExtension, extensionesPermitidas);
                 }
             }
-        }else {// Solo comprobamos la extensión en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
+        } else {// Solo comprobamos la extensión en el documento firma en el caso que el documento este vacio, ya que se trata de firma attached
             if (!extensionesPermitidas.contains(firmaExtension)) {
                 if (!scan) {
                     result.rejectValue("firmaFile", "formatonopermitido", new Object[]{firmaExtension, extensionesPermitidas}, I18NUtils.tradueix("formatonopermitido", firmaExtension, extensionesPermitidas));
@@ -606,7 +612,6 @@ public class AnexoController extends BaseController {
         }
 
     }
-
 
 
     @InitBinder

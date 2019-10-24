@@ -501,7 +501,7 @@
 
         <%--Modal ANULAR--%>
         <c:import url="../registro/anular.jsp">
-            <c:param name="tipoRegistro" value="salida"/>
+            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
         </c:import>
 
     </div>

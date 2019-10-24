@@ -22,10 +22,10 @@
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
-                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                             <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}
                         </c:if>
-                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                             <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}
                         </c:if>
                     </li>
@@ -40,20 +40,20 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <strong><spring:message code="regweb.reenviar"/>
-                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                     <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}
                                 </c:if>
-                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                     <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}
                                 </c:if>
                             </strong>
                         </h3>
                     </div>
                     <div class="panel-body">
-                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                             <c:url value="/registroEntrada/${registro.id}/reenviar" var="urlReenviar" scope="request"/>
                         </c:if>
-                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                             <c:url value="/registroSalida/${registro.id}/reenviar" var="urlReenviar" scope="request"/>
                         </c:if>
 
@@ -105,10 +105,10 @@
                                     <div class="col-xs-12">
                                         <input type="button" value="<spring:message code="regweb.reenviar"/>" class="btn btn-warning btn-sm" onclick="validarFormReenvio();"/>
 
-                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                             <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
                                         </c:if>
-                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                             <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroSalida/${registro.id}/detalle"/>')" class="btn btn-sm"/>
                                         </c:if>
 

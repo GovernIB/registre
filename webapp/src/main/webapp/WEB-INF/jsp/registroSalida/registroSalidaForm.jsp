@@ -342,7 +342,7 @@
     <c:if test="${empty registroSalida.id}">
         <c:set var="registro" value="${registroSalida}"/>
         <c:import url="../registro/interesados.jsp">
-            <c:param name="tipoRegistro" value="salida"/>
+            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
             <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
         </c:import>
     </c:if>

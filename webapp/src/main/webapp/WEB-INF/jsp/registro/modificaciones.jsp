@@ -38,7 +38,7 @@
                     <td class="center">
 
                         <%--REGISTRO ENTRADA--%>
-                        <c:if test="${param.tipoRegistro == 'entrada'}">
+                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                             <c:if test="${not empty historico.registroEntradaOriginal}">
                                 <a data-toggle="modal" role="button" href="#modalCompararRegistros" onclick="comparaRegistros('${historico.id}')" class="btn btn-warning btn-sm">Comparar</a>
                             </c:if>
@@ -48,7 +48,7 @@
                         </c:if>
 
                                 <%--REGISTRO SALIDA--%>
-                        <c:if test="${param.tipoRegistro == 'salida'}">
+                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                             <c:if test="${not empty historico.registroSalidaOriginal}">
                                 <a data-toggle="modal" role="button" href="#modalCompararRegistros" onclick="comparaRegistros('${historico.id}')" class="btn btn-warning btn-sm">Comparar</a>
                             </c:if>
@@ -67,10 +67,10 @@
 
 </div>
 
-<c:if test="${param.tipoRegistro == 'entrada'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
     <c:import url="../registroEntrada/comparaRegistros.jsp"/>
 </c:if>
-<c:if test="${param.tipoRegistro == 'salida'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <c:import url="../registroSalida/comparaRegistros.jsp"/>
 </c:if>
 

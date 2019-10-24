@@ -36,7 +36,7 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping(value = "/anexoFichero")
-@SessionAttributes(types = {AnexoForm.class })
+@SessionAttributes(types = {AnexoForm.class})
 public class AnexoFicheroController extends AnexoController {
 
 
@@ -52,7 +52,7 @@ public class AnexoFicheroController extends AnexoController {
      */
     @RequestMapping(value = "/ficheros", method = RequestMethod.GET)
     public ModelAndView ficherosGet(HttpServletRequest request,
-                                      HttpServletResponse response, Model model) throws I18NException, Exception {
+                                    HttpServletResponse response, Model model) throws I18NException, Exception {
 
         //En caso de error, actualiza las variables de sesión necesarias
         HttpSession session = request.getSession();
@@ -63,15 +63,14 @@ public class AnexoFicheroController extends AnexoController {
         Boolean isOficioRemisionSir = (Boolean) session.getAttribute("LAST_isOficioRemisionSir");
 
 
-
         return new ModelAndView(new RedirectView("/anexoFichero/ficheros/" + registroDetalleID + "/" + tipoRegistro + "/" + registroID + (anexoID == null ? "" : ("/" + anexoID)) + "/" + isOficioRemisionSir, true));
     }
 
     @RequestMapping(value = "/ficheros/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String ficherosGet(HttpServletRequest request,
-                                HttpServletResponse response, @PathVariable Long registroDetalleID,
-                                @PathVariable String tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
-                                Model model) throws I18NException, Exception {
+                              HttpServletResponse response, @PathVariable Long registroDetalleID,
+                              @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
+                              Model model) throws I18NException, Exception {
 
         log.info(" Passa per AnexoFicheroController::ficherosGet(" + registroDetalleID
                 + "," + tipoRegistro + ", " + registroID + ")");
@@ -89,18 +88,16 @@ public class AnexoFicheroController extends AnexoController {
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
         anexoForm.setPermitirAnexoDetached(PropiedadGlobalUtil.getPermitirAnexosDetached(entidad.getId()));
         anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
-        model.addAttribute("anexoForm" ,anexoForm);
+        model.addAttribute("anexoForm", anexoForm);
 
         return "registro/formularioAnexoFichero";
     }
 
 
-
-
     @RequestMapping(value = "/ficheros", method = RequestMethod.POST)
     public String ficherosPost(@ModelAttribute AnexoForm anexoForm,
                                BindingResult result, HttpServletRequest request,
-                               HttpServletResponse response, Model model) throws Exception,I18NException {
+                               HttpServletResponse response, Model model) throws Exception, I18NException {
 
         log.info(" Passa per ficherosPost");
 
@@ -123,15 +120,15 @@ public class AnexoFicheroController extends AnexoController {
                 firmaSize = anexoForm.getFirmaFile().getSize();
                 firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getFirmaFile().getOriginalFilename());
             }
-            log.info("MODO FIRMA "+ anexoForm.getAnexo().getModoFirma());
-            if(anexoForm.getDocumentoFile()!=null) {
+            log.info("MODO FIRMA " + anexoForm.getAnexo().getModoFirma());
+            if (anexoForm.getDocumentoFile() != null) {
                 log.info("DocumentoFile " + anexoForm.getDocumentoFile().getOriginalFilename());
             }
-            if(anexoForm.getFirmaFile()!=null) {
+            if (anexoForm.getFirmaFile() != null) {
                 log.info("FirmaFile " + anexoForm.getFirmaFile().getOriginalFilename());
             }
             //Validamos las limitaciones SIR
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result,false);
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, false);
 
         }
 
@@ -148,15 +145,15 @@ public class AnexoFicheroController extends AnexoController {
                 Entidad entidad = getEntidadActiva(request);
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 I18NTranslation i18n;
-                if(anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
+                if (anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
                     i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
                             I18NUtils.getLocale(), force);
                     if (i18n != null) {
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
                         Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
                     }
-                    if(anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_INVALIDA ||anexoForm.getAnexo().getEstadoFirma()==RegwebConstantes.ANEXO_FIRMA_ERROR){
-                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("error.firmanovalida") +anexoForm.getAnexo().getMotivoNoValidacion());
+                    if (anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_ERROR) {
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("error.firmanovalida") + anexoForm.getAnexo().getMotivoNoValidacion());
                     }
                 }
 
@@ -179,10 +176,9 @@ public class AnexoFicheroController extends AnexoController {
     }
 
 
-
-
     /**
      * Método que obtiene el signature custody del anexoForm.
+     *
      * @param anexoForm
      * @param dc
      * @param modoFirma
@@ -200,8 +196,8 @@ public class AnexoFicheroController extends AnexoController {
         log.debug(" anexoForm.getFirmaFile() = " + anexoForm.getFirmaFile());
         SignatureCustody sc = null;
         if (!anexoForm.getFirmaFile().isEmpty()) {
-            if (modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
-                    && modoFirma !=  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+            if (modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED
+                    && modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 String msg = "L'usuari ens indica que NO hi ha una firma pero n'envia una"
                         + " (modoFirma = " + modoFirma + ")";
                 log.error(msg, new Exception());
@@ -217,14 +213,14 @@ public class AnexoFicheroController extends AnexoController {
             sc.setName(multipart.getOriginalFilename());
 
             // Ajustamos los valores de custodia con los que se guardará el signaturecustody.
-            if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
+            if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
                 // Document amb firma adjunta
                 sc.setAttachedDocument(null);
 
                 // TODO Emprar mètode per descobrir tipus de signatura
                 sc.setSignatureType(SignatureCustody.OTHER_DOCUMENT_WITH_ATTACHED_SIGNATURE);
 
-            } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+            } else if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 // Firma en document separat CAS 4
                 if (dc == null) {
                     throw new Exception("Aquesta firma requereix el document original"
@@ -242,6 +238,7 @@ public class AnexoFicheroController extends AnexoController {
 
     /**
      * Método que obtiene el documentCustody del anexo.
+     *
      * @param anexoForm
      * @return
      */
@@ -269,13 +266,14 @@ public class AnexoFicheroController extends AnexoController {
 
     /**
      * Método que prepara el DocumentCustody y el Signature Custody de un anexo introducido via web
+     *
      * @param request
      * @param anexoForm
      * @throws Exception
      * @throws I18NException
      */
     protected void manageDocumentCustodySignatureCustody(
-            HttpServletRequest request,  AnexoForm anexoForm) throws Exception, I18NException {
+            HttpServletRequest request, AnexoForm anexoForm) throws Exception, I18NException {
 
         //Montamos el documentCustody y el signature custody
         DocumentCustody dc;
@@ -307,8 +305,8 @@ public class AnexoFicheroController extends AnexoController {
 
 
     @InitBinder
-    public void initBinder(WebDataBinder binder){
-        binder.registerCustomEditor(       Date.class,
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(Date.class,
                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
 
 

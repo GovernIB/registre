@@ -74,14 +74,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
     @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
@@ -107,14 +101,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
-    @EJB(mappedName = "regweb3/JustificanteEJB/local")
-    private JustificanteLocal justificanteEjb;
-
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
-
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
-    private SirEnvioLocal sirEnvioEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
@@ -473,7 +461,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
 
                     try{
-                        justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
+                        justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                     }catch (I18NException e){
                         log.info("----------------Error generado justificante via WS------------------");
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
@@ -530,7 +518,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
 
                     try{
-                        justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
+                        justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
                     }catch (I18NException e){
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -863,19 +851,5 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
         return organismosCodigo;
     }
-
-
-    /*
-      Método que crea el justiifcante del asiento registral y actualizar el estado del registro de salida y del asiento registral
-     */
-    private void justificanteEstadoAsientoRegistral(RegistroSalida registroSalida, AsientoRegistralWs asientoRegistral, Long estado) throws Exception, I18NValidationException, I18NException {
-        //Crear Justificante
-        justificanteEjb.crearJustificante(registroSalida.getUsuario(),registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO,"ca" );
-        //Marcar como distribuido
-        registroSalidaEjb.cambiarEstado(registroSalida.getId(),estado);
-        //Actualizar datos asiento registral
-        asientoRegistral.setEstado(estado);
-    }
-
 
 }

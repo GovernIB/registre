@@ -28,6 +28,9 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
+
 /**
  * Created by Fundació BIT.
  * Controller para gestionar los Interesados de un Registro de entrada o salida
@@ -58,9 +61,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/addOrganismo", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean addOrganismoInteresado(@PathVariable String tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Boolean addOrganismoInteresado(@PathVariable Long tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
         Entidad entidadActiva = getEntidadActiva(request);
@@ -73,7 +76,7 @@ public class InteresadoController extends BaseController{
             if(StringUtils.isEmpty(idRegistroDetalle)){ // Se trata de un nuevo Registro, utilizamos la sesion.
 
                 // Si es una Salida solo puede haber un Interesado Administración
-                if(tipoRegistro.equals("salida")){
+                if(tipoRegistro.equals(REGISTRO_SALIDA)){
 
                     String organismoCodigo = hayOrganismoInteresado(session);
                     if(StringUtils.isNotEmpty(organismoCodigo)){
@@ -88,7 +91,7 @@ public class InteresadoController extends BaseController{
             }else{ // Edición de un registro, lo añadimos a la bbdd
 
                 // Si es una Salida solo puede haber un Interesado Administración
-                if(tipoRegistro.equals("salida")){
+                if(tipoRegistro.equals(REGISTRO_SALIDA)){
 
                     String organismoCodigo = interesadoEjb.existeInteresadoAdministracion(Long.valueOf(idRegistroDetalle));
                     if(StringUtils.isNotEmpty(organismoCodigo)){
@@ -126,9 +129,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/addPersona", method = RequestMethod.GET)
     @ResponseBody
-    public Integer addPersonaInteresado(@PathVariable String tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Integer addPersonaInteresado(@PathVariable Long tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
         Interesado interesado;
@@ -176,11 +179,11 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value="/gestionar/{tipoRegistro}/nuevo/{idRegistroDetalle}", method= RequestMethod.POST)
     @ResponseBody
-    public synchronized JsonResponse nuevoInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
+    public synchronized JsonResponse nuevoInteresado(@PathVariable Long tipoRegistro,@PathVariable String idRegistroDetalle, @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
 
         JsonResponse jsonResponse = new JsonResponse();
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         Boolean isRepresentante = interesado.getIsRepresentante();
         String idRepresentado = null;
@@ -338,10 +341,10 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value="/gestionar/{tipoRegistro}/editar/{idRegistroDetalle}", method= RequestMethod.POST)
     @ResponseBody
-    public JsonResponse editarInteresado(@PathVariable String tipoRegistro,@PathVariable String idRegistroDetalle,
+    public JsonResponse editarInteresado(@PathVariable Long tipoRegistro,@PathVariable String idRegistroDetalle,
         @RequestBody Interesado interesado, HttpServletRequest request, BindingResult result) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         // TODO
         Boolean isRepresentante = interesado.getIsRepresentante();
@@ -464,10 +467,10 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/addRepresentante", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse addRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
+    public JsonResponse addRepresentante(@PathVariable Long tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam Long idRegistroDetalle, HttpServletRequest request) {
 
         log.info("");
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
         JsonResponse jsonResponse = new JsonResponse();
@@ -539,9 +542,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/eliminarRepresentante", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean eliminarRepresentante(@PathVariable String tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Boolean eliminarRepresentante(@PathVariable Long tipoRegistro,@RequestParam Long idRepresentante,@RequestParam Long idRepresentado,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         log.info("Dentro de eliminar representante: " + idRepresentante);
 
@@ -590,9 +593,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/eliminarPersona", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean eliminarPersonaInteresado(@PathVariable String tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Boolean eliminarPersonaInteresado(@PathVariable Long tipoRegistro,@RequestParam Long id,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
 
@@ -646,9 +649,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/eliminarOrganismo", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean eliminarOrganismoInteresado(@PathVariable String tipoRegistro, @RequestParam String codigoDir3,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Boolean eliminarOrganismoInteresado(@PathVariable Long tipoRegistro, @RequestParam String codigoDir3,@RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         log.info("Dentro de eliminarOrganismo: " + codigoDir3);
 
@@ -687,9 +690,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/eliminarInteresados", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean eliminarInteresados(@PathVariable String tipoRegistro, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public Boolean eliminarInteresados(@PathVariable Long tipoRegistro, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         HttpSession session = request.getSession();
 
@@ -802,7 +805,7 @@ public class InteresadoController extends BaseController{
      * @throws Exception
      */
     private Boolean eliminarOrganismoBbdd(String codigoDir3, Long idRegistroDetalle,
-        String tipoRegistro, Long idEntidad) throws Exception, I18NException{
+        Long tipoRegistro, Long idEntidad) throws Exception, I18NException{
 
         Interesado interesado = interesadoEjb.findByCodigoDir3RegistroDetalle(codigoDir3, idRegistroDetalle);
         if(interesado != null){
@@ -896,11 +899,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/obtenerInteresado", method = RequestMethod.GET)
     @ResponseBody
-    public Interesado obtenerInteresado(@PathVariable String tipoRegistro,@RequestParam Long id, HttpServletRequest request) throws Exception {
+    public Interesado obtenerInteresado(@PathVariable Long tipoRegistro,@RequestParam Long id, HttpServletRequest request) throws Exception {
 
-        String variableSesion = (tipoRegistro.equals("entrada") ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
-
-        log.info("Obtener datos Interesado: " + id);
+        String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
         Interesado interesado = interesadoEjb.findById(id);
 
@@ -967,10 +968,10 @@ public class InteresadoController extends BaseController{
 
 
 
-    private String getNumeroFormateadoByRegistroDetalle(Long idRegistroDetalle, String tipoRegistro) throws Exception{
+    private String getNumeroFormateadoByRegistroDetalle(Long idRegistroDetalle, Long tipoRegistro) throws Exception{
 
 
-        if(tipoRegistro.equals("entrada")){
+        if(tipoRegistro.equals(REGISTRO_ENTRADA)){
             return  registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
         }else{
             return registroSalidaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);

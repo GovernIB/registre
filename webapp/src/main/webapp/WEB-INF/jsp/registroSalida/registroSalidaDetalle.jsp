@@ -50,7 +50,7 @@
                         <%--DETALLE REGISTRO--%>
                         <dl class="detalle_registro">
                             <c:import url="../registro/detalleRegistro.jsp">
-                                <c:param name="tipoRegistro" value="salida"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                             </c:import>
                         </dl>
 
@@ -251,14 +251,14 @@
                             <!-- ANEXOS COMPLETO-->
                             <c:if test="${anexosCompleto}">
                                 <c:import url="../registro/anexos.jsp">
-                                    <c:param name="tipoRegistro" value="salida"/>
+                                    <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                                 </c:import>
                             </c:if>
 
                                 <%--ANEXOS SOLO LECTURA--%>
                             <c:if test="${not anexosCompleto}">
                                 <c:import url="../registro/anexosLectura.jsp">
-                                    <c:param name="tipoRegistro" value="salida"/>
+                                    <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                                     <c:param name="idEntidad" value="${registro.oficina.organismoResponsable.entidad.id}"/>
                                 </c:import>
                             </c:if>
@@ -267,7 +267,7 @@
                         <%--INTERESADOS--%>
                         <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !tieneJustificante}">
                             <c:import url="../registro/interesados.jsp">
-                                <c:param name="tipoRegistro" value="salida"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                                 <c:param name="comunidad" value="${comunidad.codigoComunidad}"/>
                                 <c:param name="idRegistroDetalle" value="${registro.registroDetalle.id}"/>
                             </c:import>
@@ -276,14 +276,14 @@
                         <%--INTERESADOS SOLO LECTURA--%>
                         <c:if test="${registro.estado != RegwebConstantes.REGISTRO_VALIDO || !puedeEditar || tieneJustificante}">
                             <c:import url="../registro/interesadosLectura.jsp">
-                                <c:param name="tipoRegistro" value="salida"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                             </c:import>
                         </c:if>
 
                         <%--EXPONE - SOLICITA--%>
                         <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
                             <c:import url="../registro/exponeSolicita.jsp">
-                                <c:param name="tipoRegistro" value="salida"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                             </c:import>
                         </c:if>
 
@@ -303,7 +303,7 @@
                     <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                         <div class="tab-pane" id="modificaciones">
                             <c:import url="../registro/modificaciones.jsp">
-                                <c:param name="tipoRegistro" value="salida"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                             </c:import>
                         </div>
                     </c:if>
@@ -319,12 +319,12 @@
 
     <%--Modal ANULAR--%>
     <c:import url="../registro/anular.jsp">
-        <c:param name="tipoRegistro" value="salida"/>
+        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
     </c:import>
 
     <%--SELLO --%>
     <c:import url="../registro/sello.jsp">
-        <c:param name="tipoRegistro" value="registroSalida"/>
+        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
     </c:import>
 
 </div>

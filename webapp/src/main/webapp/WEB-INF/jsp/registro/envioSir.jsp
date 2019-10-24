@@ -12,10 +12,10 @@
 
 <c:import url="../modulos/menu.jsp"/>
 
-<c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+<c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
     <c:set var="color" value="info"/>
 </c:if>
-<c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+<c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <c:set var="color" value="danger"/>
 </c:if>
 
@@ -31,10 +31,10 @@
                         <c:param name="avisos" value="false"/> <%--Importamos el menú de avisos--%>
                     </c:import>
                     <li class="active"><i class="fa fa-pencil-square-o"></i>
-                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                             <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado}
                         </c:if>
-                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                        <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                             <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado}
                         </c:if>
                     </li>
@@ -52,10 +52,10 @@
                 <div class="panel panel-${color}">
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
-                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                 <strong><spring:message code="regweb.enviar"/> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}<spring:message code="registroSir.mediante"/></strong>
                             </c:if>
-                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                 <strong><spring:message code="regweb.enviar"/> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}<spring:message code="registroSir.mediante"/></strong>
                             </c:if>
 
@@ -152,10 +152,10 @@
                             <div class="form-actions col-xs-12">
                                 <input type="button" id="enviar" value="<spring:message code="regweb.enviar"/>" class="btn btn-${color} btn-sm" <c:if test="${fn:length(oficinasSIR)==0}">disabled</c:if>/>
 
-                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-sm"/>
                                 </c:if>
-                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                     <input type="button" value="<spring:message code="regweb.cancelar"/>" onclick="goTo('<c:url value="/registroSalida/${registro.id}/detalle"/>')" class="btn btn-sm"/>
                                 </c:if>
 
@@ -193,11 +193,11 @@
             var url;
             var urlDetalle;
 
-            if(${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}){
+            if(${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}){
                 url = '<c:url value="/registroEntrada/${registro.id}/enviarSir"/>';
                 urlDetalle ='<c:url value="/registroEntrada/${registro.id}/detalle"/>';
             }
-            if(${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}){
+            if(${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}){
                 url = '<c:url value="/registroSalida/${registro.id}/enviarSir"/>';
                 urlDetalle ='<c:url value="/registroSalida/${registro.id}/detalle"/>';
             }

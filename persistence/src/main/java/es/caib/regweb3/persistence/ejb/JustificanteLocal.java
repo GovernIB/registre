@@ -16,9 +16,9 @@ import javax.ejb.Local;
  * Date: 22/06/16
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface JustificanteLocal {
 
-    AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, String tipoRegistro, String idioma) throws I18NException, I18NValidationException;
+    AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException;
 }
 

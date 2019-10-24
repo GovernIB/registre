@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
-<c:if test="${param.tipoRegistro == 'registroEntrada'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
     <c:url value="/registroEntrada/${registro.id}/enviarDestinatarios" var="urlDistribuir"/>
     <c:url value="/registroEntrada/${registro.id}/detalle" var="urlDetalle"/>
 </c:if>

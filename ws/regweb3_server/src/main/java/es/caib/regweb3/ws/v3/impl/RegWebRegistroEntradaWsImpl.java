@@ -281,7 +281,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
 
                 try{
-                    justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
+                    justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
                 }catch (I18NException e){
                     log.info("----------------Error generado justificante via WS------------------");
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
@@ -406,7 +406,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 6.- Generamos el justificante del RegistroEntrada
-        justificanteEjb.crearJustificante(usuarioEntidad,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
+        justificanteEjb.crearJustificante(usuarioEntidad,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
         //registroEntrada = registroEntradaEjb.generarJustificanteRegistroEntrada(registroEntrada, usuarioEntidad);
 
 

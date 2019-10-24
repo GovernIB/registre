@@ -60,7 +60,6 @@ public class OficioRemisionController extends BaseController {
     private SirEnvioLocal sirEnvioEjb;
 
 
-
     /**
      * Listado de todos los Oficios de Remision
      */
@@ -116,7 +115,7 @@ public class OficioRemisionController extends BaseController {
         // Ponemos la hora 23:59 a la fecha fin
         Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(),busqueda.getFechaInicio(),fechaFin, busqueda.getUsuario(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), false);
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, busqueda.getUsuario(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), false);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -153,10 +152,10 @@ public class OficioRemisionController extends BaseController {
 
         List<Organismo> organismosDestino = new ArrayList<Organismo>();
 
-        if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
+        if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)) {
             organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, null);
 
-        }else{
+        } else {
             organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, tipoEvento, null);
         }
 
@@ -188,10 +187,10 @@ public class OficioRemisionController extends BaseController {
 
         List<Organismo> organismosDestino = new ArrayList<Organismo>();
 
-        if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
+        if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)) {
             organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, null);
 
-        }else{
+        } else {
             organismosDestino = oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, tipoEvento, null);
         }
 
@@ -278,14 +277,14 @@ public class OficioRemisionController extends BaseController {
         List<RegistroEntrada> correctos;
 
         //Calculamos el evento
-        Long evento = interno?RegwebConstantes.EVENTO_OFICIO_INTERNO:RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+        Long evento = interno ? RegwebConstantes.EVENTO_OFICIO_INTERNO : RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
         log.info(" ");
         log.info("-------------------------------------------");
         log.info("Registrando Oficio Remision de Entrada");
         log.info(" ");
 
-        try{
+        try {
             // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
             if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)) {
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
@@ -304,14 +303,14 @@ public class OficioRemisionController extends BaseController {
             // Comprobamos que al menos haya seleccionado algún RegistroEntrada
             if (registrosEntrada.size() == 0) {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
+                return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
             correctos = oficioRemisionEntradaUtilsEjb.crearJustificantesRegistros(registrosEntrada, usuarioEntidad);
 
             // Creamos el OficioRemisión con los registros que se ha generado su Justificante
-            if(correctos.size() > 0){
+            if (correctos.size() > 0) {
                 if (interno) { //Oficio interno
                     log.info("Nuevo organismos sustituto: " + oficioRemisionForm.getIdOrganismo());
                     oficioRemision = oficioRemisionEntradaUtilsEjb.crearOficioRemisionInterno(correctos,
@@ -324,20 +323,20 @@ public class OficioRemisionController extends BaseController {
                             oficioRemisionForm.getOrganismoExternoDenominacion(), oficioRemisionForm.getIdLibro());
                 }
 
-            }else{
+            } else {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
-                return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
+                return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
             }
 
 
-        }  catch (I18NException e) {
+        } catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-            return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(e));
+            return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-            return "redirect:/oficioRemision/entradasPendientesRemision/"+evento;
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(ve));
+            return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         }
 
         log.info("");
@@ -347,7 +346,7 @@ public class OficioRemisionController extends BaseController {
 
         Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
 
-        if(correctos.size() != registrosEntrada.size()) {
+        if (correctos.size() != registrosEntrada.size()) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.generar.incompleto"));
         }
 
@@ -368,7 +367,7 @@ public class OficioRemisionController extends BaseController {
         List<RegistroSalida> correctos;
 
         //Calculamos el evento
-        Long evento = interno?RegwebConstantes.EVENTO_OFICIO_INTERNO:RegwebConstantes.EVENTO_OFICIO_EXTERNO;
+        Long evento = interno ? RegwebConstantes.EVENTO_OFICIO_INTERNO : RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
         log.info(" ");
         log.info("-------------------------------------------");
@@ -376,7 +375,7 @@ public class OficioRemisionController extends BaseController {
         log.info(" ");
 
 
-        try{
+        try {
             // Comprobamos que el UsuarioActivo pueda crear un Oficio de Remisión
             if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficioRemisionForm.getIdLibro(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
                 Mensaje.saveMessageAviso(request, getMessage("aviso.registro.editar"));
@@ -395,14 +394,14 @@ public class OficioRemisionController extends BaseController {
             // Comprobamos que al menos haya seleccionado algún RegistroSalida
             if (registrosSalida.size() == 0) {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.seleccion"));
-                return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
+                return "redirect:/oficioRemision/salidasPendientesRemision/" + evento;
             }
 
             // Generamos los Justificantes de todos los Registros seleccionados
             correctos = oficioRemisionSalidaUtilsEjb.crearJustificantesRegistros(registrosSalida, usuarioEntidad);
 
             // Creamos el OficioRemisión con los registros que se ha generado su Justificante
-            if(correctos.size() > 0){
+            if (correctos.size() > 0) {
                 if (interno) { //Oficio interno
                     oficioRemision = oficioRemisionSalidaUtilsEjb.crearOficioRemisionInterno(correctos,
                             getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getIdOrganismo(),
@@ -414,20 +413,20 @@ public class OficioRemisionController extends BaseController {
                             oficioRemisionForm.getOrganismoExternoDenominacion(), oficioRemisionForm.getIdLibro());
                 }
 
-            }else{
+            } else {
                 Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
-                return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
+                return "redirect:/oficioRemision/salidasPendientesRemision/" + evento;
             }
 
 
-        }  catch (I18NException e) {
+        } catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(e));
-            return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(e));
+            return "redirect:/oficioRemision/salidasPendientesRemision/" + evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo")+ ": " +I18NUtils.getMessage(ve));
-            return "redirect:/oficioRemision/salidasPendientesRemision/"+evento;
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(ve));
+            return "redirect:/oficioRemision/salidasPendientesRemision/" + evento;
         }
 
         log.info("");
@@ -437,7 +436,7 @@ public class OficioRemisionController extends BaseController {
 
         Mensaje.saveMessageInfo(request, getMessage("oficioRemision.generar.ok"));
 
-        if(correctos.size() != registrosSalida.size()) {
+        if (correctos.size() != registrosSalida.size()) {
             Mensaje.saveMessageError(request, getMessage("oficioRemision.generar.incompleto"));
         }
 
@@ -500,8 +499,8 @@ public class OficioRemisionController extends BaseController {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(
-                                RegwebConstantes.REGISTRO_ENTRADA_ESCRITO,registroEntradaAEnviar.getId(),
-                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
+                                RegwebConstantes.REGISTRO_ENTRADA, registroEntradaAEnviar.getId(),
+                                getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOficinaSIRCodigo());
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -542,8 +541,8 @@ public class OficioRemisionController extends BaseController {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
                         OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(
-                                RegwebConstantes.REGISTRO_SALIDA_ESCRITO,registroSalidaAEnviar.getId(),
-                                getOficinaActiva(request), usuarioEntidad,oficioRemisionForm.getOficinaSIRCodigo());
+                                RegwebConstantes.REGISTRO_SALIDA, registroSalidaAEnviar.getId(),
+                                getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOficinaSIRCodigo());
 
                         oficioRemisionList.add(oficioRemision);
                     }
@@ -552,15 +551,15 @@ public class OficioRemisionController extends BaseController {
 
         } catch (SIRException s) {
             log.info(" Error enviant a SIR: " + s.getMessage(), s);
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": "+s.getMessage());
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + s.getMessage());
             return new ModelAndView(redirect);
         } catch (I18NException e) {
             log.info(" Error enviant a SIR: " + I18NUtils.getMessage(e), e);
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio")  +": "+e.getMessage());
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + e.getMessage());
             return new ModelAndView(redirect);
         } catch (I18NValidationException ve) {
             log.info(" Error enviant a SIR: " + I18NUtils.getMessage(ve), ve);
-            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio")  +": "+ve.getMessage());
+            Mensaje.saveMessageError(request, getMessage("registroSir.error.envio") + ": " + ve.getMessage());
             return new ModelAndView(redirect);
         }
 
@@ -596,26 +595,26 @@ public class OficioRemisionController extends BaseController {
     public String detalleOficioRemision(@PathVariable Long idOficioRemision, Model model, HttpServletRequest request) throws Exception {
 
         Oficina oficinaActiva = getOficinaActiva(request);
-        Entidad entidadActiva =  getEntidadActiva(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
         // Interno
-        if(oficioRemision.getOrganismoDestinatario()!= null){
+        if (oficioRemision.getOrganismoDestinatario() != null) {
 
             // Solo si es la oficna que lo generó o alguna que depende del organismo destinatario del Oficio
-            if(!oficioRemision.getOficina().equals(oficinaActiva) && !organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario())){
+            if (!oficioRemision.getOficina().equals(oficinaActiva) && !organismosOficinaActiva.contains(oficioRemision.getOrganismoDestinatario())) {
                 log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
                 return "redirect:/oficioRemision/list";
             }
 
-        }else{ // Externo
+        } else { // Externo
 
             // Si no es la Oficina Activa no se puede consultar
-            if(!oficioRemision.getOficina().equals(oficinaActiva)){
+            if (!oficioRemision.getOficina().equals(oficinaActiva)) {
                 log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
                 return "redirect:/oficioRemision/list";
@@ -647,7 +646,7 @@ public class OficioRemisionController extends BaseController {
         Oficina oficinaActiva = getOficinaActiva(request);
 
         // Si no es la Oficina Activa no se puede consultar
-        if(!oficioRemision.getOficina().equals(oficinaActiva)){
+        if (!oficioRemision.getOficina().equals(oficinaActiva)) {
             log.info("Este OficioRemision no se puede consultar: No se encuentra en la Oficina donde se genero");
             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.oficinaActiva"));
             return "redirect:/oficioRemision/" + idOficioRemision + "/detalle";
@@ -753,15 +752,15 @@ public class OficioRemisionController extends BaseController {
 
 
     @RequestMapping(value = "/rechazados/list/{pageNumber}")
-    public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+    public ModelAndView rechazados(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosRemisionEstado");
 
         Oficina oficinaActiva = getOficinaActiva(request);
 
-        if(isOperador(request) && oficinaActiva != null) {
+        if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_RECHAZADO);
+            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.OFICIO_SIR_RECHAZADO);
 
             mav.addObject("estado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
             mav.addObject("url", "rechazados");
@@ -773,15 +772,15 @@ public class OficioRemisionController extends BaseController {
     }
 
     @RequestMapping(value = "/devueltos/list/{pageNumber}")
-    public ModelAndView devueltos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception{
+    public ModelAndView devueltos(@PathVariable Integer pageNumber, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosRemisionEstado");
 
         Oficina oficinaActiva = getOficinaActiva(request);
 
-        if(isOperador(request) && oficinaActiva != null) {
+        if (isOperador(request) && oficinaActiva != null) {
 
-            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber,oficinaActiva.getId(),RegwebConstantes.OFICIO_SIR_DEVUELTO);
+            Paginacion paginacion = oficioRemisionEjb.getByOficinaEstadoPaginado(pageNumber, oficinaActiva.getId(), RegwebConstantes.OFICIO_SIR_DEVUELTO);
 
             mav.addObject("estado", RegwebConstantes.OFICIO_SIR_DEVUELTO);
             mav.addObject("url", "devueltos");
@@ -900,7 +899,7 @@ public class OficioRemisionController extends BaseController {
     public void oficioRemisionBusqueda(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);
-        binder.registerCustomEditor(java.util.Date.class,new CustomDateEditor(sdf, true));
+        binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(sdf, true));
     }
 
 }

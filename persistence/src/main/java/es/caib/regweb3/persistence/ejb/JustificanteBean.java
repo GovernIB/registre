@@ -51,7 +51,7 @@ public class JustificanteBean implements JustificanteLocal {
 
 
     @Override
-    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, String tipoRegistro, String idioma) throws I18NException, I18NValidationException {
+    public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException {
 
         String custodyID = null;
         boolean error = false;
@@ -167,21 +167,21 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull.getAnexo().setFechaValidacion(new Date());
 
             // Cream l'annex justificant
-            anexoFull = anexoEjb.crearJustificanteAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID, false);
+            anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID, false);
 
             log.info("");
             log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
             log.info("------------------------------------------------------------");
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(),System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
 
             return anexoFull;
 
         } catch (I18NValidationException i18nve) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), i18nve, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), i18nve, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 //ex.printStackTrace();
             }
@@ -190,7 +190,7 @@ public class JustificanteBean implements JustificanteLocal {
         } catch (I18NException i18ne) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion,peticion.toString(), i18ne, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), i18ne, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 //ex.printStackTrace();
             }
@@ -199,7 +199,7 @@ public class JustificanteBean implements JustificanteLocal {
         } catch (Exception e) {
             error = true;
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception ex) {
                 //ex.printStackTrace();
             }
@@ -216,13 +216,10 @@ public class JustificanteBean implements JustificanteLocal {
                     }
                 }
             }
-
         }
-
     }
 
     /**
-     *
      * @param registro
      * @param anexo
      * @param anexoFull
@@ -230,17 +227,15 @@ public class JustificanteBean implements JustificanteLocal {
      * @return
      */
     private Map<String, Object> getCustodyParameters(IRegistro registro, Anexo anexo,
-                                                       AnexoFull anexoFull, UsuarioEntidad usuarioEntidad)  {
+                                                     AnexoFull anexoFull, UsuarioEntidad usuarioEntidad) {
 
 
-        Map<String,Object> custodyParameters = new HashMap<String, Object>();
+        Map<String, Object> custodyParameters = new HashMap<String, Object>();
 
         custodyParameters.put("registro", registro);
         custodyParameters.put("anexo", anexo);
         custodyParameters.put("anexoFull", anexoFull);
         custodyParameters.put("usuarioEntidad", usuarioEntidad);
-
-
 
         Interesado interesado = registro.getRegistroDetalle().getInteresados().get(0);
         custodyParameters.put("ciudadano_nombre", interesado.getNombreCompleto());
@@ -253,6 +248,5 @@ public class JustificanteBean implements JustificanteLocal {
         custodyParameters.put("ciudadano_idadministrativo", documentAdministratiu);
 
         return custodyParameters;
-
     }
 }

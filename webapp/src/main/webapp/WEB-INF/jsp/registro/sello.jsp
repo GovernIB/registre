@@ -2,11 +2,11 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 
-<c:if test="${param.tipoRegistro == 'registroEntrada'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
     <c:url value="/registroEntrada/${registro.id}/sello" var="urlSello"/>
 </c:if>
 
-<c:if test="${param.tipoRegistro == 'registroSalida'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <c:url value="/registroSalida/${registro.id}/sello" var="urlSello"/>
 </c:if>
 

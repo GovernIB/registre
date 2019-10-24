@@ -17,11 +17,12 @@ import java.util.List;
  * Date: 06/03/2019
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface AsientoRegistralLocal {
 
     /**
      * Cra un neuvo UsuarioEntidad haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+     *
      * @param identificador
      * @param idEntidad
      * @return
@@ -32,6 +33,7 @@ public interface AsientoRegistralLocal {
 
     /**
      * Registra una salida haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+     *
      * @param registroSalida
      * @param usuarioEntidad
      * @param interesados
@@ -43,10 +45,11 @@ public interface AsientoRegistralLocal {
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
-       throws Exception, I18NException, I18NValidationException;
+            throws Exception, I18NException, I18NValidationException;
 
     /**
      * Registra una entrada haciendo uso de @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+     *
      * @param registroEntrada
      * @param usuarioEntidad
      * @param interesados
@@ -57,11 +60,22 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                    UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**
+     * @param usuarioEntidad
+     * @param registro
+     * @param tipoRegistro
+     * @param idioma
+     * @throws I18NValidationException
+     * @throws I18NException
+     */
+    void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException;
+
+    /**
      * Obtiene la referencia del justificante de un Registro
+     *
      * @param numeroRegistroformateado
      * @param entidad
      * @return
@@ -72,6 +86,7 @@ public interface AsientoRegistralLocal {
 
     /**
      * Procesa el Registro de Salida creado según el TipoOperación indicado
+     *
      * @param tipoOperacion
      * @param registroSalida
      * @return

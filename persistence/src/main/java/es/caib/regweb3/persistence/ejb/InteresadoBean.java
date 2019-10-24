@@ -16,6 +16,8 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.List;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
+
 /**
  * Created by Fundació BIT.
  *
@@ -215,10 +217,10 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro, 
-        String tipo, Long entidadId) throws Exception, I18NException {
+        Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin !=null) {
-            if ("entrada".equals(tipo)) {
+            if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
                 postProcesoPlugin.nuevoInteresadoEntrada(interesado, numRegistro);
             } else {
                 postProcesoPlugin.nuevoInteresadoSalida(interesado, numRegistro);
@@ -228,10 +230,10 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro,
-        String tipo, Long entidadId) throws Exception, I18NException {
+        Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin !=null) {
-            if ("entrada".equals(tipo)) {
+            if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
                 postProcesoPlugin.actualizarInteresadoEntrada(interesado, numRegistro);
             } else {
                 postProcesoPlugin.actualizarInteresadoSalida(interesado, numRegistro);
@@ -241,10 +243,10 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     }
 
     public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro,
-        String tipo, Long entidadId) throws Exception, I18NException {
+        Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
         if(postProcesoPlugin !=null) {
-            if ("entrada".equals(tipo)) {
+            if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
                 postProcesoPlugin.eliminarInteresadoEntrada(idInteresado, numRegistro);
             } else {
                 postProcesoPlugin.eliminarInteresadoSalida(idInteresado, numRegistro);

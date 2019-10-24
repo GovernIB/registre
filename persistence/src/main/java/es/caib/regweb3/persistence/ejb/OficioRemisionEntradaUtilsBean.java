@@ -33,7 +33,7 @@ import java.util.*;
  *
  * @author earrivi
  * @author anadal (Convertir en EJB)
- *         Date: 16/01/14
+ * Date: 16/01/14
  */
 @Stateless(name = "OficioRemisionEntradaUtilsEJB")
 @SecurityDomain("seycon")
@@ -70,15 +70,15 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("libros", libros);
         q.setParameter("oficio_interno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
 
-        if(total != null){
+        if (total != null) {
             q.setMaxResults(total);
         }
 
         List<Object[]> organismosInternos = q.getResultList();
 
-        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
-        for (Object[] organismoInterno : organismosInternos){
-            Organismo organismo = new Organismo(null,(String) organismoInterno[0], (String) organismoInterno[1]);
+        List<Organismo> organismosDestino = new ArrayList<Organismo>();
+        for (Object[] organismoInterno : organismosInternos) {
+            Organismo organismo = new Organismo(null, (String) organismoInterno[0], (String) organismoInterno[1]);
 
             organismosDestino.add(organismo);
         }
@@ -102,15 +102,15 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("libros", libros);
         q.setParameter("tipoEvento", tipoEvento);
 
-        if(total != null){
+        if (total != null) {
             q.setMaxResults(total);
         }
 
         List<Object[]> organismosExternos = q.getResultList();
 
-        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
-        for (Object[] organismoExterno : organismosExternos){
-            Organismo organismo = new Organismo(null,(String) organismoExterno[0], (String) organismoExterno[1]);
+        List<Organismo> organismosDestino = new ArrayList<Organismo>();
+        for (Object[] organismoExterno : organismosExternos) {
+            Organismo organismo = new Organismo(null, (String) organismoExterno[0], (String) organismoExterno[1]);
 
             organismosDestino.add(organismo);
         }
@@ -123,7 +123,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     @SuppressWarnings(value = "unchecked")
     public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos, Integer total) throws Exception {
 
-        List<Organismo> organismosDestino =  new ArrayList<Organismo>();
+        List<Organismo> organismosDestino = new ArrayList<Organismo>();
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
@@ -146,13 +146,13 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             q.setParameter("organismos", organismos);
         }
 
-        if(total != null){
+        if (total != null) {
             q.setMaxResults(total);
         }
 
         List<Object[]> organismosInternos = q.getResultList();
-        for (Object[] organismoInterno : organismosInternos){
-            Organismo organismo = new Organismo(null,(String) organismoInterno[0], (String) organismoInterno[1]);
+        for (Object[] organismoInterno : organismosInternos) {
+            Organismo organismo = new Organismo(null, (String) organismoInterno[0], (String) organismoInterno[1]);
 
             organismosDestino.add(organismo);
         }
@@ -168,14 +168,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q1.setParameter("idOficina", idOficina);
         q1.setParameter("libros", libros);
 
-        if(total != null){
+        if (total != null) {
             q1.setMaxResults(total);
         }
 
         List<Object[]> organismosExternos = q1.getResultList();
 
-        for (Object[] organismoExterno : organismosExternos){
-            Organismo organismo = new Organismo(null,(String) organismoExterno[0], (String) organismoExterno[1]);
+        for (Object[] organismoExterno : organismosExternos) {
+            Organismo organismo = new Organismo(null, (String) organismoExterno[0], (String) organismoExterno[1]);
 
             organismosDestino.add(organismo);
         }
@@ -227,10 +227,9 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
 
-        return  (Long) q.getSingleResult();
+        return (Long) q.getSingleResult();
 
     }
-
 
 
     @Override
@@ -240,7 +239,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
         Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
 
-        if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)){
+        if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)) {
 
             Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
             oficios.setOrganismo(organismo);
@@ -248,14 +247,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
             // Organismo extinguido, obtenemos los organismos sustitutos
-            if(!oficios.getVigente()){
+            if (!oficios.getVigente()) {
                 Set<Organismo> historicosFinales = new HashSet<Organismo>();
                 Set<Organismo> sustitutos = new HashSet<Organismo>();
                 //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
-                organismoEjb.obtenerHistoricosFinales(organismo.getId(),historicosFinales);
-                for(Organismo historico: historicosFinales){
+                organismoEjb.obtenerHistoricosFinales(organismo.getId(), historicosFinales);
+                for (Organismo historico : historicosFinales) {
                     //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
-                    if(oficinaEjb.tieneOficinasServicio(historico.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)){
+                    if (oficinaEjb.tieneOficinasServicio(historico.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)) {
                         sustitutos.add(historico);
                         oficios.setOficinas(true);
                     }
@@ -265,30 +264,30 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             }
 
             // Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage,organismo.getId(), any, oficinaActiva.getId(), idLibro));
+            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber, resultsPerPage, organismo.getId(), any, oficinaActiva.getId(), idLibro));
 
 
-        } else if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO) || tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR)){
+        } else if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO) || tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
 
             oficios.setExterno(true);
 
             // Obtenemos el Organismo externo de Dir3Caib
             UnidadTF unidadTF = organismoEjb.obtenerDestinoExterno(codigoOrganismo);
 
-            if(unidadTF != null){
+            if (unidadTF != null) {
 
-                Organismo organismoExterno = new Organismo(null,codigoOrganismo,unidadTF.getDenominacion());
+                Organismo organismoExterno = new Organismo(null, codigoOrganismo, unidadTF.getDenominacion());
                 oficios.setOrganismo(organismoExterno);
 
                 //Oficio Externo
-                if(tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)){
+                if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO)) {
                     //Organismo externo vigente
-                    if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                    if (unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                         log.info("Organismo externo vigente");
                         organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                         oficios.setVigente(true);
 
-                    }else{ // Organismo externo extinguido, obtenemos los organismos sustitutos
+                    } else { // Organismo externo extinguido, obtenemos los organismos sustitutos
                         log.info("Organismo externo extinguido, buscamos sustitutos");
                         organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
                         oficios.setVigente(false);
@@ -298,8 +297,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
                         //Convertimos los sustitutos a organismos de regweb3
                         List<Organismo> sustitutos = new ArrayList<Organismo>();
-                        for(UnidadTF sustituto: sustitutosExternos){
-                            sustitutos.add(new Organismo(null,sustituto.getCodigo(),sustituto.getDenominacion()));
+                        for (UnidadTF sustituto : sustitutosExternos) {
+                            sustitutos.add(new Organismo(null, sustituto.getCodigo(), sustituto.getDenominacion()));
                         }
 
                         oficios.setSustitutos(sustitutos);
@@ -312,7 +311,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR) && entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
 
                     //Oficio SIR - Organismo Externo Vigente
-                    if(unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)){
+                    if (unidadTF.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                         log.info("Organismo externo SIR vigente");
                         organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
                         oficios.setVigente(true);
@@ -330,7 +329,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                         }
 
 
-                    }else { // Organismo externo extinguido, obtenemos los organismos sustitutos
+                    } else { // Organismo externo extinguido, obtenemos los organismos sustitutos
 
                         log.info("Organismo externo SIR extinguido, buscamos sustitutos");
                         organismoExterno.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO));
@@ -339,7 +338,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                         // Obtenemos los sustitutos de dir3caib
                         List<UnidadTF> sustitutosExternos = organismoEjb.obtenerSustitutosExternosSIR(organismoExterno.getCodigo());
                         //Si solo hay un sustituto, se obtienen sus oficinas SIR y se mandan.
-                        if(sustitutosExternos.size() == 1){
+                        if (sustitutosExternos.size() == 1) {
                             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
                             List<OficinaTF> oficinasSIR = oficinasService.obtenerOficinasSIRUnidad(sustitutosExternos.get(0).getCodigo());
                             oficios.setOficinasSIR(oficinasSIR);
@@ -354,7 +353,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                     }
                     oficios.setSir(true);
 
-                }else { //Oficio de Remisión Tradicional
+                } else { //Oficio de Remisión Tradicional
                     oficios.setSir(false);
                     oficios.setOficinasSIR(null);
                     log.info("Nuestra entidad no esta en SIR, se creara un oficio de remision tradicional");
@@ -363,8 +362,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
                 //Buscamos los Registros de Entrada externos, pendientes de tramitar mediante un Oficio de Remision
                 if (oficio.getExterno()) {
                     oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro, tipoEvento));
-                }else if(oficio.getEdpExterno()){
-                    oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber,resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
+                } else if (oficio.getEdpExterno()) {
+                    oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber, resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
                 }
 
             }
@@ -376,7 +375,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber,final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber, final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -428,7 +427,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         for (Object[] object : result) {
             RegistroEntrada re = new RegistroEntrada();
-            re.setId((Long)  object[0]);
+            re.setId((Long) object[0]);
             re.setNumeroRegistroFormateado((String) object[1]);
             re.setFecha((Date) object[2]);
             re.setOficina((Oficina) object[3]);
@@ -443,8 +442,6 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         return paginacion;
     }
-
-
 
 
     @SuppressWarnings(value = "unchecked")
@@ -499,7 +496,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         for (Object[] object : result) {
             RegistroEntrada re = new RegistroEntrada();
-            re.setId((Long)  object[0]);
+            re.setId((Long) object[0]);
             re.setNumeroRegistroFormateado((String) object[1]);
             re.setFecha((Date) object[2]);
             re.setOficina((Oficina) object[3]);
@@ -556,9 +553,9 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     /**
      * Crea un OficioRemision con todos los ResgistroEntrada seleccionados
      *
-     * @param registrosEntrada Listado de RegistrosEntrada que forman parte del Oficio de remisión
-     * @param oficinaActiva    Oficia en la cual se realiza el OficioRemision
-     * @param usuarioEntidad   Usuario que realiza el OficioRemision
+     * @param registrosEntrada       Listado de RegistrosEntrada que forman parte del Oficio de remisión
+     * @param oficinaActiva          Oficia en la cual se realiza el OficioRemision
+     * @param usuarioEntidad         Usuario que realiza el OficioRemision
      * @param organismoExternoCodigo
      * @param idLibro
      * @return
@@ -603,23 +600,21 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             //Justificante, Si no tiene generado el Justificante, lo hacemos
             if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
 
-                try{
-
+                try {
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA_ESCRITO.toLowerCase(), Configuracio.getDefaultLanguage());
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                     registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
                     // Añadimos el Correcto
                     correctos.add(registro);
-                }catch (I18NException e){
+                } catch (I18NException e) {
                     log.info("Error generando justificante: " + e.getMessage());
                     e.printStackTrace();
                 }
 
-            }else{
+            } else {
                 // Añadimos el Correcto
                 correctos.add(registro);
             }
-
         }
 
         return correctos;
@@ -635,8 +630,8 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
      */
     @Override
     public List<RegistroEntrada> aceptarOficioRemision(OficioRemision oficioRemision,
-                                                        UsuarioEntidad usuario, Oficina oficinaActiva,
-                                                        List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
+                                                       UsuarioEntidad usuario, Oficina oficinaActiva,
+                                                       List<OficioPendienteLlegada> oficios) throws Exception, I18NException, I18NValidationException {
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
@@ -691,7 +686,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             trazabilidadEjb.merge(trazabilidad);
 
             // Marcamos el RegistroEntrada original como ACEPTADO
-            registroEntradaEjb.cambiarEstadoHistorico(registroEntrada,RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
+            registroEntradaEjb.cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_OFICIO_ACEPTADO, usuario);
 
         }
 
