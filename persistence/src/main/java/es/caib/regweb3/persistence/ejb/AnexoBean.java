@@ -28,7 +28,6 @@ import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.utils.MetadataConstants;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
-import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.Resource;
@@ -48,6 +47,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
 
+import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
 
 
 /**
@@ -56,7 +56,7 @@ import java.util.*;
  * @author earrivi
  * @author anadal
  * @author anadal (Adaptació DocumentCustody 3.0.0)
- *         Date: 6/03/13
+ * Date: 6/03/13
  */
 @Stateless(name = "AnexoEJB")
 @SecurityDomain("seycon")
@@ -71,30 +71,18 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @PersistenceContext(unitName = "regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
+    @EJB private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+    @EJB private SignatureServerLocal signatureServerEjb;
+    @EJB private PluginLocal pluginEjb;
+    @EJB private IntegracionLocal integracionEjb;
 
     @EJB(mappedName = "regweb3/RegistroEntradaCambiarEstadoEJB/local")
     private RegistroEntradaCambiarEstadoLocal registroEntradaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaCambiarEstadoEJB/local")
     private RegistroSalidaCambiarEstadoLocal registroSalidaEjb;
-
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
-
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
-
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
-    private IntegracionLocal integracionEjb;
-
 
     @Override
     public Anexo getReference(Long id) throws Exception {
@@ -158,14 +146,14 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             log.error(e.getMessage(), e);
 
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e,null, System.currentTimeMillis() - tiempo, idEntidad, "");
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, idEntidad, "");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
 
             throw new I18NException(e, "anexo.error.obteniendo",
-               new I18NArgumentString(String.valueOf(anexoID)),
-               new I18NArgumentString(e.getMessage()));
+                    new I18NArgumentString(String.valueOf(anexoID)),
+                    new I18NArgumentString(e.getMessage()));
 
         }
     }
@@ -206,30 +194,18 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new I18NException(e, "anexo.error.obteniendo",
-               new I18NArgumentString(String.valueOf(anexoID)),
-               new I18NArgumentString(e.getMessage()));
+                    new I18NArgumentString(String.valueOf(anexoID)),
+                    new I18NArgumentString(e.getMessage()));
 
         }
     }
 
 
     /**
-     * Método que crea un anexo
-     *
-     */
-    @Override
-    public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                Long registroID, String tipoRegistro, Boolean validarAnexo) throws I18NException, I18NValidationException {
-
-        return crearJustificanteAnexo(anexoFull, usuarioEntidad, registroID, tipoRegistro, null, validarAnexo);
-
-    }
-
-    /**
      * Método que crea un anexo o un justificante a partir de lo que le llega en anexoFull
      */
-    public AnexoFull crearJustificanteAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                            Long registroID, String tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException {
+    public AnexoFull crearAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
+                                Long registroID, Long tipoRegistro, String custodyID, Boolean validarAnexo) throws I18NException, I18NValidationException {
 
         IDocumentCustodyPlugin custody = null;
         boolean error = false;
@@ -270,13 +246,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
             // Validar firma del Anexo
-            log.info("Anexo tipo doc  " + anexo.getTipoDocumento());
             //Solo validamos si no es justificante, no es fichero tecnico y nos indican que se debe validar
             if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getTipoDocumento())) {
                 final boolean force = false; //Indica si queremos forzar la excepción.
                 if (anexo.getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
                     signatureServerEjb.checkDocument(anexoFull, entidad.getId(),
-                       new Locale("es"), force);
+                            new Locale("es"), force);
                 }
             }
 
@@ -328,7 +303,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Guardamos los documentos asociados al anexo en custodia
             updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-               registro, isNew);
+                    registro, isNew);
 
             // -----------  BBDD -----------------
 
@@ -353,7 +328,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             error = true;
             log.info("Error creant un anexe: " + i18n.getMessage(), i18n);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), i18n,null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), i18n, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -363,7 +338,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             error = true;
             log.info("Error creant un anexe: " + e.getMessage(), e);
             try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
+                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_CUSTODIA, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
             } catch (Exception ex) {
                 e.printStackTrace();
             }
@@ -390,7 +365,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws I18NException
      */
     protected void validateAnexo(Anexo anexo, final boolean isNou)
-       throws I18NValidationException, I18NException {
+            throws I18NValidationException, I18NException {
         AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
         AnexoBeanValidator pfbv = new AnexoBeanValidator(anexoValidator);
         pfbv.throwValidationExceptionIfErrors(anexo, isNou);
@@ -409,8 +384,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      */
     @Override
     public AnexoFull actualizarAnexo(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                     Long registroID, String tipoRegistro, boolean isJustificante, boolean noWeb)
-       throws I18NException, I18NValidationException {
+                                     Long registroID, Long tipoRegistro, boolean isJustificante, boolean noWeb)
+            throws I18NException, I18NValidationException {
 
         try {
             Anexo anexo = anexoFull.getAnexo();
@@ -435,7 +410,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 final String custodyID = anexo.getCustodiaID();
                 //Guardamos los cambios en custodia
                 updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
-                   registro, isNew);
+                        registro, isNew);
             }
 
             //Actualizamos los datos de anexo en BBDD
@@ -464,24 +439,23 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @return
      * @throws Exception
      */
-    protected IRegistro getIRegistro(Long registroID, String tipoRegistro) throws Exception {
+    protected IRegistro getIRegistro(Long registroID, Long tipoRegistro) throws Exception {
         IRegistro registro;
         IRegistro cloneRegistro;
         //Recuperamos el registro de la BD
-        if ("entrada".equals(tipoRegistro)) {
+        if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
             registro = registroEntradaEjb.findById(registroID);
-
         } else {
             registro = registroSalidaEjb.findById(registroID);
 
         }
 
         //Cargamos el tipo asunto y los interesados
-        Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
-        Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
+        //Hibernate.initialize(registro.getRegistroDetalle().getTipoAsunto());
+        //Hibernate.initialize(registro.getRegistroDetalle().getInteresados());
 
         //Creamos un registro a partir del cargado previamente
-        if ("entrada".equals(tipoRegistro)) {
+        if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
             cloneRegistro = new RegistroEntrada((RegistroEntrada) registro);
         } else {
             cloneRegistro = new RegistroSalida((RegistroSalida) registro);
@@ -506,9 +480,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws I18NException
      */
     protected void crearHistorico(AnexoFull anexoFull, UsuarioEntidad usuarioEntidad,
-                                  Long registroID, String tipoRegistro, boolean isNew) throws Exception, I18NException {
+                                  Long registroID, Long tipoRegistro, boolean isNew) throws Exception, I18NException {
 
-        if ("entrada".equals(tipoRegistro)) {
+        if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(registroID);
             Entidad entidadActiva = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
             // Dias que han pasado desde que se creó el registroEntrada
@@ -694,7 +668,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
             signatureCustody = anexoFull.getSignatureCustody();
             mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody,
-               anexo, mimeFinal);
+                    anexo, mimeFinal);
 
             updateDate = true;
 
@@ -706,7 +680,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 // XMAS SAVEALL guardarDocumentCustody(anexoFull.getDocumentoCustody(), custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                 documentCustody = anexoFull.getDocumentoCustody();
                 mimeFinal = arreglarDocumentCustody(documentCustody,
-                   anexo, mimeFinal);
+                        anexo, mimeFinal);
 
                 //Borrar lo que haya en signature custody
                 // XMAS SAVEALL custody.deleteSignature(custodyID);
@@ -723,7 +697,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
                     signatureCustody = anexoFull.getSignatureCustody();
                     mimeFinal = arreglarSignatureCustody(signatureCustody, documentCustody,
-                       anexo, mimeFinal);
+                            anexo, mimeFinal);
 
                     // XMAS SAVEALL guardarSignatureCustody(anexoFull.getSignatureCustody(), doc, custody, custodyID, custodyParameters, anexo, updateDate, mimeFinal);
                     //Borramos el documentcustody que habia por si venimos de otro modo de firma
@@ -734,7 +708,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                     log.info("PARCHE DC " + anexoFull.getDocumentoCustody());
                     documentCustody = doc;
                     mimeFinal = arreglarDocumentCustody(documentCustody,
-                       anexo, mimeFinal);
+                            anexo, mimeFinal);
 
                     signatureCustody = null;
 
@@ -782,8 +756,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 //Convertim les dades rebudes de l'Scan al format antic
                 /*TODO s'hauria de canvia també la versió del plugin de DocumentCustody per evitar emplear la classe antiga de Metadata.
                 org.fundaciobit.plugins.utils.Metadata s'hauria d'apuntar a pluginsIB*/
-                for(Metadata metaScan: metasScan){
-                    metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(metaScan.getKey(),metaScan.getValue()));
+                for (Metadata metaScan : metasScan) {
+                    metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(metaScan.getKey(), metaScan.getValue()));
                 }
 
                 if (debug) {
@@ -798,7 +772,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
                 //les metadates estan comentades perque no s'usan de moment fins que adaptem a la nova versió de documentCustody de plugins ib)
 
-               // metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
+                // metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
 
                 // Afegida Nova Metadada
@@ -806,17 +780,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                    org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
 */
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_FECHA_INICIO,
-                   org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
+                        org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
             }
 
             // String tipoDeDocumento; //  varchar(100)
             if (anexo.getTitulo() != null) {
-              //  metadades.add(new Metadata("anexo.titulo", anexo.getTitulo()));
+                //  metadades.add(new Metadata("anexo.titulo", anexo.getTitulo()));
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.titulo", anexo.getTitulo()));
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_DESCRIPCION = "eni:descripcion"
-              //  metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
+                //  metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
             }
 
@@ -825,7 +799,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 /*metadades.add(new Metadata("anexo.tipoDocumento",
                    I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));*/
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumento",
-                  I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
+                        I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
             }
 
             if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
@@ -838,7 +812,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                /* metadades.add(new Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
                    registro.getOficina().getCodigo()));*/
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
-                         registro.getOficina().getCodigo()));
+                        registro.getOficina().getCodigo()));
             }
 
 
@@ -846,7 +820,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 /*metadades.add(new Metadata("anexo.origen",
                    I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));*/
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.origen",
-                      I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+                        I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_ORIGEN = "eni:origen"
@@ -854,67 +828,67 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                    anexo.getOrigenCiudadanoAdmin()));*/
 
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_ORIGEN,
-                 anexo.getOrigenCiudadanoAdmin()));
+                        anexo.getOrigenCiudadanoAdmin()));
             }
-  
-          /*
-           * tipoValidezDocumento.1=Còpia
-           * tipoValidezDocumento.2=Còpia Compulsada
-           * tipoValidezDocumento.3=Còpia Original
-           * tipoValidezDocumento.4=Original
-           */
+
+            /*
+             * tipoValidezDocumento.1=Còpia
+             * tipoValidezDocumento.2=Còpia Compulsada
+             * tipoValidezDocumento.3=Còpia Original
+             * tipoValidezDocumento.4=Original
+             */
             if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
               /*  metadades.add(new Metadata("anexo.validezDocumento",
                    I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));*/
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.validezDocumento",
-                   I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
+                        I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_ESTADO_ELABORACION = "eni:estado_elaboracion"
               /*  metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
                    RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));*/
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
-                   RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
+                        RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
             }
 
             if (mimeFinal != null) {
-          //      metadades.add(new Metadata("anexo.formato", mimeFinal));
+                //      metadades.add(new Metadata("anexo.formato", mimeFinal));
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.formato", mimeFinal));
             }
 
             if (anexo.getTipoDocumental() != null &&
-               anexo.getTipoDocumental().getCodigoNTI() != null) {
+                    anexo.getTipoDocumental().getCodigoNTI() != null) {
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_TIPO_DOCUMENTAL = "eni:tipo_doc_ENI"
                /* metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
                    anexo.getTipoDocumental().getCodigoNTI()));*/
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
-                  anexo.getTipoDocumental().getCodigoNTI()));
+                        anexo.getTipoDocumental().getCodigoNTI()));
 
-              //  metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
+                //  metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
 
                 try {
                     /*metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
                        ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));*/
                     metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumental.descripcion",
-                       ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+                            ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
                 } catch (Throwable th) {
                     log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
                 }
             }
             if (anexo.getObservaciones() != null) {
-              //  metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
+                //  metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
                 metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.observaciones", anexo.getObservaciones()));
             }
 
             // XMAS SAVEALL custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]), custodyParameters);
             custody2.saveAll(custodyID, custodyParameters, documentCustody,
-               signatureCustody, metadadesAntigues.toArray(new org.fundaciobit.plugins.utils.Metadata[metadadesAntigues.size()]));
+                    signatureCustody, metadadesAntigues.toArray(new org.fundaciobit.plugins.utils.Metadata[metadadesAntigues.size()]));
 
             // custody2.saveAll(custodyID, custodyParameters, documentCustody,
-             //  signatureCustody, metadades.toArray(new org.fundaciobit.plugins.utils.Metadata[metadades.size()]));
+            //  signatureCustody, metadades.toArray(new org.fundaciobit.plugins.utils.Metadata[metadades.size()]));
         }
 
     }
@@ -960,7 +934,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @throws Exception
      */
     private String arreglarSignatureCustody(SignatureCustody signature,
-                                           DocumentCustody doc, Anexo anexo, String mimeFinal) throws Exception {
+                                            DocumentCustody doc, Anexo anexo, String mimeFinal) throws Exception {
 
         if (signature != null && signature.getData() != null) {//Si nos envian firma
 
@@ -1156,7 +1130,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @SuppressWarnings(value = "unchecked")
     public Long getIdJustificante(Long idRegistroDetalle) throws Exception {
         Query query = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
-           "anexo.justificante = true order by anexo.id");
+                "anexo.justificante = true order by anexo.id");
         query.setParameter("idRegistroDetalle", idRegistroDetalle);
 
         List<Long> justificante = query.getResultList();
@@ -1171,26 +1145,26 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException{
+    public void purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException {
 
         //Obtenemos los anexos de los registros de entrada que han sido aceptados y que no han sido purgados
         Query q = em.createQuery("Select anexos from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where re.estado=:aceptado and  re.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
 
-        q.setParameter("aceptado",RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-        q.setParameter("idEntidad",idEntidad);
+        q.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+        q.setParameter("idEntidad", idEntidad);
 
         List<Anexo> anexos = q.getResultList();
 
         //Obtenemos los anexos de los registros de salida que han sido aceptados y que no han sido purgados
         Query qs = em.createQuery("Select anexos from  RegistroSalida as rs left join rs.registroDetalle.anexos as anexos where rs.estado=:aceptado and  rs.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
 
-        qs.setParameter("aceptado",RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
-        qs.setParameter("idEntidad",idEntidad);
+        qs.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
+        qs.setParameter("idEntidad", idEntidad);
 
         anexos.addAll(qs.getResultList());
 
 
-        for(Anexo anexo:anexos){
+        for (Anexo anexo : anexos) {
             //Eliminamos de custodia los archivos asociados al anexo
             eliminarCustodia(anexo.getCustodiaID(), anexo.isJustificante(), idEntidad);
             //Marcamos el anexo como purgado
@@ -1227,8 +1201,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
         Query query = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
-           "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
-           "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
+                "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
+                "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
         query.setParameter("fechaPurgo", fechaPurgo);
         query.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
         query.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
@@ -1236,7 +1210,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         return query.getResultList();
     }
-
 
 
     /**

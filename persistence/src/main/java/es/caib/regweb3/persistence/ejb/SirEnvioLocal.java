@@ -18,7 +18,7 @@ import java.util.List;
  * Date: 22/06/16
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
+@RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface SirEnvioLocal {
 
     /**
@@ -30,12 +30,13 @@ public interface SirEnvioLocal {
      * @throws Exception
      * @throws I18NException
      */
-    OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
+    OficioRemision enviarFicheroIntercambio(Long tipoRegistro, Long idRegistro,
                                             Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
 
     /**
      * Envía un mensaje ACK a partir de los datos de un RegistroSir
+     *
      * @param idRegistroSir
      * @throws Exception
      */
@@ -43,6 +44,7 @@ public interface SirEnvioLocal {
 
     /**
      * Envía un mensaje de confirmación a partir de los datos de un RegistroSir ACEPTADO
+     *
      * @param idRegistroSir
      * @throws Exception
      */
@@ -50,6 +52,7 @@ public interface SirEnvioLocal {
 
     /**
      * Reenvía un mensaje de control
+     *
      * @param mensaje
      * @return
      * @throws Exception
@@ -58,6 +61,7 @@ public interface SirEnvioLocal {
 
     /**
      * Renintenta los envíos a SIR que pendientes de llegar a destino.
+     *
      * @param idEntidad
      * @throws Exception
      */
@@ -65,6 +69,7 @@ public interface SirEnvioLocal {
 
     /**
      * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
+     *
      * @param idEntidad
      * @throws Exception
      */
@@ -83,7 +88,6 @@ public interface SirEnvioLocal {
 
 
     /**
-     *
      * @param tipoRegistro
      * @param idRegistro
      * @param oficinaReenvio
@@ -92,10 +96,11 @@ public interface SirEnvioLocal {
      * @param observaciones
      * @throws Exception
      */
-    void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
+    void reenviarRegistro(Long tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException;
 
     /**
      * Reenvio de un Registro SIR
+     *
      * @param registroSir
      * @throws Exception
      */
@@ -103,13 +108,13 @@ public interface SirEnvioLocal {
 
     /**
      * Método que indica si el RegistroSir puede ser reenviado en función de su estado.
+     *
      * @param estado del RegistroSir
      * @return
      */
     boolean puedeReenviarRegistroSir(EstadoRegistroSir estado);
 
     /**
-     *
      * @param registroSir
      * @param oficinaActiva
      * @param usuario

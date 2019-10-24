@@ -5,14 +5,12 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
+import javax.ejb.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,154 +27,162 @@ import static es.caib.regweb3.utils.RegwebConstantes.*;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AsientoRegistralBean implements AsientoRegistralLocal {
 
-   @EJB private RegistroSalidaLocal registroSalidaEjb;
-   @EJB private RegistroEntradaLocal registroEntradaEjb;
-   @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
-   @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
-   @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
-   @EJB private AnexoLocal anexoEjb;
-   @EJB private SirEnvioLocal sirEnvioEjb;
-   @EJB private JustificanteLocal justificanteEjb;
-   @EJB private OrganismoLocal organismoEjb;
+    protected final Logger log = Logger.getLogger(getClass());
 
-   @Override
-   public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException{
-      return  usuarioEntidadEjb.comprobarUsuarioEntidad(identificador, idEntidad);
-   }
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
+    @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+    @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+    @EJB private AnexoLocal anexoEjb;
+    @EJB private SirEnvioLocal sirEnvioEjb;
+    @EJB private JustificanteLocal justificanteEjb;
+    @EJB private OrganismoLocal organismoEjb;
 
-   @Override
-   public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-         UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
-      throws Exception, I18NException, I18NValidationException {
+    @Override
+    public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
+        return usuarioEntidadEjb.comprobarUsuarioEntidad(identificador, idEntidad);
+    }
 
-      registroSalida = registroSalidaEjb.registrarSalida(registroSalida,usuarioEntidad,interesados,anexos);
-      return registroSalida;
-   }
+    @Override
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+            throws Exception, I18NException, I18NValidationException {
 
-   @Override
-   public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                         UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
-           throws Exception, I18NException, I18NValidationException {
+        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos);
+    }
 
-      registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada,usuarioEntidad,interesados,anexos);
+    @Override
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+            throws Exception, I18NException, I18NValidationException {
 
-      return registroEntrada;
-   }
+        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos);
 
-   @Override
-   public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
+    }
 
-      RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(),numeroRegistroformateado);
-      RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(),numeroRegistroformateado);
+    @Override
+    public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
 
-      if (registroEntrada != null) {
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(), numeroRegistroformateado);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(), numeroRegistroformateado);
 
-         if(registroEntrada.getRegistroDetalle().getTieneJustificante()){
-            String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
-            String url = anexoEjb.getUrlValidation(registroEntrada.getRegistroDetalle().getJustificante().getCustodiaID(),true,entidad.getId());
+        if (registroEntrada != null) {
 
-            return new JustificanteReferencia(csv, url);
+            if (registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
+                String url = anexoEjb.getUrlValidation(registroEntrada.getRegistroDetalle().getJustificante().getCustodiaID(), true, entidad.getId());
 
-         }else{
-            throw new I18NException("registro.justificante.noTiene");
-         }
+                return new JustificanteReferencia(csv, url);
 
-      }else if(registroSalida != null){
-
-         if(registroSalida.getRegistroDetalle().getTieneJustificante()){
-            String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
-            String url = anexoEjb.getUrlValidation(registroSalida.getRegistroDetalle().getJustificante().getCustodiaID(),true,entidad.getId());
-            return new JustificanteReferencia(csv, url);
-         }else{
-            throw new I18NException("registro.justificante.noTiene");
-         }
-      }
-
-      return null;
-   }
-
-   @Override
-   public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException {
-
-      // Es una Notificación
-      if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
-         //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
-         crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
-         registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
-
-      // Es una Comunicación
-      }else if(tipoOperacion!= null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)){
-
-         //Si es una Comunicación dependerá de los interesados destinatarios (solo hay un interesado)
-         for(Interesado interesado: registroSalida.getRegistroDetalle().getInteresados()){
-
-            //Interesado es una persona física o jurídica es como el caso de notificación
-            if(TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo())
-                    || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())){
-               //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
-               crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
-               registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
-
-             // Interesado es una administración
-            }else if(TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())){
-               //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
-               List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida,getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
-               //No tiene oficinas en SIR
-               if(oficinasSIR.isEmpty()){
-                  //TODO hay que crear el oficio externo???
-                  //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_OFICIO_EXTERNO
-                  crearJustificanteCambioEstado(registroSalida, REGISTRO_OFICIO_EXTERNO);
-                  registroSalida.setEstado(REGISTRO_OFICIO_EXTERNO);
-                  registroSalida.getRegistroDetalle().setIdentificadorIntercambio("-1");
-
-               }else{ //Tiene oficinas en SIR, se envia el registro via SIR.
-
-                  try {
-
-                     OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(REGISTRO_SALIDA_ESCRITO, registroSalida.getId(),
-                             registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
-                     registroSalidaEjb.cambiarEstado(registroSalida.getId(), REGISTRO_OFICIO_SIR);
-
-                     registroSalida.setEstado(REGISTRO_OFICIO_SIR);
-                     registroSalida.getRegistroDetalle().setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
-
-                  }catch (Exception e){
-                     throw new I18NException("registroSir.error.envio");
-                  }
-               }
+            } else {
+                throw new I18NException("registro.justificante.noTiene");
             }
-         }
-      }
 
-      return registroSalida;
-   }
+        } else if (registroSalida != null) {
 
-   /**
-    * Transforma un conjunto de organismos a un conjunto de strings con los códigos de los organismos
-    *
-    * @return
-    * @throws Exception
-    */
-   private Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws Exception {
+            if (registroSalida.getRegistroDetalle().getTieneJustificante()) {
+                String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
+                String url = anexoEjb.getUrlValidation(registroSalida.getRegistroDetalle().getJustificante().getCustodiaID(), true, entidad.getId());
+                return new JustificanteReferencia(csv, url);
+            } else {
+                throw new I18NException("registro.justificante.noTiene");
+            }
+        }
 
-      // Creamos un Set solo con los codigos
-      Set<String> organismosCodigo = new HashSet<String>();
+        return null;
+    }
 
-      for (Organismo organismo : organismos) {
-         organismosCodigo.add(organismo.getCodigo());
+    @Override
+    public RegistroSalida procesarRegistroSalida(Long tipoOperacion, RegistroSalida registroSalida) throws I18NException, Exception, I18NValidationException {
 
-      }
-      return organismosCodigo;
-   }
+        // Es una Notificación
+        if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
+            //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
+            crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
+            registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
 
-   /**
-    * Método que crea el justiifcante del registro de salida y actualiza su estado
-    */
-   private void crearJustificanteCambioEstado(RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
-      //Crear Justificante
-      justificanteEjb.crearJustificante(registroSalida.getUsuario(),registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO,"ca" );
+            // Es una Comunicación
+        } else if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)) {
 
-      //Cambiar estado
-      registroSalidaEjb.cambiarEstado(registroSalida.getId(),estado);
-   }
+            //Si es una Comunicación dependerá de los interesados destinatarios (solo hay un interesado)
+            for (Interesado interesado : registroSalida.getRegistroDetalle().getInteresados()) {
+
+                //Interesado es una persona física o jurídica es como el caso de notificación
+                if (TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo())
+                        || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())) {
+                    //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
+                    crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
+                    registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
+
+                    // Interesado es una administración
+                } else if (TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())) {
+                    //Obtenemos las oficinas SIR a las que va dirigido el registro de Salida
+                    List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismoEjb.getByOficinaActiva(registroSalida.getOficina(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)));
+                    //No tiene oficinas en SIR
+                    if (oficinasSIR.isEmpty()) {
+                        //TODO hay que crear el oficio externo???
+                        //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_OFICIO_EXTERNO
+                        crearJustificanteCambioEstado(registroSalida, REGISTRO_OFICIO_EXTERNO);
+                        registroSalida.setEstado(REGISTRO_OFICIO_EXTERNO);
+                        registroSalida.getRegistroDetalle().setIdentificadorIntercambio("-1");
+
+                    } else { //Tiene oficinas en SIR, se envia el registro via SIR.
+
+                        try {
+
+                            OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(REGISTRO_SALIDA, registroSalida.getId(),
+                                    registroSalida.getOficina(), registroSalida.getUsuario(), oficinasSIR.get(0).getCodigo());
+                            registroSalidaEjb.cambiarEstado(registroSalida.getId(), REGISTRO_OFICIO_SIR);
+
+                            registroSalida.setEstado(REGISTRO_OFICIO_SIR);
+                            registroSalida.getRegistroDetalle().setIdentificadorIntercambio(oficioRemision.getIdentificadorIntercambio());
+
+                        } catch (Exception e) {
+                            throw new I18NException("registroSir.error.envio");
+                        }
+                    }
+                }
+            }
+        }
+
+        return registroSalida;
+    }
+
+    @Asynchronous
+    @Override
+    public void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
+        log.info("INICIO AsynchronousServiceImpl crearJustificante");
+        justificanteEjb.crearJustificante(usuarioEntidad, registro, tipoRegistro, idioma);
+        log.info("FIN AsynchronousServiceImpl crearJustificante");
+    }
+
+    /**
+     * Transforma un conjunto de organismos a un conjunto de strings con los códigos de los organismos
+     *
+     * @return
+     * @throws Exception
+     */
+    private Set<String> getOrganismosOficioRemisionSalida(Set<Organismo> organismos) throws Exception {
+
+        // Creamos un Set solo con los codigos
+        Set<String> organismosCodigo = new HashSet<String>();
+
+        for (Organismo organismo : organismos) {
+            organismosCodigo.add(organismo.getCodigo());
+
+        }
+        return organismosCodigo;
+    }
+
+    /**
+     * Método que crea el justiifcante del registro de salida y actualiza su estado
+     */
+    private void crearJustificanteCambioEstado(RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
+        //Crear Justificante
+        justificanteEjb.crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, "ca");
+
+        //Cambiar estado
+        registroSalidaEjb.cambiarEstado(registroSalida.getId(), estado);
+    }
 }

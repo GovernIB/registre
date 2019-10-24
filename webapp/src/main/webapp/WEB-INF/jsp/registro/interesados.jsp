@@ -2,10 +2,10 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
-<c:if test="${param.tipoRegistro == 'entrada'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
     <c:set var="color" value="info"/>
 </c:if>
-<c:if test="${param.tipoRegistro == 'salida'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <c:set var="color" value="danger"/>
 </c:if>
 
@@ -17,10 +17,10 @@
             <h3 class="panel-title">
                 <i class="fa fa-user"></i>
                 <strong>
-                    <c:if test="${param.tipoRegistro == 'entrada'}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                         <spring:message code="interesado.interesados"/>
                     </c:if>
-                    <c:if test="${param.tipoRegistro == 'salida'}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                         <spring:message code="registroSalida.destinatarios"/>
                     </c:if>
 
@@ -29,13 +29,13 @@
         </div>
 
         <div class="panel-body">
-            <c:if test="${errorInteresado && param.tipoRegistro == 'entrada'}">
+            <c:if test="${errorInteresado && param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                 <div class="alert alert-danger alert-dismissable">
                     <strong><spring:message code="interesado.interesado"/>.</strong> <spring:message code="interesado.registro.obligatorio"/>
                 </div>
             </c:if>
 
-            <c:if test="${errorInteresado && param.tipoRegistro == 'salida'}">
+            <c:if test="${errorInteresado && param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                 <div class="alert alert-danger alert-dismissable">
                     <strong><spring:message code="registroSalida.destinatario"/>.</strong> <spring:message code="destinatario.registro.obligatorio"/>
                 </div>
@@ -43,10 +43,10 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                        <c:if test="${param.tipoRegistro == 'entrada'}">
+                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                             <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.entrada"/>" data-toggle="popover"><spring:message code="interesado.tipoInteresado"/></label>
                         </c:if>
-                        <c:if test="${param.tipoRegistro == 'salida'}">
+                        <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                     <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoInteresado.salida"/>" data-toggle="popover"><spring:message code="interesado.tipoDestinatario"/></label>
                         </c:if>
                 </div>
@@ -103,10 +103,10 @@
                 </colgroup>
                 <thead>
                 <tr>
-                    <c:if test="${param.tipoRegistro == 'entrada'}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                         <th><spring:message code="registroEntrada.interesado"/></th>
                     </c:if>
-                    <c:if test="${param.tipoRegistro == 'salida'}">
+                    <c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                         <th><spring:message code="registroSalida.destinatario"/></th>
                     </c:if>
 

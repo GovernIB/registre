@@ -207,7 +207,7 @@
 
     <%-- MODAL Distribuir--%>
     <c:import url="../registro/registroTramitar.jsp">
-        <c:param name="tipoRegistro" value="registroEntrada"/>
+        <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
     </c:import>
 
 </div> <!-- /container -->

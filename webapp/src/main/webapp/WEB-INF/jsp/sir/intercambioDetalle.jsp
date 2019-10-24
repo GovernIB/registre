@@ -69,7 +69,7 @@
                                                         <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
 
                                                         <c:import url="../registro/detalleRegistro.jsp">
-                                                            <c:param name="tipoRegistro" value="entrada"/>
+                                                            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                                         </c:import>
                                                     </dl>
                                                 </c:if>
@@ -82,7 +82,7 @@
                                                         <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
 
                                                         <c:import url="../registro/detalleRegistro.jsp">
-                                                            <c:param name="tipoRegistro" value="salida"/>
+                                                            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
                                                         </c:import>
                                                     </dl>
                                                 </c:if>

@@ -189,7 +189,6 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
                 interesados.add(interesado);
 
             } else {// Interesado con Representante
-                log.info("interesadoWs tiene represenante");
 
                 Interesado representante = DatosInteresadoConverter.getInteresado(
                         interesadoWs.getRepresentante(),

@@ -54,9 +54,9 @@ public class AnexoScanController extends AnexoController {
 
     @RequestMapping(value = "/new/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String crearAnexoGet(HttpServletRequest request,
-                              HttpServletResponse response, @PathVariable Long registroDetalleID,
-                              @PathVariable String tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
-                              Model model) throws I18NException, Exception {
+                                HttpServletResponse response, @PathVariable Long registroDetalleID,
+                                @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
+                                Model model) throws I18NException, Exception {
 
         log.info(" Passa per AnexoScanController::ficherosGet(" + registroDetalleID
                 + "," + tipoRegistro + ", " + registroID + ")");
@@ -72,8 +72,8 @@ public class AnexoScanController extends AnexoController {
         anexoForm.setTipoRegistro(tipoRegistro);
         anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
-        model.addAttribute("anexoForm" ,anexoForm);
-        loadCommonAttributesScan(request, model,anexoForm.getRegistroID());
+        model.addAttribute("anexoForm", anexoForm);
+        loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
 
         return "registro/formularioAnexoScan";
@@ -81,8 +81,8 @@ public class AnexoScanController extends AnexoController {
 
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                               BindingResult result, HttpServletRequest request,
-                               HttpServletResponse response, Model model) throws Exception,I18NException {
+                                 BindingResult result, HttpServletRequest request,
+                                 HttpServletResponse response, Model model) throws Exception, I18NException {
 
 
         boolean isSIR = anexoForm.getOficioRemisionSir();
@@ -101,19 +101,19 @@ public class AnexoScanController extends AnexoController {
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
             }*/
-            
+
             if (isSIR) {
-                String docExtension="";
-                String firmaExtension="";
-                long docSize=-1;
-                long firmaSize=-1;
+                String docExtension = "";
+                String firmaExtension = "";
+                long docSize = -1;
+                long firmaSize = -1;
                 //obtenemos tamaño y extensión del documento
-                if(anexoForm.getDocumentoCustody()!=null) {
+                if (anexoForm.getDocumentoCustody() != null) {
                     docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
                     docSize = anexoForm.getDocumentoCustody().getLength();
                 }
                 //obtenemos tamaño y extensión de la firma
-                if(anexoForm.getSignatureCustody()!=null){
+                if (anexoForm.getSignatureCustody() != null) {
                     firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
@@ -136,12 +136,13 @@ public class AnexoScanController extends AnexoController {
         }
 
 
-        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID()+ "/" + isSIR;
+        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
 
     }
 
     /**
      * Método que carga una serie de atributos comunes del scan
+     *
      * @param request
      * @param model
      * @param registroID
@@ -149,14 +150,14 @@ public class AnexoScanController extends AnexoController {
      * @throws I18NException
      */
     protected void loadCommonAttributesScan(HttpServletRequest request, Model model,
-                                        Long registroID) throws Exception, I18NException {
+                                            Long registroID) throws Exception, I18NException {
 
-        loadCommonAttributes(request,model);
+        loadCommonAttributes(request, model);
 
         // Scan
         Entidad entidad = getEntidadActiva(request);
         final long entitatID = entidad.getId();
-        
+
         boolean teScan = scanWebModuleEjb.entitatTeScan(entitatID);
         model.addAttribute("teScan", teScan);
 
@@ -183,6 +184,7 @@ public class AnexoScanController extends AnexoController {
 
     /**
      * Método que inicializa el plugin de escaneo
+     *
      * @param request
      * @param entitatID
      * @param scanWebID
@@ -252,7 +254,7 @@ public class AnexoScanController extends AnexoController {
      * @throws I18NException
      */
     protected void manageDocumentCustodySignatureCustody(
-            HttpServletRequest request,  AnexoForm anexoForm) throws Exception, I18NException {
+            HttpServletRequest request, AnexoForm anexoForm) throws Exception, I18NException {
 
 
         final Long registroID = anexoForm.getRegistroID();
@@ -268,13 +270,13 @@ public class AnexoScanController extends AnexoController {
 
 
         log.info("Error detectat REGWEB3: " + config.getStatus().getErrorMsg());
-        if(config.getStatus().getErrorMsg()!= null){
+        if (config.getStatus().getErrorMsg() != null) {
             throw new I18NException("anexo.perfilscan.error");
         }
 
 
         //Tratamiento de los documentos obtenidos del scanner
-        if (config != null &&  config.getScannedFiles().size() != 0) {
+        if (config != null && config.getScannedFiles().size() != 0) {
 
 
             if (config.getScannedFiles().size() != 1) {

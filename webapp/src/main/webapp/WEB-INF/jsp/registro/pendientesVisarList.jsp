@@ -32,10 +32,10 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                     <div class="panel panel-info">
                 </c:if>
-                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                     <div class="panel panel-danger">
                 </c:if>
 
@@ -88,10 +88,10 @@
                                             <th><spring:message code="registroEntrada.libro.corto"/></th>
                                             <th><spring:message code="registroEntrada.usuario"/></th>
                                             <th><spring:message code="registroEntrada.oficina"/></th>
-                                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                                 <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                             </c:if>
-                                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                            <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                                 <th><spring:message code="registroSalida.organismoOrigen"/></th>
                                             </c:if>
                                             <th><spring:message code="registroEntrada.extracto"/></th>
@@ -111,11 +111,11 @@
                                                 <td>${registro.usuario.usuario.identificador}</td>
                                                 <td><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
 
-                                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                                     <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                 </c:if>
 
-                                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                                     <td>${(empty registro.origen)? registro.origenExternoDenominacion : registro.origen.denominacion}</td>
                                                 </c:if>
 
@@ -129,10 +129,10 @@
                                                 </c:if>
 
                                                 <td class="center">
-                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </c:if>
-                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                                    <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                                         <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                     </c:if>
 
@@ -143,13 +143,13 @@
                                 </table>
 
                                 <!-- Paginacion -->
-                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA_ESCRITO_CASTELLANO}">
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
                                     <c:import url="../modulos/paginacion.jsp">
                                         <c:param name="entidad" value="registroEntrada/pendientesVisar"/>
                                     </c:import>
                                 </c:if>
 
-                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA_ESCRITO_CASTELLANO}">
+                                <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
                                     <c:import url="../modulos/paginacion.jsp">
                                         <c:param name="entidad" value="registroSalida/pendientesVisar"/>
                                     </c:import>

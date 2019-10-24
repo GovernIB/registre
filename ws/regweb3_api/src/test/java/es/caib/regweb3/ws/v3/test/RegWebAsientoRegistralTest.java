@@ -33,76 +33,15 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
         for (int i = 0; i < 1; i++) {
 
-            AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
-            asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
-
-            asientoRegistralWs.setAplicacion("REGWEB3");
-            asientoRegistralWs.setAplicacionTelematica("REGWEB3");
-            asientoRegistralWs.setCodigoAsunto(null);
-            asientoRegistralWs.setCodigoSia(getTestCodigoSia());
-            asientoRegistralWs.setCodigoUsuario("jeusamio");
-            asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
-
-            asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
-            asientoRegistralWs.setExpone("Expone");
-            asientoRegistralWs.setSolicita("Solicita");
-            asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
-            asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
-            asientoRegistralWs.setPresencial(false);
-            asientoRegistralWs.setResumen("Registro test Ws");
-            asientoRegistralWs.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
-            asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-            asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
-
-
-            // Interesados
-            InteresadoWs interesadoWs = new InteresadoWs();
-
-            DatosInteresadoWs interesado = new DatosInteresadoWs();
-            interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
-            interesado.setTipoDocumentoIdentificacion("N");
-            interesado.setDocumento("43146650F");
-            interesado.setEmail("pgarcia@gmail.com");
-            interesado.setNombre("Julian");
-            interesado.setApellido1("González");
-            interesado.setCanal((long) 1);
-            interesado.setDireccion("Avenida picasso");
-            interesado.setLocalidad((long) 407);
-            interesado.setPais((long) 724);
-            interesado.setProvincia((long) 7);
-            interesadoWs.setInteresado(interesado);
-
-            /*DatosInteresadoWs representante = new DatosInteresadoWs();
-            representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
-            representante.setTipoDocumentoIdentificacion("N");
-            representante.setDocumento("33456299Q");
-            representante.setEmail("jdelatorre@gmail.com");
-            representante.setNombre("Juanito");
-            representante.setApellido1("De la torre");
-            representante.setPais((long) 724);
-            representante.setProvincia((long) 46);
-            interesadoWs.setRepresentante(representante);*/
-
-            asientoRegistralWs.getInteresados().add(interesadoWs);
-
-             InteresadoWs interesadoWs2 = new InteresadoWs();
-            DatosInteresadoWs organismo = new DatosInteresadoWs();
-            organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
-            organismo.setTipoDocumentoIdentificacion("O");
-            organismo.setRazonSocial("Ayuntamiento de Alaior");
-            organismo.setDocumento("L01070027");
-            interesadoWs2.setInteresado(organismo);
-
-           // asientoRegistralWs.getInteresados().add(interesadoWs2);
-
-            //asientoRegistralWs.getAnexos().addAll(getAnexos());
+            AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_ENTRADA, true);
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false);
 
                 //asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
+
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
                 System.out.println("Error WsI18NException: " + msg);
@@ -120,66 +59,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
         for (int i = 0; i < 1; i++) {
 
-            AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
-
-            asientoRegistralWs.setAplicacion("REGWEB3");
-            asientoRegistralWs.setAplicacionTelematica("REGWEB3");
-            asientoRegistralWs.setCodigoAsunto(null);
-            asientoRegistralWs.setCodigoSia(getTestCodigoSia());
-            asientoRegistralWs.setCodigoUsuario(getTestUserName());
-            asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
-            asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
-            asientoRegistralWs.setExpone("Expone");
-            asientoRegistralWs.setSolicita("Solicita");
-            asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
-            asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
-            asientoRegistralWs.setPresencial(false);
-            asientoRegistralWs.setResumen("Prueba via RegwebAsientoRegistralTest");
-            asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-            asientoRegistralWs.setTipoRegistro(REGISTRO_ENTRADA);
-            asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
-
-
-            // Interesados
-            InteresadoWs interesadoWs = new InteresadoWs();
-
-            DatosInteresadoWs interesado = new DatosInteresadoWs();
-            interesado.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
-            interesado.setTipoDocumentoIdentificacion("N");
-            interesado.setDocumento("43146650F");
-            interesado.setEmail("pgarcia@gmail.com");
-            interesado.setNombre("Julian");
-            interesado.setApellido1("González");
-            interesado.setCanal((long) 1);
-            interesado.setDireccion("Avenida picasso");
-            interesado.setLocalidad((long) 407);
-            interesado.setPais((long) 724);
-            interesado.setProvincia((long) 7);
-            interesadoWs.setInteresado(interesado);
-
-            /*DatosInteresadoWs representante = new DatosInteresadoWs();
-            representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA); // == 3
-            representante.setTipoDocumentoIdentificacion("N");
-            representante.setDocumento("33456299Q");
-            representante.setEmail("jdelatorre@gmail.com");
-            representante.setNombre("Juanito");
-            representante.setApellido1("De la torre");
-            representante.setPais((long) 724);
-            representante.setProvincia((long) 46);
-            interesadoWs.setRepresentante(representante);*/
-
-            asientoRegistralWs.getInteresados().add(interesadoWs);
-
-            /* InteresadoWs interesadoWs2 = new InteresadoWs();
-            DatosInteresadoWs organismo = new DatosInteresadoWs();
-            organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
-            organismo.setNombre("Presidencia Govern de les Illes Balears");
-            interesadoWs2.setInteresado(organismo);
-
-            asientoRegistralWs.getInteresados().add(interesadoWs2);*/
+            AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_SALIDA, true);
 
             asientoRegistralWs.getAnexos().addAll(getAnexos());
-
 
             try {
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false);

@@ -16,20 +16,16 @@ import java.util.List;
  * DocumentCustody: Almacena el documento del anexo sin firma
  * SignatureCustody: Almacena la firma del documento(cuando es detached) o el documento+firma cuando la firma es attached
  * Metadatas: guarda la lista de metadatos asociados al anexo.
+ *
  * @author anadal
  */
 public class AnexoFull {
 
     private Anexo anexo;
-
     private boolean documentoFileDelete;
-
     private boolean signatureFileDelete;
-
     private DocumentCustody documentoCustody;
-
     private SignatureCustody signatureCustody;
-    
     private List<Metadata> metadatas;
 
 
@@ -108,17 +104,17 @@ public class AnexoFull {
 
 
     public List<Metadata> getMetadatas() {
-      return metadatas;
+        return metadatas;
     }
 
 
     public void setMetadatas(List<Metadata> metadatas) {
-      this.metadatas = metadatas;
+        this.metadatas = metadatas;
     }
 
     @Transient
-    public long getDocSize(){
-        if(getDocumentoCustody()!=null) {
+    public long getDocSize() {
+        if (getDocumentoCustody() != null) {
             long size = getDocumentoCustody().getLength();
 
             if (size < 1024) {
@@ -131,8 +127,8 @@ public class AnexoFull {
     }
 
     @Transient
-    public long getSignSize(){
-        if(getSignatureCustody()!=null) {
+    public long getSignSize() {
+        if (getSignatureCustody() != null) {
             long size = getSignatureCustody().getLength();
 
             if (size < 1024) {
@@ -145,8 +141,8 @@ public class AnexoFull {
     }
 
     @Transient
-    public String getDocMime(){
-        if(getDocumentoCustody()!= null) {
+    public String getDocMime() {
+        if (getDocumentoCustody() != null) {
             return getDocumentoCustody().getMime();
         }
         return "";
@@ -154,8 +150,8 @@ public class AnexoFull {
     }
 
     @Transient
-    public String getSignMime(){
-        if(getSignatureCustody()!= null) {
+    public String getSignMime() {
+        if (getSignatureCustody() != null) {
             return getSignatureCustody().getMime();
         }
         return "";
@@ -163,31 +159,31 @@ public class AnexoFull {
     }
 
     @Transient
-    public String getSignaturaTituloCorto(){
+    public String getSignaturaTituloCorto() {
 
-        if(getSignatureCustody()!= null) {
+        if (getSignatureCustody() != null) {
             String tituloCorto = getSignatureCustody().getName();
 
             if (tituloCorto.length() > 100) {
                 tituloCorto = getSignatureCustody().getName().substring(0, 100) + "...";
             }
             return tituloCorto;
-        }else{
+        } else {
             return "";
         }
     }
 
     @Transient
-    public String getDocumentTituloCorto(){
+    public String getDocumentTituloCorto() {
 
-        if(getDocumentoCustody()!= null) {
+        if (getDocumentoCustody() != null) {
             String tituloCorto = getDocumentoCustody().getName();
 
             if (tituloCorto.length() > 100) {
                 tituloCorto = getDocumentoCustody().getName().substring(0, 100) + "...";
             }
             return tituloCorto;
-        }else{
+        } else {
             return "";
         }
     }

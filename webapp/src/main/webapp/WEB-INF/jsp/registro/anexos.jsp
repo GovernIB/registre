@@ -2,10 +2,10 @@
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 
 <%--CONFIGURACIONES SEGÚN EL TIPO DE REGISTRO--%>
-<c:if test="${param.tipoRegistro == 'entrada'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
     <c:set var="color" value="info"/>
 </c:if>
-<c:if test="${param.tipoRegistro == 'salida'}">
+<c:if test="${param.tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
     <c:set var="color" value="danger"/>
 </c:if>
 

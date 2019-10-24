@@ -50,7 +50,7 @@
                         <%--DETALLE REGISTRO--%>
                         <dl class="detalle_registro">
                             <c:import url="../registro/detalleRegistro.jsp">
-                                <c:param name="tipoRegistro" value="entrada"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                             </c:import>
                         </dl>
 
@@ -110,7 +110,7 @@
 
                                <%--ANEXOS SOLO LECTURA--%>
                                <c:import url="../registro/anexosLectura.jsp">
-                                   <c:param name="tipoRegistro" value="entrada"/>
+                                   <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                    <c:param name="idEntidad" value="${registro.oficina.organismoResponsable.entidad.id}"/>
                                </c:import>
 
@@ -118,13 +118,13 @@
 
                             <%--INTERESADOS SOLO LECTURA--%>
                             <c:import url="../registro/interesadosLectura.jsp">
-                                <c:param name="tipoRegistro" value="entrada"/>
+                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                             </c:import>
 
                             <%--EXPONE - SOLICITA--%>
                             <c:if test="${not empty registro.registroDetalle.expone || not empty registro.registroDetalle.solicita}">
                                 <c:import url="../registro/exponeSolicita.jsp">
-                                    <c:param name="tipoRegistro" value="entrada"/>
+                                    <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                 </c:import>
                             </c:if>
                         </div>
@@ -141,7 +141,7 @@
                         <c:if test="${not empty historicos && registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
                             <div class="tab-pane" id="modificaciones">
                                 <c:import url="../registro/modificaciones.jsp">
-                                    <c:param name="tipoRegistro" value="entrada"/>
+                                    <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
                                 </c:import>
                             </div>
                         </c:if>

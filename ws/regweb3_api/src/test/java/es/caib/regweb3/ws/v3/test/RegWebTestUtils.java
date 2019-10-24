@@ -237,6 +237,139 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
     }
 
+    public AsientoRegistralWs getAsientoRegistral(Long tipoRegistro, Boolean representante) {
+
+        // Datos
+        AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
+        asientoRegistralWs.setTipoRegistro(tipoRegistro);
+
+        asientoRegistralWs.setAplicacion("REGWEB3");
+        asientoRegistralWs.setAplicacionTelematica("REGWEB3");
+        asientoRegistralWs.setCodigoAsunto(null);
+        asientoRegistralWs.setCodigoSia(getTestCodigoSia());
+        asientoRegistralWs.setCodigoUsuario("caibapp");
+        asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
+
+        asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
+        asientoRegistralWs.setExpone(getLoremIpsum());
+        asientoRegistralWs.setSolicita(getLoremIpsum());
+        asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+        asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
+        asientoRegistralWs.setPresencial(false);
+        asientoRegistralWs.setResumen("Registro de test AsientoRegistralWs");
+        asientoRegistralWs.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
+        asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+        asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+
+        // Interesado persona fisica principal
+        interesadoWs.setInteresado(getPersonaFisica());
+
+        // Representante persona fisica
+        if(representante){
+            interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
+        }
+
+        asientoRegistralWs.getInteresados().add(interesadoWs);
+
+        InteresadoWs interesadoWs2 = new InteresadoWs();
+        DatosInteresadoWs organismo = new DatosInteresadoWs();
+        organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
+        organismo.setTipoDocumentoIdentificacion("O");
+        organismo.setRazonSocial("Ayuntamiento de Alaior");
+        organismo.setDocumento("L01070027");
+        interesadoWs2.setInteresado(organismo);
+
+        // asientoRegistralWs.getInteresados().add(interesadoWs2);
+
+        //asientoRegistralWs.getAnexos().addAll(getAnexos());
+
+        return asientoRegistralWs;
+    }
+
+    /**
+     * Retorna un interesado de tipo Persona Fisica
+     * @return
+     */
+    public DatosInteresadoWs getPersonaFisica(){
+
+        DatosInteresadoWs personaFisica = new DatosInteresadoWs();
+        personaFisica.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+        personaFisica.setTipoDocumentoIdentificacion("N");
+        personaFisica.setDocumento("46164250F");
+        personaFisica.setEmail("pgarcia@gmail.com");
+        personaFisica.setNombre("Julian");
+        personaFisica.setApellido1("González");
+        personaFisica.setCanal((long) 1);
+        personaFisica.setDireccion("Calle Aragón, 24, 5ºD");
+        personaFisica.setLocalidad((long) 407);
+        personaFisica.setPais((long) 724);
+        personaFisica.setProvincia((long) 7);
+
+        return personaFisica;
+    }
+
+    /**
+     * Retorna un interesado de tipo Persona Juridica
+     * @return
+     */
+    public DatosInteresadoWs getPersonaJuridica(){
+
+        DatosInteresadoWs personaJuridica = new DatosInteresadoWs();
+        personaJuridica.setTipoInteresado(TIPO_INTERESADO_PERSONA_JURIDICA);
+        personaJuridica.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CIF));
+        personaJuridica.setDocumento("A42539585");
+        personaJuridica.setRazonSocial("Mercadona");
+        personaJuridica.setEmail("info@mercadona.es");
+        personaJuridica.setPais((long) 724);
+        personaJuridica.setProvincia((long) 46);
+
+        return personaJuridica;
+    }
+
+    public DatosInteresadoWs getRepresentante(Long tipoPersona){
+
+        DatosInteresadoWs representante = new DatosInteresadoWs();
+
+        if(tipoPersona.equals(TIPO_INTERESADO_PERSONA_FISICA)){
+            representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_FISICA);
+            representante.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_NIF));
+            representante.setDocumento("33456299Q");
+            representante.setEmail("jdelatorre@gmail.com");
+            representante.setNombre("Juanito");
+            representante.setApellido1("De la torre");
+            representante.setPais((long) 724);
+            representante.setProvincia((long) 46);
+
+        }else if(tipoPersona.equals(TIPO_INTERESADO_PERSONA_JURIDICA)){
+            representante.setTipoInteresado(TIPO_INTERESADO_PERSONA_JURIDICA);
+            representante.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CIF));
+            representante.setDocumento("A42539585");
+            representante.setRazonSocial("Mercadona");
+            representante.setEmail("info@mercadona.es");
+            representante.setPais((long) 724);
+            representante.setProvincia((long) 46);
+        }
+
+        return representante;
+    }
+
+    public DatosInteresadoWs getAdministracion(){
+        DatosInteresadoWs administracion = new DatosInteresadoWs();
+        administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
+        administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
+        administracion.setRazonSocial("Ayuntamiento de Alaior");
+        administracion.setDocumento("L01070027");
+
+        return administracion;
+    }
+
+    public String getLoremIpsum(){
+        return "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+    }
+
 
     protected List<AnexoWs> getAnexos() throws Exception {
 

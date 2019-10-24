@@ -63,7 +63,6 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private IntegracionLocal integracionEjb;
 
     /**
-     *
      * @param idRegistro
      * @param oficinaActiva
      * @param usuario
@@ -73,7 +72,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws I18NException
      */
     @Override
-    public OficioRemision enviarFicheroIntercambio(String tipoRegistro, Long idRegistro,
+    public OficioRemision enviarFicheroIntercambio(Long tipoRegistro, Long idRegistro,
                                                    Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException {
 
@@ -92,7 +91,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
 
-        try{
+        try {
 
             // OficinaSir destino
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
@@ -101,7 +100,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             //Obtenemos los contactos de la oficina Sir de destino
             String contactosEntidadRegistralDestino = getContactosOficinaSir(oficinaSirDestino);
 
-            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+            if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
@@ -109,14 +108,14 @@ public class SirEnvioBean implements SirEnvioLocal {
                 peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
                 log.info("----------------------------------------------------------------------------------------------");
-                log.info("Enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSirDestino.getDenominacion());
+                log.info("Enviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
                 log.info("");
 
                 // Si no tiene generado el Justificante, lo hacemos
                 if (!registroDetalle.getTieneJustificante()) {
 
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro.toLowerCase(), Configuracio.getDefaultLanguage());
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroEntrada, tipoRegistro, Configuracio.getDefaultLanguage());
                     registroDetalle.getAnexosFull().add(anexoFull);
                 }
 
@@ -154,7 +153,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 //Transformamos el registro de Entrada a RegistroSir
                 registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
-            } else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+            } else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)) {
 
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistro);
                 RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
@@ -162,15 +161,14 @@ public class SirEnvioBean implements SirEnvioLocal {
                 peticion.append("Número registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
                 log.info("----------------------------------------------------------------------------------------------");
-                log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaSirDestino.getDenominacion());
+                log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaSirDestino.getDenominacion());
                 log.info("");
 
 
                 // Si no tiene generado el Justificante, lo hacemos
                 if (!registroDetalle.getTieneJustificante()) {
                     // Creamos el anexo del justificante y se lo añadimos al registro
-                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro.toLowerCase(), Configuracio.getDefaultLanguage());
-
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuario, registroSalida, tipoRegistro, Configuracio.getDefaultLanguage());
                     registroDetalle.getAnexosFull().add(anexoFull);
                 }
 
@@ -224,34 +222,34 @@ public class SirEnvioBean implements SirEnvioLocal {
             oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_ENVIADO);
 
             // Integración
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
             log.info("");
             log.info("Fin enviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
             log.info("----------------------------------------------------------------------------------------------");
 
 
-        }catch (SIRException s){
+        } catch (SIRException s) {
             s.printStackTrace();
-            if(registroSir != null){
+            if (registroSir != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), s, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             }
             throw s;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            if(registroSir != null){
+            if (registroSir != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             }
             throw e;
-        }catch (I18NException e){
+        } catch (I18NException e) {
             e.printStackTrace();
-            if(registroSir != null){
+            if (registroSir != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             }
             throw e;
-        }catch (I18NValidationException e){
+        } catch (I18NValidationException e) {
             e.printStackTrace();
-            if(registroSir != null){
+            if (registroSir != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             }
             throw e;
@@ -262,12 +260,13 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     /**
      * Acepta un RegistroSir, creando un Registro de Entrada
+     *
      * @param registroSir
      * @throws Exception
      */
     @Override
     public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, String codigoSustituto)
-            throws Exception, I18NException, I18NValidationException  {
+            throws Exception, I18NException, I18NValidationException {
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
@@ -319,7 +318,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
             return registroEntrada;
 
@@ -331,7 +330,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
@@ -352,7 +351,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
 
         log.info("----------------------------------------------------------------------------------------------");
-        log.info("Reenviando RegistroSIR: " + registroSir.getNumeroRegistro()+" mediante SIR a: " + oficinaReenvio.getDenominacion());
+        log.info("Reenviando RegistroSIR: " + registroSir.getNumeroRegistro() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
         log.info("");
 
         try {
@@ -400,13 +399,13 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.REENVIADO);
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
             log.info("");
             log.info("Fin reenviando RegistroSIR: " + registroSir.getNumeroRegistro());
             log.info("----------------------------------------------------------------------------------------------");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
@@ -415,7 +414,6 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     /**
-     *
      * @param registroSir
      * @param oficinaActiva
      * @param usuario
@@ -435,10 +433,10 @@ public class SirEnvioBean implements SirEnvioLocal {
         peticion.append("Usuario: ").append(usuario.getNombreCompleto()).append(System.getProperty("line.separator"));
 
         log.info("----------------------------------------------------------------------------------------------");
-        log.info("Rechazando RegistroSIR: " + registroSir.getNumeroRegistro()+" mediante SIR a: " + registroSir.getDecodificacionEntidadRegistralInicio());
+        log.info("Rechazando RegistroSIR: " + registroSir.getNumeroRegistro() + " mediante SIR a: " + registroSir.getDecodificacionEntidadRegistralInicio());
         log.info("");
 
-        try{
+        try {
 
             // Modificamos la oficina destino con la de inicio
             registroSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralInicio());
@@ -484,13 +482,13 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.RECHAZADO);
 
             // Integracion
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
             log.info("");
             log.info("Fin rechazando RegistroSIR: " + registroSir.getNumeroRegistro());
             log.info("----------------------------------------------------------------------------------------------");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
@@ -499,7 +497,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @Override
-    public void reenviarRegistro(String tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException{
+    public void reenviarRegistro(Long tipoRegistro, Long idRegistro, Oficina oficinaReenvio, Oficina oficinaActiva, UsuarioEntidad usuario, String observaciones) throws Exception, I18NException, I18NValidationException {
 
         RegistroSir registroSir = null;
         Date inicio = new Date();
@@ -516,9 +514,9 @@ public class SirEnvioBean implements SirEnvioLocal {
         oficioRemision.setOficina(oficinaActiva);
         oficioRemision.setUsuarioResponsable(usuario);
 
-        try{
+        try {
 
-            if(tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA_ESCRITO)){
+            if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
 
                 RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
                 RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
@@ -526,7 +524,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
 
                 log.info("----------------------------------------------------------------------------------------------");
-                log.info("Reenviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaReenvio.getDenominacion());
+                log.info("Reenviando FicheroIntercambio del registro: " + registroEntrada.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
                 log.info("");
 
                 // Actualizamos el Registro con campos SIR
@@ -553,13 +551,13 @@ public class SirEnvioBean implements SirEnvioLocal {
                 registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
                 registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
 
-            }else if(tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA_ESCRITO)){
+            } else if (tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA)) {
 
                 RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
                 RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
                 log.info("----------------------------------------------------------------------------------------------");
-                log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado()+" mediante SIR a: " + oficinaReenvio.getDenominacion());
+                log.info("Enviando FicheroIntercambio del registro: " + registroSalida.getNumeroRegistroFormateado() + " mediante SIR a: " + oficinaReenvio.getDenominacion());
                 log.info("");
 
                 // Actualizamos el Registro con campos SIR
@@ -608,23 +606,23 @@ public class SirEnvioBean implements SirEnvioLocal {
             oficioRemisionEjb.modificarEstado(oficioRemision.getId(), RegwebConstantes.OFICIO_SIR_REENVIADO);
 
             // Integración
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(),System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
             log.info("");
             log.info("Fin reenviando FicheroIntercambio del registro: " + registroSir.getNumeroRegistro());
             log.info("----------------------------------------------------------------------------------------------");
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
 
-        }catch (I18NException e){
+        } catch (I18NException e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
 
-        }catch (I18NValidationException e){
+        } catch (I18NValidationException e) {
             e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuario.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
             throw e;
@@ -635,9 +633,9 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean enviarACK(Long idRegistroSir) throws Exception{
+    public Boolean enviarACK(Long idRegistroSir) throws Exception {
 
-        try{
+        try {
             RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
             MensajeControl mensaje = new MensajeControl(RegwebConstantes.TIPO_COMUNICACION_ENVIADO);
@@ -650,7 +648,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             mensajeControlEjb.persist(mensaje);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -660,11 +658,11 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean enviarConfirmacion(Long idRegistroSir) throws Exception{
+    public Boolean enviarConfirmacion(Long idRegistroSir) throws Exception {
 
         TrazabilidadSir trazabilidadSir = trazabilidadSirEjb.getByRegistroSirAceptado(idRegistroSir);
 
-        if(trazabilidadSir.getTipo().equals(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO)){
+        if (trazabilidadSir.getTipo().equals(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO)) {
 
             RegistroEntrada registroEntrada = trazabilidadSir.getRegistroEntrada();
 
@@ -678,9 +676,9 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Boolean reenviarMensaje(MensajeControl mensaje) throws Exception{
+    public Boolean reenviarMensaje(MensajeControl mensaje) throws Exception {
 
-        try{
+        try {
 
             // Reenviar el mensaje
             mensaje = mensajeEjb.reenviarMensajeControl(mensaje);
@@ -695,7 +693,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             return true;
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             log.info("Error reenviando el mensaje de control : " + mensaje.getIdentificadorIntercambio());
         }
@@ -705,92 +703,92 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @Override
-    public void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception{
+    public void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception {
 
         try {
 
             // RegistrosSir pendientes de volver a intentar su envío
             List<Long> registrosSir = registroSirEjb.getEnviadosSinAck(idEntidad);
 
-            if(registrosSir.size() > 0){
+            if (registrosSir.size() > 0) {
 
-                log.info("Hay " + registrosSir.size() +  " RegistrosSir pendientes de volver a enviar al nodo CIR");
+                log.info("Hay " + registrosSir.size() + " RegistrosSir pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los RegistrosSir
                 for (Long registroSir : registrosSir) {
 
                     reintentarEnvioRegistroSir(registroSir);
                 }
-            }else{
+            } else {
                 log.info("No hay RegistrosSir pendientes de volver a enviar al nodo CIR");
             }
 
             // OficiosRemision pendientes de volver a intentar su envío
             List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosSinAck(idEntidad);
 
-            if(oficios.size() > 0){
+            if (oficios.size() > 0) {
 
-                log.info("Hay " + oficios.size() +  " Oficios de Remision pendientes de volver a enviar al nodo CIR");
+                log.info("Hay " + oficios.size() + " Oficios de Remision pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los OficiosRemision
                 for (OficioRemision oficio : oficios) {
 
                     reintentarEnvioOficioRemision(oficio);
                 }
-            }else{
+            } else {
                 log.info("No hay Oficios de Remision pendientes de volver a enviar al nodo CIR");
             }
 
 
         } catch (I18NException e) {
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Error al reintenar el envio de registros sin confirmacion");
             e.printStackTrace();
         }
     }
 
     @Override
-    public void reintentarEnviosConError(Long idEntidad) throws Exception{
+    public void reintentarEnviosConError(Long idEntidad) throws Exception {
 
         try {
 
             // RegistrosSir enviados con errores
             List<Long> registrosSir = registroSirEjb.getEnviadosConError(idEntidad);
 
-            if(registrosSir.size() > 0){
+            if (registrosSir.size() > 0) {
 
-                log.info("Hay " + registrosSir.size() +  " RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
+                log.info("Hay " + registrosSir.size() + " RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los RegistrosSir
                 for (Long registroSir : registrosSir) {
 
                     reintentarEnvioRegistroSir(registroSir);
                 }
-            }else{
+            } else {
                 log.info("No hay RegistrosSir enviados con errores, pendientes de volver a enviar al nodo CIR");
             }
 
             // OficiosRemision enviados con errores
             List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(idEntidad);
 
-            if(oficios.size() > 0){
+            if (oficios.size() > 0) {
 
-                log.info("Hay " + oficios.size() +  " Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
+                log.info("Hay " + oficios.size() + " Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
 
                 // Volvemos a enviar los OficiosRemision
                 for (OficioRemision oficio : oficios) {
 
                     reintentarEnvioOficioRemision(oficio);
                 }
-            }else{
+            } else {
                 log.info("No hay Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
             }
 
 
         } catch (I18NException e) {
             e.printStackTrace();
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info("Error al reintenar el envio de registros con error");
             e.printStackTrace();
         }
@@ -798,11 +796,12 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     /**
      * Envía un mensaje de Confirmación y lo guarda en bbdd
+     *
      * @param registroSir
      * @param numeroRegistroFormateado
      * @throws Exception
      */
-    private void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws Exception{
+    private void enviarMensajeConfirmacion(RegistroSir registroSir, String numeroRegistroFormateado, Date fechaRegistro) throws Exception {
 
         // Enviamos el mensaje de confirmación
         MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, numeroRegistroFormateado, fechaRegistro);
@@ -812,24 +811,23 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     /**
-     *
      * @param idRegistroSir
      * @throws Exception
      */
-    private void reintentarEnvioRegistroSir(Long idRegistroSir) throws Exception{
+    private void reintentarEnvioRegistroSir(Long idRegistroSir) throws Exception {
 
         RegistroSir registroSir = registroSirEjb.getRegistroSirConAnexos(idRegistroSir);
 
-        log.info("Reintentando envio registroSir "+ registroSir.getIdentificadorIntercambio()+" a " + registroSir.getDecodificacionEntidadRegistralDestino());
+        log.info("Reintentando envio registroSir " + registroSir.getIdentificadorIntercambio() + " a " + registroSir.getDecodificacionEntidadRegistralDestino());
 
         emisionEjb.enviarFicheroIntercambio(registroSir);
         registroSir.setNumeroReintentos(registroSir.getNumeroReintentos() + 1);
         registroSir.setFechaEstado(new Date());
 
         // Modificamos su estado si estaba marcado con ERROR
-        if(registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO_Y_ERROR)){
+        if (registroSir.getEstado().equals(EstadoRegistroSir.REENVIADO_Y_ERROR)) {
             registroSir.setEstado(EstadoRegistroSir.REENVIADO);
-        }else if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO_Y_ERROR)){
+        } else if (registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO_Y_ERROR)) {
             registroSir.setEstado(EstadoRegistroSir.RECHAZADO);
         }
 
@@ -838,12 +836,11 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     /**
-     *
      * @param oficio
      * @throws Exception
      * @throws I18NException
      */
-    private void reintentarEnvioOficioRemision(OficioRemision oficio) throws Exception, I18NException{
+    private void reintentarEnvioOficioRemision(OficioRemision oficio) throws Exception, I18NException {
 
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
@@ -853,10 +850,10 @@ public class SirEnvioBean implements SirEnvioLocal {
         peticion.append("Origen: ").append(oficio.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
         peticion.append("Destino: ").append(oficio.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
-        if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
+        if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)) {
 
-            try{
-                log.info("Reintentando envio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino() + " ("+oficio.getCodigoEntidadRegistralDestino()+")");
+            try {
+                log.info("Reintentando envio OficioRemisionSir entrada " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
 
                 // Transformamos el RegistroEntrada en un RegistroSir
                 RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficio.getRegistrosEntrada().get(0).getId());
@@ -865,17 +862,17 @@ public class SirEnvioBean implements SirEnvioLocal {
                 // Enviamos el Registro al Componente CIR
                 emisionEjb.enviarFicheroIntercambio(registroSir);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 throw e;
             }
 
 
-        }else if(oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+        } else if (oficio.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)) {
 
-            try{
-                log.info("Reintentando envio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio()+ " a " + oficio.getDecodificacionEntidadRegistralDestino() + " ("+oficio.getCodigoEntidadRegistralDestino()+")");
+            try {
+                log.info("Reintentando envio OficioRemisionSir salida " + oficio.getIdentificadorIntercambio() + " a " + oficio.getDecodificacionEntidadRegistralDestino() + " (" + oficio.getCodigoEntidadRegistralDestino() + ")");
 
                 // Transformamos el RegistroSalida en un RegistroSir
                 RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficio.getRegistrosSalida().get(0).getId());
@@ -884,7 +881,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                 // Enviamos el Registro al Componente CIR
                 emisionEjb.enviarFicheroIntercambio(registroSir);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
                 throw e;
@@ -899,7 +896,7 @@ public class SirEnvioBean implements SirEnvioLocal {
         // Modificamos su estado si estaba marcado con ERROR
         if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR) {
             oficio.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO);
-        }else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR) {
+        } else if (oficio.getEstado() == RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR) {
             oficio.setEstado(RegwebConstantes.OFICIO_SIR_REENVIADO);
         }
 
@@ -907,17 +904,18 @@ public class SirEnvioBean implements SirEnvioLocal {
         oficioRemisionEjb.merge(oficio);
 
         //Integración
-        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion,peticion.toString(),System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
+        integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, oficio.getUsuarioResponsable().getEntidad().getId(), oficio.getIdentificadorIntercambio());
 
     }
 
     /**
      * Indica si el RegistroSir  se puede reenviar, en función de su estado
+     *
      * @param estado del registroSir
      * @return
      */
-    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado){
-        return  estado.equals(EstadoRegistroSir.RECIBIDO) ||
+    public boolean puedeReenviarRegistroSir(EstadoRegistroSir estado) {
+        return estado.equals(EstadoRegistroSir.RECIBIDO) ||
                 estado.equals(EstadoRegistroSir.REENVIADO) ||
                 estado.equals(EstadoRegistroSir.REENVIADO_Y_ERROR);
 
@@ -941,14 +939,15 @@ public class SirEnvioBean implements SirEnvioLocal {
 
     /**
      * Método que obtiene los contactos de la oficina Sir de destino
+     *
      * @param oficinaSir
      * @return
      * @throws Exception
      */
     private String getContactosOficinaSir(OficinaTF oficinaSir) throws Exception {
         StringBuilder stb = new StringBuilder();
-        for(ContactoTF contactoTF: oficinaSir.getContactos()){
-            String scontactoTF = "<b>" + contactoTF.getTipoContacto()+"</b>: "+ contactoTF.getValorContacto();
+        for (ContactoTF contactoTF : oficinaSir.getContactos()) {
+            String scontactoTF = "<b>" + contactoTF.getTipoContacto() + "</b>: " + contactoTF.getValorContacto();
             stb.append(scontactoTF);
             stb.append("<br>");
         }

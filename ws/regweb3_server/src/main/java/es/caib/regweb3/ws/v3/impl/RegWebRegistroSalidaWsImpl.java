@@ -257,7 +257,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
             if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
 
                 try{
-                    justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA_ESCRITO.toLowerCase(),Configuracio.getDefaultLanguage());
+                    justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
                 }catch (I18NException e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
