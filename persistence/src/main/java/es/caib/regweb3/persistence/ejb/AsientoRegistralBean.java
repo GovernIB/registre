@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.common.proxy.plugins.async.AsyncUtils;
 
 import javax.ejb.*;
 import java.util.HashSet;
@@ -152,9 +153,11 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @Asynchronous
     @Override
     public void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException {
-        log.info("INICIO AsynchronousServiceImpl crearJustificante");
-        justificanteEjb.crearJustificante(usuarioEntidad, registro, tipoRegistro, idioma);
-        log.info("FIN AsynchronousServiceImpl crearJustificante");
+
+        //Llamada asincrona al método para generar el justficante dle regitro
+        JustificanteLocal asynchJustificante = AsyncUtils.mixinAsync(justificanteEjb);
+        asynchJustificante.crearJustificante(usuarioEntidad, registro, tipoRegistro, idioma);
+
     }
 
     /**
@@ -180,7 +183,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
      */
     private void crearJustificanteCambioEstado(RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
         //Crear Justificante
-        justificanteEjb.crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, "ca");
+        crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, "ca");
 
         //Cambiar estado
         registroSalidaEjb.cambiarEstado(registroSalida.getId(), estado);

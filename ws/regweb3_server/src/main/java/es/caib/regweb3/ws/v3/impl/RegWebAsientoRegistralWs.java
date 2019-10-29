@@ -29,6 +29,7 @@ public interface RegWebAsientoRegistralWs {
             @WebParam(name = "entidad")String entidad,
             @WebParam(name = "asientoRegistral") AsientoRegistralWs asientoRegistral,
             @WebParam(name = "tipoOperacion") Long tipoOperacion,
+            @WebParam(name = "justificante") Boolean justificante,
             @WebParam(name = "distribuir") Boolean distribuir)throws Throwable, WsI18NException, WsValidationException;
 
 

@@ -167,6 +167,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.jboss.ejb3</groupId>
+            <artifactId>jboss-ejb3-common</artifactId>
+            <version>1.0.2</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>javax</groupId>
