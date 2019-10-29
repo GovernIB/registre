@@ -1,13 +1,9 @@
 
 package es.caib.regweb3.ws.api.v3;
 
-import java.sql.Timestamp;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.sql.Timestamp;
 
 
 /**
@@ -35,6 +31,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *         &lt;element name="firmaAnexada" type="{http://www.w3.org/2001/XMLSchema}base64Binary" minOccurs="0"/>
  *         &lt;element name="tipoMIMEFirmaAnexada" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="csv" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="justificante" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -59,7 +56,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "nombreFirmaAnexada",
     "firmaAnexada",
     "tipoMIMEFirmaAnexada",
-    "csv"
+    "csv",
+    "justificante"
 })
 public class AnexoWs {
 
@@ -81,6 +79,7 @@ public class AnexoWs {
     protected byte[] firmaAnexada;
     protected String tipoMIMEFirmaAnexada;
     protected String csv;
+    protected Boolean justificante;
 
     /**
      * Obtiene el valor de la propiedad titulo.
@@ -436,6 +435,30 @@ public class AnexoWs {
      */
     public void setCsv(String value) {
         this.csv = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad justificante.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isJustificante() {
+        return justificante;
+    }
+
+    /**
+     * Define el valor de la propiedad justificante.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setJustificante(Boolean value) {
+        this.justificante = value;
     }
 
 }

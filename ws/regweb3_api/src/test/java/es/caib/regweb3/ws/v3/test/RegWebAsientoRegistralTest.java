@@ -36,7 +36,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_ENTRADA, true);
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false,true);
 
                 //asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
@@ -64,7 +64,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             asientoRegistralWs.getAnexos().addAll(getAnexos());
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
                 System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
                 System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
             } catch (WsI18NException e) {
