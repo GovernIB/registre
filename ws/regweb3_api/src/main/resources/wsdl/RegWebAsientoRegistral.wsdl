@@ -170,6 +170,7 @@
       <xs:element minOccurs="0" name="firmaAnexada" type="xs:base64Binary"/>
       <xs:element minOccurs="0" name="tipoMIMEFirmaAnexada" type="xs:string"/>
       <xs:element minOccurs="0" name="csv" type="xs:string"/>
+      <xs:element minOccurs="0" name="justificante" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="interesadoWs">
@@ -253,6 +254,7 @@
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="asientoRegistral" type="tns:asientoRegistralWs"/>
       <xs:element minOccurs="0" name="tipoOperacion" type="xs:long"/>
+      <xs:element minOccurs="0" name="justificante" type="xs:boolean"/>
       <xs:element minOccurs="0" name="distribuir" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>

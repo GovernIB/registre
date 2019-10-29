@@ -84,10 +84,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
 
     private java.lang.String solicita;
 
-    private java.lang.String tipoAsunto;
-
-    private java.lang.String tipoAsuntoDenominacion;
-
     private java.lang.Long tipoDocumentacionFisicaCodigo;
 
     private java.lang.String tipoEnvioDocumentacion;
@@ -148,8 +144,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
            java.lang.String referenciaExterna,
            java.lang.String resumen,
            java.lang.String solicita,
-           java.lang.String tipoAsunto,
-           java.lang.String tipoAsuntoDenominacion,
            java.lang.Long tipoDocumentacionFisicaCodigo,
            java.lang.String tipoEnvioDocumentacion,
            java.lang.Long tipoRegistro,
@@ -197,8 +191,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
            this.referenciaExterna = referenciaExterna;
            this.resumen = resumen;
            this.solicita = solicita;
-           this.tipoAsunto = tipoAsunto;
-           this.tipoAsuntoDenominacion = tipoAsuntoDenominacion;
            this.tipoDocumentacionFisicaCodigo = tipoDocumentacionFisicaCodigo;
            this.tipoEnvioDocumentacion = tipoEnvioDocumentacion;
            this.tipoRegistro = tipoRegistro;
@@ -988,46 +980,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
 
 
     /**
-     * Gets the tipoAsunto value for this AsientoRegistralWs.
-     * 
-     * @return tipoAsunto
-     */
-    public java.lang.String getTipoAsunto() {
-        return tipoAsunto;
-    }
-
-
-    /**
-     * Sets the tipoAsunto value for this AsientoRegistralWs.
-     * 
-     * @param tipoAsunto
-     */
-    public void setTipoAsunto(java.lang.String tipoAsunto) {
-        this.tipoAsunto = tipoAsunto;
-    }
-
-
-    /**
-     * Gets the tipoAsuntoDenominacion value for this AsientoRegistralWs.
-     * 
-     * @return tipoAsuntoDenominacion
-     */
-    public java.lang.String getTipoAsuntoDenominacion() {
-        return tipoAsuntoDenominacion;
-    }
-
-
-    /**
-     * Sets the tipoAsuntoDenominacion value for this AsientoRegistralWs.
-     * 
-     * @param tipoAsuntoDenominacion
-     */
-    public void setTipoAsuntoDenominacion(java.lang.String tipoAsuntoDenominacion) {
-        this.tipoAsuntoDenominacion = tipoAsuntoDenominacion;
-    }
-
-
-    /**
      * Gets the tipoDocumentacionFisicaCodigo value for this AsientoRegistralWs.
      * 
      * @return tipoDocumentacionFisicaCodigo
@@ -1330,12 +1282,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
             ((this.solicita==null && other.getSolicita()==null) || 
              (this.solicita!=null &&
               this.solicita.equals(other.getSolicita()))) &&
-            ((this.tipoAsunto==null && other.getTipoAsunto()==null) || 
-             (this.tipoAsunto!=null &&
-              this.tipoAsunto.equals(other.getTipoAsunto()))) &&
-            ((this.tipoAsuntoDenominacion==null && other.getTipoAsuntoDenominacion()==null) || 
-             (this.tipoAsuntoDenominacion!=null &&
-              this.tipoAsuntoDenominacion.equals(other.getTipoAsuntoDenominacion()))) &&
             ((this.tipoDocumentacionFisicaCodigo==null && other.getTipoDocumentacionFisicaCodigo()==null) || 
              (this.tipoDocumentacionFisicaCodigo!=null &&
               this.tipoDocumentacionFisicaCodigo.equals(other.getTipoDocumentacionFisicaCodigo()))) &&
@@ -1501,12 +1447,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
         }
         if (getSolicita() != null) {
             _hashCode += getSolicita().hashCode();
-        }
-        if (getTipoAsunto() != null) {
-            _hashCode += getTipoAsunto().hashCode();
-        }
-        if (getTipoAsuntoDenominacion() != null) {
-            _hashCode += getTipoAsuntoDenominacion().hashCode();
         }
         if (getTipoDocumentacionFisicaCodigo() != null) {
             _hashCode += getTipoDocumentacionFisicaCodigo().hashCode();
@@ -1808,20 +1748,6 @@ public class AsientoRegistralWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("solicita");
         elemField.setXmlName(new javax.xml.namespace.QName("", "solicita"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("tipoAsunto");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoAsunto"));
-        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
-        elemField.setMinOccurs(0);
-        elemField.setNillable(false);
-        typeDesc.addFieldDesc(elemField);
-        elemField = new org.apache.axis.description.ElementDesc();
-        elemField.setFieldName("tipoAsuntoDenominacion");
-        elemField.setXmlName(new javax.xml.namespace.QName("", "tipoAsuntoDenominacion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
