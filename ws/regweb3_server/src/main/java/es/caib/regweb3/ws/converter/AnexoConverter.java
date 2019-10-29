@@ -175,6 +175,10 @@ public class AnexoConverter extends CommonConverter {
 
       if(anexoWs.getCsv() != null){anexo.setCsv(anexoWs.getCsv());}
 
+      if(anexoWs.isJustificante() != null){
+         anexo.setJustificante(anexoWs.isJustificante());
+      }
+
       if(anexoWs.getFechaCaptura()!= null){anexo.setFechaCaptura(anexoWs.getFechaCaptura().getTime());}
 
       // Part de firma Anexada
@@ -213,6 +217,7 @@ public class AnexoConverter extends CommonConverter {
 
       if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
 
+      anexoWs.setJustificante(anexo.isJustificante());
 
       String custodyID = anexo.getCustodiaID();
 

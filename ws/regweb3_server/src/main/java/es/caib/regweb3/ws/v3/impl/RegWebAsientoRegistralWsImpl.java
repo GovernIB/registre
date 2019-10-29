@@ -31,6 +31,7 @@ import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
 
 import javax.annotation.security.RolesAllowed;
+import javax.ejb.Asynchronous;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
@@ -65,41 +66,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     RegistroSalidaValidator<RegistroSalida> registroSalidaValidator = new RegistroSalidaValidator<RegistroSalida>();
     RegistroEntradaValidator<RegistroEntrada> registroEntradaValidator = new RegistroEntradaValidator<RegistroEntrada>();
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
-
-    @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
-    private CodigoAsuntoLocal codigoAsuntoEjb;
-
     @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
     @EJB(mappedName = "regweb3/RegistroSalidaConsultaEJB/local")
     private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
-
-    @EJB(mappedName = "regweb3/LopdEJB/local")
-    private LopdLocal lopdEjb;
-
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    private InteresadoLocal interesadoEjb;
-
-    @EJB(mappedName = "regweb3/PersonaEJB/local")
-    private PersonaLocal personaEjb;
-
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    private CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    private CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    private CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
-    private IntegracionLocal integracionEjb;
 
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
@@ -120,10 +91,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
     @Override
     @WebMethod
+    @Asynchronous
     public AsientoRegistralWs crearAsientoRegistral(
        @WebParam(name = "entidad")String entidad,
        @WebParam(name = "asientoRegistral") AsientoRegistralWs asientoRegistral,
        @WebParam(name = "tipoOperacion") Long tipoOperacion,
+       @WebParam(name = "justificante") Boolean justificante,
        @WebParam(name = "distribuir") Boolean distribuir)throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
@@ -168,7 +141,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         List<Interesado> interesados;
         if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
 
-            if(tipoOperacion!= null && TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación
+            if(TIPO_OPERACION_COMUNICACION.equals(tipoOperacion)) { //Si es una comunicación
 
                 if (asientoRegistral.getInteresados().size() != 1) { // solo se permite un interesado
                     throw new I18NException("interesado.registro.obligatorio.uno");
@@ -187,7 +160,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId());
         }
 
-        // Convertir RegWebAsientoRegistralWs a RegistroEntrada
+        // Se trata a de un Registro de Entrada
         if(REGISTRO_ENTRADA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_entrada()){
 
             // Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
@@ -232,6 +205,10 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 asientoRegistral.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
                 asientoRegistral.setFechaRegistro(registroEntrada.getFecha());
 
+                if(justificante){
+                    asientoRegistralEjb.crearJustificante(usuario,registroEntrada, REGISTRO_ENTRADA, "ca");
+                }
+
                 //Integracion OK
                 peticion.append("oficina: ").append(registroEntrada.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
                 peticion.append("registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
@@ -252,6 +229,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, "distribuirAsientoRegistral", peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
             }
 
+        // Se trata a de un Registro de Salida
         }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro()) && UsuarioAplicacionCache.get().getUsuario().getRwe_ws_salida()){
 
             // Comprobar PERMISO_REGISTRO_SALIDA de usuario aplicación

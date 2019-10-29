@@ -59,6 +59,7 @@ public class AnexoWs {
 
 
     private String csv; // TODO este campo se creo para el plugin de digitalización de IECISA, verificar que no se emplee en NTI,SICRES.
+    private Boolean justificante = false;
 
     public String getTitulo() {
       return titulo;
@@ -181,4 +182,11 @@ public class AnexoWs {
       this.csv = csv;
     }
 
+    public Boolean isJustificante() {
+        return justificante;
+    }
+
+    public void setJustificante(Boolean justificante) {
+        this.justificante = justificante;
+    }
 }

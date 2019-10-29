@@ -64,6 +64,7 @@ public interface AsientoRegistralLocal {
             throws Exception, I18NException, I18NValidationException;
 
     /**
+     * Se crea el Justificante del Registro de manera Asincrona
      * @param usuarioEntidad
      * @param registro
      * @param tipoRegistro
