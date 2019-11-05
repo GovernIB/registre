@@ -103,9 +103,27 @@
                                     </div>
                                 </div>
 
+                                <div class="col-xs-12">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label for="libro"><spring:message code="registroEntrada.libro"/></label>
+                                        </div>
+                                        <div class="col-xs-8">
+                                            <form:select path="libro"  cssClass="chosen-select">
+                                                <form:option path="libro" value="-1" selected="selected">...</form:option>
+                                                <form:options path="libro" items="${libros}" itemValue="id" itemLabel="nombre"/>
+                                            </form:select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group col-xs-12">
                                     <input type="submit" value="<spring:message code="regweb.buscar"/>" class="btn btn-warning btn-sm"/>
                                     <input type="reset" value="<spring:message code="regweb.restablecer"/>" class="btn btn-sm"/>
+                                    <c:if test="${not empty paginacion.listado}">
+                                        <a class="btn btn-success btn-sm pull-right" onclick="exportarUsuarios('<c:url value="/entidad/exportarUsuarios"/>','${usuarioEntidadBusqueda.usuarioEntidad.usuario.identificador}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.nombre}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.apellido1}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.apellido2}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.documento}','${usuarioEntidadBusqueda.usuarioEntidad.usuario.tipoUsuario}','${usuarioEntidadBusqueda.libro.id}')" title="<spring:message code="usuario.exportar.busqueda"/>"><spring:message code="usuario.exportar"/></a>
+                                    </c:if>
                                 </div>
 
 
@@ -235,6 +253,44 @@
 </div> <!-- /container -->
 
 <c:import url="../modulos/pie.jsp"/>
+
+<script type="text/javascript">
+    /**
+     * Script per exportar els usuaris consultats a l'Excel
+     * @param url
+     * @param identificador
+     * @param nombre
+     * @param apellido1
+     * @param apellido2
+     * @param documento
+     * @param tipo
+     * @param libro
+     */
+    function exportarUsuarios(url,identificador,nombre,apellido1,apellido2,documento,tipo,libro){
+        if(tipo != ''){
+            url = url + "?tipo="+tipo;
+        }
+        if(identificador != ''){
+            url = url + "&identificador="+identificador;
+        }
+        if(nombre != ''){
+            url = url + "&nombre="+nombre;
+        }
+        if(apellido1 != ''){
+            url = url + "&apellido1="+apellido1;
+        }
+        if(apellido2 != ''){
+            url = url + "&apellido2="+apellido2;
+        }
+        if(documento != ''){
+            url = url + "&documento="+documento;
+        }
+        if(libro != ''){
+            url = url + "&idLibro="+libro;
+        }
+        goTo(url);
+    }
+</script>
 
 
 </body>

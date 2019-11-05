@@ -38,6 +38,12 @@ public class PermisoLibroUsuario implements Serializable {
         this.usuario = new UsuarioEntidad(idUsuario);
     }
 
+    public PermisoLibroUsuario(Long idUsuario, String identificador, String nombre, String apellido1,
+                               String apellido2, String documento, Long tipo, String mail, Long permiso) {
+        this.usuario = new UsuarioEntidad(idUsuario,identificador, nombre, apellido1, apellido2, documento, tipo, mail);
+        this.permiso = permiso;
+    }
+
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
