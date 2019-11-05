@@ -256,6 +256,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <!-- Bean exportar Personas en EXCEL-->
     <bean id="exportarPersonasExcel" class="es.caib.regweb3.webapp.view.ExportarPersonasExcel"/>
 
+    <!-- Bean exportar Usuarios en EXCEL-->
+    <bean id="exportarUsuariosExcel" class="es.caib.regweb3.webapp.view.ExportarUsuariosExcel"/>
+
     <!--Recursos estáticos-->
     <mvc:resources mapping="/css/**" location="/css/" />
     <mvc:resources mapping="/font-awesome/**" location="/font-awesome/" />

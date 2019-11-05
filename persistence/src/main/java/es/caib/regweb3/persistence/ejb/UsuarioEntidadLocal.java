@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.PermisoLibroUsuario;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -148,10 +149,12 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @param apellido1
      * @param apellido2
      * @param documento
+     * @param tipoUsuario
+     * @param idLibro
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idLibro) throws Exception;
 
     /**
      * Devuelve los usuarios de la Entidad activos que no son el usuario actual y según el tipo de usuario
@@ -185,5 +188,23 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
      * @throws Exception
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
+
+    /**
+     * Lista las {@link es.caib.regweb3.model.PermisoLibroUsuario} para Exportar a Excel
+     * @param idEntidad
+     * @param identificador
+     * @param nombre
+     * @param apellido1
+     * @param apellido2
+     * @param documento
+     * @param tipo
+     * @param idLibro
+     * @param permisoRegEntrada
+     * @param permisoRegSalida
+     * @param permisoSir
+     * @return
+     * @throws Exception
+     */
+    List<PermisoLibroUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idLibro, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws Exception;
 
 }

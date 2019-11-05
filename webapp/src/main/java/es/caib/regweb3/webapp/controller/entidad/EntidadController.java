@@ -133,7 +133,7 @@ public class EntidadController extends BaseController {
      * Listado de todos los usurios de una Entidad
      */
     @RequestMapping(value = "/usuarios", method = RequestMethod.GET)
-    public String listadoUsuariosEntidad(Model model, HttpServletRequest request) {
+    public String listadoUsuariosEntidad(Model model, HttpServletRequest request) throws Exception {
 
         Entidad entidad = getEntidadActiva(request);
 
@@ -141,6 +141,8 @@ public class EntidadController extends BaseController {
 
         model.addAttribute("usuarioEntidadBusqueda", usuarioEntidadBusqueda);
         model.addAttribute("entidad", entidad);
+        List<Libro> librosEntidad = libroEjb.getLibrosEntidad(entidad.getId());
+        model.addAttribute("libros", librosEntidad);
 
         return "entidad/usuariosList";
     }
@@ -158,17 +160,21 @@ public class EntidadController extends BaseController {
 
         ModelAndView mav = new ModelAndView("entidad/usuariosList");
         Usuario usuario = busqueda.getUsuarioEntidad().getUsuario();
+        Libro libro = busqueda.getLibro();
         Entidad entidad = getEntidadActiva(request);
 
         Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
                 entidad.getId(), usuario.getIdentificador(), usuario.getNombre(),
                 usuario.getApellido1(), usuario.getApellido2(), usuario.getDocumento(),
-                usuario.getTipoUsuario());
+                usuario.getTipoUsuario(), libro.getId());
 
         busqueda.setPageNumber(1);
         mav.addObject("entidad", entidad);
         mav.addObject("paginacion", paginacion);
+        List<Libro> librosEntidad = libroEjb.getLibrosEntidad(entidad.getId());
+        mav.addObject("libros", librosEntidad);
         mav.addObject("usuarioEntidadBusqueda", busqueda);
+
 
         return mav;
     }
@@ -1235,4 +1241,35 @@ public class EntidadController extends BaseController {
     }
 
 
+    /**
+     * Export de {@link es.caib.regweb3.model.Usuario} a Excel
+     */
+    @RequestMapping(value = "/exportarUsuarios", method = RequestMethod.GET)
+    public ModelAndView exportarUsuarios(HttpServletRequest request) throws Exception {
+
+        ModelAndView mav = new ModelAndView("exportarUsuariosExcel");
+
+        Entidad entidad = getEntidadActiva(request);
+
+        String identificador = request.getParameter("identificador");
+        String nombre = request.getParameter("nombre");
+        String apellido1 = request.getParameter("apellido1");
+        String apellido2 = request.getParameter("apellido2");
+        String documento = request.getParameter("documento");
+        Long tipo = Long.valueOf(request.getParameter("tipo"));
+        Long idLibro = Long.valueOf(request.getParameter("idLibro"));
+
+        List<PermisoLibroUsuario> permisos = usuarioEntidadEjb.getExportarExcel(entidad.getId(),identificador,nombre,apellido1,apellido2,documento,tipo,idLibro, RegwebConstantes.PERMISO_REGISTRO_ENTRADA, RegwebConstantes.PERMISO_REGISTRO_SALIDA, RegwebConstantes.PERMISO_SIR);
+
+        mav.addObject("permisos", permisos);
+
+        if(idLibro != -1) {
+            Libro libro = libroEjb.findById(idLibro);
+            mav.addObject("libro", libro.getNombre());
+        }else{
+            mav.addObject("libro", null);
+        }
+
+        return mav;
+    }
 }

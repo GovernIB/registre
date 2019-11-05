@@ -74,6 +74,16 @@ public class Usuario implements Serializable {
         this.identificador = identificador;
     }
 
+    public Usuario(String identificador, String nombre, String apellido1,
+                   String apellido2, String documento, Long tipo, String mail) {
+        this.identificador = identificador;
+        this.nombre = nombre;
+        this.apellido1 = apellido1;
+        this.apellido2 = apellido2;
+        this.documento = documento;
+        this.tipoUsuario = tipo;
+        this.email = mail;
+    }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE,generator = "generator")
