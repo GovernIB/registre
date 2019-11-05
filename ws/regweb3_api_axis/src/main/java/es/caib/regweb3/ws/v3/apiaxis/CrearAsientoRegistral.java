@@ -8,11 +8,15 @@
 package es.caib.regweb3.ws.v3.apiaxis;
 
 public class CrearAsientoRegistral  implements java.io.Serializable {
+    private java.lang.Long idSesion;
+
     private java.lang.String entidad;
 
     private es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs asientoRegistral;
 
     private java.lang.Long tipoOperacion;
+
+    private java.lang.Boolean justificante;
 
     private java.lang.Boolean distribuir;
 
@@ -20,14 +24,38 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
     }
 
     public CrearAsientoRegistral(
+           java.lang.Long idSesion,
            java.lang.String entidad,
            es.caib.regweb3.ws.v3.apiaxis.AsientoRegistralWs asientoRegistral,
            java.lang.Long tipoOperacion,
+           java.lang.Boolean justificante,
            java.lang.Boolean distribuir) {
+           this.idSesion = idSesion;
            this.entidad = entidad;
            this.asientoRegistral = asientoRegistral;
            this.tipoOperacion = tipoOperacion;
+           this.justificante = justificante;
            this.distribuir = distribuir;
+    }
+
+
+    /**
+     * Gets the idSesion value for this CrearAsientoRegistral.
+     * 
+     * @return idSesion
+     */
+    public java.lang.Long getIdSesion() {
+        return idSesion;
+    }
+
+
+    /**
+     * Sets the idSesion value for this CrearAsientoRegistral.
+     * 
+     * @param idSesion
+     */
+    public void setIdSesion(java.lang.Long idSesion) {
+        this.idSesion = idSesion;
     }
 
 
@@ -92,6 +120,26 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
 
 
     /**
+     * Gets the justificante value for this CrearAsientoRegistral.
+     * 
+     * @return justificante
+     */
+    public java.lang.Boolean getJustificante() {
+        return justificante;
+    }
+
+
+    /**
+     * Sets the justificante value for this CrearAsientoRegistral.
+     * 
+     * @param justificante
+     */
+    public void setJustificante(java.lang.Boolean justificante) {
+        this.justificante = justificante;
+    }
+
+
+    /**
      * Gets the distribuir value for this CrearAsientoRegistral.
      * 
      * @return distribuir
@@ -122,6 +170,9 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
         __equalsCalc = obj;
         boolean _equals;
         _equals = true && 
+            ((this.idSesion==null && other.getIdSesion()==null) || 
+             (this.idSesion!=null &&
+              this.idSesion.equals(other.getIdSesion()))) &&
             ((this.entidad==null && other.getEntidad()==null) || 
              (this.entidad!=null &&
               this.entidad.equals(other.getEntidad()))) &&
@@ -131,6 +182,9 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
             ((this.tipoOperacion==null && other.getTipoOperacion()==null) || 
              (this.tipoOperacion!=null &&
               this.tipoOperacion.equals(other.getTipoOperacion()))) &&
+            ((this.justificante==null && other.getJustificante()==null) || 
+             (this.justificante!=null &&
+              this.justificante.equals(other.getJustificante()))) &&
             ((this.distribuir==null && other.getDistribuir()==null) || 
              (this.distribuir!=null &&
               this.distribuir.equals(other.getDistribuir())));
@@ -145,6 +199,9 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
         }
         __hashCodeCalc = true;
         int _hashCode = 1;
+        if (getIdSesion() != null) {
+            _hashCode += getIdSesion().hashCode();
+        }
         if (getEntidad() != null) {
             _hashCode += getEntidad().hashCode();
         }
@@ -153,6 +210,9 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
         }
         if (getTipoOperacion() != null) {
             _hashCode += getTipoOperacion().hashCode();
+        }
+        if (getJustificante() != null) {
+            _hashCode += getJustificante().hashCode();
         }
         if (getDistribuir() != null) {
             _hashCode += getDistribuir().hashCode();
@@ -168,6 +228,13 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
     static {
         typeDesc.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "crearAsientoRegistral"));
         org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("idSesion");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "idSesion"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("entidad");
         elemField.setXmlName(new javax.xml.namespace.QName("", "entidad"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
@@ -185,6 +252,13 @@ public class CrearAsientoRegistral  implements java.io.Serializable {
         elemField.setFieldName("tipoOperacion");
         elemField.setXmlName(new javax.xml.namespace.QName("", "tipoOperacion"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("justificante");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "justificante"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);

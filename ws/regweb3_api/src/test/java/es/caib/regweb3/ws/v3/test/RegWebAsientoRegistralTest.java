@@ -38,7 +38,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_ENTRADA, true);
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
 
                 printAsientoRegistral(asientoRegistralWs);
 
@@ -64,7 +64,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             asientoRegistralWs.getAnexos().addAll(getAnexos());
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
 
                 printAsientoRegistral(asientoRegistralWs);
 
