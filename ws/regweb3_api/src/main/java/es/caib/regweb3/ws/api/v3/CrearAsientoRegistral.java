@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="idSesion" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="asientoRegistral" type="{http://impl.v3.ws.regweb3.caib.es/}asientoRegistralWs" minOccurs="0"/>
  *         &lt;element name="tipoOperacion" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
@@ -31,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "crearAsientoRegistral", propOrder = {
+    "idSesion",
     "entidad",
     "asientoRegistral",
     "tipoOperacion",
@@ -39,11 +41,36 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class CrearAsientoRegistral {
 
+    protected Long idSesion;
     protected String entidad;
     protected AsientoRegistralWs asientoRegistral;
     protected Long tipoOperacion;
     protected Boolean justificante;
     protected Boolean distribuir;
+
+    /**
+     * Obtiene el valor de la propiedad idSesion.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getIdSesion() {
+        return idSesion;
+    }
+
+    /**
+     * Define el valor de la propiedad idSesion.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setIdSesion(Long value) {
+        this.idSesion = value;
+    }
 
     /**
      * Obtiene el valor de la propiedad entidad.

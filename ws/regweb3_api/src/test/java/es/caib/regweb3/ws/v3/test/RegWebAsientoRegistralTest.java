@@ -6,6 +6,8 @@ import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.List;
+
 
 /**
  * Created by earrivi on 06/05/19.
@@ -36,11 +38,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_ENTRADA, true);
 
             try {
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false,true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
 
-                //asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs.getNumeroRegistroFormateado());
-                System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
-                System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
+                printAsientoRegistral(asientoRegistralWs);
 
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
@@ -65,8 +65,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             try {
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
-                System.out.println("NumeroEntrada: " + asientoRegistralWs.getNumeroRegistroFormateado());
-                System.out.println("Fecha: " + asientoRegistralWs.getFechaRegistro());
+
+                printAsientoRegistral(asientoRegistralWs);
+
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
                 System.out.println("Error WsI18NException: " + msg);
@@ -84,11 +85,12 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientoregistral() throws Exception{
 
         try {
-            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),"SALU-S-103/2019", RegwebConstantes.REGISTRO_SALIDA,false);
+            AsientoRegistralWs entrada = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),"SALU-E-214/2019", RegwebConstantes.REGISTRO_ENTRADA,false);
+            AsientoRegistralWs salida = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),"SALU-S-117/2019", RegwebConstantes.REGISTRO_SALIDA,false);
 
-            System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
-            System.out.println("Codigo Asunto: " + asientoRegistralWs.getCodigoAsunto());
-            System.out.println("Codigo Asunto " + asientoRegistralWs.getCodigoAsuntoDenominacion());
+            printAsientoRegistral(entrada);
+            printAsientoRegistral(salida);
+
         } catch (WsValidationException e) {
             e.printStackTrace();
         } catch (WsI18NException e) {
@@ -175,11 +177,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         try {
             AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoCiudadano(getTestEntidadCodigoDir3(),"43146650F","SALU-E-169/2019");
 
-
-            System.out.println("Numero: " + asientoRegistralWs.getNumeroRegistroFormateado());
-            System.out.println("Extracto: " + asientoRegistralWs.getResumen());
-            System.out.println("Anexos: " + asientoRegistralWs.getAnexos().size());
-
+            printAsientoRegistral(asientoRegistralWs);
 
         } catch (WsValidationException e) {
             e.printStackTrace();
@@ -188,7 +186,71 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         }
     }
 
+    /**
+     * Muestra por pantala el contenido de un AsientoRegistralWs
+     * @param asientoRegistralWs
+     */
+    private void printAsientoRegistral(AsientoRegistralWs asientoRegistralWs){
+        System.out.println("-------------------------------------------------------------");
 
+        System.out.println("Num. Registro: " + asientoRegistralWs.getNumeroRegistroFormateado());
+        System.out.println("Tipo registro: " + asientoRegistralWs.getTipoRegistro());
+        System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
+        System.out.println("Resumen: " + asientoRegistralWs.getResumen());
 
+        printAnexosWs(asientoRegistralWs.getAnexos());
+        printInteresadosWs(asientoRegistralWs.getInteresados());
 
+        System.out.println("");
+    }
+
+    /**
+     *
+     * @param anexos
+     */
+    private void printAnexosWs(List<AnexoWs> anexos){
+
+        System.out.println("");
+        System.out.println("Total anexos: " + anexos.size());
+        for (AnexoWs anexo : anexos) {
+            System.out.println("");
+            System.out.println("Nombre anexo: " + anexo.getTitulo());
+            System.out.println("isJustificante: " + anexo.isJustificante());
+        }
+    }
+
+    /**
+     *
+     * @param interesados
+     */
+    private void printInteresadosWs(List<InteresadoWs> interesados){
+
+        System.out.println("");
+        System.out.println("Total interesados: " + interesados.size());
+
+        for (InteresadoWs i : interesados) {
+                System.out.println("");
+            System.out.println("Interesado: " + printInteresadoWs(i.getInteresado()));
+
+            if(i.getRepresentante() != null){
+                System.out.println("Representante: " +printInteresadoWs(i.getRepresentante()));
+
+            }
+        }
+    }
+
+    private String printInteresadoWs(DatosInteresadoWs i){
+
+        if(i.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
+            return i.getRazonSocial() + " " + i.getDocumento();
+
+        }else if(i.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+            return i.getNombre() + " " + i.getApellido1();
+
+        }else if(i.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+            return i.getNombre() + " " + i.getApellido1();
+        }
+
+        return "";
+    }
 }

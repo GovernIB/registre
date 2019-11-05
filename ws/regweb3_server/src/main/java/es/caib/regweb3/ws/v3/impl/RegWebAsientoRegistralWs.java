@@ -19,6 +19,25 @@ import javax.jws.WebService;
 public interface RegWebAsientoRegistralWs {
 
     /**
+     * Obtiene un idSesion para realizar un crear un nuevo AsientoRegistral
+     * @param entidad
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    Long obtenerSesionRegistro(@WebParam(name = "entidad") String entidad) throws  Throwable, WsI18NException;
+
+    /**
+     * Verifa el estado de un idSesion
+     * @param entidad
+     * @param idSesion
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     */
+    AsientoRegistralSesionWs verificarAsientoRegistral(@WebParam(name = "entidad") String entidad, @WebParam(name = "idSesion") Long idSesion) throws  Throwable, WsI18NException;
+
+    /**
      * Crea un {@link es.caib.regweb3.ws.model.AsientoRegistralWs }
      * @param entidad
      * @param asientoRegistral
@@ -26,6 +45,7 @@ public interface RegWebAsientoRegistralWs {
      */
     @WebMethod
     AsientoRegistralWs crearAsientoRegistral(
+            @WebParam(name = "idSesion")Long idSesion,
             @WebParam(name = "entidad")String entidad,
             @WebParam(name = "asientoRegistral") AsientoRegistralWs asientoRegistral,
             @WebParam(name = "tipoOperacion") Long tipoOperacion,
