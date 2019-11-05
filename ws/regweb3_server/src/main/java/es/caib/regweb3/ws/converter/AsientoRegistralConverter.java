@@ -14,8 +14,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import java.util.Date;
 import java.util.List;
 
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
-import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_SALIDA;
+import static es.caib.regweb3.utils.RegwebConstantes.*;
 
 /**
  * Created by mgonzalez on 14/02/2019.
@@ -133,158 +132,95 @@ public class AsientoRegistralConverter extends CommonConverter {
       return registroSalida;
    }
 
-
    /**
-    * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs}, a partir de un {@link es.caib.regweb3.model.RegistroEntrada}
-    * @param registroEntrada
+    * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs}, a partir de un {@link es.caib.regweb3.model.IRegistro}
+    * @param usuario
+    * @param numeroRegistro
+    * @param tipoRegistro
     * @param idioma
-    * @param oficioRemisionEjb
-    * @param trazabilidadEjb
-    * @return
-    * @throws Exception
-    * @throws I18NException
-    */
-   public static AsientoRegistralWs getAsientoRegistralBean(RegistroEntrada registroEntrada,
-                                                            String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
-
-      if (registroEntrada == null) {
-         return null;
-      }
-
-      Entidad entidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad();
-
-      AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(REGISTRO_ENTRADA);
-      RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
-
-      asientoRegistral.setEstado(registroEntrada.getEstado());
-
-      asientoRegistral.setEntidadCodigo(entidad.getCodigoDir3());
-      asientoRegistral.setEntidadDenominacion(entidad.getNombre());
-
-      asientoRegistral.setNumeroRegistro(registroEntrada.getNumeroRegistro());
-      asientoRegistral.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
-      asientoRegistral.setFechaRegistro(registroEntrada.getFecha());
-      asientoRegistral.setCodigoUsuario(registroEntrada.getUsuario().getUsuario().getIdentificador());
-
-      asientoRegistral.setEntidadRegistralInicioCodigo(registroEntrada.getOficina().getCodigo());//Oficina
-      asientoRegistral.setEntidadRegistralInicioDenominacion(registroEntrada.getOficina().getDenominacion());
-      asientoRegistral.setLibroCodigo(registroEntrada.getLibro().getCodigo());
-
-      //Campos comunes
-      setAsientoRegistralComun(asientoRegistral,registroDetalle, entidad, idioma, oficioRemisionEjb, trazabilidadEjb);
-
-      // Campos únicos de RegistroEntrada
-      if(registroEntrada.getDestino() != null ){
-         asientoRegistral.setUnidadTramitacionDestinoCodigo(registroEntrada.getDestino().getCodigo());
-         asientoRegistral.setUnidadTramitacionDestinoDenominacion(registroEntrada.getDestino().getDenominacion());
-      }else{
-         asientoRegistral.setUnidadTramitacionDestinoCodigo(registroEntrada.getDestinoExternoCodigo());
-         asientoRegistral.setUnidadTramitacionDestinoDenominacion(registroEntrada.getDestinoExternoDenominacion());
-      }
-
-      return asientoRegistral;
-
-   }
-
-   /**
-    * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs} con anexos, a partir de un {@link es.caib.regweb3.model.RegistroEntrada}
-    * @param registroEntrada
-    * @param idioma
-    * @param oficioRemisionEjb
+    * @param conAnexos
+    * @param registroEntradaConsultaEjb
+    * @param registroSalidaConsultaEjb
+    * @param permisoLibroUsuarioEjb
     * @param anexoEjb
-    * @param trazabilidadEjb
-    * @return
-    * @throws Exception
-    * @throws I18NException
-    */
-   public static AsientoRegistralWs getAsientoRegistralBeanConAnexos(RegistroEntrada registroEntrada,
-                                                                     String idioma, OficioRemisionLocal oficioRemisionEjb, AnexoLocal anexoEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
-
-      AsientoRegistralWs asientoRegistral = getAsientoRegistralBean(registroEntrada,idioma,oficioRemisionEjb, trazabilidadEjb);
-
-      if(registroEntrada.getRegistroDetalle().getAnexos() != null){
-         List<AnexoWs> anexosWs = procesarAnexosWs(registroEntrada.getRegistroDetalle().getAnexos(), anexoEjb, registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId());
-
-         asientoRegistral.setAnexos(anexosWs);
-      }
-
-      return asientoRegistral;
-
-
-   }
-
-
-   /**
-    * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs}, a partir de un {@link es.caib.regweb3.model.RegistroSalida}
-    * @param registroSalida
-    * @param idioma
     * @param oficioRemisionEjb
     * @param trazabilidadEjb
+    * @param lopdEjb
     * @return
     * @throws Exception
     * @throws I18NException
     */
-   public static AsientoRegistralWs getAsientoRegistralBean(RegistroSalida registroSalida,
-                                                            String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
+   public static AsientoRegistralWs getAsientoRegistral(UsuarioEntidad usuario, String numeroRegistro, Long tipoRegistro, String idioma, Boolean conAnexos,
+                                                        RegistroEntradaConsultaLocal registroEntradaConsultaEjb, RegistroSalidaConsultaLocal registroSalidaConsultaEjb, PermisoLibroUsuarioLocal permisoLibroUsuarioEjb,
+                                                        AnexoLocal anexoEjb, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb, LopdLocal lopdEjb) throws Exception, I18NException {
 
-      if (registroSalida == null) {
-         return null;
+      AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(tipoRegistro);
+      List<Anexo> anexos;
+
+      if(REGISTRO_ENTRADA.equals(tipoRegistro)){
+
+         RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+
+         if (registro == null) {
+            throw new I18NException("registroEntrada.noExiste", numeroRegistro);
+         }
+
+         // Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
+         if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
+            throw new I18NException("registroEntrada.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+         }
+
+         anexos = registro.getRegistroDetalle().getAnexos();
+
+         // Convertimos los campos comunes de AsientoRegistralWs
+         setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb, trazabilidadEjb);
+
+         // Campos únicos de RegistroEntrada
+         if(registro.getDestino() != null ){
+            asientoRegistral.setUnidadTramitacionDestinoCodigo(registro.getDestino().getCodigo());
+            asientoRegistral.setUnidadTramitacionDestinoDenominacion(registro.getDestino().getDenominacion());
+         }else{
+            asientoRegistral.setUnidadTramitacionDestinoCodigo(registro.getDestinoExternoCodigo());
+            asientoRegistral.setUnidadTramitacionDestinoDenominacion(registro.getDestinoExternoDenominacion());
+         }
+
+         // LOPD
+         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
+
+      }else {
+
+         RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+
+         if (registro == null) {
+            throw new I18NException("registroSalida.noExiste", numeroRegistro);
+         }
+
+         // Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
+         if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+            throw new I18NException("registroSalida.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+         }
+
+         anexos = registro.getRegistroDetalle().getAnexos();
+
+         // Convertimos los campos comunes de AsientoRegistralWs
+         setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb, trazabilidadEjb);
+
+         // Campos únicos de RegistroSalida
+         if (registro.getOrigen() != null) {
+            asientoRegistral.setUnidadTramitacionOrigenCodigo(registro.getOrigen().getCodigo());
+            asientoRegistral.setUnidadTramitacionOrigenDenominacion(registro.getOrigen().getDenominacion());
+         } else {
+            asientoRegistral.setUnidadTramitacionOrigenCodigo(registro.getOrigenExternoCodigo());
+            asientoRegistral.setUnidadTramitacionOrigenDenominacion(registro.getOrigenExternoDenominacion());
+         }
+
+         // LOPD
+         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
       }
 
-      Entidad entidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad();
-
-      AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(REGISTRO_SALIDA);
-      RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
-
-      asientoRegistral.setEstado(registroSalida.getEstado());
-
-      asientoRegistral.setEntidadCodigo(entidad.getCodigoDir3());
-      asientoRegistral.setEntidadDenominacion(entidad.getNombre());
-
-      asientoRegistral.setNumeroRegistro(registroSalida.getNumeroRegistro());
-      asientoRegistral.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
-      asientoRegistral.setFechaRegistro(registroSalida.getFecha());
-
-      asientoRegistral.setCodigoUsuario(registroSalida.getUsuario().getUsuario().getIdentificador());
-      asientoRegistral.setEntidadRegistralInicioCodigo(registroSalida.getOficina().getCodigo());
-      asientoRegistral.setEntidadRegistralInicioDenominacion(registroSalida.getOficina().getDenominacion());
-      asientoRegistral.setLibroCodigo(registroSalida.getLibro().getCodigo());
-
-      //Campos comunes
-      setAsientoRegistralComun(asientoRegistral, registroDetalle, entidad, idioma, oficioRemisionEjb, trazabilidadEjb);
-
-
-      // Campos únicos de RegistroSalida
-      if (registroSalida.getOrigen() != null) {
-         asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigen().getCodigo());
-         asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigen().getDenominacion());
-      } else {
-         asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigenExternoCodigo());
-         asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigenExternoDenominacion());
-      }
-
-      return asientoRegistral;
-
-   }
-
-   /**
-    * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs} con anexos, a partir de un {@link es.caib.regweb3.model.RegistroSalida}
-    * @param registroSalida
-    * @param idioma
-    * @param oficioRemisionEjb
-    * @param anexoEjb
-    * @param trazabilidadEjb
-    * @return
-    * @throws Exception
-    * @throws I18NException
-    */
-   public static AsientoRegistralWs getAsientoRegistralBeanConAnexos(RegistroSalida registroSalida,
-                                                                     String idioma, OficioRemisionLocal oficioRemisionEjb, AnexoLocal anexoEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception, I18NException {
-
-      AsientoRegistralWs asientoRegistral = getAsientoRegistralBean(registroSalida,idioma,oficioRemisionEjb,trazabilidadEjb);
-
-      if(registroSalida.getRegistroDetalle().getAnexos() != null){
-         List<AnexoWs> anexosWs = procesarAnexosWs(registroSalida.getRegistroDetalle().getAnexos(), anexoEjb, registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId());
+      // Obtenemos los anexos si así se ha indicado
+      if(conAnexos && anexos != null){
+         List<AnexoWs> anexosWs = procesarAnexosWs(anexos, anexoEjb, usuario.getEntidad().getId());
 
          asientoRegistral.setAnexos(anexosWs);
       }
@@ -295,22 +231,33 @@ public class AsientoRegistralConverter extends CommonConverter {
    /**
     * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs}, a partir de un {@link es.caib.regweb3.model.RegistroDetalle}
     * @param asientoRegistral
-    * @param registroDetalle
+    * @param registro
     * @param entidad
     * @param idioma
     * @param oficioRemisionEjb
     * @param trazabilidadEjb
     * @throws Exception
     */
-   private static void setAsientoRegistralComun(AsientoRegistralWs asientoRegistral, RegistroDetalle registroDetalle, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception{
+   private static void setAsientoRegistralComun(AsientoRegistralWs asientoRegistral, IRegistro registro, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception{
+
+      RegistroDetalle registroDetalle = registro.getRegistroDetalle();
+
+      asientoRegistral.setEstado(registro.getEstado());
+
+      asientoRegistral.setEntidadCodigo(entidad.getCodigoDir3());
+      asientoRegistral.setEntidadDenominacion(entidad.getNombre());
+
+      asientoRegistral.setNumeroRegistro(registro.getNumeroRegistro());
+      asientoRegistral.setNumeroRegistroFormateado(registro.getNumeroRegistroFormateado());
+      asientoRegistral.setFechaRegistro(registro.getFecha());
+      asientoRegistral.setCodigoUsuario(registro.getUsuario().getUsuario().getIdentificador());
+
+      asientoRegistral.setEntidadRegistralInicioCodigo(registro.getOficina().getCodigo());//Oficina
+      asientoRegistral.setEntidadRegistralInicioDenominacion(registro.getOficina().getDenominacion());
+      asientoRegistral.setLibroCodigo(registro.getLibro().getCodigo());
 
       asientoRegistral.setResumen(registroDetalle.getExtracto());
       asientoRegistral.setTipoDocumentacionFisicaCodigo(registroDetalle.getTipoDocumentacionFisica());
-
-      // Tipo Asunto
-      //TraduccionTipoAsunto traduccionTipoAsunto = (TraduccionTipoAsunto) registroDetalle.getTipoAsunto().getTraduccion(idioma);
-      //asientoRegistral.setTipoAsunto(registroDetalle.getTipoAsunto().getCodigo());
-      //asientoRegistral.setTipoAsuntoDenominacion(traduccionTipoAsunto.getNombre());
 
       asientoRegistral.setIdioma(registroDetalle.getIdioma());
 

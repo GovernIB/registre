@@ -5,6 +5,7 @@
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb3.caib.es/">
   <xs:element name="anexoWs" type="tns:anexoWs"/>
+  <xs:element name="asientoRegistralSesionWs" type="tns:asientoRegistralSesionWs"/>
   <xs:element name="asientoRegistralWs" type="tns:asientoRegistralWs"/>
   <xs:element name="crearAsientoRegistral" type="tns:crearAsientoRegistral"/>
   <xs:element name="crearAsientoRegistralResponse" type="tns:crearAsientoRegistralResponse"/>
@@ -26,7 +27,11 @@
   <xs:element name="obtenerOficioExternoResponse" type="tns:obtenerOficioExternoResponse"/>
   <xs:element name="obtenerReferenciaJustificante" type="tns:obtenerReferenciaJustificante"/>
   <xs:element name="obtenerReferenciaJustificanteResponse" type="tns:obtenerReferenciaJustificanteResponse"/>
+  <xs:element name="obtenerSesionRegistro" type="tns:obtenerSesionRegistro"/>
+  <xs:element name="obtenerSesionRegistroResponse" type="tns:obtenerSesionRegistroResponse"/>
   <xs:element name="oficioWs" type="tns:oficioWs"/>
+  <xs:element name="verificarAsientoRegistral" type="tns:verificarAsientoRegistral"/>
+  <xs:element name="verificarAsientoRegistralResponse" type="tns:verificarAsientoRegistralResponse"/>
   <xs:complexType name="obtenerJustificante">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
@@ -230,6 +235,33 @@
       <xs:element minOccurs="0" name="url" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
+  <xs:complexType name="verificarAsientoRegistral">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="idSesion" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="verificarAsientoRegistralResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:asientoRegistralSesionWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="asientoRegistralSesionWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="estado" type="xs:long"/>
+      <xs:element minOccurs="0" name="asientoRegistralWs" type="tns:asientoRegistralWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerSesionRegistro">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerSesionRegistroResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:long"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="obtenerAsientosCiudadano">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
@@ -251,6 +283,7 @@
   </xs:complexType>
   <xs:complexType name="crearAsientoRegistral">
     <xs:sequence>
+      <xs:element minOccurs="0" name="idSesion" type="xs:long"/>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="asientoRegistral" type="tns:asientoRegistralWs"/>
       <xs:element minOccurs="0" name="tipoOperacion" type="xs:long"/>
@@ -277,6 +310,10 @@
   </xs:complexType>
 </xs:schema>
   </wsdl:types>
+  <wsdl:message name="verificarAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:verificarAsientoRegistralResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="obtenerJustificante">
     <wsdl:part name="parameters" element="tns:obtenerJustificante">
     </wsdl:part>
@@ -313,6 +350,10 @@
     <wsdl:part name="parameters" element="tns:crearAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="obtenerSesionRegistro">
+    <wsdl:part name="parameters" element="tns:obtenerSesionRegistro">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:message name="obtenerAsientosCiudadanoResponse">
     <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadanoResponse">
     </wsdl:part>
@@ -347,6 +388,14 @@
   </wsdl:message>
   <wsdl:message name="WsValidationException">
     <wsdl:part name="WsValidationException" element="tns:WsValidationErrors">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerSesionRegistroResponse">
+    <wsdl:part name="parameters" element="tns:obtenerSesionRegistroResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verificarAsientoRegistral">
+    <wsdl:part name="parameters" element="tns:verificarAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebAsientoRegistralWs">
@@ -407,6 +456,22 @@
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="verificarAsientoRegistral">
+      <wsdl:input name="verificarAsientoRegistral" message="tns:verificarAsientoRegistral">
+    </wsdl:input>
+      <wsdl:output name="verificarAsientoRegistralResponse" message="tns:verificarAsientoRegistralResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerSesionRegistro">
+      <wsdl:input name="obtenerSesionRegistro" message="tns:obtenerSesionRegistro">
+    </wsdl:input>
+      <wsdl:output name="obtenerSesionRegistroResponse" message="tns:obtenerSesionRegistroResponse">
+    </wsdl:output>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
     </wsdl:operation>
@@ -523,6 +588,18 @@
         <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="verificarAsientoRegistral">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="verificarAsientoRegistral">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="verificarAsientoRegistralResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="obtenerAsientosCiudadano">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="obtenerAsientosCiudadano">
@@ -534,6 +611,18 @@
       <wsdl:fault name="WsValidationException">
         <soap:fault name="WsValidationException" use="literal"/>
       </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerSesionRegistro">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerSesionRegistro">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerSesionRegistroResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
       <wsdl:fault name="WsI18NException">
         <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>

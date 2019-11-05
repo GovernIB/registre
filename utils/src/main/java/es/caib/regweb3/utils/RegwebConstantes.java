@@ -807,4 +807,17 @@ public interface RegwebConstantes {
             EVENTO_OFICIO_EXTERNO,
             EVENTO_OFICIO_SIR
     };
+
+    /* -------------- ESTADOS SESIÓN --------------*/
+    Long SESION_NO_INICIADA = 0L;
+    Long SESION_INICIADA = 1L;
+    Long SESION_FINALIZADA = 2L;
+    Long SESION_ERROR = 3L;
+
+    Long[] ESTADOS_SESION = {
+            SESION_NO_INICIADA,
+            SESION_INICIADA,
+            SESION_FINALIZADA,
+            SESION_ERROR
+    };
 }
