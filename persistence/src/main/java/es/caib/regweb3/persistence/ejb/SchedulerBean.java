@@ -26,41 +26,19 @@ public class SchedulerBean implements SchedulerLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/SirEnvioEJB/local")
-    private SirEnvioLocal sirEnvioEjb;
-
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
-
-    @EJB(mappedName = "regweb3/ContadorEJB/local")
-    private ContadorLocal contadorEjb;
-
-    @EJB(mappedName = "regweb3/IntegracionEJB/local")
-    private IntegracionLocal integracionEjb;
-
-    @EJB(mappedName = "regweb3/ArxiuEJB/local")
-    private ArxiuLocal arxiuEjb;
-
-    @EJB(mappedName = "regweb3/AnexoSirEJB/local")
-    private AnexoSirLocal anexoSirEjb;
-
-    @EJB(mappedName = "regweb3/AnexoEJB/local")
-    private AnexoLocal anexoEjb;
-
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
-    private NotificacionLocal notificacionEjb;
-
-    @EJB(mappedName = "regweb3/DistribucionEJB/local")
-    private DistribucionLocal distribucionEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroSalidaEJB/local")
-    private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private SirEnvioLocal sirEnvioEjb;
+    @EJB private EntidadLocal entidadEjb;
+    @EJB private LibroLocal libroEjb;
+    @EJB private ContadorLocal contadorEjb;
+    @EJB private IntegracionLocal integracionEjb;
+    @EJB private ArxiuLocal arxiuEjb;
+    @EJB private AnexoSirLocal anexoSirEjb;
+    @EJB private AnexoLocal anexoEjb;
+    @EJB private NotificacionLocal notificacionEjb;
+    @EJB private DistribucionLocal distribucionEjb;
+    @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
+    @EJB private SesionLocal sesionEjb;
 
 
     @Override
@@ -301,6 +279,29 @@ public class SchedulerBean implements SchedulerLocal{
                     log.error("Error generando notificacionesRechazadosDevueltos", e);
                 }
             }
+        }
+    }
+
+    @Override
+    public void purgarSesionesWs() throws Exception{
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for(Entidad entidad: entidades) {
+
+            log.info(" ");
+            log.info("------------- Purgando sesiones para " + entidad.getNombre() + " -------------");
+            log.info(" ");
+
+            try{
+                sesionEjb.purgarSesiones(entidad.getId());
+            }catch (Exception e){
+                log.info("Error purgando sesiones");
+                e.printStackTrace();
+            }
+
+            log.info(" ");
+            log.info("------------- Fin Purgando sesiones para " + entidad.getNombre() + " -------------");
         }
     }
 

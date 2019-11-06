@@ -17,7 +17,7 @@ import javax.ejb.Local;
 public interface SesionLocal extends BaseEjb<Sesion, Long> {
 
     /**
-     *
+     * Crea una nueva Sesión con el estado NO_INICIADA
      * @param usuario
      * @return
      * @throws Exception
@@ -25,7 +25,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
     Sesion nuevaSesion(UsuarioEntidad usuario) throws Exception;
 
     /**
-     *
+     * Busca una Sesión a partir de id y el usuario
      * @param idSesion
      * @param usuario
      * @return
@@ -33,7 +33,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
     Sesion findByIdSesionUsuario(Long idSesion, UsuarioEntidad usuario);
 
     /**
-     *
+     * Cambia el estado de una Sesión
      * @param idSesion
      * @param usuario
      * @param estado
@@ -42,7 +42,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
     void cambiarEstado(Long idSesion, UsuarioEntidad usuario, Long estado) throws Exception;
 
     /**
-     *
+     * Crea una nueva Sesión con estado INICIADO
      * @param idSesion
      * @param usuario
      * @throws Exception
@@ -50,7 +50,7 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
     void iniciarSesion(Long idSesion, UsuarioEntidad usuario) throws Exception;
 
     /**
-     *
+     * Marca la Sesión como finalizada, añadiendole el numero de registro
      * @param idSesion
      * @param usuario
      * @param tipoRegistro
@@ -60,9 +60,8 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
     void finalizarSesion(Long idSesion, UsuarioEntidad usuario, Long tipoRegistro, String numeroRegistro) throws Exception;
 
     /**
-     *
-     * @param estado
-     * @throws Exception
+     * Purgado de sesiones
+     * @param idEntidad
      */
-    void purgarSesionesEstado(Long estado) throws Exception;
+    void purgarSesiones(Long idEntidad) throws Exception;
 }
