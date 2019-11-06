@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Sesion;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -152,7 +153,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     private void purgarSesionesIniciadas(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.MINUTE, -60); //el -X indica que se le restaran X minutos
+        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
 
         List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :iniciada and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
@@ -166,7 +167,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     private void purgarSesionesNoIniciadas(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.MINUTE, -60); //el -X indica que se le restaran X minutos
+        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoNoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
 
         List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :no_iniciada and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
@@ -179,7 +180,7 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     private void purgarSesionesErrorFinalidadas(Long idEntidad) throws Exception{
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
-        hoy.add(Calendar.MINUTE, -60); //el -X indica que se le restaran X minutos
+        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoFinalizadas(idEntidad)); //el -X indica que se le restaran X minutos
 
         List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and (s.estado = :error or s.estado = :finalizada) and s.fecha <= :fecha")
                 .setParameter("idEntidad", idEntidad)
