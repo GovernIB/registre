@@ -4,12 +4,14 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonListController;
 import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
 import org.apache.log4j.Logger;
@@ -52,11 +54,11 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
-    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
-    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
-
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
+
+    @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
+    private AsientoRegistralLocal asientoRegistralEjb;
 
 
     /**
@@ -200,6 +202,32 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
         return "registroEntrada/registroEntradaDetalleAdmin";
+    }
+
+    /**
+     * Marca como Distribuido y genera el Justificante del {@link es.caib.regweb3.model.RegistroEntrada}
+     */
+    @RequestMapping(value = "/registroEntrada/{idRegistro}/procesar", method = RequestMethod.GET)
+    public String procesarRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException, I18NValidationException {
+
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+
+        try{
+            if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+            }
+            registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
+
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
+        }catch (Exception e){
+            e.printStackTrace();
+            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.error"));
+        }
+
+
+        return "redirect:/adminEntidad/registroEntrada/"+idRegistro+"/detalle";
     }
 
     /**

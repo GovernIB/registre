@@ -503,8 +503,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void tramitarRegistroEntrada(RegistroEntrada registroEntrada,
-                                        UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
+    public void distribuirRegistroEntrada(RegistroEntrada registroEntrada,
+                                          UsuarioEntidad usuarioEntidad) throws Exception, I18NValidationException, I18NException {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();

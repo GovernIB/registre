@@ -147,7 +147,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         if (distribucionPlugin == null) {
             //Tramitamos el registro de entrada directamente
-            registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
+            registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             return true;
         } else {
@@ -155,7 +155,7 @@ public class DistribucionBean implements DistribucionLocal {
             registroEntrada = gestionFicherosTecnicos(registroEntrada);
             boolean distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale("ca"));
             if (distribuido) { //Si ha ido bien lo marcamos como distribuido
-                registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
+                registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 

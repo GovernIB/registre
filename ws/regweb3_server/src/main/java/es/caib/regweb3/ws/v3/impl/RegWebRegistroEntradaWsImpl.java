@@ -411,7 +411,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
 
         // 7.- Tramitamos el RegistroEntrada
-        registroEntradaEjb.tramitarRegistroEntrada(registroEntrada, usuarioEntidad);
+        registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
 
     }
 
