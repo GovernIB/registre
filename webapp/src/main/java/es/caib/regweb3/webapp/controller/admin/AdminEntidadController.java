@@ -215,17 +215,21 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         try{
-            if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
-            }
-            registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
 
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
+            if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+
+                if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                    asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                }
+                registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
+
+                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.error"));
         }
-
 
         return "redirect:/adminEntidad/registroEntrada/"+idRegistro+"/detalle";
     }
