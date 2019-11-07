@@ -149,7 +149,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         if(sesion.getEstado().equals(RegwebConstantes.SESION_FINALIZADA)){
 
             AsientoRegistralWs asientoRegistral = AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, sesion.getNumeroRegistro(), sesion.getTipoRegistro(),
-                    UsuarioAplicacionCache.get().getIdioma(), false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
+                    UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
 
             asientoRegistralSesionWs.setAsientoRegistralWs(asientoRegistral);
         }
@@ -435,7 +435,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             asientoRegistralWs = AsientoRegistralConverter.getAsientoRegistral(usuarioEntidad, numeroRegistroFormateado, tipoRegistro,
-                    UsuarioAplicacionCache.get().getIdioma(), conAnexos, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
+                    UsuarioAplicacionCache.get().getIdioma(), conAnexos, true, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
 
         }catch (Exception e){
 
@@ -783,7 +783,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             for (RegistroEntrada entrada : (List<RegistroEntrada>)entradas) {
 
                 asientos.add(AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, entrada.getNumeroRegistroFormateado(), REGISTRO_ENTRADA,
-                        UsuarioAplicacionCache.get().getIdioma(), false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
+                        UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
 
             }
             resultado.setResults(asientos);
@@ -832,7 +832,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             AsientoRegistralWs asiento = AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, numeroRegistroFormateado, REGISTRO_ENTRADA,
-                    UsuarioAplicacionCache.get().getIdioma(), true, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
+                    UsuarioAplicacionCache.get().getIdioma(), true, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
