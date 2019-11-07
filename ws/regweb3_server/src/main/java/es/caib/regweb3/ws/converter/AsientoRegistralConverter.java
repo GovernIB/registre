@@ -150,7 +150,7 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @throws Exception
     * @throws I18NException
     */
-   public static AsientoRegistralWs getAsientoRegistral(UsuarioEntidad usuario, String numeroRegistro, Long tipoRegistro, String idioma, Boolean conAnexos,
+   public static AsientoRegistralWs getAsientoRegistral(UsuarioEntidad usuario, String numeroRegistro, Long tipoRegistro, String idioma, Boolean conAnexos, Boolean comprobarPermisos,
                                                         RegistroEntradaConsultaLocal registroEntradaConsultaEjb, RegistroSalidaConsultaLocal registroSalidaConsultaEjb, PermisoLibroUsuarioLocal permisoLibroUsuarioEjb,
                                                         AnexoLocal anexoEjb, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb, LopdLocal lopdEjb) throws Exception, I18NException {
 
@@ -166,8 +166,10 @@ public class AsientoRegistralConverter extends CommonConverter {
          }
 
          // Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
-         if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
-            throw new I18NException("registroEntrada.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+         if(comprobarPermisos){
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
+               throw new I18NException("registroEntrada.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+            }
          }
 
          anexos = registro.getRegistroDetalle().getAnexos();
@@ -196,9 +198,12 @@ public class AsientoRegistralConverter extends CommonConverter {
          }
 
          // Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
-         if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-            throw new I18NException("registroSalida.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+         if(comprobarPermisos){
+            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+               throw new I18NException("registroSalida.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+            }
          }
+
 
          anexos = registro.getRegistroDetalle().getAnexos();
 
