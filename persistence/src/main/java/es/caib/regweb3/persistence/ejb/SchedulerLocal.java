@@ -86,5 +86,9 @@ public interface SchedulerLocal {
      */
     void generarComunicaciones() throws Exception;
 
+    /**
+     * Purga las sesiones ws
+     */
+    void purgarSesionesWs() throws Exception;
 }
 

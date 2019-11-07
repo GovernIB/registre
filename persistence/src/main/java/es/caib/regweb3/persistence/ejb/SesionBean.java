@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Sesion;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.security.SecureRandom;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -140,8 +142,68 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     }
 
     @Override
-    public void purgarSesionesEstado(Long estado) throws Exception{
+    public void purgarSesiones(Long idEntidad) throws Exception{
 
-        em.createQuery("delete from Sesion where estado = :estado").setParameter("estado", estado).executeUpdate();
+        purgarSesionesIniciadas(idEntidad);
+        purgarSesionesErrorFinalidadas(idEntidad);
+        purgarSesionesNoIniciadas(idEntidad);
+
+    }
+
+    private void purgarSesionesIniciadas(Long idEntidad) throws Exception{
+
+        Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
+        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
+
+        List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :iniciada and s.fecha <= :fecha")
+                .setParameter("idEntidad", idEntidad)
+                .setParameter("iniciada", RegwebConstantes.SESION_INICIADA)
+                .setParameter("fecha", hoy.getTime()).getResultList();
+
+        eliminarSesiones(result);
+
+    }
+
+    private void purgarSesionesNoIniciadas(Long idEntidad) throws Exception{
+
+        Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
+        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoNoIniciadas(idEntidad)); //el -X indica que se le restaran X minutos
+
+        List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and s.estado = :no_iniciada and s.fecha <= :fecha")
+                .setParameter("idEntidad", idEntidad)
+                .setParameter("no_iniciada", RegwebConstantes.SESION_NO_INICIADA)
+                .setParameter("fecha", hoy.getTime()).getResultList();
+
+        eliminarSesiones(result);
+    }
+
+    private void purgarSesionesErrorFinalidadas(Long idEntidad) throws Exception{
+
+        Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
+        hoy.add(Calendar.MINUTE, -PropiedadGlobalUtil.getSesionMinutosPurgadoFinalizadas(idEntidad)); //el -X indica que se le restaran X minutos
+
+        List<?> result =  em.createQuery("select distinct(s.id) from Sesion as s where s.usuario.entidad.id = :idEntidad and (s.estado = :error or s.estado = :finalizada) and s.fecha <= :fecha")
+                .setParameter("idEntidad", idEntidad)
+                .setParameter("error", RegwebConstantes.SESION_ERROR)
+                .setParameter("finalizada", RegwebConstantes.SESION_FINALIZADA)
+                .setParameter("fecha", hoy.getTime()).getResultList();
+
+        eliminarSesiones(result);
+    }
+
+    private void eliminarSesiones(List<?> sesiones) throws Exception{
+
+        if(sesiones.size() > 0){
+
+            // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
+            while (sesiones.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
+
+                List<?> subList = sesiones.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
+                em.createQuery("delete from Sesion where id in (:sesiones)").setParameter("sesiones", subList).executeUpdate();
+                sesiones.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
+            }
+            em.createQuery("delete from Sesion where id in (:sesiones)").setParameter("sesiones", sesiones).executeUpdate();
+        }
+
     }
 }

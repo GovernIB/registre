@@ -24,42 +24,24 @@ public class Regweb3Scheduler {
     private SchedulerLocal schedulerEjb;
 
 
+
     /**
-     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
-     * Cuando lo hace: cada 4 minutos
+     * Qué hace: Purga las sesiones ws
+     * Cuando lo hace: cada 60 minutos
      */
-    /*@Scheduled(cron = "0 0/4 * * * *")
-    public void actualizarProximoEventoRegistrosEntrada(){
+    @Scheduled(cron = "0 0 * * * *") //  {*/60 * * * * * cada 60 secs }
+    public void purgarSesionesWs(){
 
         try {
 
-            schedulerEjb.actualizarProximoEventoRegistrosEntrada();
+            schedulerEjb.purgarSesionesWs();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosEntrada --");
-            e.printStackTrace();
-        }
-
-    }*/
-
-    /**
-     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
-     * Cuando lo hace: cada 4 minutos
-     */
-    @Scheduled(cron = "0 0/4 * * * *")
-    public void actualizarProximoEventoRegistrosSalida(){
-
-        try {
-
-            schedulerEjb.actualizarProximoEventoRegistrosSalida();
-
-        } catch (Exception e) {
-            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosSalida --");
+            log.info("-- Error Scheduler: purgarSesionesWs --");
             e.printStackTrace();
         }
 
     }
-
 
     /**
      * Qué hace: Realiza tareas administrativas generales de la aplicación
@@ -195,6 +177,42 @@ public class Regweb3Scheduler {
             log.info("-- Error Scheduler: cerrarExpedientes --");
             e.printStackTrace();
         }
+    }
+
+    /**TODO ELIMINAR
+     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
+     * Cuando lo hace: cada 4 minutos
+     */
+    /*@Scheduled(cron = "0 0/4 * * * *")
+    public void actualizarProximoEventoRegistrosEntrada(){
+
+        try {
+
+            schedulerEjb.actualizarProximoEventoRegistrosEntrada();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosEntrada --");
+            e.printStackTrace();
+        }
+
+    }*/
+
+    /**TODO ELIMINAR
+     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
+     * Cuando lo hace: cada 4 minutos
+     */
+    @Scheduled(cron = "0 0/4 * * * *")
+    public void actualizarProximoEventoRegistrosSalida(){
+
+        try {
+
+            schedulerEjb.actualizarProximoEventoRegistrosSalida();
+
+        } catch (Exception e) {
+            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosSalida --");
+            e.printStackTrace();
+        }
+
     }
 
     /**
