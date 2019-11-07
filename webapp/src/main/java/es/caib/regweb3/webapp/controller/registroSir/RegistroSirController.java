@@ -41,9 +41,6 @@ public class RegistroSirController extends BaseController {
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
-
     @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
     private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
 

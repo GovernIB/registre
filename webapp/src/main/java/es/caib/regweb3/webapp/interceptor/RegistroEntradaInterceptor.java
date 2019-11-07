@@ -2,7 +2,10 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
+import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -38,9 +41,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
-
-    @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-    private TipoAsuntoLocal tipoAsuntoEjb;
 
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;

@@ -51,9 +51,6 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
   public static final String NAME_WS = NAME + "Ws";
 
 
-  @EJB(mappedName = "regweb3/TipoAsuntoEJB/local")
-  private TipoAsuntoLocal tipoAsuntoEjb;
-
   @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
   private TipoDocumentalLocal tipoDocumentalEjb;
   
