@@ -19,11 +19,11 @@
     <cxf.version>2.2.12</cxf.version>
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-    <documentcustody.api.version>3.0.0</documentcustody.api.version>
+    <documentcustody.api.version>4.0.0</documentcustody.api.version>
     <scanweb.api.version>3.0.0</scanweb.api.version>
     <itext.version>5.4.3</itext.version>
     <bouncycastle.version>1.51</bouncycastle.version>
-    <plugin-documentcustody-arxiudigitalcaib.version>3.0.14</plugin-documentcustody-arxiudigitalcaib.version>
+    <plugin-documentcustody-arxiudigitalcaib.version>4.0.0</plugin-documentcustody-arxiudigitalcaib.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>

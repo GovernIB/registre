@@ -15,8 +15,8 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
-import org.fundaciobit.plugins.utils.Metadata;
-import org.fundaciobit.plugins.utils.MetadataConstants;
+import org.fundaciobit.pluginsib.core.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -106,6 +106,7 @@ public class JustificanteBean implements JustificanteLocal {
             // Cerca el Plugin de Justificant definit a les Propietats Globals
             ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
 
+
             // Comprova que existeix el plugin de justificant
             if (signaturePlugin == null) {
                 // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
@@ -143,7 +144,8 @@ public class JustificanteBean implements JustificanteLocal {
             }
             anexo.setCsv(csv);
 
-            String url = documentCustodyPlugin.getValidationUrl(custodyID, custodyParameters);
+
+            String url = documentCustodyPlugin.getOriginalFileUrl(custodyID, custodyParameters);
             String specialValue = documentCustodyPlugin.getSpecialValue(custodyID, custodyParameters);
             // Obtenim el ByteArray per generar el pdf
             byte[] pdfSignat;

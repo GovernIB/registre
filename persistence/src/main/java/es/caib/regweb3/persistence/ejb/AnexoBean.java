@@ -772,15 +772,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
                 //les metadates estan comentades perque no s'usan de moment fins que adaptem a la nova versió de documentCustody de plugins ib)
 
-                // metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
+                 metadades.add(new Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
+                //metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.fechaCaptura", anexo.getFechaCaptura()));
 
                 // Afegida Nova Metadada
-                /*metadades.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO,
+                metadades.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO,
                    org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
-*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_FECHA_INICIO,
-                        org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
+
+                //metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_FECHA_INICIO,
+                  //      org.fundaciobit.plugins.utils.ISO8601.dateToISO8601(anexo.getFechaCaptura())));
             }
 
             // String tipoDeDocumento; //  varchar(100)
@@ -790,45 +790,45 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_DESCRIPCION = "eni:descripcion"
-                //  metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
+                  metadades.add(new Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
+                //metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_DESCRIPCION, anexo.getTitulo()));
             }
 
             //  String tipoDeDocumento; //  varchar(100)
             if (anexo.getTipoDocumento() != null) {
-                /*metadades.add(new Metadata("anexo.tipoDocumento",
-                   I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumento",
-                        I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
+                metadades.add(new Metadata("anexo.tipoDocumento",
+                   I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));
+                /*metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumento",
+                        I18NLogicUtils.tradueix(loc, "tipoDocumento.0" + anexo.getTipoDocumento())));*/
             }
 
             if (registro.getOficina() != null && registro.getOficina().getNombreCompleto() != null) {
 
-                //metadades.add(new Metadata("oficina", registro.getOficina().getNombreCompleto()));
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("oficina", registro.getOficina().getNombreCompleto()));
+                metadades.add(new Metadata("oficina", registro.getOficina().getNombreCompleto()));
+               // metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("oficina", registro.getOficina().getNombreCompleto()));
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO = "eni:codigo_oficina_registro"
-               /* metadades.add(new Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
-                   registro.getOficina().getCodigo()));*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
-                        registro.getOficina().getCodigo()));
+                metadades.add(new Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
+                   registro.getOficina().getCodigo()));
+                /*metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_CODIGO_OFICINA_REGISTRO,
+                        registro.getOficina().getCodigo()));*/
             }
 
 
             if (anexo.getOrigenCiudadanoAdmin() != null) {
-                /*metadades.add(new Metadata("anexo.origen",
-                   I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.origen",
-                        I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+                metadades.add(new Metadata("anexo.origen",
+                   I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));
+                /*metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.origen",
+                        I18NLogicUtils.tradueix(loc, "anexo.origen." + anexo.getOrigenCiudadanoAdmin())));*/
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_ORIGEN = "eni:origen"
-               /* metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN,
-                   anexo.getOrigenCiudadanoAdmin()));*/
+                metadades.add(new Metadata(MetadataConstants.ENI_ORIGEN,
+                   anexo.getOrigenCiudadanoAdmin()));
 
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_ORIGEN,
-                        anexo.getOrigenCiudadanoAdmin()));
+                /*metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_ORIGEN,
+                        anexo.getOrigenCiudadanoAdmin()));*/
             }
 
             /*
@@ -838,22 +838,22 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
              * tipoValidezDocumento.4=Original
              */
             if (anexo.getValidezDocumento() != null && anexo.getValidezDocumento() != -1) {
-              /*  metadades.add(new Metadata("anexo.validezDocumento",
-                   I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.validezDocumento",
-                        I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
+                metadades.add(new Metadata("anexo.validezDocumento",
+                   I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));
+               /* metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.validezDocumento",
+                        I18NLogicUtils.tradueix(loc, "tipoValidezDocumento." + anexo.getValidezDocumento())));*/
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_ESTADO_ELABORACION = "eni:estado_elaboracion"
-              /*  metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
-                   RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
-                        RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
+               metadades.add(new Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
+                   RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));
+                 /*metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_ESTADO_ELABORACION,
+                        RegwebConstantes.CODIGO_NTI_BY_TIPOVALIDEZDOCUMENTO.get(anexo.getValidezDocumento())));*/
             }
 
             if (mimeFinal != null) {
-                //      metadades.add(new Metadata("anexo.formato", mimeFinal));
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.formato", mimeFinal));
+                     metadades.add(new Metadata("anexo.formato", mimeFinal));
+                // metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.formato", mimeFinal));
             }
 
             if (anexo.getTipoDocumental() != null &&
@@ -861,34 +861,37 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
                 // Afegida Nova Metadada
                 // MetadataConstants.ENI_TIPO_DOCUMENTAL = "eni:tipo_doc_ENI"
-               /* metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
-                   anexo.getTipoDocumental().getCodigoNTI()));*/
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
-                        anexo.getTipoDocumental().getCodigoNTI()));
+                metadades.add(new Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
+                   anexo.getTipoDocumental().getCodigoNTI()));
+               /* metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata(MetadataConstants.ENI_TIPO_DOCUMENTAL,
+                        anexo.getTipoDocumental().getCodigoNTI()));*/
 
-                //  metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
+                 metadades.add(new Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
+                //metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumental.codigo", anexo.getTipoDocumental().getCodigoNTI()));
 
                 try {
-                    /*metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
-                       ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));*/
-                    metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumental.descripcion",
-                            ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+                    metadades.add(new Metadata("anexo.tipoDocumental.descripcion",
+                       ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));
+                   /* metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.tipoDocumental.descripcion",
+                            ((TraduccionTipoDocumental) anexo.getTipoDocumental().getTraduccion(loc.getLanguage())).getNombre()));*/
                 } catch (Throwable th) {
                     log.error("Error en la traduccion de tipo documental: " + th.getMessage(), th);
                 }
             }
             if (anexo.getObservaciones() != null) {
-                //  metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
-                metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.observaciones", anexo.getObservaciones()));
+                 metadades.add(new Metadata("anexo.observaciones", anexo.getObservaciones()));
+                // metadadesAntigues.add(new org.fundaciobit.plugins.utils.Metadata("anexo.observaciones", anexo.getObservaciones()));
             }
 
             // XMAS SAVEALL custody.updateMetadata(custodyID, metadades.toArray(new Metadata[metadades.size()]), custodyParameters);
-            custody2.saveAll(custodyID, custodyParameters, documentCustody,
-                    signatureCustody, metadadesAntigues.toArray(new org.fundaciobit.plugins.utils.Metadata[metadadesAntigues.size()]));
+            //custody2.saveAll(custodyID, custodyParameters, documentCustody,
+              //      signatureCustody, metadadesAntigues.toArray(new org.fundaciobit.plugins.utils.Metadata[metadadesAntigues.size()]));
 
-            // custody2.saveAll(custodyID, custodyParameters, documentCustody,
-            //  signatureCustody, metadades.toArray(new org.fundaciobit.plugins.utils.Metadata[metadades.size()]));
+            //custody2.saveAll(custodyID, custodyParameters, documentCustody,
+              //       signatureCustody, metadadesAntigues.toArray(new org.fundaciobit.pluginsib.core.utils.Metadata[metadadesAntigues.size()]));
+
+             custody2.saveAll(custodyID, custodyParameters, documentCustody,
+              signatureCustody, metadades.toArray(new org.fundaciobit.pluginsib.core.utils.Metadata[metadades.size()]));
         }
 
     }
@@ -1410,7 +1413,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         } else {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
         }
-        return custody.getValidationUrl(custodiaID, new HashMap<String, Object>());
+        return custody.getOriginalFileUrl(custodiaID, new HashMap<String, Object>());
     }
 
 

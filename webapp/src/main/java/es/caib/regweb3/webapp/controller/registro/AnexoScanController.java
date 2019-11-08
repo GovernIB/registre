@@ -240,6 +240,7 @@ public class AnexoScanController extends AnexoController {
         }
 
         String urlToPluginWebPage;
+
         urlToPluginWebPage = scanWebModuleEjb.scanDocument(request,
                 absoluteRequestPluginBasePath, relativeRequestPluginBasePath, scanWebID);
         return urlToPluginWebPage;
@@ -268,8 +269,13 @@ public class AnexoScanController extends AnexoController {
 
         ScanWebConfigRegWeb config = scanWebModuleEjb.getScanWebConfig(request, scanWebID);
 
+        for(Metadata metadata : config.getMetadades()){
+            log.info("Metadata DIIB: " + metadata.getKey() +" - " + metadata.getValue());
 
-        log.info("Error detectat REGWEB3: " + config.getStatus().getErrorMsg());
+        }
+
+
+       // log.info("Error detectat REGWEB3: " + config.getStatus().getErrorMsg());
         if (config.getStatus().getErrorMsg() != null) {
             throw new I18NException("anexo.perfilscan.error");
         }
@@ -293,6 +299,11 @@ public class AnexoScanController extends AnexoController {
             dc = sd.getScannedPlainFile();
             sc = sd.getScannedSignedFile();
 
+            if(sc != null) {
+                log.info(sc.getName());
+            }
+
+
             final int modoFirma;
             if (dc == null) {
                 // Firma: PAdES, CAdES, XAdES
@@ -306,10 +317,22 @@ public class AnexoScanController extends AnexoController {
                 modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED;
             }
 
+
+            //TODO ver si es así para todos o solo digitalIB
+            //modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
+
             if (log.isDebugEnabled()) {
                 log.debug("NOU MODE DE FIRMA: " + modoFirma);
             }
+
+
+            //TODO obtener el title code de digitalIB de las metadatas, ver si hay que fijarlo para todos los plugins de escaneo????(FELIP)
+            //anexoForm.getAnexo().setTitulo(sd.getScannedPlainFile().getName());
             anexoForm.getAnexo().setModoFirma(modoFirma);
+            //Fijamos el tipo de documento como "Documento Adjunto".
+            //TODO ver si esto es solo digitalIB o cualquier escaner
+            anexoForm.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+            anexoForm.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
 
             anexoForm.setMetadatas(sd.getMetadatas());
 

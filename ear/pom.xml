@@ -166,15 +166,15 @@
     </dependency>
 
 
+
     <!-- ======================= -->
     <!-- ===== PLUGINS API ===== -->
     <!-- ======================= -->
 
-
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugins-api</artifactId>
-      <version>1.0.0</version>
+      <groupId>org.fundaciobit.pluginsib.core</groupId>
+      <artifactId>pluginsib-core</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <!-- ============================================ -->
@@ -182,21 +182,23 @@
     <!-- ============================================ -->
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-documentcustody-api</artifactId>
+      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+      <artifactId>pluginsib-documentcustody-api</artifactId>
       <version>${documentcustody.api.version}</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-documentcustody-filesystem</artifactId>
-      <version>3.0.0</version>
-    </dependency>
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-documentcustody-alfresco</artifactId>
-      <version>3.0.0</version>
+      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+      <artifactId>pluginsib-documentcustody-filesystem</artifactId>
+      <version>4.0.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+      <artifactId>pluginsib-documentcustody-alfresco</artifactId>
+      <version>4.0.0</version>
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>
@@ -207,6 +209,10 @@
           <artifactId>stax-api</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>org.codehaus.woodstox</groupId>
+          <artifactId>stax2-api</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>xpp3</groupId>
           <artifactId>xpp3</artifactId>
         </exclusion>
@@ -214,8 +220,8 @@
     </dependency>
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-documentcustody-arxiudigitalcaib</artifactId>
+      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+      <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
       <version>${plugin-documentcustody-arxiudigitalcaib.version}</version>
     </dependency>
 
@@ -225,26 +231,15 @@
     <!-- ====================================== -->
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-userinformation-database</artifactId>
-      <version>1.0.0</version>
+      <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+      <artifactId>pluginsib-userinformation-ldap</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-userinformation-ldap</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-
-
-    <!-- ============================================ -->
-    <!-- ============= PLUGINS DE SCANNER =========== -->
-    <!-- ============================================ -->
-
-    <dependency>
-      <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
-      <artifactId>pluginsib-scanweb-api</artifactId>
-      <version>${scanweb.api.version}</version>
+      <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+      <artifactId>pluginsib-userinformation-database</artifactId>
+      <version>2.0.0</version>
     </dependency>
 
     <!--   VEURE APARTAT DE PROFILES AL FINAL D'AQUEST POM -->
@@ -313,22 +308,24 @@
     <!-- ======== PLUGINS DE FIRMA EN SERVIDOR =========== -->
     <!-- ================================================= -->
 
-    <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-signatureserver-api</artifactId>
-      <version>2.0.0</version>
-    </dependency>
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-signatureserver-miniappletinserver</artifactId>
-      <version>2.0.2</version>
+      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+      <artifactId>pluginsib-signatureserver-api</artifactId>
+      <version>3.0.0</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+      <artifactId>pluginsib-signatureserver-miniappletinserver</artifactId>
+      <version>3.0.0</version>
     </dependency>
     
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-signatureserver-afirmaserver</artifactId>
-      <version>2.0.4</version>
+      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+      <artifactId>pluginsib-signatureserver-afirmaserver</artifactId>
+      <version>3.0.0</version>
       
       <exclusions> 
         <exclusion>  
@@ -648,11 +645,58 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
-          <version>3.0.0</version>
+          <version>3.0.1</version>
         </dependency>
       </dependencies>
     </profile>
 
-  </profiles>
+    <!-- ========== PLUGIN DE SCAN DE DIGITALIB =========== -->
+    <profile>
+      <id>digitalibscanweb</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+          <artifactId>pluginsib-scanweb-digitalib</artifactId>
+          <version>3.0.1</version>
+        </dependency>
+        <!-- incluimos la dependencia jersey porque si no da un error de json -->
+       <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-json</artifactId>
+          <version>1.19</version>
+
+         <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
+         <exclusions>
+           <exclusion>
+             <groupId>javax.xml.bind</groupId>
+             <artifactId>jaxb-api</artifactId>
+           </exclusion>
+           <exclusion>
+             <groupId>com.sun.xml.bind</groupId>
+             <artifactId>jaxb-impl</artifactId>
+           </exclusion>
+           <exclusion>
+             <groupId>javax.xml.stream</groupId>
+             <artifactId>stax-api</artifactId>
+           </exclusion>
+         </exclusions>
+
+       </dependency>
+
+
+       <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-jaxrs</artifactId>
+         <version>1.9.9</version>
+       </dependency>
+       <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-xc</artifactId>
+         <version>1.9.9</version>
+       </dependency>
+     </dependencies>
+   </profile>
+
+ </profiles>
 
 </project>

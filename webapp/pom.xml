@@ -154,19 +154,31 @@
     <!-- Externas -->
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-documentcustody-arxiudigitalcaib</artifactId>
+      <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
+      <artifactId>pluginsib-documentcustody-arxiudigitalcaib</artifactId>
       <version>${plugin-documentcustody-arxiudigitalcaib.version}</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugins-api</artifactId>
-      <version>1.0.0</version>
+      <groupId>org.fundaciobit.pluginsib.core</groupId>
+      <artifactId>pluginsib-core</artifactId>
+      <version>2.0.0</version>
       <type>jar</type>
       <scope>provided</scope>
     </dependency>
+
+
+
+    <dependency>
+      <groupId>org.fundaciobit.pluginsib.userinformation</groupId>
+      <artifactId>pluginsib-userinformation-api</artifactId>
+      <version>2.0.0</version>
+      <type>jar</type>
+      <scope>provided</scope>
+    </dependency>
+
+
 
     <dependency>
       <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
@@ -190,10 +202,11 @@
       <scope>provided</scope>
     </dependency>
 
+
     <dependency>
-      <groupId>org.fundaciobit.plugins</groupId>
-      <artifactId>plugin-signatureserver-api</artifactId>
-      <version>2.0.0</version>
+      <groupId>org.fundaciobit.pluginsib.signatureserver</groupId>
+      <artifactId>pluginsib-signatureserver-api</artifactId>
+      <version>3.0.0</version>
       <scope>provided</scope>
     </dependency>
 

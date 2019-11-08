@@ -5,7 +5,6 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.utils.PluginsManager;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.Stateless;
@@ -16,6 +15,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+//import org.fundaciobit.plugins.utils.PluginsManager;
 
 /**
  * Created by Fundació BIT.
@@ -173,7 +174,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
     }
 
-    @Override
+    /*@Override
     public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
         try {
@@ -190,10 +191,10 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         }
 
         return null;
-    }
+    }*/
 
     @Override
-    public Object getPlugin2(Long idEntidad, Long tipoPlugin) throws I18NException {
+    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
 
         try {
             List<Plugin> plugins;
@@ -202,7 +203,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
 
             if (plugins.size() > 0) {
-                return cargarPlugin2(plugins.get(0));
+                return cargarPlugin(plugins.get(0));
             }
         } catch (Exception e) {
             throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
@@ -244,6 +245,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         return null;
     }
 
+
     /**
      *
      * @param plugin
@@ -251,40 +253,6 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
      * @throws Exception
      */
     private Object cargarPlugin(Plugin plugin) throws Exception {
-
-        String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
-
-        // Si no existe el plugin, retornamos null
-        if (plugin == null) {
-            log.info("No existe ningun plugin de este tipo definido en el sistema", new Exception());
-            return null;
-        }
-
-        // Obtenemos la clase del Plugin
-        String className = plugin.getClase().trim();
-
-        // Obtenemos sus propiedades
-        Properties prop = new Properties();
-
-        if (plugin.getPropiedadesEntidad() != null && plugin.getPropiedadesEntidad().trim().length() != 0) {
-            prop.load(new StringReader(plugin.getPropiedadesEntidad()));
-        }
-
-        if (plugin.getPropiedadesAdmin() != null && plugin.getPropiedadesAdmin().trim().length() != 0) {
-            prop.load(new StringReader(plugin.getPropiedadesAdmin()));
-        }
-
-        // Carregant la classe
-        return PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
-    }
-
-    /**
-     *
-     * @param plugin
-     * @return
-     * @throws Exception
-     */
-    private Object cargarPlugin2(Plugin plugin) throws Exception {
 
         String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
 
