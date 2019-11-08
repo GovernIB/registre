@@ -214,32 +214,13 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return api;
     }
 
+    /**
+     *
+     * @param tipoRegistro
+     * @return
+     */
+    private AsientoRegistralWs getDatosComunesAsiento(Long tipoRegistro){
 
-    public static byte[] constructFitxerFromResource(String name) throws Exception {
-        String filename;
-        if (name.startsWith("/")) {
-            filename = name.substring(1);
-        } else {
-            filename = '/' + name;
-        }
-        InputStream is = RegWebTestUtils.class.getResourceAsStream(filename);
-        if (is == null) {
-            return null;
-        }
-        try {
-            return IOUtils.toByteArray(is);
-        } finally {
-            try {
-                is.close();
-            } catch (Exception e) {
-            }
-        }
-
-    }
-
-    public AsientoRegistralWs getAsientoRegistral(Long tipoRegistro, Boolean representante) {
-
-        // Datos
         AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
         asientoRegistralWs.setTipoRegistro(tipoRegistro);
 
@@ -261,6 +242,39 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
+        return asientoRegistralWs;
+    }
+
+    /**
+     *
+     * @param tipoRegistro
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_Administracion(Long tipoRegistro){
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+        interesadoWs.setInteresado(getAdministracion());
+
+        asiento.getInteresados().add(interesadoWs);
+
+        return asiento;
+    }
+
+    /**
+     *
+     * @param tipoRegistro
+     * @param representante
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_PersonaFisica(Long tipoRegistro, Boolean representante) {
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
 
@@ -272,21 +286,40 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
         }
 
-        asientoRegistralWs.getInteresados().add(interesadoWs);
-
-        InteresadoWs interesadoWs2 = new InteresadoWs();
-        DatosInteresadoWs organismo = new DatosInteresadoWs();
-        organismo.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
-        organismo.setTipoDocumentoIdentificacion("O");
-        organismo.setRazonSocial("Ayuntamiento de Alaior");
-        organismo.setDocumento("L01070027");
-        interesadoWs2.setInteresado(organismo);
-
-        // asientoRegistralWs.getInteresados().add(interesadoWs2);
+        asiento.getInteresados().add(interesadoWs);
 
         //asientoRegistralWs.getAnexos().addAll(getAnexos());
 
-        return asientoRegistralWs;
+        return asiento;
+    }
+
+    /**
+     *
+     * @param tipoRegistro
+     * @param representante
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_PersonaJuridica(Long tipoRegistro, Boolean representante) {
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+
+        // Interesado persona fisica principal
+        interesadoWs.setInteresado(getPersonaJuridica());
+
+        // Representante persona fisica
+        if(representante){
+            interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
+        }
+
+        asiento.getInteresados().add(interesadoWs);
+
+        //asientoRegistralWs.getAnexos().addAll(getAnexos());
+
+        return asiento;
     }
 
     /**
@@ -360,8 +393,8 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         DatosInteresadoWs administracion = new DatosInteresadoWs();
         administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
         administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
-        administracion.setRazonSocial("Ayuntamiento de Alaior");
-        administracion.setDocumento("L01070027");
+        administracion.setRazonSocial("Ayuntamiento de Jun");
+        administracion.setDocumento("L01181113");
 
         return administracion;
     }
@@ -463,5 +496,25 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return anexos;
     }
 
+    public static byte[] constructFitxerFromResource(String name) throws Exception {
+        String filename;
+        if (name.startsWith("/")) {
+            filename = name.substring(1);
+        } else {
+            filename = '/' + name;
+        }
+        InputStream is = RegWebTestUtils.class.getResourceAsStream(filename);
+        if (is == null) {
+            return null;
+        }
+        try {
+            return IOUtils.toByteArray(is);
+        } finally {
+            try {
+                is.close();
+            } catch (Exception e) {
+            }
+        }
 
+    }
 }
