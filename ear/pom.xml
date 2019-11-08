@@ -208,10 +208,10 @@
           <groupId>javax.xml.stream</groupId>
           <artifactId>stax-api</artifactId>
         </exclusion>
-        <exclusion>
+       <!-- <exclusion>
           <groupId>org.codehaus.woodstox</groupId>
           <artifactId>stax2-api</artifactId>
-        </exclusion>
+        </exclusion>-->
         <exclusion>
           <groupId>xpp3</groupId>
           <artifactId>xpp3</artifactId>
