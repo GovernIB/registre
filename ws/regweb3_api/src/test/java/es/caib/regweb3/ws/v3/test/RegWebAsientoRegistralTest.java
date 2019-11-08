@@ -61,7 +61,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             Long idSesion = asientoRegistralApi.obtenerSesionRegistro(getTestEntidadCodigoDir3());
             System.out.println("IdSesion: " + idSesion);
 
-            AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_ENTRADA, true);
+            AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
             asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(idSesion,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
 
             printAsiento(asientoRegistralWs);
@@ -91,7 +91,31 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             try {
 
-                AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_ENTRADA, true);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
+
+                printAsiento(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+    @Test
+    public void crearAsientoSalida() throws Exception {
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_Administracion(REGISTRO_SALIDA);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
 
                 printAsiento(asientoRegistralWs);
@@ -114,7 +138,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         for (int i = 0; i < 1; i++) {
 
             try {
-                AsientoRegistralWs asientoRegistralWs = getAsientoRegistral(REGISTRO_SALIDA, true);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, true);
                 asientoRegistralWs.getAnexos().addAll(getAnexos());
 
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
