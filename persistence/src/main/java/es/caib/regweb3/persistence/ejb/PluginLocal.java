@@ -73,15 +73,6 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
     Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
 
     /**
-     * Obtiene en plugin determinado
-     * @param idEntidad
-     * @param tipoPlugin
-     * @return
-     * @throws Exception
-     */
-    Object getPlugin2(Long idEntidad, Long tipoPlugin) throws I18NException;
-
-    /**
      * Comprueba si el plugin está definido
      * @param idEntidad
      * @param tipoPlugin

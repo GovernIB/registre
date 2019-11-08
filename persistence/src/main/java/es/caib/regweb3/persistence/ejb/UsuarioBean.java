@@ -9,9 +9,9 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
-import org.fundaciobit.plugins.userinformation.RolesInfo;
-import org.fundaciobit.plugins.userinformation.UserInfo;
+import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
+import org.fundaciobit.pluginsib.userinformation.RolesInfo;
+import org.fundaciobit.pluginsib.userinformation.UserInfo;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.springframework.beans.factory.annotation.Autowired;
 

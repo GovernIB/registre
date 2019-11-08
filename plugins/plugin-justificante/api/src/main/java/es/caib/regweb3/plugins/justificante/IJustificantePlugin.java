@@ -2,7 +2,7 @@ package es.caib.regweb3.plugins.justificante;
 
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
-import org.fundaciobit.plugins.IPlugin;
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 /**
  * Created by Fundació BIT.

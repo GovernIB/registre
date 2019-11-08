@@ -9,8 +9,8 @@ import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
-import org.fundaciobit.plugins.userinformation.RolesInfo;
+import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
+import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.springframework.stereotype.Component;
 
 import javax.ejb.EJB;

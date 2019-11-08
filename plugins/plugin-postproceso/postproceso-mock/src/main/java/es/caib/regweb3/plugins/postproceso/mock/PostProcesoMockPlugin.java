@@ -6,7 +6,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import org.apache.log4j.Logger;
-import org.fundaciobit.plugins.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import java.util.Properties;
 

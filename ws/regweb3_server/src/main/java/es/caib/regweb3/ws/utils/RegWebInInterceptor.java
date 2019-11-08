@@ -18,8 +18,8 @@ import org.apache.cxf.service.model.BindingOperationInfo;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
-import org.fundaciobit.plugins.userinformation.IUserInformationPlugin;
-import org.fundaciobit.plugins.userinformation.RolesInfo;
+import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
+import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;

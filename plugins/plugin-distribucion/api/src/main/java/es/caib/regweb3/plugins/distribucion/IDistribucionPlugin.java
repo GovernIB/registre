@@ -1,7 +1,7 @@
 package es.caib.regweb3.plugins.distribucion;
 
 import es.caib.regweb3.model.RegistroEntrada;
-import org.fundaciobit.plugins.IPlugin;
+import org.fundaciobit.pluginsib.core.IPlugin;
 
 import java.util.Locale;
 

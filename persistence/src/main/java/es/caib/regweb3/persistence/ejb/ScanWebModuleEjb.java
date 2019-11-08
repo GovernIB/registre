@@ -223,8 +223,9 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
   public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException  {
     
     IScanWebPlugin scanWebPlugin = 
+   //     (IScanWebPlugin)pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
         (IScanWebPlugin)pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
-    
+
     if (scanWebPlugin == null) {
       
       throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(ss.getEntitatID()));
@@ -250,13 +251,17 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     IScanWebPlugin p = pluginsByEntitat.get(entitatID);
     
     if (p == null) {
+     //Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
       Object obj = pluginEjb.getPlugin(entitatID, RegwebConstantes.PLUGIN_SCAN);
-      
+
       if (obj == null) {
         // No te cap plugin definit
         return null;
       }
-      pluginsByEntitat.put(entitatID, (IScanWebPlugin)obj);
+
+     // AbstractScanWebPlugin plugin = (AbstractScanWebPlugin)obj;
+      //log.info("XYZ PROPERTYBASE " + plugin.getPropertyKeyBase());
+      pluginsByEntitat.put(entitatID, (IScanWebPlugin) obj);
       p =  pluginsByEntitat.get(entitatID);
     }      
 

@@ -4,7 +4,7 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.userinformation.RolesInfo;
+import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;

@@ -10,8 +10,8 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
-import org.fundaciobit.plugins.utils.AbstractPluginProperties;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
+import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;

@@ -1,7 +1,8 @@
 package es.caib.regweb3.plugins.justificante;
 
+
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
-import org.fundaciobit.plugins.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.Metadata;
 
 import java.util.List;
 

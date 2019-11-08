@@ -21,10 +21,7 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.ws.WebServiceException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Created by jpernia on 04/04/2017.
@@ -327,7 +324,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
       // TODO CACHE DE PLUGIN!!!!!
       IValidateSignaturePlugin validatePlugin;
-      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin2(idEntidad,
+      validatePlugin = (IValidateSignaturePlugin) pluginEjb.getPlugin(idEntidad,
                  RegwebConstantes.PLUGIN_VALIDACION_FIRMAS);
 
       if (validatePlugin == null) {// El plugin de Validació de Firmes no s'ha definit.
@@ -611,7 +608,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             }
 
             CommonInfoSignature commonInfoSignature = new CommonInfoSignature(locale.getLanguage(),
-                    filtreCertificats, username, administrationID, policyInfoSignature);
+                    filtreCertificats, username, administrationID);
 
             final String signID = String.valueOf(System.currentTimeMillis());
 
@@ -634,24 +631,37 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             final boolean userRequiresTimeStamp = false;
             final int signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_WITHOUT;
             FileUtils.writeByteArrayToFile(source, doc.getData());
-            FileInfoSignature fileInfo = new FileInfoSignature(signID, source, doc.getMime(), name,
-                    reason, location, signerEmail, signNumber, locale.getLanguage(), signType,
-                    signAlgorithm, signMode, signaturesTableLocation, signaturesTableHeader,
-                    pdfInfoSignature, csvStampInfo, userRequiresTimeStamp, timeStampGenerator);
+
+            File previusSignatureDetachedFile = null;
+            int signOperation = FileInfoSignature.SIGN_OPERATION_SIGN;
+            String expedientCode=null;
+            String expedientName=null;
+            String expedientUrl= null;
+            String procedureCode=null;
+            String procedureName=null;
+            FileInfoSignature fileInfo = new  FileInfoSignature(signID, source, previusSignatureDetachedFile,
+               doc.getMime(),  name, reason,  location, signerEmail, signNumber, locale.getLanguage(),
+               signOperation, signType, signAlgorithm, signMode, signaturesTableLocation, signaturesTableHeader,
+               pdfInfoSignature, csvStampInfo, userRequiresTimeStamp,  timeStampGenerator, policyInfoSignature,
+                expedientCode,  expedientName,  expedientUrl,  procedureCode,  procedureName);
+
+
 
             final String signaturesSetID = String.valueOf(System.currentTimeMillis());
             SignaturesSet signaturesSet = new SignaturesSet(signaturesSetID, commonInfoSignature,
                     new FileInfoSignature[]{fileInfo});
 
             // Check si passa filtre
-            if (!plugin.filter(signaturesSet)) {
+            Map<String, Object> parameters = new HashMap<String,Object>();
+            String error = plugin.filter(signaturesSet,parameters);
+            if (error !=null) {
                 // "El plugin no suporta aquest tipus de firma/mode (" + signType + ", " + signMode + ")
                 // o s'ha produit un error greou durant la firma"
-                throw new I18NException("error.plugin.firma.nosuportat", signType, String.valueOf(signMode));
+                throw new I18NException("error.plugin.firma.nosuportat", signType, String.valueOf(signMode),error);
             }
 
             final String timestampUrlBase = null;
-            signaturesSet = plugin.signDocuments(signaturesSet, timestampUrlBase);
+            signaturesSet = plugin.signDocuments(signaturesSet, timestampUrlBase,parameters);
             StatusSignaturesSet sss = signaturesSet.getStatusSignaturesSet();
 
             if (sss.getStatus() != StatusSignaturesSet.STATUS_FINAL_OK) {
