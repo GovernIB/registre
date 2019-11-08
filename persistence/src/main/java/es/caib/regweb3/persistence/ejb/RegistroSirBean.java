@@ -24,7 +24,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.plugins.utils.cxf.CXFUtils;
+import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
