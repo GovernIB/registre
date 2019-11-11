@@ -250,14 +250,52 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param tipoRegistro
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_Administracion(Long tipoRegistro){
+    public AsientoRegistralWs getAsiento_to_AdministracionSir(Long tipoRegistro){
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
 
         // Interesados
         InteresadoWs interesadoWs = new InteresadoWs();
-        interesadoWs.setInteresado(getAdministracion());
+        interesadoWs.setInteresado(getAdministracionSir());
+
+        asiento.getInteresados().add(interesadoWs);
+
+        return asiento;
+    }
+
+    /**
+     *
+     * @param tipoRegistro
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_AdministracionInterna(Long tipoRegistro){
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+        interesadoWs.setInteresado(getAdministracionInterna());
+
+        asiento.getInteresados().add(interesadoWs);
+
+        return asiento;
+    }
+
+    /**
+     *
+     * @param tipoRegistro
+     * @return
+     */
+    public AsientoRegistralWs getAsiento_to_AdministracionExterna(Long tipoRegistro){
+
+        // Datos comunes
+        AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+        interesadoWs.setInteresado(getAdministracionExterna());
 
         asiento.getInteresados().add(interesadoWs);
 
@@ -389,12 +427,32 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         return representante;
     }
 
-    public DatosInteresadoWs getAdministracion(){
+    public DatosInteresadoWs getAdministracionSir(){
         DatosInteresadoWs administracion = new DatosInteresadoWs();
         administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
         administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
         administracion.setRazonSocial("Ayuntamiento de Jun");
         administracion.setDocumento("L01181113");
+
+        return administracion;
+    }
+
+    public DatosInteresadoWs getAdministracionExterna(){
+        DatosInteresadoWs administracion = new DatosInteresadoWs();
+        administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
+        administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
+        administracion.setRazonSocial("Ayuntamiento de Algaida");
+        administracion.setDocumento("L01070048");
+
+        return administracion;
+    }
+
+    public DatosInteresadoWs getAdministracionInterna(){
+        DatosInteresadoWs administracion = new DatosInteresadoWs();
+        administracion.setTipoInteresado(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION); // == 1
+        administracion.setTipoDocumentoIdentificacion(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN));
+        administracion.setRazonSocial("Conselleria de Presidencia y Vicepresidencia");
+        administracion.setDocumento("A04015411");
 
         return administracion;
     }
