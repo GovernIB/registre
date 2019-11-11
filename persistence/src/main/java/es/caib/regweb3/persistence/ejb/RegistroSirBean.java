@@ -2017,8 +2017,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 /** PARCHE GREG PROBLEMA: El campo  firma que se informa es más grande que 255 y al intentar hacer el insert peta por superar longitud
                  * De momento cortamos el campo, pero se debe informar a MADRID de este caso concreto */
                 if (anexoSir.getFirma() != null) { // Anexo con Firma CSV
-                    if(anexoSir.getFirma().length()>=255) {
-                        anexo.setCsv(anexoSir.getFirma().substring(0, 254));
+                    if(anexoSir.getFirma().length() >= 255) {
+                        anexo.setCsv(null);
                     }else{
                         anexo.setCsv(anexoSir.getFirma());
                     }
