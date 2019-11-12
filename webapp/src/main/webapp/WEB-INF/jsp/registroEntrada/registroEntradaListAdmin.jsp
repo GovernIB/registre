@@ -311,118 +311,116 @@
 
                         <div class="form-group col-xs-12">
 
-                                <c:if test="${empty paginacion.listado}">
-                                    <div class="alert alert-grey alert-dismissable">
-                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="registroEntrada.registroEntrada"/></strong>
-                                    </div>
-                                </c:if>
+                            <c:if test="${empty paginacion.listado}">
+                                <div class="alert alert-grey alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <spring:message code="regweb.busqueda.vacio"/> <strong><spring:message code="registroEntrada.registroEntrada"/></strong>
+                                </div>
+                            </c:if>
 
-                                <c:if test="${not empty paginacion.listado}">
+                            <c:if test="${not empty paginacion.listado}">
 
-                                    <div class="alert-grey">
-                                        <c:if test="${paginacion.totalResults == 1}">
-                                            <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
-                                        </c:if>
-                                        <c:if test="${paginacion.totalResults > 1}">
-                                            <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntradas"/>
-                                        </c:if>
+                                <div class="alert-grey">
+                                    <c:if test="${paginacion.totalResults == 1}">
+                                        <spring:message code="regweb.resultado"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntrada"/>
+                                    </c:if>
+                                    <c:if test="${paginacion.totalResults > 1}">
+                                        <spring:message code="regweb.resultados"/> <strong>${paginacion.totalResults}</strong> <spring:message code="registroEntrada.registroEntradas"/>
+                                    </c:if>
 
-                                        <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
-                                    </div>
-
+                                    <p class="pull-right"><spring:message code="regweb.pagina"/> <strong>${paginacion.currentIndex}</strong> de ${paginacion.totalPages}</p>
+                                </div>
 
                                 <div class="table-responsive">
 
-                                        <table class="table table-bordered table-hover table-striped tablesorter">
-                                            <colgroup>
-                                                <col width="80">
-                                                <col>
-                                                <col width="80">
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col>
-                                                <col width="101">
-                                            </colgroup>
-                                            <thead>
-                                                <tr>
-                                                    <th class="center"><spring:message code="regweb.numero"/></th>
-                                                    <th class="center"><spring:message code="registroEntrada.fecha"/></th>
-                                                    <th class="center"><spring:message code="registroEntrada.usuario"/></th>
-                                                    <th class="center"><spring:message code="registroEntrada.oficina"/></th>
-                                                    <th class="center"><spring:message code="organismo.destino.corto"/></th>
-                                                    <th class="center"><spring:message code="registroEntrada.estado"/></th>
-                                                    <th class="center"><spring:message code="registroEntrada.interesados"/></th>
-                                                    <th class="center">Doc.</th>
-                                                    <th class="center"><spring:message code="registro.presencial"/></th>
-                                                    <th class="center"><spring:message code="regweb.acciones"/></th>
-                                                </tr>
-                                            </thead>
+                                    <table class="table table-bordered table-hover table-striped tablesorter">
+                                        <colgroup>
+                                            <col width="80">
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col width="101">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th class="center"><spring:message code="regweb.numero"/></th>
+                                                <th class="center"><spring:message code="registroEntrada.fecha"/></th>
+                                                <th class="center"><spring:message code="registroEntrada.usuario"/></th>
+                                                <th class="center"><spring:message code="registroEntrada.oficina"/></th>
+                                                <th class="center"><spring:message code="organismo.destino.corto"/></th>
+                                                <th class="center"><spring:message code="registroEntrada.estado"/></th>
+                                                <th class="center"><spring:message code="registroEntrada.interesados"/></th>
+                                                <th class="center">Doc.</th>
+                                                <th class="center"><spring:message code="registro.presencial"/></th>
+                                                <th class="center"><spring:message code="regweb.acciones"/></th>
+                                            </tr>
+                                        </thead>
 
-                                            <tbody>
-                                                <c:forEach var="registro" items="${paginacion.listado}" varStatus="status">
-                                                    <tr>
-                                                        <td>${registro.numeroRegistroFormateado}</td>
-                                                        <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
-                                                        <td class="center">${registro.usuario.usuario.identificador}</td>
-                                                        <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
-                                                        <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
-                                                        <td class="center">
-                                                            <c:import url="../registro/estadosRegistro.jsp">
-                                                                <c:param name="estado" value="${registro.estado}"/>
-                                                                <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
-                                                            </c:import>
+                                        <tbody>
+                                            <c:forEach var="registro" items="${paginacion.listado}" varStatus="status">
+                                                <tr>
+                                                    <td>${registro.numeroRegistroFormateado}</td>
+                                                    <td class="center"><fmt:formatDate value="${registro.fecha}" pattern="dd/MM/yyyy"/></td>
+                                                    <td class="center">${registro.usuario.usuario.identificador}</td>
+                                                    <td class="center"><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
+                                                    <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
+                                                    <td class="center">
+                                                        <c:import url="../registro/estadosRegistro.jsp">
+                                                            <c:param name="estado" value="${registro.estado}"/>
+                                                            <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
+                                                        </c:import>
+                                                    </td>
+                                                    <c:if test="${registro.registroDetalle.interesados != null}">
+                                                        <td class="center"><label
+                                                                class="no-bold representante" rel="popupAbajo"
+                                                                data-content="<c:out value="${registro.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
+                                                                data-toggle="popover"><c:out value="${registro.registroDetalle.totalInteresados}" escapeXml="true"/></label>
                                                         </td>
-                                                        <c:if test="${registro.registroDetalle.interesados != null}">
-                                                            <td class="center"><label
-                                                                    class="no-bold representante" rel="popupAbajo"
-                                                                    data-content="<c:out value="${registro.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
-                                                                    data-toggle="popover"><c:out value="${registro.registroDetalle.totalInteresados}" escapeXml="true"/></label>
-                                                            </td>
+                                                    </c:if>
+                                                    <c:if test="${registro.registroDetalle.interesados == null}">
+                                                        <td class="center">0</td>
+                                                    </c:if>
+                                                    <td class="center">
+                                                        <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
+                                                            <i class="fa fa-print text-verd" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
                                                         </c:if>
-                                                        <c:if test="${registro.registroDetalle.interesados == null}">
-                                                            <td class="center">0</td>
+                                                        <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
+                                                            <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
                                                         </c:if>
-                                                        <td class="center">
-                                                            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                                                <i class="fa fa-print text-verd" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
-                                                            </c:if>
-                                                            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA}">
-                                                                <i class="fa fa-file-text text-vermell" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
-                                                            </c:if>
-                                                            <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
-                                                                <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
-                                                            </c:if>
-                                                        </td>
-                                                        <td class="center">
-                                                            <c:if test="${registro.registroDetalle.presencial}">
-                                                                <span class="label label-success"><spring:message code="regweb.si"/></span>
-                                                            </c:if>
-                                                            <c:if test="${not registro.registroDetalle.presencial}">
-                                                                <span class="label label-danger"><spring:message code="regweb.no"/></span>
-                                                            </c:if>
-                                                        </td>
-                                                        <td class="center">
-                                                            <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                            <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
-                                                                <a class="btn btn-success btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${registro.id}/procesar"/>" target="_blank" title="<spring:message code="registroEntrada.procesar"/>"><span class="fa fa-check"></span></a>
-                                                            </c:if>
-                                                        </td>
-                                                    </tr>
-                                                </c:forEach>
-                                            </tbody>
-                                        </table>
+                                                        <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA}">
+                                                            <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
+                                                        </c:if>
+                                                    </td>
+                                                    <td class="center">
+                                                        <c:if test="${registro.registroDetalle.presencial}">
+                                                            <span class="label label-success"><spring:message code="regweb.si"/></span>
+                                                        </c:if>
+                                                        <c:if test="${not registro.registroDetalle.presencial}">
+                                                            <span class="label label-danger"><spring:message code="regweb.no"/></span>
+                                                        </c:if>
+                                                    </td>
+                                                    <td class="center">
+                                                        <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
+                                                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO}">
+                                                            <a class="btn btn-success btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${registro.id}/procesar"/>" target="_blank" title="<spring:message code="registroEntrada.procesar"/>"><span class="fa fa-check"></span></a>
+                                                        </c:if>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
 
                                     <!-- Paginacion -->
                                     <c:import url="../modulos/paginacionBusqueda.jsp">
                                         <c:param name="entidad" value="registroEntrada"/>
                                     </c:import>
 
-                            </div>
+                                </div>
 
                             </c:if>
 
