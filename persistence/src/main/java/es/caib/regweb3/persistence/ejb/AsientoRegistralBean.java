@@ -39,6 +39,8 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @EJB private SirEnvioLocal sirEnvioEjb;
     @EJB private JustificanteLocal justificanteEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB private DistribucionLocal distribucionEjb;
 
     @Override
     public UsuarioEntidad comprobarUsuarioEntidad(String identificador, Long idEntidad) throws Exception, I18NException {
@@ -158,6 +160,35 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         JustificanteLocal asynchJustificante = AsyncUtils.mixinAsync(justificanteEjb);
         asynchJustificante.crearJustificante(usuarioEntidad, registro, tipoRegistro, idioma);
 
+    }
+
+    @Asynchronous
+    @Override
+    public void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuario) throws Exception, I18NException {
+
+        DistribucionLocal asynchDistribucion = AsyncUtils.mixinAsync(distribucionEjb);
+
+        //  Comprobamos que el usuario tiene permisos para Distribuir el registro
+        if(!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
+            throw new I18NException("registroEntrada.distribuir.error.permiso");
+        }
+
+        // Comprobamos que el RegistroEntrada se puede Distribuir
+        if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
+            throw new I18NException("registroEntrada.distribuir.noPermitido");
+        }
+
+        try{
+            // Distribuimos el registro de entrada
+            asynchDistribucion.distribuir(registroEntrada, usuario, false);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new I18NException("registroEntrada.distribuir.error");
+        } catch (I18NValidationException e) {
+            e.printStackTrace();
+            throw new I18NException("registroEntrada.distribuir.error");
+        }
     }
 
     /**

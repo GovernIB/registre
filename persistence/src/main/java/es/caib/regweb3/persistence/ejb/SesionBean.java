@@ -106,6 +106,25 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     }
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public Sesion findByIdSesionUsuarioEstado(Long idSesion, UsuarioEntidad usuario, Long estado) {
+
+        Query q = em.createQuery("Select s from Sesion as s where " +
+                "s.idSesion = :idSesion and s.usuario.id = :idUsuario and s.estado = :estado");
+
+        q.setParameter("idSesion", idSesion);
+        q.setParameter("idUsuario", usuario.getId());
+        q.setParameter("estado", estado);
+
+        List<Sesion> result = q.getResultList();
+        if(result.size() == 1){
+            return result.get(0);
+        }else{
+            return  null;
+        }
+    }
+
+    @Override
     public void cambiarEstado(Long idSesion, UsuarioEntidad usuario, Long estado) throws Exception{
 
         Sesion sesion = findByIdSesionUsuario(idSesion, usuario);
@@ -118,12 +137,24 @@ public class SesionBean extends BaseEjbJPA<Sesion, Long> implements SesionLocal{
     @Override
     public void iniciarSesion(Long idSesion, UsuarioEntidad usuario) throws Exception{
 
-        Sesion sesion = findByIdSesionUsuario(idSesion, usuario);
+        Sesion sesion;
 
-        if(sesion != null){
+        Query q = em.createQuery("Select s from Sesion as s where s.idSesion = :idSesion " +
+                "and s.usuario.id = :idUsuario and s.estado != :estado");
+
+        q.setParameter("idSesion", idSesion);
+        q.setParameter("idUsuario", usuario.getId());
+        q.setParameter("estado", RegwebConstantes.SESION_FINALIZADA);
+
+        List<Sesion> result = q.getResultList();
+
+        if(result.size() == 1){
+
+            sesion =  result.get(0);
 
             sesion.setEstado(RegwebConstantes.SESION_INICIADA);
             merge(sesion);
+
         }else{
             throw new Exception("El idSesion no existe en el sistema");
         }

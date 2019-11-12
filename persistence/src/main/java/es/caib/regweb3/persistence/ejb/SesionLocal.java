@@ -33,6 +33,15 @@ public interface SesionLocal extends BaseEjb<Sesion, Long> {
     Sesion findByIdSesionUsuario(Long idSesion, UsuarioEntidad usuario);
 
     /**
+     * Busca una Sesión a partir de id, usuario y estado
+     * @param idSesion
+     * @param usuario
+     * @param estado
+     * @return
+     */
+    Sesion findByIdSesionUsuarioEstado(Long idSesion, UsuarioEntidad usuario, Long estado);
+
+    /**
      * Cambia el estado de una Sesión
      * @param idSesion
      * @param usuario
