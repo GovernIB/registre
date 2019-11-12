@@ -75,6 +75,15 @@ public interface AsientoRegistralLocal {
     void crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NValidationException, I18NException;
 
     /**
+     * Distribuye un registro de entrada de manera Asincrona
+     * @param registroEntrada
+     * @param usuarioEntidad
+     * @throws Exception
+     * @throws I18NException
+     */
+    void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+
+    /**
      * Obtiene la referencia del justificante de un Registro
      *
      * @param numeroRegistroformateado
