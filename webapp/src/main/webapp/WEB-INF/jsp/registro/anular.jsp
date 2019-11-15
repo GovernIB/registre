@@ -62,7 +62,7 @@
     function anularRegistro() {
 
         var motivo = $('#observacionesAnulacion').val();
-alert(motivo.length);
+
         if(motivo == ""){
             var variable = "#motivoAnulacion span.errors";
             var formatoHtml = "<span id='observaciones.errors' class='help-block'><spring:message code="error.valor.requerido"/></span>";
