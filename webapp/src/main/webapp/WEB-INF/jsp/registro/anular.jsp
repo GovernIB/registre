@@ -37,7 +37,7 @@
                                     <label for="motivoAnulacion" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observaciones.anulacion"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroSir.motivo"/></label>
                                 </div>
                                 <div class="col-xs-9" id="motivoAnulacion">
-                                    <form:textarea path="observacionesAnulacion" rows="5" cssClass="form-control"/> <span class="errors"></span>
+                                    <form:textarea path="observacionesAnulacion" rows="5" cssClass="form-control" maxlength="255"/> <span class="errors"></span>
                                 </div>
                             </div>
 
@@ -62,10 +62,16 @@
     function anularRegistro() {
 
         var motivo = $('#observacionesAnulacion').val();
-
+alert(motivo.length);
         if(motivo == ""){
             var variable = "#motivoAnulacion span.errors";
             var formatoHtml = "<span id='observaciones.errors' class='help-block'><spring:message code="error.valor.requerido"/></span>";
+            $(variable).html(formatoHtml);
+            $(variable).parents(".form-group").addClass("has-error");
+            return false;
+        }else if(motivo.length > 255){
+            var variable = "#motivoAnulacion span.errors";
+            var formatoHtml = "<span id='observaciones.errors' class='help-block'><spring:message code="error.valor.maxlenght"/></span>";
             $(variable).html(formatoHtml);
             $(variable).parents(".form-group").addClass("has-error");
             return false;
