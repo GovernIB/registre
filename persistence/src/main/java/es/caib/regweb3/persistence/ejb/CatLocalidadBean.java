@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.CatLocalidad;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -87,10 +88,14 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     @Override
     @SuppressWarnings(value = "unchecked")
     public CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception{
-        Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia");
+        Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where " +
+                "catLocalidad.codigoLocalidad =:codigoLocalidad " +
+                "and catLocalidad.provincia.codigoProvincia =:codigoProvincia " +
+                "and catLocalidad.entidadGeografica.codigoEntidadGeografica = :entidadGeografica");
 
         q.setParameter("codigoLocalidad",codigoLocalidad);
         q.setParameter("codigoProvincia",codigoProvincia);
+        q.setParameter("entidadGeografica", RegwebConstantes.ENTIDAD_GEOGRAFICA_MUNICIPIO);
 
         List<CatLocalidad> catLocalidad = q.getResultList();
         if(catLocalidad.size() > 0){  //todo: revisar el caso en el que el código Localidad+Provincia retorna más de 1 resultado (Entidad Geografica)
@@ -104,9 +109,13 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     @SuppressWarnings(value = "unchecked")
     public List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception {
 
-        Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.provincia.id = :idProvincia order by catLocalidad.nombre");
+        Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where " +
+                "catLocalidad.provincia.id = :idProvincia and " +
+                "catLocalidad.entidadGeografica.codigoEntidadGeografica = :entidadGeografica " +
+                "order by catLocalidad.nombre");
 
         q.setParameter("idProvincia",idProvincia);
+        q.setParameter("entidadGeografica", RegwebConstantes.ENTIDAD_GEOGRAFICA_MUNICIPIO);
 
         return  q.getResultList();
 
