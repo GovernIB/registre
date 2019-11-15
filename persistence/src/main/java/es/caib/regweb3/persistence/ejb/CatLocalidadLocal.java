@@ -16,14 +16,47 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface CatLocalidadLocal extends BaseEjb<CatLocalidad, Long> {
 
+    /**
+     *
+     * @param codigoLocalidad
+     * @param codigoProvincia
+     * @param codigoEntidadGeografica
+     * @return
+     * @throws Exception
+     */
     CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception;
 
+    /**
+     *
+     * @param codigoLocalidad
+     * @param codigoProvincia
+     * @return
+     * @throws Exception
+     */
     CatLocalidad findByLocalidadProvincia(Long codigoLocalidad, Long codigoProvincia) throws Exception;
 
+    /**
+     *
+     * @param idProvincia
+     * @return
+     * @throws Exception
+     */
     List<CatLocalidad> getByProvincia(Long idProvincia) throws Exception;
 
+    /**
+     *
+     * @param codigoProvincia
+     * @return
+     * @throws Exception
+     */
     List<Object[]> getByCodigoProvinciaObject(Long codigoProvincia) throws Exception;
 
+    /**
+     *
+     * @param codigoProvincia
+     * @return
+     * @throws Exception
+     */
     List<CatLocalidad> getByCodigoProvincia(Long codigoProvincia) throws Exception;
 
     /**

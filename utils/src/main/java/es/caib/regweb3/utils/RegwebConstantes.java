@@ -383,6 +383,9 @@ public interface RegwebConstantes {
     /* -------------- PAIS --------------*/
     Long PAIS_ESPAÑA = 724L;
 
+    /* -------------- ENTIDAD GEOGRÁFICA --------------*/
+    String ENTIDAD_GEOGRAFICA_MUNICIPIO = "01";
+
     /* -------------- CANAL NOTIFICACIÓN --------------*/
     Long CANAL_DIRECCION_POSTAL = 1L;
     Long CANAL_DIRECCION_ELECTRONICA = 2L;
