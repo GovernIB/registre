@@ -273,7 +273,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralOrigen(String decodificacionEntidadRegistralOrigen) {
-        this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen;
+       if(decodificacionEntidadRegistralOrigen.length() > 80){
+           this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen.substring(0,79);
+       }else{
+           this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen;
+       }
     }
 
     @Column(name = "NUMERO_REGISTRO", length = 20, nullable = false)
@@ -319,7 +323,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionUnidadTramitacionOrigen(String decodificacionUnidadTramitacionOrigen) {
-        this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen;
+        if(decodificacionUnidadTramitacionOrigen.length() > 80){
+            this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen.substring(0,79);
+        }else{
+            this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen;
+        }
     }
 
     @Column(name = "COD_ENT_REG_DEST", length = 21, nullable = false)
@@ -337,7 +345,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralDestino(String decodificacionEntidadRegistralDestino) {
-        this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
+        if(decodificacionEntidadRegistralDestino.length() > 80){
+            this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino.substring(0,79);
+        }else{
+            this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
+        }
     }
 
     @Column(name = "COD_UNI_TRA_DEST", length = 21, nullable = true)
@@ -355,7 +367,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionUnidadTramitacionDestino(String decodificacionUnidadTramitacionDestino) {
-        this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino;
+        if(decodificacionUnidadTramitacionDestino.length() > 80){
+            this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino.substring(0,79);
+        }else{
+            this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino;
+        }
     }
 
     @Column(name = "RESUMEN", length = 240, nullable = false)
@@ -364,7 +380,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setResumen(String resumen) {
-        this.resumen = resumen;
+        if(resumen.length() > 240){
+            this.resumen = resumen.substring(0,239);
+        }else{
+            this.resumen = resumen;
+        }
     }
 
     @Column(name = "COD_ASUNTO", length = 16, nullable = true)
@@ -518,7 +538,11 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralInicio(String decodificacionEntidadRegistralInicio) {
-        this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio;
+        if(decodificacionEntidadRegistralInicio.length() > 80){
+            this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio.substring(0,79);
+        }else{
+            this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio;
+        }
     }
 
     @Column(name = "EXPONE", length = 4000, nullable = true)

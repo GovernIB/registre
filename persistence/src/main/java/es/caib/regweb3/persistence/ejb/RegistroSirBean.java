@@ -794,11 +794,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setCodigoEntidadRegistralDestino(registroDetalle.getCodigoEntidadRegistralDestino());
         registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
         registroSir.setCodigoUnidadTramitacionDestino(registroEntrada.getDestinoExternoCodigo());
-        if(registroEntrada.getDestinoExternoDenominacion().length() > 80) {  // recortamos en caso de que pase de 80 caracteres
-            registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion().substring(0,79));
-        } else{
-            registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
-        }
+        registroSir.setDecodificacionUnidadTramitacionDestino(registroEntrada.getDestinoExternoDenominacion());
 
         // Segmento De_Asunto
         registroSir.setResumen(registroDetalle.getExtracto());
@@ -877,12 +873,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroSir.setDecodificacionEntidadRegistralDestino(registroDetalle.getDecodificacionEntidadRegistralDestino());
         registroSir.setCodigoUnidadTramitacionDestino(obtenerCodigoUnidadTramitacionDestino(registroDetalle));
         String destinoExternoDecodificacion = obtenerDenominacionUnidadTramitacionDestino(registroDetalle);
-        if(destinoExternoDecodificacion != null) {
-            if (destinoExternoDecodificacion.length() > 80) {  // recortamos en caso de que pase de 80 caracteres
-                registroSir.setDecodificacionUnidadTramitacionDestino(destinoExternoDecodificacion.substring(0, 79));
-            } else {
-                registroSir.setDecodificacionUnidadTramitacionDestino(destinoExternoDecodificacion);
-            }
+        if(es.caib.regweb3.utils.StringUtils.isNotEmpty(destinoExternoDecodificacion)) {
+            registroSir.setDecodificacionUnidadTramitacionDestino(destinoExternoDecodificacion);
         }else{
             registroSir.setDecodificacionUnidadTramitacionDestino(null);
         }
