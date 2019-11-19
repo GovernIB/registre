@@ -366,7 +366,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 4.- Obtenemos el RegistroSalida
-        RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistro);
+        RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistro);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
@@ -380,8 +380,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         // Retornamos el RegistroSalidaResponseWs
         RegistroSalidaResponseWs responseWs = null;
         try{
-            responseWs = RegistroSalidaConverter.getRegistroSalidaResponseWs(registro,
-                    UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+            responseWs = RegistroSalidaConverter.getRegistroSalidaResponseWs(registro, UsuarioAplicacionCache.get().getIdioma());
         }catch (Exception e){
 
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistro);

@@ -186,20 +186,6 @@ public class CommonConverter {
         return tipoDocumentalWs;
     }
 
-    public static TipoAsuntoWs getTipoAsuntoWs(TipoAsunto tipoAsunto, String idioma) {
-        if (tipoAsunto == null) {
-            return null;
-        }
-
-        TipoAsuntoWs taWs = new TipoAsuntoWs();
-
-        taWs.setActivo(tipoAsunto.getActivo() == null ? false : tipoAsunto.getActivo());
-        taWs.setCodigo(tipoAsunto.getCodigo());
-        taWs.setNombre(((TraduccionTipoAsunto) tipoAsunto.getTraduccion(idioma)).getNombre());
-
-        return taWs;
-    }
-
     public static CodigoAsuntoWs getCodigoAsuntoWs(CodigoAsunto codigoAsunto, String idioma) {
         if (codigoAsunto == null) {
             return null;
@@ -251,8 +237,7 @@ public class CommonConverter {
 
     }
 
-    public static Long getTipoValidezDocumento(String tValDocCodigoSicres
-    ) throws Exception {
+    public static Long getTipoValidezDocumento(String tValDocCodigoSicres) throws Exception {
 
         return (tValDocCodigoSicres == null) ? null : RegwebConstantes.TIPOVALIDEZDOCUMENTO_BY_CODIGO_SICRES.get(tValDocCodigoSicres);
 
@@ -286,27 +271,6 @@ public class CommonConverter {
         return anexosWs;
     }
 
-
-    /**
-     * @param anexos
-     * @return
-     * @throws Exception
-     */
-    public static List<AnexoWs> procesarAnexosWs(List<Anexo> anexos, AnexoLocal anexoEjb, Long idEntidad) throws Exception, I18NException {
-
-        List<AnexoWs> anexosWs = new ArrayList<AnexoWs>();
-
-        for (Anexo anexo : anexos) {
-
-            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);
-
-            AnexoWs anexoWs = AnexoConverter.getAnexoWs(anexoFull, anexoEjb, idEntidad);
-
-            anexosWs.add(anexoWs);
-        }
-
-        return anexosWs;
-    }
 
     /**
      * @param interesados

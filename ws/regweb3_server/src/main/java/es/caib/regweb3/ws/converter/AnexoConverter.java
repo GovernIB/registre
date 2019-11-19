@@ -3,7 +3,6 @@ package es.caib.regweb3.ws.converter;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -117,25 +116,6 @@ public class AnexoConverter extends CommonConverter {
       anexoFull.setSignatureFileDelete(false);
 
       return  anexoFull;
-   }
-
-   /**
-    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
-    * @param anexoEjb
-    * @param anexoFull
-    * @return
-    * @throws Exception
-    * @throws I18NException
-    */
-   public static AnexoWs getAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
-      throws Exception, I18NException {
-
-      if (anexoFull == null || anexoFull.getAnexo() == null){
-         return  null;
-      }
-
-      return procesarAnexoWs(anexoFull, anexoEjb, idEntidad);
-
    }
 
 
@@ -252,75 +232,6 @@ public class AnexoConverter extends CommonConverter {
       }
 
       return anexoWs;
-   }
-
-
-   /**
-    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
-    * @param anexoFull
-    * @param anexoEjb
-    * @return
-    * @throws Exception
-    */
-   private static AnexoWs procesarAnexoWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Long idEntidad)
-      throws Exception, I18NException {
-
-      AnexoWs anexoWs = new AnexoWs();
-
-      Anexo anexo = anexoFull.getAnexo();
-
-      if(StringUtils.isNotEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
-
-      if(anexo.getTipoDocumental()!= null){anexoWs.setTipoDocumental(anexo.getTipoDocumental().getCodigoNTI());}
-      if(anexo.getValidezDocumento()!= null) {
-         anexoWs.setValidezDocumento(anexo.getValidezDocumento().toString());
-      }
-      if(anexo.getTipoDocumento()!= null) {
-         anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
-      }
-      if(StringUtils.isNotEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
-      if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
-
-      if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
-
-      anexoWs.setJustificante(anexo.isJustificante());
-
-      String custodyID = anexo.getCustodiaID();
-
-      if (custodyID == null) {
-         if (custodyID == null) {
-            log.error("El anexo con id " + anexo.getId()
-               + " de un registro no tiene identificador de custodia", new Exception());
-         }
-      } else {
-
-         // Firma Fichero Anexado
-         if (anexoFull.getSignatureCustody() != null) {
-            SignatureCustody sign = anexoFull.getSignatureCustody();
-            anexoWs.setNombreFirmaAnexada(sign.getName());
-            anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
-            anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
-         }
-
-         // Documento fichero Anexado
-         if (anexoFull.getDocumentoCustody() != null) {
-            DocumentCustody doc = anexoFull.getDocumentoCustody();
-            anexoWs.setNombreFicheroAnexado(doc.getName());
-            anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
-            anexoWs.setFicheroAnexado(anexoEjb.getArchivoContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
-         }
-      }
-
-      // Transformamos de Date a Calendar
-      Calendar calendar = Calendar.getInstance();
-      calendar.setTime(anexo.getFechaCaptura());
-      if(anexo.getFechaCaptura()!= null){anexoWs.setFechaCaptura(calendar);}
-
-      // Part de firma Anexada
-      if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
-
-      return anexoWs;
-
    }
 
 }
