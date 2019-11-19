@@ -574,7 +574,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(entidad, numeroRegistroFormateado);
+        RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -588,14 +588,12 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Retornamos el RegistroEntradaResponseWs
         RegistroEntradaResponseWs responseWs = null;
         try{
-            responseWs = RegistroEntradaConverter.getRegistroEntradaResponseWs(registro,
-               UsuarioAplicacionCache.get().getIdioma(), anexoEjb);
+            responseWs = RegistroEntradaConverter.getRegistroEntradaResponseWs(registro, UsuarioAplicacionCache.get().getIdioma());
         }catch (Exception e){
 
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
             throw new I18NException("registro.obtener.error");
         }
-
 
         // LOPD
         lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
@@ -604,7 +602,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
 
         return responseWs;
-
 
     }
 

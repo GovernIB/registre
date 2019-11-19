@@ -1,7 +1,6 @@
 package es.caib.regweb3.ws.converter;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
@@ -78,7 +77,7 @@ public class RegistroSalidaConverter extends CommonConverter {
     }
 
     public static RegistroSalidaResponseWs getRegistroSalidaResponseWs(RegistroSalida registroSalida,
-                                                                         String idioma, AnexoLocal anexoEjb) throws Exception, I18NException {
+                                                                         String idioma) throws Exception, I18NException {
 
         if (registroSalida == null) {
             return null;
@@ -156,11 +155,9 @@ public class RegistroSalidaConverter extends CommonConverter {
             registroWs.setInteresados(interesadosWs);
         }
 
-        if(registroDetalle.getAnexos() != null){
-            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb, entidad.getId());
-
-            registroWs.setAnexos(anexosWs);
-        }
+        // Anexos
+        List<AnexoWs> anexosWs = transformarAnexosWs(registroDetalle);
+        registroWs.setAnexos(anexosWs);
 
         // Campos únicos de RegistroEntrada
         if(registroSalida.getOrigen() != null ){

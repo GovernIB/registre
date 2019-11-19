@@ -2,7 +2,6 @@ package es.caib.regweb3.ws.converter;
 
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
 import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.persistence.ejb.TipoAsuntoLocal;
@@ -37,7 +36,7 @@ public class RegistroEntradaConverter extends CommonConverter {
     public static RegistroEntrada getRegistroEntrada(RegistroEntradaWs registroEntradaWs,
                                                      UsuarioEntidad usuario, Libro libro, Oficina oficina, Organismo destinoInterno, UnidadTF destinoExterno,
         CodigoAsuntoLocal codigoAsuntoEjb, TipoAsuntoLocal tipoAsuntoEjb, OficinaLocal oficinaEjb)
-            throws Exception, I18NException {
+            throws Exception {
 
         if (registroEntradaWs == null){
             return  null;
@@ -87,7 +86,7 @@ public class RegistroEntradaConverter extends CommonConverter {
 
 
     public static RegistroEntradaResponseWs getRegistroEntradaResponseWs(RegistroEntrada registroEntrada,
-                                            String idioma, AnexoLocal anexoEjb) throws Exception, I18NException {
+                                            String idioma) throws Exception {
 
         if (registroEntrada == null) {
             return null;
@@ -165,11 +164,9 @@ public class RegistroEntradaConverter extends CommonConverter {
             registroWs.setInteresados(interesadosWs);
         }
 
-        if(registroDetalle.getAnexos() != null){
-            List<AnexoWs> anexosWs = procesarAnexosWs(registroDetalle.getAnexos(), anexoEjb, entidad.getId());
-
-            registroWs.setAnexos(anexosWs);
-        }
+        // Anexos
+        List<AnexoWs> anexosWs = transformarAnexosWs(registroDetalle);
+        registroWs.setAnexos(anexosWs);
 
         // Campos únicos de RegistroEntrada
         if(registroEntrada.getDestino() != null ){
@@ -180,9 +177,7 @@ public class RegistroEntradaConverter extends CommonConverter {
             registroWs.setDestinoDenominacion(registroEntrada.getDestinoExternoDenominacion());
         }
 
-
         return registroWs;
-
     }
 
 }

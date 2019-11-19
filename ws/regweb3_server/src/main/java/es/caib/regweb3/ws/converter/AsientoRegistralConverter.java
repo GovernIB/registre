@@ -196,7 +196,6 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @param registroEntradaConsultaEjb
     * @param registroSalidaConsultaEjb
     * @param permisoLibroUsuarioEjb
-    * @param anexoEjb
     * @param oficioRemisionEjb
     * @param trazabilidadEjb
     * @param lopdEjb
@@ -206,14 +205,18 @@ public class AsientoRegistralConverter extends CommonConverter {
     */
    public static AsientoRegistralWs getAsientoRegistral(UsuarioEntidad usuario, String numeroRegistro, Long tipoRegistro, String idioma, Boolean conAnexos, Boolean comprobarPermisos,
                                                         RegistroEntradaConsultaLocal registroEntradaConsultaEjb, RegistroSalidaConsultaLocal registroSalidaConsultaEjb, PermisoLibroUsuarioLocal permisoLibroUsuarioEjb,
-                                                        AnexoLocal anexoEjb, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb, LopdLocal lopdEjb) throws Exception, I18NException {
+                                                        OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb, LopdLocal lopdEjb) throws Exception, I18NException {
 
       AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(tipoRegistro);
-      List<Anexo> anexos;
 
       if(REGISTRO_ENTRADA.equals(tipoRegistro)){
+         RegistroEntrada registro;
 
-         RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+         if(conAnexos){
+            registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+         }else{
+            registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+         }
 
          if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro);
@@ -238,14 +241,20 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setUnidadTramitacionDestinoDenominacion(registro.getDestinoExternoDenominacion());
          }
 
-         anexos = registro.getRegistroDetalle().getAnexos();
+         // Anexos
+         asientoRegistral.setAnexos(transformarAnexosWs(registro.getRegistroDetalle()));
 
          // LOPD
          lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
       }else {
+         RegistroSalida registro;
 
-         RegistroSalida registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+         if(conAnexos){
+            registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+         }else{
+            registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+         }
 
          if (registro == null) {
             throw new I18NException("registroSalida.noExiste", numeroRegistro);
@@ -270,17 +279,11 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setUnidadTramitacionOrigenDenominacion(registro.getOrigenExternoDenominacion());
          }
 
-         anexos = registro.getRegistroDetalle().getAnexos();
+         // Anexos
+         asientoRegistral.setAnexos(transformarAnexosWs(registro.getRegistroDetalle()));
 
          // LOPD
          lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
-      }
-
-      // Obtenemos los anexos si así se ha indicado
-      if(conAnexos && anexos != null){
-         List<AnexoWs> anexosWs = procesarAnexosWs(anexos, anexoEjb, usuario.getEntidad().getId());
-
-         asientoRegistral.setAnexos(anexosWs);
       }
 
       return asientoRegistral;
