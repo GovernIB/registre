@@ -133,6 +133,60 @@ public class AsientoRegistralConverter extends CommonConverter {
    }
 
    /**
+    * Transforma un {@link es.caib.regweb3.model.IRegistro} en un {@link es.caib.regweb3.ws.model.AsientoRegistralWs}
+    * @param registro
+    * @param tipoRegistro
+    * @param entidad
+    * @param idioma
+    * @param oficioRemisionEjb
+    * @param trazabilidadEjb
+    * @return
+    * @throws Exception
+    */
+   public static AsientoRegistralWs transformarRegistro(IRegistro registro, Long tipoRegistro, Entidad entidad, String idioma, OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb) throws Exception{
+
+
+      AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(tipoRegistro);
+
+      // Convertimos los campos comunes de AsientoRegistralWs
+      setAsientoRegistralComun(asientoRegistral, registro, entidad, idioma, oficioRemisionEjb, trazabilidadEjb);
+
+      if(REGISTRO_ENTRADA.equals(tipoRegistro)){
+
+         RegistroEntrada registroEntrada = (RegistroEntrada) registro;
+
+         // Campos únicos de RegistroEntrada
+         if(registroEntrada.getDestino() != null ){
+            asientoRegistral.setUnidadTramitacionDestinoCodigo(registroEntrada.getDestino().getCodigo());
+            asientoRegistral.setUnidadTramitacionDestinoDenominacion(registroEntrada.getDestino().getDenominacion());
+         }else{
+            asientoRegistral.setUnidadTramitacionDestinoCodigo(registroEntrada.getDestinoExternoCodigo());
+            asientoRegistral.setUnidadTramitacionDestinoDenominacion(registroEntrada.getDestinoExternoDenominacion());
+         }
+
+      }else {
+
+         RegistroSalida registroSalida = (RegistroSalida) registro;
+
+         // Campos únicos de RegistroSalida
+         if (registroSalida.getOrigen() != null) {
+            asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigen().getCodigo());
+            asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigen().getDenominacion());
+         } else {
+            asientoRegistral.setUnidadTramitacionOrigenCodigo(registroSalida.getOrigenExternoCodigo());
+            asientoRegistral.setUnidadTramitacionOrigenDenominacion(registroSalida.getOrigenExternoDenominacion());
+         }
+      }
+
+      // Anexos
+      List<AnexoWs> anexosWs = transformarAnexosWs(registro.getRegistroDetalle());
+
+      asientoRegistral.setAnexos(anexosWs);
+
+      return asientoRegistral;
+   }
+
+   /**
     * Obtiene un {@link es.caib.regweb3.ws.model.AsientoRegistralWs}, a partir de un {@link es.caib.regweb3.model.IRegistro}
     * @param usuario
     * @param numeroRegistro
@@ -172,8 +226,6 @@ public class AsientoRegistralConverter extends CommonConverter {
             }
          }
 
-         anexos = registro.getRegistroDetalle().getAnexos();
-
          // Convertimos los campos comunes de AsientoRegistralWs
          setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb, trazabilidadEjb);
 
@@ -185,6 +237,8 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setUnidadTramitacionDestinoCodigo(registro.getDestinoExternoCodigo());
             asientoRegistral.setUnidadTramitacionDestinoDenominacion(registro.getDestinoExternoDenominacion());
          }
+
+         anexos = registro.getRegistroDetalle().getAnexos();
 
          // LOPD
          lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
@@ -204,9 +258,6 @@ public class AsientoRegistralConverter extends CommonConverter {
             }
          }
 
-
-         anexos = registro.getRegistroDetalle().getAnexos();
-
          // Convertimos los campos comunes de AsientoRegistralWs
          setAsientoRegistralComun(asientoRegistral, registro, usuario.getEntidad(), idioma, oficioRemisionEjb, trazabilidadEjb);
 
@@ -218,6 +269,8 @@ public class AsientoRegistralConverter extends CommonConverter {
             asientoRegistral.setUnidadTramitacionOrigenCodigo(registro.getOrigenExternoCodigo());
             asientoRegistral.setUnidadTramitacionOrigenDenominacion(registro.getOrigenExternoDenominacion());
          }
+
+         anexos = registro.getRegistroDetalle().getAnexos();
 
          // LOPD
          lopdEjb.altaLopd(registro.getNumeroRegistro(), registro.getFecha(), registro.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_CONSULTA);
