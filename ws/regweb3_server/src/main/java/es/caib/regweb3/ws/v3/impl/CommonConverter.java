@@ -259,6 +259,35 @@ public class CommonConverter {
     }
 
     /**
+     * @param registroDetalle
+     * @return
+     * @throws Exception
+     */
+    public static List<AnexoWs> transformarAnexosWs(RegistroDetalle registroDetalle) throws Exception {
+
+        List<AnexoWs> anexosWs = new ArrayList<AnexoWs>();
+
+        // Si se trata de AnexoFull
+        if(registroDetalle.getAnexosFull() != null){
+
+            for (AnexoFull anexoFull : registroDetalle.getAnexosFull()) {
+                AnexoWs anexoWs = AnexoConverter.transformarAnexoWs(anexoFull);
+                anexosWs.add(anexoWs);
+            }
+
+        }else{ // Si se trata de Anexo
+
+            for (Anexo anexo : registroDetalle.getAnexos()) {
+                AnexoWs anexoWs = AnexoConverter.transformarAnexoWs(anexo);
+                anexosWs.add(anexoWs);
+            }
+        }
+
+        return anexosWs;
+    }
+
+
+    /**
      * @param anexos
      * @return
      * @throws Exception

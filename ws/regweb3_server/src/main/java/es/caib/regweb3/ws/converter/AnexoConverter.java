@@ -113,7 +113,6 @@ public class AnexoConverter extends CommonConverter {
 
       }
 
-
       anexoFull.setSignatureCustody(sign);
       anexoFull.setSignatureFileDelete(false);
 
@@ -188,6 +187,73 @@ public class AnexoConverter extends CommonConverter {
 
    }
 
+   /**
+    * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
+    * @param anexo
+    * @return
+    * @throws Exception
+    */
+   public static AnexoWs transformarAnexoWs(Anexo anexo) throws Exception {
+
+      AnexoWs anexoWs = new AnexoWs();
+
+      if(StringUtils.isNotEmpty(anexo.getTitulo())){anexoWs.setTitulo(anexo.getTitulo());}
+
+      if(anexo.getTipoDocumental()!= null){anexoWs.setTipoDocumental(anexo.getTipoDocumental().getCodigoNTI());}
+      if(anexo.getValidezDocumento()!= null) {
+         anexoWs.setValidezDocumento(anexo.getValidezDocumento().toString());
+      }
+      if(anexo.getTipoDocumento()!= null) {
+         anexoWs.setTipoDocumento(RegwebConstantes.CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(anexo.getTipoDocumento()));
+      }
+      if(StringUtils.isNotEmpty(anexo.getObservaciones())){anexoWs.setObservaciones(anexo.getObservaciones());}
+      if(anexo.getOrigenCiudadanoAdmin()!=null){anexoWs.setOrigenCiudadanoAdmin(anexo.getOrigenCiudadanoAdmin());}
+
+      if(anexo.getCsv() != null){anexoWs.setCsv(anexo.getCsv());}
+
+      anexoWs.setJustificante(anexo.isJustificante());
+
+      // Transformamos de Date a Calendar
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(anexo.getFechaCaptura());
+      if(anexo.getFechaCaptura()!= null){anexoWs.setFechaCaptura(calendar);}
+
+      // Part de firma Anexada
+      if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
+
+      return anexoWs;
+
+   }
+
+   /**
+    * Convierte un {@link es.caib.regweb3.model.utils.AnexoFull} en un {@link es.caib.regweb3.ws.model.AnexoWs}
+    * @param anexoFull
+    * @return
+    * @throws Exception
+    */
+   public static AnexoWs transformarAnexoWs(AnexoFull anexoFull) throws Exception {
+
+      AnexoWs anexoWs = transformarAnexoWs(anexoFull.getAnexo());
+
+      // Firma Fichero Anexado
+      if (anexoFull.getSignatureCustody() != null) {
+         SignatureCustody sign = anexoFull.getSignatureCustody();
+         anexoWs.setNombreFirmaAnexada(sign.getName());
+         anexoWs.setTipoMIMEFirmaAnexada(sign.getMime());
+         anexoWs.setFirmaAnexada(sign.getData());
+      }
+
+      // Documento fichero Anexado
+      if (anexoFull.getDocumentoCustody() != null) {
+         DocumentCustody doc = anexoFull.getDocumentoCustody();
+         anexoWs.setNombreFicheroAnexado(doc.getName());
+         anexoWs.setTipoMIMEFicheroAnexado(doc.getMime());
+         anexoWs.setFicheroAnexado(doc.getData());
+      }
+
+      return anexoWs;
+   }
+
 
    /**
     * Convierte un {@link es.caib.regweb3.model.Anexo} en un {@link es.caib.regweb3.ws.model.AnexoWs}
@@ -236,8 +302,6 @@ public class AnexoConverter extends CommonConverter {
             anexoWs.setFirmaAnexada(anexoEjb.getFirmaContent(custodyID, anexoFull.getAnexo().isJustificante(), idEntidad));
          }
 
-
-
          // Documento fichero Anexado
          if (anexoFull.getDocumentoCustody() != null) {
             DocumentCustody doc = anexoFull.getDocumentoCustody();
@@ -247,7 +311,6 @@ public class AnexoConverter extends CommonConverter {
          }
       }
 
-
       // Transformamos de Date a Calendar
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(anexo.getFechaCaptura());
@@ -256,11 +319,8 @@ public class AnexoConverter extends CommonConverter {
       // Part de firma Anexada
       if(anexo.getModoFirma()!= 0){anexoWs.setModoFirma(anexo.getModoFirma());}
 
-
       return anexoWs;
 
    }
-
-
 
 }

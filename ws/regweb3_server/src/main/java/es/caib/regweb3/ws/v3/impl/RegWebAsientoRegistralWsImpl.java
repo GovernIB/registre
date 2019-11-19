@@ -210,7 +210,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             //asientoRegistral.setAplicacion(CODIGO_APLICACION); todo REPENSAR setAplicacionTelematica
             //asientoRegistral.setVersion(Versio.VERSIO);
 
-
             // Validar los Interesados
             List<Interesado> interesados;
             if (asientoRegistral.getInteresados() != null && asientoRegistral.getInteresados().size() > 0) {
@@ -796,7 +795,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Transformamos los Registros de Entrada en AsientoRegistralWs
             List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
-            for (RegistroEntrada entrada : (List<RegistroEntrada>)entradas) {
+            for (RegistroEntrada entrada : entradas) {
 
                 asientos.add(AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, entrada.getNumeroRegistroFormateado(), REGISTRO_ENTRADA,
                         UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
@@ -847,13 +846,20 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         try{
 
-            AsientoRegistralWs asiento = AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, numeroRegistroFormateado, REGISTRO_ENTRADA,
-                    UsuarioAplicacionCache.get().getIdioma(), true, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, anexoEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getByDocumentoNumeroRegistro(entidadActiva.getId(), documento, numeroRegistroFormateado);
+
+            if (registroEntrada == null) {
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+            }
+
+            AsientoRegistralWs asiento = AsientoRegistralConverter.transformarRegistro(registroEntrada, REGISTRO_ENTRADA, entidadActiva,
+                    UsuarioAplicacionCache.get().getIdioma(),  oficioRemisionEjb, trazabilidadSirEjb);
 
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
-            return asiento;
+            lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioAplicacion.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
+            return asiento;
 
         }catch (Exception e){
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
