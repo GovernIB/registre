@@ -323,7 +323,7 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionUnidadTramitacionOrigen(String decodificacionUnidadTramitacionOrigen) {
-        if(decodificacionUnidadTramitacionOrigen.length() > 80){
+        if(decodificacionUnidadTramitacionOrigen != null && decodificacionUnidadTramitacionOrigen.length() > 80){
             this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen.substring(0,79);
         }else{
             this.decodificacionUnidadTramitacionOrigen = decodificacionUnidadTramitacionOrigen;
