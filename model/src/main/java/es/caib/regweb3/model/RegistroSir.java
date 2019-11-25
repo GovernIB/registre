@@ -273,7 +273,7 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralOrigen(String decodificacionEntidadRegistralOrigen) {
-       if(decodificacionEntidadRegistralOrigen.length() > 80){
+       if(decodificacionEntidadRegistralOrigen != null && decodificacionEntidadRegistralOrigen.length() > 80){
            this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen.substring(0,79);
        }else{
            this.decodificacionEntidadRegistralOrigen = decodificacionEntidadRegistralOrigen;
@@ -345,7 +345,7 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralDestino(String decodificacionEntidadRegistralDestino) {
-        if(decodificacionEntidadRegistralDestino.length() > 80){
+        if(decodificacionEntidadRegistralDestino != null && decodificacionEntidadRegistralDestino.length() > 80){
             this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino.substring(0,79);
         }else{
             this.decodificacionEntidadRegistralDestino = decodificacionEntidadRegistralDestino;
@@ -367,7 +367,7 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionUnidadTramitacionDestino(String decodificacionUnidadTramitacionDestino) {
-        if(decodificacionUnidadTramitacionDestino.length() > 80){
+        if(decodificacionUnidadTramitacionDestino != null && decodificacionUnidadTramitacionDestino.length() > 80){
             this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino.substring(0,79);
         }else{
             this.decodificacionUnidadTramitacionDestino = decodificacionUnidadTramitacionDestino;
@@ -538,7 +538,7 @@ public class RegistroSir implements Serializable {
     }
 
     public void setDecodificacionEntidadRegistralInicio(String decodificacionEntidadRegistralInicio) {
-        if(decodificacionEntidadRegistralInicio.length() > 80){
+        if(decodificacionEntidadRegistralInicio != null && decodificacionEntidadRegistralInicio.length() > 80){
             this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio.substring(0,79);
         }else{
             this.decodificacionEntidadRegistralInicio = decodificacionEntidadRegistralInicio;
