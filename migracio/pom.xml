@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
 
 	<artifactId>regweb3-migraciodades</artifactId>
-    <version>3.1.2</version>
+    <version>3.1.3</version>
 	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>es.caib.regweb3</groupId>
 		<artifactId>regweb3</artifactId>
-        <version>3.1.2</version>
+        <version>3.1.3</version>
 	</parent>
 
 	<name>RegWeb3 - Migracio Dades</name>
