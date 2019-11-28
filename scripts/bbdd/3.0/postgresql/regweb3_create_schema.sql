@@ -738,6 +738,17 @@
         primary key (ID)
     );
 
+    create table RWE_SESION (
+        ID int8 not null,
+        ESTADO int8,
+        FECHA timestamp,
+        IDSESION int8 not null,
+        NUMREG varchar(255),
+        TIPO_REGISTRO int8,
+        USUARIO int8 not null,
+        primary key (ID)
+    );
+
     create table RWE_TIPOASUNTO (
         ID int8 not null,
         ACTIVO bool not null,
@@ -1409,6 +1420,8 @@
 
     create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
 
+    create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
+
     alter table RWE_REGISTRO_MIGRADO
         add constraint RWE_REGMIG_ENTIDAD_FK
         foreign key (IDENTIDAD)
@@ -1477,6 +1490,11 @@
     alter table RWE_REPRO
         add constraint RWE_REPRO_USUARIO_FK
         foreign key (USUARIOENTIDAD)
+        references RWE_USUARIO_ENTIDAD;
+
+    alter table RWE_SESION
+        add constraint RWE_SESION_USUENT_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
     alter table RWE_TIPOASUNTO
@@ -1560,5 +1578,7 @@
         references RWE_OFICINA;
 
     create sequence RWE_ALL_SEQ;
+
+    create sequence RWE_SESION_SEQ;
 
     create sequence RWE_SIR_SEQ;

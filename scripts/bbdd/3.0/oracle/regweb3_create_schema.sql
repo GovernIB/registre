@@ -683,6 +683,16 @@ create table RWE_ANEXO (
         ORDEN number(10,0) not null
     );
 
+     create table RWE_SESION (
+        ID number(19,0) not null,
+        ESTADO number(19,0),
+        FECHA timestamp,
+        IDSESION number(19,0) not null,
+        NUMREG varchar2(255 char),
+        TIPO_REGISTRO number(19,0),
+        USUARIO number(19,0) not null
+    );
+
     create table RWE_TIPOASUNTO (
         ID number(19,0) not null,
         ACTIVO number(1,0) not null,
@@ -772,6 +782,8 @@ create table RWE_ANEXO (
 
     create sequence RWE_ALL_SEQ;
 
+    create sequence RWE_SESION_SEQ;
+
     create sequence RWE_SIR_SEQ;
 
 
@@ -836,6 +848,7 @@ create table RWE_ANEXO (
     create index RWE_REGMIG_REMDES_I on RWE_REGISTRO_MIGRADO (DESREMDES);
     create index RWE_REGMIG_ANO_I on RWE_REGISTRO_MIGRADO (ANO);
     create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
+    create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
  -- FINAL Indexes
 
  -- INICI PK's
@@ -940,6 +953,8 @@ create table RWE_ANEXO (
     alter table RWE_REPRO add constraint RWE_REPRO_pk primary key (ID);
 
     alter table RWE_ROL add constraint RWE_ROL_pk primary key (ID);
+
+    alter table RWE_SESION add constraint RWE_SESION_pk primary key (ID);
 
     alter table RWE_TIPOASUNTO add constraint RWE_TIPOASUNTO_pk primary key (ID);
 
@@ -1486,6 +1501,11 @@ create table RWE_ANEXO (
     alter table RWE_REPRO
         add constraint RWE_REPRO_USUARIO_FK
         foreign key (USUARIOENTIDAD)
+        references RWE_USUARIO_ENTIDAD;
+
+    alter table RWE_SESION
+        add constraint RWE_SESION_USUENT_FK
+        foreign key (USUARIO)
         references RWE_USUARIO_ENTIDAD;
 
     alter table RWE_TIPOASUNTO
