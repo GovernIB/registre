@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionLocal;
 import es.caib.regweb3.persistence.ejb.OficioRemisionSalidaUtilsLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.TimeUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -115,8 +114,8 @@ public class AvisoController extends BaseController {
 
         }
 
-        Long end = System.currentTimeMillis();
-        log.info("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(end - start));
+
+        //log.info("TIEMPO CARGA Avisos: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - start));
         return mav;
     }
 
