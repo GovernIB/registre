@@ -93,11 +93,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -139,11 +141,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -166,6 +170,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q.setParameter("idLibro", idLibro);
         q.setParameter("accion", accion);
         q.setParameter("tipoRegistro", tipoRegistro);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -177,6 +182,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Query q = em.createQuery("Select lopd from Lopd as lopd order by lopd.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -235,6 +241,7 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         q = em.createQuery("Select count(lopd.id) from Lopd as lopd where lopd.usuario.id = :idUsuarioEntidad ");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult() > 0;
     }
@@ -297,11 +304,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -359,11 +368,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -418,11 +429,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -480,11 +493,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -535,11 +550,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -598,11 +615,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -654,11 +673,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -717,11 +738,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -774,11 +797,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -858,11 +883,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }
@@ -940,11 +967,13 @@ public class LopdBean extends BaseEjbJPA<Lopd, Long> implements LopdLocal{
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0, resultsPerPage);
         }

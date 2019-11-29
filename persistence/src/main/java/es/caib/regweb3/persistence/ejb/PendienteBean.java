@@ -60,6 +60,8 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.estado=:estado and pendiente.procesado=:procesado");
         q.setParameter("estado", estado);
         q.setParameter("procesado", procesado);
+        q.setHint("org.hibernate.readOnly", true);
+
         return q.getResultList();
 
     }
@@ -68,8 +70,8 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     @SuppressWarnings(value = "unchecked")
     public List<Pendiente> findPendientesProcesar(Long idEntidad) throws Exception {
 
-
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Pendiente> pendientes = q.getResultList();
         List<Pendiente> pendientesEntidad= new ArrayList<Pendiente>();
@@ -80,7 +82,6 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
             }
         }
         return pendientesEntidad;
-
 
     }
 
@@ -96,6 +97,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(pendiente.id) from Pendiente as pendiente");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -108,6 +110,7 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente order by pendiente.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }

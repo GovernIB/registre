@@ -61,6 +61,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
         Query q = em.createQuery("Select count(codigoAsunto.id) from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto");
         q.setParameter("idTipoAsunto", idTipoAsunto);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -73,6 +74,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto order by codigoAsunto.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -86,6 +88,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -97,6 +100,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
                 "where codigoAsunto.entidad.id = :idEntidad");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -108,7 +112,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.tipoAsunto.id = :idTipoAsunto order by codigoAsunto.id");
 
         q.setParameter("idTipoAsunto", idTipoAsunto);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -121,9 +125,8 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
                 "and codigoAsunto.entidad.id = :idEntidad order by codigoAsunto.id ");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
         return q.getResultList();
-
-
     }
 
     @Override
@@ -134,7 +137,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
                 "and codigoAsunto.activo= true order by codigoAsunto.id");
 
         q.setParameter("idTipoAsunto", idTipoAsunto);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -146,6 +149,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         Query q = em.createQuery("Select codigoAsunto from CodigoAsunto as codigoAsunto where codigoAsunto.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CodigoAsunto> codigoAsunto = q.getResultList();
 
@@ -165,6 +169,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
         q.setParameter("codigo", codigo);
         q.setParameter("idCodigoAsunto", idCodigoAsunto);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
 
@@ -178,6 +183,7 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CodigoAsunto> codigoAsunto = q.getResultList();
 
@@ -191,17 +197,13 @@ public class CodigoAsuntoBean extends BaseEjbJPA<CodigoAsunto, Long> implements 
     @Override
     public Integer eliminarByEntidad(Long idEntidad) throws Exception {
 
-
         List<?> codigos = em.createQuery("Select distinct(id) from CodigoAsunto where tipoAsunto.entidad.id =:idEntidad").setParameter("idEntidad", idEntidad).getResultList();
 
         for (Object id : codigos) {
             remove(findById((Long) id));
         }
 
-
         return codigos.size();
-
     }
-
 
 }

@@ -60,6 +60,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(notificacion.id) from Notificacion as notificacion");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -72,6 +73,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         Query q = em.createQuery("Select notificacion from Notificacion as notificacion order by notificacion.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -88,11 +90,11 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         Query q = em.createQuery("Select count(no.id) from Notificacion as no where no.destinatario.id = :idUsuarioEntidad " + queryEstado);
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(idEstado != null){
             q.setParameter("idEstado", idEstado);
         }
-
 
         return (Long) q.getSingleResult();
     }
@@ -103,6 +105,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
         Query q = em.createQuery("Select notificacion from Notificacion as notificacion where notificacion.destinatario.entidad.id = :idEntidad order by notificacion.id");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -158,11 +161,13 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         Paginacion paginacion;
 
         if (notificacion.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), notificacion.getPageNumber());
             int inicio = (notificacion.getPageNumber() - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(BaseEjbJPA.RESULTADOS_PAGINACION);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0);
         }
@@ -193,6 +198,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("nueva",RegwebConstantes.NOTIFICACION_ESTADO_NUEVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }

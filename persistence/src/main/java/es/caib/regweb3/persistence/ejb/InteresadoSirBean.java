@@ -51,7 +51,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(interesadoSir.id) from InteresadoSir as interesadoSir");
-
+        q.setHint("org.hibernate.readOnly", true);
         return (Long) q.getSingleResult();
     }
 
@@ -63,6 +63,7 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
         Query q = em.createQuery("Select interesadoSir from InteresadoSir as interesadoSir order by interesadoSir.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }

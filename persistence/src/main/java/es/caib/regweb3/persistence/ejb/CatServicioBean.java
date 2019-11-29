@@ -62,6 +62,7 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
         Query q = em.createQuery("Select catServicio from CatServicio as catServicio order by catServicio.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -69,17 +70,17 @@ public class CatServicioBean extends BaseEjbJPA<CatServicio, Long> implements Ca
     @Override
     @SuppressWarnings(value = "unchecked")
     public CatServicio findByCodigo(Long codigo) throws Exception {
-         Query q = em.createQuery("Select catServicio from CatServicio as catServicio where catServicio.codServicio = :codigo");
+        Query q = em.createQuery("Select catServicio from CatServicio as catServicio where catServicio.codServicio = :codigo");
 
-         q.setParameter("codigo",codigo);
+        q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
-         List<CatServicio> catServicio = q.getResultList();
-         if(catServicio.size() == 1){
-             return catServicio.get(0);
-         }else{
-             return  null;
-         }
+        List<CatServicio> catServicio = q.getResultList();
 
+        if(catServicio.size() == 1){
+            return catServicio.get(0);
+        }else{
+            return  null;
+        }
     }
-
 }

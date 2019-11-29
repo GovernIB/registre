@@ -102,6 +102,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RelacionSirOfi> relaciones = q.getResultList();
 
@@ -121,6 +122,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<RelacionSirOfi> relacionSirOfis = new ArrayList<RelacionSirOfi>();
@@ -143,6 +145,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("oficinaSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficinas =  new ArrayList<Oficina>();
 
@@ -167,6 +170,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("oficinaSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficinas =  new ArrayList<Oficina>();
 
@@ -190,6 +194,7 @@ public class RelacionSirOfiBean extends BaseEjbJPA<RelacionSirOfi, RelacionSirOf
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos =  new ArrayList<Organismo>();
 

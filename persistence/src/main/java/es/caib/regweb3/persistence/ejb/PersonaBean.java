@@ -69,9 +69,12 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Query q = em.createQuery(query.toString());
 
         q.setParameter("idEntidad", idEntidad);
+
         if (tipoPersona != null) {
             q.setParameter("tipoPersona", tipoPersona);
         }
+
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -85,6 +88,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Persona> fisicas = new ArrayList<Persona>();
@@ -107,6 +111,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Persona> juridicas = new ArrayList<Persona>();
@@ -124,6 +129,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(persona.id) from Persona as persona");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -136,6 +142,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Query q = em.createQuery("Select persona from Persona as persona order by persona.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -148,6 +155,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         q.setParameter("documento", documento);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -160,6 +168,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         q.setParameter("documento", documento);
         q.setParameter("idPersona", idPersona);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -228,9 +237,11 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -297,6 +308,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
             q = em.createQuery(query.toString());
         }
 
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Persona> fisicas = new ArrayList<Persona>();
@@ -358,6 +370,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
             q = em.createQuery(query.toString());
         }
 
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Persona> juridicas = new ArrayList<Persona>();
@@ -424,6 +437,9 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
             q.setParameter(param.getKey(), param.getValue());
         }
+
+        q.setHint("org.hibernate.readOnly", true);
+
         List<Object[]> result = q.getResultList();
         List<ObjetoBasico> personas = new ArrayList<ObjetoBasico>();
 
@@ -445,6 +461,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         q.setParameter("documento", documento);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -458,9 +475,9 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
                 "group by persona.documento having(count(persona.documento) > 1 )");
 
         q.setParameter("idEntidad", idEntidad);
-        List<String> duplicados = q.getResultList();
+        q.setHint("org.hibernate.readOnly", true);
 
-        log.info("Personas duplicadas: " + duplicados.size());
+        List<String> duplicados = q.getResultList();
 
         List<Persona> personasDuplicadas = new ArrayList<Persona>();
 
@@ -475,7 +492,6 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @SuppressWarnings(value = "unchecked")
     public List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception {
 
-        log.info("entram a exportar BEAN");
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
@@ -528,6 +544,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
             q = em.createQuery(query.toString());
         }
 
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Persona> personas = new ArrayList<Persona>();

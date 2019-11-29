@@ -74,6 +74,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(oficina.id) from Oficina as oficina");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -86,6 +87,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         Query q = em.createQuery("Select oficina from Oficina as oficina order by oficina.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -98,6 +100,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
                 "oficina.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficina = q.getResultList();
         if(oficina.size() == 1){
@@ -117,6 +120,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficina = q.getResultList();
         if (oficina.size() == 1) {
@@ -134,6 +138,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
                 "oficina.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         if (result.size() > 0) {
@@ -154,6 +159,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficina = q.getResultList();
         if (oficina.size() == 1) {
@@ -173,6 +179,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("codigo",codigo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficina = q.getResultList();
         if(oficina.size() == 1){
@@ -191,6 +198,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("idOrganismo",idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
+
         List<Oficina> oficinas = q.getResultList();
         for(Oficina oficina:oficinas){
           Hibernate.initialize(oficina.getOrganizativasOfi());
@@ -219,9 +228,10 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
             q.setParameter("oficinaVirtual", catServicioEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
         }
 
-        List<Oficina> oficinas =  new ArrayList<Oficina>();
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
+        List<Oficina> oficinas =  new ArrayList<Oficina>();
 
         for (Object[] object : result){
             Oficina oficina = new Oficina((Long)object[0],(String)object[1],(String)object[2],(Long)object[3],(String)object[4], (String)object[5]);
@@ -254,6 +264,8 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
                 "oficina.organismoResponsable.entidad.id =:idEntidad");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
         List<Oficina> oficinas = q.getResultList();
         for(Oficina oficina:oficinas){
           Hibernate.initialize(oficina.getOrganizativasOfi());
@@ -270,6 +282,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficinas =  new ArrayList<Oficina>();
         List<Object[]> result = q.getResultList();
@@ -291,6 +304,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Oficina> oficinas = new ArrayList<Oficina>();
@@ -316,6 +330,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Oficina> oficinas = new ArrayList<Oficina>();
@@ -370,6 +385,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("idOficina",idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("recepcionSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -384,6 +400,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("idOficina",idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("envioSir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -399,6 +416,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("idOficina",idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -415,6 +433,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         q.setParameter("sir", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR));
         q.setParameter("sirEnvio", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_ENVIO));
         q.setParameter("sirRecepcion", catServicioEjb.findByCodigo(RegwebConstantes.OFICINA_INTEGRADA_SIR_RECEPCION));
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -550,9 +569,11 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {

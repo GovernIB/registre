@@ -63,6 +63,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         Query q = em.createQuery("Select propiedadGlobal from PropiedadGlobal as propiedadGlobal order by propiedadGlobal.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -78,6 +79,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere+" order by p.id");
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -115,6 +117,8 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
             q.setParameter("idPropiedadGlobal", idPropiedadGlobal);
         }
 
+        q.setHint("org.hibernate.readOnly", true);
+
         List<PropiedadGlobal> p = q.getResultList();
 
         return p.size() == 1 ? p.get(0) : null;
@@ -131,6 +135,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad = :idEntidad "+tipoWhere);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -152,6 +157,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -169,6 +175,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         }
 
         Query q = em.createQuery("Select count(p.id) from PropiedadGlobal as p where p.entidad is null "+tipoWhere);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -189,6 +196,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         Query q = em.createQuery("Select p from PropiedadGlobal as p where p.entidad is null "+tipoWhere+" order by p.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -215,6 +223,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad = :idEntidad and pg.clave = :clave");
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("clave", clave);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<?> list = q.getResultList();
 
@@ -227,6 +236,7 @@ public class PropiedadGlobalBean extends BaseEjbJPA<PropiedadGlobal, Long> imple
 
         Query q = em.createQuery("Select pg.valor from PropiedadGlobal as pg where pg.entidad is null and pg.clave = :clave");
         q.setParameter("clave", clave);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<?> list = q.getResultList();
 

@@ -67,6 +67,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
         q.setParameter("idUsuario",idUsuario);
         q.setParameter("orden",orden);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Plantilla) q.getSingleResult();
     }
@@ -93,6 +94,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         Query q = em.createQuery("Select plantilla from Plantilla as plantilla order by plantilla.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -107,6 +109,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         q.setParameter("idUsuario",idUsuario);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -119,6 +122,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 "where plantilla.usuario.id = :idUsuario order by plantilla.orden");
 
         q.setParameter("idUsuario", idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         return  q.getResultList();
     }
@@ -132,6 +136,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
 
         q.setParameter("idUsuario",idUsuario);
         q.setParameter("tipoRegistro",tipoRegistro);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Plantilla> plantillas = new ArrayList<Plantilla>();
 
@@ -153,6 +158,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 "where plantilla.usuario.id = :idUsuario");
 
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -164,6 +170,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 "where plantilla.usuario.id = :idUsuario");
 
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Integer) q.getSingleResult();
     }
@@ -175,6 +182,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
                 "where plantilla.id = :idPlantilla");
 
         q.setParameter("idPlantilla",idPlantilla);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -314,6 +322,7 @@ public class PlantillaBean extends BaseEjbJPA<Plantilla, Long> implements Planti
         q = em.createQuery("Select count(plantilla.id) from Plantilla as plantilla where plantilla.usuario.id = :idUsuarioEntidad ");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult() > 0;
     }

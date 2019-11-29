@@ -59,6 +59,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(plugin.id) from Plugin as plugin");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -71,6 +72,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         Query q = em.createQuery("Select plugin from Plugin as plugin order by plugin.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -89,6 +91,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         if(tipo != null){
             q.setParameter("tipo", tipo);
         }
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -106,6 +109,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         q.setParameter("idEntidad", idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -127,6 +131,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         if(tipo != null){
             q.setParameter("tipo", tipo);
         }
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -143,6 +148,7 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         Query q = em.createQuery("Select p from Plugin as p where p.entidad is null "+tipoWhere+" order by p.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(tipo != null){
             q.setParameter("tipo", tipo);
@@ -169,29 +175,11 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
             q.setParameter("idEntidad", idEntidad);
         }
         q.setParameter("tipo", tipo);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
     }
-
-    /*@Override
-    public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {
-
-        try {
-            List<Plugin> plugins;
-
-            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
-
-
-            if (plugins.size() > 0) {
-                return cargarPlugin(plugins.get(0));
-            }
-        } catch (Exception e) {
-            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
-        }
-
-        return null;
-    }*/
 
     @Override
     public Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException {

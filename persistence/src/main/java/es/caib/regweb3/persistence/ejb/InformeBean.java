@@ -158,6 +158,8 @@ public class InformeBean implements InformeLocal {
             q = em.createQuery(query.toString());
         }
 
+        q.setHint("org.hibernate.readOnly", true);
+
         // Executa la query
         List<RegistroEntrada> registrosEntrada = new ArrayList<RegistroEntrada>();
         List<Object[]> result = q.getResultList();
@@ -232,6 +234,7 @@ public class InformeBean implements InformeLocal {
                     q2.setParameter(param.getKey(), param.getValue());
                 }
 
+                q2.setHint("org.hibernate.readOnly", true);
                 List<Object[]> result2 = q2.getResultList();
 
                 // Composa els interessats del registre
@@ -252,10 +255,7 @@ public class InformeBean implements InformeLocal {
                     (String) object[14], (Long) object[15], (Long) object[16], (String) object[17], (Long) object[18], (String) object[19],
                     (Long) object[20], (String) object[21], (Long) object[22], (String) object[23], (Long) object[24], (String) object[25], interesados);
 
-
             registrosEntrada.add(registroEntrada);
-
-
         }
 
         return registrosEntrada;
@@ -387,6 +387,7 @@ public class InformeBean implements InformeLocal {
             query.append("order by registroSalida.fecha desc");
             q = em.createQuery(query.toString());
         }
+        q.setHint("org.hibernate.readOnly", true);
 
         // Executa la query
         List<RegistroSalida> registrosSalida = new ArrayList<RegistroSalida>();
@@ -463,6 +464,7 @@ public class InformeBean implements InformeLocal {
                     q2.setParameter(param.getKey(), param.getValue());
                 }
 
+                q2.setHint("org.hibernate.readOnly", true);
                 List<Object[]> result2 = q2.getResultList();
 
                 // Composa els interessats del registre
@@ -506,6 +508,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -524,6 +527,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -544,6 +548,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idOficina", idOficina);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -562,6 +567,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idOficina", idOficina);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -580,6 +586,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("conselleria", conselleria);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -597,6 +604,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("conselleria", conselleria);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -617,6 +625,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -636,6 +645,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -655,6 +665,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idOficina", idOficina);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -672,6 +683,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("libro", libro);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -689,6 +701,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("oficina", oficina);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -708,6 +721,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -727,6 +741,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -746,6 +761,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("idOficina", idOficina);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -763,6 +779,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("libro", libro);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -780,6 +797,7 @@ public class InformeBean implements InformeLocal {
         q.setParameter("oficina", oficina);
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }

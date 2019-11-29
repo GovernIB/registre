@@ -86,6 +86,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         } else {
             q.setMaxResults(999);
         }
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Long> registros = q.getResultList(); // Registros de salida que son Oficios de Remision
 
@@ -99,9 +100,9 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
             // Parámetros
             q1.setParameter("registros", registros);
             q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+            q.setHint("org.hibernate.readOnly", true);
 
             List<Object[]> destinos = q1.getResultList();
-
 
             for (Object[] object : destinos) {
                 organismosDestino.add(new Organismo(null, (String) object[0], (String) object[1]));
@@ -132,13 +133,15 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
         q.setParameter("tipoEvento", tipoEvento);
+
         if (StringUtils.isNotEmpty(fecha)) {
             SimpleDateFormat sdf = new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA);
             q.setParameter("fecha", sdf.parse(fecha));
         }
 
-        return (Long) q.getSingleResult();
+        q.setHint("org.hibernate.readOnly", true);
 
+        return (Long) q.getSingleResult();
     }
 
     /**
@@ -194,7 +197,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
     public OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva, Long tipoEvento) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
-        //Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
 
         if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)) {
 
@@ -373,11 +375,13 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(10);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0);
         }

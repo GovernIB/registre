@@ -69,16 +69,17 @@ public class CatComunidadAutonomaBean extends BaseEjbJPA<CatComunidadAutonoma, L
     @Override
     @SuppressWarnings(value = "unchecked")
     public CatComunidadAutonoma findByCodigo(Long codigo) throws Exception {
-         Query q = em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma where catComunidadAutonoma.codigoComunidad = :codigo");
+        Query q = em.createQuery("Select catComunidadAutonoma from CatComunidadAutonoma as catComunidadAutonoma where catComunidadAutonoma.codigoComunidad = :codigo");
 
-         q.setParameter("codigo",codigo);
+        q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
-         List<CatComunidadAutonoma> catComunidadAutonoma = q.getResultList();
-         if(catComunidadAutonoma.size() == 1){
-             return catComunidadAutonoma.get(0);
-         }else{
-             return  null;
-         }
+        List<CatComunidadAutonoma> catComunidadAutonoma = q.getResultList();
+        if(catComunidadAutonoma.size() == 1){
+            return catComunidadAutonoma.get(0);
+        }else{
+            return  null;
+        }
 
     }
 }

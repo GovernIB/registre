@@ -62,6 +62,7 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
         Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion order by catNivelAdministracion.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -69,17 +70,16 @@ public class CatNivelAdministracionBean extends BaseEjbJPA<CatNivelAdministracio
     @Override
     @SuppressWarnings(value = "unchecked")
     public CatNivelAdministracion findByCodigo(Long codigo) throws Exception {
-         Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion where catNivelAdministracion.codigoNivelAdministracion = :codigo");
+        Query q = em.createQuery("Select catNivelAdministracion from CatNivelAdministracion as catNivelAdministracion where catNivelAdministracion.codigoNivelAdministracion = :codigo");
 
-         q.setParameter("codigo",codigo);
+        q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
-         List<CatNivelAdministracion> catNivelAdministracion = q.getResultList();
-         if(catNivelAdministracion.size() == 1){
-             return catNivelAdministracion.get(0);
-         }else{
-             return  null;
-         }
-
+        List<CatNivelAdministracion> catNivelAdministracion = q.getResultList();
+        if(catNivelAdministracion.size() == 1){
+            return catNivelAdministracion.get(0);
+        }else{
+            return  null;
+        }
     }
-
 }

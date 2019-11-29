@@ -187,6 +187,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setHint("org.hibernate.readOnly", true);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -306,6 +307,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<String> result = q.getResultList();
 
@@ -331,7 +333,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
         // Parámetros
         q.setParameter("idRegistro", idRegistro);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         if (q.getResultList().size() > 0) {
             return (String) q.getResultList().get(0);

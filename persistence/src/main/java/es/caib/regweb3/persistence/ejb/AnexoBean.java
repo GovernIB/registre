@@ -1115,11 +1115,12 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @Override
     @SuppressWarnings(value = "unchecked")
     public Long getIdJustificante(Long idRegistroDetalle) throws Exception {
-        Query query = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
+        Query q = em.createQuery("Select anexo.id from Anexo as anexo where anexo.registroDetalle.id=:idRegistroDetalle and " +
                 "anexo.justificante = true order by anexo.id");
-        query.setParameter("idRegistroDetalle", idRegistroDetalle);
+        q.setParameter("idRegistroDetalle", idRegistroDetalle);
+        q.setHint("org.hibernate.readOnly", true);
 
-        List<Long> justificante = query.getResultList();
+        List<Long> justificante = q.getResultList();
 
         if (justificante.size() >= 1) {
             return justificante.get(0);
@@ -1186,15 +1187,15 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
 
         // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
-        Query query = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
+        Query q = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
                 "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
                 "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
-        query.setParameter("fechaPurgo", fechaPurgo);
-        query.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        query.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        q.setParameter("fechaPurgo", fechaPurgo);
+        q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        q.setHint("org.hibernate.readOnly", true);
 
-
-        return query.getResultList();
+        return q.getResultList();
     }
 
 

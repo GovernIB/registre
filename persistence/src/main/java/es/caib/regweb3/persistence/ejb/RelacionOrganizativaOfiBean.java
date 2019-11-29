@@ -100,6 +100,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficinas = q.getResultList();
         for(Oficina oficina:oficinas){
@@ -125,6 +126,8 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
+
         if (!oficinaVirtual) {
             q.setParameter("oficinaVirtual", catServicioLocalEjb.findByCodigo(RegwebConstantes.REGISTRO_VIRTUAL_NO_PRESENCIAL));
         }
@@ -151,6 +154,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -166,6 +170,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("idOficina", idOficina);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RelacionOrganizativaOfi> relaciones =  q.getResultList();
 
@@ -186,6 +191,7 @@ public class RelacionOrganizativaOfiBean extends BaseEjbJPA<RelacionOrganizativa
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<RelacionOrganizativaOfi> relacionOrganizativaOfis = new ArrayList<RelacionOrganizativaOfi>();

@@ -60,6 +60,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
 
          Query q = em.createQuery("Select count(modeloRecibo.id) from ModeloRecibo as modeloRecibo where modeloRecibo.entidad.id = :idEntidad");
          q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
          return (Long) q.getSingleResult();
     }
@@ -70,6 +71,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
 
         Query q = em.createQuery("Select modeloRecibo.id, modeloRecibo.nombre from ModeloRecibo as modeloRecibo where modeloRecibo.entidad.id = :idEntidad");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<ModeloRecibo> modelos =  new ArrayList<ModeloRecibo>();
 
@@ -90,6 +92,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
         Query q = em.createQuery("Select modeloRecibo from ModeloRecibo as modeloRecibo order by modeloRecibo.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -102,6 +105,7 @@ public class ModeloReciboBean extends BaseEjbJPA<ModeloRecibo, Long> implements 
          q.setParameter("idEntidad",idEntidad);
          q.setFirstResult(inicio);
          q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
          return q.getResultList();
     }

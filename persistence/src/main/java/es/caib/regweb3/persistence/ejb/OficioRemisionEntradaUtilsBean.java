@@ -69,6 +69,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
         q.setParameter("oficio_interno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
+        q.setHint("org.hibernate.readOnly", true);
 
         if (total != null) {
             q.setMaxResults(total);
@@ -101,6 +102,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
         q.setParameter("tipoEvento", tipoEvento);
+        q.setHint("org.hibernate.readOnly", true);
 
         if (total != null) {
             q.setMaxResults(total);
@@ -149,6 +151,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         if (total != null) {
             q.setMaxResults(total);
         }
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> organismosInternos = q.getResultList();
         for (Object[] organismoInterno : organismosInternos) {
@@ -172,6 +175,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             q1.setMaxResults(total);
         }
 
+        q1.setHint("org.hibernate.readOnly", true);
         List<Object[]> organismosExternos = q1.getResultList();
 
         for (Object[] organismoExterno : organismosExternos) {
@@ -181,13 +185,10 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         }
 
         return organismosDestino;
-
     }
 
     @Override
     public Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
-
-        Long total;
 
         // Si el array de organismos está vacío, no incluimos la condición.
         String organismosWhere = "";
@@ -206,6 +207,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
+        q.setHint("org.hibernate.readOnly", true);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -226,9 +228,9 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
-
     }
 
 
@@ -404,11 +406,14 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idLibro", idLibro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
+        q.setHint("org.hibernate.readOnly", true);
+
         q2.setParameter("idOrganismo", idOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
+        q2.setHint("org.hibernate.readOnly", true);
 
         Paginacion paginacion;
 
@@ -472,12 +477,15 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         q.setParameter("idOficina", idOficina);
         q.setParameter("idLibro", idLibro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setHint("org.hibernate.readOnly", true);
+
         q.setParameter("tipoEvento", tipoEvento);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("idOficina", idOficina);
         q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("tipoEvento", tipoEvento);
+        q2.setHint("org.hibernate.readOnly", true);
 
         Paginacion paginacion;
 
@@ -697,8 +705,5 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         oficioRemisionEjb.merge(oficioRemision);
 
         return registros;
-
     }
-
-
 }

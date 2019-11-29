@@ -71,6 +71,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select permisoLibroUsuario from PermisoLibroUsuario as permisoLibroUsuario order by permisoLibroUsuario.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -175,10 +176,8 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("registroSalida", RegwebConstantes.PERMISO_REGISTRO_SALIDA);
         q.setParameter("modificacionEntrada", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA);
         q.setParameter("modificacionSalida", RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA);
-        //q.setParameter("consultaEntrada", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
-        //q.setParameter("consultaSalida", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
-        //q.setParameter("administradorLibro", RegwebConstantes.PERMISO_ADMINISTRACION_LIBRO);
 
+        q.setHint("org.hibernate.readOnly", true);
         List<Libro> libros =  new ArrayList<Libro>();
 
         List<Object[]> result = q.getResultList();
@@ -206,6 +205,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("vigente",vigente.getId());
         q.setParameter("consultaEntrada", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
         q.setParameter("consultaSalida", RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libros =  new ArrayList<Libro>();
 
@@ -233,6 +233,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",vigente.getId());
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libros =  new ArrayList<Libro>();
 
@@ -263,6 +264,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idPermiso",idPermiso);
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -278,6 +280,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idPermiso",idPermiso);
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE).getId());
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos = new ArrayList<Organismo>();
 
@@ -303,6 +306,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
 
         q.setParameter("organismos",organismos);
         q.setParameter("idUsuarioEntidad",usuario.getId());
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -319,6 +323,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("organismos",organismos);
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idPermiso",idPermiso);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libros = new ArrayList<Libro>();
 
@@ -344,6 +349,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("organismos",organismos);
         q.setParameter("registro_entrada",PERMISO_REGISTRO_ENTRADA);
         q.setParameter("registro_salida",PERMISO_REGISTRO_SALIDA);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -356,6 +362,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
                 "plu.usuario.entidad.id = :idEntidad and plu.usuario.activo = true and plu.usuario.usuario.tipoUsuario = 1");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -374,6 +381,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idLibro",idLibro);
         q.setParameter("vigente",vigente.getId());
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Long> permisos = q.getResultList();
 
@@ -396,6 +404,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idLibro",idLibro);
         q.setParameter("idPermiso",idPermiso);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Long> permisos = q.getResultList();
 
@@ -477,6 +486,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idLibro",idLibro);
         q.setParameter("idPermiso",idPermiso);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() == 1;
     }

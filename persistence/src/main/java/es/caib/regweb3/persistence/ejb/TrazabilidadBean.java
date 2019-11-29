@@ -83,6 +83,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         q.setParameter("idIntercambio", idIntercambio);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -96,6 +97,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "where trazabilidad.registroSalida.id = :idRegistroSalida or trazabilidad.registroSalidaRectificado.id = :idRegistroSalida order by trazabilidad.fecha ");
 
         q.setParameter("idRegistroSalida", idRegistroSalida);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -109,6 +111,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "order by trazabilidad.fecha");
 
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -122,6 +125,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "order by trazabilidad.fecha desc");
 
         q.setParameter("idOficioRemision", idOficioRemision);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -134,6 +138,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         q.setParameter("idOficioRemision",idOficioRemision);
         q.setParameter("idRegistroEntrada",idRegistroEntrada);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Trazabilidad) q.getSingleResult();
 
@@ -146,6 +151,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         q.setParameter("idOficioRemision",idOficioRemision);
         q.setParameter("idRegistroSalida",idRegistroSalida);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Trazabilidad) q.getSingleResult();
     }
@@ -158,6 +164,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "where trazabilidad.registroSir.id = :registroSir order by trazabilidad.fecha");
 
         q.setParameter("registroSir", idRegistroSir);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -171,6 +178,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         q.setParameter("registroSir", idRegistroSir);
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
 
@@ -196,6 +204,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "where t.oficioRemision.id = :idOficioRemision");
 
         q.setParameter("idOficioRemision",idOficioRemision);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroSalida> registros =  new ArrayList<RegistroSalida>();
         List<Object[]> result = q.getResultList();
@@ -233,6 +242,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setHint("org.hibernate.readOnly", true);
 
         if (organismos.size() > 0) {
             q.setParameter("organismos", organismos);
@@ -298,11 +308,13 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0);
         }

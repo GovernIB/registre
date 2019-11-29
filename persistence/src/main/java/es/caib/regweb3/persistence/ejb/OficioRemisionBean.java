@@ -81,6 +81,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(oficioRemision.id) from OficioRemision as oficioRemision");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -93,6 +94,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision order by oficioRemision.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -185,9 +187,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long)q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         }else{
@@ -195,17 +199,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         }
 
         List<OficioRemision> oficios = q.getResultList();
-
-        // Inicializamos los Registros según su tipo de registro
-        /*if(tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-            for(OficioRemision oficio:oficios){
-                Hibernate.initialize(oficio.getRegistrosEntrada());
-            }
-        }else if(tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-            for(OficioRemision oficio:oficios){
-                Hibernate.initialize(oficio.getRegistrosSalida());
-            }
-        }*/
 
         paginacion.setListado(oficios);
 
@@ -375,6 +368,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 + " order by oficioRemision.id desc");
 
         q.setParameter("organismos",organismos);
+        q.setHint("org.hibernate.readOnly", true);
+
         if(total != null){
             q.setMaxResults(total);
         }
@@ -444,9 +439,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long)q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         }else{
@@ -480,6 +477,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 + " and oficioRemision.estado = " + RegwebConstantes.OFICIO_INTERNO_ENVIADO);
 
         q.setParameter("organismos",organismos);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -491,6 +489,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision.registrosEntrada from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
 
         q.setParameter("idOficioRemision", idOficioRemision);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -502,6 +501,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Query q = em.createQuery("Select oficioRemision.registrosSalida from OficioRemision as oficioRemision where oficioRemision.id = :idOficioRemision ");
 
         q.setParameter("idOficioRemision", idOficioRemision);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -517,6 +517,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setMaxResults(total);
         q.setParameter("idEstado", idEstado);
         q.setParameter("idOficina", idOficina);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<OficioRemision> oficios = new ArrayList<OficioRemision>();
 
@@ -538,6 +539,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         q.setParameter("idEstado", idEstado);
         q.setParameter("idOficina", idOficina);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -566,9 +568,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -600,6 +604,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("reenviado", RegwebConstantes.OFICIO_SIR_REENVIADO);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -617,6 +622,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("reenviadoError", RegwebConstantes.OFICIO_SIR_REENVIADO_ERROR);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -632,6 +638,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("codigoEntidadRegistralDestino", codigoEntidadRegistralDestino);
         q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
         q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() == 1){
@@ -669,6 +676,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 " where registroEntrada in elements(ofiRem.registrosEntrada) and ofiRem.id = :idOficioRemision");
 
         q.setParameter("idOficioRemision", idOficioRemision);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
 
@@ -681,6 +689,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     "order by interesado.id");
 
             q2.setParameter("registroDetalle",object[0]);
+            q2.setHint("org.hibernate.readOnly", true);
 
             List<Interesado> interesados = q2.getResultList();
             String nombreInteresado = "";
@@ -703,6 +712,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 " where registroSalida in elements(ofiRem.registrosSalida) and ofiRem.id = :idOficioRemision");
 
         q.setParameter("idOficioRemision", idOficioRemision);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
 
@@ -715,6 +725,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                     "order by interesado.id");
 
             q2.setParameter("registroDetalle",object[0]);
+            q2.setHint("org.hibernate.readOnly", true);
 
             List<Interesado> interesados = q2.getResultList();
             String nombreInteresado = "";
@@ -740,7 +751,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         if(organismo != null){
 
             if(!organismo.getEdp()){
-                log.info("Es un oficio interno");
+                //log.info("Es un oficio interno");
                 oficio.setInterno(true);
             }else{
                 // Comprobamos si el organismo edp tiene algún libro que le registre
@@ -751,11 +762,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 }else{
                     oficio.setEdpExterno(true);
                 }
-                log.info("Es un oficio edp interno?: " + oficioEdpInterno);
+               // log.info("Es un oficio edp interno?: " + oficioEdpInterno);
             }
         }else{
             oficio.setExterno(true);
-            log.info("Es un oficio externo");
+            //log.info("Es un oficio externo");
         }
 
         return oficio;
@@ -799,6 +810,8 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             q.setParameter("registroEntrada", registroEntrada);
         }
 
+        q.setHint("org.hibernate.readOnly", true);
+
         List<OficioRemision> oficioRemision = q.getResultList();
         if (oficioRemision.size() == 1) {
             return oficioRemision.get(0);
@@ -812,98 +825,95 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @Override
     public CombineStream generarOficioRemisionRtf(OficioRemision oficioRemision, ModeloOficioRemision modeloOficioRemision, List<String> registrosEntrada, List<String> registrosSalida) throws Exception{
 
+        File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
 
-            log.info("modeloOficioRemision  "+ modeloOficioRemision.getModelo());
-            File archivo = es.caib.regweb3.persistence.utils.FileSystemManager.getArchivo(modeloOficioRemision.getModelo().getId());
+        // Convertimos el archivo a array de bytes
+        byte[] datos = FileUtils.readFileToByteArray(archivo);
+        InputStream is = new ByteArrayInputStream(datos);
+        java.util.Hashtable<String,Object> ht = new java.util.Hashtable<String,Object>();
 
-            // Convertimos el archivo a array de bytes
-            byte[] datos = FileUtils.readFileToByteArray(archivo);
-            InputStream is = new ByteArrayInputStream(datos);
-            java.util.Hashtable<String,Object> ht = new java.util.Hashtable<String,Object>();
-
-            // Extraemos año de la fecha del registro
-            SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-            String anoOficio = formatYear.format(oficioRemision.getFecha());
+        // Extraemos año de la fecha del registro
+        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+        String anoOficio = formatYear.format(oficioRemision.getFecha());
 
 
-            // Fecha según el idioma y mes
-            Date dataActual = new Date();
-            SimpleDateFormat sdf1 = new SimpleDateFormat("dd");
-            SimpleDateFormat sdf2 = new SimpleDateFormat("MMMMM", new Locale("es"));
-            SimpleDateFormat sdf4 = new SimpleDateFormat("MMMMM", new Locale("ca"));
-            SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy");
-            String diaRecibo = sdf1.format(dataActual);
-            String mesRecibo;
-            String anoRecibo = sdf3.format(dataActual);
-            String fechaActualCa;
-            String fechaActualEs;
+        // Fecha según el idioma y mes
+        Date dataActual = new Date();
+        SimpleDateFormat sdf1 = new SimpleDateFormat("dd");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("MMMMM", new Locale("es"));
+        SimpleDateFormat sdf4 = new SimpleDateFormat("MMMMM", new Locale("ca"));
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy");
+        String diaRecibo = sdf1.format(dataActual);
+        String mesRecibo;
+        String anoRecibo = sdf3.format(dataActual);
+        String fechaActualCa;
+        String fechaActualEs;
 
-            // Fecha en castellano
-            mesRecibo = sdf2.format(dataActual);
-            fechaActualEs = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
+        // Fecha en castellano
+        mesRecibo = sdf2.format(dataActual);
+        fechaActualEs = diaRecibo + " de " + mesRecibo + " de " + anoRecibo;
 
-            // Fecha en catalán
-            mesRecibo = sdf4.format(dataActual);
-            if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
-                mesRecibo= " d'" + mesRecibo;
-            }else{
-                mesRecibo= " de " + mesRecibo;
-            }
-            fechaActualCa = diaRecibo + mesRecibo + " de " + anoRecibo;
+        // Fecha en catalán
+        mesRecibo = sdf4.format(dataActual);
+        if(mesRecibo.startsWith("a") || mesRecibo.startsWith("o")){
+            mesRecibo= " d'" + mesRecibo;
+        }else{
+            mesRecibo= " de " + mesRecibo;
+        }
+        fechaActualCa = diaRecibo + mesRecibo + " de " + anoRecibo;
 
-            // Registros
-            String registros = "";
+        // Registros
+        String registros = "";
 
-            if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
-                for (String registroEntrada : registrosEntrada) {
-                    registros = registros.concat("- " + registroEntrada + "\\\r\n");
-                }
-
-            }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
-                for (String registroSalida : registrosSalida) {
-                    registros = registros.concat("- " + registroSalida + "\\\r\n");
-                }
+        if(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA.equals(oficioRemision.getTipoOficioRemision())){
+            for (String registroEntrada : registrosEntrada) {
+                registros = registros.concat("- " + registroEntrada + "\\\r\n");
             }
 
-
-            // Mapeamos los campos del rtf con los del registro
-            if(oficioRemision.getOrganismoDestinatario() != null) {
-                ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getOrganismoDestinatario().getDenominacion()));
-                String direccion = "";
-                if(oficioRemision.getOrganismoDestinatario().getNombreVia() != null){
-                    direccion = direccion + oficioRemision.getOrganismoDestinatario().getNombreVia() + " ";
-                }
-                if(oficioRemision.getOrganismoDestinatario().getNumVia() != null){
-                    direccion = direccion + oficioRemision.getOrganismoDestinatario().getNumVia() + " ";
-                }
-                if(oficioRemision.getOrganismoDestinatario().getCodPostal() != null){
-                    direccion = direccion + "- " + oficioRemision.getOrganismoDestinatario().getCodPostal() + " ";
-                }
-                if(oficioRemision.getOrganismoDestinatario().getLocalidad() != null){
-                    direccion = direccion + oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre();
-                }
-                ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(direccion));
-            } else{
-                ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getDestinoExternoDenominacion()));
-                ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(""));
+        }else if(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA.equals(oficioRemision.getTipoOficioRemision())){
+            for (String registroSalida : registrosSalida) {
+                registros = registros.concat("- " + registroSalida + "\\\r\n");
             }
-            ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
-            ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
-            ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
-            if(oficioRemision.getOficina().getLocalidad() != null){
-                ht.put("(localidadOficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getLocalidad().getNombre()));
-            }else{
-                ht.put("(localidadOficina)", "");
+        }
+
+
+        // Mapeamos los campos del rtf con los del registro
+        if(oficioRemision.getOrganismoDestinatario() != null) {
+            ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getOrganismoDestinatario().getDenominacion()));
+            String direccion = "";
+            if(oficioRemision.getOrganismoDestinatario().getNombreVia() != null){
+                direccion = direccion + oficioRemision.getOrganismoDestinatario().getNombreVia() + " ";
             }
-            ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registros));
-            ht.put("(data)", ConvertirTexto.toCp1252(fechaActualCa));
-            ht.put("(fecha)", ConvertirTexto.toCp1252(fechaActualEs));
+            if(oficioRemision.getOrganismoDestinatario().getNumVia() != null){
+                direccion = direccion + oficioRemision.getOrganismoDestinatario().getNumVia() + " ";
+            }
+            if(oficioRemision.getOrganismoDestinatario().getCodPostal() != null){
+                direccion = direccion + "- " + oficioRemision.getOrganismoDestinatario().getCodPostal() + " ";
+            }
+            if(oficioRemision.getOrganismoDestinatario().getLocalidad() != null){
+                direccion = direccion + oficioRemision.getOrganismoDestinatario().getLocalidad().getNombre();
+            }
+            ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(direccion));
+        } else{
+            ht.put("(organismoDestinatario)", ConvertirTexto.toCp1252(oficioRemision.getDestinoExternoDenominacion()));
+            ht.put("(direccionOrgDest)", ConvertirTexto.toCp1252(""));
+        }
+        ht.put("(numeroOficio)", ConvertirTexto.toCp1252(oficioRemision.getNumeroOficio().toString()));
+        ht.put("(anoOficio)", ConvertirTexto.toCp1252(anoOficio));
+        ht.put("(oficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getDenominacion()));
+        if(oficioRemision.getOficina().getLocalidad() != null){
+            ht.put("(localidadOficina)", ConvertirTexto.toCp1252(oficioRemision.getOficina().getLocalidad().getNombre()));
+        }else{
+            ht.put("(localidadOficina)", "");
+        }
+        ht.put("(registrosEntrada)", ConvertirTexto.toCp1252(registros));
+        ht.put("(data)", ConvertirTexto.toCp1252(fechaActualCa));
+        ht.put("(fecha)", ConvertirTexto.toCp1252(fechaActualEs));
 
-            // Reemplaza el texto completo
-            ht.put("(read_only)", ConvertirTexto.getISOBytes("\\annotprot\\readprot\\enforceprot1\\protlevel3\\readonlyrecommended "));
+        // Reemplaza el texto completo
+        ht.put("(read_only)", ConvertirTexto.getISOBytes("\\annotprot\\readprot\\enforceprot1\\protlevel3\\readonlyrecommended "));
 
-            return new CombineStream(is, ht);
-
+        return new CombineStream(is, ht);
 
     }
 

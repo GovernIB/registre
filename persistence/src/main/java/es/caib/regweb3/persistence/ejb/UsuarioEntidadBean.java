@@ -78,6 +78,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         q.setParameter("idEntidad",idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -89,6 +90,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "where usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true");
 
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -101,6 +103,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.activo = true order by usuarioEntidad.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -133,6 +136,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             + " where upper(usuarioEntidad.usuario.identificador) = :identificador");
 
         q.setParameter("identificador", identificador.toUpperCase());
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
         if(usuarioEntidad.size() == 1){
@@ -152,6 +156,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.entidad.activo = true");
 
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -167,6 +172,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         q.setParameter("identificador",identificador.toUpperCase());
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
         if(usuarioEntidad.size() == 1){
@@ -186,6 +192,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         q.setParameter("identificador",identificador.toUpperCase());
         q.setParameter("codigoEntidad",codigoEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
         if(usuarioEntidad.size() == 1){
@@ -201,6 +208,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad where usuarioEntidad.usuario.documento = :documento");
 
         q.setParameter("documento",documento);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarioEntidad = q.getResultList();
         if(usuarioEntidad.size() == 1){
@@ -218,6 +226,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.entidad.id= :idEntidad order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
@@ -239,6 +248,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.entidad.id = :idEntidad and usuarioEntidad.activo = true and usuarioEntidad.usuario.rwe_admin = true order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -251,6 +261,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_admin = true and usuarioEntidad.activo = true order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -264,6 +275,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarios =  q.getResultList();
 
@@ -284,6 +296,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("idUsuario", idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarios =  q.getResultList();
 
@@ -302,6 +315,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.entidad.activo = true and usuarioEntidad.activo = true order by usuarioEntidad.entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Entidad> entidades =  new ArrayList<Entidad>();
 
@@ -383,11 +397,13 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         Paginacion paginacion;
 
         if(pageNumber != null){ // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long)q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
+            q.setHint("org.hibernate.readOnly", true);
         }else{
             paginacion = new Paginacion(0, 0);
         }
@@ -421,6 +437,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("idUsuario",idUsuario);
         q.setParameter("tipoUsuario",tipoUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
 
@@ -455,6 +472,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 "usuarioEntidad.entidad.id= :idEntidad and usuarioEntidad.usuario.rwe_usuari = true order by usuarioEntidad.usuario.apellido1");
 
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -559,6 +577,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 q = em.createQuery(query.toString());
             }
 
+            q.setHint("org.hibernate.readOnly", true);
             List<Object[]> result = q.getResultList();
 
             for (Object[] object : result) {
@@ -618,7 +637,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 q = em.createQuery(query.toString());
             }
 
-
+            q.setHint("org.hibernate.readOnly", true);
             List<Object[]> result = q.getResultList();
 
             for (Object[] object : result) {

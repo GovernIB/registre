@@ -64,6 +64,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(interesado.id) from Interesado as interesado");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -76,6 +77,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         Query q = em.createQuery("Select interesado from Interesado as interesado order by interesado.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -88,6 +90,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
         q.setParameter("codigoDir3",codigoDir3);
         q.setParameter("registroDetalle",registroDetalle);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Interesado> interesado = q.getResultList();
         if(interesado.size() > 0){
@@ -131,6 +134,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
                 "interesado.documento = :documento");
 
         q.setParameter("documento",documento);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -142,6 +146,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
         q.setParameter("documento",documento);
         q.setParameter("idInteresado",idInteresado);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -154,6 +159,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
         q.setParameter("idRegistroDetalle",idRegistroDetalle);
         q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<String> result = q.getResultList();
         if(result.size() > 0){
