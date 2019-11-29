@@ -7,17 +7,21 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.ws.BindingProvider;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -130,6 +134,13 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
                endpoint,
                usuario,
                password);
+
+            if(endpoint.startsWith("https") && Configuracio.isDevelopment()){
+                XTrustProvider.install();
+            }
+            
+            // Le especificamos un timeout mayor que el habitual (1 minuto)
+            setTimeoutWSCall(client, 300000);
 
             client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
 
@@ -544,5 +555,17 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             log.info("Anexo: " + anexo.getTitulo());
             throw new Exception("Error: Tipus Firma o Perfil Firma no poden ser buits");
         }*/
+    }
+
+    /**
+     * Añade un timeout espeficio a la llamada WS
+     * @param client
+     * @param timeout
+     */
+    private void setTimeoutWSCall(BustiaV1 client, Integer timeout) {
+
+        Map<String, Object> reqContext = ((BindingProvider) client).getRequestContext();
+        reqContext.put("javax.xml.ws.client.connectionTimeout", timeout);
+        reqContext.put("javax.xml.ws.client.receiveTimeout", timeout);
     }
 }
