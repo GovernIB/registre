@@ -1,6 +1,7 @@
 package es.caib.regweb3.plugins.distribucion.goib;
 
 
+import es.caib.distribucio.core.api.exception.ValidationException;
 import es.caib.distribucio.ws.v1.bustia.*;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -133,6 +134,14 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             client.enviarAnotacioRegistreEntrada(entidadCodigo, unidadAdministrativaCodigo, registreAnotacio);
 
             return true;
+
+        }catch (ValidationException ve){
+            //todo Eliminar este parche, cuando Distribució retorne true al detectar una anotación repetida
+            if(ve.getLocalizedMessage().contains("ja ha estat donada")){
+                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida");
+                return true;
+            }
+            throw new Exception(ve);
         } catch (Exception e) {
             throw new Exception(e);
         }
