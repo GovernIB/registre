@@ -242,7 +242,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         String fecha = PropiedadGlobalUtil.getFechaOficiosSalida(); // Fecha a partir de la cual se generarán oficios de salida
 
-
         //Añadido marilen, si no se busca antes da un lazy al intentar cargar las relacionesOrganizativasOfi en el método getByOficinaActiva
         Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
@@ -313,6 +312,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
             q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
+            q.setHint("org.hibernate.readOnly", true);
 
             List<RegistroSalida> registros = q.getResultList();
 
@@ -380,7 +380,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
 
         //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
-
+        q.setHint("org.hibernate.readOnly", true);
         List<Long> registros = q.getResultList();
 
         for (Long idRegistro : registros) {
@@ -428,7 +428,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         }
 
         //q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
-
+        q.setHint("org.hibernate.readOnly", true);
         List<Long> registros = q.getResultList();
 
         for (Long idRegistro : registros) {
@@ -472,9 +472,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Modificamos el estado del RegistroSalida
         cambiarEstadoHistorico(registroSalida, RegwebConstantes.REGISTRO_VALIDO, usuarioEntidad);
-
     }
-
 
     /**
      * Convierte los resultados de una query en una lista de {@link es.caib.regweb3.model.utils.RegistroBasico}

@@ -58,51 +58,51 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
-        Query query = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.numeroReintentos asc");
-        query.setParameter("tipo", tipo);
-        query.setParameter("idEntidad", idEntidad);
-        query.setParameter("maxReintentos", maxReintentos);
+
+        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.numeroReintentos asc");
+        q.setParameter("tipo", tipo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("maxReintentos", maxReintentos);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(total != null) {
-            query.setMaxResults(total);
+            q.setMaxResults(total);
         }
 
-        return query.getResultList();
-        
+        return q.getResultList();
     }
 
     @Override
     public Cola findByIdObjeto(Long idObjeto,Long idEntidad) throws Exception{
 
+        Query q = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
+        q.setParameter("idObjeto", idObjeto);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
-        Query query = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
-        query.setParameter("idObjeto", idObjeto);
-        query.setParameter("idEntidad", idEntidad);
-
-
-        if(query.getResultList().size()>0){
-            return (Cola)query.getResultList().get(0);
+        if(q.getResultList().size()>0){
+            return (Cola)q.getResultList().get(0);
         }else{
             return null;
         }
-
     }
 
 
 
     @Override
     public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
-        Query query = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos = :maxReintentos order by cola.usuarioEntidad.entidad.id asc");
-        query.setParameter("tipo", tipo);
-        query.setParameter("idEntidad", idEntidad);
-        query.setParameter("maxReintentos", maxReintentos);
+
+        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos = :maxReintentos order by cola.usuarioEntidad.entidad.id asc");
+        q.setParameter("tipo", tipo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("maxReintentos", maxReintentos);
+        q.setHint("org.hibernate.readOnly", true);
 
         if(total != null) {
-            query.setMaxResults(total);
+            q.setMaxResults(total);
         }
 
-        return query.getResultList();
-
+        return q.getResultList();
     }
 
 
@@ -132,6 +132,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         Query q = em.createQuery("Select cola from Cola as cola order by cola.id");
         q.setFirstResult(inicio);
         q.setMaxResults(Cola.RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -163,13 +164,10 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
             where.add("cola.estado = :estado ");
             parametros.put("estado", cola.getEstado());
         }
-        
 
         // Entidad
         where.add("cola.usuarioEntidad.entidad.id = :idEntidad ");
         parametros.put("idEntidad", idEntidad);
-
-
 
         // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
@@ -201,12 +199,13 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         Paginacion paginacion;
 
         if (cola.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), cola.getPageNumber(),Cola.RESULTADOS_PAGINACION);
             int inicio = (cola.getPageNumber() - 1) * Cola.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(Cola.RESULTADOS_PAGINACION);
-
+            q.setHint("org.hibernate.readOnly", true);
 
         } else {
             paginacion = new Paginacion(0, 0);
@@ -215,7 +214,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         paginacion.setListado(q.getResultList());
 
         return paginacion;
-
     }
 
     @Override
@@ -377,8 +375,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
            cola.setError("&nbsp;");
            cola.setEstado(null);
            merge(cola);
-
     }
-
 
 }

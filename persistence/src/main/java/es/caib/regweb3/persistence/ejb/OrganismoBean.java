@@ -77,6 +77,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
@@ -100,6 +101,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(organismo.id) from Organismo as organismo");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -111,6 +113,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.entidad.id = :entidad");
 
         q.setParameter("entidad", entidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -123,6 +126,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.entidad.id = :entidad");
 
         q.setParameter("entidad", entidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos =  new ArrayList<Organismo>();
         List<Object[]> result = q.getResultList();
@@ -143,6 +147,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Query q = em.createQuery("Select organismo from Organismo as organismo order by organismo.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -157,6 +162,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("entidad", entidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -169,6 +175,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismo = q.getResultList();
         if (organismo.size() == 1) {
@@ -190,6 +197,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
@@ -212,6 +220,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismo = q.getResultList();
         if (organismo.size() == 1) {
@@ -231,6 +240,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         if (result.size() == 1) {
@@ -276,6 +286,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidadActiva", idEntidadActiva);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
 
@@ -301,6 +312,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
 
         q.setParameter("entidad", entidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         // Montamos los organismos con los campos obtenidos de la query anterior, pero faltan los libros.
         List<Object[]> result = q.getResultList();
@@ -330,6 +342,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.entidad.id = :entidad");
 
         q.setParameter("entidad", entidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Organismo> organismos = new ArrayList<Organismo>();
@@ -351,6 +364,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q.setParameter("entidad", entidad);
         q.setParameter("codigoEstado", estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Organismo> organismos = new ArrayList<Organismo>();
@@ -375,7 +389,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q.setParameter("entidad", entidad);
         q.setParameter("codigoEstado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         Set<Organismo> organismosConOficinas = new HashSet<Organismo>();
@@ -392,7 +406,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q2.setParameter("entidad", entidad);
         q2.setParameter("codigoEstado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result2 = q2.getResultList();
         Set<Organismo> organismosConOficinasFuncionales = new HashSet<Organismo>();
@@ -416,6 +430,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         q.setParameter("nivel", nivel);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("estado", estado);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos = new ArrayList<Organismo>();
         List<Object[]> result = q.getResultList();
@@ -489,14 +504,17 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
             paginacion = new Paginacion(0, 0);
         }
+
         List<Organismo> organismos = q.getResultList();
         for (Organismo org : organismos) {
             Hibernate.initialize(org.getLibros());
@@ -583,6 +601,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
             LinkedHashSet<Organismo> hijos = new LinkedHashSet<Organismo>();
 
+            q.setHint("org.hibernate.readOnly", true);
+
             List<Object[]> result = q.getResultList();
 
             for (Object[] object : result) {
@@ -614,6 +634,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         Query q = em.createQuery("Select relacionSirOfi from RelacionSirOfi as relacionSirOfi where " +
                 "relacionSirOfi.organismo.id = :idOrganismo ");
+
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RelacionSirOfi> relSir = q.getResultList();
         if (!relSir.isEmpty()) {

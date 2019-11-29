@@ -63,6 +63,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
         Query q = em.createQuery("Select trazabilidadSir from TrazabilidadSir as trazabilidadSir order by trazabilidadSir.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -76,6 +77,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
                 "where trazabilidadSir.registroSir.id = :registroSir order by trazabilidadSir.fecha");
 
         q.setParameter("registroSir", idRegistroSir);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -89,6 +91,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
         q.setParameter("idIntercambio", idIntercambio);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -102,6 +105,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
 
         q.setParameter("registroSir", idRegistroSir);
         q.setParameter("aceptado", RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<TrazabilidadSir> result = q.getResultList();
 

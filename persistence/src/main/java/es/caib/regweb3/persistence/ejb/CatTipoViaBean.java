@@ -62,6 +62,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia order by catTipoVia.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -73,6 +74,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.codigoTipoVia = :codigo");
 
          q.setParameter("codigo", codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
          List<CatTipoVia> catTipoVia = q.getResultList();
          if(catTipoVia.size() == 1){
@@ -90,6 +92,7 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
         Query q = em.createQuery("Select catTipoVia from CatTipoVia as catTipoVia where catTipoVia.descripcionTipoVia = :descripcion");
 
         q.setParameter("descripcion", descripcion);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CatTipoVia> catTipoVia = q.getResultList();
         if(catTipoVia.size() == 1){
@@ -98,5 +101,4 @@ public class CatTipoViaBean extends BaseEjbJPA<CatTipoVia, Long> implements CatT
             return  null;
         }
     }
-
 }

@@ -106,6 +106,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     public Long getTotal() throws Exception {
 
         Query q = em.createQuery("Select count(registroSir.id) from RegistroSir as registroSir");
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -118,6 +119,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Query q = em.createQuery("Select registroSir from RegistroSir as registroSir order by registroSir.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -133,6 +135,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
         q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroSir> registroSir = q.getResultList();
         if(registroSir.size() == 1){
@@ -225,10 +228,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @Override
     public void eliminarRegistroSir(RegistroSir registroSir) throws Exception{
 
-        //RegistroSir registroSir = findById(idRegistroSir);
-
-        log.info("Eliminamos el RegistroSir: " + registroSir.getIdentificadorIntercambio());
-
         List<TrazabilidadSir> trazabilidades = trazabilidadSirEjb.getByRegistroSir(registroSir.getId());
 
         // Eliminamos sus trazabilidades
@@ -238,7 +237,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         for(AnexoSir anexoSir: registroSir.getAnexos()){
             FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
-            log.info("Eliminamos archivo: " + anexoSir.getAnexo().getId());
         }
 
         remove(registroSir);
@@ -336,9 +334,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -396,9 +396,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * BaseEjbJPA.RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -421,6 +423,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroSir> registros = new ArrayList<RegistroSir>();
         List<Object[]> result = q.getResultList();
@@ -452,6 +455,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("oficinaSir", oficinaSir);
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
         q.setParameter("no_acompanya", RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC.toString());
+        q.setHint("org.hibernate.readOnly", true);
 
         return  (Long) q.getSingleResult();
     }
@@ -936,6 +940,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO);
         q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setHint("org.hibernate.readOnly", true);
 
         return  q.getResultList();
 
@@ -954,6 +959,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ERROR);
         q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ERROR);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosSir(idEntidad));
+        q.setHint("org.hibernate.readOnly", true);
 
         return  q.getResultList();
 

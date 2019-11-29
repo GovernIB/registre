@@ -54,7 +54,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q = em.createQuery("Select re.id, re.numeroRegistroFormateado, re.fecha, re.libro.nombre, re.usuario.usuario.identificador, re.estado " +
                 "from RegistroEntrada as re where re.id = :idRegistroEntrada ");
 
-
+        q.setHint("org.hibernate.readOnly", true);
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
 
         List<Object[]> result = q.getResultList();
@@ -220,9 +220,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -250,6 +252,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
                 "from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
+        q.setHint("org.hibernate.readOnly", true);
         q.setMaxResults(total);
         q.setParameter("idOficinaActiva", idOficina);
         q.setParameter("idEstado", idEstado);
@@ -265,7 +268,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q;
         Query q2;
 
-
         q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.id = :idOficinaActiva " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
@@ -278,13 +280,14 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q2.setParameter("idOficinaActiva", idOficinaActiva);
         q2.setParameter("idEstado", idEstado);
 
-
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -323,9 +326,11 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -347,6 +352,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         q.setParameter("idOficinaActiva", idOficinaActiva);
         q.setParameter("idEstado", idEstado);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -365,6 +371,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -381,6 +388,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         q.setParameter("libros", libros);
         q.setParameter("idEstado", idEstado);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -395,6 +403,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
         q.setParameter("codigoEntidad", codigoEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroEntrada> registro = q.getResultList();
 
@@ -410,14 +419,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     @SuppressWarnings(value = "unchecked")
     public RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
-
        RegistroEntrada registroEntrada = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
        if(registroEntrada != null){
            return cargarAnexosFull(registroEntrada);
        }else{
            return null;
        }
-
 
     }
 
@@ -435,6 +442,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("numero", numero);
         q.setParameter("anyo", anyo);
         q.setParameter("libro", libro);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroEntrada> registro = q.getResultList();
 
@@ -453,7 +461,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
               );
 
         q.setParameter("idRegistroDetalle", idRegistroDetalle);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         List<String> registro = q.getResultList();
 
@@ -474,6 +482,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q = em.createQuery("Select registroEntrada.libro.id from RegistroEntrada as registroEntrada where registroEntrada.id = :idRegistroEntrada ");
 
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Long> libros = q.getResultList();
 
@@ -496,6 +505,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("idRegistro", idRegistro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -506,6 +516,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q;
 
         q = em.createQuery(query);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -550,6 +561,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.libro.id = :idLibro ");
 
         q.setParameter("idLibro", idLibro);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -562,6 +574,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.usuario.id = :idUsuarioEntidad ");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult() > 0;
     }
@@ -574,6 +587,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         q.setParameter("idRegistroEntrada", idRegistroEntrada);
         q.setParameter("idEstado", idEstado);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult() > 0;
     }
@@ -602,6 +616,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Query q = em.createQuery("Select registroEntrada from RegistroEntrada as registroEntrada where registroEntrada.registroDetalle.identificadorIntercambio = :identificadorIntercambio ");
 
         q.setParameter("identificadorIntercambio", identificadorIntercambio);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (RegistroEntrada) q.getResultList().get(0);
     }
@@ -628,13 +643,14 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q2.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q2.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
 
-
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * RESULTADOS_PAGINACION;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(RESULTADOS_PAGINACION);
         } else {
@@ -661,6 +677,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("idOficinaActiva", idOficina);
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
         List<Object[]> result = q.getResultList();
@@ -692,6 +709,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("idOficinaActiva", idOficina);
         q.setParameter("rechazado", RegwebConstantes.REGISTRO_RECHAZADO);
         q.setParameter("reenviado", RegwebConstantes.REGISTRO_REENVIADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
     }
@@ -729,6 +747,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("documento", documento.trim());
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -744,6 +763,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("documento", documento);
         q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
         q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroEntrada> registros = q.getResultList();
 

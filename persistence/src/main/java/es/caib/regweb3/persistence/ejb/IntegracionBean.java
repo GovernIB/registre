@@ -72,6 +72,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         Query q = em.createQuery("Select integracion from Integracion as integracion order by integracion.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -82,6 +83,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         Query q = em.createQuery("Select integracion from Integracion as integracion where integracion.entidad.id = :idEntidad order by integracion.id");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -96,6 +98,7 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("numeroRegistro",numeroRegistro);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -133,7 +136,6 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
             parametros.put("numRegFormat", "%" + integracion.getNumRegFormat() + "%");
         }
 
-
         // Añadimos los parámetros a la query
         if (parametros.size() != 0) {
             query.append("where ");
@@ -164,11 +166,13 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         Paginacion paginacion;
 
         if (integracion.getPageNumber() != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), integracion.getPageNumber(), Integracion.RESULTADOS_PAGINACION);
             int inicio = (integracion.getPageNumber() - 1) * Integracion.RESULTADOS_PAGINACION;
             q.setFirstResult(inicio);
             q.setMaxResults(Integracion.RESULTADOS_PAGINACION);
+            q.setHint("org.hibernate.readOnly", true);
         } else {
             paginacion = new Paginacion(0, 0);
         }
@@ -193,8 +197,8 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -2); //el -2 indica que se le restaran 3 dias
         q.setParameter("fecha", hoy.getTime());
-
         q.setMaxResults(10);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 

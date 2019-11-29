@@ -64,6 +64,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia order by catProvincia.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -71,17 +72,17 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
     @Override
     @SuppressWarnings("unchecked")
     public CatProvincia findByCodigo(Long codigo) throws Exception {
-         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.codigoProvincia = :codigo");
+        Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.codigoProvincia = :codigo");
 
-         q.setParameter("codigo",codigo);
+        q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
-         List<CatProvincia> catProvincia = q.getResultList();
-         if(catProvincia.size() == 1){
-             return catProvincia.get(0);
-         }else{
-             return  null;
-         }
-
+        List<CatProvincia> catProvincia = q.getResultList();
+        if(catProvincia.size() == 1){
+            return catProvincia.get(0);
+        }else{
+            return  null;
+        }
     }
 
     @Override
@@ -91,6 +92,7 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
         Query q = em.createQuery("Select catProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
 
         q.setParameter("codigoComunidad", codigoComunidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -102,6 +104,8 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
         Query q = em.createQuery("Select catProvincia.codigoProvincia, catProvincia.descripcionProvincia from CatProvincia as catProvincia where catProvincia.comunidadAutonoma.codigoComunidad = :codigoComunidad order by catProvincia.descripcionProvincia");
 
         q.setParameter("codigoComunidad", codigoComunidad);
+        q.setHint("org.hibernate.readOnly", true);
+
         List<Object[]> provincias = q.getResultList();
 
         List<ObjetoBasico> provinciasob = new ArrayList<ObjetoBasico>();
@@ -111,5 +115,4 @@ public class CatProvinciaBean extends BaseEjbJPA<CatProvincia, Long> implements 
         }
         return provinciasob;
     }
-
 }

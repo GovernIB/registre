@@ -70,6 +70,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
 
         Query q = em.createQuery("Select modelo.id, modelo.nombre from ModeloOficioRemision as modelo where modelo.entidad.id = :idEntidad");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<ModeloOficioRemision> modelos =  new ArrayList<ModeloOficioRemision>();
 
@@ -90,6 +91,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
         Query q = em.createQuery("Select modeloOficioRemision from ModeloOficioRemision as modeloOficioRemision order by modeloOficioRemision.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -102,6 +104,7 @@ public class ModeloOficioRemisionBean extends BaseEjbJPA<ModeloOficioRemision, L
         q.setParameter("idEntidad",idEntidad);
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }

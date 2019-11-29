@@ -64,6 +64,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
         Query q = em.createQuery("Select contador from Contador as contador order by contador.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }

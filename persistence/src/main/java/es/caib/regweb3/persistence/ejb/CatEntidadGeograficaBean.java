@@ -62,6 +62,7 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
         Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica order by catEntidadGeografica.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -72,6 +73,7 @@ public class CatEntidadGeograficaBean extends BaseEjbJPA<CatEntidadGeografica, L
         Query q = em.createQuery("Select catEntidadGeografica from CatEntidadGeografica as catEntidadGeografica where catEntidadGeografica.codigoEntidadGeografica = :codigo");
 
         q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CatEntidadGeografica> catEntidadGeografica = q.getResultList();
         if(catEntidadGeografica.size() == 1){

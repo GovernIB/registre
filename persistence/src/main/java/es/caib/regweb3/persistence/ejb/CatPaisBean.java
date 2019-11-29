@@ -62,6 +62,7 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
         Query q = em.createQuery("Select catPais from CatPais as catPais order by catPais.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -69,17 +70,16 @@ public class CatPaisBean extends BaseEjbJPA<CatPais, Long> implements CatPaisLoc
     @Override
     @SuppressWarnings(value = "unchecked")
     public CatPais findByCodigo(Long codigo) throws Exception {
-         Query q = em.createQuery("Select catPais from CatPais as catPais where catPais.codigoPais = :codigo");
+        Query q = em.createQuery("Select catPais from CatPais as catPais where catPais.codigoPais = :codigo");
 
-         q.setParameter("codigo",codigo);
+        q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
-         List<CatPais> catPais = q.getResultList();
-         if(catPais.size() == 1){
-             return catPais.get(0);
-         }else{
-             return  null;
-         }
-
+        List<CatPais> catPais = q.getResultList();
+        if(catPais.size() == 1){
+            return catPais.get(0);
+        }else{
+            return  null;
+        }
     }
-
 }

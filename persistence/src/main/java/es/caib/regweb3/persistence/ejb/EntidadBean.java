@@ -203,6 +203,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         Query q = em.createQuery("Select organismo.id from Organismo as organismo where organismo.entidad.id = :idEntidad");
 
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Long> organismos = q.getResultList();
 
@@ -217,6 +218,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
                 "and usuarioEntidad.usuario.id = :idUsuario and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Entidad> entidades =  new ArrayList<Entidad>();
 
@@ -239,6 +241,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
                 "and entidad.activo = true order by entidad.id");
 
         q.setParameter("idUsuario",idUsuario);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Entidad> entidades =  new ArrayList<Entidad>();
 
@@ -267,6 +270,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         q.setParameter("codigo",codigo);
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }

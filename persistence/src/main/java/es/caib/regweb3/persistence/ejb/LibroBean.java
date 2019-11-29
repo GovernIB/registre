@@ -74,6 +74,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         Query q = em.createQuery("Select libro from Libro as libro order by libro.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -84,6 +85,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         Query q = em.createQuery("Select libro.id, libro.nombre,libro.codigo, libro.organismo.id,libro.organismo.denominacion from Libro as libro where libro.activo = true and libro.organismo.entidad.id = :idEntidad order by libro.id");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libros =  new ArrayList<Libro>();
 
@@ -108,6 +110,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         q.setParameter("codigo",codigo);
         q.setParameter("idLibro",idLibro);
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
 
@@ -120,6 +123,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         Query q = em.createQuery("Select libro from Libro as libro where libro.codigo = :codigo");
 
         q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libro = q.getResultList();
         if(libro.size() == 1){
@@ -140,6 +144,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         q.setParameter("codigo",codigo);
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Libro> libro = q.getResultList();
 
@@ -158,6 +163,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
                 "libro.organismo.id = :idOrganismo and libro.activo = true");
 
         q.setParameter("idOrganismo",idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList().size() > 0;
     }
@@ -171,6 +177,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
                 "libro.organismo.id = :idOrganismo and libro.activo = true");
 
         q.setParameter("idOrganismo",idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Libro> libros = new ArrayList<Libro>();
@@ -192,6 +199,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
                 "libro.organismo.codigo = :codigoOrganismo and libro.activo = true");
 
         q.setParameter("codigoOrganismo",codigoOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Libro> libros = new ArrayList<Libro>();
@@ -214,6 +222,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         q.setParameter("codigoOrganismo",codigoOrganismo);
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Libro> libros = new ArrayList<Libro>();
@@ -235,6 +244,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
                 "libro.organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo",idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
 
         return  q.getResultList();
     }
@@ -247,7 +257,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
                 "libro.organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
-
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
         List<Libro> libros = new ArrayList<Libro>();
@@ -266,6 +276,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         Query q = em.createQuery("Select libro from Libro as libro where libro.organismo.entidad.id = :idEntidad order by libro.id");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -275,6 +286,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         Query q = em.createQuery("Select count(libro.id) from Libro as libro where libro.organismo.entidad.id = :idEntidad");
         q.setParameter("idEntidad",idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long)q.getSingleResult()>0;
     }
@@ -315,6 +327,7 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<Object[]> result = q.getResultList();
 

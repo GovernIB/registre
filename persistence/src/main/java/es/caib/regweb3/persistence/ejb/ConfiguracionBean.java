@@ -62,6 +62,7 @@ public class ConfiguracionBean extends BaseEjbJPA<Configuracion, Long> implement
         Query q = em.createQuery("Select configuracion from Configuracion as configuracion order by configuracion.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }

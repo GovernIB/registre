@@ -63,6 +63,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad order by catLocalidad.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -70,18 +71,19 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
     @Override
     @SuppressWarnings(value = "unchecked")
     public CatLocalidad findByCodigo(Long codigoLocalidad, Long codigoProvincia, String codigoEntidadGeografica) throws Exception {
-         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia and catLocalidad.entidadGeografica.codigoEntidadGeografica =:codigoEntidadGeografica");
+        Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.codigoLocalidad =:codigoLocalidad and catLocalidad.provincia.codigoProvincia =:codigoProvincia and catLocalidad.entidadGeografica.codigoEntidadGeografica =:codigoEntidadGeografica");
 
-         q.setParameter("codigoLocalidad", codigoLocalidad);
-         q.setParameter("codigoProvincia", codigoProvincia);
-         q.setParameter("codigoEntidadGeografica",codigoEntidadGeografica);
+        q.setParameter("codigoLocalidad", codigoLocalidad);
+        q.setParameter("codigoProvincia", codigoProvincia);
+        q.setParameter("codigoEntidadGeografica",codigoEntidadGeografica);
+        q.setHint("org.hibernate.readOnly", true);
 
-         List<CatLocalidad> catLocalidad = q.getResultList();
-         if(catLocalidad.size() == 1){
-             return catLocalidad.get(0);
-         }else{
-             return  null;
-         }
+        List<CatLocalidad> catLocalidad = q.getResultList();
+        if(catLocalidad.size() == 1){
+            return catLocalidad.get(0);
+        }else{
+            return  null;
+        }
 
     }
 
@@ -96,6 +98,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
         q.setParameter("codigoLocalidad",codigoLocalidad);
         q.setParameter("codigoProvincia",codigoProvincia);
         q.setParameter("entidadGeografica", RegwebConstantes.ENTIDAD_GEOGRAFICA_MUNICIPIO);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CatLocalidad> catLocalidad = q.getResultList();
         if(catLocalidad.size() > 0){
@@ -116,9 +119,9 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
 
         q.setParameter("idProvincia",idProvincia);
         q.setParameter("entidadGeografica", RegwebConstantes.ENTIDAD_GEOGRAFICA_MUNICIPIO);
+        q.setHint("org.hibernate.readOnly", true);
 
         return  q.getResultList();
-
     }
 
     @Override
@@ -128,6 +131,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.provincia.codigoProvincia = :codigoProvincia order by catLocalidad.nombre");
 
         q.setParameter("codigoProvincia", codigoProvincia);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -140,6 +144,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
         Query q = em.createQuery("Select catLocalidad.codigoLocalidad, catLocalidad.nombre, catLocalidad.entidadGeografica.codigoEntidadGeografica from CatLocalidad as catLocalidad where catLocalidad.provincia.codigoProvincia = :codigoProvincia order by catLocalidad.nombre");
 
         q.setParameter("codigoProvincia", codigoProvincia);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
@@ -152,6 +157,7 @@ public class CatLocalidadBean extends BaseEjbJPA<CatLocalidad, Long> implements 
         Query q = em.createQuery("Select catLocalidad from CatLocalidad as catLocalidad where catLocalidad.nombre =:nombre");
 
         q.setParameter("nombre",nombre);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CatLocalidad> catLocalidad = q.getResultList();
         if(catLocalidad.size() == 1){

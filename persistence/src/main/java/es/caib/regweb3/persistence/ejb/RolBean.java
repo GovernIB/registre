@@ -65,6 +65,7 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
         Query q = em.createQuery("Select rol from Rol as rol order by rol.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -76,6 +77,7 @@ public class RolBean extends BaseEjbJPA<Rol, Long> implements RolLocal{
         Query q = em.createQuery("Select rol from Rol as rol where rol.nombre IN (:roles) order by rol.orden");
 
         q.setParameter("roles",roles);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 

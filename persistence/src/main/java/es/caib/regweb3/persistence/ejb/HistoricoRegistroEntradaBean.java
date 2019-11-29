@@ -69,6 +69,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         Query q = em.createQuery("Select historicoRegistroEntrada from HistoricoRegistroEntrada as historicoRegistroEntrada order by historicoRegistroEntrada.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -78,8 +79,8 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     public List<HistoricoRegistroEntrada> getByRegistroEntrada(Long idRegistro) throws Exception {
 
         Query q = em.createQuery("Select hre.id, hre.registroEntradaOriginal, hre.estado, hre.fecha, hre.modificacion, hre.usuario.id, hre.usuario.usuario from HistoricoRegistroEntrada as hre where hre.registroEntrada.id =:idRegistro order by hre.fecha desc");
-      q.setParameter("idRegistro", idRegistro);
-
+        q.setParameter("idRegistro", idRegistro);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<HistoricoRegistroEntrada> hres = new ArrayList<HistoricoRegistroEntrada>();
 
@@ -98,7 +99,6 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
     @Override
     public HistoricoRegistroEntrada crearHistoricoRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad, String modificacion, boolean serializar) throws Exception{
 
-        
         HistoricoRegistroEntrada historico = new HistoricoRegistroEntrada();
 
         historico.setEstado(registroEntrada.getEstado());
@@ -124,6 +124,7 @@ public class HistoricoRegistroEntradaBean extends BaseEjbJPA<HistoricoRegistroEn
         q = em.createQuery("Select count(hre.id) from HistoricoRegistroEntrada as hre where hre.usuario.id = :idUsuarioEntidad ");
 
         q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
+        q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult() > 0;
     }

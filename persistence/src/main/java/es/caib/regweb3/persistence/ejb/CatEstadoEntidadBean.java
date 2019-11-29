@@ -62,6 +62,7 @@ public class CatEstadoEntidadBean extends BaseEjbJPA<CatEstadoEntidad, Long> imp
         Query q = em.createQuery("Select catEstadoEntidad from CatEstadoEntidad as catEstadoEntidad order by catEstadoEntidad.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -72,6 +73,7 @@ public class CatEstadoEntidadBean extends BaseEjbJPA<CatEstadoEntidad, Long> imp
         Query q = em.createQuery("Select catEstadoEntidad from CatEstadoEntidad as catEstadoEntidad where catEstadoEntidad.codigoEstadoEntidad = :codigo");
 
         q.setParameter("codigo",codigo);
+        q.setHint("org.hibernate.readOnly", true);
 
         List<CatEstadoEntidad> catEstadoEntidad = q.getResultList();
         if(catEstadoEntidad.size() == 1){

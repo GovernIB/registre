@@ -64,6 +64,7 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
         Query q = em.createQuery("Select modificacionLopdMigrado from ModificacionLopdMigrado as modificacionLopdMigrado order by modificacionLopdMigrado.id");
         q.setFirstResult(inicio);
         q.setMaxResults(RESULTADOS_PAGINACION);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
@@ -77,10 +78,9 @@ public class ModificacionLopdMigradoBean extends BaseEjbJPA<ModificacionLopdMigr
                 "modificacionLopdMigrado.registroMigrado.id = :numRegistroMigrado order by modificacionLopdMigrado.fecha asc");
 
         q.setParameter("numRegistroMigrado", numRegistroMigrado);
+        q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
 
     }
-
-
 }
