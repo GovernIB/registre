@@ -220,7 +220,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
-            q.setHint("org.hibernate.readOnly", true);
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber);
             int inicio = (pageNumber - 1) * RESULTADOS_PAGINACION;

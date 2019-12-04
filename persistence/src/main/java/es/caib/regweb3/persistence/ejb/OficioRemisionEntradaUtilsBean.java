@@ -418,9 +418,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
         } else {
@@ -490,9 +492,11 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
+            q2.setHint("org.hibernate.readOnly", true);
             Long total = (Long) q2.getSingleResult();
             paginacion = new Paginacion(total.intValue(), pageNumber, resultsPerPage);
             int inicio = (pageNumber - 1) * resultsPerPage;
+            q.setHint("org.hibernate.readOnly", true);
             q.setFirstResult(inicio);
             q.setMaxResults(resultsPerPage);
         } else {
