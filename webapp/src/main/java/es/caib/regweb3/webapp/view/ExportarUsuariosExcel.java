@@ -251,6 +251,10 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
             if(libro == null) {
                 nombreFichero = getMessage("usuario.exportar.fichero") + ".xls";
             }else{
+                libro = libro.replace(".","_");
+                libro = libro.replace(" ","_");
+                libro = libro.replace(",","");
+                libro = libro.replace("'","_");
                 nombreFichero = getMessage("usuario.exportar.fichero") + "_" + libro + ".xls";
             }
 
