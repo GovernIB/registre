@@ -13,12 +13,11 @@
 </head>
 
 <body style="background-image:none !important;">
-
 <c:if test="${not empty closeAndReload}">
 
 <script type="text/javascript" >
 
-  parent.closeAndReload();
+parent.closeAndReload();
 
 </script>
 
@@ -51,9 +50,6 @@
                                 <div>NO IFRAME</div>
                             </iframe>
                         </div>
-                    </div>
-                    <div class="col-xs-1 pull-right">
-                        <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="$('#reload').show();"><spring:message code="regweb.guardar"/></button>
                     </div>
                 </div>
             </c:if>

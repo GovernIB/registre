@@ -1,12 +1,10 @@
 package es.caib.regweb3.webapp.controller.registro;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -14,6 +12,7 @@ import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
@@ -71,10 +70,12 @@ public class AnexoController extends BaseController {
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     private ScanWebModuleLocal scanWebModuleEjb;
 
+    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
+    private SignatureServerLocal signatureServerEjb;
+
 
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
-    public String crearAnexoGet2(HttpServletRequest request,
-                                 HttpServletResponse response, Model model) throws I18NException, Exception {
+    public String crearAnexoGet2(HttpServletRequest request, Model model ) throws I18NException, Exception {
 
         //Recibimos de sesión los datos en anexoForm
         AnexoForm anexoForm = (AnexoForm) request.getSession().getAttribute("anexoForm");
@@ -98,6 +99,28 @@ public class AnexoController extends BaseController {
 
         //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
+
+        boolean isSIR = anexoForm.getOficioRemisionSir();
+
+        //Validamos las condiciones de SIR
+        if (isSIR) {
+            String docExtension = "";
+            String firmaExtension = "";
+            long docSize = -1;
+            long firmaSize = -1;
+            //obtenemos tamaño y extensión del documento
+            if (anexoForm.getDocumentoCustody() != null) {
+                docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
+                docSize = anexoForm.getDocumentoCustody().getLength();
+            }
+            //obtenemos tamaño y extensión de la firma
+            if (anexoForm.getSignatureCustody() != null) {
+                firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
+                firmaSize = anexoForm.getSignatureCustody().getLength();
+            }
+            //validamos las limitaciones SIR
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, true);
+        }
 
         if (!result.hasErrors()) { // Si no hay errores
 
@@ -127,7 +150,6 @@ public class AnexoController extends BaseController {
         // si hay errores, volvemos al formulario cargando los valores comunes
         loadCommonAttributes(request, model);
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
-
         return "registro/formularioAnexo";
 
     }
@@ -620,6 +642,30 @@ public class AnexoController extends BaseController {
                 new CustomDateEditor(new SimpleDateFormat("dd/MM/yyyy"), true, 10));
 
 
+    }
+
+
+    /**
+     * Método que valida la firma indicada en el AnexoForm que recibimos.
+     * @param request
+     * @param anexoForm
+     * @throws I18NException
+     */
+    protected void validarAnexoForm(HttpServletRequest request, AnexoForm anexoForm) throws I18NException {
+        Entidad entidad = getEntidadActiva(request);
+        final boolean force = false; //Indica si queremos forzar la excepción.
+        I18NTranslation i18n;
+        if (anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) {// Si no tiene firma no se valida
+            i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
+               I18NUtils.getLocale(), force);
+            if (i18n != null) {
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
+                Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
+            }
+            if (anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_ERROR) {
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("error.firmanovalida") + anexoForm.getAnexo().getMotivoNoValidacion());
+            }
+        }
     }
 
 
