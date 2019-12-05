@@ -6,7 +6,6 @@
 <head>
     <title><spring:message code="regweb.titulo"/></title>
     <c:import url="../modulos/imports.jsp"/>
-    
     <c:if test="${teScan}">
       ${headerScan}
     </c:if>
@@ -18,7 +17,16 @@
 
 <script type="text/javascript" >
 
-  parent.closeAndReload();
+  //Amb aquest codi funciona tant per si ve d'scan o de fitxer
+  $('#targetiframe').attr('src', '');
+  $('#targetiframe').removeClass('iframeAnexo');
+  $('#targetiframe').removeClass('iframeAnexoFile');
+  $('#targetiframe').removeClass('iframeAnexoGros');
+  $('#targetiframe').removeClass('iframeAnexoFileGros');
+  $('#targetiframe').removeClass('iframeScan');
+  $('#targetiframe').height('');
+  $('#modalAnexos').find('.modal-content').css('height', '');
+  parent.parent.window.location.href=parent.parent.window.location.href;
 
 </script>
 
@@ -113,122 +121,145 @@
                             <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                 <label for="validezDocumento" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.validez"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="anexo.validezDocumento"/></label>
                                 </div>
-                                <div class="col-xs-9">
-                                    <form:select path="anexo.validezDocumento" class="chosen-select">
-                                        <%--<form:option value="-1">...</form:option>--%>
-                                        <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
-                                            <form:option value="${validezDocumento}"><spring:message code="tipoValidezDocumento.${validezDocumento}"/></form:option>
-                                        </c:forEach>
-                                    </form:select>
+                                <div class="col-xs-9 radioButton">
+                                    <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
+                                        <label class="radio">
+                                            <c:if test="${validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA}">
+                                                <form:radiobutton  path="anexo.validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"  checked = "cheked"/><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>
+                                            </c:if>
+                                            <c:if test="${validezDocumento != RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA}">
+                                                <form:radiobutton  path="anexo.validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481" /><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>
+                                            </c:if>
+                                        </label>
+                                    </c:forEach>
                                     <form:errors path="anexo.validezDocumento" cssClass="label label-danger"/>
                                 </div>
-                        </div>
-
-                        <div class="col-xs-6">
-                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                <label for="observacionesAnexo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observacionesAnexo"/>" data-toggle="popover"><spring:message code="anexo.observaciones"/></label>
                             </div>
-                            <div class="col-xs-9">
-                                <form:textarea path="anexo.observaciones" class="form-control" rows="2"  maxlength="50"/>
-                                <form:errors path="anexo.observaciones" cssClass="label label-danger"/>
-                            </div>
-                        </div>
-                    </div>
 
 
 
-                    <div class="form-group col-xs-12" id="divmodofirma">
-                        <div class="col-xs-6">
-                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                              <label for="tipoFirma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoFirma"/>" data-toggle="popover"><spring:message code="anexo.tipofirma"/></label>
-                            </div>
-                            <div class="col-xs-9 campFormText">
-                              <c:choose>
-                                  <c:when test="${anexoForm.anexo.modoFirma == 1}">
-                                      <spring:message code="anexo.tipofirma.attached"/>
-                                  </c:when>
-                                  <c:when test="${anexoForm.anexo.modoFirma == 2}">
-                                      <spring:message code="anexo.tipofirma.detached"/>
-                                  </c:when>
-                                  <c:when test="${anexoForm.anexo.modoFirma == 0}">
-                                      <spring:message code="anexo.tipofirma.sinfirma"/>
-                                  </c:when>
-                              </c:choose>
-                            </div>
-                        </div>
-
-                    </div>
-
-
-
-
-                    <!--ANEXO-->
-                    <c:if test="${not empty anexoForm.documentoCustody}">
-                        <div class="form-group col-xs-12">
-                            <div class="col-xs-6" id="divInputArchivo">
+                            <div class="col-xs-6">
                                 <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                   <label for="documentoFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombreDoc"/>" data-toggle="popover"><spring:message code="anexo.archivo"/></label>
+                                    <label for="observacionesAnexo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.observacionesAnexo"/>" data-toggle="popover"><spring:message code="anexo.observaciones"/></label>
+                                </div>
+                                <div class="col-xs-9">
+                                    <form:textarea path="anexo.observaciones" class="form-control" rows="2"  maxlength="50"/>
+                                    <form:errors path="anexo.observaciones" cssClass="label label-danger"/>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group col-xs-12" id="divmodofirma">
+                            <div class="col-xs-6">
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                    <label for="tipoFirma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoFirma"/>" data-toggle="popover"><spring:message code="anexo.tipofirma"/></label>
                                 </div>
                                 <div class="col-xs-9 campFormText">
-                                    <c:if test="${empty anexoForm.anexo.id}">
-                                        <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
-                                                ${anexoForm.documentTituloCorto}
-                                        </a>
+                                    <c:choose>
+                                        <c:when test="${anexoForm.anexo.modoFirma == 1}">
+                                            <spring:message code="anexo.tipofirma.attached"/>
+                                        </c:when>
+                                        <c:when test="${anexoForm.anexo.modoFirma == 2}">
+                                            <spring:message code="anexo.tipofirma.detached"/>
+                                        </c:when>
+                                        <c:when test="${anexoForm.anexo.modoFirma == 0}">
+                                            <spring:message code="anexo.tipofirma.sinfirma"/>
+                                        </c:when>
+                                    </c:choose>
+                                </div>
+                            </div>
 
+                        </div>
+
+
+
+                        <!--ANEXO-->
+                        <c:if test="${not empty anexoForm.documentoCustody}">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6" id="divInputArchivo">
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                       <label for="documentoFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombreDoc"/>" data-toggle="popover"><spring:message code="anexo.archivo"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">
+                                        <c:if test="${empty anexoForm.anexo.id}">
+                                            <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
+                                                    ${anexoForm.documentTituloCorto}
+                                            </a>
+
+                                        </c:if>
+                                        <c:if test="${not empty anexoForm.anexo.id}">
+                                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
+                                                    ${anexoForm.documentTituloCorto}</a>
+                                        </c:if>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6" >
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                        <label><spring:message code="anexo.mime.documento"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">
+                                         ${anexoForm.docMime}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </c:if>
+                        <!--FIN ANEXO-->
+
+                        <!--FIRMA -->
+                        <c:if test="${not empty anexoForm.signatureCustody}">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6" id="divInputFirma">
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                       <label for="firmaFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombreFirma"/>" data-toggle="popover"><spring:message code="anexo.firma"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">
+                                    <c:if test="${empty anexoForm.anexo.id}">
+                                        <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
+                                                ${anexoForm.signaturaTituloCorto}</a>
                                     </c:if>
                                     <c:if test="${not empty anexoForm.anexo.id}">
-                                        <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
-                                                ${anexoForm.documentTituloCorto}</a>
+                                        <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">
+                                                ${anexoForm.signaturaTituloCorto}</a>
                                     </c:if>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6" >
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                        <label><spring:message code="anexo.mime.firma"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">
+                                            ${anexoForm.signMime}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-xs-6" >
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <label><spring:message code="anexo.mime.documento"/></label>
-                                </div>
-                                <div class="col-xs-9 campFormText">
-                                     ${anexoForm.docMime}
-                                </div>
-                            </div>
-                        </div>
+                        </c:if>
+                        <!--FIN FIRMA-->
 
-                    </c:if>
-                    <!--FIN ANEXO-->
+                        <!-- METADATOS ESCANEO -->
+                        <!--PENDENT DE QUE ME DIGUIN DE DGTIC COM LES GESTIONAM-->
+                       <%-- <h4><spring:message code="anexo.metadatas"/></h4>
+                        <div class="divider"></div>
 
-                    <!--FIRMA -->
-                    <c:if test="${not empty anexoForm.signatureCustody}">
                         <div class="form-group col-xs-12">
-                            <div class="col-xs-6" id="divInputFirma">
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                   <label for="firmaFile" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.nombreFirma"/>" data-toggle="popover"><spring:message code="anexo.firma"/></label>
+                            <c:forEach var="metadata" items="${anexoForm.metadatas}">
+                                <c:if test="${metadata.key != 'title'}">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                        <label for="metadata" rel="popupAbajo" data-content="" data-toggle="popover">${metadata.key}</label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">${metadata.value}</div>
                                 </div>
-                                <div class="col-xs-9 campFormText">
-                                <c:if test="${empty anexoForm.anexo.id}">
-                                    <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
-                                            ${anexoForm.signaturaTituloCorto}</a>
                                 </c:if>
-                                <c:if test="${not empty anexoForm.anexo.id}">
-                                    <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">
-                                            ${anexoForm.signaturaTituloCorto}</a>
-                                </c:if>
-                                </div>
-                            </div>
-                            <div class="col-xs-6" >
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <label><spring:message code="anexo.mime.firma"/></label>
-                                </div>
-                                <div class="col-xs-9 campFormText">
-                                        ${anexoForm.signMime}
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-                    <!--FIN FIRMA-->
+                            </c:forEach>
+                        </div>--%>
+                    <!-- FIN METADATOS ESCANEO -->
 
                 
-                   <div class="hide col-xs-12 text-center centrat" id="reload">
+                    <div class="hide col-xs-12 text-center centrat" id="reload">
                         <img src="<c:url value="/img/712.GIF"/>" width="20" height="20"/>
-                   </div>
+                    </div>
 
                    <div class="pull-right"> <%--  class="modal-footer" --%>
                         <button id="desaAnnex" type="submit" class="btn btn-warning btn-sm" onclick="eliminarErrors()"><spring:message code="regweb.guardar"/></button>

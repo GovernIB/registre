@@ -3,13 +3,10 @@ package es.caib.regweb3.webapp.controller.registro;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
-import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
@@ -43,9 +40,6 @@ public class AnexoFicheroController extends AnexoController {
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
 
-    @EJB(mappedName = "regweb3/SignatureServerEJB/local")
-    private SignatureServerLocal signatureServerEjb;
-
 
     /**
      * Si arriba aqui és que hi ha un error de  Tamany de Fitxer Superat.
@@ -57,7 +51,7 @@ public class AnexoFicheroController extends AnexoController {
         //En caso de error, actualiza las variables de sesión necesarias
         HttpSession session = request.getSession();
         Long registroDetalleID = (Long) session.getAttribute("LAST_registroDetalleID");
-        String tipoRegistro = (String) session.getAttribute("LAST_tipoRegistro");
+        Long tipoRegistro = (Long) session.getAttribute("LAST_tipoRegistro");
         Long registroID = (Long) session.getAttribute("LAST_registroID");
         Long anexoID = (Long) session.getAttribute("LAST_anexoID");
         Boolean isOficioRemisionSir = (Boolean) session.getAttribute("LAST_isOficioRemisionSir");
@@ -101,37 +95,6 @@ public class AnexoFicheroController extends AnexoController {
 
         log.info(" Passa per ficherosPost");
 
-        // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
-        boolean isSIR = anexoForm.getOficioRemisionSir();
-
-        if (isSIR) { //Verificación de las limitaciones de un anexo via SIR
-            long docSize = -1;
-            String docExtension = "";
-            //Obtenemos extensión y tamaño del archivo
-            if (anexoForm.getDocumentoFile() != null) {
-                docSize = anexoForm.getDocumentoFile().getSize();
-                docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoFile().getOriginalFilename());
-            }
-
-            long firmaSize = -1;
-            String firmaExtension = "";
-            //Obtenemos extensión y tamaño del documento firma
-            if (anexoForm.getFirmaFile() != null) {
-                firmaSize = anexoForm.getFirmaFile().getSize();
-                firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getFirmaFile().getOriginalFilename());
-            }
-            log.info("MODO FIRMA " + anexoForm.getAnexo().getModoFirma());
-            if (anexoForm.getDocumentoFile() != null) {
-                log.info("DocumentoFile " + anexoForm.getDocumentoFile().getOriginalFilename());
-            }
-            if (anexoForm.getFirmaFile() != null) {
-                log.info("FirmaFile " + anexoForm.getFirmaFile().getOriginalFilename());
-            }
-            //Validamos las limitaciones SIR
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, false);
-
-        }
-
         if (result.hasErrors()) {
 
             return "registro/formularioAnexoFichero";
@@ -140,22 +103,8 @@ public class AnexoFicheroController extends AnexoController {
                 //Preparamos los documentcustody, signaturecustody en el anexoForm para pasarlos a la siguiente pantalla
                 manageDocumentCustodySignatureCustody(request, anexoForm);
 
-
-                //Validamos el anexo contra afirma
-                Entidad entidad = getEntidadActiva(request);
-                final boolean force = false; //Indica si queremos forzar la excepción.
-                I18NTranslation i18n;
-                if (anexoForm.getAnexo().getModoFirma() != RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA) { // Si no tiene firma no se valida
-                    i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
-                            I18NUtils.getLocale(), force);
-                    if (i18n != null) {
-                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
-                        Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
-                    }
-                    if (anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_INVALIDA || anexoForm.getAnexo().getEstadoFirma() == RegwebConstantes.ANEXO_FIRMA_ERROR) {
-                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("error.firmanovalida") + anexoForm.getAnexo().getMotivoNoValidacion());
-                    }
-                }
+                //Validamos la firma del anexoForm que nos indican, previo a crear el anexo
+                validarAnexoForm(request, anexoForm);
 
                 request.getSession().setAttribute("anexoForm", anexoForm);
 

@@ -16,6 +16,9 @@ public class AnexoForm extends AnexoFull {
     private Long registroID;
     private Boolean oficioRemisionSir;
     private Boolean permitirAnexoDetached;
+    //propiedades de los anexos escaneados
+    private String pixelType;
+    private String pppResolution;
 
     public AnexoForm() {
         super();
@@ -83,5 +86,21 @@ public class AnexoForm extends AnexoFull {
 
     public void setPermitirAnexoDetached(Boolean permitirAnexoDetached) {
         this.permitirAnexoDetached = permitirAnexoDetached;
+    }
+
+    public String getPixelType() {
+        return pixelType;
+    }
+
+    public void setPixelType(String pixelType) {
+        this.pixelType = pixelType;
+    }
+
+    public String getPppResolution() {
+        return pppResolution;
+    }
+
+    public void setPppResolution(String pppResolution) {
+        this.pppResolution = pppResolution;
     }
 }
