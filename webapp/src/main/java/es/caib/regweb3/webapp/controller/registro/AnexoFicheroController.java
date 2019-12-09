@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -70,16 +69,9 @@ public class AnexoFicheroController extends AnexoController {
                 + "," + tipoRegistro + ", " + registroID + ")");
 
         Entidad entidad = getEntidadActiva(request);
-        //Actualiza las variables con la ultima acción
-        saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-        RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
+        //Actualiza las variables con la ultima acción y prepara el anexoForm
+        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir);
 
-        //Inicializamos el formulario de anexo
-        AnexoForm anexoForm = new AnexoForm();
-        anexoForm.setRegistroID(registroID);
-        anexoForm.setTipoRegistro(tipoRegistro);
-        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
-        anexoForm.setOficioRemisionSir(isOficioRemisionSir);
         anexoForm.setPermitirAnexoDetached(PropiedadGlobalUtil.getPermitirAnexosDetached(entidad.getId()));
         anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
         model.addAttribute("anexoForm", anexoForm);
