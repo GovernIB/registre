@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
@@ -64,85 +63,15 @@ public class AnexoScanController extends AnexoController {
         log.info(" Passa per AnexoScanController::ficherosGet(" + registroDetalleID
                 + "," + tipoRegistro + ", " + registroID + ")");
 
-        //Actualiza las variables con la ultima acción
-        saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-
-        RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
-
-        //Prepara el anexoForm con los datos
-        AnexoForm anexoForm = new AnexoForm();
-        anexoForm.setRegistroID(registroID);
-        anexoForm.setTipoRegistro(tipoRegistro);
-        anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
-        anexoForm.setOficioRemisionSir(isOficioRemisionSir);
-        model.addAttribute("anexoForm", anexoForm);
+       //Actualiza las variables con la ultima acción y prepara el anexoForm
+        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir);
         request.getSession().setAttribute("anexoForm", anexoForm);
         loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
 
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+        model.addAttribute("anexoForm", anexoForm);
         return "registro/formularioAnexoScan";
     }
-
-    /*@RequestMapping(value = "/new", method = RequestMethod.POST)
-    public String crearAnexoPost(@ModelAttribute AnexoForm anexoForm,
-                                 BindingResult result, HttpServletRequest request,
-                                 HttpServletResponse response, Model model) throws Exception, I18NException {
-
-
-        boolean isSIR = anexoForm.getOficioRemisionSir();
-        try {
-            //Preparamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
-            manageDocumentCustodySignatureCustody(request, anexoForm);
-
-            //Validamos el anexo contra afirma
-            //TODO PENDIENTE DE PROVAR
-           *//* Entidad entidad = getEntidadActiva(request);
-            final boolean force = false; //Indica si queremos forzar la excepción.
-            I18NTranslation i18n;
-            i18n = signatureServerEjb.checkDocument(anexoForm, entidad.getId(),
-                    I18NUtils.getLocale(), force);
-            if (i18n != null) {
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix(i18n));
-                Mensaje.saveMessageError(request, I18NUtils.tradueix("error.checkanexosir.avisaradministradors"));
-            }*//*
-
-            if (isSIR) {
-                String docExtension = "";
-                String firmaExtension = "";
-                long docSize = -1;
-                long firmaSize = -1;
-                //obtenemos tamaño y extensión del documento
-                if (anexoForm.getDocumentoCustody() != null) {
-                    docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
-                    docSize = anexoForm.getDocumentoCustody().getLength();
-                }
-                //obtenemos tamaño y extensión de la firma
-                if (anexoForm.getSignatureCustody() != null) {
-                    firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
-                    firmaSize = anexoForm.getSignatureCustody().getLength();
-                }
-                //validamos las limitaciones SIR
-                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, true);
-            }
-
-
-            request.getSession().setAttribute("anexoForm", anexoForm);
-            return "redirect:/anexo/nou2";
-
-        } catch (I18NException i18n) {
-            String msg = I18NUtils.tradueix(i18n.getTraduccio());
-            log.error(msg, i18n);
-            Mensaje.saveMessageError(request, msg);
-
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            Mensaje.saveMessageError(request, e.getMessage());
-        }
-
-
-        return "redirect:/anexoScan/new/" + anexoForm.getAnexo().getRegistroDetalle().getId() + "/" + anexoForm.getTipoRegistro() + "/" + anexoForm.getRegistroID() + "/" + isSIR;
-
-    }*/
 
 
     @RequestMapping(value = "/new")
