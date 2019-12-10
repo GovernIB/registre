@@ -3,8 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
@@ -18,12 +16,13 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mgonzalez on 21/03/2018.
@@ -289,9 +288,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 //Si hemos alcanzado el máximo de reintentos marcamos estado a error
                 if (elemento.getNumeroReintentos() == maxReintentos) {
                     elemento.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
-                    //Enviamos email a administradores entidad cuando se ha alcanzado el máximo de reintentos
-                    enviarEmailAdminEntidad(idioma, administradores);
-
                 } else {
                     elemento.setEstado(RegwebConstantes.COLA_ESTADO_WARNING);
                 }
@@ -323,49 +319,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         return colas.size();
     }
 
-
-
-    /**
-     * Envia un email a la lista de administradores de entidad
-     * @param idioma idioma del mensaje
-     * @param administradores listado de administradores de la entidad
-     * @throws Exception
-     */
-    private void enviarEmailAdminEntidad(String idioma, List<UsuarioEntidad> administradores) throws Exception{
-        //Datos comunes Mail
-        Locale locale = new Locale(idioma);
-
-        try {
-            String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
-            String mensajeTexto = "";
-            //Montamos el mensaje del mail con el nombre de la Entidad
-            if (administradores.size() > 0) {
-                //Montamos el mensaje del mail con el nombre de la Entidad
-                mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo", administradores.get(0).getEntidad().getNombre());
-            }
-
-            //Miramos que estén definidos el remitente y el nombre del remitente
-            if (PropiedadGlobalUtil.getRemitente() != null && PropiedadGlobalUtil.getRemitenteNombre() != null) {
-                InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(), PropiedadGlobalUtil.getRemitenteNombre());
-                //Enviamos email a todos los administradores de la entidad
-                for (UsuarioEntidad usuarioEntidad : administradores) {
-                    String mailAdminEntidad = usuarioEntidad.getUsuario().getEmail();
-                    if (!mailAdminEntidad.isEmpty()) {
-                        MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, mailAdminEntidad);
-                    } else {
-                        log.error("Existen problemas de distribución en los registros. Por favor avise al Administrador : " + usuarioEntidad.getNombreCompleto() + " de la entidad: " + usuarioEntidad.getEntidad().getNombre());
-                    }
-                }
-            } else {
-                log.error("No está definida la propiedad global <es.caib.regweb3.mail.remitente> o la propiedad <es.caib.regweb3.mail.remitente.nombre>  para la entidad.  ");
-            }
-        }catch(Exception e){
-            //Si se produce una excepción continuamos con el proceso.
-            log.error("Se ha producido un excepcion enviando mail");
-            e.printStackTrace();
-        }
-
-    }
 
 
     @Override

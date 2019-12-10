@@ -90,5 +90,12 @@ public interface SchedulerLocal {
      * Purga las sesiones ws
      */
     void purgarSesionesWs() throws Exception;
+
+    /**
+     * Envia email a los administradores y propietario de las entidades para notificar
+     * que existe un error en la distribución
+     * @throws Exception
+     */
+    public void enviarEmailErrorDistribucion() throws Exception;
 }
 
