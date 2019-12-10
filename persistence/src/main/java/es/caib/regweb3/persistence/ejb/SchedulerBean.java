@@ -1,7 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Usuario;
+import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -10,7 +15,12 @@ import org.jboss.ejb3.annotation.TransactionTimeout;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -39,6 +49,7 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private SesionLocal sesionEjb;
+    @EJB private ColaLocal colaEjb;
 
 
     @Override
@@ -305,4 +316,60 @@ public class SchedulerBean implements SchedulerLocal{
         }
     }
 
+
+    @Override
+    public void enviarEmailErrorDistribucion() throws Exception {
+
+        List<Entidad> entidades = entidadEjb.getAll();
+
+        for (Entidad entidad : entidades) {
+
+            Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(entidad.getId());
+            Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+
+            //Obtenemos el numero de registros que han alcanzado el máximo de reintentos
+            int numRegistrosMaxReintentos = colaEjb.findByTipoEntidadMaxReintentos(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), null, maxReintentos).size();
+            if (numRegistrosMaxReintentos > 0) {
+                try {
+                    //Obtenemos los usuarios a los que hay que enviarles el mail
+                    List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+                    usuariosANotificar.add(entidad.getPropietario());
+                    Set<UsuarioEntidad> administradores = entidad.getAdministradores();
+                    for (UsuarioEntidad usuarioEntidad : administradores) {
+                        usuariosANotificar.add(usuarioEntidad.getUsuario());
+                    }
+
+                    //Montamos textos del mail
+                    String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
+                    String mensajeTexto = "";
+                    //Montamos el mensaje del mail con el nombre de la Entidad
+                    if (usuariosANotificar.size() > 0) {
+                        //Montamos el mensaje del mail con el nombre de la Entidad
+                        String[] args = {Integer.toString(numRegistrosMaxReintentos),entidad.getNombre()};
+                        mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo", args);
+                    }
+
+                    //Miramos que estén definidos el remitente y el nombre del remitente
+                    if (PropiedadGlobalUtil.getRemitente() != null && PropiedadGlobalUtil.getRemitenteNombre() != null) {
+                        InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(), PropiedadGlobalUtil.getRemitenteNombre());
+                        //Enviamos el mail a todos los usuarios
+                        for (Usuario usuario : usuariosANotificar) {
+                            String mailAdminEntidad = usuario.getEmail();
+                            if (!mailAdminEntidad.isEmpty()) {
+                                MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, mailAdminEntidad);
+                            } else {
+                                log.error("Existen problemas de distribución en los registros. Por favor avise al Administrador : " + usuario.getNombreCompleto() + " de la entidad: " + entidad.getNombre());
+                            }
+                        }
+                    } else {
+                        log.error("No está definida la propiedad global <es.caib.regweb3.mail.remitente> o la propiedad <es.caib.regweb3.mail.remitente.nombre>");
+                    }
+                } catch (Exception e) {
+                    //Si se produce una excepción continuamos con el proceso.
+                    log.error("Se ha producido un excepcion enviando mail");
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 }
