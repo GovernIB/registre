@@ -323,7 +323,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                 // Comprobar PERMISO_REGISTRO_SALIDA de usuario aplicación
                 if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
-                    throw new I18NException("registro.usuario.permisos", asientoRegistral.getCodigoUsuario(), libro.getCodigo());
+                    throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
                 }
 
                 // Comprobar que el Organismo Origen está vigente
