@@ -175,7 +175,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
                 "organismo.codigo = :codigo");
 
         q.setParameter("codigo", codigo);
-        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismo = q.getResultList();
         if (organismo.size() == 1) {
@@ -220,7 +219,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismo = q.getResultList();
         if (organismo.size() == 1) {

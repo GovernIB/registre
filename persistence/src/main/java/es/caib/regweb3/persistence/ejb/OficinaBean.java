@@ -120,7 +120,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         q.setParameter("codigo", codigo);
         q.setParameter("idEntidad", idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
 
         List<Oficina> oficina = q.getResultList();
         if (oficina.size() == 1) {
