@@ -291,8 +291,7 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
                 // Actualizamos el OficioRemision
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_SIR_ENVIADO_ACK);
                 oficioRemision.setFechaEstado(new Date());
-                oficioRemision = oficioRemisionEjb.merge(oficioRemision);
-                log.info("Despues de merge" + oficioRemision.getEstado());
+                oficioRemisionEjb.merge(oficioRemision);
                 break;
 
             case RegwebConstantes.OFICIO_SIR_REENVIADO:
