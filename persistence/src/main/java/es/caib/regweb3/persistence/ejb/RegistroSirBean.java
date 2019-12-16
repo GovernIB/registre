@@ -135,7 +135,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("identificadorIntercambio",identificadorIntercambio);
         q.setParameter("codigoEntidadRegistralDestino",codigoEntidadRegistralDestino);
         q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
-        q.setHint("org.hibernate.readOnly", true);
 
         List<RegistroSir> registroSir = q.getResultList();
         if(registroSir.size() == 1){
