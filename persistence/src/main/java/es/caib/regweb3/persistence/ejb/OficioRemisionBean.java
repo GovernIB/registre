@@ -638,7 +638,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         q.setParameter("codigoEntidadRegistralDestino", codigoEntidadRegistralDestino);
         q.setParameter("devuelto", RegwebConstantes.OFICIO_SIR_DEVUELTO);
         q.setParameter("rechazado", RegwebConstantes.OFICIO_SIR_RECHAZADO);
-        q.setHint("org.hibernate.readOnly", true);
+        //q.setHint("org.hibernate.readOnly", true);
 
         List<OficioRemision> oficioRemision = q.getResultList();
         if(oficioRemision.size() == 1){
