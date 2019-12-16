@@ -150,22 +150,22 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             log.info("Capturamos la ValidationException :" + ve.getLocalizedMessage());
             //todo Eliminar este parche, cuando Distribució retorne true al detectar una anotación repetida
             if(ve.getLocalizedMessage().contains("ja ha estat donada")){
-                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida");
+                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida 1");
                 return true;
             }
             if(ve.getMessage().contains("ja ha estat donada")){
-                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida");
+                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida 2");
                 return true;
             }
             throw new Exception(ve);
         } catch (Exception e) {
             log.info("Capturada Exception :" + e.getLocalizedMessage());
             if(e.getLocalizedMessage().contains("ja ha estat donada")){
-                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida");
+                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida 3");
                 return true;
             }
             if(e.getMessage().contains("ja ha estat donada")){
-                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida");
+                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida 4");
                 return true;
             }
             throw new Exception(e);
