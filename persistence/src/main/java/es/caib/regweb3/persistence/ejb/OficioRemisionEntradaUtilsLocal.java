@@ -10,7 +10,6 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -24,32 +23,36 @@ import java.util.Set;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI"})
 public interface OficioRemisionEntradaUtilsLocal {
 
-
-    List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception;
-
-    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
-
-
-
     /**
-     * Obtiene los Organimos destino de los Registros de Entrada que están considerados Oficios de Remisión
+     *
      * @param idOficina
      * @param libros
-     * @param organismos
+     * @param total
      * @return
      * @throws Exception
      */
-    List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos, Integer total) throws Exception;
+    List<Organismo> organismosEntradaPendientesRemisionInternos(Long idOficina, List<Libro> libros, Integer total) throws Exception;
+
+    /**
+     *
+     * @param idOficina
+     * @param libros
+     * @param tipoEvento
+     * @param total
+     * @return
+     * @throws Exception
+     */
+    List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
+
 
     /**
      * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión internos
      * @param idOficina
      * @param libros
-     * @param organismos
      * @return
      * @throws Exception
      */
-    Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception;
+    Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws Exception;
 
     /**
      * Obtiene el total de Registros de Entrada que están considerados Oficios de Remisión externos
@@ -68,12 +71,11 @@ public interface OficioRemisionEntradaUtilsLocal {
      * @param oficinaActiva Oficina activa
      * @param idLibro Libro seleccionado
      * @param codigoOrganismo Organismo destinatario seleccionado
-     * @param organismos
      * @param entidadActiva
      * @return
      * @throws Exception
      */
-    OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception;
+    OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception;
 
 
     /**

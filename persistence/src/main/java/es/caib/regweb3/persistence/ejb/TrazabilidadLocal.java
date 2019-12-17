@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -105,12 +104,11 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * Obtiene los RegistroEntrada validos que han sido creados a partir de una recepción SIR
      * @param idOficina
      * @param idEntidad
-     * @param organismos
      * @param total
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception;
+    List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws Exception;
 
     /**
      * Obtiene todos los RegistroEntrada validos que han sido creados a partir de una recepción SIR paginados
@@ -120,7 +118,7 @@ public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
      * @return
      * @throws Exception
      */
-    Paginacion getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
+    Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception;
 
     /**
      *

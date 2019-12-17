@@ -542,7 +542,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         Oficina oficinaActiva = getOficinaActiva(request);
         Entidad entidadActiva = getEntidadActiva(request);
 
-        Paginacion paginacion = trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(), entidadActiva.getId(), pageNumber);
+        Paginacion paginacion = trazabilidadEjb.buscarPendientesDistribuirSir(oficinaActiva.getId(), entidadActiva.getId(), pageNumber);
 
         mav.addObject("titulo", getMessage("registroEntrada.pendientesDistribuir.sir"));
         mav.addObject("paginacion", paginacion);

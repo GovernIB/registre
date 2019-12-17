@@ -180,10 +180,9 @@ public class OficioRemisionController extends BaseController {
 
         RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
         registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO); // Fijamos el Estado válido por defecto
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
         // Obtenemos los Registros de Entrada, pendientes de tramitar por medio de un Oficio de Remisión, agrupados según su Organismos destinatario.
-        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(tipoEvento, busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva, registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), getOrganismosOficioRemision(organismosOficinaActiva), entidadActiva);
+        OficiosRemisionOrganismo oficiosRemisionOrganismo = oficioRemisionEntradaUtilsEjb.oficiosEntradaPendientesRemision(tipoEvento, busqueda.getPageNumber(), PropiedadGlobalUtil.getResultsPerPageOficios(entidadActiva.getId()), busqueda.getAnyo(), oficinaActiva, registroEntrada.getLibro().getId(), registroEntrada.getDestino().getCodigo(), entidadActiva);
 
         List<Organismo> organismosDestino = new ArrayList<Organismo>();
 
@@ -697,9 +696,7 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
-        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_INTERNO_ENVIADO);
+        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(getOrganismosOficinaActiva(request), busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_INTERNO_ENVIADO);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -738,9 +735,7 @@ public class OficioRemisionController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
-        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(organismosOficinaActiva, busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_ACEPTADO);
+        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(getOrganismosOficinaActiva(request), busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_ACEPTADO);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
@@ -831,8 +826,7 @@ public class OficioRemisionController extends BaseController {
         model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
         // Obtenemos los Organismos destinatários donde la Oficina puede registrar
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-        model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
+        model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
 
         model.addAttribute("oficioPendienteLlegadaForm", new OficioPendienteLlegadaForm());
         model.addAttribute("modeloOficioRemision", new ModeloForm());

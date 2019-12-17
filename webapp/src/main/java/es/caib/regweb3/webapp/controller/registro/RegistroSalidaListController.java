@@ -286,7 +286,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         ModelAndView mav = new ModelAndView("registro/envioSir");
         RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         Oficina oficinaActiva = getOficinaActiva(request);
 
         if (!oficinaActiva.getSirEnvio()) {
@@ -298,8 +297,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         //List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
 
         //Obtenemos el destino externo de dir3caib que nos han indicado para ver si está extinguido
-        String codigoDir3 = registroSalidaEjb.organismoOficioRemision(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
-        log.info("codigoDir3 " + codigoDir3);
+        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
+
         //Consultamos el estado del destino externo
         if (codigoDir3 != null) {
             UnidadTF destino = organismoEjb.obtenerDestinoExterno(codigoDir3);

@@ -122,96 +122,21 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemision(Long idOficina, List<Libro> libros, Set<Long> organismos, Integer total) throws Exception {
-
-        List<Organismo> organismosDestino = new ArrayList<Organismo>();
-
-        // Si el array de organismos está vacío, no incluimos la condición.
-        String organismosWhere = "";
-        if (organismos.size() > 0) {
-            organismosWhere = " and re.destino.id not in (:organismos) ";
-        }
-
-        // Obtenemos los Organismos destinatarios PROPIOS que tiene Oficios de Remision pendientes de tramitar
-        Query q;
-
-        q = em.createQuery("Select distinct re.destino.codigo, re.destino.denominacion from RegistroEntrada as re where " +
-                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino != null " + organismosWhere);
-
-        // Parámetros
-        q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q.setParameter("idOficina", idOficina);
-        q.setParameter("libros", libros);
-        if (organismos.size() > 0) {
-            q.setParameter("organismos", organismos);
-        }
-
-        if (total != null) {
-            q.setMaxResults(total);
-        }
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Object[]> organismosInternos = q.getResultList();
-        for (Object[] organismoInterno : organismosInternos) {
-            Organismo organismo = new Organismo(null, (String) organismoInterno[0], (String) organismoInterno[1]);
-
-            organismosDestino.add(organismo);
-        }
-
-        // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
-        Query q1;
-        q1 = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
-                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino is null ");
-
-        // Parámetros
-        q1.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-        q1.setParameter("idOficina", idOficina);
-        q1.setParameter("libros", libros);
-
-        if (total != null) {
-            q1.setMaxResults(total);
-        }
-
-        q1.setHint("org.hibernate.readOnly", true);
-        List<Object[]> organismosExternos = q1.getResultList();
-
-        for (Object[] organismoExterno : organismosExternos) {
-            Organismo organismo = new Organismo(null, (String) organismoExterno[0], (String) organismoExterno[1]);
-
-            organismosDestino.add(organismo);
-        }
-
-        return organismosDestino;
-    }
-
-    @Override
-    public Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros, Set<Long> organismos) throws Exception {
-
-        // Si el array de organismos está vacío, no incluimos la condición.
-        String organismosWhere = "";
-        if (organismos.size() > 0) {
-            organismosWhere = "and re.destino.id not in (:organismos)";
-        }
+    public Long oficiosEntradaInternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws Exception {
 
         // Total oficios internos
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente " + organismosWhere);
+                "re.destino != null and re.destino.estado.codigoEstadoEntidad = :vigente and re.evento = :oficio_interno");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
+        q.setParameter("oficio_interno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
         q.setHint("org.hibernate.readOnly", true);
-
-        if (organismos.size() > 0) {
-            q.setParameter("organismos", organismos);
-        }
 
         return (Long) q.getSingleResult();
     }
@@ -223,11 +148,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
                 "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino is null ");
+                "re.destino is null and re.evento = :oficio_externo ");
 
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
         q.setParameter("libros", libros);
+        q.setParameter("oficio_externo", RegwebConstantes.EVENTO_OFICIO_EXTERNO);
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
@@ -236,7 +162,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Set<Long> organismos, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
         Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
