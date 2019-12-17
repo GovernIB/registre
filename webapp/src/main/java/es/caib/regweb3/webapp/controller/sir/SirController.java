@@ -215,7 +215,7 @@ public class SirController extends BaseController {
 
         RegistroEntrada registroEntrada = busqueda.getRegistroEntrada();
 
-        Paginacion paginacion = trazabilidadEjb.getPendientesDistribuirSir(registroEntrada.getOficina().getId(), entidad.getId(),busqueda.getPageNumber());
+        Paginacion paginacion = trazabilidadEjb.buscarPendientesDistribuirSir(registroEntrada.getOficina().getId(), entidad.getId(),busqueda.getPageNumber());
 
         busqueda.setPageNumber(1);
 

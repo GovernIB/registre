@@ -3,7 +3,6 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.utils.Oficio;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 
@@ -201,14 +200,5 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      */
     void postProcesoActualizarRegistro(RegistroSalida rs, Long entidadId) throws Exception, I18NException;
 
-    /**
-     * Comprueba si el RegistroSalida es un Oficio de Remisión y obtiene el códigoDir3 del
-     * Interesado tipo administración asociado al registro.
-     * @param registroSalida
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception;
 
 }

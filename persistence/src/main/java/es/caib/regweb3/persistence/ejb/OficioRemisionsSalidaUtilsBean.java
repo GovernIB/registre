@@ -144,53 +144,6 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
         return (Long) q.getSingleResult();
     }
 
-    /**
-     * Obtenemos los destinatarios de tipo de Adminitración de un conjunto de Registros
-     *
-     * @param registros
-     * @param distinct
-     * @return
-     * @throws Exception
-     */
-    @SuppressWarnings(value = "unchecked")
-    private List<Object[]> destinatariosAdministracion(List<Long> registros, Boolean distinct) throws Exception {
-
-        String query = "";
-        if (distinct) {
-            query = "Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.tipo = :administracion and " +
-                    "  i.registroDetalle.id in (:registros)";
-        } else {
-            query = "Select i.codigoDir3, i.razonSocial from Interesado as i where i.tipo = :administracion and " +
-                    "  i.registroDetalle.id in (:registros)";
-        }
-
-        List<Object[]> destinos = new ArrayList<Object[]>();
-
-        // Si hay más de 1000 registros, dividimos las queries (ORA-01795).
-        while (registros.size() > RegwebConstantes.NUMBER_EXPRESSIONS_IN) {
-            List<?> subList = registros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN);
-
-            Query q2 = em.createQuery(query);
-
-            // Parámetros
-            q2.setParameter("registros", subList);
-            q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-
-            destinos.addAll(q2.getResultList());
-            registros.subList(0, RegwebConstantes.NUMBER_EXPRESSIONS_IN).clear();
-        }
-
-        // Obtenemos los destinos de los Interesados de los Registros Salida anteriores
-        Query q2 = em.createQuery(query);
-
-        // Parámetros
-        q2.setParameter("registros", registros);
-        q2.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
-
-        destinos.addAll(q2.getResultList());
-
-        return destinos;
-    }
 
     @Override
     @SuppressWarnings(value = "unchecked")

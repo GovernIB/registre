@@ -86,7 +86,7 @@ public class AvisoController extends BaseController {
                 // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
                 if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
 
-                    oficiosEntradaInternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaInternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada, getOrganismosOficioRemision(organismosOficinaActiva));
+                    oficiosEntradaInternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaInternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada);
                     oficiosEntradaExternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaExternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada);
                 }
 

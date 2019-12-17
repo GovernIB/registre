@@ -16,7 +16,6 @@ import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -222,31 +221,21 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Set<Long> organismos, Integer total) throws Exception {
-
-        // Si el array de organismos está vacío, no incluimos la condición.
-        String organismosWhere = "";
-        if (organismos.size() > 0) {
-            organismosWhere = " and t.registroEntradaDestino.destino.id in (:organismos) ";
-        }
+    public List<RegistroEntrada> getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer total) throws Exception {
 
         Query q = em.createQuery("Select t.registroEntradaDestino.id, t.registroEntradaDestino.numeroRegistroFormateado, " +
                 "t.registroEntradaDestino.fecha, t.registroEntradaDestino.registroDetalle.extracto from Trazabilidad as t " +
                 "where t.tipo = :recibido_sir and t.registroSir.entidad.id = :idEntidad and " +
-                "t.registroEntradaDestino.destino != null and " +
+                "t.registroEntradaDestino.evento = :distribuir and " +
                 "t.registroEntradaDestino.oficina.id = :idOficina and " +
-                "t.registroEntradaDestino.estado = :registro_valido " + organismosWhere +
-                " order by t.fecha");
+                "t.registroEntradaDestino.estado = :registro_valido order by t.fecha");
 
         q.setParameter("recibido_sir", RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("idOficina", idOficina);
         q.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
+        q.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         q.setHint("org.hibernate.readOnly", true);
-
-        if (organismos.size() > 0) {
-            q.setParameter("organismos", organismos);
-        }
 
         if(total != null){
             q.setMaxResults(total);
@@ -271,7 +260,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception {
+    public Paginacion buscarPendientesDistribuirSir(Long idOficina, Long idEntidad, Integer pageNumber) throws Exception {
 
         Query q;
         Query q2;
@@ -303,7 +292,6 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q2.setParameter("registro_valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("distribuir", RegwebConstantes.EVENTO_DISTRIBUIR);
         if (idOficina != null) q2.setParameter("idOficina", idOficina);
-
 
         Paginacion paginacion;
 

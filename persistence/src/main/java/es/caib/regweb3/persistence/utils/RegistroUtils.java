@@ -1,10 +1,8 @@
 package es.caib.regweb3.persistence.utils;
 
-import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
+import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBContext;
@@ -15,6 +13,7 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -203,6 +202,27 @@ public class RegistroUtils{
         fecha = calendarDate.getTime();
 
         return fecha;
+    }
+
+    /**
+     *
+     * @param registroSalida
+     * @return
+     * @throws Exception
+     */
+    public static String obtenerCodigoDir3Interesado(RegistroSalida registroSalida) throws Exception {
+
+        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
+
+        for (Interesado interesado : interesados) {
+            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
+
+                return interesado.getCodigoDir3();
+
+            }
+        }
+
+        return null;
     }
 
 }

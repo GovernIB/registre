@@ -170,7 +170,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public Boolean isOficioRemisionInterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
-        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
+        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
@@ -183,7 +183,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public Boolean isOficioRemisionExterno(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
-        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
+        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
@@ -198,7 +198,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     public List<OficinaTF> isOficioRemisionSir(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
 
         // Obtenemos el organismo destinatario del Registro en el caso de que sea un OficioRemision externo
-        String codigoDir3 = organismoOficioRemision(registroSalida, organismos);
+        String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
 
         // Si se trata de un OficioRemisionExterno, comprobamos si el destino tiene Oficinas Sir
         if (StringUtils.isNotEmpty(codigoDir3) && isOficioRemisionExterno(registroSalida, organismos)) {
@@ -206,32 +206,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
 
             return oficinasService.obtenerOficinasSIRUnidad(codigoDir3);
-        }
-
-        return null;
-    }
-
-    /**
-     * Comprueba si el RegistroSalida es un Oficio de Remisión y obtiene el códigoDir3 del
-     * Interesado tipo administración asociado al registro.
-     *
-     * @param registroSalida
-     * @param organismos
-     * @return
-     * @throws Exception
-     */
-    public String organismoOficioRemision(RegistroSalida registroSalida, Set<String> organismos) throws Exception {
-
-        List<Interesado> interesados = registroSalida.getRegistroDetalle().getInteresados();
-
-        for (Interesado interesado : interesados) {
-            if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
-
-                if (!organismos.contains(interesado.getCodigoDir3())) {
-
-                    return interesado.getCodigoDir3();
-                }
-            }
         }
 
         return null;
