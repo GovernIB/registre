@@ -457,7 +457,7 @@
             success: function(result) {
                 var html;
                 if(result != 'V') {
-                    html ='${registro.destinoExternoDenominacion}' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
+                    html ='<c:out value="${registro.destinoExternoDenominacion}" escapeXml="true"/>' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
                 }
                 $('#'+elemento).html(html);
             }
