@@ -157,6 +157,14 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
 
     /**
+     * Obtiene un OficioRemisionSir a partir del identificadorIntercambio del envío
+     * @param identificadorIntercambio
+     * @return
+     * @throws Exception
+     */
+    OficioRemision getByIdentificadorIntercambio(String identificadorIntercambio) throws Exception;
+
+    /**
      * Modifica el Estado de un OficioRemision
      * @param idOficioRemision
      * @param estado

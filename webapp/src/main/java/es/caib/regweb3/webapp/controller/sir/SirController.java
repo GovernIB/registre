@@ -2,13 +2,16 @@ package es.caib.regweb3.webapp.controller.sir;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.sir.MensajeControl;
+import es.caib.regweb3.model.sir.TipoMensaje;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.TipoRegistro;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.sir.utils.Sicres3XML;
+import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.EliminarForm;
@@ -62,6 +65,49 @@ public class SirController extends BaseController {
 
     @EJB(mappedName = "regweb3/MensajeControlEJB/local")
     private MensajeControlLocal mensajeControlEjb;
+
+
+    /**
+     * Controller temporal para confirmar Oficios enviados a SIR
+     */
+    @RequestMapping(value = "/{idIntercambio}/confirmar", method = RequestMethod.GET)
+    public String marcarConformacion(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
+
+        Entidad entidad = getEntidadActiva(request);
+        
+        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(idIntercambio);
+
+        List<MensajeControl> mensajes = mensajeControlEjb.getByIdentificadorIntercambio(idIntercambio, entidad.getId());
+
+        try{
+
+            for (MensajeControl mensaje:mensajes) {
+                if(mensaje.getTipoMensaje().equals(TipoMensaje.CONFIRMACION.getValue())){
+
+                    oficioRemision.setCodigoEntidadRegistralProcesado(mensaje.getCodigoEntidadRegistralOrigen());
+                    oficioRemision.setDecodificacionEntidadRegistralProcesado(Dir3CaibUtils.denominacion(PropiedadGlobalUtil.getDir3CaibServer(), mensaje.getCodigoEntidadRegistralOrigen(), RegwebConstantes.OFICINA));
+                    oficioRemision.setNumeroRegistroEntradaDestino(mensaje.getNumeroRegistroEntradaDestino());
+                    oficioRemision.setFechaEntradaDestino(mensaje.getFechaEntradaDestino());
+                    oficioRemision.setEstado(RegwebConstantes.OFICIO_ACEPTADO);
+                    oficioRemision.setFechaEstado(mensaje.getFechaEntradaDestino());
+                    oficioRemisionEjb.merge(oficioRemision);
+
+                    Mensaje.saveMessageInfo(request,"Se ha marcado como confirmado el oficio de remisión");
+
+                    break;
+                }
+            }
+            Mensaje.saveMessageAviso(request,"No existe ningún mensaje de confirmación para este Oficio");
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Mensaje.saveMessageInfo(request,"Ha ocurrido un error confirmado el Oficio: " + e.getMessage());
+        }
+
+
+        return "redirect:/inici";
+    }
+
 
     /**
      * Carga el formulario para ver el detalle de un IdentificadorIntercambio
