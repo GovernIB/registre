@@ -208,7 +208,7 @@ public class AnexoScanController extends AnexoController {
             IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
             UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(usuarioEntidad.getUsuario().getIdentificador());
             funcionariNif = regwebUserInfo.getAdministrationID();
-            if(!funcionariNif.isEmpty()) {
+            if(funcionariNif != null && !funcionariNif.isEmpty()) {
                 ss.getMetadades().add(new Metadata("functionary.administrationid", funcionariNif));
             }
         }
