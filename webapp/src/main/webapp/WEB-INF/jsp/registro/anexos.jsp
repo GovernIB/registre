@@ -309,7 +309,7 @@
         tamModalAnexo = 260;
         tamModalFitxer = 420;
     }
-    var tamModalScan = 500;
+    var tamModalScan = 610;
 
 
     // Afegeix el contingut HTML amb imatge de "pensar"
