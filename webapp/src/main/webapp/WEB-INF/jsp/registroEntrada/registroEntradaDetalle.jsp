@@ -440,30 +440,6 @@
 
     }
 
-
-    /**
-     * Obtiene el estado de un organismo externo
-     * @param url donde hacer la petición ajax
-     * @param id
-     * @param elemento
-     * @return Texto con la traducción del elmento solicitado
-     */
-    function obtenerEstadoOrganismoExterno(url, codigo,elemento){
-
-        jQuery.ajax({
-            url: url,
-            data: { codigo: codigo },
-            type: 'GET',
-            success: function(result) {
-                var html;
-                if(result != 'V') {
-                    html ='<c:out value="${registro.destinoExternoDenominacion}" escapeXml="true"/>' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
-                }
-                $('#'+elemento).html(html);
-            }
-        }) ;
-    }
-
 </script>
 
 
