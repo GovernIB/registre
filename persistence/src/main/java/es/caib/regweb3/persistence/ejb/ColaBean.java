@@ -62,7 +62,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", maxReintentos);
-        q.setHint("org.hibernate.readOnly", true);
+        //q.setHint("org.hibernate.readOnly", true);
 
         if(total != null) {
             q.setMaxResults(total);
