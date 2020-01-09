@@ -14,6 +14,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -112,8 +113,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
         List<Organismo> organismosDestino = new ArrayList<Organismo>();
         for (Object[] organismoExterno : organismosExternos) {
-            Organismo organismo = new Organismo(null, (String) organismoExterno[0], (String) organismoExterno[1]);
-
+            Organismo organismo = new Organismo(null, (String) organismoExterno[0], StringUtils.isNotEmpty(((String) organismoExterno[1])) ? (String) organismoExterno[1]:(String) organismoExterno[0]);
             organismosDestino.add(organismo);
         }
 
