@@ -19,6 +19,9 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
+    List<Trazabilidad> oficiosSinREDestino() throws Exception;
+
+
     /**
      * Obtiene todas las Trazabilidades a partir de un Identificador Intercambio
      * @param idIntercambio
