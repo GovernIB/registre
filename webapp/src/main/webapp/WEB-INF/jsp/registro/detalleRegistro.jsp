@@ -21,6 +21,29 @@
         </dd>
         <!-- Funcionalidad para consultar via rest a dir3caib el estado de un organismo externo y se muestra en el div "estadoExterno"-->
         <script type="text/javascript">
+            /**
+             * Obtiene el estado de un organismo externo
+             * @param url donde hacer la petición ajax
+             * @param id
+             * @param elemento
+             * @return Texto con la traducción del elmento solicitado
+             */
+            function obtenerEstadoOrganismoExterno(url, codigo,elemento){
+                jQuery.ajax({
+                    url: url,
+                    data: { codigo: codigo },
+                    type: 'GET',
+                    success: function(result) {
+                        var html;
+                        if(result != 'V') {
+                            html ='<c:out value="${registro.destinoExternoDenominacion}" escapeXml="true"/>' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
+                        }
+                        $('#'+elemento).html(html);
+                    }
+                }) ;
+            }
+
+
             $(document).ready(function(){
                 var urlCompleta= '<%=PropiedadGlobalUtil.getDir3CaibServer()%>'+ '/rest/GET/unidad/estado';
                 obtenerEstadoOrganismoExterno(urlCompleta, '${registro.destinoExternoCodigo}','estadoExterno');
@@ -80,28 +103,3 @@
         <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
     </c:import>
 </dd>
-
-<script type="text/javascript">
-    /**
-     * Obtiene el estado de un organismo externo
-     * @param url donde hacer la petición ajax
-     * @param id
-     * @param elemento
-     * @return Texto con la traducción del elmento solicitado
-     */
-    function obtenerEstadoOrganismoExterno(url, codigo,elemento){
-
-        jQuery.ajax({
-            url: url,
-            data: { codigo: codigo },
-            type: 'GET',
-            success: function(result) {
-                var html;
-                if(result != 'V') {
-                    html ='<c:out value="${registro.destinoExternoDenominacion}" escapeXml="true"/>' +' - '+ '${registro.destinoExternoCodigo}' + ' - <span class="label label-danger">' + tradestado['estado.' + result] + '</span>';
-                }
-                $('#'+elemento).html(html);
-            }
-        }) ;
-    }
-</script>
