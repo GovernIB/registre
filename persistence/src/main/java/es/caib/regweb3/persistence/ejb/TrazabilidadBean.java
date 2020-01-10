@@ -35,6 +35,19 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
 
     @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Trazabilidad> oficiosSinREDestino() throws Exception{
+        Query q = em.createQuery("Select trazabilidad from Trazabilidad as trazabilidad " +
+                "where trazabilidad.tipo = 1 and trazabilidad.oficioRemision.estado = :estadoOficio and trazabilidad.registroEntradaDestino is null");
+
+        q.setParameter("estadoOficio",RegwebConstantes.OFICIO_ACEPTADO);
+
+
+        return q.getResultList();
+    }
+
+
+    @Override
     public Trazabilidad getReference(Long id) throws Exception {
 
         return em.getReference(Trazabilidad.class, id);

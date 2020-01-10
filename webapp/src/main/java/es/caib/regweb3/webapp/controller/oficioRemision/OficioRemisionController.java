@@ -63,6 +63,19 @@ public class OficioRemisionController extends BaseController {
     /**
      * Listado de todos los Oficios de Remision
      */
+    @RequestMapping(value = "/sinDestino", method = RequestMethod.GET)
+    public String oficiosSinREDestino() throws Exception {
+
+        List<Trazabilidad> trazabilidades = trazabilidadEjb.oficiosSinREDestino();
+
+        log.info("Total: " + trazabilidades.size());
+
+        return "redirect:/oficioRemision/list";
+    }
+
+    /**
+     * Listado de todos los Oficios de Remision
+     */
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String listado() {
         return "redirect:/oficioRemision/list";
