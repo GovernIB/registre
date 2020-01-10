@@ -137,7 +137,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         q.setParameter("idOficioRemision",idOficioRemision);
         q.setParameter("idRegistroEntrada",idRegistroEntrada);
-        q.setHint("org.hibernate.readOnly", true);
+        //q.setHint("org.hibernate.readOnly", true);
 
         return (Trazabilidad) q.getSingleResult();
 
@@ -150,7 +150,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
         q.setParameter("idOficioRemision",idOficioRemision);
         q.setParameter("idRegistroSalida",idRegistroSalida);
-        q.setHint("org.hibernate.readOnly", true);
+        //q.setHint("org.hibernate.readOnly", true);
 
         return (Trazabilidad) q.getSingleResult();
     }
@@ -163,7 +163,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
                 "where trazabilidad.registroSir.id = :registroSir order by trazabilidad.fecha");
 
         q.setParameter("registroSir", idRegistroSir);
-        q.setHint("org.hibernate.readOnly", true);
+        //q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
     }
