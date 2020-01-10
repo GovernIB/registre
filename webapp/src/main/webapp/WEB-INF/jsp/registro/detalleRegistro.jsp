@@ -29,8 +29,6 @@
              * @return Texto con la traducción del elmento solicitado
              */
             function obtenerEstadoOrganismoExterno(url, codigo,elemento){
-                alert("Se llama esta función");
-
                 jQuery.ajax({
                     url: url,
                     data: { codigo: codigo },
@@ -46,9 +44,7 @@
             }
 
 
-
             $(document).ready(function(){
-                alert("entro aqui");
                 var urlCompleta= '<%=PropiedadGlobalUtil.getDir3CaibServer()%>'+ '/rest/GET/unidad/estado';
                 obtenerEstadoOrganismoExterno(urlCompleta, '${registro.destinoExternoCodigo}','estadoExterno');
             });
