@@ -86,6 +86,24 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         }
     }
 
+    @Override
+    public Cola findByIdObjetoEstado(Long idObjeto,Long idEntidad, Long idEstado) throws Exception{
+
+        Query q = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad and " +
+                "cola.estado = :estado");
+        q.setParameter("idObjeto", idObjeto);
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("estado", idEstado);
+
+        q.setHint("org.hibernate.readOnly", true);
+
+        if(q.getResultList().size()>0){
+            return (Cola)q.getResultList().get(0);
+        }else{
+            return null;
+        }
+    }
+
 
     @Override
     public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
