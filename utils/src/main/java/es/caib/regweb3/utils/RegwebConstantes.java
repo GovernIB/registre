@@ -755,13 +755,15 @@ public interface RegwebConstantes {
 
     int    NUMELEMENTOSDISTRIBUIR = 20; // se distribuyen 20 elementos por entidad en cada iteración del scheduler
 
-    /* -------------- ESTADO INTEGRACION --------------*/
+    /* -------------- ESTADO COLAS --------------*/
     Long COLA_ESTADO_ERROR = 1L;
-    Long  COLA_ESTADO_WARNING = 2L;
+    Long COLA_ESTADO_PENDIENTE = 2L;
+    Long COLA_ESTADO_PROCESADO = 3L;
 
     Long[] COLA_ESTADOS = {
             COLA_ESTADO_ERROR,
-            COLA_ESTADO_WARNING
+            COLA_ESTADO_PENDIENTE,
+            COLA_ESTADO_PROCESADO
     };
 
     String TIPOMIME_JPG  = "image/jpeg";
