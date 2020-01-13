@@ -42,8 +42,15 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      */
     Cola findByIdObjeto(Long idObjeto, Long idEntidad) throws Exception;
 
-
-
+    /**
+     * Busca un elemento de la cola por IdObjeto, Entidad y Estado
+     * @param idObjeto
+     * @param idEntidad
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    Cola findByIdObjetoEstado(Long idObjeto,Long idEntidad, Long idEstado) throws Exception;
 
     /**
      * Obtiene los elementos de la cola por tipo y por entidad que han alcanzado el máximo de reintentos

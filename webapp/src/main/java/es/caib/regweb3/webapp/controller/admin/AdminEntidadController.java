@@ -57,6 +57,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
+    @EJB(mappedName = "regweb3/ColaEJB/local")
+    private ColaLocal colaEjb;
+
     @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
     private AsientoRegistralLocal asientoRegistralEjb;
 
@@ -216,14 +219,21 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         try{
 
-            if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)){
+            if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) ||
+                    registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_DISTRIBUYENDO)){
 
-                if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                    asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
-                }
-                registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
+                Cola elemento = colaEjb.findByIdObjetoEstado(registroEntrada.getId(), usuarioEntidad.getEntidad().getId(), RegwebConstantes.COLA_ESTADO_PROCESADO);
 
-                Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
+                //if(elemento != null){ todo: Añadir esta validación al solucionar el bug de Distribuyendo
+
+                    if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+                        asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                    }
+
+                    registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
+
+                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
+               // }
             }
 
         }catch (Exception e){
