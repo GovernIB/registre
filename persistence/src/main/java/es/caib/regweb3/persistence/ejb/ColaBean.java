@@ -238,6 +238,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 cola.setTipo(RegwebConstantes.COLA_DISTRIBUCION);
                 cola.setUsuarioEntidad(usuarioEntidad);
                 cola.setDenominacionOficina(re.getOficina().getDenominacion());
+                cola.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
 
                 persist(cola);
 
@@ -300,8 +301,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 //Si hemos alcanzado el máximo de reintentos marcamos estado a error
                 if (elemento.getNumeroReintentos() == maxReintentos) {
                     elemento.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
-                } else {
-                    elemento.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
                 }
             }
             //Guardamos que ha ocurrido un error en integraciones
