@@ -57,9 +57,9 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Long> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception {
+    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception {
 
-        Query q = em.createQuery( "select cola.id from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.fecha asc ");
+        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.fecha asc ");
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosCola(idEntidad));
