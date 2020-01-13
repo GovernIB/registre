@@ -43,43 +43,41 @@
                         <div class="panel-body">
 
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <div class="form-group col-xs-12">
-                                        <form:form modelAttribute="colaBusqueda" method="post" cssClass="form-horizontal">
-                                            <form:hidden path="pageNumber"/>
-                                            <div class="col-xs-12">
-                                                <div class="form-group col-xs-3 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="estado"><spring:message code="regweb.estado"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:select path="estado" cssClass="chosen-select" onchange="doForm('#colaBusqueda')">
-                                                            <form:option value="" label="..."/>
-                                                            <c:forEach var="estado" items="${estados}">
-                                                                <form:option value="${estado}"><spring:message code="cola.estado.${estado}"/></form:option>
-                                                            </c:forEach>
-                                                        </form:select>
-                                                    </div>
+                                <div class="form-group col-xs-12">
+                                    <form:form modelAttribute="colaBusqueda" method="post" cssClass="form-horizontal">
+                                        <form:hidden path="pageNumber"/>
+                                        <div class="col-xs-12">
+                                            <div class="form-group col-xs-3 espaiLinies senseMargeLat">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                    <form:label path="estado"><spring:message code="regweb.estado"/></form:label>
                                                 </div>
-
-                                                <div class="form-group col-xs-4 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="descripcionObjeto"><spring:message code="cola.descripcion"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:input path="descripcionObjeto" cssClass="form-control" maxlength="255" />
-                                                    </div>
+                                                <div class="col-xs-8">
+                                                    <form:select path="estado" cssClass="chosen-select" onchange="doForm('#colaBusqueda')">
+                                                        <form:option value="" label="..."/>
+                                                        <c:forEach var="estado" items="${estados}">
+                                                            <form:option value="${estado}"><spring:message code="cola.estado.${estado}"/></form:option>
+                                                        </c:forEach>
+                                                    </form:select>
                                                 </div>
-
-                                                <div class="form-group col-xs-1 espaiLinies senseMargeLat">
-                                                    <button type="button" onclick="doForm('#colaBusqueda')" class="btn btn-warning btn-sm btn-block">
-                                                        <spring:message code="regweb.buscar"/>
-                                                    </button>
-                                                </div>
-
                                             </div>
-                                        </form:form>
-                                    </div>
+
+                                            <div class="form-group col-xs-4 espaiLinies senseMargeLat">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                    <form:label path="descripcionObjeto"><spring:message code="cola.descripcion"/></form:label>
+                                                </div>
+                                                <div class="col-xs-8">
+                                                    <form:input path="descripcionObjeto" cssClass="form-control" maxlength="255" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-1 espaiLinies senseMargeLat">
+                                                <button type="button" onclick="doForm('#colaBusqueda')" class="btn btn-warning btn-sm btn-block">
+                                                    <spring:message code="regweb.buscar"/>
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </form:form>
                                 </div>
                             </div>
 
