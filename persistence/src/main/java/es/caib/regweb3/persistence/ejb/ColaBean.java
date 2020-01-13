@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -56,13 +57,12 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
+    public List<Long> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception {
 
-        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.fecha asc ");
+        Query q = em.createQuery( "select cola.id from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.fecha asc ");
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
-        q.setParameter("maxReintentos", maxReintentos);
-        //q.setHint("org.hibernate.readOnly", true);
+        q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosCola(idEntidad));
 
         if(total != null) {
             q.setMaxResults(total);
@@ -87,7 +87,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
 
-
     @Override
     public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
 
@@ -103,8 +102,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
         return q.getResultList();
     }
-
-
 
 
     @Override
@@ -137,8 +134,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
 
-
-
     @Override
     public Paginacion busqueda(Cola cola, Long idEntidad) throws Exception {
 
@@ -162,6 +157,12 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         if (cola.getEstado() != null) {
             where.add("cola.estado = :estado ");
             parametros.put("estado", cola.getEstado());
+        }
+
+        // Descripcion objeto
+        if (StringUtils.isNotEmpty(cola.getDescripcionObjeto())) {
+            where.add(" (UPPER(cola.descripcionObjeto) LIKE UPPER(:descripcionObjeto)) ");
+            parametros.put("descripcionObjeto", "%" + cola.getDescripcionObjeto() + "%");
         }
 
         // Entidad
@@ -216,6 +217,15 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
+    public void procesarElemento(Cola elemento) throws Exception{
+
+        Query q = em.createQuery("update Cola set estado=:procesado where id = :idCola");
+        q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
+        q.setParameter("idCola", elemento.getId());
+        q.executeUpdate();
+    }
+
+    @Override
     public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -245,7 +255,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
 
-
     @Override
     public Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException {
 
@@ -271,7 +280,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, String idioma, Throwable th, List<UsuarioEntidad> administradores, int maxReintentos) throws Exception{
+    public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, Throwable th) throws Exception{
 
         //Montamos el string de la causa del error
         String causa = "";
@@ -282,6 +291,9 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         }
 
         try {
+            //Obtenemos el numero máximo de reintentos de una propiedad global
+            Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(entidadId);
+
             //Incrementar numeroreintentos si no hemos llegado al máximo
             if (elemento.getNumeroReintentos() < maxReintentos) {
                 elemento.setNumeroReintentos(elemento.getNumeroReintentos() + 1);
@@ -289,7 +301,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 if (elemento.getNumeroReintentos() == maxReintentos) {
                     elemento.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
                 } else {
-                    elemento.setEstado(RegwebConstantes.COLA_ESTADO_WARNING);
+                    elemento.setEstado(RegwebConstantes.COLA_ESTADO_PENDIENTE);
                 }
             }
             //Guardamos que ha ocurrido un error en integraciones

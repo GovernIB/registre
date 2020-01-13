@@ -200,16 +200,17 @@ public class DistribucionController extends BaseController {
     @RequestMapping(value = "/{idRegistro}/distribuirelementocola/{tipo}", method = RequestMethod.GET)
     public String distribuirElementoEnCola(@PathVariable Long idRegistro, @PathVariable Long tipo, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(idRegistro, usuarioEntidad.getEntidad().getId());
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        Boolean distribuido = distribucionEjb.distribuirRegistroEnCola(idRegistro, entidadActiva.getId());
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));
         }else{
             Mensaje.saveMessageError(request, getMessage("registroEntrada.distribuir.error.noEnviado"));
         }
-        return "redirect:/cola/list/"+tipo;
 
+        return "redirect:/cola/list/"+tipo;
     }
 
 

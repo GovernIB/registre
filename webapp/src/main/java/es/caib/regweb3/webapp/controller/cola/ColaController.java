@@ -2,6 +2,7 @@ package es.caib.regweb3.webapp.controller.cola;
 
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -40,6 +41,7 @@ public class ColaController extends BaseController {
 
         Cola cola = new Cola();
         cola.setTipo(tipo);
+        cola.setEstado(RegwebConstantes.COLA_ESTADO_ERROR);
 
         Entidad entidadActiva = getEntidadActiva(request);
 
@@ -101,6 +103,33 @@ public class ColaController extends BaseController {
             Mensaje.saveMessageError(request, getMessage("cola.error.reiniciar"));
             iie.printStackTrace();
 
+        }
+
+        return "redirect:/cola/list/"+tipo;
+    }
+
+    /**
+     * Marcar como procesado un elemento de la {@link Cola}
+     */
+    @RequestMapping(value = "/{colaId}/procesar/{tipo}")
+    public String procesarCola(@PathVariable Long colaId, @PathVariable Long tipo, HttpServletRequest request) {
+
+        try {
+
+            // Marcamos el elemento como procesado
+            Cola cola = colaEjb.findById(colaId);
+            colaEjb.procesarElemento(cola);
+
+            // Marcamos como distribuido el Registro
+            RegistroEntrada registroEntrada = registroEntradaEjb.findById(cola.getIdObjeto());
+            registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
+
+
+            Mensaje.saveMessageInfo(request, getMessage("cola.procesar.ok"));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("cola.error.eliminar"));
+            e.printStackTrace();
         }
 
         return "redirect:/cola/list/"+tipo;
