@@ -118,7 +118,7 @@
                                         <thead>
                                         <tr>
                                             <th class="center"><spring:message code="cola.fecha"/></th>
-                                            <th class="center"><spring:message code="cola.descripcion.${tipo}"/></th>
+                                            <th class="center"><spring:message code="cola.descripcion"/></th>
                                             <th class="center"><spring:message code="regweb.estado"/></th>
                                             <th class="center"><spring:message code="oficina.oficina"/></th>
                                             <th class="center" ><spring:message code="cola.numeroreintentos"/></th>
