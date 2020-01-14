@@ -108,6 +108,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         String queryBase = "Select DISTINCT registroEntrada from RegistroEntrada as registroEntrada left outer join registroEntrada.registroDetalle.interesados interessat ";
         StringBuilder query = new StringBuilder(queryBase);
 
+        // Entidad
+        where.add(" registroEntrada.usuario.entidad.id =:idEntidad  ");
+        parametros.put("idEntidad", idEntidad);
+
         // Numero registro
         if (StringUtils.isNotEmpty(re.getNumeroRegistroFormateado())) {
             where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");

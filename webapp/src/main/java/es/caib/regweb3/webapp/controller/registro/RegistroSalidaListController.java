@@ -128,10 +128,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         Oficina oficinaActiva = getOficinaActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Entidad entidadActiva = getEntidadActiva(request);
 
         registroSalidaBusquedaValidator.validate(busqueda, result);
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         // Si hay errores volvemos a la vista del formulario
         if (result.hasErrors()) {
@@ -156,7 +156,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
