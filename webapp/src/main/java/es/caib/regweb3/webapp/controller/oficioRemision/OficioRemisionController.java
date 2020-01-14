@@ -367,11 +367,11 @@ public class OficioRemisionController extends BaseController {
 
         } catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
-            Mensaje.saveMessageError(request,  I18NUtils.getMessage(e));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(e));
             return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
-            Mensaje.saveMessageError(request,  I18NUtils.getMessage(ve));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(e));
             return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         }
 
