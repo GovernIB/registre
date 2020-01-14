@@ -46,7 +46,7 @@
                                 <div class="form-group col-xs-12">
                                     <form:form modelAttribute="colaBusqueda" method="post" cssClass="form-horizontal">
                                         <form:hidden path="pageNumber"/>
-                                        <div class="col-xs-12">
+
                                             <div class="form-group col-xs-3 espaiLinies senseMargeLat">
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
                                                     <form:label path="estado"><spring:message code="regweb.estado"/></form:label>
@@ -76,7 +76,6 @@
                                                 </button>
                                             </div>
 
-                                        </div>
                                     </form:form>
                                 </div>
                             </div>
