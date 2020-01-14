@@ -360,7 +360,7 @@ public class OficioRemisionController extends BaseController {
                 }
 
             } else {
-                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo"));
+                Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo.justificante"));
                 return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
             }
 
@@ -371,7 +371,7 @@ public class OficioRemisionController extends BaseController {
             return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(e));
+            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(ve));
             return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         }
 
