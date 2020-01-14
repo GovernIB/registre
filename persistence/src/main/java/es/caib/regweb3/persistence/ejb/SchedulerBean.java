@@ -330,7 +330,7 @@ public class SchedulerBean implements SchedulerLocal{
             Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
 
             //Obtenemos el numero de registros que han alcanzado el máximo de reintentos
-            int numRegistrosMaxReintentos = colaEjb.findByTipoEntidadMaxReintentos(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), null, maxReintentos).size();
+            int numRegistrosMaxReintentos = colaEjb.findByTipoEntidadMaxReintentos(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), maxReintentos).size();
             if (numRegistrosMaxReintentos > 0) {
                 try {
                     //Obtenemos los usuarios a los que hay que enviarles el mail

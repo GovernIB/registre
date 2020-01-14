@@ -56,11 +56,10 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * Obtiene los elementos de la cola por tipo y por entidad que han alcanzado el máximo de reintentos
      * @param tipo tipo de elemento
      * @param idEntidad entidad a la que pertenece
-     * @param total numero total de resultados que se quiere devolver
      * @return
      * @throws Exception
      */
-    List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception;
+    List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception;
 
     /**
      * Realiza la busqueda de los elementos de la cola por entidad
@@ -88,7 +87,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @throws I18NException
      * @throws I18NValidationException
      */
-     Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException;
+     void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception, I18NException;
 
     /**
      *
@@ -113,10 +112,10 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
 
     /**
      * Reiniciamos un elemento de la cola para que vuelva a relanzarse
-     * @param cola
+     * @param idCola
      * @throws Exception
      */
-    void reiniciarElementoCola(Cola cola) throws Exception;
+    void reiniciarElementoCola(Long idCola) throws Exception;
 
     /**
      * MArca como procesado un elemento de la Cola
