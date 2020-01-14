@@ -74,6 +74,8 @@
         <sec:intercept-url pattern="/propiedadGlobal/**" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
         <!--Plugin-->
         <sec:intercept-url pattern="/plugin/**" access="hasAnyRole('RWE_SUPERADMIN','RWE_ADMIN')"/>
+        <!--Cola-->
+        <sec:intercept-url pattern="/cola/**" access="hasRole('RWE_ADMIN')"/>
 
         <sec:access-denied-handler error-page="/accesoDenegado"/>
         <sec:custom-filter position="PRE_AUTH_FILTER" ref="preauthFilter"/>
