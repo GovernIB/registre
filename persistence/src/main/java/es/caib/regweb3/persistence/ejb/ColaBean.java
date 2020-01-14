@@ -59,10 +59,11 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     @SuppressWarnings(value = "unchecked")
     public List<Cola> findByTipoEntidad(Long tipo, Long idEntidad, Integer total) throws Exception {
 
-        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos order by cola.fecha asc ");
+        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos < :maxReintentos and cola.estado != :procesado order by cola.fecha asc ");
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", PropiedadGlobalUtil.getMaxReintentosCola(idEntidad));
+        q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
 
         if(total != null) {
             q.setMaxResults(total);
@@ -77,7 +78,6 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         Query q = em.createQuery( "select cola from Cola as cola where cola.idObjeto=:idObjeto and cola.usuarioEntidad.entidad.id=:idEntidad");
         q.setParameter("idObjeto", idObjeto);
         q.setParameter("idEntidad", idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
 
         if(q.getResultList().size()>0){
             return (Cola)q.getResultList().get(0);
