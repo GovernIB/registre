@@ -47,34 +47,34 @@
                                     <form:form modelAttribute="integracionBusqueda" method="post" cssClass="form-horizontal">
                                         <form:hidden path="pageNumber"/>
 
-                                                <div class="form-group col-xs-3 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
-                                                            <form:option value="" label="..."/>
-                                                            <c:forEach var="estado" items="${estados}">
-                                                                <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
-                                                            </c:forEach>
-                                                        </form:select>
-                                                    </div>
+                                            <div class="form-group col-xs-3 espaiLinies senseMargeLat">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                    <form:label path="estado"><spring:message code="integracion.estado"/></form:label>
                                                 </div>
+                                                <div class="col-xs-8">
+                                                    <form:select path="estado" cssClass="chosen-select" onchange="doForm('#integracionBusqueda')">
+                                                        <form:option value="" label="..."/>
+                                                        <c:forEach var="estado" items="${estados}">
+                                                            <form:option value="${estado}"><spring:message code="integracion.estado.${estado}"/></form:option>
+                                                        </c:forEach>
+                                                    </form:select>
+                                                </div>
+                                            </div>
 
-                                                <div class="form-group col-xs-4 espaiLinies senseMargeLat">
-                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                                        <form:label path="numRegFormat"><spring:message code="registroEntrada.numeroRegistro"/></form:label>
-                                                    </div>
-                                                    <div class="col-xs-8">
-                                                        <form:input path="numRegFormat" cssClass="form-control" maxlength="255" />
-                                                    </div>
+                                            <div class="form-group col-xs-4 espaiLinies senseMargeLat">
+                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                    <form:label path="numRegFormat"><spring:message code="registroEntrada.numeroRegistro"/></form:label>
                                                 </div>
+                                                <div class="col-xs-8">
+                                                    <form:input path="numRegFormat" cssClass="form-control" maxlength="255" />
+                                                </div>
+                                            </div>
 
-                                                <div class="form-group col-xs-1 espaiLinies senseMargeLat">
-                                                    <button type="button" onclick="doForm('#integracionBusqueda')" class="btn btn-warning btn-sm btn-block">
-                                                        <spring:message code="regweb.buscar"/>
-                                                    </button>
-                                                </div>
+                                            <div class="form-group col-xs-1 espaiLinies senseMargeLat">
+                                                <button type="button" onclick="doForm('#integracionBusqueda')" class="btn btn-warning btn-sm btn-block">
+                                                    <spring:message code="regweb.buscar"/>
+                                                </button>
+                                            </div>
 
                                     </form:form>
                                 </div>
