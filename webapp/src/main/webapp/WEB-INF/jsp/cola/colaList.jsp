@@ -112,7 +112,7 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col width="101">
+                                            <col width="150">
                                         </colgroup>
                                         <thead>
                                         <tr>
