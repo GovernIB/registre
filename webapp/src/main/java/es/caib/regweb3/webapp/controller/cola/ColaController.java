@@ -85,15 +85,13 @@ public class ColaController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idEntidad}/reiniciarCola/{tipo}", method = RequestMethod.GET)
-    public String  reiniciarCola(@PathVariable Long idEntidad, @PathVariable Long tipo, @ModelAttribute Cola busqueda, Model model,  HttpServletRequest request) throws Exception {
+    public String reiniciarCola(@PathVariable Long idEntidad, @PathVariable Long tipo, HttpServletRequest request) throws Exception {
+
         try {
 
-            Paginacion paginacion= colaEjb.reiniciarColabyEntidadTipo(idEntidad,tipo, busqueda);
-            model.addAttribute("colaBusqueda", busqueda);
-            model.addAttribute("paginacion", paginacion);
+            colaEjb.reiniciarColabyEntidadTipo(idEntidad,tipo);
+
             Mensaje.saveMessageInfo(request, getMessage("cola.reiniciada"));
-
-
 
         } catch (I18NException ie) {
             Mensaje.saveMessageError(request, getMessage("cola.error.reiniciar"));
@@ -167,8 +165,7 @@ public class ColaController extends BaseController {
 
         try {
 
-            Cola cola = colaEjb.findById(colaId);
-            colaEjb.reiniciarElementoCola(cola);
+            colaEjb.reiniciarElementoCola(colaId);
 
             Mensaje.saveMessageInfo(request, getMessage("cola.reiniciado"));
 

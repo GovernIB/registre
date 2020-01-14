@@ -5,7 +5,6 @@ import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
-import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -106,17 +105,12 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad,Integer total, int maxReintentos) throws Exception {
+    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception {
 
         Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos = :maxReintentos order by cola.usuarioEntidad.entidad.id asc");
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", maxReintentos);
-        //q.setHint("org.hibernate.readOnly", true);
-
-        if(total != null) {
-            q.setMaxResults(total);
-        }
 
         return q.getResultList();
     }
@@ -275,26 +269,19 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public Paginacion reiniciarColabyEntidadTipo(Long idEntidad, Long tipo, Cola cola) throws Exception, I18NException {
+    public void reiniciarColabyEntidadTipo(Long idEntidad, Long tipo) throws Exception, I18NException {
 
         //Obtenemos el numero máximo de reintentos de una propiedad global
         Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);
 
-        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
         //Obtenemos todos los que han alcanzado el máximo de reintentos.
-        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo,idEntidad,null,maxReintentos);
+        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo, idEntidad, maxReintentos);
+
         //Reseteamos los valores de los pendientes para que vuelvan a entrar en la cola.
         for(Cola pendiente: pendientesDistribuir){
-            reiniciarElementoCola(pendiente);
+            reiniciarElementoCola(pendiente.getId());
         }
 
-        //Gestionamos la paginación
-        int total = pendientesDistribuir.size();
-        Paginacion paginacion = new Paginacion(total, cola.getPageNumber(),Cola.RESULTADOS_PAGINACION);
-        int inicio = (cola.getPageNumber() - 1) * Cola.RESULTADOS_PAGINACION;
-        int fin = pendientesDistribuir.size()<Cola.RESULTADOS_PAGINACION ? pendientesDistribuir.size():Cola.RESULTADOS_PAGINACION;
-        paginacion.setListado(pendientesDistribuir.subList(inicio,fin));
-        return paginacion;
     }
 
 
@@ -351,12 +338,14 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public void reiniciarElementoCola(Cola cola) throws Exception {
+    public void reiniciarElementoCola(Long idCola) throws Exception {
 
-           cola.setNumeroReintentos(0); //Contador a 0
-           cola.setError("&nbsp;");
-           cola.setEstado(null);
-           merge(cola);
+        Query q = em.createQuery("update Cola set estado=:pendiente, numeroReintentos = :numeroReintentos, error = '' where id = :idCola");
+        q.setParameter("pendiente", RegwebConstantes.COLA_ESTADO_PENDIENTE);
+        q.setParameter("numeroReintentos", 0);
+        q.setParameter("idCola", idCola);
+        q.executeUpdate();
+
     }
 
 }
