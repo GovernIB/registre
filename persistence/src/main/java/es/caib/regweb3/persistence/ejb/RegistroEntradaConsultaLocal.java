@@ -22,6 +22,8 @@ import java.util.List;
 public interface RegistroEntradaConsultaLocal {
 
 
+    Long findByNumeroRegistroOrigen(String numeroRegistroFormateado, Long idRegistro) throws Exception;
+
     /**
      * Obtiene un RegistroEntrada con un mínimo de campos
      * @param idRegistroEntrada

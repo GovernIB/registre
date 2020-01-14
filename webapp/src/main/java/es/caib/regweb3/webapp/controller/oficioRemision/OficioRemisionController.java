@@ -64,11 +64,35 @@ public class OficioRemisionController extends BaseController {
      * Listado de todos los Oficios de Remision
      */
     @RequestMapping(value = "/sinDestino", method = RequestMethod.GET)
-    public String oficiosSinREDestino() throws Exception {
+    public String oficiosSinREDestino(HttpServletRequest request) throws Exception {
 
-        List<Trazabilidad> trazabilidades = trazabilidadEjb.oficiosSinREDestino();
+        List<Trazabilidad> trazabilidadesEntrada = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
+        List<Trazabilidad> trazabilidadesSalida = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
 
-        log.info("Total: " + trazabilidades.size());
+        log.info("Total entradas: " + trazabilidadesEntrada.size());
+
+        for (Trazabilidad t:trazabilidadesEntrada) {
+
+            Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroEntradaOrigen().getNumeroRegistroFormateado(), t.getRegistroEntradaOrigen().getId());
+            log.info("Registro entrada destino: " + re);
+            t.setRegistroEntradaDestino(registroEntradaEjb.getReference(re));
+            trazabilidadEjb.merge(t);
+        }
+
+        log.info("");
+        log.info("---------------------------------------------");
+        log.info("");
+
+        log.info("Total salidas: " + trazabilidadesSalida.size());
+        for (Trazabilidad t:trazabilidadesSalida) {
+
+            Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroSalida().getNumeroRegistroFormateado(), t.getRegistroSalida().getId());
+            log.info("Registro entrada destino: " + re);
+            t.setRegistroEntradaDestino(registroEntradaEjb.getReference(re));
+            trazabilidadEjb.merge(t);
+        }
+
+        Mensaje.saveMessageInfo(request,"Se han solucionado "+trazabilidadesEntrada.size()+ " entradas y "+trazabilidadesSalida.size()+" salidas.");
 
         return "redirect:/oficioRemision/list";
     }
@@ -343,11 +367,11 @@ public class OficioRemisionController extends BaseController {
 
         } catch (I18NException e) {
             log.error(I18NUtils.getMessage(e), e);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(e));
+            Mensaje.saveMessageError(request,  I18NUtils.getMessage(e));
             return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         } catch (I18NValidationException ve) {
             log.error(I18NUtils.getMessage(ve), ve);
-            Mensaje.saveMessageError(request, getMessage("oficioRemision.error.nuevo") + ": " + I18NUtils.getMessage(ve));
+            Mensaje.saveMessageError(request,  I18NUtils.getMessage(ve));
             return "redirect:/oficioRemision/entradasPendientesRemision/" + evento;
         }
 

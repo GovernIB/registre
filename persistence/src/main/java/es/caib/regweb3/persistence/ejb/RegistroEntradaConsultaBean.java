@@ -45,6 +45,25 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     @EJB private OrganismoLocal organismoEjb;
 
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Long findByNumeroRegistroOrigen(String numeroRegistroFormateado, Long idRegistro) throws Exception {
+
+        Query q = em.createQuery("Select re.id from RegistroEntrada as re where re.registroDetalle.numeroRegistroOrigen = :numeroRegistroFormateado " +
+                "and re.id != :idRegistro ");
+
+        q.setParameter("numeroRegistroFormateado", numeroRegistroFormateado);
+        q.setParameter("idRegistro", idRegistro);
+
+        List<Long> registros = q.getResultList();
+
+        if (registros.size() == 1) {
+            return registros.get(0);
+        } else {
+            return null;
+        }
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public RegistroBasico findByIdLigero(Long idRegistroEntrada) throws Exception{
