@@ -98,8 +98,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         ModelAndView mav = new ModelAndView("registroEntrada/registroEntradaListAdmin", result.getModel());
 
+        Entidad entidadActiva = getEntidadActiva(request);
+
         // Obtenemos los Libros de la Entidad
-        List<Libro> librosConsulta = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
+        List<Libro> librosConsulta = libroEjb.getLibrosEntidad(entidadActiva.getId());
 
         List<Organismo> organosDestino = organismoEjb.getAllByEntidad(getEntidadActiva(request).getId());
         List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -130,7 +132,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), false, null, busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), false, null, busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -278,8 +280,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaListAdmin", result.getModel());
 
+        Entidad entidadActiva = getEntidadActiva(request);
+
         // Obtenemos los Libros de la Entidad
-        List<Libro> librosConsulta = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
+        List<Libro> librosConsulta = libroEjb.getLibrosEntidad(entidadActiva.getId());
 
         List<Organismo> organoOrigen = organismoEjb.getAllByEntidad(getEntidadActiva(request).getId());
         List<Oficina> oficinasRegistro = oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -310,7 +314,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), false, null, busqueda.getUsuario(), usuarioEntidad.getEntidad().getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), false, null, busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
