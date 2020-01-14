@@ -307,7 +307,7 @@
         tamModalFitxer = 500;
     } else{   /* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
         tamModalAnexo = 260;
-        tamModalFitxer = 420;
+        tamModalFitxer = 450;
     }
     var tamModalScan = 610;
 
