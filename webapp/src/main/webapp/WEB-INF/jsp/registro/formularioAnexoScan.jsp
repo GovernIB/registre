@@ -44,13 +44,13 @@ parent.closeAndReload();
                
             <c:if test="${teScan}">
                 <div class="col-xs-12">
-                    <div class="col-xs-11">
+<%--                    <div class="col-xs-11">--%>
                         <div class="tab-pane" id="scan">
                             <iframe src="${urlToPluginWebPage}" id="myiframe" scrolling="yes" class="iframeScan">
                                 <div>NO IFRAME</div>
                             </iframe>
                         </div>
-                    </div>
+<%--                    </div>--%>
                 </div>
             </c:if>
                     
