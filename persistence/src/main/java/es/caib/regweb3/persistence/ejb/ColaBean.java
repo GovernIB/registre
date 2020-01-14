@@ -291,7 +291,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         //Montamos el string de la causa del error
         String causa = "";
         if(th != null){
-            causa = th.getCause() + "<br>";
+            causa = th.getMessage() + "<br>";
         }else{//En este caso el plugin no lanza excepción, simplemente devuelve false
             causa = " El plugin de distribución ha devuelto false <br>";
         }
