@@ -948,7 +948,7 @@ a.text-gris:focus {
 }
 .iframeAnexo{
     width: 100%;
-    height: 320px;
+    height: 350px;
 }
 /* SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
 .iframeAnexoFileGros{
@@ -962,10 +962,11 @@ a.text-gris:focus {
 .iframeScan{
     width: 100%;
     /*height: 620px; PER MODAL GROS*/
-    height: 410px;
+    height: 510px;
     background-color: white;
     min-height:200px;
     border: 0;
+    padding: 10px !important;
 }
 /* FI Estils pels diferents iframes d'Annexe */
 
