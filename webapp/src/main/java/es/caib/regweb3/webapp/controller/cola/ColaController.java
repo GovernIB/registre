@@ -93,14 +93,9 @@ public class ColaController extends BaseController {
 
             Mensaje.saveMessageInfo(request, getMessage("cola.reiniciada"));
 
-        } catch (I18NException ie) {
+        } catch (I18NException | Exception ie) {
             Mensaje.saveMessageError(request, getMessage("cola.error.reiniciar"));
             ie.printStackTrace();
-
-        } catch (Exception iie){
-            Mensaje.saveMessageError(request, getMessage("cola.error.reiniciar"));
-            iie.printStackTrace();
-
         }
 
         return "redirect:/cola/list/"+tipo;
