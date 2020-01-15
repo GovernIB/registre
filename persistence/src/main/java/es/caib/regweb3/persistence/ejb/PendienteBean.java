@@ -71,7 +71,6 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     public List<Pendiente> findPendientesProcesar(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
-        q.setHint("org.hibernate.readOnly", true);
 
         List<Pendiente> pendientes = q.getResultList();
         List<Pendiente> pendientesEntidad= new ArrayList<Pendiente>();
