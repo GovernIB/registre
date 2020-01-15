@@ -221,28 +221,33 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      */
     private AsientoRegistralWs getDatosComunesAsiento(Long tipoRegistro){
 
-        AsientoRegistralWs asientoRegistralWs = new AsientoRegistralWs();
-        asientoRegistralWs.setTipoRegistro(tipoRegistro);
+        AsientoRegistralWs asiento = new AsientoRegistralWs();
+        asiento.setTipoRegistro(tipoRegistro);
 
-        asientoRegistralWs.setAplicacion("REGWEB3");
-        asientoRegistralWs.setAplicacionTelematica("REGWEB3");
-        asientoRegistralWs.setCodigoAsunto(null);
-        asientoRegistralWs.setCodigoSia(getTestCodigoSia());
-        asientoRegistralWs.setCodigoUsuario("caibapp");
-        asientoRegistralWs.setEntidadCodigo(getTestEntidadCodigoDir3());
+        asiento.setAplicacion("REGWEB3");
+        asiento.setAplicacionTelematica("REGWEB3");
+        asiento.setCodigoAsunto(null);
+        asiento.setCodigoSia(getTestCodigoSia());
+        asiento.setCodigoUsuario("caibapp");
+        asiento.setEntidadCodigo(getTestEntidadCodigoDir3());
 
-        asientoRegistralWs.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
-        asientoRegistralWs.setExpone(getLoremIpsum());
-        asientoRegistralWs.setSolicita(getLoremIpsum());
-        asientoRegistralWs.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
-        asientoRegistralWs.setLibroCodigo(getTestDestinoLibro());
-        asientoRegistralWs.setPresencial(false);
-        asientoRegistralWs.setResumen("Registro de test AsientoRegistralWs");
-        asientoRegistralWs.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
-        asientoRegistralWs.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
-        asientoRegistralWs.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
+        asiento.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
+        asiento.setExpone(getLoremIpsum());
+        asiento.setSolicita(getLoremIpsum());
+        asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
+        asiento.setLibroCodigo(getTestDestinoLibro());
+        asiento.setPresencial(false);
+        asiento.setResumen("Registro de test AsientoRegistralWs");
+        asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
+        asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
+        asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
 
-        return asientoRegistralWs;
+        asiento.setReferenciaExterna("FE4567Y");
+        asiento.setNumeroExpediente("34567Y/2019");
+        asiento.setTipoTransporte("01");
+        asiento.setObservaciones("Asiento registral realizado mediante el api WS");
+
+        return asiento;
     }
 
     /**
