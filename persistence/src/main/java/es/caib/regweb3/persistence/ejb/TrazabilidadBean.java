@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -36,6 +37,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception{
         Query q = em.createQuery("Select t from Trazabilidad as t " +
                 "where t.tipo = :tipoTrazabilidad and t.oficioRemision.tipoOficioRemision = :tipoOficio and t.oficioRemision.estado = :estadoOficio " +
@@ -46,6 +48,17 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q.setParameter("tipoOficio", tipoOficio);
 
         return q.getResultList();
+    }
+
+    @Override
+    @TransactionTimeout(value = 1200)  // 20 minutos
+    public void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception{
+
+        Query q = em.createQuery("update from Trazabilidad set registroEntradaDestino = :idRegistro where id = :idTrazabilidad");
+
+        q.setParameter("idTrazabilidad", idTrazabilidad);
+        q.setParameter("idRegistro", idRegistro);
+        q.executeUpdate();
     }
 
 

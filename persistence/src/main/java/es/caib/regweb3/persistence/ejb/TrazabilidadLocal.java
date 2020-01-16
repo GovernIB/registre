@@ -20,7 +20,7 @@ import java.util.List;
 public interface TrazabilidadLocal extends BaseEjb<Trazabilidad, Long> {
 
     List<Trazabilidad> oficiosSinREDestino(Long tipoOficio) throws Exception;
-
+    void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception;
 
     /**
      * Obtiene todas las Trazabilidades a partir de un Identificador Intercambio

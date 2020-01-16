@@ -63,36 +63,39 @@ public class OficioRemisionController extends BaseController {
     /**
      * Listado de todos los Oficios de Remision
      */
-    @RequestMapping(value = "/sinDestino", method = RequestMethod.GET)
-    public String oficiosSinREDestino(HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/sinDestino/{tipoOficio}", method = RequestMethod.GET)
+    public String oficiosSinREDestino(@PathVariable Long tipoOficio, HttpServletRequest request) throws Exception {
 
-        List<Trazabilidad> trazabilidadesEntrada = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
-        List<Trazabilidad> trazabilidadesSalida = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+        if(tipoOficio.equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
 
-        log.info("Total entradas: " + trazabilidadesEntrada.size());
+            List<Trazabilidad> trazabilidadesEntrada = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
 
-        for (Trazabilidad t:trazabilidadesEntrada) {
+            log.info("Total entradas: " + trazabilidadesEntrada.size());
 
-            Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroEntradaOrigen().getNumeroRegistroFormateado(), t.getRegistroEntradaOrigen().getId());
-            log.info("Registro entrada destino: " + re);
-            t.setRegistroEntradaDestino(registroEntradaEjb.getReference(re));
-            trazabilidadEjb.merge(t);
+            for (Trazabilidad t:trazabilidadesEntrada) {
+
+                Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroEntradaOrigen().getNumeroRegistroFormateado(), t.getRegistroEntradaOrigen().getId());
+                log.info("Registro entrada destino: " + re);
+                trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
+            }
+
+            Mensaje.saveMessageInfo(request,"Se han solucionado "+trazabilidadesEntrada.size()+" entradas.");
+
+        }else  if(tipoOficio.equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
+
+            List<Trazabilidad> trazabilidadesSalida = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA);
+
+            log.info("Total salidas: " + trazabilidadesSalida.size());
+            for (Trazabilidad t:trazabilidadesSalida) {
+
+                Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroSalida().getNumeroRegistroFormateado(), t.getRegistroSalida().getId());
+                log.info("Registro entrada destino: " + re);
+                trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
+            }
+
+            Mensaje.saveMessageInfo(request,"Se han solucionado "+trazabilidadesSalida.size()+" salidas.");
         }
 
-        log.info("");
-        log.info("---------------------------------------------");
-        log.info("");
-
-        log.info("Total salidas: " + trazabilidadesSalida.size());
-        for (Trazabilidad t:trazabilidadesSalida) {
-
-            Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroSalida().getNumeroRegistroFormateado(), t.getRegistroSalida().getId());
-            log.info("Registro entrada destino: " + re);
-            t.setRegistroEntradaDestino(registroEntradaEjb.getReference(re));
-            trazabilidadEjb.merge(t);
-        }
-
-        Mensaje.saveMessageInfo(request,"Se han solucionado "+trazabilidadesEntrada.size()+ " entradas y "+trazabilidadesSalida.size()+" salidas.");
 
         return "redirect:/oficioRemision/list";
     }
