@@ -753,8 +753,6 @@ public interface RegwebConstantes {
             COLA_DISTRIBUCION
     };
 
-    int    NUMELEMENTOSDISTRIBUIR = 20; // se distribuyen 20 elementos por entidad en cada iteración del scheduler
-
     /* -------------- ESTADO COLAS --------------*/
     Long COLA_ESTADO_ERROR = 1L;
     Long COLA_ESTADO_PENDIENTE = 2L;
