@@ -54,7 +54,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
     @TransactionTimeout(value = 1200)  // 20 minutos
     public void actualizarTrazabilidad(Long idTrazabilidad, Long idRegistro) throws Exception{
 
-        Query q = em.createQuery("update from Trazabilidad set registroEntradaDestino = :idRegistro where id = :idTrazabilidad");
+        Query q = em.createQuery("update from Trazabilidad set registroEntradaDestino.id = :idRegistro where id = :idTrazabilidad");
 
         q.setParameter("idTrazabilidad", idTrazabilidad);
         q.setParameter("idRegistro", idRegistro);
