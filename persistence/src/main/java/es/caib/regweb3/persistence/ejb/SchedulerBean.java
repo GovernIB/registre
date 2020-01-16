@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -170,7 +171,7 @@ public class SchedulerBean implements SchedulerLocal{
      * @throws Exception
      */
     @Override
-    @TransactionTimeout(value = 1200)  // 20 minutos
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void distribuirRegistrosEnCola() throws Exception{
 
         try {
@@ -178,12 +179,13 @@ public class SchedulerBean implements SchedulerLocal{
 
             for (Entidad entidad : entidades) {
                 if(!PropiedadGlobalUtil.pararDistribucion(entidad.getId())) {
+                    long inicio =  System.currentTimeMillis();
                     log.info(" ");
-                    log.info("------------- Inicio Distribucion registros en Cola" + entidad.getNombre() + " -------------");
+                    log.info("------------- Inicio Distribucion registros en Cola " + entidad.getNombre() + " -------------");
                     log.info(" ");
                     distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
                     log.info(" ");
-                    log.info("------------- Fin Distribucion registros en Cola " + entidad.getNombre() + " -------------");
+                    log.info("------------- Fin Distribucion registros en Cola " + entidad.getNombre() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio)+ " -------------");
                 }
             }
 

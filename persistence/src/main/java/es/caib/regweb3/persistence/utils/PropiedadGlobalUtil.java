@@ -541,6 +541,22 @@ public class PropiedadGlobalUtil {
     }
 
     /**
+     * Obtenemos el número de elementos de cada iteración en la Cola
+     * Propiedad: es.caib.regweb3.cola.elementos
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getElementosCola(Long idEntidad) {
+        final String partialPropertyName = "cola.elementos";
+        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+
+        if (valor == null) {
+            valor = 15;
+        }
+        return valor;
+    }
+
+    /**
      * Obtenemos el número máximo de reintentos de la cola
      * Propiedad: es.caib.regweb3.cola.maxReintentos
      * @param idEntidad
