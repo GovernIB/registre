@@ -145,6 +145,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"enlaceDir3","true","Permite mostrar un enlace en le menú a la instalación de DIR3CAIB", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"avisos","false","Muestra o no los avisos pendientes", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
         propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"comunicaciones.generar","true","Permite generar comunicaciones automáticas a los usuarios de las oficinas con mayor carga de trabajo pendiente.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_GENERAL));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cola.elementos","15","Número de elementos de cada iteración en la Cola.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
+        propiedadGlobalEjb.persist(new PropiedadGlobal(RegwebConstantes.REGWEB3_PROPERTY_BASE+"cola.maxReintentos","4","Número máximo de reintentos de los elementos de la Cola.", entidad.getId(), RegwebConstantes.TIPO_PROPIEDAD_DISTRIBUCION));
 
         // Creamos los Plugins
         pluginEjb.persist(new Plugin("Custodia","Custodia de anexos","org.fundaciobit.plugins.documentcustody.filesystem.FileSystemDocumentCustodyPlugin",true,entidad.getId(),RegwebConstantes.PLUGIN_CUSTODIA,null,"es.caib.regweb3.plugins.documentcustody.filesystem.prefix=ANNEX_\n" +
