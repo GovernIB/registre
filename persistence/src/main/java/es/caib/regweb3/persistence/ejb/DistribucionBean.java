@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -20,6 +21,9 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +39,9 @@ import java.util.Locale;
 public class DistribucionBean implements DistribucionLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
+
+    @PersistenceContext(unitName = "regweb3")
+    private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private JustificanteLocal justificanteEjb;
@@ -259,6 +266,31 @@ public class DistribucionBean implements DistribucionLocal {
         }
 
         return distribuido;
+
+    }
+
+    /**
+     *
+     * @param registroEntrada
+     * @throws Exception
+     */
+    private void cambiarEstadoRegistro(RegistroEntrada registroEntrada) throws Exception{
+
+        // Creamos la Trazabilidad
+        Trazabilidad trazabilidad = new Trazabilidad();
+        trazabilidad.setOficioRemision(null);
+        trazabilidad.setFecha(new Date());
+        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
+        trazabilidad.setRegistroSalida(null);
+        trazabilidad.setRegistroEntradaDestino(null);
+        em.persist(trazabilidad);
+
+        //Actualizamos el Estado a DISTRIBUIDO
+        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q.setParameter("idRegistro", registroEntrada.getId());
+        q.executeUpdate();
 
     }
 
