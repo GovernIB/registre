@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
@@ -40,7 +41,6 @@ public class DistribucionBean implements DistribucionLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private ColaLocal colaEjb;
-    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
 
 
     @Override
@@ -164,11 +164,11 @@ public class DistribucionBean implements DistribucionLocal {
     }
 
     @Override
-    @TransactionTimeout(value = 1200)  // 20 minutos
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void distribuirRegistrosEnCola(Long idEntidad) throws Exception {
 
         //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
-        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, RegwebConstantes.NUMELEMENTOSDISTRIBUIR);
+        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, PropiedadGlobalUtil.getElementosCola(idEntidad));
 
         log.info("");
         log.info("Hay " + elementosADistribuir.size() + " elementos que se van a distribuir en esta iteracion");
@@ -177,6 +177,22 @@ public class DistribucionBean implements DistribucionLocal {
 
             distribuirRegistroEnCola(elemento.getIdObjeto(), idEntidad);
         }
+
+    }
+
+    /**
+     * Distribuye un registro de la cola de manera individual
+     *
+     * @param idObjeto
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    @Override
+    public Boolean distribuirRegistro(Long idObjeto, Long idEntidad) throws Exception{
+
+        return distribuirRegistroEnCola(idObjeto, idEntidad);
 
     }
 
@@ -190,8 +206,7 @@ public class DistribucionBean implements DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    @Override
-    public Boolean distribuirRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception {
+    private Boolean distribuirRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception {
 
         Boolean distribuido = false;
 

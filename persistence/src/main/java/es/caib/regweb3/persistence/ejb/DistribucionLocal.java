@@ -49,5 +49,5 @@ public interface DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    Boolean distribuirRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception;
+    Boolean distribuirRegistro(Long idObjeto, Long idEntidad) throws Exception;
 }
