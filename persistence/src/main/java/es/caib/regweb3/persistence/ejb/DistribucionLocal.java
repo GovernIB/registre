@@ -24,24 +24,23 @@ public interface DistribucionLocal {
      *
      * @param re registro de entrada a distribuir
      * @param usuarioEntidad
-     * @param forzarEnvio    Fuerza que se distribuya directamente sin pasar por la Cola, aunque esté así configurado en el Plugin
      * @return lista de destinatarios a los que se debe distribuir el registro
      * @throws Exception
      * @throws I18NException
      */
-    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException;
+    RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException;
 
     /**
-     * Distribuye los registros(varios) que estan en la cola
+     * Procesar los registros(varios) que estan en la cola
      *
      * @param idEntidad
      * @throws Exception
      */
-    void distribuirRegistrosEnCola(Long idEntidad) throws Exception;
+    void procesarRegistrosEnCola(Long idEntidad) throws Exception;
 
 
     /**
-     * Distribuye un registro de la cola de manera individual
+     * Procesa un registro de la cola de manera individual
      *
      * @param idObjeto
      * @param idEntidad
@@ -49,5 +48,5 @@ public interface DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    Boolean distribuirRegistro(Long idObjeto, Long idEntidad) throws Exception;
+    Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception;
 }

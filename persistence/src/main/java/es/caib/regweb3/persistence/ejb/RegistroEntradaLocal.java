@@ -171,7 +171,7 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * @param usuarioEntidad
      * @throws Exception
      */
-    void distribuirRegistroEntrada(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
 
 
     /**

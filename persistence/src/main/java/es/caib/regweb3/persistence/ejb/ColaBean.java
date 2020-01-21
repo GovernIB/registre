@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -19,10 +20,7 @@ import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by mgonzalez on 21/03/2018.
@@ -229,12 +227,28 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public void procesarElemento(Cola elemento) throws Exception{
+    public void procesarElemento(Cola elemento, RegistroEntrada registroEntrada) throws Exception{
 
         Query q = em.createQuery("update Cola set estado=:procesado where id = :idCola");
         q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
         q.setParameter("idCola", elemento.getId());
         q.executeUpdate();
+
+        // Creamos la Trazabilidad
+        Trazabilidad trazabilidad = new Trazabilidad();
+        trazabilidad.setOficioRemision(null);
+        trazabilidad.setFecha(new Date());
+        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
+        trazabilidad.setRegistroSalida(null);
+        trazabilidad.setRegistroEntradaDestino(null);
+        em.persist(trazabilidad);
+
+        //Actualizamos el Estado a DISTRIBUIDO
+        Query q1 = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
+        q1.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+        q1.setParameter("idRegistro", registroEntrada.getId());
+        q1.executeUpdate();
     }
 
     @Override
@@ -286,14 +300,11 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, Throwable th) throws Exception{
+    public void actualizarElementoCola(Cola elemento,Long entidadId, String error) throws Exception{
 
         //Montamos el string de la causa del error
-        String causa = "";
-        if(th != null){
-            causa = th.getMessage() + "<br>";
-        }else{//En este caso el plugin no lanza excepción, simplemente devuelve false
-            causa = " El plugin de distribución ha devuelto false <br>";
+        if(StringUtils.isNotEmpty(error)){
+            error += "<br>";
         }
 
         try {
@@ -309,14 +320,12 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 }
             }
             //Guardamos que ha ocurrido un error en integraciones
-            elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
+            elemento.setError(elemento.getError() + "&nbsp;" +  error);
             merge(elemento);
 
-            // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), th, null,System.currentTimeMillis() - tiempo, entidadId, elemento.getDescripcionObjeto());
 
         }catch (Exception e){
-            elemento.setError(elemento.getError() + "&nbsp;" + hora + causa);
+            elemento.setError(elemento.getError() + "&nbsp;" +  error);
             merge(elemento);
             e.printStackTrace();
         }

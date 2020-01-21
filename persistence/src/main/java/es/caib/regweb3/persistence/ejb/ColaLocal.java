@@ -92,15 +92,11 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
     /**
      *
      * @param elemento
-     * @param descripcion
-     * @param peticion
-     * @param tiempo
+     * @param error
      * @param entidadId
-     * @param hora
-     * @param th
      * @throws Exception
      */
-     void actualizarElementoCola(Cola elemento,String descripcion, StringBuilder peticion,long tiempo,Long entidadId, String hora, Throwable th) throws Exception;
+     void actualizarElementoCola(Cola elemento,Long entidadId, String error) throws Exception;
 
     /**
      * Elimina los elementos de la cola de distribución de la entidad indicada
@@ -121,5 +117,5 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * MArca como procesado un elemento de la Cola
      * @param elemento
      */
-    void procesarElemento(Cola elemento) throws Exception;
+    void procesarElemento(Cola elemento,RegistroEntrada registroEntrada) throws Exception;
 }

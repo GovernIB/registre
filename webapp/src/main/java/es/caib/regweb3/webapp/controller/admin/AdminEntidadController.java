@@ -232,7 +232,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
                         asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                     }
 
-                    registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, usuarioEntidad);
+                    registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad);
 
                     Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
                // }

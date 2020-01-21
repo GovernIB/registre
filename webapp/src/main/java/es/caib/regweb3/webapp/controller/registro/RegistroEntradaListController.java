@@ -728,7 +728,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
             //Distribuimos el registro
-            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, false);
+            respuesta = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
             if (respuesta.getHayPlugin()) {//
                 if (respuesta.getEnviadoCola()) { //Si se ha enviado a la cola
