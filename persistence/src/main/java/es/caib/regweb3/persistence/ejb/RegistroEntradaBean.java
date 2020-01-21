@@ -505,8 +505,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void distribuirRegistroEntrada(RegistroEntrada registroEntrada,
-                                          UsuarioEntidad usuarioEntidad) throws Exception {
+    public void marcarDistribuido(RegistroEntrada registroEntrada,
+                                  UsuarioEntidad usuarioEntidad) throws Exception {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();

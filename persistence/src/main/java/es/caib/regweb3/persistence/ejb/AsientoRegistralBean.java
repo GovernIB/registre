@@ -180,7 +180,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         try{
             // Distribuimos el registro de entrada
-            asynchDistribucion.distribuir(registroEntrada, usuario, false);
+            asynchDistribucion.distribuir(registroEntrada, usuario);
 
         }catch (Exception e){
             e.printStackTrace();

@@ -2,12 +2,10 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.Trazabilidad;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
-import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -23,7 +21,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,48 +48,49 @@ public class DistribucionBean implements DistribucionLocal {
 
 
     @Override
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad, Boolean forzarEnvio) throws Exception, I18NException, I18NValidationException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
+        Boolean distribuido;
 
         //Información a guardar de la integración
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Distribución Registro";
+        String descripcion = "Distribución directa";
         String numRegFormat = re.getNumeroRegistroFormateado();
 
         //Montamos la petición de la integración
         peticion.append("usuario: ").append(re.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
         peticion.append("registro: ").append(re.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
         peticion.append("oficina: ").append(re.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
-        peticion.append("clase: ").append(re.getClass().getName()).append(System.getProperty("line.separator"));
 
         //Obtenemos plugin
         try {
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
 
             //Si han especificado plug-in
-            if (distribucionPlugin != null) {
+            if (distribucionPlugin != null && distribucionPlugin.configurarDistribucion().isEnvioCola()) {
 
+                peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
+
+                // Enviamos el registro a la Cola de Distribución
+                Boolean encolado = colaEjb.enviarAColaDistribucion(re, usuarioEntidad);
+
+                respuestaDistribucion.setEnviadoCola(encolado);
                 respuestaDistribucion.setHayPlugin(true);
 
-                //Obtenemos la configuración de la distribución
-                ConfiguracionDistribucion conf = distribucionPlugin.configurarDistribucion();
-
-                if (conf.isEnvioCola() && !forzarEnvio) { //Si esta configurado para enviarlo a la cola
-                    if (colaEjb.enviarAColaDistribucion(re, usuarioEntidad)) { //si se ha enviado a la cola
-                        respuestaDistribucion.setEnviadoCola(true);
-                    } else { //si no se ha enviado a la cola
-                        respuestaDistribucion.setEnviadoCola(false);
-                    }
-                    return respuestaDistribucion;
-                }
+                return respuestaDistribucion;
 
             }
 
-            // Distribuimos el registro
-            Boolean distribuido = distribuirRegistroEntrada(re, distribucionPlugin, inicio, descripcion, tiempo, peticion);
+            // Distribuimos inmediatamente el registro
+            distribuido = distribuirRegistroEntrada(re, distribucionPlugin);
+
+            if(distribuido){ // Si ha ido bien la Distribución, marcamos el Registro de Entrada
+                registroEntradaEjb.marcarDistribuido(re, re.getUsuario());
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, re.getUsuario().getEntidad().getId(), re.getNumeroRegistroFormateado());
+            }
 
             respuestaDistribucion.setEnviado(distribuido);
 
@@ -129,66 +127,39 @@ public class DistribucionBean implements DistribucionLocal {
      *
      * @param registroEntrada
      * @param distribucionPlugin
-     * @param inicio
-     * @param descripcion
-     * @param tiempo
-     * @param peticion
      * @return
      * @throws Exception
      * @throws I18NValidationException
      * @throws I18NException
      */
-    private Boolean distribuirRegistroEntrada(RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin, Date inicio, String descripcion, long tiempo, StringBuilder peticion) throws Exception, I18NValidationException, I18NException {
+    private Boolean distribuirRegistroEntrada(RegistroEntrada registroEntrada, IDistribucionPlugin distribucionPlugin) throws Exception, I18NValidationException, I18NException {
+
+        Boolean distribuido;
 
         log.info("------------------------------------------------------------");
         log.info("Distribuyendo el registro: " + registroEntrada.getNumeroRegistroFormateado());
         log.info("");
 
-        AnexoFull justificante = null;
         // Si no tiene Justificante, lo creamos
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-            justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+            AnexoFull justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
         }
 
-        if (distribucionPlugin == null) { //Si no hay plugin definido, tramitamos el registro de entrada directamente
-            registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
+        if (distribucionPlugin == null) {
             return true;
-
-        } else {// Hay plugin, lo enviamos a la aplicación destino
-            //Gestionamos los ficheros ténicos antes de distribuir
-            registroEntrada = gestionFicherosTecnicos(registroEntrada);
-            boolean distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
-            if (distribuido) { //Si ha ido bien lo marcamos como distribuido
-                registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
-            }
-
-            return distribuido;
         }
 
-    }
+        //Gestionamos los ficheros ténicos antes de distribuir
+        registroEntrada = gestionFicherosTecnicos(registroEntrada);
+        distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
 
-    @Override
-    @TransactionTimeout(value = 1800)  // 30 minutos
-    public void distribuirRegistrosEnCola(Long idEntidad) throws Exception {
-
-        //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
-        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, PropiedadGlobalUtil.getElementosCola(idEntidad));
-
-        log.info("");
-        log.info("Hay " + elementosADistribuir.size() + " elementos que se van a distribuir en esta iteracion");
-
-        for (Cola elemento : elementosADistribuir) {
-
-            distribuirRegistroEnCola(elemento.getIdObjeto(), idEntidad);
-        }
+        return distribuido;
 
     }
 
     /**
-     * Distribuye un registro de la cola de manera individual
+     * Procesa un registro de la cola de manera individual
      *
      * @param idObjeto
      * @param idEntidad
@@ -197,23 +168,7 @@ public class DistribucionBean implements DistribucionLocal {
      * @throws I18NException
      */
     @Override
-    public Boolean distribuirRegistro(Long idObjeto, Long idEntidad) throws Exception{
-
-        return distribuirRegistroEnCola(idObjeto, idEntidad);
-
-    }
-
-
-    /**
-     * Distribuye un registro de la cola de manera individual
-     *
-     * @param idObjeto
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    private Boolean distribuirRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception {
+    public Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception {
 
         Boolean distribuido = false;
 
@@ -224,8 +179,10 @@ public class DistribucionBean implements DistribucionLocal {
         String descripcion = "Distribución desde Cola";
         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()) + "</b>&nbsp;&nbsp;&nbsp;";
 
+
         //Elemento de la cola
         Cola elemento = colaEjb.findByIdObjeto(idObjeto, idEntidad);
+        String error = "";
 
         try {
 
@@ -244,55 +201,51 @@ public class DistribucionBean implements DistribucionLocal {
             }
 
             //Distribuimos el registro de entrada.
-            distribuido = distribuirRegistroEntrada(registroEntrada, distribucionPlugin, inicio, descripcion, tiempo, peticion);
+            distribuido = distribuirRegistroEntrada(registroEntrada, distribucionPlugin);
 
             if (distribuido) { //Si la distribución ha ido bien
 
-                colaEjb.procesarElemento(elemento); //Eliminamos el elemento de la cola
-
-            } else { //No ha ido bien, actualizamos los diferentes datos del elemento a distribuir
-
-                colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, null);
+                colaEjb.procesarElemento(elemento, registroEntrada); //Eliminamos el elemento de la cola
+                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
         } catch (Exception | I18NException | I18NValidationException e) {
             log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
             e.printStackTrace();
-            colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, e);
+            error = hora + e.getMessage();
+            colaEjb.actualizarElementoCola(elemento, idEntidad, error);
+            // Añadimos el error a la integración
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
         } catch (Throwable t) {
             log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
             t.printStackTrace();
-            colaEjb.actualizarElementoCola(elemento, descripcion, peticion, tiempo, idEntidad, hora, t);
+            error = hora + t.getMessage();
+            colaEjb.actualizarElementoCola(elemento, idEntidad,error);
+            // Añadimos el error a la integración
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), t, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
         }
 
         return distribuido;
 
     }
 
-    /**
-     *
-     * @param registroEntrada
-     * @throws Exception
-     */
-    private void cambiarEstadoRegistro(RegistroEntrada registroEntrada) throws Exception{
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void procesarRegistrosEnCola(Long idEntidad) throws Exception {
 
-        // Creamos la Trazabilidad
-        Trazabilidad trazabilidad = new Trazabilidad();
-        trazabilidad.setOficioRemision(null);
-        trazabilidad.setFecha(new Date());
-        trazabilidad.setTipo(RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
-        trazabilidad.setRegistroEntradaOrigen(registroEntrada);
-        trazabilidad.setRegistroSalida(null);
-        trazabilidad.setRegistroEntradaDestino(null);
-        em.persist(trazabilidad);
+        //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
+        List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, PropiedadGlobalUtil.getElementosCola(idEntidad));
 
-        //Actualizamos el Estado a DISTRIBUIDO
-        Query q = em.createQuery("update RegistroEntrada set estado=:idEstado where id = :idRegistro");
-        q.setParameter("idEstado", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        q.setParameter("idRegistro", registroEntrada.getId());
-        q.executeUpdate();
+        log.info("");
+        log.info("Hay " + elementosADistribuir.size() + " elementos que se van a distribuir en esta iteracion");
+
+        for (Cola elemento : elementosADistribuir) {
+
+            procesarRegistroEnCola(elemento.getIdObjeto(), idEntidad);
+        }
 
     }
+
 
     /**
      * Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.

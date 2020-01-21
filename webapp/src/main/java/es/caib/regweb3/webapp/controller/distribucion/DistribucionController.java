@@ -135,7 +135,7 @@ public class DistribucionController extends BaseController {
         try {
 
             //Distribuimos el registro
-            respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuarioEntidad, true);
+            respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
             if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
                 if(respuestaDistribucion.getEnviadoCola()){ //Si se ha enviado a la cola
@@ -202,7 +202,7 @@ public class DistribucionController extends BaseController {
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        Boolean distribuido = distribucionEjb.distribuirRegistro(idRegistro, entidadActiva.getId());
+        Boolean distribuido = distribucionEjb.procesarRegistroEnCola(idRegistro, entidadActiva.getId());
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));

@@ -602,7 +602,7 @@ public class PropiedadGlobalUtil {
      * @return
      */
     public static boolean pararDistribucion(Long idEntidad){
-        final String partialPropertyName = "parar.cola.distribucion";
+        final String partialPropertyName = "cola.parar.distribucion";
         return getBooleanByEntidad(idEntidad, partialPropertyName);
     }
 
