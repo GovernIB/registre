@@ -172,8 +172,10 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         parametros.put("fechaFin", fechaFin);
 
         // Libro
-        where.add(" registroSalida.libro.id = :idLibro");
-        parametros.put("idLibro", registroSalida.getLibro().getId());
+        if(registroSalida.getLibro().getId() !=  null && registroSalida.getLibro().getId() > 0) {
+            where.add(" registroSalida.libro.id = :idLibro");
+            parametros.put("idLibro", registroSalida.getLibro().getId());
+        }
 
         // Buscamos registros de sañida con anexos
         if (anexos) {

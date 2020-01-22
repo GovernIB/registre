@@ -59,6 +59,7 @@
                             </div>
                             <div class="col-xs-8">
                                 <form:select path="registroSalida.libro.id" cssClass="chosen-select" id="llibre">
+                                    <form:option value="-1">...</form:option>
                                     <c:forEach var="libro" items="${librosConsulta}">
                                         <c:if test="${libro.activo}">
                                             <form:option value="${libro.id}">${libro.nombreCompleto}</form:option>
