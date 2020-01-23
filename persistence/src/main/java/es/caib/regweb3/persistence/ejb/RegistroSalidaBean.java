@@ -571,7 +571,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
 
             /* En el caso de rectificar se escoge el primer sustituto de la lista que nos devuelven y se cambia de manera transparente para el usuario */
-            if (!interesadoAdministracion.getCodigoDir3().isEmpty()) {
+            if (interesadoAdministracion != null && !interesadoAdministracion.getCodigoDir3().isEmpty()) {
                 Organismo organismo = organismoEjb.findByCodigoEntidad(codigoDir3, registroSalida.getUsuario().getEntidad().getId());
                 if (organismo != null) { //Destino interno
                     if (!organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
@@ -593,7 +593,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
                     UnidadTF destinoExterno = organismoEjb.obtenerDestinoExterno(interesadoAdministracion.getCodigoDir3());
                     //Si está extinguido
-                    if (!destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
+                    if (destinoExterno != null && !destinoExterno.getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                         //Si es SIR, obtenemos sus sustitutos y asignamos el primero.
                         if (registroSalida.getEvento().equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
                             List<UnidadTF> destinosExternosSIR = organismoEjb.obtenerSustitutosExternosSIR(destinoExterno.getCodigo());
