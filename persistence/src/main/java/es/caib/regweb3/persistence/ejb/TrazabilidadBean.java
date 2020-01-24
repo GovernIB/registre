@@ -46,6 +46,7 @@ public class TrazabilidadBean extends BaseEjbJPA<Trazabilidad, Long> implements 
         q.setParameter("tipoTrazabilidad",RegwebConstantes.TRAZABILIDAD_OFICIO);
         q.setParameter("estadoOficio",RegwebConstantes.OFICIO_ACEPTADO);
         q.setParameter("tipoOficio", tipoOficio);
+        q.setMaxResults(20);
 
         return q.getResultList();
     }
