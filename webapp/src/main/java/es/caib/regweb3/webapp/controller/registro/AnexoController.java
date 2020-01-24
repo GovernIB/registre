@@ -200,7 +200,7 @@ public class AnexoController extends BaseController {
         //Cargamos los atributos comunes
         loadCommonAttributes(request, model);
         // En caso de edición se cargan todos los tipos de validez documento
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
         model.addAttribute("anexoForm", anexoForm);
 
         return "registro/formularioAnexo";
@@ -238,7 +238,7 @@ public class AnexoController extends BaseController {
 
         }
         loadCommonAttributes(request, model);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
         return "registro/formularioAnexo";
 
     }
