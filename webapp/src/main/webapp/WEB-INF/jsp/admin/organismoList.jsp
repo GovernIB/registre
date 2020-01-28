@@ -52,7 +52,7 @@
                             </div>
 
                             <div class="form-group col-xs-6">
-                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                <div class="col-xs-4 pull-left align-right">
                                     <spring:message code="organismo.estado"/>
                                 </div>
                                 <div class="col-xs-8">
