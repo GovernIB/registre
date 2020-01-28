@@ -177,7 +177,7 @@ public class DistribucionBean implements DistribucionLocal {
         Date inicio = new Date();
         long tiempo = System.currentTimeMillis();
         String descripcion = "Distribución desde Cola";
-        String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()) + "</b>&nbsp;&nbsp;&nbsp;";
+        String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
 
 
         //Elemento de la cola
