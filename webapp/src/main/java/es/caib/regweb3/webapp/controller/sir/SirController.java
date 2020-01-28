@@ -68,6 +68,33 @@ public class SirController extends BaseController {
 
 
     /**
+     * Controller temporal para anular Oficios enviados a SIR
+     */
+    @RequestMapping(value = "/{idIntercambio}/anular", method = RequestMethod.GET)
+    public String anularOficio(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
+
+        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(idIntercambio);
+
+        try{
+
+            if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO){
+
+                oficioRemision.setEstado(RegwebConstantes.OFICIO_ANULADO);
+                oficioRemision.setFechaEstado(new Date());
+                oficioRemisionEjb.merge(oficioRemision);
+
+                Mensaje.saveMessageInfo(request,"Se ha marcado anulado el oficio de remisión");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Mensaje.saveMessageError(request,"Ha ocurrido un error anulando el Oficio: " + e.getMessage());
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
      * Controller temporal para confirmar Oficios enviados a SIR
      */
     @RequestMapping(value = "/{idIntercambio}/confirmar", method = RequestMethod.GET)
