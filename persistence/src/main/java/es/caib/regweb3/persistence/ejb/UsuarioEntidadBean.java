@@ -518,7 +518,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         if (idLibro != null && idLibro > 0) { //S'HA TRIAT UN LLIBRE
 
-            query = new StringBuilder("Select permLibUsu.usuario.id, permLibUsu.usuario.usuario.identificador, permLibUsu.usuario.usuario.nombre, permLibUsu.usuario.usuario.apellido1, permLibUsu.usuario.usuario.apellido2, permLibUsu.usuario.usuario.documento, permLibUsu.usuario.usuario.tipoUsuario, permLibUsu.usuario.usuario.email, permLibUsu.permiso from PermisoLibroUsuario as permLibUsu ");
+            query = new StringBuilder("Select permLibUsu.usuario.id, permLibUsu.usuario.usuario.identificador, permLibUsu.usuario.usuario.nombre, permLibUsu.usuario.usuario.apellido1, permLibUsu.usuario.usuario.apellido2, permLibUsu.usuario.usuario.documento, permLibUsu.usuario.usuario.tipoUsuario, permLibUsu.usuario.usuario.email, permLibUsu.permiso, permLibUsu.id from PermisoLibroUsuario as permLibUsu ");
 
             if (identificador != null && identificador.length() > 0) {
                 where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.identificador", "identificador", parametros, identificador));
@@ -541,11 +541,10 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 parametros.put("tipo", tipo);
             }
 
-            if (idLibro != null && idLibro > 0) { //S'HA TRIAT UN LLIBRE A LA CERCA
-                where.add("permLibUsu.libro.id = :idLibro ");
-                parametros.put("idLibro", idLibro);
-                where.add("permLibUsu.activo = true ");
-            }
+            where.add("permLibUsu.libro.id = :idLibro ");
+            parametros.put("idLibro", idLibro);
+            where.add("permLibUsu.activo = true ");
+            where.add("permLibUsu.libro.activo = true ");
 
             where.add("permLibUsu.usuario.entidad.id = :idEntidad ");
             parametros.put("idEntidad", idEntidad);
@@ -582,10 +581,13 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
             for (Object[] object : result) {
                 PermisoLibroUsuario permisoLibroUsuario = new PermisoLibroUsuario((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
-                        (String) object[4], (String) object[5], (Long) object[6], (String) object[7], (Long) object[8]);
+                        (String) object[4], (String) object[5], (Long) object[6], (String) object[7], (Long) object[8], (Long) object[9]);
 
                 permisos.add(permisoLibroUsuario);
+
+                log.info("usuario: " + permisoLibroUsuario.getUsuario().getUsuario().getIdentificador() + " - LIBRO:  " + idLibro + " - permiso: " + permisoLibroUsuario.getPermiso() + " - id: " + permisoLibroUsuario.getId());
             }
+
 
         } else { // NO S'HA TRIAT LLIBRE
 
@@ -642,7 +644,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
             for (Object[] object : result) {
                 PermisoLibroUsuario permisoLibroUsuario = new PermisoLibroUsuario((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
-                        (String) object[4], (String) object[5], (Long) object[6], (String) object[7], null);
+                        (String) object[4], (String) object[5], (Long) object[6], (String) object[7], null, null);
 
                 permisos.add(permisoLibroUsuario);
             }
