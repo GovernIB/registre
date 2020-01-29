@@ -147,7 +147,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         } catch (Exception e) {
             if(e.getLocalizedMessage().contains("ja ha estat donada")){
-                log.info("Consideramos que la anotación ya esxiste y la marcamos como Distribuida");
+                log.info("Consideramos que la anotación : " + registro.getNumeroRegistroFormateado()+"  ya esxiste y la marcamos como Distribuida");
                 return true;
             }else{
                 e.printStackTrace();
