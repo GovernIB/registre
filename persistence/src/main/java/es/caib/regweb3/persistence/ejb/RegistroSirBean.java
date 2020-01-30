@@ -1931,7 +1931,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             anexo.setTitulo(anexoSir.getNombreFichero());
 
             if (anexoSir.getValidezDocumento() != null) {
-                anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
+                //Transformamos de copia compulsada a copia_original = autèntica
+                if(Long.valueOf(anexoSir.getValidezDocumento())== TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA){
+                    anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
+                }else {
+                    anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
+                }
             } else {//Campo NTI Cogemos la validez de documento indicada por el usuario
                 if (camposNTI.getIdValidezDocumento() != null) {
                     anexo.setValidezDocumento(Long.valueOf(camposNTI.getIdValidezDocumento()));

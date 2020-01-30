@@ -27,7 +27,6 @@ public class AnexoWs {
     private String tipoDocumental;
     /**
      * Long TIPOVALIDEZDOCUMENTO_COPIA="01";
-     * TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA="02";
      * TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL="03";
      * TIPOVALIDEZDOCUMENTO_ORIGINAL="04";
      */
