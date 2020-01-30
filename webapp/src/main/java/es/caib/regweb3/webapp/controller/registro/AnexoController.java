@@ -86,7 +86,7 @@ public class AnexoController extends BaseController {
         //Cargamos atributos comunes
         loadCommonAttributes(request, model);
         //Cuando creamos un anexo, no se carga el tipo de validez de documento "Copia Compulsada"
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         return "registro/formularioAnexo";
     }
 
@@ -146,7 +146,7 @@ public class AnexoController extends BaseController {
 
         // si hay errores, volvemos al formulario cargando los valores comunes
         loadCommonAttributes(request, model);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         return "registro/formularioAnexo";
 
     }
@@ -200,7 +200,7 @@ public class AnexoController extends BaseController {
         //Cargamos los atributos comunes
         loadCommonAttributes(request, model);
         // En caso de edición se cargan todos los tipos de validez documento
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
 
         return "registro/formularioAnexo";
@@ -238,7 +238,7 @@ public class AnexoController extends BaseController {
 
         }
         loadCommonAttributes(request, model);
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         return "registro/formularioAnexo";
 
     }

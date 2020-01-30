@@ -125,7 +125,7 @@
                                     <c:forEach items="${tiposValidezDocumento}" var="validezDocumento">
                                         <label class="radio">
                                             <c:if test="${validezDocumento == RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA}">
-                                                <form:radiobutton  path="anexo.validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"  checked = "cheked"/><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>
+                                                <form:radiobutton  path="anexo.validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481"  checked = "checked"/><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>
                                             </c:if>
                                             <c:if test="${validezDocumento != RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA}">
                                                 <form:radiobutton  path="anexo.validezDocumento"  value="${validezDocumento}" data-parsley-required="true" data-parsley-multiple="BuyAgain" data-parsley-id="1481" /><span class="text12"> <spring:message code="tipoValidezDocumento.${validezDocumento}"/></span>

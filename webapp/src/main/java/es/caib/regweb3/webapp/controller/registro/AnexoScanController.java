@@ -68,7 +68,7 @@ public class AnexoScanController extends AnexoController {
         request.getSession().setAttribute("anexoForm", anexoForm);
         loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
 
-        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_ENVIO);
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
         return "registro/formularioAnexoScan";
     }
