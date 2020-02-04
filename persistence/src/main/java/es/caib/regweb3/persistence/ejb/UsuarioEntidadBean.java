@@ -584,8 +584,6 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                         (String) object[4], (String) object[5], (Long) object[6], (String) object[7], (Long) object[8], (Long) object[9]);
 
                 permisos.add(permisoLibroUsuario);
-
-                log.info("usuario: " + permisoLibroUsuario.getUsuario().getUsuario().getIdentificador() + " - LIBRO:  " + idLibro + " - permiso: " + permisoLibroUsuario.getPermiso() + " - id: " + permisoLibroUsuario.getId());
             }
 
 
