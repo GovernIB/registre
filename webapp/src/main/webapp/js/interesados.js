@@ -98,18 +98,12 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
             mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
 
             // Actualizamos el evento del registro de salida
-            if(tipoRegistro === 2){
+            if(tipoRegistro === '2'){
              actualizarEventoRegistroSalida(idRegistroSalida);
              }
         }
     }
     mostrarOcultarTabla();
-
-    // Recargamos la página cuando editemos una salida, lo hacemos por si se añade un Organismos SIR
-    // de esa manera, se detectará y aparecerá el botón de Envío
-    if(idRegistroDetalle && mensaje && tipoRegistro === 2){
-        location.reload();
-    }
 }
 
 /**
@@ -1230,6 +1224,7 @@ function actualizarEventoRegistroSalida(idRegistroSalida){
         data: { idRegistroSalida: idRegistroSalida},
         type: "GET",
         success: function(result) {
+            location.reload();
         }
     });
 }

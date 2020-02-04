@@ -190,7 +190,6 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
 
                 HSSFRow row = sheet.createRow(rowNum++);
                 PermisoLibroUsuario permisoLibroUsuario = permisos.get(i);
-                log.info("USUARIO: " + permisoLibroUsuario.getUsuario().getUsuario().getIdentificador());
                 // Identificador
                 row.createCell(0).setCellValue(permisoLibroUsuario.getUsuario().getUsuario().getIdentificador());
                 // Nom
@@ -213,17 +212,13 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                     row.createCell(7).setCellValue("");
                     boolean mismoUsuario = true;
                     while (mismoUsuario) {
-                        log.info("PERMIS valor: " + permisoLibroUsuario.getPermiso() + " - " + permisoLibroUsuario.getId());
                         if (permisoLibroUsuario.getPermiso().equals(RegwebConstantes.PERMISO_REGISTRO_ENTRADA)) {
-                            log.info("Permis ENTRADA");
                             row.createCell(5).setCellValue("X");
                         } else {
                             if (permisoLibroUsuario.getPermiso().equals(RegwebConstantes.PERMISO_REGISTRO_SALIDA)) {
-                                log.info("Permis SORTIDA");
                                 row.createCell(6).setCellValue("X");
                             } else {
                                 if (permisoLibroUsuario.getPermiso().equals(RegwebConstantes.PERMISO_SIR)) {
-                                    log.info("Permis SIR");
                                     row.createCell(7).setCellValue("X");
                                 }
                             }
@@ -232,7 +227,6 @@ public class ExportarUsuariosExcel extends AbstractExcelView {
                         if (i < permisos.size() - 1) {
                             if (!permisoLibroUsuario.getUsuario().getId().equals(permisos.get(i + 1).getUsuario().getId())) {
                                 mismoUsuario = false;
-                                log.info("--------- CANVI USUARI ---------");
                             } else {
                                 i = i + 1;
                                 permisoLibroUsuario = permisos.get(i);

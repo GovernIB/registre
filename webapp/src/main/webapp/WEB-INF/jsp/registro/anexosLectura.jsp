@@ -70,6 +70,7 @@
                             </tr>
                             </thead>
                             <tbody>
+                            <c:set var="totalA" value="0"/>
                             <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
                                 <c:set var="tamanyAnexo" value="0"/>
                                 <!-- No mostra el justificant ni ho conta pel tamany màxim -->
@@ -105,6 +106,7 @@
                                                 </c:if>
                                                     <td>
                                                         ${tamanyAnexo } KB
+                                                        <c:set var="totalA" value="${totalA + tamanyAnexo }"/>
                                                     </td>
                                             </c:if>
 
@@ -242,6 +244,14 @@
                                     </tr>
                                 </c:if>
                             </c:forEach>
+                                <%-- Fila pel tamany Total dels annexes --%>
+                            <tr>
+                                <td class="senseBorder"></td>
+                                <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
+                                    <b>${totalA} KB</b></td>
+                                <td class="senseBorder"></td>
+                                <td class="senseBorder"></td>
+                            </tr>
                             </tbody>
                         </table>
                     </c:if>
