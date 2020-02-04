@@ -66,6 +66,8 @@ public class OficioRemisionController extends BaseController {
     @RequestMapping(value = "/sinDestino/{tipoOficio}", method = RequestMethod.GET)
     public String oficiosSinREDestino(@PathVariable Long tipoOficio, HttpServletRequest request) throws Exception {
 
+        int contador = 0;
+
         if(tipoOficio.equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
 
             List<Trazabilidad> trazabilidadesEntrada = trazabilidadEjb.oficiosSinREDestino(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA);
@@ -75,11 +77,15 @@ public class OficioRemisionController extends BaseController {
             for (Trazabilidad t:trazabilidadesEntrada) {
 
                 Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroEntradaOrigen().getNumeroRegistroFormateado(), t.getRegistroEntradaOrigen().getId());
-                log.info("Registro entrada destino: " + re);
-                trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
+                if(re != null){
+                    log.info("Registro entrada destino: " + re);
+                    trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
+                    contador = contador + 1;
+                }
+
             }
 
-            Mensaje.saveMessageInfo(request,"Se han solucionado "+trazabilidadesEntrada.size()+" entradas.");
+            Mensaje.saveMessageInfo(request,"Se han encontrado "+trazabilidadesEntrada.size()+" trazabilidades y se han solucionado "+contador+" entradas.");
 
         }else  if(tipoOficio.equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
 
@@ -89,11 +95,16 @@ public class OficioRemisionController extends BaseController {
             for (Trazabilidad t:trazabilidadesSalida) {
 
                 Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroSalida().getNumeroRegistroFormateado(), t.getRegistroSalida().getId());
-                log.info("Registro entrada destino: " + re);
-                trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
+
+                if(re != null){
+                    log.info("Registro entrada destino: " + re);
+                    trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
+                    contador = contador + 1;
+                }
+
             }
 
-            Mensaje.saveMessageInfo(request,"Se han solucionado "+trazabilidadesSalida.size()+" salidas.");
+            Mensaje.saveMessageInfo(request,"Se han encontrado "+trazabilidadesSalida.size()+" trazabilidades y se han solucionado "+contador+" salidas.");
         }
 
 
