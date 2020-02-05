@@ -133,7 +133,9 @@
                         <c:if test="${not empty trazabilidades}">
 
                             <div class="tab-pane" id="trazabilidad">
-                                <c:import url="../trazabilidad/trazabilidadEntrada.jsp"/>
+                                <c:import url="../trazabilidad/trazabilidadEntrada.jsp">
+                                    <c:param name="adminEntidad" value="true"/>
+                                </c:import>
                             </div>
                         </c:if>
 
