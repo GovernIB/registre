@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -83,6 +84,26 @@ public class AnexoScanController extends AnexoController {
         try {
             //Preparamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
             manageDocumentCustodySignatureCustody(request, anexoForm);
+
+            //Validamos las condiciones de SIR
+            if (isSIR) {
+                String docExtension = "";
+                String firmaExtension = "";
+                long docSize = -1;
+                long firmaSize = -1;
+                //obtenemos tamaño y extensión del documento
+                if (anexoForm.getDocumentoCustody() != null) {
+                    docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
+                    docSize = anexoForm.getDocumentoCustody().getLength();
+                }
+                //obtenemos tamaño y extensión de la firma
+                if (anexoForm.getSignatureCustody() != null) {
+                    firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
+                    firmaSize = anexoForm.getSignatureCustody().getLength();
+                }
+                //validamos las limitaciones SIR
+                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, null, true);
+            }
 
             //Validamos la firma del anexoForm que nos indican, previo a crear el anexo
             validarAnexoForm(request, anexoForm);

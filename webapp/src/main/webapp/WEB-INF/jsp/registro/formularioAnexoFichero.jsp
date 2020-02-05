@@ -76,7 +76,7 @@
                            </span>
                         <input type="text" id="documentFileText" class="form-control" readonly>
                     </div>
-                    <form:errors path="documentoFile" cssClass="help-block" element="span"/>
+                    <form:errors path="documentoFile" cssClass="label label-danger" element="span"/>
                 </div>
                 <div class="col-xs-2">
                     <button type="button" class="close centrat-float-left" onClick="borrarCampo('documentFile');">×</button>
@@ -100,7 +100,7 @@
                        </span>
                     <input type="text" id="firmaFileText" class="form-control" readonly>
                 </div>
-                <form:errors path="firmaFile" cssClass="help-block" element="span"/>
+                <form:errors path="firmaFile" cssClass="label label-danger" element="span"/>
             </div>
             <div class="col-xs-2">
                 <button type="button" class="close centrat-float-left" onClick="borrarCampo('firmaFile');">×</button>

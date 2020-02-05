@@ -101,27 +101,6 @@ public class AnexoController extends BaseController {
         //Validamos el anexo
         anexoValidator.validate(anexoForm.getAnexo(), result);
 
-        //Validamos las condiciones de SIR
-        boolean isSIR = anexoForm.getOficioRemisionSir();
-        if (isSIR) {
-            String docExtension = "";
-            String firmaExtension = "";
-            long docSize = -1;
-            long firmaSize = -1;
-            //obtenemos tamaño y extensión del documento
-            if (anexoForm.getDocumentoCustody() != null) {
-                docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoCustody().getName());
-                docSize = anexoForm.getDocumentoCustody().getLength();
-            }
-            //obtenemos tamaño y extensión de la firma
-            if (anexoForm.getSignatureCustody() != null) {
-                firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getSignatureCustody().getName());
-                firmaSize = anexoForm.getSignatureCustody().getLength();
-            }
-            //validamos las limitaciones SIR
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, true);
-        }
-
         if (!result.hasErrors()) { // Si no hay errores
 
             try {

@@ -317,21 +317,21 @@
             var iframe = parent.$('#targetiframe').height();
             var modal = parent.$('#modalAnexos').find('.modal-content').height();
 
-            if($('#mensajeError').length != 0){
+            if($('#mensajeError').length !== 0){
                 iframe = iframe + incrementError;
                 parent.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
                 parent.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
-            if($('.alert-warning').length != 0){
+            if($('.alert-warning').length !== 0){
                 iframe = iframe + incrementError + 40;
                 parent.$('#targetiframe').height(iframe);
                 modal = modal + incrementError + 40;
                 parent.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
-            if($('.alert-success').length != 0){
+            if($('.alert-success').length !== 0){
                 iframe = iframe + incrementError;
                 parent.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
@@ -348,7 +348,7 @@
         var iframe = parent.$('#targetiframe').height();
         var modal = parent.$('#modalAnexos').find('.modal-content').height();
 
-        if($('#mensajeError').length != 0){
+        if($('#mensajeError').length !== 0){
             $('#mensajeError').remove();
             iframe = iframe - incrementError;
             parent.$('#targetiframe').height(iframe);

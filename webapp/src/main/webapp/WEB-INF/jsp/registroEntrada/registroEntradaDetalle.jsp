@@ -326,7 +326,9 @@
 
                             <div class="tab-pane" id="trazabilidad">
 
-                                <c:import url="../trazabilidad/trazabilidadEntrada.jsp"/>
+                                <c:import url="../trazabilidad/trazabilidadEntrada.jsp">
+                                    <c:param name="adminEntidad" value="false"/>
+                                </c:import>
 
                             </div>
                         </c:if>

@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -87,6 +88,31 @@ public class AnexoFicheroController extends AnexoController {
 
         log.info(" Passa per ficherosPost");
 
+        // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
+        boolean isSIR = anexoForm.getOficioRemisionSir();
+
+        if (isSIR) { //Verificación de las limitaciones de un anexo via SIR
+            long docSize = -1;
+            String docExtension = "";
+            //Obtenemos extensión y tamaño del archivo
+            if (anexoForm.getDocumentoFile() != null) {
+                docSize = anexoForm.getDocumentoFile().getSize();
+                docExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getDocumentoFile().getOriginalFilename());
+            }
+
+            long firmaSize = -1;
+            String firmaExtension = "";
+            //Obtenemos extensión y tamaño del documento firma
+            if (anexoForm.getFirmaFile() != null) {
+                firmaSize = anexoForm.getFirmaFile().getSize();
+                firmaExtension = AnexoUtils.obtenerExtensionAnexo(anexoForm.getFirmaFile().getOriginalFilename());
+            }
+
+            //Validamos las limitaciones SIR
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, false);
+
+        }
+
         if (result.hasErrors()) {
 
             return "registro/formularioAnexoFichero";
@@ -152,6 +178,7 @@ public class AnexoFicheroController extends AnexoController {
             sc.setData(multipart.getBytes());
             sc.setMime(multipart.getContentType());
             sc.setName(multipart.getOriginalFilename());
+            sc.setLength(multipart.getSize());
 
             // Ajustamos los valores de custodia con los que se guardará el signaturecustody.
             if (modoFirma == RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED) {
@@ -200,6 +227,7 @@ public class AnexoFicheroController extends AnexoController {
             dc.setData(multipart.getBytes());
             dc.setMime(multipart.getContentType());
             dc.setName(multipart.getOriginalFilename());
+            dc.setLength(multipart.getSize());
         }
         return dc;
     }
