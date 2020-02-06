@@ -69,6 +69,7 @@ public class ArchivoManager {
         try {
             processError();
         } catch (Exception e) {
+            log.info("Error eliminado archivos en disco..");
             e.printStackTrace();
         }
     }

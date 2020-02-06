@@ -215,7 +215,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             e.printStackTrace();
             for(AnexoSir anexoSir: registroSir.getAnexos()){
                 ArchivoManager am = new ArchivoManager(anexoSir.getAnexo(),archivoEjb);
-                am.processError();
+                am.processErrorArchivosWithoutThrowException();
                 log.info("Eliminamos los posibles archivos creados: " + anexoSir.getAnexo().getId());
             }
             throw e;
