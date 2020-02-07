@@ -76,7 +76,7 @@ public class OficioRemisionController extends BaseController {
 
             for (Trazabilidad t:trazabilidadesEntrada) {
 
-                Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroEntradaOrigen().getNumeroRegistroFormateado(), t.getRegistroEntradaOrigen().getId());
+                Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroEntradaOrigen().getRegistroDetalle().getNumeroRegistroOrigen(), t.getRegistroEntradaOrigen().getId());
                 if(re != null){
                     log.info("Registro entrada destino: " + re);
                     trazabilidadEjb.actualizarTrazabilidad(t.getId(),re);
