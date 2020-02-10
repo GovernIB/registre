@@ -94,7 +94,7 @@ public class OficioRemisionController extends BaseController {
             log.info("Total salidas: " + trazabilidadesSalida.size());
             for (Trazabilidad t:trazabilidadesSalida) {
 
-                Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroSalida().getNumeroRegistroFormateado(), t.getRegistroSalida().getId());
+                Long re = registroEntradaConsultaEjb.findByNumeroRegistroOrigen(t.getRegistroSalida().getRegistroDetalle().getNumeroRegistroOrigen(), t.getRegistroSalida().getId());
 
                 if(re != null){
                     log.info("Registro entrada destino: " + re);
