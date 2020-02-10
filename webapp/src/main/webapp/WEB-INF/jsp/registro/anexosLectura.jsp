@@ -38,7 +38,12 @@
                     </div>
                 </c:if>
                 <%--Tiene Anexos--%>
+                <c:set var="anexosPurgados" value="false"/>
                 <c:if test="${not empty registro.registroDetalle.anexos && fn:length(registro.registroDetalle.anexos) >= 1}">
+                    <!-- Calculamos si estan purgados los anexos, coge el valor del último anexo, pero estan siempre todos purgados-->
+                    <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
+                        <c:set var="anexosPurgados" value="${anexo.purgado}"/>
+                    </c:forEach>
                     <c:if test="${fn:length(registro.registroDetalle.anexos) == 1 && registro.registroDetalle.tieneJustificante}">
                         <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/><strong> <spring:message
@@ -52,7 +57,7 @@
                             <colgroup>
                                 <col>
                                 <col>
-                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
                                     <col>
                                 </c:if>
                                 <col>
@@ -62,7 +67,7 @@
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
                                 <th><spring:message code="anexo.tipoDocumento"/></th>
-                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
+                                <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
                                     <th><spring:message code="anexo.tamano"/></th>
                                 </c:if>
                                 <th class="center"><spring:message code="anexo.anexo"/></th>
@@ -245,13 +250,15 @@
                                 </c:if>
                             </c:forEach>
                                 <%-- Fila pel tamany Total dels annexes --%>
-                            <tr>
-                                <td class="senseBorder"></td>
-                                <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
-                                    <b>${totalA} KB</b></td>
-                                <td class="senseBorder"></td>
-                                <td class="senseBorder"></td>
-                            </tr>
+                            <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
+                                <tr>
+                                    <td class="senseBorder"></td>
+                                    <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
+                                        <b>${totalA} KB</b></td>
+                                    <td class="senseBorder"></td>
+                                    <td class="senseBorder"></td>
+                                </tr>
+                            </c:if>
                             </tbody>
                         </table>
                     </c:if>
