@@ -572,6 +572,21 @@ public class RegistroDetalle implements Serializable {
         return false; // No tiene ningun anexo
     }
 
+    /**
+     * Devuelve si el registroDetalle tiene los anexos purgados
+     * @return
+     */
+    @Transient
+    public boolean isDetallePurgado(){
+
+        for(Anexo anexo: anexos){
+            if(anexo.isPurgado() && !anexo.isJustificante()){
+                return true;
+            }
+        }
+        return false; // No tiene ningun anexo
+    }
+
     @Transient
     public String getExtractoCorto(){
 

@@ -31,19 +31,17 @@
         <div class="panel-body">
             <div class="table-responsive">
                 <%--No tiene Anexos--%>
-                <c:if test="${empty registro.registroDetalle.anexos}">
+                <c:if test="${!registro.registroDetalle.tieneAnexos}">
                     <div class="alert alert-grey ">
                         <spring:message code="regweb.listado.vacio"/><strong> <spring:message
                             code="anexo.anexo"/></strong>
                     </div>
                 </c:if>
+                <!-- Averiguamos si el registroDetalle tiene los anexos purgados -->
+                <c:set var="anexosPurgados" value="${registro.registroDetalle.detallePurgado}"/>
                 <%--Tiene Anexos--%>
-                <c:set var="anexosPurgados" value="false"/>
-                <c:if test="${not empty registro.registroDetalle.anexos && fn:length(registro.registroDetalle.anexos) >= 1}">
-                    <!-- Calculamos si estan purgados los anexos, coge el valor del último anexo, pero estan siempre todos purgados-->
-                    <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
-                        <c:set var="anexosPurgados" value="${anexo.purgado}"/>
-                    </c:forEach>
+                <c:if test="${registro.registroDetalle.tieneAnexos}">
+
                     <c:if test="${fn:length(registro.registroDetalle.anexos) == 1 && registro.registroDetalle.tieneJustificante}">
                         <div class="alert alert-grey ">
                             <spring:message code="regweb.listado.vacio"/><strong> <spring:message
