@@ -10,6 +10,7 @@ import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
+import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -66,6 +67,75 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/MensajeControlEJB/local")
     private MensajeControlLocal mensajeControlEjb;
 
+    @EJB(mappedName = "regweb3/MensajeEJB/local")
+    private MensajeLocal mensajeEjb;
+
+
+    /**
+     * Controller temporal para relacionar un RegistroSir con un RegistroEntrada
+     */
+    @RequestMapping(value = "/{idRegistroSir}/{idRegistroEntrada}/aceptar", method = RequestMethod.GET)
+    public String aceptarRegistroSir(@PathVariable Long idRegistroSir,@PathVariable Long idRegistroEntrada, HttpServletRequest request) throws Exception {
+
+        RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
+
+        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistroEntrada);
+
+        if(registroSir == null || registroEntrada == null){
+
+            Mensaje.saveMessageError(request,"El RegistroSir o el RegistroEntrada no existen");
+            return "redirect:/inici";
+        }
+
+        try{
+
+            // Creamos la TrazabilidadSir
+            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+            trazabilidadSir.setFecha(registroEntrada.getFecha());
+            trazabilidadSir.setRegistroSir(registroSir);
+            trazabilidadSir.setRegistroEntrada(registroEntrada);
+            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+            trazabilidadSir.setNombreUsuario(registroEntrada.getUsuario().getNombreCompleto());
+            trazabilidadSir.setContactoUsuario(registroEntrada.getUsuario().getUsuario().getEmail());
+            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
+            trazabilidadSirEjb.persist(trazabilidadSir);
+
+            // CREAMOS LA TRAZABILIDAD
+            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+            trazabilidad.setRegistroSir(registroSir);
+            trazabilidad.setRegistroEntradaOrigen(null);
+            trazabilidad.setOficioRemision(null);
+            trazabilidad.setRegistroSalida(null);
+            trazabilidad.setRegistroEntradaDestino(registroEntrada);
+            trazabilidad.setFecha(registroEntrada.getFecha());
+
+            trazabilidadEjb.persist(trazabilidad);
+
+            // Modificamos el estado del RegistroSir
+            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
+
+            // Enviamos el Mensaje de Confirmación
+            MensajeControl confirmacion = mensajeEjb.enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+
+            // Guardamos el mensaje de confirmación
+            mensajeControlEjb.persist(confirmacion);
+
+            Mensaje.saveMessageInfo(request,"Se ha vuelto a aceptar el RegistroSir y enviado el mensaje de conformación");
+
+            return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Mensaje.saveMessageError(request,"Ha ocurrido un error anulando el Oficio: " + e.getMessage());
+        }
+
+        return "redirect:/sir/"+registroSir.getIdentificadorIntercambio()+"/detalle";
+    }
 
     /**
      * Controller temporal para anular Oficios enviados a SIR
