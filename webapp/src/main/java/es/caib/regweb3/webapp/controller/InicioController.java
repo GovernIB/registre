@@ -134,6 +134,10 @@ public class InicioController extends BaseController{
             mav.addObject("catalogo", descargaEjb.findByTipo(RegwebConstantes.CATALOGO));
         }
 
+        // Si es SuperAdmin redireccionamos al listado de Entidades
+        if (isSuperAdmin(request)){
+            mav.setViewName("redirect:/entidad/list");
+        }
 
         return mav;
     }
