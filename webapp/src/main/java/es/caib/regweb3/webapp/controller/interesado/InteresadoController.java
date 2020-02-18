@@ -149,7 +149,7 @@ public class InteresadoController extends BaseController{
                 }else{ // Edición de un registro, lo añadimos a la bbdd
                     interesado.setId(null);
                     interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
-                    interesado = interesadoEjb.persist(interesado);
+                    interesado = interesadoEjb.guardarInteresado(interesado);
                     Entidad entidadActiva = getEntidadActiva(request);
 
                     //Obtenemos el numero de registro Formateado para pasarlo al plug-in postproceso
@@ -239,7 +239,7 @@ public class InteresadoController extends BaseController{
                         if(StringUtils.isEmpty(persona.getDocumento())){ // Si no hay documento, no se guarda en la bbdd
                             persona.setId((long)(Math.random()*10000));
                         }else{
-                            persona = personaEjb.persist(persona);
+                            persona = personaEjb.guardarPersona(persona);
                         }
 
                         interesado.setId(persona.getId());
@@ -248,7 +248,7 @@ public class InteresadoController extends BaseController{
                     case (int)RegwebConstantes.CONFIGURACION_PERSONA_CONFIRMAR_NUEVA_PERSONA: // Se pregunta antes de Guardar
 
                         if(persona.isGuardarInteresado() && StringUtils.isNotEmpty(persona.getDocumento())){
-                            persona = personaEjb.persist(persona);
+                            persona = personaEjb.guardarPersona(persona);
                         }else{
                             persona.setId((long)(Math.random()*10000));
                         }
@@ -295,7 +295,7 @@ public class InteresadoController extends BaseController{
                         personaJson.setRepresentado(new PersonaJson(idRepresentado));
 
                         // Guardamos el Nuevo representante
-                        interesado = interesadoEjb.persist(interesado);
+                        interesado = interesadoEjb.guardarInteresado(interesado);
                         interesadoEjb.postProcesoNuevoInteresado(interesado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
 
                         // Lo asociamos al represenatado
@@ -306,7 +306,7 @@ public class InteresadoController extends BaseController{
                     }else{
                         interesado.setId(null);
                         interesado.setRegistroDetalle(registroDetalleEjb.getReference(Long.valueOf(idRegistroDetalle)));
-                        interesado = interesadoEjb.persist(interesado);
+                        interesado = interesadoEjb.guardarInteresado(interesado);
                         interesadoEjb.postProcesoNuevoInteresado(interesado,numRegistroFormateado, tipoRegistro,entidadActiva.getId());
                     }
 
@@ -508,7 +508,7 @@ public class InteresadoController extends BaseController{
                 representante.setId(null);
                 representante.setRegistroDetalle(registroDetalleEjb.getReference(idRegistroDetalle));
                 representante.setRepresentado(representado);
-                representante = interesadoEjb.persist(representante);
+                representante = interesadoEjb.guardarInteresado(representante);
                 Entidad entidadActiva= getEntidadActiva(request);
                 //Averiguamos el numeroRegistroFormateado para pasarselo al plug-in de postproceso
                 String numRegistroFormateado = getNumeroFormateadoByRegistroDetalle(idRegistroDetalle,tipoRegistro);
@@ -935,7 +935,6 @@ public class InteresadoController extends BaseController{
             interesado.setProvincia(null);
             interesado.setLocalidad(null);
         }
-
 
         // Si tiene documento ponemos las letras en mayúsculas
         if(interesado.getDocumento() != null){
