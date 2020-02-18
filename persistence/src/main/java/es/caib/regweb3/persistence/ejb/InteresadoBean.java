@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -80,6 +81,16 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Interesado guardarInteresado(Interesado interesado) throws Exception {
+
+        interesado.setNombre(StringUtils.capitailizeWord(interesado.getNombre()));
+        interesado.setApellido1(StringUtils.capitailizeWord(interesado.getApellido1()));
+        interesado.setApellido2(StringUtils.capitailizeWord(interesado.getApellido2()));
+
+        return persist(interesado);
     }
 
     @Override
@@ -190,13 +201,13 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
                     interesado.setRegistroDetalle(registroDetalle);
                     interesado.setId(null); // ponemos su id a null
                     interesado.setRepresentante(null);
-                    interesado = persist(interesado);
+                    interesado = guardarInteresado(interesado);
 
                     // Guardamos el Representante
                     representante.setId(null);
                     representante.setRegistroDetalle(registroDetalle);
                     representante.setRepresentado(interesado);
-                    representante = persist(representante);
+                    representante = guardarInteresado(representante);
 
                     // Lo asigamos al interesado y actualizamos
                     interesado.setRepresentante(representante);
@@ -210,7 +221,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
                     interesado.setRegistroDetalle(registroDetalle);
                     interesado.setId(null); // ponemos su id a null
                     interesado.setRepresentante(null);
-                    interesado = persist(interesado);
+                    interesado = guardarInteresado(interesado);
 
                     // Lo añadimos al Array
                     interesados.add(interesado);

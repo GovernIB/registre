@@ -19,6 +19,14 @@ import java.util.List;
 public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
+     * Guarda una persona normalizando algunos campos
+     * @param persona
+     * @return
+     * @throws Exception
+     */
+    Persona guardarPersona(Persona persona) throws Exception;
+
+    /**
      * Obtiene todas las {@link es.caib.regweb3.model.Persona} de una {@link es.caib.regweb3.model.Entidad} y su TipoPersona
      * @param idEntidad
      * @return

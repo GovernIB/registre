@@ -18,6 +18,13 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA"})
 public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
 
+    /**
+     * Guarda una interesado normalizando algunos campos
+     * @param interesado
+     * @return
+     * @throws Exception
+     */
+    Interesado guardarInteresado(Interesado interesado) throws Exception;
 
     /**
      * Obtiene un Interesado a partir del CodigoDir3 y Su registroDetalle
