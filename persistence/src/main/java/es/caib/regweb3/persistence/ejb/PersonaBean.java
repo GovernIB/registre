@@ -5,6 +5,7 @@ import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -44,6 +45,16 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     public Persona findById(Long id) throws Exception {
 
         return em.find(Persona.class, id);
+    }
+
+    @Override
+    public Persona guardarPersona(Persona persona) throws Exception {
+
+        persona.setNombre(StringUtils.capitailizeWord(persona.getNombre()));
+        persona.setApellido1(StringUtils.capitailizeWord(persona.getApellido1()));
+        persona.setApellido2(StringUtils.capitailizeWord(persona.getApellido2()));
+
+        return persist(persona);
     }
 
     @Override
