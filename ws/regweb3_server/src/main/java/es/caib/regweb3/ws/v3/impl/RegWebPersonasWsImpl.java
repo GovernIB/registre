@@ -147,7 +147,7 @@ public class RegWebPersonasWsImpl  extends AuthenticatedBaseWsImpl implements Re
     validate(persona);
     
 
-    persona = personaEjb.persist(persona);
+    persona = personaEjb.guardarPersona(persona);
 
     return persona.getId();
 
