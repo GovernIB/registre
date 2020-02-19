@@ -50,9 +50,10 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @Override
     public Persona guardarPersona(Persona persona) throws Exception {
 
-        persona.setNombre(StringUtils.capitailizeWord(persona.getNombre()));
-        persona.setApellido1(StringUtils.capitailizeWord(persona.getApellido1()));
-        persona.setApellido2(StringUtils.capitailizeWord(persona.getApellido2()));
+        persona.setNombre(StringUtils.capitailizeWord(persona.getNombre(), false));
+        persona.setApellido1(StringUtils.capitailizeWord(persona.getApellido1(), false));
+        persona.setApellido2(StringUtils.capitailizeWord(persona.getApellido2(), false));
+        persona.setRazonSocial(StringUtils.capitailizeWord(persona.getRazonSocial(), true));
 
         return persist(persona);
     }
