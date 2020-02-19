@@ -545,7 +545,8 @@ public class RegistroSir implements Serializable {
         }
     }
 
-    @Column(name = "EXPONE", length = 4000, nullable = true)
+    @Lob
+    @Column(name = "EXPONE", length = 2147483647)
     public String getExpone() {
         return expone;
     }
@@ -554,7 +555,8 @@ public class RegistroSir implements Serializable {
         this.expone = expone;
     }
 
-    @Column(name = "SOLICITA", length = 4000, nullable = true)
+    @Lob
+    @Column(name = "SOLICITA", length = 2147483647)
     public String getSolicita() {
         return solicita;
     }
