@@ -183,7 +183,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 for(InteresadoSir interesadoSir: registroSir.getInteresados()){
                     interesadoSir.setRegistroSir(registroSir);
 
-                    interesadoSirEjb.persist(interesadoSir);
+                    interesadoSirEjb.guardarInteresadoSir(interesadoSir);
                 }
             }
 
@@ -1680,11 +1680,12 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      */
     private List<Interesado> procesarInteresados(List<InteresadoSir> interesadosSir) throws Exception{
         List<Interesado> interesados = new ArrayList<Interesado>();
+
         for (InteresadoSir interesadoSir : interesadosSir) {
             Interesado interesado = transformarInteresado(interesadoSir);
 
             if (interesadoSir.getRepresentante()) {
-                log.info("Tiene representante");
+
                 Interesado representante = transformarRepresentante(interesadoSir);
                 representante.setIsRepresentante(true);
                 representante.setRepresentado(interesado);

@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.plugins.postproceso.IPostProcesoPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -80,6 +81,17 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    public Interesado guardarInteresado(Interesado interesado) throws Exception {
+
+        interesado.setNombre(StringUtils.capitailizeWord(interesado.getNombre(), false));
+        interesado.setApellido1(StringUtils.capitailizeWord(interesado.getApellido1(), false));
+        interesado.setApellido2(StringUtils.capitailizeWord(interesado.getApellido2(), false));
+        interesado.setRazonSocial(StringUtils.capitailizeWord(interesado.getRazonSocial(), true));
+
+        return persist(interesado);
     }
 
     @Override
@@ -190,13 +202,13 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
                     interesado.setRegistroDetalle(registroDetalle);
                     interesado.setId(null); // ponemos su id a null
                     interesado.setRepresentante(null);
-                    interesado = persist(interesado);
+                    interesado = guardarInteresado(interesado);
 
                     // Guardamos el Representante
                     representante.setId(null);
                     representante.setRegistroDetalle(registroDetalle);
                     representante.setRepresentado(interesado);
-                    representante = persist(representante);
+                    representante = guardarInteresado(representante);
 
                     // Lo asigamos al interesado y actualizamos
                     interesado.setRepresentante(representante);
@@ -210,7 +222,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
                     interesado.setRegistroDetalle(registroDetalle);
                     interesado.setId(null); // ponemos su id a null
                     interesado.setRepresentante(null);
-                    interesado = persist(interesado);
+                    interesado = guardarInteresado(interesado);
 
                     // Lo añadimos al Array
                     interesados.add(interesado);
@@ -259,6 +271,50 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
             }
         }
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void capitalizarInteresadosJuridicos() throws Exception {
+
+        Query q = em.createQuery("Select interesado.id, interesado.razonSocial from Interesado as interesado  " +
+                "where interesado.tipo =:tipoInteresado order by interesado.id");
+
+        q.setParameter("tipoInteresado", RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            Query u = em.createQuery("update Interesado set razonSocial =:razonSocial where id =:idInteresado ");
+            u.setParameter("idInteresado", object[0]);
+            u.setParameter("razonSocial", StringUtils.capitailizeWord((String) object[1], true));
+            u.executeUpdate();
+            em.flush();
+        }
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void capitalizarInteresadosFisicas() throws Exception {
+
+        Query q = em.createQuery("Select interesado.id, interesado.nombre, interesado.apellido1, interesado.apellido2 from Interesado as interesado  " +
+                "where interesado.tipo =:tipoInteresado order by interesado.id");
+
+        q.setParameter("tipoInteresado", RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            Query u = em.createQuery("update Interesado set nombre =:nombre, apellido1 =:apellido1, apellido2 =:apellido2 where id =:idInteresado ");
+            u.setParameter("idInteresado", object[0]);
+            u.setParameter("nombre", StringUtils.capitailizeWord((String) object[1], false));
+            u.setParameter("apellido1", StringUtils.capitailizeWord((String) object[2], false));
+            u.setParameter("apellido2", StringUtils.capitailizeWord((String) object[3], false));
+            u.executeUpdate();
+            em.flush();
+        }
     }
 
 

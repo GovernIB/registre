@@ -19,6 +19,14 @@ import java.util.List;
 public interface PersonaLocal extends BaseEjb<Persona, Long> {
 
     /**
+     * Guarda una persona normalizando algunos campos
+     * @param persona
+     * @return
+     * @throws Exception
+     */
+    Persona guardarPersona(Persona persona) throws Exception;
+
+    /**
      * Obtiene todas las {@link es.caib.regweb3.model.Persona} de una {@link es.caib.regweb3.model.Entidad} y su TipoPersona
      * @param idEntidad
      * @return
@@ -137,4 +145,19 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @throws Exception
      */
     List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    void capitalizarPersonasJuridicas(Long idEntidad) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @throws Exception
+     */
+    void capitalizarPersonasFisicas(Long idEntidad) throws Exception;
 }
