@@ -109,4 +109,16 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
      */
     void postProcesoEliminarInteresado(Long idInteresado, String numRegistro,
                                        Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+
+    /**
+     *
+     * @throws Exception
+     */
+    void capitalizarInteresadosFisicas() throws Exception;
+
+    /**
+     *
+     * @throws Exception
+     */
+    void capitalizarInteresadosJuridicos() throws Exception;
 }

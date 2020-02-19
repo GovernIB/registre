@@ -570,4 +570,50 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         return personas;
     }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void capitalizarPersonasJuridicas(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select persona.id, persona.razonSocial from Persona as persona  " +
+                "where persona.entidad.id =:idEntidad and persona.tipo =:tipoPersona order by persona.id");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            Query u = em.createQuery("update Persona set razonSocial =:razonSocial where id =:idPersona ");
+            u.setParameter("idPersona", object[0]);
+            u.setParameter("razonSocial", StringUtils.capitailizeWord((String) object[1], true));
+            u.executeUpdate();
+            em.flush();
+        }
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void capitalizarPersonasFisicas(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2 from Persona as persona  " +
+                "where persona.entidad.id =:idEntidad and persona.tipo =:tipoPersona order by persona.id");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            Query u = em.createQuery("update Persona set nombre =:nombre, apellido1 =:apellido1, apellido2 =:apellido2 where id =:idPersona ");
+            u.setParameter("idPersona", object[0]);
+            u.setParameter("nombre", StringUtils.capitailizeWord((String) object[1], false));
+            u.setParameter("apellido1", StringUtils.capitailizeWord((String) object[2], false));
+            u.setParameter("apellido2", StringUtils.capitailizeWord((String) object[3], false));
+            u.executeUpdate();
+            em.flush();
+        }
+    }
 }
