@@ -7,6 +7,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonListController;
 import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
@@ -62,6 +63,15 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
     @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
     private AsientoRegistralLocal asientoRegistralEjb;
+
+    @EJB(mappedName = "regweb3/PersonaEJB/local")
+    private PersonaLocal personaEjb;
+
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    public InteresadoLocal interesadoEjb;
+
+    @EJB(mappedName = "regweb3/InteresadoSirEJB/local")
+    private InteresadoSirLocal interesadoSirEjb;
 
 
     /**
@@ -377,6 +387,63 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
 
         return "registroSalida/registroSalidaDetalleAdmin";
     }
+
+    /**
+     * Capitalizar todas las {@link es.caib.regweb3.model.Persona} de un tipo
+     */
+    @RequestMapping(value = "/capitalizarPersonas/{tipoPersona}")
+    public String capitalizarPersonas(@PathVariable Long tipoPersona, HttpServletRequest request) {
+
+        try {
+
+            long inicio = System.currentTimeMillis();
+
+            Entidad entidad = getEntidadActiva(request);
+
+            if(tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)){
+                personaEjb.capitalizarPersonasJuridicas(entidad.getId());
+
+            }else if(tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)){
+                personaEjb.capitalizarPersonasFisicas(entidad.getId());
+            }
+
+            Mensaje.saveMessageInfo(request, "Se han capitalizado las personas correctamente en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "Error al capitalizar personas");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
+    /**
+     * Capitalizar todas las {@link es.caib.regweb3.model.Interesado} de un tipo
+     */
+    @RequestMapping(value = "/capitalizarInteresados/{tipoInteresado}")
+    public String capitalizarInteresados(@PathVariable Long tipoInteresado, HttpServletRequest request) {
+
+        try {
+
+            long inicio = System.currentTimeMillis();
+
+            if(tipoInteresado.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
+                interesadoEjb.capitalizarInteresadosJuridicos();
+
+            }else if(tipoInteresado.equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
+                interesadoEjb.capitalizarInteresadosFisicas();
+            }
+
+            Mensaje.saveMessageInfo(request, "Se han capitalizado los interesados correctamente en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "Error al capitalizar interesados");
+            e.printStackTrace();
+        }
+
+        return "redirect:/inici";
+    }
+
 
     @InitBinder("registroEntradaBusqueda")
     public void registroEntradaBusqueda(WebDataBinder binder) {

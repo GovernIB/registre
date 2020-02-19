@@ -273,5 +273,49 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     }
 
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void capitalizarInteresadosJuridicos() throws Exception {
+
+        Query q = em.createQuery("Select interesado.id, interesado.razonSocial from Interesado as interesado  " +
+                "where interesado.tipo =:tipoInteresado order by interesado.id");
+
+        q.setParameter("tipoInteresado", RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA);
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            Query u = em.createQuery("update Interesado set razonSocial =:razonSocial where id =:idInteresado ");
+            u.setParameter("idInteresado", object[0]);
+            u.setParameter("razonSocial", StringUtils.capitailizeWord((String) object[1], true));
+            u.executeUpdate();
+            em.flush();
+        }
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public void capitalizarInteresadosFisicas() throws Exception {
+
+        Query q = em.createQuery("Select interesado.id, interesado.nombre, interesado.apellido1, interesado.apellido2 from Interesado as interesado  " +
+                "where interesado.tipo =:tipoInteresado order by interesado.id");
+
+        q.setParameter("tipoInteresado", RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA);
+
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result) {
+
+            Query u = em.createQuery("update Interesado set nombre =:nombre, apellido1 =:apellido1, apellido2 =:apellido2 where id =:idInteresado ");
+            u.setParameter("idInteresado", object[0]);
+            u.setParameter("nombre", StringUtils.capitailizeWord((String) object[1], false));
+            u.setParameter("apellido1", StringUtils.capitailizeWord((String) object[2], false));
+            u.setParameter("apellido2", StringUtils.capitailizeWord((String) object[3], false));
+            u.executeUpdate();
+            em.flush();
+        }
+    }
+
 
 }

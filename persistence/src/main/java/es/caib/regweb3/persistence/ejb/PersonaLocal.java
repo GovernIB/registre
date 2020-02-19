@@ -145,4 +145,19 @@ public interface PersonaLocal extends BaseEjb<Persona, Long> {
      * @throws Exception
      */
     List<Persona> getExportarExcel(Long idEntidad, String nombre, String apellido1, String apellido2, String documento, Long tipo) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    void capitalizarPersonasJuridicas(Long idEntidad) throws Exception;
+
+    /**
+     *
+     * @param idEntidad
+     * @throws Exception
+     */
+    void capitalizarPersonasFisicas(Long idEntidad) throws Exception;
 }
