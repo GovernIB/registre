@@ -9,7 +9,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                         onclick="limpiarInteresadoDetalleSir()">x
                 </button>
-                <h4><strong><spring:message code='interesado.interesado'/></strong></h4>
+                <h3 id="interesadoTitulo"></h3>
             </div>
 
             <div class="modal-body">
@@ -130,7 +130,7 @@
 
             <div id="representante">
                 <div class="modal-header">
-                    <h4><strong><spring:message code='representante.representante'/></strong></h4>
+                    <h3><strong><spring:message code='representante.representante'/></strong></h3>
                 </div>
 
                 <div class="modal-body">

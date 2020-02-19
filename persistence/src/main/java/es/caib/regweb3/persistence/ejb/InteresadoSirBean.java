@@ -1,7 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.InteresadoSir;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -66,6 +68,22 @@ public class InteresadoSirBean extends BaseEjbJPA<InteresadoSir, Long> implement
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();
+    }
+
+    @Override
+    public InteresadoSir guardarInteresadoSir(InteresadoSir interesadoSir) throws Exception {
+
+        interesadoSir.setNombreInteresado(StringUtils.capitailizeWord(interesadoSir.getNombreInteresado(), false));
+        interesadoSir.setPrimerApellidoInteresado(StringUtils.capitailizeWord(interesadoSir.getPrimerApellidoInteresado(), false));
+        interesadoSir.setSegundoApellidoInteresado(StringUtils.capitailizeWord(interesadoSir.getSegundoApellidoInteresado(), false));
+        interesadoSir.setRazonSocialInteresado(StringUtils.capitailizeWord(interesadoSir.getRazonSocialInteresado(), true));
+
+        interesadoSir.setNombreRepresentante(StringUtils.capitailizeWord(interesadoSir.getNombreRepresentante(), false));
+        interesadoSir.setPrimerApellidoRepresentante(StringUtils.capitailizeWord(interesadoSir.getPrimerApellidoRepresentante(), false));
+        interesadoSir.setSegundoApellidoRepresentante(StringUtils.capitailizeWord(interesadoSir.getSegundoApellidoRepresentante(), false));
+        interesadoSir.setRazonSocialRepresentante(StringUtils.capitailizeWord(interesadoSir.getRazonSocialRepresentante(), true));
+
+        return persist(interesadoSir);
     }
 
     @Override

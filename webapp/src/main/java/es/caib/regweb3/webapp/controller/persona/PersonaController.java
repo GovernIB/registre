@@ -126,7 +126,7 @@ public class PersonaController extends BaseController {
                     persona.setDocumento(persona.getDocumento().toUpperCase());
                 }
 
-                personaEjb.persist(persona);
+                personaEjb.guardarPersona(persona);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
 
