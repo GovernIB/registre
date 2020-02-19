@@ -8,7 +8,7 @@ public class UtilsTest {
     @Test
     public void capitalizeWords() throws Exception {
 
-        System.out.println(StringUtils.capitailizeWord("Dr. bernal"));
-        System.out.println(StringUtils.capitailizeWord("juan carLos De lA martínez"));
+        System.out.println(StringUtils.capitailizeWord("TALLERES HNOS. J Y J. TORRES, CB", true));
+        System.out.println(StringUtils.capitailizeWord("Dr. juan carLos De lA martínez", false));
     }
 }
