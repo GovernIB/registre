@@ -236,10 +236,11 @@ public class PropiedadGlobalUtil {
      * Propiedad: es.caib.regweb3.mail.remitente
      * @return
      */
-    public static String getRemitente() {
+    public static String getRemitente(Long idEntidad) {
+
         final String partialPropertyName = "mail.remitente";
 
-        return getString(partialPropertyName);
+        return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
     /**
@@ -247,10 +248,10 @@ public class PropiedadGlobalUtil {
      * Propiedad: es.caib.regweb3.mail.remitente.nombre
      * @return
      */
-    public static String getRemitenteNombre() {
+    public static String getRemitenteNombre(Long idEntidad) {
         final String partialPropertyName = "mail.remitente.nombre";
 
-        return getString(partialPropertyName);
+        return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
 
@@ -585,7 +586,7 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Propiedad temporal que nos permite indicar si no queremos distribuir
+     * Propiedad que indica si se validan los anexos con firma antes de distribuir.
      * Propiedad: es.caib.regweb3.nodistribuir
      * @param idEntidad
      * @return
