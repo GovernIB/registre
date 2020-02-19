@@ -354,8 +354,8 @@ public class SchedulerBean implements SchedulerLocal{
                     }
 
                     //Miramos que estén definidos el remitente y el nombre del remitente
-                    if (PropiedadGlobalUtil.getRemitente() != null && PropiedadGlobalUtil.getRemitenteNombre() != null) {
-                        InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(), PropiedadGlobalUtil.getRemitenteNombre());
+                    if (PropiedadGlobalUtil.getRemitente(entidad.getId()) != null && PropiedadGlobalUtil.getRemitenteNombre(entidad.getId()) != null) {
+                        InternetAddress addressFrom = new InternetAddress(PropiedadGlobalUtil.getRemitente(entidad.getId()), PropiedadGlobalUtil.getRemitenteNombre(entidad.getId()));
                         //Enviamos el mail a todos los usuarios
                         for (Usuario usuario : usuariosANotificar) {
                             String mailAdminEntidad = usuario.getEmail();
