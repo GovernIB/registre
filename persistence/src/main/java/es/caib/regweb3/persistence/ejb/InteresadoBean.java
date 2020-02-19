@@ -86,9 +86,10 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     @Override
     public Interesado guardarInteresado(Interesado interesado) throws Exception {
 
-        interesado.setNombre(StringUtils.capitailizeWord(interesado.getNombre()));
-        interesado.setApellido1(StringUtils.capitailizeWord(interesado.getApellido1()));
-        interesado.setApellido2(StringUtils.capitailizeWord(interesado.getApellido2()));
+        interesado.setNombre(StringUtils.capitailizeWord(interesado.getNombre(), false));
+        interesado.setApellido1(StringUtils.capitailizeWord(interesado.getApellido1(), false));
+        interesado.setApellido2(StringUtils.capitailizeWord(interesado.getApellido2(), false));
+        interesado.setRazonSocial(StringUtils.capitailizeWord(interesado.getRazonSocial(), true));
 
         return persist(interesado);
     }

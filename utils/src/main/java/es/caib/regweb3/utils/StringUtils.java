@@ -15,7 +15,8 @@ import java.util.List;
 public class StringUtils {
 
     public final Logger log = Logger.getLogger(getClass());
-    private static final List<String> excepciones = Arrays.asList("de", "la", "y", "del", "el", "los", "las");
+    private static final List<String> excepciones = Arrays.asList("de", "la", "y", "del", "el", "los", "las", "SL");
+    private static final List<String> mayusculas = Arrays.asList("sl","s.l.","sa","s.a.", "cb", "c.b.");
 
 
     /**
@@ -58,7 +59,7 @@ public class StringUtils {
      * @param texto
      * @return
      */
-    public static String capitailizeWord(String texto) {
+    public static String capitailizeWord(String texto, Boolean uppercase) {
 
         if(isNotEmpty(texto)){
 
@@ -72,7 +73,10 @@ public class StringUtils {
 
                 palabra = palabra.toLowerCase();
 
-                if(!excepciones.contains(palabra)){ // Si no es una excepción la capitalizamos
+                if(uppercase && mayusculas.contains(palabra)){
+                    s.append(palabra.toUpperCase()).append(" ");
+
+                }else if(!excepciones.contains(palabra)){ // Si no es una excepción la capitalizamos
 
                     // Declare a character of space
                     // To identify that the next character is the starting

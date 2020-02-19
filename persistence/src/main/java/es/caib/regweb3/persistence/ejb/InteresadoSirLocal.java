@@ -17,6 +17,14 @@ import javax.ejb.Local;
 public interface InteresadoSirLocal extends BaseEjb<InteresadoSir, Long> {
 
     /**
+     * Guarda una interesado normalizando algunos campos
+     * @param interesadoSir
+     * @return
+     * @throws Exception
+     */
+    InteresadoSir guardarInteresadoSir(InteresadoSir interesadoSir) throws Exception;
+
+    /**
      * Elimina los InteresadoSir de una Entidad
      * @param idEntidad
      * @return

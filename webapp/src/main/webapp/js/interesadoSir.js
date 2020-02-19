@@ -20,6 +20,7 @@ function obtenerInteresadoSir(idInteresadoSir){
             $('#representante').hide();
 
             // Interesado
+            $('#interesadoTitulo').html(result.nombreCompleto);
             $('#nombreInteresado').html(result.nombreInteresado);
             $('#primerApellidoInteresado').html(result.primerApellidoInteresado);
             $('#segundoApellidoInteresado').html(result.segundoApellidoInteresado);
