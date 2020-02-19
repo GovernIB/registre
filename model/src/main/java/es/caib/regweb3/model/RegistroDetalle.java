@@ -384,7 +384,8 @@ public class RegistroDetalle implements Serializable {
         this.identificadorIntercambio = identificadorIntercambio;
     }
 
-    @Column(name = "EXPONE", length = 4000, nullable = true)
+    @Lob
+    @Column(name = "EXPONE", length = 2147483647, nullable = true)
     public String getExpone() {
         return expone;
     }
@@ -393,7 +394,8 @@ public class RegistroDetalle implements Serializable {
         this.expone = expone;
     }
 
-    @Column(name = "SOLICITA", length = 4000, nullable = true)
+    @Lob
+    @Column(name = "SOLICITA", length = 2147483647, nullable = true)
     public String getSolicita() {
         return solicita;
     }
