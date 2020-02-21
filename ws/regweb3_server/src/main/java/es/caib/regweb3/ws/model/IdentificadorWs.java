@@ -12,6 +12,7 @@ import java.util.Date;
  * @author anadal
  */
 @XmlRootElement
+@Deprecated
 public class IdentificadorWs implements Serializable {
 
     private String numeroRegistroFormateado;

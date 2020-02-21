@@ -12,6 +12,7 @@ import java.util.List;
  * @author anadal (herència)
  */
 @XmlRootElement
+@Deprecated
 public class RegistroWs implements Serializable {
 
     private Integer numero;

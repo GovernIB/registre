@@ -11,6 +11,7 @@ import java.util.List;
  * @author earrivi
  */
 @XmlRootElement
+@Deprecated
 public class RegistroResponseWs implements Serializable {
 
     private String entidadCodigo;

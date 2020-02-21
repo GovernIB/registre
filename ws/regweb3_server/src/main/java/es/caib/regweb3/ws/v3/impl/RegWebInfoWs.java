@@ -39,6 +39,7 @@ public interface RegWebInfoWs {
      */
     @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
+    @Deprecated
     List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
       throws Throwable, WsI18NException;
     
