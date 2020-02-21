@@ -137,7 +137,7 @@ public class DistribucionController extends BaseController {
             //Distribuimos el registro
             respuestaDistribucion = distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
 
-            if(respuestaDistribucion.getHayPlugin() && !respuestaDistribucion.getListadoDestinatariosModificable()){// Si no es modificable,
+            if(respuestaDistribucion.getHayPlugin()){// Si hay plugin
                 if(respuestaDistribucion.getEnviadoCola()){ //Si se ha enviado a la cola
                     respuesta.setStatus("ENVIADO_COLA");
                     Mensaje.saveMessageInfo(request, getMessage("registroEntrada.enviocola"));

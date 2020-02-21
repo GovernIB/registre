@@ -15,7 +15,7 @@ public class RespuestaDistribucion {
     private Boolean enviado = false; //true si se ha enviado distribuido bien
     private Boolean enviadoCola = false; //true si se ha enviado a la cola bien
     private Boolean hayPlugin = false; //true si se ha especificado plugin.
-    private Boolean listadoDestinatariosModificable; //True si se puede modificar la lista de destinatarios.
+
 
     public RespuestaDistribucion() {
     }
@@ -42,14 +42,6 @@ public class RespuestaDistribucion {
 
     public void setHayPlugin(Boolean hayPlugin) {
         this.hayPlugin = hayPlugin;
-    }
-
-    public Boolean getListadoDestinatariosModificable() {
-        return listadoDestinatariosModificable;
-    }
-
-    public void setListadoDestinatariosModificable(Boolean listadoDestinatariosModificable) {
-        this.listadoDestinatariosModificable = listadoDestinatariosModificable;
     }
 
     public Boolean getEnviadoCola() {

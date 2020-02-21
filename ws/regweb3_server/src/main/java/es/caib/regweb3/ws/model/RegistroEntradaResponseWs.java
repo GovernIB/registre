@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author earrivi
  */
 @XmlRootElement
+@Deprecated
 public class RegistroEntradaResponseWs extends RegistroResponseWs  {
 
     private String destinoCodigo;

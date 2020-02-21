@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @XmlRootElement
+@Deprecated
 public class TipoAsuntoWs {
 
   private String codigo;

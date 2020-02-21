@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class CodigoAsuntoWs {
 
-
+    @Deprecated
     private TipoAsuntoWs tipoAsunto;
 
     private String codigo;

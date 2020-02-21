@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author anadal (herència)
  */
 @XmlRootElement
+@Deprecated
 public class RegistroEntradaWs extends RegistroWs  {
 
     private String destino;
