@@ -87,7 +87,7 @@ public class TrazabilidadSirBean extends BaseEjbJPA<TrazabilidadSir, Long> imple
     public List<TrazabilidadSir> getByIdIntercambio(String idIntercambio, Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select DISTINCT trazabilidadSir from TrazabilidadSir as trazabilidadSir " +
-                "where trazabilidadSir.registroSir.identificadorIntercambio = :idIntercambio and registroSir.entidad.id = :idEntidad order by trazabilidadSir.fecha desc");
+                "where trazabilidadSir.registroSir.identificadorIntercambio = :idIntercambio and registroSir.entidad.id = :idEntidad order by trazabilidadSir.fecha");
 
         q.setParameter("idIntercambio", idIntercambio);
         q.setParameter("idEntidad", idEntidad);
