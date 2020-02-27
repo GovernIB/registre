@@ -8,6 +8,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -275,6 +276,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void capitalizarInteresadosJuridicos() throws Exception {
 
         Query q = em.createQuery("Select interesado.id, interesado.razonSocial from Interesado as interesado  " +
@@ -296,6 +298,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void capitalizarInteresadosFisicas() throws Exception {
 
         Query q = em.createQuery("Select interesado.id, interesado.nombre, interesado.apellido1, interesado.apellido2 from Interesado as interesado  " +

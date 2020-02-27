@@ -8,6 +8,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -573,6 +574,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void capitalizarPersonasJuridicas(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select persona.id, persona.razonSocial from Persona as persona  " +
@@ -595,6 +597,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    @TransactionTimeout(value = 1200)  // 20 minutos
     public void capitalizarPersonasFisicas(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select persona.id, persona.nombre, persona.apellido1, persona.apellido2 from Persona as persona  " +
