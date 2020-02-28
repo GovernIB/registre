@@ -79,10 +79,17 @@ public class RestController {
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
     public @ResponseBody List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
 
-        HttpSession session = request.getSession();
-        LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
-        Entidad entidad = loginInfo.getEntidadActiva();
-        return personaEjb.busquedaPersonas(query,tipoPersona,entidad.getId());
+        try {
+            HttpSession session = request.getSession();
+            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
+            Entidad entidad = loginInfo.getEntidadActiva();
+            return personaEjb.busquedaPersonas(query, tipoPersona, entidad.getId());
+
+        }catch (Exception e){
+            log.error("Se ha producido un error en la busqueda de personas via rest: " + e.getMessage());
+            return new ArrayList<>();
+        }
+
     }
 
     /**
