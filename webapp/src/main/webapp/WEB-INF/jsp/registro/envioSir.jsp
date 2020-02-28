@@ -88,7 +88,7 @@
 
                                         <input type="hidden" id="idRegistro" name="idRegistro" value="${registro.id}"/>
 
-                                        <!-- Gestión de sustitutos --!>
+                                        <!-- Gestión de sustitutos -->
                                         <!-- Si hay sustitutos es que el organismo al que va dirigido está extinguido -->
                                         <c:if test="${fn:length(sustitutos) > 1}">
                                             <p><span class="text-vermell ">
