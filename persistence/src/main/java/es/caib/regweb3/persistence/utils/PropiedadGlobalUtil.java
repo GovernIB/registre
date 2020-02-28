@@ -532,13 +532,8 @@ public class PropiedadGlobalUtil {
      */
     public static Integer getMesesPurgoAnexos(Long idEntidad) {
         final String partialPropertyName = "anexos.purgo.meses";
-        Integer valor = getIntegerByEntidad(idEntidad,partialPropertyName);
+        return  getIntegerByEntidad(idEntidad,partialPropertyName);
 
-
-        if (valor == null) {
-            valor = 3;
-        }
-        return valor;
     }
 
     /**

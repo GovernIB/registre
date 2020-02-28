@@ -1184,18 +1184,19 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     public List<String> obtenerCustodyIdAnexosDistribuidos(int meses) throws Exception {
-        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
+            Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
 
-        // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
-        Query q = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
-                "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
-                "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
-        q.setParameter("fechaPurgo", fechaPurgo);
-        q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
-        q.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
-        q.setHint("org.hibernate.readOnly", true);
+            // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
+            Query q = em.createQuery("select anexo.custodiaID from Anexo as anexo, Trazabilidad  as t " +
+                    "where t.fecha<=:fechaPurgo and t.registroEntradaOrigen.registroDetalle.id = anexo.registroDetalle.id and " +
+                    "t.tipo =:tipoDistribucion and t.registroEntradaOrigen.estado=:distribuido and anexo.justificante = false and anexo.purgado = false");
+            q.setParameter("fechaPurgo", fechaPurgo);
+            q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
+            q.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
+            q.setHint("org.hibernate.readOnly", true);
 
-        return q.getResultList();
+            return q.getResultList();
+
     }
 
 
