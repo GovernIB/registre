@@ -29,7 +29,7 @@
 
     <script type="text/javascript" src="<c:url value="/js/jquery-1.10.2.js"/>"></script>
 
-    <%--Bootstrap-session-timeout--%>
+    <!--Bootstrap-session-timeout-->
     <script type="text/javascript" src="<c:url value="/js/bootstrap-session-timeout.js"/>"></script>
 
     <!-- Le fav and touch icons -->
