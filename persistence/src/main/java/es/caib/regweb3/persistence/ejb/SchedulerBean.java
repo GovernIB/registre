@@ -234,10 +234,13 @@ public class SchedulerBean implements SchedulerLocal{
 
             for(Entidad entidad: entidades) {
                 //Obtenemos los custodiaID de todos los anexos que se han distribuido los meses indicados por la propiedad global  "getMesesPurgoAnexos"
-                List<String> custodyIds = anexoEjb.obtenerCustodyIdAnexosDistribuidos( PropiedadGlobalUtil.getMesesPurgoAnexos( entidad.getId()));
-                for(String custodyId: custodyIds ){
-                    //Purgamos anexo a anexo
-                    anexoEjb.purgarAnexo(custodyId, false,entidad.getId());
+                Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos( entidad.getId());
+                if( mesesPurgo != null && mesesPurgo!= -1) { // si nos han indicado meses, borramos.
+                    List<String> custodyIds = anexoEjb.obtenerCustodyIdAnexosDistribuidos(mesesPurgo);
+                    for (String custodyId : custodyIds) {
+                        //Purgamos anexo a anexo
+                        anexoEjb.purgarAnexo(custodyId, false, entidad.getId());
+                    }
                 }
             }
 
