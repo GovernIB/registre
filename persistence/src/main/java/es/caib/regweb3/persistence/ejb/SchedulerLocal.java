@@ -16,18 +16,6 @@ public interface SchedulerLocal {
      *
      * @throws Exception
      */
-    void actualizarProximoEventoRegistrosEntrada() throws Exception;
-
-    /**
-     *
-     * @throws Exception
-     */
-    void actualizarProximoEventoRegistrosSalida() throws Exception;
-
-    /**
-     *
-     * @throws Exception
-     */
     void purgarIntegraciones() throws Exception;
 
     /**
@@ -96,6 +84,6 @@ public interface SchedulerLocal {
      * que existe un error en la distribución
      * @throws Exception
      */
-    public void enviarEmailErrorDistribucion() throws Exception;
+    void enviarEmailErrorDistribucion() throws Exception;
 }
 

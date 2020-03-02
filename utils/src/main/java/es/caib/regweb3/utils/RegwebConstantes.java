@@ -21,6 +21,7 @@ public interface RegwebConstantes {
     /*-------------------GENERAL-------------------*/
     String CODIGO_APLICACION = "RWE3";
     String APLICACION_NOMBRE = "REGWEB3";
+    String APLICACION_EMAIL = "no_responder@regweb3.com";
     int REGISTROS_PANTALLA_INICIO = 5;
 
     /*-------------- VARIABLES DE SESION --------------*/
@@ -688,7 +689,7 @@ public interface RegwebConstantes {
     Long INTEGRACION_SIR = 4L;
     Long INTEGRACION_JUSTIFICANTE = 5L;
     Long INTEGRACION_CERRAR_EXPEDIENTE = 6L;
-    Long INTEGRACION_ACTUALIZAR_EVENTO = 7L;
+    Long INTEGRACION_SCHEDULERS = 7L;
 
     Long[] INTEGRACION_TIPOS = {
             INTEGRACION_CUSTODIA,
@@ -697,7 +698,7 @@ public interface RegwebConstantes {
             INTEGRACION_DISTRIBUCION,
             INTEGRACION_WS,
             INTEGRACION_SIR,
-            INTEGRACION_ACTUALIZAR_EVENTO
+            INTEGRACION_SCHEDULERS
     };
 
     Long[] INTEGRACION_TIPOS_CAIB = {
@@ -708,7 +709,7 @@ public interface RegwebConstantes {
             INTEGRACION_WS,
             INTEGRACION_CERRAR_EXPEDIENTE,
             INTEGRACION_SIR,
-            INTEGRACION_ACTUALIZAR_EVENTO
+            INTEGRACION_SCHEDULERS
     };
 
     /* -------------- ESTADO INTEGRACION --------------*/

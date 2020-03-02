@@ -20,7 +20,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.springframework.context.i18n.LocaleContextHolder;
 
 import javax.annotation.Resource;
@@ -262,54 +261,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         registroSalida.setEvento(evento);
 
         merge(registroSalida);
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    @TransactionTimeout(value = 1200)  // 20 minutos
-    public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
-
-        Date inicio = new Date();
-        StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
-        peticion.append("setMaxResults: ").append(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId())).append(System.getProperty("line.separator"));
-
-        try {
-
-            Query q;
-            q = em.createQuery("Select rs from RegistroSalida as rs where " +
-                    "rs.oficina.organismoResponsable.entidad.id = :idEntidad and rs.evento is null " +
-                    "and (rs.estado = :valido or rs.estado = :pendienteVisar) order by fecha desc");
-
-            // Parámetros
-            q.setParameter("idEntidad", entidad.getId());
-            q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-            q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-            q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
-            q.setHint("org.hibernate.readOnly", true);
-
-            List<RegistroSalida> registros = q.getResultList();
-
-            peticion.append("Total registros: ").append(registros.size()).append(System.getProperty("line.separator"));
-
-            for (RegistroSalida registroSalida : registros) {
-                Long evento = proximoEventoSalida(registroSalida, entidad);
-
-                Query q1 = em.createQuery("update RegistroSalida set evento=:evento where id = :idRegistro");
-                q1.setParameter("evento", evento);
-                q1.setParameter("idRegistro", registroSalida.getId());
-                q1.executeUpdate();
-
-            }
-
-            // Integración
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de salidas", peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de salidas", peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
-        }
-
     }
 
     /**

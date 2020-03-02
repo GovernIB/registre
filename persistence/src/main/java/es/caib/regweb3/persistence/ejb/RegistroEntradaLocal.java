@@ -110,12 +110,6 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      */
     Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception;
 
-    /**
-     *
-     * @param entidad
-     * @throws Exception
-     */
-    void actualizarRegistrosSinEvento(Entidad entidad) throws Exception;
 
     /**
      * Cambia el estado de un RegistroEntrada y el HistoricoModificación correspondiente

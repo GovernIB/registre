@@ -62,18 +62,18 @@ public interface SirEnvioLocal {
     /**
      * Renintenta los envíos a SIR que pendientes de llegar a destino.
      *
-     * @param idEntidad
+     * @param entidad
      * @throws Exception
      */
-    void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception;
+    void reintentarEnviosSinConfirmacion(Entidad entidad) throws Exception;
 
     /**
      * Renintenta los envíos con ERROR a SIR que pendientes de llegar a destino.
      *
-     * @param idEntidad
+     * @param entidad
      * @throws Exception
      */
-    void reintentarEnviosConError(Long idEntidad) throws Exception;
+    void reintentarEnviosConError(Entidad entidad) throws Exception;
 
     /**
      * @param registroSir

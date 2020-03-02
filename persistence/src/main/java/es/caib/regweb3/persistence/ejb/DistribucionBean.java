@@ -1,14 +1,15 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Cola;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.utils.I18NLogicUtils;
+import es.caib.regweb3.persistence.utils.MailUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -19,6 +20,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.text.SimpleDateFormat;
@@ -244,6 +247,57 @@ public class DistribucionBean implements DistribucionLocal {
             procesarRegistroEnCola(elemento.getIdObjeto(), idEntidad);
         }
 
+    }
+
+    @Override
+    public void enviarEmailErrorDistribucion(Entidad entidad) throws Exception {
+
+        Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(entidad.getId());
+        Locale locale = new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO);
+
+        //Obtenemos el numero de registros que han alcanzado el máximo de reintentos
+        int numRegistrosMaxReintentos = colaEjb.findByTipoEntidadMaxReintentos(RegwebConstantes.COLA_DISTRIBUCION, entidad.getId(), maxReintentos).size();
+
+        if (numRegistrosMaxReintentos > 0) {
+
+
+            // Obtenemos los usuarios a los que hay que enviarles el mail
+            List<Usuario> usuariosANotificar = new ArrayList<Usuario>();
+
+            // Propietario Entidad
+            usuariosANotificar.add(entidad.getPropietario());
+
+            // Administradores Entidad
+            for (UsuarioEntidad usuarioEntidad : entidad.getAdministradores()) {
+                usuariosANotificar.add(usuarioEntidad.getUsuario());
+            }
+
+            // Asunto
+            String asunto = I18NLogicUtils.tradueix(locale, "cola.mail.asunto");
+
+            //Montamos el mensaje del mail con el nombre de la Entidad
+            String[] args = {Integer.toString(numRegistrosMaxReintentos),entidad.getNombre()};
+            String mensajeTexto = I18NLogicUtils.tradueix(locale, "cola.mail.cuerpo", args);
+
+            //Enviamos el mail a todos los usuarios
+            InternetAddress addressFrom = new InternetAddress(RegwebConstantes.APLICACION_EMAIL, RegwebConstantes.APLICACION_NOMBRE);
+
+            for (Usuario usuario : usuariosANotificar) {
+
+                if (StringUtils.isNotEmpty(usuario.getEmail())) {
+
+                    try {
+
+                        MailUtils.enviaMail(asunto, mensajeTexto, addressFrom, Message.RecipientType.TO, usuario.getEmail());
+                    } catch (Exception e) {
+                        //Si se produce una excepción continuamos con el proceso.
+                        log.error("Se ha producido un excepcion enviando mail");
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        }
     }
 
 

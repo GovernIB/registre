@@ -6,7 +6,10 @@ import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.LibroLocal;
+import es.caib.regweb3.persistence.ejb.OrganismoLocal;
+import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.Dir3CaibUtils;
@@ -45,12 +48,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
     @Autowired
     private RegistroEntradaWebValidator registroEntradaValidator;
-
-    @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
-    private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
-    private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
     @EJB(mappedName = "regweb3/PlantillaEJB/local")
     private PlantillaLocal plantillaEjb;

@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
@@ -37,6 +38,13 @@ public interface DistribucionLocal {
      * @throws Exception
      */
     void procesarRegistrosEnCola(Long idEntidad) throws Exception;
+
+    /**
+     * Envia un email con los errores de la cola de distribución a los Administradores de la Entidad
+     * @param entidad
+     * @throws Exception
+     */
+    void enviarEmailErrorDistribucion(Entidad entidad) throws Exception;
 
 
     /**

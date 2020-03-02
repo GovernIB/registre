@@ -384,61 +384,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         return RegwebConstantes.EVENTO_DISTRIBUIR;
     }
 
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    @TransactionTimeout(value = 1200)  // 20 minutos
-    public void actualizarRegistrosSinEvento(Entidad entidad) throws Exception {
-
-        Date inicio = new Date();
-        StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
-        peticion.append("setMaxResults: ").append(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId())).append(System.getProperty("line.separator"));
-
-        try {
-
-            Query q;
-            q = em.createQuery("Select re.id, re.oficina from RegistroEntrada as re where " +
-                    "re.oficina.organismoResponsable.entidad.id = :idEntidad and re.evento is null " +
-                    "and (re.estado = :valido or re.estado = :pendienteVisar) order by fecha desc");
-
-            // Parámetros
-            q.setParameter("idEntidad", entidad.getId());
-            q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
-            q.setParameter("pendienteVisar", RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-            q.setMaxResults(PropiedadGlobalUtil.getTotalActualizarProximoEvento(entidad.getId()));
-
-            List<Object[]> result = q.getResultList();
-
-            List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
-
-            peticion.append("Total registros: ").append(result.size()).append(System.getProperty("line.separator"));
-
-            for (Object[] object : result) {
-                RegistroEntrada registro = new RegistroEntrada();
-                registro.setId((Long) object[0]);
-                registro.setOficina((Oficina) object[1]);
-                registros.add(registro);
-            }
-
-            for (RegistroEntrada registroEntrada : registros) {
-                Long evento = proximoEventoEntrada(registroEntrada, entidad, registroEntrada.getOficina().getId());
-
-                Query q1 = em.createQuery("update RegistroEntrada set evento=:evento where id = :idRegistro");
-                q1.setParameter("evento", evento);
-                q1.setParameter("idRegistro", registroEntrada.getId());
-                q1.executeUpdate();
-
-            }
-
-            // Integración
-            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_ACTUALIZAR_EVENTO, "Actualizar eventos de entradas", peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
-        }
-
-    }
 
     @Override
     public void cambiarEstadoHistorico(RegistroEntrada registroEntrada, Long idEstado, UsuarioEntidad usuarioEntidad) throws Exception {
