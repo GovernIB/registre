@@ -243,17 +243,6 @@ public class PropiedadGlobalUtil {
         return getStringByEntidad(idEntidad, partialPropertyName);
     }
 
-    /**
-     * Retorna el valor de la propiedad del valor del nombre del remitente para el envio de mails
-     * Propiedad: es.caib.regweb3.mail.remitente.nombre
-     * @return
-     */
-    public static String getRemitenteNombre(Long idEntidad) {
-        final String partialPropertyName = "mail.remitente.nombre";
-
-        return getStringByEntidad(idEntidad, partialPropertyName);
-    }
-
 
     /**
      * Retorna el valor de la propiedad DefaultLanguage de la entidad indicada.

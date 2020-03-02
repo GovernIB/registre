@@ -703,14 +703,24 @@ public class SirEnvioBean implements SirEnvioLocal {
     }
 
     @Override
-    public void reintentarEnviosSinConfirmacion(Long idEntidad) throws Exception {
+    public void reintentarEnviosSinConfirmacion(Entidad entidad) throws Exception {
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Reintentar Envios Sir sin confirmación";
+        Date inicio = new Date();
 
         try {
 
+            peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
             // RegistrosSir pendientes de volver a intentar su envío
-            List<Long> registrosSir = registroSirEjb.getEnviadosSinAck(idEntidad);
+            List<Long> registrosSir = registroSirEjb.getEnviadosSinAck(entidad.getId());
+
+            peticion.append("registrosSir: ").append(registrosSir.size()).append(System.getProperty("line.separator"));
 
             if (registrosSir.size() > 0) {
+
 
                 log.info("Hay " + registrosSir.size() + " RegistrosSir pendientes de volver a enviar al nodo CIR");
 
@@ -724,7 +734,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             }
 
             // OficiosRemision pendientes de volver a intentar su envío
-            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosSinAck(idEntidad);
+            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosSinAck(entidad.getId());
+
+            peticion.append("oficios: ").append(oficios.size()).append(System.getProperty("line.separator"));
 
             if (oficios.size() > 0) {
 
@@ -739,22 +751,32 @@ public class SirEnvioBean implements SirEnvioLocal {
                 log.info("No hay Oficios de Remision pendientes de volver a enviar al nodo CIR");
             }
 
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
-        } catch (I18NException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+
+        } catch (Exception | I18NException e) {
             log.info("Error al reintenar el envio de registros sin confirmacion");
             e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
         }
     }
 
     @Override
-    public void reintentarEnviosConError(Long idEntidad) throws Exception {
+    public void reintentarEnviosConError(Entidad entidad) throws Exception {
+
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Reintentar Envios Sir con Error";
+        Date inicio = new Date();
 
         try {
 
+            peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
             // RegistrosSir enviados con errores
-            List<Long> registrosSir = registroSirEjb.getEnviadosConError(idEntidad);
+            List<Long> registrosSir = registroSirEjb.getEnviadosConError(entidad.getId());
+
+            peticion.append("registrosSir: ").append(registrosSir.size()).append(System.getProperty("line.separator"));
 
             if (registrosSir.size() > 0) {
 
@@ -770,7 +792,9 @@ public class SirEnvioBean implements SirEnvioLocal {
             }
 
             // OficiosRemision enviados con errores
-            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(idEntidad);
+            List<OficioRemision> oficios = oficioRemisionEjb.getEnviadosConError(entidad.getId());
+
+            peticion.append("oficios: ").append(oficios.size()).append(System.getProperty("line.separator"));
 
             if (oficios.size() > 0) {
 
@@ -785,12 +809,13 @@ public class SirEnvioBean implements SirEnvioLocal {
                 log.info("No hay Oficios de Remision enviados con errores, pendientes de volver a enviar al nodo CIR");
             }
 
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
 
-        } catch (I18NException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+
+        } catch (Exception | I18NException e) {
             log.info("Error al reintenar el envio de registros con error");
             e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), "");
         }
     }
 

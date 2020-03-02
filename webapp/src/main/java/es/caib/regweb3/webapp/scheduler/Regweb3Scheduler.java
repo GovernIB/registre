@@ -187,41 +187,6 @@ public class Regweb3Scheduler {
         }
     }
 
-    /**TODO ELIMINAR
-     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
-     * Cuando lo hace: cada 4 minutos
-     */
-    @Scheduled(cron = "0 0/4 * * * *")
-    public void actualizarProximoEventoRegistrosEntrada(){
-
-        try {
-
-            schedulerEjb.actualizarProximoEventoRegistrosEntrada();
-
-        } catch (Exception e) {
-            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosEntrada --");
-            e.printStackTrace();
-        }
-
-    }
-
-    /**TODO ELIMINAR
-     * Qué hace: Averigua y asigna el próximo evento de los registros que no lo tienen definido
-     * Cuando lo hace: cada 4 minutos
-     */
-    @Scheduled(cron = "0 0/4 * * * *")
-    public void actualizarProximoEventoRegistrosSalida(){
-
-        try {
-
-            schedulerEjb.actualizarProximoEventoRegistrosSalida();
-
-        } catch (Exception e) {
-            log.info("-- Error Scheduler: actualizarProximoEventoRegistrosSalida --");
-            e.printStackTrace();
-        }
-
-    }
 
     /**
      * Scheduler para realizar pruebas que se ejecutará cada 60 segundos
