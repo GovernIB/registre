@@ -56,5 +56,5 @@ public interface DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception;
+    Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad, Long tipoIntegracion) throws Exception;
 }

@@ -202,7 +202,7 @@ public class DistribucionController extends BaseController {
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        Boolean distribuido = distribucionEjb.procesarRegistroEnCola(idRegistro, entidadActiva.getId());
+        Boolean distribuido = distribucionEjb.procesarRegistroEnCola(idRegistro, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));

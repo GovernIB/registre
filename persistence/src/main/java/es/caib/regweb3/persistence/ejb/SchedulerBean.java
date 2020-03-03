@@ -240,31 +240,19 @@ public class SchedulerBean implements SchedulerLocal{
     @TransactionTimeout(value = 1800)  // 30 minutos
     public void distribuirRegistrosEnCola() throws Exception{
 
-        List<Entidad> entidades = entidadEjb.getEntidadesActivas();
-        StringBuilder peticion = new StringBuilder();
-        long tiempo = System.currentTimeMillis();
-        String descripcion = "Distribuir registros en Cola";
-        Entidad entidadActiva = null;
-
         try {
+            List<Entidad> entidades = entidadEjb.getEntidadesActivas();
 
             for (Entidad entidad : entidades) {
 
                 if(!PropiedadGlobalUtil.pararDistribucion(entidad.getId())) {
 
-                    //Integración
-                    entidadActiva = entidad;
-                    Date inicio = new Date();
-                    peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
-
                     distribucionEjb.procesarRegistrosEnCola(entidad.getId());
 
-                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
                 }
             }
 
         }catch (Exception e){
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
             log.error("Error distribuyendo registros de la Cola ...", e);
         }
     }
