@@ -171,7 +171,7 @@ public class DistribucionBean implements DistribucionLocal {
      * @throws I18NException
      */
     @Override
-    public Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad) throws Exception {
+    public Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad, Long tipoIntegracon) throws Exception {
 
         Boolean distribuido = false;
 
@@ -209,7 +209,7 @@ public class DistribucionBean implements DistribucionLocal {
             if (distribuido) { //Si la distribución ha ido bien
 
                 colaEjb.procesarElemento(elemento, registroEntrada); //Eliminamos el elemento de la cola
-                integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
+                integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
         } catch (Exception | I18NException | I18NValidationException e) {
@@ -218,14 +218,14 @@ public class DistribucionBean implements DistribucionLocal {
             error = hora + e.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad, error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), e, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
         } catch (Throwable t) {
             log.info("Error distribuyendo registro de la Cola: " + elemento.getDescripcionObjeto());
             t.printStackTrace();
             error = hora + t.getMessage();
             colaEjb.actualizarElementoCola(elemento, idEntidad,error);
             // Añadimos el error a la integración
-            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), t, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
+            integracionEjb.addIntegracionError(tipoIntegracon, descripcion, peticion.toString(), t, null,System.currentTimeMillis() - tiempo, idEntidad, elemento.getDescripcionObjeto());
         }
 
         return distribuido;
@@ -244,7 +244,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         for (Cola elemento : elementosADistribuir) {
 
-            procesarRegistroEnCola(elemento.getIdObjeto(), idEntidad);
+            procesarRegistroEnCola(elemento.getIdObjeto(), idEntidad, RegwebConstantes.INTEGRACION_SCHEDULERS);
         }
 
     }
