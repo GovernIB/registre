@@ -37,7 +37,6 @@ public class Regweb3Scheduler {
             schedulerEjb.purgarSesionesWs();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: purgarSesionesWs --");
             e.printStackTrace();
         }
 
@@ -53,7 +52,6 @@ public class Regweb3Scheduler {
             schedulerEjb.purgarIntegraciones();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: purgando integraciones --");
             e.printStackTrace();
         }
 
@@ -61,7 +59,6 @@ public class Regweb3Scheduler {
             schedulerEjb.purgarAnexosSir();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: purgando AnexosSir --");
             e.printStackTrace();
         }
 
@@ -69,7 +66,6 @@ public class Regweb3Scheduler {
             schedulerEjb.purgarAnexosDistribuidos();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: purgando Anexos Distribuidos --");
             e.printStackTrace();
         }
 
@@ -77,7 +73,6 @@ public class Regweb3Scheduler {
             schedulerEjb.purgarAnexosRegistrosConfirmados();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: purgando Anexos de registros enviados por Sir y que han sido confirmados --");
             e.printStackTrace();
         }
 
@@ -85,7 +80,6 @@ public class Regweb3Scheduler {
             schedulerEjb.enviarEmailErrorDistribucion();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: enviando email error de distribución --");
             e.printStackTrace();
         }
     }
@@ -101,7 +95,6 @@ public class Regweb3Scheduler {
             schedulerEjb.generarComunicaciones();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: Generando comunicaciones --");
             e.printStackTrace();
         }
 
@@ -118,7 +111,6 @@ public class Regweb3Scheduler {
             schedulerEjb.reiniciarContadoresEntidad();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: reiniciarContadoresEntidad --");
             e.printStackTrace();
         }
 
@@ -136,7 +128,6 @@ public class Regweb3Scheduler {
             schedulerEjb.reintentarEnviosSinConfirmacion();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: reintentarEnviosSinConfirmacion --");
             e.printStackTrace();
         }
 
@@ -144,7 +135,6 @@ public class Regweb3Scheduler {
             schedulerEjb.reintentarEnviosConError();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: reintentarEnviosConError --");
             e.printStackTrace();
         }
 
@@ -163,7 +153,6 @@ public class Regweb3Scheduler {
             schedulerEjb.distribuirRegistrosEnCola();
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: distribuirRegistrosEnCola --");
             e.printStackTrace();
         }
 
@@ -182,7 +171,6 @@ public class Regweb3Scheduler {
             }
 
         } catch (Exception e) {
-            log.info("-- Error Scheduler: cerrarExpedientes --");
             e.printStackTrace();
         }
     }
