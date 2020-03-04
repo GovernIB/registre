@@ -12,12 +12,15 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
+import es.caib.regweb3.webapp.validator.OficioRemisionBusquedaValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -40,6 +43,9 @@ import java.util.*;
 @RequestMapping(value = "/oficioRemision")
 @SessionAttributes(types = OficioRemision.class)
 public class OficioRemisionController extends BaseController {
+
+    @Autowired
+    private OficioRemisionBusquedaValidator oficioRemisionValidator;
 
     @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
     private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
@@ -154,29 +160,36 @@ public class OficioRemisionController extends BaseController {
      * Realiza la busqueda de {@link es.caib.regweb3.model.RegistroEntrada} según los parametros del formulario
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ModelAndView list(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+    public ModelAndView list(@ModelAttribute("oficioRemisionBusqueda") OficioRemisionBusquedaForm busqueda, BindingResult result, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficioRemisionList");
+
+        oficioRemisionValidator.validate(busqueda,result);
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
         // Obtenemos los Libros donde el usuario tiene permisos de Consulta
         List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
 
-        // Ponemos la hora 23:59 a la fecha fin
-        Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+        if (result.hasErrors()) {
+            mav.addObject("errors", result.getAllErrors());
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, busqueda.getUsuario(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), false);
+        } else {
+            // Ponemos la hora 23:59 a la fecha fin
+            Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-        busqueda.setPageNumber(1);
-        mav.addObject("paginacion", paginacion);
+            Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, busqueda.getUsuario(), oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), false);
+
+            busqueda.setPageNumber(1);
+            mav.addObject("paginacion", paginacion);
+
+        }
+        mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("destinosOficioRemision", RegwebConstantes.DESTINOS_OFICIO_REMISION);
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION);
-        mav.addObject("librosConsulta", librosConsulta);
         mav.addObject("oficioRemisionBusqueda", busqueda);
         mav.addObject("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
-
         return mav;
 
     }
@@ -729,7 +742,6 @@ public class OficioRemisionController extends BaseController {
 
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusquedaForm);
-        model.addAttribute("anys", getAnys());
 
         return mav;
     }
@@ -741,16 +753,23 @@ public class OficioRemisionController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/pendientesLlegada/list", method = RequestMethod.POST)
-    public ModelAndView oficiosPendientesLlegada(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+    public ModelAndView oficiosPendientesLlegada(@ModelAttribute("oficioRemisionBusqueda") OficioRemisionBusquedaForm busqueda, BindingResult result, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosPendientesLlegadaList");
 
+        oficioRemisionValidator.validate(busqueda,result);
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(getOrganismosOficinaActiva(request), busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_INTERNO_ENVIADO);
+        // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors()) {
+            mav.addObject("errors", result.getAllErrors());
+        } else {
+            Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(getOrganismosOficinaActiva(request), busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_INTERNO_ENVIADO);
 
-        busqueda.setPageNumber(1);
-        mav.addObject("paginacion", paginacion);
+            busqueda.setPageNumber(1);
+            mav.addObject("paginacion", paginacion);
+        }
+
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
@@ -760,7 +779,7 @@ public class OficioRemisionController extends BaseController {
     /**
      * Listado de oficios de remisión aceptados
      */
-    @RequestMapping(value = "/aceptados/list", method = RequestMethod.GET)
+   @RequestMapping(value = "/aceptados/list", method = RequestMethod.GET)
     public ModelAndView oficiosAceptados(Model model, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosAceptadosList");
@@ -780,16 +799,22 @@ public class OficioRemisionController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/aceptados/list", method = RequestMethod.POST)
-    public ModelAndView oficiosAceptados(@ModelAttribute OficioRemisionBusquedaForm busqueda, HttpServletRequest request) throws Exception {
+    public ModelAndView oficiosAceptados(@ModelAttribute("oficioRemisionBusqueda") OficioRemisionBusquedaForm busqueda, BindingResult result, HttpServletRequest request) throws Exception {
 
         ModelAndView mav = new ModelAndView("oficioRemision/oficiosAceptadosList");
 
+        oficioRemisionValidator.validate(busqueda,result);
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(getOrganismosOficinaActiva(request), busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_ACEPTADO);
+        // Si hay errores volvemos a la vista del formulario
+        if (result.hasErrors()) {
+            mav.addObject("errors", result.getAllErrors());
+        } else { // Si no hay errores realizamos la búsqueda
+            Paginacion paginacion = oficioRemisionEjb.oficiosBusqueda(getOrganismosOficinaActiva(request), busqueda.getPageNumber(), oficioRemision, busqueda.getTipoOficioRemision(), RegwebConstantes.OFICIO_ACEPTADO);
 
-        busqueda.setPageNumber(1);
-        mav.addObject("paginacion", paginacion);
+            busqueda.setPageNumber(1);
+            mav.addObject("paginacion", paginacion);
+        }
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
@@ -945,6 +970,7 @@ public class OficioRemisionController extends BaseController {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);
         binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(sdf, true));
+        binder.setValidator(this.oficioRemisionValidator);
     }
 
 }

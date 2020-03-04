@@ -59,12 +59,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-xs-6 espaiLinies">
+                                    <div class="form-group col-xs-6 espaiLinies">
                                         <div class="col-xs-4 pull-left etiqueta_regweb">
                                             <label for="oficioRemision.numeroOficio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
                                         </div>
                                         <div class="col-xs-8">
                                             <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
+                                            <form:errors path="oficioRemision.numeroOficio" cssClass="help-block" element="span"/>
                                         </div>
                                     </div>
                                 </div>
