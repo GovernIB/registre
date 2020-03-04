@@ -70,7 +70,7 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     }
 
     @Override
-    public NumeroRegistro incrementarContador(Long idContador) throws Exception {
+    public synchronized NumeroRegistro incrementarContador(Long idContador) throws Exception {
 
         //log.info("Antes: " + findById(idContador).getNumero());
         Query q = em.createQuery("update Contador set numero = numero + 1 where id = :idContador ");
