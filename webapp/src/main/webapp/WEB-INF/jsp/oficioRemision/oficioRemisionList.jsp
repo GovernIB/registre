@@ -48,8 +48,8 @@
 
                         <div class="panel-body">
 
-                            <div class="col-xs-12">
-                                <div class="col-xs-6 espaiLinies">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="tipoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipo.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.tipo"/></label>
                                     </div>
@@ -62,7 +62,7 @@
                                         </form:select>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="destinoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.destino"/></label>
                                     </div>
@@ -77,8 +77,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12">
-                                <div class="col-xs-6 espaiLinies">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="oficioRemision.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.libro"/></label>
                                     </div>
@@ -86,7 +86,7 @@
                                         <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="estadoOficioRemision" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estadoOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.estado"/></label>
                                     </div>
@@ -101,16 +101,17 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12">
-                                <div class="col-xs-6 espaiLinies">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="oficioRemision.numeroOficio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.numeroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.numeroOficio"/></label>
                                     </div>
                                     <div class="col-xs-8">
                                         <form:input path="oficioRemision.numeroOficio" cssClass="form-control" maxlength="10"/>
+                                        <form:errors path="oficioRemision.numeroOficio" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="usuario" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.usuarioOficio.busqueda"/>" data-toggle="popover"><spring:message code="usuario.usuario"/></label>
                                     </div>
@@ -125,8 +126,8 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-12">
-                                <div class="col-xs-6 espaiLinies">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="fechaInicio" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.inicioOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechainicio"/></label>
                                     </div>
@@ -138,7 +139,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-6">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="fechaFin" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.finOficio.busqueda"/>" data-toggle="popover"><spring:message code="regweb.fechafin"/></label>
                                     </div>
