@@ -276,7 +276,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    @TransactionTimeout(value = 1200)  // 20 minutos
+    @TransactionTimeout(value = 3000)  // 50 minutos
     public void capitalizarInteresadosJuridicos() throws Exception {
 
         Query q = em.createQuery("Select interesado.id, interesado.razonSocial from Interesado as interesado  " +
@@ -298,7 +298,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    @TransactionTimeout(value = 1200)  // 20 minutos
+    @TransactionTimeout(value = 3000)  // 50 minutos
     public void capitalizarInteresadosFisicas() throws Exception {
 
         Query q = em.createQuery("Select interesado.id, interesado.nombre, interesado.apellido1, interesado.apellido2 from Interesado as interesado  " +
