@@ -54,34 +54,36 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
     @Test
     public void crearAsientoConSesion() throws Exception {
+        //for (int i = 0; i < 10; i++) {
 
-        try {
+            try {
 
-            // Obtenemos el idSesion
-            Long idSesion = asientoRegistralApi.obtenerSesionRegistro(getTestEntidadCodigoDir3());
-            System.out.println("IdSesion: " + idSesion);
+                // Obtenemos el idSesion
+                Long idSesion = asientoRegistralApi.obtenerSesionRegistro(getTestEntidadCodigoDir3());
+                System.out.println("IdSesion: " + idSesion);
 
-            AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-            asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(idSesion,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(idSesion, getTestEntidadCodigoDir3(), asientoRegistralWs, null, false, false);
 
-            printAsiento(asientoRegistralWs);
+                printAsiento(asientoRegistralWs);
 
-            // Verificar el estado de la operación
-            AsientoRegistralSesionWs sesionWs = asientoRegistralApi.verificarAsientoRegistral(getTestEntidadCodigoDir3(), idSesion);
+                // Verificar el estado de la operación
+                AsientoRegistralSesionWs sesionWs = asientoRegistralApi.verificarAsientoRegistral(getTestEntidadCodigoDir3(), idSesion);
 
-            System.out.println("Estado: " + sesionWs.getEstado());
+                System.out.println("Estado: " + sesionWs.getEstado());
 
-            Assert.assertEquals(RegwebConstantes.SESION_FINALIZADA, sesionWs.getEstado());
+                Assert.assertEquals(RegwebConstantes.SESION_FINALIZADA, sesionWs.getEstado());
 
-        }catch (WsI18NException e) {
-            String msg = WsClientUtils.toString(e);
-            System.out.println("Error WsI18NException: " + msg);
-            throw e;
-        } catch (WsValidationException e) {
-            String msg = WsClientUtils.toString(e);
-            System.out.println("Error WsValidationException: " + msg);
-            throw e;
-        }
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        //}
     }
 
     @Test
