@@ -5,7 +5,6 @@ import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
-import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.BasicForm;
 import org.springframework.stereotype.Controller;
@@ -111,9 +110,6 @@ public class InicioController extends BaseController{
                 mav.addObject("salidasRechazadasReenviadas", registroSalidaConsultaEjb.getSirRechazadosReenviados(oficinaActiva.getId(), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 mav.addObject("pendientesDistribuir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
-
-            /* Url de ayuda */
-            mav.addObject("ayudaUrl", PropiedadGlobalUtil.getAyudaUrl(entidadActiva.getId()));
 
         }
 

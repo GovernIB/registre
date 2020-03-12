@@ -36,6 +36,7 @@ public class LoginInfo {
     private Configuracion configuracion;
     private Boolean enlaceDir3 = false;
     private Boolean mostrarAvisos;
+    private String ayudaUrl = "";
 
     final User springSecurityUser;
     final Collection<GrantedAuthority> springRoles;
@@ -230,6 +231,14 @@ public class LoginInfo {
         this.mostrarAvisos = mostrarAvisos;
     }
 
+    public String getAyudaUrl() {
+        return ayudaUrl;
+    }
+
+    public void setAyudaUrl(String ayudaUrl) {
+        this.ayudaUrl = ayudaUrl;
+    }
+
     public static LoginInfo getInstance() throws LoginException {
         Object obj;
         try {
@@ -267,6 +276,7 @@ public class LoginInfo {
         this.organismosOficinaActiva = null;
         this.configuracion = null;
         this.enlaceDir3 = false;
+        this.ayudaUrl = "";
     }
 
     @Override
