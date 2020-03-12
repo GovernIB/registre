@@ -3,6 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%--Menú REGISTRO ENTRADA--%>
 <div class="btn-group">
@@ -132,9 +133,10 @@
         <c:if test="${loginInfo.enlaceDir3}">
             <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="<%=PropiedadGlobalUtil.getDir3CaibServer()%>"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
-            <c:if test="${not empty ayudaUrl}">
-                <li class="submenu-complet"><a href="<c:url value="${ayudaUrl}"/>" target="_blank"><i class="fa fa-home"></i> <spring:message code="menu.ayudaUrl"/></a></li>
-            </c:if>
+        </c:if>
+
+        <c:if test="${not empty loginInfo.ayudaUrl}">
+            <li class="submenu-complet"><a href="<c:url value="${loginInfo.ayudaUrl}"/>" target="_blank"><i class="fa fa-home"></i> <spring:message code="menu.ayudaUrl"/></a></li>
         </c:if>
 
         <li class="divider"></li>
