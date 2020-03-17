@@ -479,6 +479,7 @@ public class LoginService {
 
         loginInfo.setEnlaceDir3(PropiedadGlobalUtil.getEnlaceDir3(entidad.getId()));
         loginInfo.setMostrarAvisos(PropiedadGlobalUtil.getMostrarAvisos(entidad.getId()));
+        loginInfo.setAyudaUrl(PropiedadGlobalUtil.getAyudaUrl(entidad.getId()));
 
         log.info("Entidad activa usuario: " + entidad.getNombre() + " - " + loginInfo.getUsuarioAutenticado().getNombreCompleto());
 
