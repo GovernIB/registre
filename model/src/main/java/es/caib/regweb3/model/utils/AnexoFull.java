@@ -141,6 +141,41 @@ public class AnexoFull {
     }
 
     @Transient
+    public String getExtension() {
+
+
+        if(getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA || getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+
+            if (getDocumentoCustody() != null) {
+
+                int indexPunt = getDocumentoCustody().getName().lastIndexOf(".");
+                if (indexPunt != -1 && indexPunt < getDocumentoCustody().getName().length() - 1) {
+                    return getDocumentoCustody().getName().substring(indexPunt + 1);
+                } else {
+                    return null;
+                }
+            }
+
+        }else if(getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+
+            if (getSignatureCustody() != null) {
+
+                int indexPunt = getSignatureCustody().getName().lastIndexOf(".");
+                if (indexPunt != -1 && indexPunt < getSignatureCustody().getName().length() - 1) {
+                    return getSignatureCustody().getName().substring(indexPunt + 1);
+                } else {
+                    return null;
+                }
+            }
+
+
+        }
+
+
+        return null;
+    }
+
+    @Transient
     public String getDocMime() {
         if (getDocumentoCustody() != null) {
             return getDocumentoCustody().getMime();
