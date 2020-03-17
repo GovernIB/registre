@@ -82,6 +82,8 @@ public class Entidad implements Serializable {
     private Integer posXsello;
     @XmlTransient
     private Integer posYsello;
+    @XmlTransient
+    private Long perfilCustodia;
     
 
     public Entidad() {
@@ -367,6 +369,14 @@ public class Entidad implements Serializable {
 
     public void setPosYsello(Integer posYsello) { this.posYsello = posYsello; }
 
+    @Column(name = "PERFIL_CUSTODIA")
+    public Long getPerfilCustodia() {
+        return perfilCustodia;
+    }
+
+    public void setPerfilCustodia(Long perfilCustodia) {
+        this.perfilCustodia = perfilCustodia;
+    }
 
     @Override
     public boolean equals(Object o) {

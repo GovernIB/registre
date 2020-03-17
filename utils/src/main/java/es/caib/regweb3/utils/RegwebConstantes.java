@@ -102,6 +102,15 @@ public interface RegwebConstantes {
     String ESTADO_ENTIDAD_TRANSITORIO = "T";
     String ESTADO_ENTIDAD_VIGENTE = "V";
 
+    /* -------------- PERFIL CUSTODIA --------------*/
+    Long PERFIL_CUSTODIA_DOCUMENT_CUSTODY = 1L;
+    Long PERFIL_CUSTODIA_ARXIU = 2L;
+
+    long[] PERFILES_CUSTODIA = {
+            PERFIL_CUSTODIA_DOCUMENT_CUSTODY,
+            PERFIL_CUSTODIA_ARXIU
+    };
+
     /* -------------- FORMATOS --------------*/
     String FORMATO_FECHA = "dd/MM/yyyy";
     String FORMATO_FECHA_HORA = "dd/MM/yyyy HH:mm";
@@ -668,6 +677,8 @@ public interface RegwebConstantes {
     Long PLUGIN_SCAN = 6L;
     Long PLUGIN_CUSTODIA_JUSTIFICANTE = 7L;
     Long PLUGIN_VALIDACION_FIRMAS = 8L;
+    Long PLUGIN_ARXIU = 9L;
+    Long PLUGIN_ARXIU_JUSTIFICANTE = 10L;
 
     Long[] TIPOS_PLUGIN = {
             PLUGIN_CUSTODIA,
@@ -678,7 +689,9 @@ public interface RegwebConstantes {
             PLUGIN_USER_INFORMATION,
             PLUGIN_SCAN,
             PLUGIN_CUSTODIA_JUSTIFICANTE,
-            PLUGIN_VALIDACION_FIRMAS
+            PLUGIN_VALIDACION_FIRMAS,
+            PLUGIN_ARXIU,
+            PLUGIN_ARXIU_JUSTIFICANTE
     };
 
     /* -------------- TIPO INTEGRACION --------------*/

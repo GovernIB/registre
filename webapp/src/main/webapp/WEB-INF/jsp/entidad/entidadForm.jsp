@@ -402,6 +402,24 @@
                                                 </c:if>
                                             </div>
                                             <!-- Fi logo pie -->
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.perfilCustodia"><spring:message code="entidad.perfilCustodia"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:select path="entidad.perfilCustodia" cssClass="chosen-select">
+                                                            <c:forEach items="${perfilesCustodia}" var="perfil">
+                                                                <form:option value="${perfil}"><spring:message code="perfilCustodia.${perfil}" /></form:option>
+                                                            </c:forEach>
+                                                        </form:select>
+                                                        <form:errors path="entidad.perfilCustodia" cssClass="help-block" element="span"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+
+                                                </div>
+                                            </div>
                                         </div>
                                         <!-- Fi Configuracion -->
 
