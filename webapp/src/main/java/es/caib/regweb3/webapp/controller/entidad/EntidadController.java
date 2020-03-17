@@ -39,8 +39,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.Timestamp;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -1082,6 +1082,11 @@ public class EntidadController extends BaseController {
     @ModelAttribute("configuraciones")
     public long[] configuraciones() throws Exception {
         return RegwebConstantes.CONFIGURACIONES_PERSONA;
+    }
+
+    @ModelAttribute("perfilesCustodia")
+    public long[] perfilesCustodia() throws Exception {
+        return RegwebConstantes.PERFILES_CUSTODIA;
     }
 
 
