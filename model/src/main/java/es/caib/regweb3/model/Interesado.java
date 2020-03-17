@@ -602,6 +602,16 @@ public class Interesado implements Serializable {
 
     }
 
+    @Transient
+    public String getDocumentoNTI(){
+
+        if(StringUtils.isNotEmpty(getDocumento())){
+            return getDocumento();
+        }else{
+            return getCodigoDir3();
+        }
+    }
+
     public void setGuardarInteresado(boolean guardarInteresado) {
         this.guardarInteresado = guardarInteresado;
     }
