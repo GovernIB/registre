@@ -49,7 +49,7 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
         String uuidDocument = documentCrear(anexoFull, registro, tipoRegistro, uuidExpedient);
 
 
-        return uuidExpedient+"·"+uuidDocument;
+        return uuidExpedient+"#"+uuidDocument;
     }
 
     /**
