@@ -252,12 +252,9 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
     }
 
     @Override
-    public boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+    public synchronized boolean enviarAColaDistribucion(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         try {
-            //Comprobamos que el objeto no esté ya en cola. Ha ocurrido alguna vez de ver en cola el mismo registro 2 veces
-            if(findByIdObjeto(re.getId(),usuarioEntidad.getEntidad().getId())==null){
-                //Creamos un elemento nuevo de la cola de distribución
                 Cola cola = new Cola();
                 cola.setIdObjeto(re.getId());
                 cola.setDescripcionObjeto(re.getNumeroRegistroFormateado());
@@ -271,10 +268,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
                 log.info("RegistroEntrada: " + re.getNumeroRegistroFormateado() + " enviado a la Cola de Distribución");
                 registroEntradaEjb.cambiarEstado(re.getId(),RegwebConstantes.REGISTRO_DISTRIBUYENDO);
                 return true;
-            }else{ // Si ya existe, no se incluye en la cola
-                log.error("El registre ja es troba a la coa; No es tornarà a afegir");
-                return false;
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;

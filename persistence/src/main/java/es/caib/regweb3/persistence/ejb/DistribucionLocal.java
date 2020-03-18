@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
@@ -50,11 +51,11 @@ public interface DistribucionLocal {
     /**
      * Procesa un registro de la cola de manera individual
      *
-     * @param idObjeto
+     * @param elemento
      * @param idEntidad
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad, Long tipoIntegracion) throws Exception;
+    Boolean procesarRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception;
 }

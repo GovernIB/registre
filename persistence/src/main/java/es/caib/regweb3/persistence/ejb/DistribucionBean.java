@@ -51,7 +51,7 @@ public class DistribucionBean implements DistribucionLocal {
 
 
     @Override
-    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+    public  RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
         Boolean distribuido;
@@ -164,14 +164,14 @@ public class DistribucionBean implements DistribucionLocal {
     /**
      * Procesa un registro de la cola de manera individual
      *
-     * @param idObjeto
+     * @param elemento elemento de la cola
      * @param idEntidad
      * @return
      * @throws Exception
      * @throws I18NException
      */
     @Override
-    public Boolean procesarRegistroEnCola(Long idObjeto, Long idEntidad, Long tipoIntegracon) throws Exception {
+    public Boolean procesarRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracon) throws Exception {
 
         Boolean distribuido = false;
 
@@ -183,8 +183,6 @@ public class DistribucionBean implements DistribucionLocal {
         String hora = "<b>" + new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(inicio) + "</b>&nbsp;&nbsp;&nbsp;";
 
 
-        //Elemento de la cola
-        Cola elemento = colaEjb.findByIdObjeto(idObjeto, idEntidad);
         String error = "";
 
         try {
@@ -193,7 +191,7 @@ public class DistribucionBean implements DistribucionLocal {
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_DISTRIBUCION);
 
             //Obtenemos el registro de entrada que se debe distribuir
-            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idObjeto);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(elemento.getIdObjeto());
 
             //Montamos la petición de la integración
             peticion.append("usuario: ").append(registroEntrada.getUsuario().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -244,7 +242,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         for (Cola elemento : elementosADistribuir) {
 
-            procesarRegistroEnCola(elemento.getIdObjeto(), idEntidad, RegwebConstantes.INTEGRACION_SCHEDULERS);
+            procesarRegistroEnCola(elemento, idEntidad, RegwebConstantes.INTEGRACION_SCHEDULERS);
         }
 
     }
