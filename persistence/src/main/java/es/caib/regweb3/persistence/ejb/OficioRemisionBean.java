@@ -614,7 +614,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         Query q = em.createQuery("Select oficioRemision from OficioRemision as oficioRemision where oficioRemision.usuarioResponsable.entidad.id = :idEntidad " +
                 "and (oficioRemision.estado = :enviadoError or oficioRemision.estado = :reenviadoError) " +
-                "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' or oficioRemision.codigoError = '0063') " +
+                "and (oficioRemision.codigoError = '0039' or oficioRemision.codigoError = '0046' or oficioRemision.codigoError = '0057' or oficioRemision.codigoError = '0065' or oficioRemision.codigoError = '0063' or oficioRemision.codigoError = '0058') " +
                 "and oficioRemision.numeroReintentos < :maxReintentos");
 
         q.setParameter("enviadoError", RegwebConstantes.OFICIO_SIR_ENVIADO_ERROR);
