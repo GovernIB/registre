@@ -300,7 +300,9 @@ public class JustificanteBean implements JustificanteLocal {
             anexo.setObservaciones(observacionesAnexo);
             anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
             anexo.setJustificante(true);
-
+            anexo.setRegistroDetalle(registro.getRegistroDetalle());
+            anexo.setFechaCaptura(new Date());
+            anexo.setFirmaValida(false);
 
             // Creamos el pdf del Justificante
             byte[] pdfJustificant;
@@ -326,7 +328,12 @@ public class JustificanteBean implements JustificanteLocal {
             // Creamos el Justificante en Arxiu
             custodyID = regweb3PluginArxiu.crearJustificante(registro, tipoRegistro, anexoFull);
 
-            anexoFull = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registro.getId(), tipoRegistro, custodyID, false);
+            // Asociamos el CustodyId al anexo que vamos a crear
+            anexo.setCustodiaID(custodyID);
+
+            anexo = anexoEjb.persist(anexo);
+
+            anexoFull.setAnexo(anexo);
 
             log.info("");
             log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
