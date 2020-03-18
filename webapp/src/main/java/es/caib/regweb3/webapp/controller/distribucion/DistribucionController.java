@@ -1,8 +1,10 @@
 package es.caib.regweb3.webapp.controller.distribucion;
 
+import es.caib.regweb3.model.Cola;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.persistence.ejb.ColaLocal;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -41,6 +43,9 @@ public class DistribucionController extends BaseController {
 
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/ColaEJB/local")
+    private ColaLocal colaEjb;
 
     @Autowired
     private RegistroEntradaBusquedaValidator registroEntradaBusquedaValidator;
@@ -189,7 +194,7 @@ public class DistribucionController extends BaseController {
     /**
      * Función que se encarga de distribuir un elemento de la cola de distribución de manera individual y
      * sin esperar a la próxima ejecución del scheduler
-     * @param idRegistro
+     * @param idCola
      * @param tipo
      * @param request
      * @return
@@ -197,12 +202,13 @@ public class DistribucionController extends BaseController {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    @RequestMapping(value = "/{idRegistro}/distribuirelementocola/{tipo}", method = RequestMethod.GET)
-    public String distribuirElementoEnCola(@PathVariable Long idRegistro, @PathVariable Long tipo, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
+    @RequestMapping(value = "/{idCola}/distribuirelementocola/{tipo}", method = RequestMethod.GET)
+    public String distribuirElementoEnCola(@PathVariable Long idCola, @PathVariable Long tipo, HttpServletRequest request) throws Exception, I18NException,I18NValidationException {
 
         Entidad entidadActiva = getEntidadActiva(request);
+        Cola elemento = colaEjb.findById(idCola);
 
-        Boolean distribuido = distribucionEjb.procesarRegistroEnCola(idRegistro, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
+        Boolean distribuido = distribucionEjb.procesarRegistroEnCola(elemento, entidadActiva.getId(),RegwebConstantes.INTEGRACION_DISTRIBUCION);
 
         if(distribuido){
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.distribuir.ok"));

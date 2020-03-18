@@ -170,7 +170,7 @@
                                                         <c:if test="${cola.numeroReintentos > 0}">
                                                             <a class="btn btn-info btn-sm" onclick='confirm("<c:url value="/cola/${cola.id}/procesar/${tipo}"/>","<spring:message code="regweb.confirmar.distribuido" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.marcardistribuido"/>"><span class="fa fa-check"></span></a>
                                                         </c:if>
-                                                        <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/distribucion/${cola.idObjeto}/distribuirelementocola/${tipo}"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
+                                                        <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/distribucion/${cola.id}/distribuirelementocola/${tipo}"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
                                                     </c:if>
                                                 </td>
                                             </tr>
