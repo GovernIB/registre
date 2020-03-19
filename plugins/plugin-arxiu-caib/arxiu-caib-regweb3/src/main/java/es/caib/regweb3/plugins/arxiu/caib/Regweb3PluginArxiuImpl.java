@@ -6,20 +6,26 @@ import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.arxiu.caib.utils.Regweb3PluginArxiuUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.log4j.Logger;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
+import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements Regweb3PluginArxiu{
+
+    protected final Logger log = Logger.getLogger(getClass());
 
     private static final String basePluginRegweb3Arxiu = "plugin.arxiu.";
 
-    private static final String URL = basePluginRegweb3Arxiu + "base.url";
-    private static final String USER = basePluginRegweb3Arxiu + "usuari";
-    private static final String PASS = basePluginRegweb3Arxiu + "contrasenya";
-    private static final String CODI_APLICACIO = basePluginRegweb3Arxiu + "aplicacio.codi";
+    private static final String URL = basePluginRegweb3Arxiu + "caib.base.url";
+    private static final String USER = basePluginRegweb3Arxiu + "caib.usuari";
+    private static final String PASS = basePluginRegweb3Arxiu + "caib.contrasenya";
+    private static final String CODI_APLICACIO = basePluginRegweb3Arxiu + "caib.aplicacio.codi";
     private static final String NOMBRE_PROCEDIMIENTO = basePluginRegweb3Arxiu + "nombreProcedimiento";
     private static final String SERIE_DOCUMENTAL = basePluginRegweb3Arxiu + "serieDocumental";
     private static final String CODIGO_PROCEDIMIENTO = basePluginRegweb3Arxiu + "codigoProcedimiento";
@@ -42,12 +48,20 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
 
     public String crearJustificante(IRegistro registro, Long tipoRegistro, AnexoFull anexoFull) throws Exception{
 
+        log.info(getPropertySerieDocumental());
+        log.info(getPropertyUrl());
+        log.info(getPropertyUsuario());
+        log.info(getPropertyPassword());
+        log.info(getPropertyCodigoProcedimiento());
+
         // Creamos el Expediente del Justificante
         String uuidExpedient = expedientCrear(registro, tipoRegistro);
 
+        log.info("Expediente creado: " + uuidExpedient);
         // Creamos el Documento del Justificante
         String uuidDocument = documentCrear(anexoFull, registro, tipoRegistro, uuidExpedient);
 
+        log.info("Documento creado: " + uuidExpedient);
 
         return uuidExpedient+"#"+uuidDocument;
     }
@@ -65,6 +79,8 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
         String serieDocumental = getPropertySerieDocumental();
         Interesado interesado = registro.getRegistroDetalle().getInteresados().get(0);
 
+
+        // TODO COMPROBAR EXISTENCIA DEL EXPEDIENTE ANTS DE CREAR
         // Generamos el Expedient
         Expedient expediente = getExpedient(null,
                 nombreExpediente,
@@ -78,6 +94,12 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
 
         // Creamos el Expediente en Arxiu
         ContingutArxiu expedienteCreado = getArxiuPlugin().expedientCrear(expediente);
+
+        if(expedienteCreado == null){
+            log.info("Expediente no creado");
+        }else{
+            log.info("Expediente creado: " + expedienteCreado.getNom());
+        }
 
         return expedienteCreado.getIdentificador();
     }
@@ -98,6 +120,7 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
         Document documento = getDocument(registro, tipoRegistro, anexoFull);
 
         // Crear el Documento en Arxiu
+
         ContingutArxiu documentoCreado = getArxiuPlugin().documentCrear(documento, uuidExpedient);
 
         return documentoCreado.getIdentificador();
@@ -106,8 +129,17 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
 
     private IArxiuPlugin getArxiuPlugin() throws Exception {
 
+        Properties prop = new Properties();
 
-        return (IArxiuPlugin) org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(ARXIU_CLASS, RegwebConstantes.REGWEB3_PROPERTY_BASE, null);
+        prop.load(new StringReader(RegwebConstantes.REGWEB3_PROPERTY_BASE+URL+"="+getPropertyUrl()));
+        prop.load(new StringReader(RegwebConstantes.REGWEB3_PROPERTY_BASE+USER+"="+getPropertyUsuario()));
+        prop.load(new StringReader(RegwebConstantes.REGWEB3_PROPERTY_BASE+PASS+"="+getPropertyPassword()));
+        prop.load(new StringReader(RegwebConstantes.REGWEB3_PROPERTY_BASE+CODI_APLICACIO+"="+getPropertyCodigoAplicacion()));
+
+        // TODO Temporal, instalación de certificados para funcionar con https
+        XTrustProvider.install();
+
+        return (IArxiuPlugin) org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(getPropertyArxiuClass(), RegwebConstantes.REGWEB3_PROPERTY_BASE, prop);
 
     }
 
@@ -145,6 +177,11 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
     private String getPropertySerieDocumental() throws Exception {
 
         return getProperty(SERIE_DOCUMENTAL);
+    }
+
+    private String getPropertyArxiuClass() throws Exception {
+
+        return getProperty(ARXIU_CLASS);
     }
 
     /**
@@ -294,7 +331,8 @@ public class Regweb3PluginArxiuImpl extends AbstractPluginProperties implements 
 
             // Firma detached
             Firma firma = getFirma(anexoFull);
-            document.setFirmes(Collections.singletonList(firma));
+            document.setFirmes(new ArrayList<Firma>());
+            document.getFirmes().add(firma);
 
         }
 
