@@ -1,0 +1,6 @@
+es.caib.regweb3.plugin.arxiu.class=es.caib.plugins.arxiu.caib.ArxiuPluginCaib
+es.caib.regweb3.plugin.arxiu.caib.base.url=https://afirmades.caib.es:4430/esb
+es.caib.regweb3.plugin.arxiu.caib.usuari=
+es.caib.regweb3.plugin.arxiu.caib.contrasenya=
+es.caib.regweb3.plugin.arxiu.caib.aplicacio.codi=REGWEB
+es.caib.regweb3.plugin.arxiu.serieDocumental=S0002
