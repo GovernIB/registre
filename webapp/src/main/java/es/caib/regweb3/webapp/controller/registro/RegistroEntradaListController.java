@@ -699,7 +699,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
+
         RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+        log.info("Distribución de registro: " + registroEntrada.getNumeroRegistroFormateado());
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
 
