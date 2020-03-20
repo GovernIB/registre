@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
-import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
@@ -13,7 +12,6 @@ import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -38,8 +36,6 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
-
-    @Autowired private RolUtils rolUtils;
 
     @EJB private PluginLocal pluginEjb;
     @EJB private RolLocal rolEjb;
