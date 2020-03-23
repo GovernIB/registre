@@ -234,11 +234,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             trazabilidadSirEjb.remove(trazabilidadSir);
         }
 
+        // Copiamos los id de los anexos sir a eliminar
+        List<Long> idsAnexosSir = new ArrayList<>();
         for(AnexoSir anexoSir: registroSir.getAnexos()){
-            FileSystemManager.eliminarArchivo(anexoSir.getAnexo().getId());
+            idsAnexosSir.add(anexoSir.getAnexo().getId());
         }
 
+        // Eliminamos el Anexo Sir
         remove(registroSir);
+
+        // Eliminamos los archivos
+        for(Long idAnexoSir: idsAnexosSir){
+            FileSystemManager.eliminarArchivo(idAnexoSir);
+        }
 
     }
 
