@@ -1,12 +1,14 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
-import es.caib.regweb3.plugins.arxiu.caib.Regweb3PluginArxiu;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
@@ -19,11 +21,14 @@ import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -40,6 +45,7 @@ import java.util.Map;
 @Stateless(name = "JustificanteEJB")
 @SecurityDomain("seycon")
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class JustificanteBean implements JustificanteLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -49,11 +55,16 @@ public class JustificanteBean implements JustificanteLocal {
     @EJB private AnexoLocal anexoEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
     @EJB private IntegracionLocal integracionEjb;
+    @Autowired ArxiuCaibUtils arxiuCaibUtils;
 
 
     @Override
     public AnexoFull crearJustificante(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException {
 
+        // Comprobamos si ya se ha generado el Justificante
+        if (registro.getRegistroDetalle().getTieneJustificante()) {
+            throw new I18NException("aviso.justificante.existe");
+        }
 
         if(usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
 
@@ -89,8 +100,13 @@ public class JustificanteBean implements JustificanteLocal {
         String descripcion = "Generar Justificante DocumentCustody";
         String numRegFormat = "";
         Locale locale = new Locale(idioma);
+        final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
         try {
+
+            log.info("------------------------------------------------------------");
+            log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+            log.info("");
 
             // Integración
             peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
@@ -99,16 +115,6 @@ public class JustificanteBean implements JustificanteLocal {
             peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
 
             numRegFormat = registro.getNumeroRegistroFormateado();
-
-            // Comprobamos si ya se ha generado el Justificante
-            if (registro.getRegistroDetalle().getTieneJustificante()) {
-                throw new I18NException("aviso.justificante.existe");
-            }
-
-            log.info("------------------------------------------------------------");
-            log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
-            log.info("");
-            final Long idEntidad = usuarioEntidad.getEntidad().getId();
 
             // Carregam el plugin del Justificant
             IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_JUSTIFICANTE);
@@ -265,13 +271,29 @@ public class JustificanteBean implements JustificanteLocal {
 
         try{
 
+            log.info("------------------------------------------------------------");
+            log.info("Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado());
+            log.info("");
+
+            // Integración
+            peticion.append("usuario: ").append(usuarioEntidad.getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+            peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
+            peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
+            peticion.append("oficina: ").append(registro.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
+
+
             // Cargamos el plugin de Arxiu
-            Regweb3PluginArxiu regweb3PluginArxiu = (Regweb3PluginArxiu) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE);
+            IArxiuPlugin iArxiuPlugin = (IArxiuPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE);
 
             // Comprova que existeix el plugin de Arxiu del Justificante
-            if (regweb3PluginArxiu == null) {
+            if (iArxiuPlugin == null) {
                 throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.10"));
             }
+
+            peticion.append("clase: ").append(iArxiuPlugin.getClass().getName()).append(System.getProperty("line.separator"));
+
+            // Asociamos el plugin de Arxiu obtenido
+            arxiuCaibUtils.setArxiuPlugin(iArxiuPlugin);
 
             // Carregam el plugin del Justificant
             IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
@@ -281,7 +303,6 @@ public class JustificanteBean implements JustificanteLocal {
                 // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
                 throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.1"));
             }
-
 
             // Mensajes traducidos
             String fileName = I18NLogicUtils.tradueix(locale, "justificante.fichero") + "_" + registro.getNumeroRegistroFormateado() + ".pdf";
@@ -304,7 +325,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexo.setFechaCaptura(new Date());
             anexo.setFirmaValida(false);
 
-            // Creamos el pdf del Justificante
+            // Generamos el pdf del Justificante mediante el Plugin
             byte[] pdfJustificant;
             if (registro instanceof RegistroEntrada) {
                 pdfJustificant = justificantePlugin.generarJustificanteEntrada((RegistroEntrada) registro, "", "", "", idioma);
@@ -316,7 +337,10 @@ public class JustificanteBean implements JustificanteLocal {
             SignatureCustody sign = signatureServerEjb.signJustificante(pdfJustificant, idioma, entidad.getId(), peticion, registro.getNumeroRegistroFormateado());
             sign.setName(nombreFichero);
 
-            // Cream l'annex justificant
+            // Hash
+            anexo.setHash(RegwebUtils.obtenerHash(sign.getData()));
+
+            // Asociamos los datos de la firma
             anexoFull.setSignatureCustody(sign);
             anexoFull.setSignatureFileDelete(false);
             anexoFull.getAnexo().setSignType("PAdES");
@@ -325,12 +349,23 @@ public class JustificanteBean implements JustificanteLocal {
             anexoFull.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_VALIDA);
             anexoFull.getAnexo().setFechaValidacion(new Date());
 
-            // Creamos el Justificante en Arxiu
-            custodyID = regweb3PluginArxiu.crearJustificante(registro, tipoRegistro, anexoFull);
+            // Guardamos el Justificante en Arxiu
+            long tiempoArxiu = System.currentTimeMillis();
+            custodyID = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, anexoFull);
+            log.info("Fin generando expediente y documento en Arxiu en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempoArxiu));
 
             // Asociamos el CustodyId al anexo que vamos a crear
             anexo.setCustodiaID(custodyID);
 
+            // Obtenemos el csv del documwento creado
+            String csv = arxiuCaibUtils.getCsv(custodyID);
+
+            anexo.setCsv(csv);
+
+            peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
+            peticion.append("csv: ").append(csv).append(System.getProperty("line.separator"));
+
+            // Guardamos el Anexo
             anexo = anexoEjb.persist(anexo);
 
             anexoFull.setAnexo(anexo);
@@ -341,7 +376,6 @@ public class JustificanteBean implements JustificanteLocal {
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
-
 
             return anexoFull;
 
