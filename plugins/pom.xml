@@ -19,7 +19,6 @@
         <module>plugin-distribucion</module>
         <module>plugin-justificante</module>
         <module>plugin-postproceso</module>
-        <module>plugin-arxiu-caib</module>
     </modules>
 
     <repositories>

@@ -590,7 +590,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         long tiempo = System.currentTimeMillis();
 
         // Integración
-        peticion.append("clase: ").append(plugin.getClass().getName()).append(System.getProperty("line.separator"));
+        peticion.append("clase firma: ").append(plugin.getClass().getName()).append(System.getProperty("line.separator"));
         peticion.append("signType: ").append(signType).append(System.getProperty("line.separator"));
         peticion.append("signMode: ").append(signMode).append(System.getProperty("line.separator"));
 

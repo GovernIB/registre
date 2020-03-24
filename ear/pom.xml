@@ -304,16 +304,6 @@
         <version>${project.version}</version>
     </dependency>
 
-    <!-- ============================================ -->
-    <!-- ======== PLUGINS DE ARXIU ================== -->
-    <!-- ============================================ -->
-
-    <dependency>
-      <groupId>es.caib.regweb3</groupId>
-      <artifactId>arxiu-caib-regweb3</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <!-- ================================================= -->
     <!-- ======== PLUGINS DE FIRMA EN SERVIDOR =========== -->
     <!-- ================================================= -->
