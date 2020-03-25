@@ -1164,12 +1164,18 @@ public class EntidadController extends BaseController {
     }
 
 
-    @InitBinder("entidadForm")
+    @InitBinder({"entidadForm"})
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("id");
 
         binder.registerCustomEditor(UsuarioEntidad.class, "entidad.administradores", new UsuarioEntidadEditor());
         binder.setValidator(this.entidadValidator);
+    }
+
+    @InitBinder({"permisoLibroUsuarioForm"})
+    public void initBinder2(WebDataBinder binder) {
+        // Per resoldre el problema dels 256 objectes dins un form
+        binder.setAutoGrowCollectionLimit(500);
     }
 
 
