@@ -99,6 +99,21 @@ public class EntidadController extends BaseController {
     private OficioRemisionLocal oficioRemisionEjb;
 
 
+    @ModelAttribute("idiomas")
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_UI;
+    }
+
+    @ModelAttribute("configuraciones")
+    public long[] configuraciones() throws Exception {
+        return RegwebConstantes.CONFIGURACIONES_PERSONA;
+    }
+
+    @ModelAttribute("perfilesCustodia")
+    public long[] perfilesCustodia() throws Exception {
+        return RegwebConstantes.PERFILES_CUSTODIA;
+    }
+
     /**
      * Listado de todas las Entidades
      */
@@ -547,13 +562,13 @@ public class EntidadController extends BaseController {
             Entidad entidad = entidadEjb.findById(entidadId);
 
             // Comprova que l'entitat no existeixi com organisme dins la BBDD i tengui llibres (per les EDP externes)
-            Organismo organismo = organismoEjb.findByCodigoOtraEntidadConLibros(entidad.getCodigoDir3(),entidadId);
+            Organismo organismo = organismoEjb.findByCodigoOtraEntidadConLibros(entidad.getCodigoDir3(), entidadId);
 
-            if(organismo != null && libroEjb.getLibrosActivosOrganismoDiferente(organismo.getCodigo(), entidadId).size()>0) {  // Ja existeix un organisme amb el codi dir3 i llibres
+            if (organismo != null && libroEjb.getLibrosActivosOrganismoDiferente(organismo.getCodigo(), entidadId).size() > 0) {  // Ja existeix un organisme amb el codi dir3 i llibres
 
                 Mensaje.saveMessageError(request, getMessage("entidad.activar.nok"));
 
-            } else{  // Si no existeix ja l'organisme i té llibres
+            } else {  // Si no existeix ja l'organisme i té llibres
 
                 entidad.setActivo(true);
 
@@ -581,7 +596,7 @@ public class EntidadController extends BaseController {
 
         try {
             //Marcamos la entidad de mantenimiento
-            entidadEjb.marcarEntidadMantenimiento(entidadId,true);
+            entidadEjb.marcarEntidadMantenimiento(entidadId, true);
 
             Descarga ultimaDescarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadId);
             Timestamp fechaUltimaActualizacion = null;
@@ -598,7 +613,7 @@ public class EntidadController extends BaseController {
 
             int actualizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, fechaUltimaActualizacion, fechaSincronizacion);
             if (actualizados == -1) {
-                entidadEjb.marcarEntidadMantenimiento(entidadId,false);
+                entidadEjb.marcarEntidadMantenimiento(entidadId, false);
                 log.info("No se puede actualizar regweb hasta que no se haya actualizado dir3caib previamente");
                 jsonResponse.setError(getMessage("regweb.actualizacion.imposible"));
                 jsonResponse.setStatus("NOTALLOWED");
@@ -635,7 +650,7 @@ public class EntidadController extends BaseController {
 
         try {
             //Marcamos la entidad en mantenimiento
-            entidadEjb.marcarEntidadMantenimiento(entidadId,true);
+            entidadEjb.marcarEntidadMantenimiento(entidadId, true);
 
             //Iniciamos proceso sincronización
             int sincronizados = sincronizadorDIR3Ejb.sincronizarActualizar(entidadId, null, null);
@@ -647,7 +662,7 @@ public class EntidadController extends BaseController {
                 jsonResponse.setError(getMessage("regweb.sincronizados.numero") + sincronizados);
                 jsonResponse.setStatus("SUCCESS");
             }
-            entidadEjb.marcarEntidadMantenimiento(entidadId,false);
+            entidadEjb.marcarEntidadMantenimiento(entidadId, false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -683,7 +698,7 @@ public class EntidadController extends BaseController {
             return "redirect:/entidad/usuarios";
         }
 
-        if (roles.contains("RWE_USUARI") || roles.contains("RWE_WS_SALIDA") || roles.contains("RWE_WS_ENTRADA")|| !usuarioEntidad.getActivo()) {
+        if (roles.contains("RWE_USUARI") || roles.contains("RWE_WS_SALIDA") || roles.contains("RWE_WS_ENTRADA") || !usuarioEntidad.getActivo()) {
 
             PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
             permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
@@ -922,7 +937,7 @@ public class EntidadController extends BaseController {
                                 // Añadimos todos los organimos procesados automáticamente
                                 extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), orgSustituye);
                                 //Actualizamos todos los oficios pendientes de llegada por el organismo que los sustituye
-                                oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(),orgSustituye.getId());
+                                oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), orgSustituye.getId());
                             }
                             //actualizar pendiente
                             pendiente.setProcesado(true);
@@ -940,7 +955,7 @@ public class EntidadController extends BaseController {
                                 pendienteEjb.merge(pendiente);
                             }
                             Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
-                            oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(),orgSustituye.getId());
+                            oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), orgSustituye.getId());
                         }
                     }
                 } else {  // ANULADOS
@@ -959,20 +974,20 @@ public class EntidadController extends BaseController {
                     model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
                 }
             } else {
-                entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
+                entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
                 log.info("no hay organismos a procesar ");
                 Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
                 return "redirect:/organismo/list";
             }
-           // Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
+            // Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
             log.info("organismosAProcesar: " + organismosExtinguidos.size());
             log.info("organismosConError: " + organismosConError.size());
             //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
             model.addAttribute("esPendiente", true);
-            entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
+            entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
         } else {
-            entidadEjb.marcarEntidadMantenimiento(entidad.getId(),false);
+            entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
             log.debug("else no pendientes de procesar");
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
@@ -1038,7 +1053,7 @@ public class EntidadController extends BaseController {
             organismoJson.setLibroOrganismos(nombresLibrosOrganismos);
 
             jsonResponse.setResult(organismoJson);
-            entidadEjb.marcarEntidadMantenimiento(getEntidadActiva(request).getId(),false);
+            entidadEjb.marcarEntidadMantenimiento(getEntidadActiva(request).getId(), false);
         } catch (Exception e) {
             jsonResponse.setStatus("FAIL");
             e.printStackTrace();
@@ -1072,21 +1087,6 @@ public class EntidadController extends BaseController {
         model.addAttribute("tituloPagina", getMessage("entidad.cambiarlibros"));
         model.addAttribute("tieneLibros", libroEjb.tieneLibrosEntidad(entidad.getId()));
         return "/organismo/organismosACambiarLibro";
-    }
-
-    @ModelAttribute("idiomas")
-    public Long[] idiomas() throws Exception {
-        return RegwebConstantes.IDIOMAS_UI;
-    }
-
-    @ModelAttribute("configuraciones")
-    public long[] configuraciones() throws Exception {
-        return RegwebConstantes.CONFIGURACIONES_PERSONA;
-    }
-
-    @ModelAttribute("perfilesCustodia")
-    public long[] perfilesCustodia() throws Exception {
-        return RegwebConstantes.PERFILES_CUSTODIA;
     }
 
 
@@ -1164,21 +1164,43 @@ public class EntidadController extends BaseController {
     }
 
 
-    @InitBinder({"entidadForm"})
-    public void initBinder(WebDataBinder binder) {
-        binder.setDisallowedFields("id");
+    /**
+     * Export de {@link es.caib.regweb3.model.Usuario} a Excel
+     */
+    @RequestMapping(value = "/exportarUsuarios", method = RequestMethod.GET)
+    public ModelAndView exportarUsuarios(HttpServletRequest request) throws Exception {
 
-        binder.registerCustomEditor(UsuarioEntidad.class, "entidad.administradores", new UsuarioEntidadEditor());
-        binder.setValidator(this.entidadValidator);
+        ModelAndView mav = new ModelAndView("exportarUsuariosExcel");
+
+        Entidad entidad = getEntidadActiva(request);
+
+        String identificador = request.getParameter("identificador");
+        String nombre = request.getParameter("nombre");
+        String apellido1 = request.getParameter("apellido1");
+        String apellido2 = request.getParameter("apellido2");
+        String documento = request.getParameter("documento");
+        Long tipo = Long.valueOf(request.getParameter("tipo"));
+        Long idLibro = Long.valueOf(request.getParameter("idLibro"));
+
+        List<PermisoLibroUsuario> permisos = usuarioEntidadEjb.getExportarExcel(entidad.getId(), identificador, nombre, apellido1, apellido2, documento, tipo, idLibro, RegwebConstantes.PERMISO_REGISTRO_ENTRADA, RegwebConstantes.PERMISO_REGISTRO_SALIDA, RegwebConstantes.PERMISO_SIR);
+
+        mav.addObject("permisos", permisos);
+
+        if (idLibro != -1) {
+            Libro libro = libroEjb.findById(idLibro);
+            mav.addObject("libro", libro.getNombre());
+        } else {
+            mav.addObject("libro", null);
+        }
+
+        return mav;
     }
 
-    @InitBinder({"permisoLibroUsuarioForm"})
-    public void initBinder2(WebDataBinder binder) {
-        // Per resoldre el problema dels 256 objectes dins un form
-        binder.setAutoGrowCollectionLimit(500);
-    }
-
-
+    /**
+     * @param logoMenu
+     * @return
+     * @throws IOException
+     */
     private byte[] redimensionaLogoMenu(byte[] logoMenu) throws IOException {
 
         // Obtenemos la imagen del Logo
@@ -1251,36 +1273,17 @@ public class EntidadController extends BaseController {
         }
     }
 
+    @InitBinder({"entidadForm"})
+    public void initBinder(WebDataBinder binder) {
+        binder.setDisallowedFields("id");
 
-    /**
-     * Export de {@link es.caib.regweb3.model.Usuario} a Excel
-     */
-    @RequestMapping(value = "/exportarUsuarios", method = RequestMethod.GET)
-    public ModelAndView exportarUsuarios(HttpServletRequest request) throws Exception {
+        binder.registerCustomEditor(UsuarioEntidad.class, "entidad.administradores", new UsuarioEntidadEditor());
+        binder.setValidator(this.entidadValidator);
+    }
 
-        ModelAndView mav = new ModelAndView("exportarUsuariosExcel");
-
-        Entidad entidad = getEntidadActiva(request);
-
-        String identificador = request.getParameter("identificador");
-        String nombre = request.getParameter("nombre");
-        String apellido1 = request.getParameter("apellido1");
-        String apellido2 = request.getParameter("apellido2");
-        String documento = request.getParameter("documento");
-        Long tipo = Long.valueOf(request.getParameter("tipo"));
-        Long idLibro = Long.valueOf(request.getParameter("idLibro"));
-
-        List<PermisoLibroUsuario> permisos = usuarioEntidadEjb.getExportarExcel(entidad.getId(),identificador,nombre,apellido1,apellido2,documento,tipo,idLibro, RegwebConstantes.PERMISO_REGISTRO_ENTRADA, RegwebConstantes.PERMISO_REGISTRO_SALIDA, RegwebConstantes.PERMISO_SIR);
-
-        mav.addObject("permisos", permisos);
-
-        if(idLibro != -1) {
-            Libro libro = libroEjb.findById(idLibro);
-            mav.addObject("libro", libro.getNombre());
-        }else{
-            mav.addObject("libro", null);
-        }
-
-        return mav;
+    @InitBinder({"permisoLibroUsuarioForm"})
+    public void initBinder2(WebDataBinder binder) {
+        // Per resoldre el problema dels 256 objectes dins un form
+        binder.setAutoGrowCollectionLimit(500);
     }
 }
