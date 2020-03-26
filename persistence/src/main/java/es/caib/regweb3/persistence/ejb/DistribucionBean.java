@@ -51,7 +51,7 @@ public class DistribucionBean implements DistribucionLocal {
 
 
     @Override
-    public  RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
+    public RespuestaDistribucion distribuir(RegistroEntrada re, UsuarioEntidad usuarioEntidad) throws Exception, I18NException, I18NValidationException {
 
         log.info("Distribución de registro bean : " +re.getNumeroRegistroFormateado());
         RespuestaDistribucion respuestaDistribucion = new RespuestaDistribucion();
