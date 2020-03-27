@@ -14,6 +14,7 @@ import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -98,13 +99,19 @@ public class SirController extends BaseController {
 
         ModelAndView mav = new ModelAndView("sir/copiarDocumentacion");
         Entidad entidad = getEntidadActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        long inicio = System.currentTimeMillis();
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
+        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
 
-        Integer total = registroSirEjb.crearRegistrosERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal(), entidad.getId());
+        Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
+        List<Libro> libros = libroEjb.getLibrosActivosOrganismo(oficina.getOrganismoResponsable().getId());
 
-        Mensaje.saveMessageInfo(request, "Se han procesado "+total+" registros.");
+        sirEnvioEjb.aceptarRegistrosERTE(registros, oficina, libros.get(0).getId(), usuarioEntidad, entidad.getId());
+
+        Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
 
         mav.addObject("estados", EstadoRegistroSir.values());
         mav.addObject("tipos", TipoRegistro.values());

@@ -20,7 +20,7 @@ public class ErteBusquedaForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fechaFin;
     private String estado;
-    private Long total;
+    private Integer total;
 
 
     public ErteBusquedaForm() {}
@@ -68,11 +68,11 @@ public class ErteBusquedaForm {
 
     public void setEstado(String estado) { this.estado = estado; }
 
-    public Long getTotal() {
+    public Integer getTotal() {
         return total;
     }
 
-    public void setTotal(Long total) {
+    public void setTotal(Integer total) {
         this.total = total;
     }
 }

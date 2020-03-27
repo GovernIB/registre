@@ -26,7 +26,6 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
 import org.jboss.ejb3.annotation.SecurityDomain;
-import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,11 +43,6 @@ import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -87,65 +81,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
 
+
     @Override
-    @TransactionTimeout(value = 1800)  // 30 minutos
-    public Integer crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception{
-
-        // ruta actual: /app/caib/regweb/archivos
-        // ruta erte: /app/caib/regweb/dades/erte
-
-        final String rutaERTE = PropiedadGlobalUtil.getErtePath(idEntidad);
-
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
-
-        try{
-
-            List<Long> registros = getUltimosPendientesProcesarERTE(oficina, fechaInicio, fechaFin, aplicacion, 50);
-
-            log.info("Total registros: " + registros.size());
-            log.info("");
-
-            for(Long erte:registros){
-
-                // Cargamos el registro
-                RegistroSir registroSir = findById(erte);
-
-                log.info("Procesando el registro: " + registroSir.getId());
-
-                // Copiamos cada anexo en la carpeta creada
-                for(AnexoSir anexoSir:registroSir.getAnexos()){
-
-                    Archivo archivo = anexoSir.getAnexo();
-
-                    File origen = FileSystemManager.getArchivo(archivo.getId());
-
-                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroSir.getNumeroRegistro();
-
-                    Path carpeta = Paths.get(destino);
-                    Files.createDirectories(carpeta);
-
-                    try{
-                        Files.copy(origen.toPath(), (new File(destino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                    }catch (Exception e){
-                        log.info("No encuentra el fichero");
-                    }
-                }
-            }
-
-            return registros.size();
-
-        } catch(Exception e){
-            log.info("Error generando carpetas ERTE");
-            e.printStackTrace();
-        }
-
-        return 0;
-
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    private List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception{
+    public List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception{
 
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
@@ -2020,6 +1958,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             anexo.setTitulo(anexoSir.getNombreFichero());
 
+            // Validez Documento
             if (anexoSir.getValidezDocumento() != null) {
                 //Transformamos de copia compulsada a copia_original = autèntica
                 if(Long.valueOf(anexoSir.getValidezDocumento())== TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA){
@@ -2030,9 +1969,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             } else {//Campo NTI Cogemos la validez de documento indicada por el usuario
                 if (camposNTI.getIdValidezDocumento() != null) {
                     anexo.setValidezDocumento(Long.valueOf(camposNTI.getIdValidezDocumento()));
+
+                }else{ //Si no hay valor, por defecto "Copia"
+                    anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA);
                 }
             }
 
+            // Tipo Documento
             if (anexoSir.getTipoDocumento() != null) {
                 anexo.setTipoDocumento(Long.valueOf(anexoSir.getTipoDocumento()));
 
@@ -2046,6 +1989,9 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             //Campo NTI no informados, asignamos lo que indica el usuario
             if (camposNTI.getIdOrigen() != null) {
                 anexo.setOrigenCiudadanoAdmin(camposNTI.getIdOrigen().intValue());
+
+            }else{ // Si no está informado, por defecto Ciudadano
+                anexo.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
             }
 
             // Si el usuario no especifica el tipo Documental, por defecto se pone TD99 - Otros

@@ -10,6 +10,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.model.utils.IndicadorPrueba;
+import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.sir.core.excepcion.SIRException;
 import es.caib.regweb3.sir.ejb.EmisionLocal;
@@ -22,16 +23,19 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Fundació BIT.
@@ -61,6 +65,81 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
+
+
+
+    @Override
+    @TransactionTimeout(value = 3000)  // 50 minutos
+    public Integer aceptarRegistrosERTE(List<Long> registros, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception{
+
+        // ruta actual: /app/caib/regweb/archivos
+        // ruta erte: /app/caib/regweb/dades/erte
+
+        final String rutaERTE = PropiedadGlobalUtil.getErtePath(idEntidad);
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
+
+        try{
+
+            log.info("Total registros: " + registros.size());
+            log.info("");
+
+            for(Long erte:registros){
+
+                // Cargamos el registro
+                RegistroSir registroSir = registroSirEjb.findById(erte);
+
+                log.info("Procesando el registro: " + registroSir.getId());
+
+                // Crear List<CamposNTI> ficticia
+                List<CamposNTI> camposNTIS =  new ArrayList<CamposNTI>();
+                for(AnexoSir anexoSir:registroSir.getAnexos()){
+                    CamposNTI campoNTI = new CamposNTI();
+                    campoNTI.setId(anexoSir.getId());
+
+                    camposNTIS.add(campoNTI);
+                }
+
+                //Aceptar el RegistroSir
+                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS,null);
+
+
+                // Copiamos cada anexo en la carpeta creada
+                for(AnexoSir anexoSir:registroSir.getAnexos()){
+
+                    Archivo archivo = anexoSir.getAnexo();
+
+                    File origen = FileSystemManager.getArchivo(archivo.getId());
+
+                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroEntrada.getNumeroRegistroFormateado();
+
+                    Path carpeta = Paths.get(destino);
+                    Files.createDirectories(carpeta);
+
+                    try{
+                        Files.copy(origen.toPath(), (new File(destino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                    }catch (Exception e){
+                        log.info("No encuentra el fichero");
+                    }
+                }
+            }
+
+            return registros.size();
+
+        } catch(Exception e){
+            log.info("Error generando carpetas ERTE");
+            e.printStackTrace();
+        } catch (I18NValidationException | I18NException e) {
+            log.info("Error aceptando el RegistroSir");
+            e.printStackTrace();
+        }
+
+        return 0;
+
+    }
+
+
 
     /**
      * @param idRegistro
