@@ -20,7 +20,7 @@ public class ErteBusquedaForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date fechaFin;
     private String estado;
-    private Integer total;
+    private Integer total = 10;
 
 
     public ErteBusquedaForm() {}

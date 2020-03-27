@@ -65,6 +65,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
+    @EJB private DistribucionLocal distribucionEjb;
 
 
 
@@ -123,6 +124,8 @@ public class SirEnvioBean implements SirEnvioLocal {
                         log.info("No encuentra el fichero");
                     }
                 }
+
+                distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
             }
 
             return registros.size();
@@ -394,7 +397,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
             // Enviamos el Mensaje de Confirmación
-            enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+            //enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
