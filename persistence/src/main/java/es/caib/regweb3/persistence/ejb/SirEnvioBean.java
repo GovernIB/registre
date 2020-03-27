@@ -87,46 +87,53 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             for(Long erte:registros){
 
-                // Cargamos el registro
-                RegistroSir registroSir = registroSirEjb.findById(erte);
+                try{
 
-                log.info("Procesando el registro: " + registroSir.getId());
+                    // Cargamos el registro
+                    RegistroSir registroSir = registroSirEjb.findById(erte);
 
-                // Crear List<CamposNTI> ficticia
-                List<CamposNTI> camposNTIS =  new ArrayList<CamposNTI>();
-                for(AnexoSir anexoSir:registroSir.getAnexos()){
-                    CamposNTI campoNTI = new CamposNTI();
-                    campoNTI.setId(anexoSir.getId());
+                    log.info("Procesando el registro: " + registroSir.getId());
 
-                    camposNTIS.add(campoNTI);
-                }
+                    // Crear List<CamposNTI> ficticia
+                    List<CamposNTI> camposNTIS =  new ArrayList<CamposNTI>();
+                    for(AnexoSir anexoSir:registroSir.getAnexos()){
+                        CamposNTI campoNTI = new CamposNTI();
+                        campoNTI.setId(anexoSir.getId());
 
-                //Aceptar el RegistroSir
-                RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS,null);
-
-
-                // Copiamos cada anexo en la carpeta creada
-                for(AnexoSir anexoSir:registroSir.getAnexos()){
-
-                    Archivo archivo = anexoSir.getAnexo();
-
-                    File origen = FileSystemManager.getArchivo(archivo.getId());
-
-                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
-
-                    Path carpeta = Paths.get(destino);
-                    Files.createDirectories(carpeta);
-
-                    try{
-                        Files.copy(origen.toPath(), (new File(destino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                    }catch (Exception e){
-                        log.info("No encuentra el fichero");
+                        camposNTIS.add(campoNTI);
                     }
-                }
 
-                distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+                    //Aceptar el RegistroSir
+                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS,null);
+
+
+                    // Copiamos cada anexo en la carpeta creada
+                    for(AnexoSir anexoSir:registroSir.getAnexos()){
+
+                        Archivo archivo = anexoSir.getAnexo();
+
+                        File origen = FileSystemManager.getArchivo(archivo.getId());
+
+                        String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
+
+                        Path carpeta = Paths.get(destino);
+                        Files.createDirectories(carpeta);
+
+                        try{
+                            Files.copy(origen.toPath(), (new File(destino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                        }catch (Exception e){
+                            log.info("No encuentra el fichero");
+                        }
+                    }
+
+                    distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+
+                }catch (Exception e){
+                    log.info("Error procesando un registro sir");
+                }
             }
+
 
             return registros.size();
 
@@ -397,7 +404,7 @@ public class SirEnvioBean implements SirEnvioLocal {
             registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
 
             // Enviamos el Mensaje de Confirmación
-            //enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+            enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
