@@ -20,6 +20,18 @@ public class PropiedadGlobalUtil {
 
 
     /**
+     * Retorna el valor de la propiedad de la ruta ERTE
+     * Propiedad: es.caib.regweb3.urlvalidation.password
+     * @param idEntidad
+     * @return
+     */
+    public static String getErtePath(Long idEntidad) {
+        final String partialPropertyName = "erte.path";
+
+        return getStringByEntidad(idEntidad, partialPropertyName);
+    }
+
+    /**
      * Retorna el valor de la propiedad de la entidad indicada.
      * Propiedad: es.caib.regweb3.sesion.minutosPurgado.iniciadas
      * @param idEntidad

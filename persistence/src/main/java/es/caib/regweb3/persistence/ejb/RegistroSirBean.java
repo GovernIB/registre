@@ -43,6 +43,9 @@ import javax.xml.crypto.dsig.Reference;
 import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -81,6 +84,63 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
 
+    @Override
+    public void crearRegistrosERTE(String oficina, Long idEntidad) throws Exception{
+
+        // ruta actual: /app/caib/regweb/archivos
+        // ruta erte: /app/caib/regweb/dades/erte
+
+        final String rutaERTE = PropiedadGlobalUtil.getErtePath(idEntidad);
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+        try{
+
+            List<Long> registros = getUltimosPendientesProcesarERTE(oficina, 50);
+
+            for(Long erte:registros){
+
+                // Cargamos el registro
+                RegistroSir registroSir = findById(erte);
+
+                // Copiamos cada anexo en la carpeta creada
+                for(AnexoSir anexoSir:registroSir.getAnexos()){
+
+                    Archivo archivo = anexoSir.getAnexo();
+
+                    File origen = FileSystemManager.getArchivo(archivo.getId());
+
+                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroSir.getNumeroRegistro()+ "/"+archivo.getNombre();
+
+                    Files.copy(origen.toPath(), (new File(destino)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                }
+
+            }
+
+        }catch(Exception e){
+            log.info("Error generando carpetas ERTE");
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    private List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Integer total) throws Exception{
+
+        Query q = em.createQuery("Select r.id from RegistroSir as r " +
+                "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
+                "order by r.fechaRecepcion desc");
+
+        q.setMaxResults(total);
+        q.setParameter("oficinaSir", oficinaSir);
+        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
+
+    }
 
     @Override
     public RegistroSir getReference(Long id) throws Exception {

@@ -57,6 +57,24 @@ public class RegistroSirController extends BaseController {
     private TrazabilidadSirLocal trazabilidadSirEjb;
 
 
+
+
+
+    /**
+     * Carga el formulario para ver el detalle de un {@link RegistroSir}
+     */
+    @RequestMapping(value = "/{oficina}/detalle", method = RequestMethod.GET)
+    public String crearRegistrosERTE(@PathVariable String oficina, Model model, HttpServletRequest request) throws Exception {
+
+        Entidad entidadActiva = getEntidadActiva(request);
+
+        registroSirEjb.crearRegistrosERTE(oficina, entidadActiva.getId());
+
+        return "redirect:/inici";
+    }
+
+
+
     /**
      * Listado de todos los RegistroSirs
      */
