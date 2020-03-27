@@ -112,7 +112,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
                     File origen = FileSystemManager.getArchivo(archivo.getId());
 
-                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroEntrada.getNumeroRegistroFormateado();
+                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
 
                     Path carpeta = Paths.get(destino);
                     Files.createDirectories(carpeta);
