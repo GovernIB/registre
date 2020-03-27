@@ -26,6 +26,7 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,6 +46,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,23 +88,29 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private SignatureServerLocal signatureServerEjb;
 
     @Override
-    public void crearRegistrosERTE(String oficina, Long idEntidad) throws Exception{
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void crearRegistrosERTE(String oficina, Long idEntidad){
 
         // ruta actual: /app/caib/regweb/archivos
         // ruta erte: /app/caib/regweb/dades/erte
 
         final String rutaERTE = PropiedadGlobalUtil.getErtePath(idEntidad);
 
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
 
         try{
 
-            List<Long> registros = getUltimosPendientesProcesarERTE(oficina, 50);
+            List<Long> registros = getUltimosPendientesProcesarERTE(oficina);
+
+            log.info("Total registros: " + registros);
+            log.info("");
 
             for(Long erte:registros){
 
                 // Cargamos el registro
                 RegistroSir registroSir = findById(erte);
+
+                log.info("Procesando el registro: " + registroSir.getId());
 
                 // Copiamos cada anexo en la carpeta creada
                 for(AnexoSir anexoSir:registroSir.getAnexos()){
@@ -110,15 +119,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     File origen = FileSystemManager.getArchivo(archivo.getId());
 
-                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroSir.getNumeroRegistro()+ "/"+archivo.getNombre();
+                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroSir.getNumeroRegistro();
 
-                    Files.copy(origen.toPath(), (new File(destino)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Path carpeta = Paths.get(destino);
+                    Files.createDirectories(carpeta);
+
+                    try{
+                        Files.copy(origen.toPath(), (new File(destino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                    }catch (Exception e){
+                        log.info("No encuentra el fichero");
+                    }
 
                 }
 
             }
 
-        }catch(Exception e){
+        } catch(Exception e){
             log.info("Error generando carpetas ERTE");
             e.printStackTrace();
         }
@@ -127,13 +144,13 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @SuppressWarnings(value = "unchecked")
-    private List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Integer total) throws Exception{
+    private List<Long> getUltimosPendientesProcesarERTE(String oficinaSir) throws Exception{
 
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
-                "order by r.fechaRecepcion desc");
+                "order by r.fechaRecepcion asc");
 
-        q.setMaxResults(total);
+        //q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
         q.setHint("org.hibernate.readOnly", true);
