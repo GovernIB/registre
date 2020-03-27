@@ -15,10 +15,7 @@ import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.form.EliminarForm;
-import es.caib.regweb3.webapp.form.OficioRemisionBusquedaForm;
-import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
-import es.caib.regweb3.webapp.form.RegistroSirBusquedaForm;
+import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.dom4j.Document;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -69,6 +66,56 @@ public class SirController extends BaseController {
 
     @EJB(mappedName = "regweb3/MensajeEJB/local")
     private MensajeLocal mensajeEjb;
+
+
+
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/copiarDocumentacion", method = RequestMethod.GET)
+    public ModelAndView copiarDocumentacion(Model model, HttpServletRequest request)throws Exception {
+
+        ModelAndView mav = new ModelAndView("sir/copiarDocumentacion");
+        Entidad entidad = getEntidadActiva(request);
+
+        ErteBusquedaForm erteBusquedaForm = new ErteBusquedaForm(new RegistroSir(),1);
+        model.addAttribute("estados", EstadoRegistroSir.values());
+        model.addAttribute("tipos", TipoRegistro.values());
+        model.addAttribute("erteBusquedaForm", erteBusquedaForm);
+        model.addAttribute("anys", getAnys());
+        model.addAttribute("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+
+        return mav;
+    }
+
+    /**
+     *
+     */
+    @RequestMapping(value = "/copiarDocumentacion", method = RequestMethod.POST)
+    public ModelAndView copiarDocumentacion(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+
+        ModelAndView mav = new ModelAndView("sir/copiarDocumentacion");
+        Entidad entidad = getEntidadActiva(request);
+
+        RegistroSir registroSir = busqueda.getRegistroSir();
+
+
+        registroSirEjb.crearRegistrosERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal(), entidad.getId());
+
+        busqueda.setPageNumber(1);
+
+        mav.addObject("estados", EstadoRegistroSir.values());
+        mav.addObject("tipos", TipoRegistro.values());
+        mav.addObject("registroSirBusqueda", busqueda);
+        mav.addObject("anys", getAnys());
+        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+
+        return mav;
+
+    }
+
 
 
     /**

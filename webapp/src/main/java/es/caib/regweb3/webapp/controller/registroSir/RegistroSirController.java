@@ -68,7 +68,7 @@ public class RegistroSirController extends BaseController {
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        registroSirEjb.crearRegistrosERTE(oficina, entidadActiva.getId());
+        //registroSirEjb.crearRegistrosERTE(oficina, entidadActiva.getId());
 
         return "redirect:/inici";
     }

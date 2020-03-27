@@ -85,7 +85,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private SignatureServerLocal signatureServerEjb;
 
     @Override
-    public void crearRegistrosERTE(String oficina, Long idEntidad) throws Exception{
+    public void crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception{
 
         // ruta actual: /app/caib/regweb/archivos
         // ruta erte: /app/caib/regweb/dades/erte
@@ -96,7 +96,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         try{
 
-            List<Long> registros = getUltimosPendientesProcesarERTE(oficina, 50);
+            List<Long> registros = getUltimosPendientesProcesarERTE(oficina, fechaInicio, fechaFin, aplicacion, 50);
 
             for(Long erte:registros){
 
@@ -127,14 +127,19 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     @SuppressWarnings(value = "unchecked")
-    private List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Integer total) throws Exception{
+    private List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception{
 
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
+                "and  (r.fechaRecepcion >= :fechaInicio and r.fechaRecepcion <= :fechaFin) " +
+                "and r.aplicacion=:aplicacion " +
                 "order by r.fechaRecepcion desc");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
+        q.setParameter("fechaInicio", fechaInicio);
+        q.setParameter("fechaFin", fechaFin);
+        q.setParameter("aplicacion", aplicacion);
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
         q.setHint("org.hibernate.readOnly", true);
 
