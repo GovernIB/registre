@@ -52,23 +52,9 @@
                                         <label for="registroSir.codigoEntidadRegistral" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:select items="${oficinasSir}" itemLabel="${denominacion}" itemValue="${codigo}" path="registroSir.codigoEntidadRegistral" cssClass="chosen-select"/>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="col-xs-12">
-
-                                <div class="col-xs-6 espaiLinies">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estadoSir.busqueda"/>" data-toggle="popover"><spring:message code="registroSir.estado"/></label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <form:select path="estado" cssClass="chosen-select">
-                                            <form:option value="" label="..."/>
-                                            <c:forEach var="estado" items="${estados}">
-                                                <form:option value="${estado.value}"><spring:message code="registroSir.estado.${estado.value}"/></form:option>
+                                        <form:select path="registroSir.codigoEntidadRegistral" cssClass="chosen-select">
+                                            <c:forEach var="oficina" items="${oficinasSir}">
+                                                <form:option value="${oficina.codigo}">${oficina.denominacion}</form:option>
                                             </c:forEach>
                                         </form:select>
                                     </div>
@@ -82,6 +68,8 @@
                                         <form:input path="registroSir.aplicacion" maxlength="4" cssClass="form-control"/>
                                     </div>
                                 </div>
+
+
                             </div>
 
                             <div class="col-xs-12">
@@ -108,20 +96,24 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+
+                            <div class="col-xs-12">
+
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="total" rel="popupAbajo" data-content="" data-toggle="popover">Total</label>
                                     </div>
                                     <div class="col-xs-8" id="total">
-                                        <div class="input-group date no-pad-right">
-                                            <form:input path="total" type="text" cssClass="form-control"  maxlength="10" name="total"/>
-                                        </div>
+                                        <form:input path="total" type="text" cssClass="form-control"  maxlength="10" name="total"/>
                                     </div>
                                 </div>
                             </div>
 
+
                             <div class="form-group col-xs-12">
-                                <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                <button type="submit" class="btn btn-warning btn-sm">Ejecutar</button>
                             </div>
                     </form:form>
 

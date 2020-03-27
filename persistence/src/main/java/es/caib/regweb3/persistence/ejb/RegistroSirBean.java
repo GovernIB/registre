@@ -89,20 +89,20 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception{
+    public Integer crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception{
 
         // ruta actual: /app/caib/regweb/archivos
         // ruta erte: /app/caib/regweb/dades/erte
 
         final String rutaERTE = PropiedadGlobalUtil.getErtePath(idEntidad);
 
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
 
         try{
 
             List<Long> registros = getUltimosPendientesProcesarERTE(oficina, fechaInicio, fechaFin, aplicacion, 50);
 
-            log.info("Total registros: " + registros);
+            log.info("Total registros: " + registros.size());
             log.info("");
 
             for(Long erte:registros){
@@ -130,16 +130,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     }catch (Exception e){
                         log.info("No encuentra el fichero");
                     }
-
                 }
-
             }
+
+            return registros.size();
 
         } catch(Exception e){
             log.info("Error generando carpetas ERTE");
             e.printStackTrace();
         }
 
+        return 0;
 
     }
 
@@ -149,14 +150,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
                 "and  (r.fechaRecepcion >= :fechaInicio and r.fechaRecepcion <= :fechaFin) " +
-                "and r.aplicacion=:aplicacion " +
+                "and r.aplicacion LIKE :aplicacion " +
                 "order by r.fechaRecepcion desc");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
-        q.setParameter("aplicacion", aplicacion);
+        q.setParameter("aplicacion", "%"+aplicacion+"%");
         q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
         q.setHint("org.hibernate.readOnly", true);
 

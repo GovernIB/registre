@@ -102,9 +102,9 @@ public class SirController extends BaseController {
         RegistroSir registroSir = busqueda.getRegistroSir();
 
 
-        registroSirEjb.crearRegistrosERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal(), entidad.getId());
+        Integer total = registroSirEjb.crearRegistrosERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal(), entidad.getId());
 
-        busqueda.setPageNumber(1);
+        Mensaje.saveMessageInfo(request, "Se han procesado "+total+" registros.");
 
         mav.addObject("estados", EstadoRegistroSir.values());
         mav.addObject("tipos", TipoRegistro.values());

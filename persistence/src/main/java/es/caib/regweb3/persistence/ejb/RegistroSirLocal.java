@@ -24,7 +24,7 @@ import java.util.List;
 public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
 
-     void crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception;
+     Integer crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception;
 
     /**
      * Obtiene un RegistroSir a partir de los parámetros
