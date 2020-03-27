@@ -23,16 +23,16 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
+     List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception;
 
-     Integer crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception;
 
-    /**
-     * Obtiene un RegistroSir a partir de los parámetros
-     * @param identificadorIntercambio
-     * @param codigoEntidadRegistralDestino
-     * @return
-     * @throws Exception
-     */
+        /**
+         * Obtiene un RegistroSir a partir de los parámetros
+         * @param identificadorIntercambio
+         * @param codigoEntidadRegistralDestino
+         * @return
+         * @throws Exception
+         */
     RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
 
     /**

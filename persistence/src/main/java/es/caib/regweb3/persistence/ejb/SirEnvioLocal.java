@@ -21,15 +21,19 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN", "RWE_ADMIN", "RWE_USUARI", "RWE_WS_ENTRADA", "RWE_WS_SALIDA"})
 public interface SirEnvioLocal {
 
-    /**
-     * @param tipoRegistro
-     * @param idRegistro
-     * @param oficinaActiva
-     * @param usuario
-     * @param codigoOficinaSir
-     * @throws Exception
-     * @throws I18NException
-     */
+
+    Integer aceptarRegistrosERTE(List<Long> registros, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
+
+
+        /**
+         * @param tipoRegistro
+         * @param idRegistro
+         * @param oficinaActiva
+         * @param usuario
+         * @param codigoOficinaSir
+         * @throws Exception
+         * @throws I18NException
+         */
     OficioRemision enviarFicheroIntercambio(Long tipoRegistro, Long idRegistro,
                                             Oficina oficinaActiva, UsuarioEntidad usuario, String codigoOficinaSir)
             throws Exception, I18NException, I18NValidationException;
