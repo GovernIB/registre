@@ -58,23 +58,6 @@ public class RegistroSirController extends BaseController {
 
 
 
-
-
-    /**
-     *
-     */
-    @RequestMapping(value = "/{oficina}/erte", method = RequestMethod.GET)
-    public String crearRegistrosERTE(@PathVariable String oficina, Model model, HttpServletRequest request) throws Exception {
-
-        Entidad entidadActiva = getEntidadActiva(request);
-
-        //registroSirEjb.crearRegistrosERTE(oficina, entidadActiva.getId());
-
-        return "redirect:/inici";
-    }
-
-
-
     /**
      * Listado de todos los RegistroSirs
      */
