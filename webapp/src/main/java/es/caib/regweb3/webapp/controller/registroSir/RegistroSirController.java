@@ -61,9 +61,9 @@ public class RegistroSirController extends BaseController {
 
 
     /**
-     * Carga el formulario para ver el detalle de un {@link RegistroSir}
+     *
      */
-    @RequestMapping(value = "/{oficina}/detalle", method = RequestMethod.GET)
+    @RequestMapping(value = "/{oficina}/erte", method = RequestMethod.GET)
     public String crearRegistrosERTE(@PathVariable String oficina, Model model, HttpServletRequest request) throws Exception {
 
         Entidad entidadActiva = getEntidadActiva(request);

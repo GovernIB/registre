@@ -26,6 +26,7 @@ import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,6 +46,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -85,6 +88,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private SignatureServerLocal signatureServerEjb;
 
     @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
     public void crearRegistrosERTE(String oficina, Date fechaInicio, Date fechaFin, String aplicacion, Long total, Long idEntidad) throws Exception{
 
         // ruta actual: /app/caib/regweb/archivos
@@ -98,10 +102,15 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             List<Long> registros = getUltimosPendientesProcesarERTE(oficina, fechaInicio, fechaFin, aplicacion, 50);
 
+            log.info("Total registros: " + registros);
+            log.info("");
+
             for(Long erte:registros){
 
                 // Cargamos el registro
                 RegistroSir registroSir = findById(erte);
+
+                log.info("Procesando el registro: " + registroSir.getId());
 
                 // Copiamos cada anexo en la carpeta creada
                 for(AnexoSir anexoSir:registroSir.getAnexos()){
@@ -110,15 +119,23 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
                     File origen = FileSystemManager.getArchivo(archivo.getId());
 
-                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroSir.getNumeroRegistro()+ "/"+archivo.getNombre();
+                    String destino = rutaERTE + formatDate.format(registroSir.getFechaRegistro()) + " - " + registroSir.getNumeroRegistro();
 
-                    Files.copy(origen.toPath(), (new File(destino)).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Path carpeta = Paths.get(destino);
+                    Files.createDirectories(carpeta);
+
+                    try{
+                        Files.copy(origen.toPath(), (new File(destino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                    }catch (Exception e){
+                        log.info("No encuentra el fichero");
+                    }
 
                 }
 
             }
 
-        }catch(Exception e){
+        } catch(Exception e){
             log.info("Error generando carpetas ERTE");
             e.printStackTrace();
         }
