@@ -79,6 +79,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private CatPaisLocal catPaisEjb;
     @EJB private TipoDocumentalLocal tipoDocumentalEjb;
     @EJB private TrazabilidadSirLocal trazabilidadSirEjb;
+    @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private SignatureServerLocal signatureServerEjb;
 
 
@@ -1531,7 +1532,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     }
 
     /**
-     * Transforma un {@link RegistroSir} en un {@link RegistroEntrada}
+     * Transforma un {@link RegistroSir} en un {@link RegistroEntrada} y lo registra
      * @param registroSir
      * @param usuario
      * @param oficinaActiva
@@ -1543,7 +1544,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroEntrada transformarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, String codigoSustituto)
+    public RegistroEntrada aceptarRegistroSirEntrada(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, String codigoSustituto)
             throws Exception, I18NException, I18NValidationException {
 
         Libro libro = libroEjb.findById(idLibro);
@@ -1586,58 +1587,34 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull);
         }
 
+        // Creamos la TrazabilidadSir
+        TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
+        trazabilidadSir.setRegistroSir(registroSir);
+        trazabilidadSir.setRegistroEntrada(registroEntrada);
+        trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
+        trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
+        trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
+        trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
+        trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
+        trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
+        trazabilidadSir.setContactoUsuario(usuario.getUsuario().getEmail());
+        trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
+        trazabilidadSirEjb.persist(trazabilidadSir);
+
+        // CREAMOS LA TRAZABILIDAD
+        Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
+        trazabilidad.setRegistroSir(registroSir);
+        trazabilidad.setRegistroEntradaOrigen(null);
+        trazabilidad.setOficioRemision(null);
+        trazabilidad.setRegistroSalida(null);
+        trazabilidad.setRegistroEntradaDestino(registroEntrada);
+        trazabilidad.setFecha(new Date());
+        trazabilidadEjb.persist(trazabilidad);
+
+        // Modificamos el estado del RegistroSir
+        modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
+
         return registroEntrada;
-    }
-
-    /**
-     * Transforma un {@link RegistroSir} en un {@link RegistroSalida}
-     * @param registroSir
-     * @param usuario
-     * @param oficinaActiva
-     * @param idLibro
-     * @param idIdioma
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    @Override
-    public RegistroSalida transformarRegistroSirSalida(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs) throws Exception, I18NException, I18NValidationException {
-
-        Libro libro = libroEjb.findById(idLibro);
-
-        RegistroSalida registroSalida = new RegistroSalida();
-        registroSalida.setUsuario(usuario);
-        registroSalida.setOficina(oficinaActiva);
-        registroSalida.setEstado(RegwebConstantes.REGISTRO_VALIDO);
-        registroSalida.setLibro(libro);
-
-        // Organismo origen
-        // TODO Esta asignación es incorrecta
-        Organismo organismoOrigen;
-        if(registroSir.getCodigoUnidadTramitacionDestino() != null){
-            organismoOrigen = organismoEjb.findByCodigoLigero(registroSir.getCodigoUnidadTramitacionDestino());
-            registroSalida.setOrigen(organismoOrigen);
-        }
-
-        registroSalida.setOrigenExternoCodigo(null);
-        registroSalida.setOrigenExternoDenominacion(null);
-
-        // RegistroDetalle
-        registroSalida.setRegistroDetalle(getRegistroDetalle(registroSir, idIdioma));
-
-        // Interesados
-        List<Interesado> interesados = procesarInteresados(registroSir.getInteresados());
-
-        // Anexos
-        List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
-
-        // Registramos el Registro Entrada
-        synchronized (this){
-            registroSalida = registroSalidaEjb.registrarSalida(registroSalida, usuario,interesados, anexosFull);
-        }
-
-        return registroSalida;
     }
 
     /**
