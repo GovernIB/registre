@@ -369,39 +369,12 @@ public class SirEnvioBean implements SirEnvioLocal {
         log.info("");
         log.info("Aceptando RegistroSir " + registroSir.getIdentificadorIntercambio());
 
-        // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
         RegistroEntrada registroEntrada;
 
         try {
-            registroEntrada = registroSirEjb.transformarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, camposNTIs, codigoSustituto);
+            // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
 
-            // Creamos la TrazabilidadSir
-            TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);
-            trazabilidadSir.setRegistroSir(registroSir);
-            trazabilidadSir.setRegistroEntrada(registroEntrada);
-            trazabilidadSir.setCodigoEntidadRegistralOrigen(registroSir.getCodigoEntidadRegistralOrigen());
-            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(registroSir.getDecodificacionEntidadRegistralOrigen());
-            trazabilidadSir.setCodigoEntidadRegistralDestino(registroSir.getCodigoEntidadRegistralDestino());
-            trazabilidadSir.setDecodificacionEntidadRegistralDestino(registroSir.getDecodificacionEntidadRegistralDestino());
-            trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
-            trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
-            trazabilidadSir.setContactoUsuario(usuario.getUsuario().getEmail());
-            trazabilidadSir.setObservaciones(registroSir.getDecodificacionTipoAnotacion());
-            trazabilidadSirEjb.persist(trazabilidadSir);
-
-            // CREAMOS LA TRAZABILIDAD
-            Trazabilidad trazabilidad = new Trazabilidad(RegwebConstantes.TRAZABILIDAD_RECIBIDO_SIR);
-            trazabilidad.setRegistroSir(registroSir);
-            trazabilidad.setRegistroEntradaOrigen(null);
-            trazabilidad.setOficioRemision(null);
-            trazabilidad.setRegistroSalida(null);
-            trazabilidad.setRegistroEntradaDestino(registroEntrada);
-            trazabilidad.setFecha(new Date());
-
-            trazabilidadEjb.persist(trazabilidad);
-
-            // Modificamos el estado del RegistroSir
-            registroSirEjb.modificarEstado(registroSir.getId(), EstadoRegistroSir.ACEPTADO);
+            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, camposNTIs, codigoSustituto);
 
             // Enviamos el Mensaje de Confirmación
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
