@@ -44,8 +44,8 @@ public class ArxiuCaibUtils {
         String uuidDocument = documentCrear(anexoFull, registro, tipoRegistro, uuidExpedient);
         log.info("Documento creado: " + uuidExpedient);
 
-        //return uuidExpedient+"#"+uuidDocument;
-        return uuidDocument;
+        return uuidExpedient+"#"+uuidDocument;
+        //return uuidDocument;
     }
 
     /**
@@ -64,7 +64,7 @@ public class ArxiuCaibUtils {
 
         // TODO COMPROBAR EXISTENCIA DEL EXPEDIENTE ANTES DE CREAR
         // Generamos el Expedient
-        Expedient expediente = getExpedient(null,
+        Expedient expediente = generarExpedient(null,
                 nombreExpediente,
                 null,
                 Arrays.asList(registro.getOficina().getCodigo()),
@@ -99,7 +99,7 @@ public class ArxiuCaibUtils {
     private String documentCrear(AnexoFull anexoFull,IRegistro registro, Long tipoRegistro, String uuidExpedient) throws Exception{
 
         //Generamos el Documento
-        Document documento = getDocument(registro, tipoRegistro, anexoFull);
+        Document documento = generarDocument(registro, tipoRegistro, anexoFull);
 
         // Crear el Documento en Arxiu
 
@@ -118,8 +118,33 @@ public class ArxiuCaibUtils {
         return getArxiuPlugin().getCsv(identificadorDocumento);
     }
 
+
     /**
-     * Obtiene un {@link es.caib.plugins.arxiu.api.Expedient} a partir de los parámetros
+     * 
+     * @param uuidDocument
+     * @param version
+     * @param contenido
+     * @param versionImprimible
+     * @return
+     * @throws Exception
+     */
+    public Document getDocumento(String uuidDocument, String version, Boolean contenido, Boolean versionImprimible) throws Exception{
+
+        Document documento = null;
+
+        try{
+            documento = getArxiuPlugin().documentDetalls(uuidDocument, version, contenido);
+
+        }catch (Exception e){
+
+        }
+
+        return documento;
+    }
+
+
+    /**
+     * Genera un {@link es.caib.plugins.arxiu.api.Expedient} a partir de los parámetros
      * @param identificador
      * @param nombre
      * @param ntiIdentificador
@@ -131,7 +156,7 @@ public class ArxiuCaibUtils {
      * @param serieDocumental
      * @return
      */
-    private Expedient getExpedient(String identificador,
+    private Expedient generarExpedient(String identificador,
                                          String nombre,
                                          String ntiIdentificador,
                                          List<String> ntiOrgans,
@@ -160,14 +185,14 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene un {@link es.caib.plugins.arxiu.api.Document} a partir de los parámetros
+     * Genera un {@link es.caib.plugins.arxiu.api.Document} a partir de los parámetros
      * @param registro
      * @param tipoRegistro
      * @param anexoFull
      * @return
      * @throws Exception
      */
-    private Document getDocument(IRegistro registro, Long tipoRegistro, AnexoFull anexoFull) throws Exception {
+    private Document generarDocument(IRegistro registro, Long tipoRegistro, AnexoFull anexoFull) throws Exception {
 
         // Documento
         Document document = new Document();
