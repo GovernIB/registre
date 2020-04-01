@@ -105,7 +105,7 @@ public class SirController extends BaseController {
         RegistroSir registroSir = busqueda.getRegistroSir();
 
         List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
-log.info("Destino sustituto: " + busqueda.getDestino());
+
         Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
         List<Libro> libros = libroEjb.getLibrosActivosOrganismo(oficina.getOrganismoResponsable().getId());
 
