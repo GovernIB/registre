@@ -21,6 +21,7 @@ public class ErteBusquedaForm {
     private Date fechaFin;
     private String estado;
     private Integer total = 10;
+    private String destino;
 
 
     public ErteBusquedaForm() {}
@@ -74,5 +75,13 @@ public class ErteBusquedaForm {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
     }
 }

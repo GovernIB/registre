@@ -105,11 +105,11 @@ public class SirController extends BaseController {
         RegistroSir registroSir = busqueda.getRegistroSir();
 
         List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
-
+log.info("Destino sustituto: " + busqueda.getDestino());
         Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
         List<Libro> libros = libroEjb.getLibrosActivosOrganismo(oficina.getOrganismoResponsable().getId());
 
-        sirEnvioEjb.aceptarRegistrosERTE(registros, oficina, libros.get(0).getId(), usuarioEntidad, entidad.getId());
+        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, libros.get(0).getId(), usuarioEntidad, entidad.getId());
 
         Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
 
