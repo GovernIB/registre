@@ -103,6 +103,15 @@
 
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
+                                        <label for="destino" rel="popupAbajo" data-content="" data-toggle="popover">Destino dir3</label>
+                                    </div>
+                                    <div class="col-xs-8" id="destino">
+                                        <form:input path="destino" type="text" cssClass="form-control"  name="desrino"/>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 espaiLinies">
+                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="total" rel="popupAbajo" data-content="" data-toggle="popover">Total</label>
                                     </div>
                                     <div class="col-xs-8" id="total">
