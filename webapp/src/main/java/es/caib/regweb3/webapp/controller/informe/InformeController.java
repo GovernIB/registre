@@ -187,8 +187,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
                             registrosLibro.get(i).add("");
                         }
                     } else if (valorCamp.equals("numRe")) {
-                        if (registroEntrada.getNumeroRegistro() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getNumeroRegistro().toString());
+                        if (registroEntrada.getNumeroRegistroFormateado() != null) {
+                            registrosLibro.get(i).add(registroEntrada.getNumeroRegistroFormateado());
                         } else {
                             registrosLibro.get(i).add("");
                         }
@@ -387,8 +387,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
                             registrosLibro.get(i).add("");
                         }
                     } else if (valorCamp.equals("numRe")) {
-                        if (registroSalida.getNumeroRegistro() != null) {
-                            registrosLibro.get(i).add(registroSalida.getNumeroRegistro().toString());
+                        if (registroSalida.getNumeroRegistroFormateado() != null) {
+                            registrosLibro.get(i).add(registroSalida.getNumeroRegistroFormateado());
                         } else {
                             registrosLibro.get(i).add("");
                         }
