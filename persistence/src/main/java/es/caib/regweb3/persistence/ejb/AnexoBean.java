@@ -1162,6 +1162,18 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
+    public void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses) throws Exception, I18NException{
+
+        // Obtenemos los custodiaID de todos los anexos que se han distribuido los meses indicados
+        List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(meses);
+        for (String custodyId : custodyIds) {
+            //Purgamos anexo a anexo
+            purgarAnexo(custodyId, false, idEntidad);
+        }
+
+    }
+
+    @Override
     public void purgarAnexo(String custodiaId, boolean isJustificante, Long idEntidad) throws Exception, I18NException {
 
         try {
