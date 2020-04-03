@@ -127,4 +127,12 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @param elemento
      */
     void procesarElemento(Cola elemento,RegistroEntrada registroEntrada) throws Exception;
+
+    /**
+     * Método que elimina los elementos que fueron procesados hace x meses
+     * @param idEntidad
+     * @param meses
+     * @throws Exception
+     */
+    void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception;
 }

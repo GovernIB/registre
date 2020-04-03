@@ -526,13 +526,23 @@ public class PropiedadGlobalUtil {
     }
 
     /**
-     * Si no está configurado, se devuelven 3 meses
      * Propiedad: es.caib.regweb3.anexos.purgo.meses
      * @param idEntidad
      * @return
      */
     public static Integer getMesesPurgoAnexos(Long idEntidad) {
         final String partialPropertyName = "anexos.purgo.meses";
+        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+
+    }
+
+    /**
+     * Propiedad: es.caib.regweb3.procesados.purgo.meses
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getMesesPurgoProcesadosCola(Long idEntidad) {
+        final String partialPropertyName = "cola.procesados.purgo.meses";
         return  getIntegerByEntidad(idEntidad,partialPropertyName);
 
     }

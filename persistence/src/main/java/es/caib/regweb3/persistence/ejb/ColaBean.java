@@ -8,6 +8,7 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -368,6 +369,32 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         q.setParameter("numeroReintentos", 0);
         q.setParameter("idCola", idCola);
         q.executeUpdate();
+
+    }
+
+    public List<Cola> obtenerProcesados(Long idEntidad, Integer meses) throws Exception{
+        Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
+
+
+        Query q = em.createQuery( "select cola from Cola as cola where cola.estado=:procesado and cola.fecha<=:fechaPurgo and cola.usuarioEntidad.entidad.id =:idEntidad");
+
+        q.setParameter("fechaPurgo", fechaPurgo);
+        q.setParameter("procesado", RegwebConstantes.COLA_ESTADO_PROCESADO);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return q.getResultList();
+    }
+
+    @Override
+    public void purgarElementosProcesados(Long idEntidad, Integer meses) throws Exception{
+        //Obtenemos los elementos que fueron procesados hace meses
+        List<Cola> elementos = obtenerProcesados(idEntidad,meses);
+
+        //Eliminamos los elementos de la cola
+        for(Cola elemento: elementos){
+            remove(elemento);
+        }
 
     }
 
