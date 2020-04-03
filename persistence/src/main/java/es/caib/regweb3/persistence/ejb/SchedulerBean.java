@@ -39,6 +39,7 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private NotificacionLocal notificacionEjb;
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private SesionLocal sesionEjb;
+    @EJB private ColaLocal colaEjb;
 
 
     @Override
@@ -125,12 +126,7 @@ public class SchedulerBean implements SchedulerLocal{
                     Date inicio = new Date();
                     peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                    // Obtenemos los custodiaID de todos los anexos que se han distribuido los meses indicados
-                    List<String> custodyIds = anexoEjb.obtenerCustodyIdAnexosDistribuidos(mesesPurgo);
-                    for (String custodyId : custodyIds) {
-                        //Purgamos anexo a anexo
-                        anexoEjb.purgarAnexo(custodyId, false, entidad.getId());
-                    }
+                    anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId(),mesesPurgo);
 
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
                 }
@@ -392,5 +388,42 @@ public class SchedulerBean implements SchedulerLocal{
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
         }
 
+    }
+
+    @Override
+    public void purgarProcesadosColaDistribucion() throws Exception {
+
+
+        List<Entidad> entidades = entidadEjb.getAll();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String descripcion = "Purgar Elementos Procesados Cola";
+        Entidad entidadActiva = null;
+
+        try {
+
+            for(Entidad entidad: entidades) {
+
+                // Obtenemos la propiedad global  "getMesesPurgoProcesadosCola"
+                Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoProcesadosCola( entidad.getId());
+
+                if( mesesPurgo != null && mesesPurgo != -1) { // si nos han indicado meses, borramos.
+
+                    //Integración
+                    entidadActiva = entidad;
+                    Date inicio = new Date();
+                    peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
+
+                    // Obtenemos todos los elementos procesados con anterioridad a los meses purgo indicados
+                    colaEjb.purgarElementosProcesados(entidad.getId(), mesesPurgo);
+
+                    integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("Error purgando elementos procesados cola ...", e);
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), "");
+        }
     }
 }
