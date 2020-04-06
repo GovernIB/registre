@@ -35,7 +35,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -48,6 +48,7 @@ public class InformeBean implements InformeLocal {
                 "registroEntrada.oficina.denominacion, " +
                 "registroEntrada.fecha, " +
                 "registroEntrada.numeroRegistro, " +
+                "registroEntrada.numeroRegistroFormateado, " +
                 "registroDetalle.extracto, " +
                 "registroDetalle.oficinaOrigen.id, " +
                 "registroDetalle.oficinaOrigen.denominacion, " +
@@ -76,9 +77,9 @@ public class InformeBean implements InformeLocal {
         where.add(" registroDetalle.id=registroEntrada.registroDetalle.id ");
 
         // Numero registro
-        if (StringUtils.isNotEmpty(numRegistro)) {
+        if (StringUtils.isNotEmpty(numeroRegistroFormateado)) {
             where.add(" registroEntrada.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
-            parametros.put("numeroRegistroFormateado", "%" + numRegistro + "%");
+            parametros.put("numeroRegistroFormateado", "%" + numeroRegistroFormateado + "%");
         }
 
         // Extracto
@@ -169,7 +170,7 @@ public class InformeBean implements InformeLocal {
 
             // Obté identificadors del resultat de la query
             long idRE = (Long) object[0];
-            long idDetalle = (Long) object[24];
+            long idDetalle = (Long) object[25];
 
             List<Interesado> interesados = new ArrayList<Interesado>();
 
@@ -250,10 +251,10 @@ public class InformeBean implements InformeLocal {
             }
 
             RegistroEntrada registroEntrada = new RegistroEntrada(idRE, (Long) object[1], (String) object[2],
-                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7],
-                    (Long) object[8], (String) object[9], (String) object[10], (Date) object[11], (String) object[12], (Long) object[13],
-                    (String) object[14], (Long) object[15], (Long) object[16], (String) object[17], (Long) object[18], (String) object[19],
-                    (Long) object[20], (String) object[21], (Long) object[22], (String) object[23], (Long) object[24], (String) object[25], interesados);
+                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (String) object[8],
+                    (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
+                    (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
+                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
 
             registrosEntrada.add(registroEntrada);
         }
@@ -263,7 +264,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -276,6 +277,7 @@ public class InformeBean implements InformeLocal {
                 "registroSalida.oficina.denominacion, " +
                 "registroSalida.fecha, " +
                 "registroSalida.numeroRegistro, " +
+                "registroSalida.numeroRegistroFormateado, " +
                 "registroDetalle.extracto, " +
                 "registroDetalle.oficinaOrigen.id, " +
                 "registroDetalle.oficinaOrigen.denominacion, " +
@@ -304,9 +306,9 @@ public class InformeBean implements InformeLocal {
         where.add(" registroDetalle.id=registroSalida.registroDetalle.id ");
 
         // Numero registro
-        if (StringUtils.isNotEmpty(numRegistro)) {
+        if (StringUtils.isNotEmpty(numRegistroFormateado)) {
             where.add(" registroSalida.numeroRegistroFormateado LIKE :numeroRegistroFormateado");
-            parametros.put("numeroRegistroFormateado", "%" + numRegistro + "%");
+            parametros.put("numeroRegistroFormateado", "%" + numRegistroFormateado + "%");
         }
 
         // Extracto
@@ -398,7 +400,7 @@ public class InformeBean implements InformeLocal {
 
             // Obté identificadors del resultat de la query
             long idRS = (Long) object[0];
-            long idDetalle = (Long) object[24];
+            long idDetalle = (Long) object[25];
 
             List<Interesado> interesados = new ArrayList<Interesado>();
 
@@ -481,10 +483,10 @@ public class InformeBean implements InformeLocal {
             }
 
             RegistroSalida registroSalida = new RegistroSalida(idRS, (Long) object[1], (String) object[2],
-                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7],
-                    (Long) object[8], (String) object[9], (String) object[10], (Date) object[11], (String) object[12], (Long) object[13],
-                    (String) object[14], (Long) object[15], (Long) object[16], (String) object[17], (Long) object[18], (String) object[19],
-                    (Long) object[20], (String) object[21], (Long) object[22], (String) object[23], (Long) object[24], (String) object[25], interesados);
+                    (Long) object[3], (String) object[4], (Date) object[5], (Integer) object[6], (String) object[7], (String) object[8],
+                    (Long) object[9], (String) object[10], (String) object[11], (Date) object[12], (String) object[13], (Long) object[14],
+                    (String) object[15], (Long) object[16], (Long) object[17], (String) object[18], (Long) object[19], (String) object[20],
+                    (Long) object[21], (String) object[22], (Long) object[23], (String) object[24], (Long) object[25], (String) object[26], interesados);
 
             registrosSalida.add(registroSalida);
 

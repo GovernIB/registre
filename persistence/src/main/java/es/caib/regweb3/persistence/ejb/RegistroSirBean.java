@@ -69,7 +69,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private InteresadoSirLocal interesadoSirEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
-    @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private ArchivoLocal archivoEjb;
     @EJB private LibroLocal libroEjb;
     @EJB private CatProvinciaLocal catProvinciaEjb;
@@ -90,7 +89,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
                 "and  (r.fechaRecepcion >= :fechaInicio and r.fechaRecepcion <= :fechaFin) " +
                 "and r.aplicacion LIKE :aplicacion " +
-                "order by r.fechaRecepcion desc");
+                "order by r.fechaRecepcion");
 
         q.setMaxResults(total);
         q.setParameter("oficinaSir", oficinaSir);
