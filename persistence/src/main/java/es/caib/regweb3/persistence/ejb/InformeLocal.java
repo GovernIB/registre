@@ -24,7 +24,7 @@ public interface InformeLocal {
      *
      * @param fechaInicio
      * @param fechaFin
-     * @param numRegistro
+     * @param numeroRegistroFormateado
      * @param interesadoNom
      * @param interesadoLli1
      * @param interesadoLli2
@@ -41,14 +41,14 @@ public interface InformeLocal {
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception;
+    List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception;
 
     /**
      * Busca los Registros de Salida en función de varios parámetros
      *
      * @param fechaInicio
      * @param fechaFin
-     * @param numRegistro
+     * @param numRegistroFormateado
      * @param interesadoNom
      * @param interesadoLli1
      * @param interesadoLli2
@@ -64,7 +64,7 @@ public interface InformeLocal {
      * @return
      * @throws Exception
      */
-    List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistro, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception;
+    List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa
