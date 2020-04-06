@@ -82,6 +82,13 @@ public class Regweb3Scheduler {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            schedulerEjb.purgarProcesadosColaDistribucion();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
