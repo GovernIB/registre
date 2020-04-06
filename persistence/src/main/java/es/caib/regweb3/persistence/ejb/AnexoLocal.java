@@ -112,6 +112,15 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
 
     /**
+     * Método que elimina los anexos asociados a registros que ya se han distribuido.
+     * @param meses
+     * @throws Exception
+     * @throws I18NException
+     */
+    void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses) throws Exception, I18NException;
+
+
+    /**
      * Elimina el archivo físico de custodia pero dejamos la info del anexo en la tabla de anexos y lo marcamos como purgado.
      *
      * @param custodiaId
