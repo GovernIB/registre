@@ -170,6 +170,7 @@ create table RWE_ANEXO (
         NOMBRE varchar2(255 char) not null,
         NUMREGISTRO varchar2(4000 char),
         OFICIOREMISION number(1,0) not null,
+        PERFIL_CUSTODIA number(19,0),
         POSXSELLO number(10,0),
         POSYSELLO number(10,0),
         SELLO varchar2(4000 char),
