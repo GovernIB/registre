@@ -189,6 +189,7 @@
         NOMBRE varchar(255) not null,
         NUMREGISTRO varchar(4000),
         OFICIOREMISION bool not null,
+        PERFIL_CUSTODIA int8,
         POSXSELLO int4,
         POSYSELLO int4,
         SELLO varchar(4000),
