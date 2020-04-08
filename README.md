@@ -11,7 +11,7 @@ Aplicació web de registre d'anotacions a llibres d'entrada i sortida
 
 ***Documentació***
 
-[Documentació de branca](https://github.com/GovernIB/registre/tree/registre-3.0#documentaci%C3%B3)
+[Documentació de branca](https://github.com/GovernIB/registre/tree/registre-3.1.4#documentaci%C3%B3)
 
 ***Característiques***
 
