@@ -31,7 +31,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
@@ -115,8 +114,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
                         String rutaDestino = rutaERTE + formatDate.format(registroEntrada.getFecha()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
 
-                        Path carpeta = Paths.get(destino);
-                        Files.createDirectories(carpeta);
+                        Files.createDirectories(Paths.get(rutaDestino));
 
                         try{
                             Files.copy(origen.toPath(), (new File(rutaDestino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
