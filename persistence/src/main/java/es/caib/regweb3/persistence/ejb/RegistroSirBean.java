@@ -83,7 +83,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
 
     @Override
-    public List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception{
+    public List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception{
 
         Query q = em.createQuery("Select r.id from RegistroSir as r " +
                 "where r.codigoEntidadRegistral = :oficinaSir and r.estado = :idEstado " +
@@ -96,7 +96,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
         q.setParameter("aplicacion", "%"+aplicacion+"%");
-        q.setParameter("idEstado", EstadoRegistroSir.RECIBIDO);
+        q.setParameter("idEstado", estado);
         q.setHint("org.hibernate.readOnly", true);
 
         return q.getResultList();

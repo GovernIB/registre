@@ -71,7 +71,60 @@ public class SirController extends BaseController {
 
 
     /**
-     *
+     * Acepta un registro sir, lo distribuye y copia la documentación a una carpeta
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/aceptarRegistroErte", method = RequestMethod.GET)
+    public ModelAndView aceptarRegistroErte(Model model, HttpServletRequest request)throws Exception {
+
+        ModelAndView mav = new ModelAndView("sir/aceptarRegistroErte");
+        Entidad entidad = getEntidadActiva(request);
+
+        ErteBusquedaForm erteBusquedaForm = new ErteBusquedaForm(new RegistroSir(),1);
+        model.addAttribute("estados", EstadoRegistroSir.values());
+        model.addAttribute("tipos", TipoRegistro.values());
+        model.addAttribute("erteBusquedaForm", erteBusquedaForm);
+        model.addAttribute("anys", getAnys());
+        model.addAttribute("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+
+        return mav;
+    }
+
+    /**
+     * Acepta un registro sir, lo distribuye y copia la documentación a una carpeta
+     */
+    @RequestMapping(value = "/aceptarRegistroErte", method = RequestMethod.POST)
+    public ModelAndView aceptarRegistroErte(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
+
+        ModelAndView mav = new ModelAndView("sir/aceptarRegistroErte");
+        Entidad entidad = getEntidadActiva(request);
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        long inicio = System.currentTimeMillis();
+
+        RegistroSir registroSir = busqueda.getRegistroSir();
+
+        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(EstadoRegistroSir.RECIBIDO, registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
+
+        Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
+        List<Libro> libros = libroEjb.getLibrosActivosOrganismo(oficina.getOrganismoResponsable().getId());
+
+        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, libros.get(0).getId(), usuarioEntidad, entidad.getId());
+
+        Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+
+        mav.addObject("estados", EstadoRegistroSir.values());
+        mav.addObject("tipos", TipoRegistro.values());
+        mav.addObject("registroSirBusqueda", busqueda);
+        mav.addObject("anys", getAnys());
+        mav.addObject("oficinasSir", oficinaEjb.oficinasSIREntidad(entidad.getId()));
+
+        return mav;
+
+    }
+
+    /**
+     * Copia la documentación a una carpeta de un Registroerte aceptado
      * @return
      * @throws Exception
      */
@@ -92,24 +145,20 @@ public class SirController extends BaseController {
     }
 
     /**
-     *
+     * Copia la documentación a una carpeta de un Registroerte aceptado
      */
     @RequestMapping(value = "/copiarDocumentacion", method = RequestMethod.POST)
     public ModelAndView copiarDocumentacion(@ModelAttribute ErteBusquedaForm busqueda, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = new ModelAndView("sir/copiarDocumentacion");
         Entidad entidad = getEntidadActiva(request);
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         long inicio = System.currentTimeMillis();
 
         RegistroSir registroSir = busqueda.getRegistroSir();
 
-        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
+        List<Long> registros = registroSirEjb.getUltimosPendientesProcesarERTE(EstadoRegistroSir.ACEPTADO, registroSir.getCodigoEntidadRegistral(), busqueda.getFechaInicio(), busqueda.getFechaFin(), registroSir.getAplicacion(), busqueda.getTotal());
 
-        Oficina oficina = oficinaEjb.findByCodigo(registroSir.getCodigoEntidadRegistral());
-        List<Libro> libros = libroEjb.getLibrosActivosOrganismo(oficina.getOrganismoResponsable().getId());
-
-        sirEnvioEjb.aceptarRegistrosERTE(registros, busqueda.getDestino(), oficina, libros.get(0).getId(), usuarioEntidad, entidad.getId());
+        sirEnvioEjb.copiarDocumentacionERTE(registros, entidad.getId());
 
         Mensaje.saveMessageInfo(request, "Se han procesado "+registros.size()+" registros en " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
 

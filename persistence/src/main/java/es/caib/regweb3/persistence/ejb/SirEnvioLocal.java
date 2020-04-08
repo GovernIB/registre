@@ -24,6 +24,7 @@ public interface SirEnvioLocal {
 
     Integer aceptarRegistrosERTE(List<Long> registros, String destino, Oficina oficina,Long idLibro, UsuarioEntidad usuarioEntidad, Long idEntidad) throws Exception;
 
+    Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception;
 
         /**
          * @param tipoRegistro

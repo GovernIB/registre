@@ -23,7 +23,7 @@ import java.util.List;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
 public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
-     List<Long> getUltimosPendientesProcesarERTE(String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception;
+     List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception;
 
 
         /**

@@ -81,7 +81,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
         try{
 
-            log.info("Total registros: " + registros.size());
+            log.info("Total registros pendientes erte: " + registros.size());
             log.info("");
 
             for(Long erte:registros){
@@ -91,7 +91,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                     // Cargamos el registro
                     RegistroSir registroSir = registroSirEjb.findById(erte);
 
-                    log.info("Procesando el registro: " + registroSir.getId());
+                    log.info("Procesando el registro sir pendiente: " + registroSir.getId());
 
                     // Crear List<CamposNTI> ficticia
                     List<CamposNTI> camposNTIS =  new ArrayList<CamposNTI>();
@@ -117,6 +117,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                         Files.createDirectories(Paths.get(rutaDestino));
 
                         try{
+                            log.info("Copiamos la documentación del registro aceptado a: " + rutaDestino);
                             Files.copy(origen.toPath(), (new File(rutaDestino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
 
                         }catch (Exception e){
@@ -139,6 +140,71 @@ public class SirEnvioBean implements SirEnvioLocal {
             e.printStackTrace();
         } catch (I18NValidationException | I18NException e) {
             log.info("Error aceptando el RegistroSir");
+            e.printStackTrace();
+        }
+
+        return 0;
+
+    }
+
+    @Override
+    @TransactionTimeout(value = 3000)  // 50 minutos
+    public Integer copiarDocumentacionERTE(List<Long> registros, Long idEntidad) throws Exception{
+
+        // ruta actual: /app/caib/regweb/archivos
+        // ruta erte: /app/caib/regweb/dades/erte
+
+        final String rutaERTE = PropiedadGlobalUtil.getErtePath(idEntidad);
+
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd-MM-yyyy HH.mm.ss");
+
+        try{
+
+            log.info("Total registros aceptados erte: " + registros.size());
+            log.info("");
+
+            for(Long erte:registros){
+
+                try{
+
+                    // Cargamos el registro
+                    TrazabilidadSir trazabilidadSir = trazabilidadSirEjb.getByRegistroSirAceptado(erte);
+
+                    RegistroSir registroSir = trazabilidadSir.getRegistroSir();
+                    RegistroEntrada registroEntrada = trazabilidadSir.getRegistroEntrada();
+
+                    log.info("Procesando el registro aceptado: " + registroSir.getId());
+
+                    // Copiamos cada anexo en la carpeta creada
+                    for(AnexoSir anexoSir:registroSir.getAnexos()){
+
+                        Archivo archivo = anexoSir.getAnexo();
+
+                        File origen = FileSystemManager.getArchivo(archivo.getId());
+
+                        String rutaDestino = rutaERTE + formatDate.format(registroEntrada.getFecha()) + " - " + registroEntrada.getNumeroRegistroFormateado().replace("/","-");
+
+                        Files.createDirectories(Paths.get(rutaDestino));
+
+                        try{
+                            log.info("Copiamos la documentación del registro aceptado a: " + rutaDestino);
+                            Files.copy(origen.toPath(), (new File(rutaDestino +"/"+ archivo.getNombre())).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                        }catch (Exception e){
+                            log.info("No encuentra el fichero");
+                        }
+                    }
+
+                }catch (Exception e){
+                    log.info("Error procesando un registro sir");
+                }
+            }
+
+
+            return registros.size();
+
+        } catch(Exception e){
+            log.info("Error generando carpetas ERTE");
             e.printStackTrace();
         }
 
