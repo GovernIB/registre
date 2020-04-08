@@ -38,7 +38,7 @@
                 <div class="panel panel-warning">
 
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> Copia la documentación de los Registros sir aceptados</strong> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i><strong> Aceptar registros sir, distribuirlos y copiar la documentación a una carpet</strong> </h3>
                     </div>
 
                     <form:form modelAttribute="erteBusquedaForm" method="post" cssClass="form-horizontal">
