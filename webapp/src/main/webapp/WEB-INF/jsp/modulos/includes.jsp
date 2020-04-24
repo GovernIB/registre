@@ -8,3 +8,4 @@
 <%@ taglib prefix="un" uri="http://jakarta.apache.org/taglibs/unstandard-1.0" %>
 <%@ taglib prefix="reg"  uri="/WEB-INF/jstl/regweb3.tld" %>
 <un:useConstants var="RegwebConstantes" className="es.caib.regweb3.utils.RegwebConstantes"/>
+<un:useConstants var="MetadataConstants" className="org.fundaciobit.pluginsib.core.utils.MetadataConstants"/>

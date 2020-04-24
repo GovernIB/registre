@@ -645,7 +645,7 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
-          <version>3.0.1</version>
+          <version>3.0.2</version>
         </dependency>
       </dependencies>
     </profile>
@@ -657,7 +657,7 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-digitalib</artifactId>
-          <version>3.0.3</version>
+          <version>3.0.4</version>
         </dependency>
         <!-- incluimos la dependencia jersey porque si no da un error de json -->
        <dependency>

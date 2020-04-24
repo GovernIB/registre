@@ -17,6 +17,7 @@ import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
 import org.fundaciobit.plugins.scanweb.api.ScanWebMode;
 import org.fundaciobit.plugins.scanweb.api.ScannedDocument;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
+import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
 import org.fundaciobit.pluginsib.userinformation.UserInfo;
 import org.springframework.stereotype.Controller;
@@ -215,24 +216,27 @@ public class AnexoScanController extends AnexoController {
             ss.setFlags(defaultFlags);
         }
 
-        // Le pasamos en la configuración del escaner en los metadatos los datos del funcionario
-        // que realiza el escaneo
+        //  Pasamos los datos del funcionario que realiza el escaneo en el list de metadades
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        ss.getMetadades().add(new Metadata("functionary.username" , usuarioEntidad.getUsuario().getIdentificador()));
-        ss.getMetadades().add(new Metadata("functionary.fullname" , usuarioEntidad.getNombreCompleto()));
-        ss.getMetadades().add(new Metadata("document.language" , RegwebConstantes.IDIOMA_CATALAN_CODIGO));
+
         String funcionariNif = "";
         if(usuarioEntidad.getUsuario().getDocumento() != null){
-            ss.getMetadades().add(new Metadata("functionary.administrationid", usuarioEntidad.getUsuario().getDocumento()));
+            metadades.add(new Metadata( MetadataConstants.FUNCTIONARY_ADMINISTRATIONID, usuarioEntidad.getUsuario().getDocumento())); // "Nif del Funcionari",
+
         }else{
             //Si no tiene documento lo recuperamos del sistema de información de usuario(seycon)
             IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
             UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(usuarioEntidad.getUsuario().getIdentificador());
             funcionariNif = regwebUserInfo.getAdministrationID();
             if(funcionariNif != null && !funcionariNif.isEmpty()) {
-                ss.getMetadades().add(new Metadata("functionary.administrationid", funcionariNif));
+                metadades.add(new Metadata( MetadataConstants.FUNCTIONARY_ADMINISTRATIONID, funcionariNif)); // "Nif del Funcionari",
             }
         }
+
+        metadades.add(new Metadata(MetadataConstants.FUNCTIONARY_FULLNAME,  usuarioEntidad.getNombreCompleto()));
+        metadades.add(new Metadata( MetadataConstants.FUNCTIONARY_USERNAME, usuarioEntidad.getUsuario().getIdentificador())); // "Username del Funcionari
+
+        ss.setMetadades(metadades);
 
         //Obtenemos las url relativas y absolutas del sistema de escaner configurado
         String relativeRequestPluginBasePath = ScanRequestServlet.getRelativeRequestPluginBasePath(request,
@@ -339,8 +343,9 @@ public class AnexoScanController extends AnexoController {
 
             //Fijamos el título del anexo si nos lo proporciona el plugin de scan
             for(Metadata metadata : sd.getMetadatas()){
-                if(metadata.getKey().equals("title")){
-                    anexoForm.getAnexo().setTitulo(metadata.getValue());
+
+                if(metadata.getKey().equals(MetadataConstants.TITULO_DOCUMENTO)){
+                    anexoForm.getAnexo().setTitulo(metadata.getValue()); 
                 }
             }
 

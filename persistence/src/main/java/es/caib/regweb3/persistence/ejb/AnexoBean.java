@@ -132,6 +132,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
             anexoFull.setSignatureFileDelete(false);
 
+            //Obtenemos las metadatas de escaneo del anexo
+            List<Metadata> metadataList = new ArrayList<>();
+            if(custody.getOnlyOneMetadata(custodyID,MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR) !=null) {
+                metadataList.add(custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR));
+            }
+            if(custody.getOnlyOneMetadata(custodyID,MetadataConstants.EEMGDE_RESOLUCION) != null) {
+                metadataList.add(custody.getOnlyOneMetadata(custodyID, MetadataConstants.EEMGDE_RESOLUCION));
+            }
+            anexoFull.setMetadatas(metadataList);
+
             if (log.isDebugEnabled()) {
                 log.debug("SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
                 log.debug("DOCUMENT " + custody.getDocumentInfoOnly(custodyID));
