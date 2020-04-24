@@ -447,6 +447,18 @@
         }
     }
 
+    function redimensionaModalScan() {
+        // Fixa el tamany del modal
+        document.getElementById('tamanyModal').setAttribute("value", tamModalScan);
+        $('#modalAnexos').find('.modal-content').css('height', $('#tamanyModal').val());
+        // Afegeix la classe a iframe
+        if(${anexoDetachedPermitido}) {
+            document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoGros');
+        } else {
+            document.getElementById('targetiframe').setAttribute("class", 'iframeAnexo');
+        }
+    }
+
     <!-- Redimensiona el Modal amb Errors cap a AnnexeFile-->
     function redimensionaModalAnnexeErrors() {
         // Fixa el tamany del modal

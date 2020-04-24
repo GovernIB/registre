@@ -39,8 +39,8 @@
 
 <%-- Formulario que contiene el resto de campos del anexo. --%>
 <form:form id="anexoForm" action="${pageContext.request.contextPath}/anexo/${(empty anexoForm.anexo.id)?'nou' : 'editar'}" modelAttribute="anexoForm" method="POST" cssClass="form-horizontal">
-                
-                        
+
+
                         <form:hidden path="anexo.id" />
                         <form:hidden path="anexo.registroDetalle.id" />
                         <form:hidden path="anexo.custodiaID" />
@@ -64,7 +64,7 @@
                            </div>
                            <div class="col-xs-9">
                                <form:input path="anexo.titulo" class="form-control"  maxlength="200"/>
-                               <form:errors path="anexo.titulo" cssClass="label label-danger"/> 
+                               <form:errors path="anexo.titulo" cssClass="label label-danger"/>
                            </div>
                         </div>
 
@@ -239,21 +239,28 @@
 
                         <!-- METADATOS ESCANEO -->
                         <!--PENDENT DE QUE ME DIGUIN DE DGTIC COM LES GESTIONAM-->
-                       <%-- <h4><spring:message code="anexo.metadatas"/></h4>
-                        <div class="divider"></div>
+                        <c:if test="${not empty anexoForm.metadatas}">
+                            <h4><spring:message code="anexo.metadatas"/></h4>
+                            <div class="divider"></div>
 
-                        <div class="form-group col-xs-12">
-                            <c:forEach var="metadata" items="${anexoForm.metadatas}">
-                                <c:if test="${metadata.key != 'title'}">
-                                <div class="col-xs-6">
-                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                        <label for="metadata" rel="popupAbajo" data-content="" data-toggle="popover">${metadata.key}</label>
-                                    </div>
-                                    <div class="col-xs-9 campFormText">${metadata.value}</div>
-                                </div>
-                                </c:if>
-                            </c:forEach>
-                        </div>--%>
+                            <div class="form-group col-xs-12">
+                                <c:forEach var="metadata" items="${anexoForm.metadatas}">
+                                    <c:if test="${metadata.key == MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR || metadata.key == MetadataConstants.EEMGDE_RESOLUCION}">
+                                        <div class="col-xs-6">
+                                            <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                            <label for="metadata" rel="popupAbajo" data-content="" data-toggle="popover"><spring:message code="${metadata.key}"/></label>
+                                            </div>
+                                            <c:if test="${metadata.key != MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR}" >
+                                                <div class="col-xs-6 campFormText">${metadata.value} </div>
+                                            </c:if>
+                                            <c:if test="${metadata.key == MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR}" >
+                                                <div class="col-xs-6 campFormText"><spring:message code="anexo.profundidadColor.${metadata.value}"/></div>
+                                            </c:if>
+                                        </div>
+                                    </c:if>
+                                </c:forEach>
+                            </div>
+                        </c:if>
                     <!-- FIN METADATOS ESCANEO -->
 
                 
@@ -297,9 +304,22 @@
             }
         });
 
+        //Si tiene metadatos fijamos tamano modal al de scan
+        <c:if test="${not empty anexoForm.metadatas}">
         $(function () {
+
+            parent.redimensionaModalScan();
+        });
+
+        </c:if>
+
+        //Si no tiene metadatos fijamos tamano modal al de fichero
+        <c:if test="${empty anexoForm.metadatas}">
+        $(function () {
+
             parent.redimensionaModalAnnexe();
         });
+        </c:if>
     });
 </script>
 
