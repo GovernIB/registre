@@ -447,7 +447,7 @@
         }
     }
 
-    function redimensionaModalScan() {
+    function redimensionaModalScan(nuevoEstilo) {
         // Fixa el tamany del modal
         document.getElementById('tamanyModal').setAttribute("value", tamModalScan);
         $('#modalAnexos').find('.modal-content').css('height', $('#tamanyModal').val());
@@ -456,6 +456,9 @@
             document.getElementById('targetiframe').setAttribute("class", 'iframeAnexoGros');
         } else {
             document.getElementById('targetiframe').setAttribute("class", 'iframeAnexo');
+        }
+        if(nuevoEstilo!=null) {
+            $("#targetiframe").addClass(nuevoEstilo);
         }
     }
 

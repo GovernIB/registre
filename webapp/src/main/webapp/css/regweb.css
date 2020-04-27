@@ -968,6 +968,9 @@ a.text-gris:focus {
     border: 0;
     padding: 10px !important;
 }
+.metadades{
+    height: 500px !important;
+}
 /* FI Estils pels diferents iframes d'Annexe */
 
 .margeDret5{
@@ -1390,4 +1393,11 @@ pre {
     padding-left: 5px;
     padding-top: 2px;
     padding-bottom: 2px;
+}
+
+.dreta{
+    float: right;
+}
+.esquerra{
+    float: left;
 }

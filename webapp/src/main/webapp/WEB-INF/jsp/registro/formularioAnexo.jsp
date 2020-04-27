@@ -308,7 +308,7 @@
         <c:if test="${not empty anexoForm.metadatas}">
         $(function () {
 
-            parent.redimensionaModalScan();
+            parent.redimensionaModalScan("metadades");
         });
 
         </c:if>
