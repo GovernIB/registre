@@ -69,7 +69,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
     @Override
     public synchronized RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull)
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -113,7 +113,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
                 for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
-                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, true);
+                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
                 }
             }
 
@@ -556,7 +556,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             }
 
             // Registramos el nuevo registro
-            rectificado = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos);
+            rectificado = registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, false);
 
             // Moficiamos el estado al registro original
             cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);

@@ -1,14 +1,11 @@
 package es.caib.regweb3.persistence.ejb;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
-import com.sun.jersey.client.urlconnection.HTTPSProperties;
+import es.caib.plugins.arxiu.api.Document;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.utils.ClientUtils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -30,11 +27,13 @@ import org.fundaciobit.pluginsib.core.utils.ISO8601;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ejb.interceptor.SpringBeanAutowiringInterceptor;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.net.ssl.*;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -44,8 +43,6 @@ import java.beans.PersistenceDelegate;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
@@ -61,6 +58,7 @@ import static es.caib.regweb3.utils.RegwebConstantes.REGISTRO_ENTRADA;
  */
 @Stateless(name = "AnexoEJB")
 @SecurityDomain("seycon")
+@Interceptors(SpringBeanAutowiringInterceptor.class)
 public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -85,6 +83,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     @EJB(mappedName = "regweb3/RegistroSalidaCambiarEstadoEJB/local")
     private RegistroSalidaCambiarEstadoLocal registroSalidaEjb;
 
+    @Autowired
+    ArxiuCaibUtils arxiuCaibUtils;
+
+
     @Override
     public Anexo getReference(Long id) throws Exception {
 
@@ -98,39 +100,42 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
         String descripcion = "Descarga anexo";
+        AnexoFull anexoFull = null;
 
         try {
 
             //Obtenemos el anexo de la tabla de anexos de regweb
             Anexo anexo = em.find(Anexo.class, anexoID);
 
+            //Montamos un AnexoFull( Anexo + toda la parte de custodia)
+            anexoFull = new AnexoFull(anexo);
+
             //Obtenemos el identificador de custodia
             String custodyID = anexo.getCustodiaID();
 
-            //Montamos un AnexoFull( Anexo + toda la parte de custodia)
-            AnexoFull anexoFull = new AnexoFull(anexo);
+            if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
 
-            // Los justificantes y los anexos se guardan en plugins diferentes,
-            // por eso se carga el plugin en función de si es justificante o no
-            IDocumentCustodyPlugin custody;
-            if (anexo.isJustificante()) { // Si es justificante cargamos el plugin de custodia del justificante
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-                descripcion = "Descarga justificante";
-            } else { //si no, cargamos el plugin de anexos que no son justificantes
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
-            }
+                // Los justificantes y los anexos se guardan en plugins diferentes,
+                // por eso se carga el plugin en función de si es justificante o no
+                IDocumentCustodyPlugin custody;
+                if (anexo.isJustificante()) { // Si es justificante cargamos el plugin de custodia del justificante
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                    descripcion = "Descarga justificante";
+                } else { //si no, cargamos el plugin de anexos que no son justificantes
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+                }
 
-            // Integracion
-            peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
-            peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
-            peticion.append("anexoID: ").append(anexoID).append(System.getProperty("line.separator"));
-            peticion.append("justificante: ").append(anexo.isJustificante()).append(System.getProperty("line.separator"));
+                // Integracion
+                peticion.append("clase: ").append(custody.getClass().getName()).append(System.getProperty("line.separator"));
+                peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
+                peticion.append("anexoID: ").append(anexoID).append(System.getProperty("line.separator"));
+                peticion.append("justificante: ").append(anexo.isJustificante()).append(System.getProperty("line.separator"));
 
-            //Obtenemos la información(sin el contenido físico en bytes[]) del anexo guardados en custodia
-            anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID)); //Documento asociado al anexo
-            anexoFull.setDocumentoFileDelete(false);
-            anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
-            anexoFull.setSignatureFileDelete(false);
+                //Obtenemos la información(sin el contenido físico en bytes[]) del anexo guardados en custodia
+                anexoFull.setDocumentoCustody(custody.getDocumentInfoOnly(custodyID)); //Documento asociado al anexo
+                anexoFull.setDocumentoFileDelete(false);
+                anexoFull.setSignatureCustody(custody.getSignatureInfoOnly(custodyID)); //Firma asociada al anexo
+                anexoFull.setSignatureFileDelete(false);
 
             //Obtenemos las metadatas de escaneo del anexo si no es justificante
             if(!anexo.isJustificante()) {
@@ -154,6 +159,19 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 log.debug("SIGNATURE " + custody.getSignatureInfoOnly(custodyID));
                 log.debug("DOCUMENT " + custody.getDocumentInfoOnly(custodyID));
                 log.debug("modoFirma " + anexo.getModoFirma());
+            }
+
+            }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+                // Cargamos el plugin de Arxiu
+                arxiuCaibUtils.cargarPlugin(idEntidad);
+
+                Document document = arxiuCaibUtils.getDocumento(custodyID,null,false,false);
+
+                anexoFull.setDocument(document);
+                anexoFull.setDocumentoFileDelete(false);
+                anexoFull.setSignatureFileDelete(false);
+
             }
 
             // Integracion
@@ -190,23 +208,34 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             AnexoFull anexoFull = new AnexoFull(anexo);
 
-            // Los justificantes y los anexos se guardan en plugins diferentes,
-            // por eso se carga el plugin en función de si es justificante o no
-            IDocumentCustodyPlugin custody;
-            final boolean isJustificante = anexo.isJustificante();
-            if (isJustificante) { // Si es justificante cargamos el plugin de custodia del justificante
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-            } else {//si no, cargamos el plugin de anexos que no son justificantes
-                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+            if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
+
+                IDocumentCustodyPlugin custody;
+                final boolean isJustificante = anexo.isJustificante();
+                if (isJustificante) { // Si es justificante cargamos el plugin de custodia del justificante
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+                } else {//si no, cargamos el plugin de anexos que no son justificantes
+                    custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+                }
+
+                //Obtenemos la información(con el contenido físico en bytes[]) del anexo guardados en custodia
+                anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
+                anexoFull.setDocumentoFileDelete(false);
+
+                anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
+                anexoFull.setSignatureFileDelete(false);
+
+            } else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+                // Cargamos el plugin de Arxiu
+                arxiuCaibUtils.cargarPlugin(idEntidad);
+
+                Document document = arxiuCaibUtils.getDocumento(custodyID,null,true,true);
+
+                anexoFull.setDocument(document);
+                anexoFull.setDocumentoFileDelete(false);
+                anexoFull.setSignatureFileDelete(false);
             }
-
-            //Obtenemos la información(con el contenido físico en bytes[]) del anexo guardados en custodia
-            anexoFull.setDocumentoCustody(custody.getDocumentInfo(custodyID)); //Documento asociado al anexo
-            anexoFull.setDocumentoFileDelete(false);
-
-            anexoFull.setSignatureCustody(custody.getSignatureInfo(custodyID));//Firma asociada al anexo
-            //anexoFull.setSignatureCustody(descargarFirmaDesdeUrlValidacion(custodyID, isJustificante, idEntidad));//Firma asociada al anexo
-            anexoFull.setSignatureFileDelete(false);
 
             return anexoFull;
 
@@ -238,6 +267,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Entidad entidad = null;
 
         try {
+
+            // Si el anexo nuevo, proviene de un Oficio y fue un Justificante creado con el ApiArxiu, lo transformamos
+            if(anexoFull.getAnexo().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+                anexoFull.arxiuDocumentToCustody();
+            }
 
             Anexo anexo = anexoFull.getAnexo();
 
@@ -1233,24 +1267,37 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Obtiene la info + contenido físico(byte[]) del fichero existente en el sistema de archivos
      *
-     * @param custodiaID
+     * @param anexo
      * @return
      */
     @Override
-    public DocumentCustody getArchivo(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception {
+    public DocumentCustody getArchivo(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
-        IDocumentCustodyPlugin custody;
-
-        if (custodiaID == null) {
+        if (anexo.getCustodiaID() == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        if (isJustificante) {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-        } else {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+
+        if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
+
+            IDocumentCustodyPlugin custody = null;
+
+            if (anexo.isJustificante()) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            } else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+            return custody.getDocumentInfo(anexo.getCustodiaID());
+
+        } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
+
+            // Cargamos el plugin de Arxiu
+            arxiuCaibUtils.cargarPlugin(idEntidad);
+
+            //return arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, true);
         }
-        return custody.getDocumentInfo(custodiaID);
+
+        return null;
 
     }
 
@@ -1258,25 +1305,40 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Obtiene el contenido físico del documento como byte[]
      *
-     * @param custodiaID
+     * @param anexo
+     * @param idEntidad
      * @return
      */
     @Override
-    public byte[] getArchivoContent(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception {
+    public byte[] getArchivoContent(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
-        IDocumentCustodyPlugin custody;
-
-        if (custodiaID == null) {
+        if (anexo.getCustodiaID() == null) {
             log.warn("getArchivo :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        if (isJustificante) {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-        } else {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+
+        if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
+
+            IDocumentCustodyPlugin custody = null;
+
+            if (anexo.isJustificante()) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            } else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+            return custody.getDocument(anexo.getCustodiaID());
+
+        } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
+
+            // Cargamos el plugin de Arxiu
+            arxiuCaibUtils.cargarPlugin(idEntidad);
+
+            Document document = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, true);
+
+            return document.getContingut().getContingut();
         }
 
-        return custody.getDocument(custodiaID);
+        return null;
 
     }
 
@@ -1310,46 +1372,47 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public SignatureCustody getSignatureInfoOnly(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception {
+    public SignatureCustody getSignatureInfoOnly(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         IDocumentCustodyPlugin custody = null;
 
-        if (custodiaID == null) {
+        if (anexo.getCustodiaID() == null) {
             log.warn("getSignatureInfoOnly :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        if (isJustificante) {
+        if (anexo.isJustificante()) {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
 
         } else {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
         }
 
-        return custody.getSignatureInfoOnly(custodiaID);
+        return custody.getSignatureInfoOnly(anexo.getCustodiaID());
     }
 
     /**
      * Obtiene la info + contenido físico(byte[]) de la firma existente en el sistema de archivos
      *
-     * @param custodiaID
+     * @param anexo
+     * @param idEntidad
      * @return
      */
-    public SignatureCustody getFirma(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception {
+    public SignatureCustody getFirma(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         IDocumentCustodyPlugin custody;
 
-        if (custodiaID == null) {
+        if (anexo.getCustodiaID() == null) {
             log.warn("getFirma :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        if (isJustificante) {
+        if (anexo.isJustificante()) {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
 
         } else {
             custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
         }
 
-        return custody.getSignatureInfo(custodiaID);
+        return custody.getSignatureInfo(anexo.getCustodiaID());
     }
 
 
@@ -1411,43 +1474,56 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     /**
      * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
      *
-     * @param custodiaID
-     * @param isJustificante
+     * @param anexo
+     * @param idEntidad
      * @return
      */
-    public String getUrlValidation(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception {
+    public String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
-        IDocumentCustodyPlugin custody = null;
-
-        if (custodiaID == null) {
+        if (anexo.getCustodiaID() == null) {
             log.warn("getUrlValidation :: CustodiaID vale null !!!!!", new Exception());
             return null;
         }
-        if (isJustificante) {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
-        } else {
-            custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+
+        if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
+
+            IDocumentCustodyPlugin custody = null;
+
+            if (anexo.isJustificante()) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            } else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+            return custody.getOriginalFileUrl(anexo.getCustodiaID(), new HashMap<String, Object>());
+
+        } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
+
+            // Cargamos el plugin de Arxiu
+            arxiuCaibUtils.cargarPlugin(idEntidad);
+
+            return  arxiuCaibUtils.getUrlValidacion(anexo.getCustodiaID());
         }
-        return custody.getOriginalFileUrl(custodiaID, new HashMap<String, Object>());
+
+        return null;
     }
 
 
     /**
      * Obtiene el SignatureCustody de un Anexo
      *
-     * @param custodiaID
-     * @param isJustificante
+     * @param anexo
+     * @param idEntidad
      * @return SignatureCustody
      */
-    public SignatureCustody descargarFirmaDesdeUrlValidacion(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception {
+    public SignatureCustody descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
         // Si es justificante
         byte[] data = null;
 
-        if (isJustificante) {
+        if (anexo.isJustificante()) {
             String url = null;
             try {
-                url = getUrlValidation(custodiaID, isJustificante, idEntidad);
+                url = getUrlValidation(anexo, idEntidad);
 
                 // Si soporta url, davalla arxiu de la url
                 if (StringUtils.isNotEmpty(url)) {
@@ -1458,7 +1534,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                         String password = PropiedadGlobalUtil.getUrlValidationPassword(idEntidad);
 
                         if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-                            ClientResponse cr = commonCall(url, username, password);
+                            ClientResponse cr = ClientUtils.commonCall(url, username, password);
                             in = new BufferedInputStream(cr.getEntityInputStream());
 
                         } else {
@@ -1481,7 +1557,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                         }
                     }
 
-                    SignatureCustody sc = getSignatureInfoOnly(custodiaID, isJustificante, idEntidad);
+                    SignatureCustody sc = getSignatureInfoOnly(anexo, idEntidad);
                     sc.setData(data);
                     return sc;
                 }
@@ -1494,89 +1570,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         }
 
         // Si no ha soportat url, davalla l'arxiu original
-        SignatureCustody sc = getFirma(custodiaID, isJustificante, idEntidad);
+        SignatureCustody sc = getFirma(anexo, idEntidad);
 
         return sc;
-    }
-
-
-    private ClientResponse commonCall(String endPointBase, String username, String password) throws Exception {
-
-        ClientResponse response;
-
-        try {
-
-            log.info("endPoint: " + endPointBase);
-
-            // Inicialitza un client per fer una connexió http al servidor
-            final Client client;
-
-            if (endPointBase.toLowerCase().startsWith("https")) {  //Entra si tenim una connexió a servidor segura
-
-                HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
-                ClientConfig config = new DefaultClientConfig();
-                SSLContext ctx = SSLContext.getInstance("SSL");
-                ctx.init(null, new TrustManager[]{new InsecureTrustManager()}, null);
-                config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties(hostnameVerifier, ctx));
-
-                client = Client.create(config);
-
-            } else {   //Entra si NO tenim una connexió segura al servidor
-
-                client = Client.create();
-            }
-
-            // Si tenim username
-            if (username != null) {
-                client.addFilter(new HTTPBasicAuthFilter(username, password));
-            }
-
-            WebResource webResource = client.resource(endPointBase);
-
-            response = webResource.type("application/json").get(ClientResponse.class);
-
-        } catch (Exception e) {
-            throw new Exception(e.getMessage(), e);
-        }
-
-        // Status de HTTP OK
-        if (response.getStatus() == 200) {
-
-            return response;
-
-        } else {   // Error de Comunicació o no controlat
-
-            String raw_msg = response.getEntity(String.class);
-            throw new Exception("Error desconegut (Codi de servidor " + response.getStatus() + "): " + raw_msg);
-
-        }
-
-    }
-
-    private static class InsecureTrustManager implements X509TrustManager {
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void checkClientTrusted(final java.security.cert.X509Certificate[] chain, final String authType) throws CertificateException {
-            // Everyone is trusted!
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void checkServerTrusted(final java.security.cert.X509Certificate[] chain, final String authType) throws CertificateException {
-            // Everyone is trusted!
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
-        }
     }
 
 }

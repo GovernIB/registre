@@ -1,16 +1,25 @@
 package es.caib.regweb3.persistence.integracion;
 
+import com.sun.jersey.api.client.ClientResponse;
 import es.caib.plugins.arxiu.api.*;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.IRegistro;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.utils.ClientUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 import org.springframework.stereotype.Component;
 
+import javax.ejb.EJB;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,32 +29,77 @@ public class ArxiuCaibUtils {
 
     public static final Logger log = Logger.getLogger(ArxiuCaibUtils.class);
 
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
+
+    private static final String basePluginArxiuCaib = RegwebConstantes.REGWEB3_PROPERTY_BASE + "plugin.arxiu.caib.";
+    private static final String PROPERTY_APLICACION = basePluginArxiuCaib + "aplicacio.codi";
+    private static final String PROPERTY_SERIE_DOCUMENTAL = basePluginArxiuCaib + "serieDocumental";
+    private static final String PROPERTY_NOMBRE_PROCEDIMIENTO = basePluginArxiuCaib + "nombreProcedimiento";
+    private static final String PROPERTY_CODIGO_PROCEDIMIENTO = basePluginArxiuCaib + "codigoProcedimiento";
+    private static final String PROPERTY_CONCSV_URL = basePluginArxiuCaib + "concsv.url";
+    private static final String PROPERTY_CONCSV_USERNAME = basePluginArxiuCaib + "concsv.username";
+    private static final String PROPERTY_CONCSV_PASSWORD = basePluginArxiuCaib + "concsv.password";
+
     private IArxiuPlugin arxiuPlugin;
+    private Properties properties;
 
 
     /**
      *
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     */
+    public IArxiuPlugin cargarPlugin(Long idEntidad) throws I18NException {
+
+        IArxiuPlugin iArxiuPlugin = (IArxiuPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE);
+
+        setArxiuPlugin(iArxiuPlugin);
+        setProperties(pluginEjb.getPropertiesPlugin(idEntidad, RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE));
+
+        return iArxiuPlugin;
+    }
+
+    /**
+     *
      * @param registro
-     * @param tipoRegistro
-     * @param anexoFull
+     * @param firma
      * @return
      * @throws Exception
      */
-    public String crearJustificante(IRegistro registro, Long tipoRegistro, AnexoFull anexoFull) throws Exception{
+    public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
-        String serieDocumental = "S0002"; // PropiedadGlobal getSerieDocumental()
-        String codigoProcedimiento = "1234"; // PropiedadGlobal getCodigoProcedimiento()
+        ContingutArxiu expediente;
+        ContingutArxiu documento;
+
+        String serieDocumental = getPropertySerieDocumental();
+        String codigoProcedimiento = getPropertyCodigoProcedimiento();
 
         // Creamos el Expediente del Justificante
-        String uuidExpedient = expedientCrear(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-        log.info("Expediente creado: " + uuidExpedient);
+        expediente = expedientCrear(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
+        log.info("Expediente creado: " + expediente.getIdentificador());
 
         // Creamos el Documento del Justificante
-        String uuidDocument = documentCrear(anexoFull, registro, tipoRegistro, uuidExpedient);
-        log.info("Documento creado: " + uuidExpedient);
+        try{
 
-        return uuidExpedient+"#"+uuidDocument;
-        //return uuidDocument;
+            Document doc = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma);
+            documento = getArxiuPlugin().documentCrear(doc, expediente.getIdentificador());
+            log.info("Documento creado: " + documento.getIdentificador());
+
+        }catch (ArxiuException e){
+            log.info("Error creando el documento en Arxiu, eliminamos el expediente: " + expediente.getIdentificador());
+
+            //Eliminamos el expediente creado
+            if(expediente != null){
+                getArxiuPlugin().expedientEsborrar(expediente.getIdentificador());
+            }
+
+            throw e;
+        }
+
+        return new JustificanteArxiu(expediente, documento);
+
     }
 
     /**
@@ -55,7 +109,7 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    private String expedientCrear(IRegistro registro, Long tipoRegistro, String serieDocumental, String codigoProcedimiento) throws Exception {
+    private ContingutArxiu expedientCrear(IRegistro registro, Long tipoRegistro, String serieDocumental, String codigoProcedimiento) throws Exception {
 
         String nombreExpediente = getNombreExpediente(registro, tipoRegistro);
 
@@ -72,18 +126,12 @@ public class ArxiuCaibUtils {
                 codigoProcedimiento,
                 ExpedientEstat.OBERT,
                 Arrays.asList(interesado.getDocumentoNTI()),
-                serieDocumental);
+                serieDocumental, RegwebConstantes.APLICACION_NOMBRE);
 
         // Creamos el Expediente en Arxiu
         ContingutArxiu expedienteCreado = getArxiuPlugin().expedientCrear(expediente);
 
-        if(expedienteCreado == null){
-            log.info("Expediente no creado");
-        }else{
-            log.info("Expediente creado: " + expedienteCreado.getNom());
-        }
-
-        return expedienteCreado.getIdentificador();
+        return expedienteCreado;
     }
 
 
@@ -93,19 +141,19 @@ public class ArxiuCaibUtils {
      * @param registro
      * @param tipoRegistro
      * @param uuidExpedient
+     * @param serieDocumental
      * @return
      * @throws Exception
      */
-    private String documentCrear(AnexoFull anexoFull,IRegistro registro, Long tipoRegistro, String uuidExpedient) throws Exception{
+    private ContingutArxiu documentCrear(AnexoFull anexoFull,IRegistro registro, Integer tipoRegistro, String uuidExpedient, String serieDocumental) throws Exception{
 
         //Generamos el Documento
-        Document documento = generarDocument(registro, tipoRegistro, anexoFull);
+        Document documento = generarDocument(registro, tipoRegistro, anexoFull, serieDocumental);
 
         // Crear el Documento en Arxiu
-
         ContingutArxiu documentoCreado = getArxiuPlugin().documentCrear(documento, uuidExpedient);
 
-        return documentoCreado.getIdentificador();
+        return documentoCreado;
     }
 
     /**
@@ -118,25 +166,90 @@ public class ArxiuCaibUtils {
         return getArxiuPlugin().getCsv(identificadorDocumento);
     }
 
+    /**
+     * Obtiene la Url de Validacion {@link es.caib.plugins.arxiu.api.Document}
+     * @param identificadorDocumento
+     * @return
+     * @throws Exception
+     */
+    public String getUrlValidacion(String identificadorDocumento) throws Exception{
+        return getPropertyConCsvUrl(identificadorDocumento);
+    }
+
 
     /**
      * 
      * @param uuidDocument
      * @param version
      * @param contenido
-     * @param versionImprimible
+     * @param original
      * @return
      * @throws Exception
      */
-    public Document getDocumento(String uuidDocument, String version, Boolean contenido, Boolean versionImprimible) throws Exception{
+    public Document getDocumento(String uuidDocument, String version, Boolean contenido, Boolean original) throws Exception{
 
         Document documento = null;
 
         try{
             documento = getArxiuPlugin().documentDetalls(uuidDocument, version, contenido);
 
-        }catch (Exception e){
+            if(!original){
 
+                log.info("Obteniendo el documento desde url validacion: " + uuidDocument);
+                //documento = getArxiuPlugin().documentDetalls(uuidDocument, version, false);
+                byte[] data = null;
+
+                try{
+
+                    String url = getUrlValidacion(documento.getIdentificador());
+                    String username = getPropertyConCsvUsername();
+                    String password = getPropertyConCsvPassword();
+
+                    if(StringUtils.isNotEmpty(url)){
+                        BufferedInputStream in = null;
+                        ByteArrayOutputStream fout = null;
+
+                        try {
+
+                            if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                                ClientResponse cr = ClientUtils.commonCall(url, username, password);
+                                in = new BufferedInputStream(cr.getEntityInputStream());
+
+                            } else {
+                                in = new BufferedInputStream(new URL(url).openStream());
+                            }
+                            fout = new ByteArrayOutputStream();
+
+                            final byte buffer[] = new byte[1024];
+                            int count;
+                            while ((count = in.read(buffer, 0, 1024)) != -1) {
+                                fout.write(buffer, 0, count);
+                            }
+                            data = fout.toByteArray();
+
+                            documento.getContingut().setContingut(data);
+
+                        } finally {
+                            if (in != null) {
+                                in.close();
+                            }
+                            if (fout != null) {
+                                fout.close();
+                            }
+                        }
+
+                    }
+
+                }catch (Exception e){
+                    log.info("Error obteniendo el documento desde la url de validacion");
+                    e.printStackTrace();
+                }
+
+            }
+
+        }catch (Exception e){
+            log.info("Error obteniendo el Documento: " + uuidDocument);
+            e.printStackTrace();
         }
 
         return documento;
@@ -164,12 +277,13 @@ public class ArxiuCaibUtils {
                                          String ntiClassificacio,
                                          ExpedientEstat expedientEstat,
                                          List<String> ntiInteressats,
-                                         String serieDocumental) {
+                                         String serieDocumental, String aplicacion) {
 
         Expedient expedient = new Expedient();
         expedient.setNom(nombre);
         expedient.setIdentificador(identificador);
 
+        // Metadates
         ExpedientMetadades metadades = new ExpedientMetadades();
         metadades.setIdentificador(ntiIdentificador);
         metadades.setDataObertura(ntiDataObertura);
@@ -179,9 +293,59 @@ public class ArxiuCaibUtils {
         metadades.setInteressats(ntiInteressats);
         metadades.setSerieDocumental(serieDocumental);
 
+        // Metadates adicionals
+        Map<String, Object> metaDadesAddicionals = new HashMap<String, Object>();
+        metaDadesAddicionals.put("eni:app_tramite_exp", aplicacion);
+        metadades.setMetadadesAddicionals(metaDadesAddicionals);
+
+
         expedient.setMetadades(metadades);
 
         return expedient;
+    }
+
+    /**
+     * Genera un {@link es.caib.plugins.arxiu.api.Document} que representa un Justificante
+     * @param registro
+     * @param tipoRegistro
+     * @param firma
+     * @return
+     * @throws Exception
+     */
+    private Document crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma) throws Exception {
+
+        // Documento
+        Document document = new Document();
+        document.setIdentificador(null);
+        document.setEstat(DocumentEstat.DEFINITIU);
+
+        // Metadatos
+        DocumentMetadades metadades = new DocumentMetadades();
+        metadades.setIdentificador(null);
+        metadades.setSerieDocumental(serieDocumental);
+        metadades.setOrgans(Arrays.asList(registro.getOficina().getCodigo()));
+        metadades.setDataCaptura(new Date());
+
+        metadades.setOrigen(ContingutOrigen.ADMINISTRACIO);
+        metadades.setEstatElaboracio(DocumentEstatElaboracio.ORIGINAL);
+        metadades.setTipusDocumental(DocumentTipus.ALTRES); // TODO Revisar si sería más conveniente poner DocumentTipus.JUSTIFICANT_RECEPCIO
+
+        metadades.setExtensio(DocumentExtensio.PDF);
+        metadades.setFormat(getDocumentFormat(DocumentExtensio.PDF));
+
+        // Contenido y Firma
+        document.setContingut(null);
+        document.setNom(firma.getFitxerNom());
+
+        document.setFirmes(new ArrayList<Firma>());
+        document.getFirmes().add(firma);
+
+        // Metadatos adicionales
+        metadades.setMetadadesAddicionals(getMedadadesAdicionals(registro, tipoRegistro));
+
+        document.setMetadades(metadades);
+
+        return document;
     }
 
     /**
@@ -192,7 +356,7 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    private Document generarDocument(IRegistro registro, Long tipoRegistro, AnexoFull anexoFull) throws Exception {
+    private Document generarDocument(IRegistro registro, Integer tipoRegistro, AnexoFull anexoFull, String serieDocumental) throws Exception {
 
         // Documento
         Document document = new Document();
@@ -202,7 +366,7 @@ public class ArxiuCaibUtils {
         // Metadatos
         DocumentMetadades metadades = new DocumentMetadades();
         metadades.setIdentificador(null);
-        metadades.setSerieDocumental("S0002");
+        metadades.setSerieDocumental(serieDocumental);
         metadades.setOrgans(Arrays.asList(registro.getOficina().getCodigo()));
         metadades.setDataCaptura(anexoFull.getAnexo().getFechaCaptura());
 
@@ -288,18 +452,7 @@ public class ArxiuCaibUtils {
         document.setContingut(contingut);
 
         // Metadatos adicionales
-        Map<String, Object> metaDadesAddicionals = new HashMap<String, Object>();
-        metaDadesAddicionals.put("eni:numero_asiento_registral", registro.getNumeroRegistro());
-        if (registro.getFecha() != null) {
-            TimeZone tz = TimeZone.getTimeZone("UTC");
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-            df.setTimeZone(tz);
-            metaDadesAddicionals.put("eni:fecha_asiento_registral", df.format(registro.getFecha()));
-        }
-        metaDadesAddicionals.put("eni:codigo_oficina_registro", registro.getOficina().getCodigo());
-        metaDadesAddicionals.put("eni:tipo_asiento_registral", tipoRegistro.intValue());
-
-        metadades.setMetadadesAddicionals(metaDadesAddicionals);
+        metadades.setMetadadesAddicionals(getMedadadesAdicionals(registro, tipoRegistro));
 
         document.setMetadades(metadades);
 
@@ -339,7 +492,6 @@ public class ArxiuCaibUtils {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
 
-
         return registro.getLibro().getCodigo() +"-"+ getTipoRegistro(tipoRegistro) +"-"+ registro.getNumeroRegistro() +"_"+ sdf.format(registro.getFecha());
 
     }
@@ -357,6 +509,40 @@ public class ArxiuCaibUtils {
             return "S";
         }
 
+    }
+
+    private Integer getTipoRegistroEni(Long tipoRegistro) throws Exception{
+
+        if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    /**
+     *
+     * @param registro
+     * @param tipoRegistro
+     * @return
+     * @throws Exception
+     */
+    private Map<String, Object> getMedadadesAdicionals(IRegistro registro, Integer tipoRegistro) throws Exception{
+
+        Map<String, Object> metaDadesAddicionals = new HashMap<String, Object>();
+
+        metaDadesAddicionals.put("eni:numero_asiento_registral", registro.getNumeroRegistroFormateado());
+        if (registro.getFecha() != null) {
+            TimeZone tz = TimeZone.getTimeZone("UTC");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            df.setTimeZone(tz);
+            metaDadesAddicionals.put("eni:fecha_asiento_registral", df.format(registro.getFecha()));
+        }
+        metaDadesAddicionals.put("eni:codigo_oficina_registro", registro.getOficina().getCodigo());
+        metaDadesAddicionals.put("eni:tipo_asiento_registral", tipoRegistro);
+        metaDadesAddicionals.put("eni:app_tramite_exp", RegwebConstantes.APLICACION_NOMBRE);
+
+        return metaDadesAddicionals;
     }
 
     /**
@@ -519,6 +705,7 @@ public class ArxiuCaibUtils {
      */
     private IArxiuPlugin getArxiuPlugin() throws Exception {
 
+        //todo eliminar https
         XTrustProvider.install();
         return arxiuPlugin;
 
@@ -532,4 +719,58 @@ public class ArxiuCaibUtils {
 
         this.arxiuPlugin = iArxiuPlugin;
     }
+
+    /**
+     *
+     * @param properties
+     */
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+    private String getPropertyAplicacio() throws Exception {
+        return getProperty(PROPERTY_APLICACION);
+    }
+
+    private String getPropertySerieDocumental() throws Exception {
+        return getProperty(PROPERTY_SERIE_DOCUMENTAL);
+    }
+
+    private String getPropertyCodigoProcedimiento() throws Exception {
+        return getProperty(PROPERTY_CODIGO_PROCEDIMIENTO);
+    }
+
+    private String getPropertyNombreProcedimiento() throws Exception {
+        return getProperty(PROPERTY_NOMBRE_PROCEDIMIENTO);
+    }
+
+    private String getPropertyConCsvUrl(String custodyId) throws Exception {
+        String url = getProperty(PROPERTY_CONCSV_URL);
+
+        if(StringUtils.isNotEmpty(url)){
+            return url.concat(custodyId);
+        }
+
+        return  null;
+    }
+
+    private String getPropertyConCsvUsername() throws Exception {
+        return getProperty(PROPERTY_CONCSV_USERNAME);
+    }
+
+    private String getPropertyConCsvPassword() throws Exception {
+        return getProperty(PROPERTY_CONCSV_PASSWORD);
+    }
+
+    public final String getProperty(String name) throws Exception{
+
+        String value = properties.getProperty(name);
+
+        if (value == null) {
+            throw new Exception("Property " + name + " is required but it has not defined in the Properties");
+        } else {
+            return value;
+        }
+    }
+
 }

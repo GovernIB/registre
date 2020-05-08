@@ -1,5 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.plugins.arxiu.api.Firma;
+import es.caib.plugins.arxiu.api.FirmaPerfil;
+import es.caib.plugins.arxiu.api.FirmaTipus;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -48,7 +51,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      */
     @Override
     public SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                             Long idEntidadActiva, StringBuilder peticion, String numeroRegistro) throws Exception, I18NException {
+                                             Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
@@ -65,14 +68,58 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final int signMode = FileInfoSignature.SIGN_MODE_EXPLICIT;
         final boolean epes = true;
 
-        DocumentCustody doc = new DocumentCustody();
-        doc.setData(pdfsource);
-        doc.setLength(pdfsource.length);
-        doc.setMime(FileInfoSignature.PDF_MIME_TYPE);
-        doc.setName("justificante.pdf");
-
-        return signFile(doc, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
+        // Firmamos el Justificante
+        byte[]firma = signFile(fileName, pdfsource, FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
                 reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
+
+        // Creamos el SignatureCustody
+        return crearSignatureCustody(signType, signMode, firma);
+
+    }
+
+    /**
+     * Método que genera la Firma de un Justificante
+     *
+     * @param pdfsource
+     * @param languageUI
+     * @param idEntidadActiva
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public Firma signJustificanteArxiu(byte[] pdfsource, String languageUI,
+                                  Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException {
+
+        // Cerca el Plugin de Justificant definit a les Propietats Globals
+        ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);
+
+        // Comprova que existegix el plugin de justificant
+        if (signaturePlugin == null) {
+            // No s´ha definit cap plugin de Firma. Consulti amb el seu Administrador.
+            throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.4"));
+        }
+
+        String reason = "FIRMA_JUSTIFICANT"; // Hem de canviar raó justificant????
+
+        final String signType = FileInfoSignature.SIGN_TYPE_PADES;
+        final int signMode = FileInfoSignature.SIGN_MODE_EXPLICIT;
+        final boolean epes = true;
+
+        // Firmamos el Justificante
+        byte[] firmaJustificante =  signFile(fileName,pdfsource,FileInfoSignature.PDF_MIME_TYPE, signType, signMode, epes, signaturePlugin, new Locale(languageUI),
+                reason, idEntidadActiva, new Date(), peticion, numeroRegistro);
+
+        // Creamos la Firma
+        Firma firma = new Firma();
+        firma.setFitxerNom(fileName);
+        firma.setContingut(firmaJustificante);
+        firma.setTamany(firmaJustificante.length);
+        firma.setPerfil(FirmaPerfil.EPES);
+        firma.setTipus(FirmaTipus.PADES);
+        firma.setTipusMime(FileInfoSignature.PDF_MIME_TYPE);
+        firma.setCsvRegulacio("");
+
+        return firma;
 
     }
 
@@ -452,8 +499,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final boolean epes = true;
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
-        SignatureCustody sc = signFile(docToSign, signType, signMode, epes,
+        // Firmamos el fichero
+        byte[] firma = signFile(docToSign.getName(), docToSign.getData(), docToSign.getMime(), signType, signMode, epes,
                 signaturePlugin, locale, reason, idEntidad, new Date(), new StringBuilder(), numeroRegistro);
+
+        // Creamos el SignatureCustody
+        SignatureCustody sc = crearSignatureCustody(signType, signMode, firma);
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -501,6 +552,11 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         for (AnexoFull anexoFull : anexosEnviarASir) {
 
             AnexoFull anexo = new AnexoFull(anexoFull);
+
+            // Si el anexo es un Justificante creado con el ApiArxiu, lo transformamos
+            if(anexo.getAnexo().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+                anexo.arxiuDocumentToCustody();
+            }
 
             DocumentCustody dc = anexo.getDocumentoCustody();
             SignatureCustody sc = anexo.getSignatureCustody();
@@ -550,8 +606,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         final boolean epes = true;
         final String reason = "Convertir Document/Firma a perfil EPES per enviar a SIR";
 
-        SignatureCustody sc = signFile(documentToSign, signType, signMode, epes,
+        // Firmamos el fichero
+        byte[] firma = signFile(documentToSign.getName(), documentToSign.getData(), documentToSign.getMime(), signType, signMode, epes,
                 signaturePlugin, locale, reason, idEntidad, new Date(), new StringBuilder(), numeroRegistro);
+
+        // Creamos el SignatureCustody
+        SignatureCustody sc = crearSignatureCustody(signType, signMode, firma);
 
         // Ficar dins Anexo tipo, formato i perfil
         Anexo anexo = input.getAnexo();
@@ -569,7 +629,9 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
 
     /**
-     * @param doc
+     * @param fileName
+     * @param data
+     * @param mimeType
      * @param signType
      * @param signMode
      * @param epes
@@ -580,7 +642,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @return
      * @throws I18NException
      */
-    protected SignatureCustody signFile(AnnexCustody doc, String signType,
+    protected byte[] signFile(String fileName, byte[] data, String mimeType, String signType,
                                         int signMode, boolean epes, ISignatureServerPlugin plugin, Locale locale, String reason, Long idEntidadActiva, Date inicio, StringBuilder peticion, String numeroRegistro)
             throws I18NException {
 
@@ -612,7 +674,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
 
             final String signID = String.valueOf(System.currentTimeMillis());
 
-            final String name = doc.getName();
+            final String name = fileName;
 
             final String location = null; // "Palma";
             final String signerEmail = null; // "anadal@ibit.org";
@@ -630,7 +692,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             source = File.createTempFile("regweb_signfile", "document");
             final boolean userRequiresTimeStamp = false;
             final int signaturesTableLocation = FileInfoSignature.SIGNATURESTABLELOCATION_WITHOUT;
-            FileUtils.writeByteArrayToFile(source, doc.getData());
+            FileUtils.writeByteArrayToFile(source, data);
 
             File previusSignatureDetachedFile = null;
             int signOperation = FileInfoSignature.SIGN_OPERATION_SIGN;
@@ -640,7 +702,7 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             String procedureCode=null;
             String procedureName=null;
             FileInfoSignature fileInfo = new  FileInfoSignature(signID, source, previusSignatureDetachedFile,
-               doc.getMime(),  name, reason,  location, signerEmail, signNumber, locale.getLanguage(),
+               mimeType,  name, reason,  location, signerEmail, signNumber, locale.getLanguage(),
                signOperation, signType, signAlgorithm, signMode, signaturesTableLocation, signaturesTableHeader,
                pdfInfoSignature, csvStampInfo, userRequiresTimeStamp,  timeStampGenerator, policyInfoSignature,
                 expedientCode,  expedientName,  expedientUrl,  procedureCode,  procedureName);
@@ -676,41 +738,12 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
                 } else {
                     destination = status.getSignedData();
 
-                    SignatureCustody sc = new SignatureCustody();
-                    sc.setData(FileUtils.readFileToByteArray(destination));
-                    sc.setLength(sc.getData().length);
-                    String mime;
-                    String custSignType;
-                    Boolean attachedDocument;
-                    String signFileName;
-                    if (FileInfoSignature.SIGN_TYPE_PADES.equals(signType)) {
-                        mime = FileInfoSignature.PDF_MIME_TYPE;
-                        custSignType = SignatureCustody.PADES_SIGNATURE;
-                        attachedDocument = null;
-                        signFileName = "signed.pdf";
-                    } else if (FileInfoSignature.SIGN_TYPE_XADES.equals(signType)) {
-                        mime = "application/xml";
-                        custSignType = SignatureCustody.XADES_SIGNATURE;
-                        attachedDocument = (signMode == FileInfoSignature.SIGN_MODE_EXPLICIT);
-                        signFileName = "signature.xml";
-                    } else if (FileInfoSignature.SIGN_TYPE_CADES.equals(signType)) {
-                        custSignType = SignatureCustody.CADES_SIGNATURE;
-                        mime = "application/octet-stream";
-                        attachedDocument = (signMode == FileInfoSignature.SIGN_MODE_EXPLICIT);
-                        signFileName = "signature.csig";
-                    } else {
-                        throw new I18NException(new Exception(), "error.realitzantfirma",
-                                new I18NArgumentString("Tipus de firma desconeguda (" + signType + ")"));
-                    }
-                    sc.setName(signFileName);
-                    sc.setMime(mime);
-                    sc.setSignatureType(custSignType);
-                    sc.setAttachedDocument(attachedDocument);
+                    byte[] firma = FileUtils.readFileToByteArray(destination);
 
                     // Integracion
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_FIRMA, reason, peticion.toString(), System.currentTimeMillis() - tiempo, idEntidadActiva, numeroRegistro);
 
-                    return sc;
+                    return firma;
 
                 }
             }
@@ -744,6 +777,50 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
         }
     }
 
+    /**
+     * Crea un {@link org.fundaciobit.plugins.documentcustody.api.SignatureCustody} a partir de los parámetros
+     * @param signType
+     * @param signMode
+     * @param firma
+     * @return
+     * @throws I18NException
+     */
+    private SignatureCustody crearSignatureCustody(String signType, int signMode, byte[] firma) throws I18NException {
+
+        String mime;
+        String custSignType;
+        Boolean attachedDocument;
+        String signFileName;
+        if (FileInfoSignature.SIGN_TYPE_PADES.equals(signType)) {
+            mime = FileInfoSignature.PDF_MIME_TYPE;
+            custSignType = SignatureCustody.PADES_SIGNATURE;
+            attachedDocument = null;
+            signFileName = "signed.pdf";
+        } else if (FileInfoSignature.SIGN_TYPE_XADES.equals(signType)) {
+            mime = "application/xml";
+            custSignType = SignatureCustody.XADES_SIGNATURE;
+            attachedDocument = (signMode == FileInfoSignature.SIGN_MODE_EXPLICIT);
+            signFileName = "signature.xml";
+        } else if (FileInfoSignature.SIGN_TYPE_CADES.equals(signType)) {
+            custSignType = SignatureCustody.CADES_SIGNATURE;
+            mime = "application/octet-stream";
+            attachedDocument = (signMode == FileInfoSignature.SIGN_MODE_EXPLICIT);
+            signFileName = "signature.csig";
+        } else {
+            throw new I18NException(new Exception(), "error.realitzantfirma",
+                    new I18NArgumentString("Tipus de firma desconeguda (" + signType + ")"));
+        }
+
+        SignatureCustody sc = new SignatureCustody();
+        sc.setData(firma);
+        sc.setLength(sc.getData().length);
+        sc.setName(signFileName);
+        sc.setMime(mime);
+        sc.setSignatureType(custSignType);
+        sc.setAttachedDocument(attachedDocument);
+
+        return sc;
+    }
 
     public boolean is_pdf(byte[] data) {
 

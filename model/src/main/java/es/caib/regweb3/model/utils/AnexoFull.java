@@ -1,5 +1,6 @@
 package es.caib.regweb3.model.utils;
 
+import es.caib.plugins.arxiu.api.Document;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -19,14 +20,19 @@ import java.util.List;
  *
  * @author anadal
  */
-public class AnexoFull {
+public class AnexoFull{
 
     private Anexo anexo;
+
+    // DocumentCustody
     private boolean documentoFileDelete;
     private boolean signatureFileDelete;
     private DocumentCustody documentoCustody;
     private SignatureCustody signatureCustody;
     private List<Metadata> metadatas;
+
+    //ArxiuCaib
+    private Document document;
 
 
     /**
@@ -40,11 +46,13 @@ public class AnexoFull {
         this.documentoCustody = anexoFull.documentoCustody;
         this.signatureCustody = anexoFull.signatureCustody;
         this.metadatas = anexoFull.metadatas;
+        this.document = anexoFull.getDocument();
     }
 
 
     public AnexoFull() {
         this.anexo = new Anexo();
+        this.document = new Document();
         this.anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED);
         this.anexo.setTipoDocumental(new TipoDocumental());
     }
@@ -112,31 +120,121 @@ public class AnexoFull {
         this.metadatas = metadatas;
     }
 
+
+    public Document getDocument() {
+        return document;
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    @Transient
+    public byte[] getDocData() {
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getDocumentoCustody() != null) {
+                return getDocumentoCustody().getData();
+
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                return getDocument().getContingut().getContingut();
+
+            }
+
+        }
+
+        return null;
+    }
+
+    @Transient
+    public byte[] getSignData() {
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getSignatureCustody() != null) {
+                return getSignatureCustody().getData();
+
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                return getDocument().getFirmes().get(0).getContingut();
+
+            }
+
+        }
+
+        return null;
+    }
+
     @Transient
     public long getDocSize() {
-        if (getDocumentoCustody() != null) {
-            long size = getDocumentoCustody().getLength();
 
-            if (size < 1024) {
-                return 1;
-            } else {
-                return size / 1024;
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getDocumentoCustody() != null) {
+                long size = getDocumentoCustody().getLength();
+
+                if (size < 1024) {
+                    return 1;
+                } else {
+                    return size / 1024;
+                }
             }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                long size = getDocument().getContingut().getTamany();
+
+                if (size < 1024) {
+                    return 1;
+                } else {
+                    return size / 1024;
+                }
+            }
+
         }
+
         return -1;
     }
 
     @Transient
     public long getSignSize() {
-        if (getSignatureCustody() != null) {
-            long size = getSignatureCustody().getLength();
 
-            if (size < 1024) {
-                return 1;
-            } else {
-                return size / 1024;
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getSignatureCustody() != null) {
+                long size = getSignatureCustody().getLength();
+
+                if (size < 1024) {
+                    return 1;
+                } else {
+                    return size / 1024;
+                }
             }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                long size = getDocument().getFirmes().get(0).getTamany();
+
+                if (size < 1024) {
+                    return 1;
+                } else {
+                    return size / 1024;
+                }
+            }
+
         }
+
+
         return -1;
     }
 
@@ -177,18 +275,41 @@ public class AnexoFull {
 
     @Transient
     public String getDocMime() {
-        if (getDocumentoCustody() != null) {
-            return getDocumentoCustody().getMime();
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getDocumentoCustody() != null) {
+                return getDocumentoCustody().getMime();
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                return getDocument().getContingut().getTipusMime();
+            }
         }
+
         return "";
 
     }
 
     @Transient
     public String getSignMime() {
-        if (getSignatureCustody() != null) {
-            return getSignatureCustody().getMime();
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getSignatureCustody() != null) {
+                return getSignatureCustody().getMime();
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                return getDocument().getFirmes().get(0).getTipusMime();
+            }
         }
+
+
         return "";
 
     }
@@ -221,6 +342,25 @@ public class AnexoFull {
         } else {
             return "";
         }
+    }
+
+    @Transient
+    public void arxiuDocumentToCustody(){
+
+        getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
+
+        String custodyId = getAnexo().getCustodiaID() +"#"+getAnexo().getExpedienteID();
+        getAnexo().setCustodiaID(custodyId);
+        SignatureCustody sc = new SignatureCustody();
+        sc.setData(getDocument().getContingut().getContingut());
+        sc.setLength(getDocument().getContingut().getTamany());
+        sc.setName(getDocument().getNom());
+        sc.setMime(getDocument().getContingut().getTipusMime());
+        sc.setSignatureType(getAnexo().getSignType());
+        sc.setAttachedDocument(null);
+
+        setSignatureCustody(sc);
+
     }
 
 }

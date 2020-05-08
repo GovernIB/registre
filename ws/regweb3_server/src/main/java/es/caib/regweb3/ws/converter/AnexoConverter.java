@@ -129,7 +129,7 @@ public class AnexoConverter extends CommonConverter {
    private static Anexo procesarAnexo(AnexoWs anexoWs, Long idEntidad,
                                       TipoDocumentalLocal tipoDocumentalEjb) throws Exception{
 
-      Anexo anexo = new Anexo();
+      Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
       if(StringUtils.isNotEmpty(anexoWs.getTitulo())){ anexo.setTitulo(anexoWs.getTitulo());}
 

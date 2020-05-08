@@ -1,17 +1,18 @@
 package es.caib.regweb3.webapp.controller.registro;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
+import es.caib.plugins.arxiu.api.Document;
+import es.caib.plugins.arxiu.api.IArxiuPlugin;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -74,6 +75,13 @@ public class AnexoController extends BaseController {
 
     @EJB(mappedName = "regweb3/SignatureServerEJB/local")
     private SignatureServerLocal signatureServerEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
+
+    @Autowired
+    ArxiuCaibUtils arxiuCaibUtils;
+
 
 
     @RequestMapping(value = "/nou2", method = RequestMethod.GET)
@@ -291,8 +299,7 @@ public class AnexoController extends BaseController {
                       HttpServletResponse response) throws Exception, I18NException {
 
         AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
-        fullDownload(anexoFull.getAnexo().getCustodiaID(), anexoFull.getDocumentoCustody().getMime(),
-                anexoFull.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(), false);
+        fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), false);
     }
 
     /**
@@ -307,12 +314,56 @@ public class AnexoController extends BaseController {
         AnexoFull anexo = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
         //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
         if (anexo.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
-            fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getDocumentoCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), false, response, getEntidadActiva(request).getId(), original);
+            fullDownload(anexo.getAnexo(), anexo.getDocumentoCustody().getMime(), false, response, getEntidadActiva(request).getId(), original);
         } else {
-            fullDownload(anexo.getAnexo().getCustodiaID(), anexo.getSignatureCustody().getMime(),
-                    anexo.getAnexo().isJustificante(), true, response, getEntidadActiva(request).getId(), original);
+            fullDownload(anexo.getAnexo(), anexo.getSignatureCustody().getMime(), true, response, getEntidadActiva(request).getId(), original);
         }
+
+    }
+
+    /**
+     * Función que nos permite descargar el ustificante generado con el Api ArxiuCaiJb
+     *
+     * @param anexoId identificador del anexo
+     */
+    @RequestMapping(value = "/descargarJustificante/{anexoId}/{original}", method = RequestMethod.GET)
+    public void descargarJustificante(@PathVariable("anexoId") Long anexoId, @PathVariable("original") Boolean original, HttpServletRequest request,
+                                               HttpServletResponse response) throws Exception, I18NException {
+
+        Entidad entidadActiva = getEntidadActiva(request);
+        Anexo anexo = anexoEjb.findById(anexoId);
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+            IArxiuPlugin iArxiuPlugin = arxiuCaibUtils.cargarPlugin(entidadActiva.getId());
+
+            // Comprova que existeix el plugin de Arxiu del Justificante
+            if (iArxiuPlugin == null) {
+                throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.10"));
+            }
+
+            Document justificante = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, original);
+
+            if(justificante != null){
+                obtenerContentType(justificante.getContingut().getTipusMime(), response, justificante.getNom(),null,justificante.getContingut().getContingut());
+            }else {
+                log.info("No se obtenido el  justificante");
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexoId, getEntidadActiva(request).getId());
+
+            //Parche para la api de custodia antigua que se guardan los documentos firmados (modofirma == 1 Attached) en DocumentCustody.
+            if (anexoFull.getSignatureCustody() == null) {//Api antigua, hay que descargar el document custody
+                fullDownload(anexoFull.getAnexo(), anexoFull.getDocumentoCustody().getMime(),
+                        false, response, getEntidadActiva(request).getId(), original);
+            } else {
+                fullDownload(anexoFull.getAnexo(), anexoFull.getSignatureCustody().getMime(),
+                        true, response, getEntidadActiva(request).getId(), original);
+            }
+
+        }
+
 
     }
 
@@ -320,9 +371,8 @@ public class AnexoController extends BaseController {
     /**
      * Función que obtiene los datos de un archivo del sistema de custodia para mostrarlo
      *
-     * @param custodiaID     identificador del archivo
+     * @param anexo     identificador del archivo
      * @param contentType
-     * @param isJustificante
      * @param firma
      * @param response
      * @return Descarga el archivo y además devuelve true o false en funcion de si ha encontrado el archivo indicado.
@@ -330,7 +380,7 @@ public class AnexoController extends BaseController {
      * Por tanto cuando vaya a recuperar un documento con firma antiguo, mirarà en SignatureCustody y no lo encontrará, por tanto controlamos ese caso y devolvemos false.
      * para poder ir a buscarlo a DocumentCustody, que es donde estará. (todo esto se hace en el método firma)
      */
-    private void fullDownload(String custodiaID, String contentType, boolean isJustificante, boolean firma, HttpServletResponse response, Long idEntidad, boolean original) {
+    private void fullDownload(Anexo anexo, String contentType, boolean firma, HttpServletResponse response, Long idEntidad, boolean original) {
 
         String filename = null;
         OutputStream output;
@@ -340,20 +390,20 @@ public class AnexoController extends BaseController {
         try {
 
             // Si l'arxiu té identificador, entram
-            if (custodiaID != null) {
+            if (anexo.getCustodiaID() != null) {
 
                 // Si és un arxiu sense firma
                 if (!firma) {
-                    DocumentCustody dc = anexoEjb.getArchivo(custodiaID, isJustificante, idEntidad);
+                    DocumentCustody dc = anexoEjb.getArchivo(anexo, idEntidad);
                     filename = dc.getName();
                     data = dc.getData();
                 } else {   // Si és firma d'un arxiu
                     if (original) {
-                        SignatureCustody dc = anexoEjb.getFirma(custodiaID, isJustificante, idEntidad);
+                        SignatureCustody dc = anexoEjb.getFirma(anexo, idEntidad);
                         filename = dc.getName();
                         data = dc.getData();
                     } else {
-                        SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(custodiaID, isJustificante, idEntidad);
+                        SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
                         data = sc.getData();
                         filename = sc.getName();
                     }
@@ -749,6 +799,7 @@ public class AnexoController extends BaseController {
         anexoForm.setRegistroID(registroID);
         anexoForm.setTipoRegistro(tipoRegistro);
         anexoForm.getAnexo().setRegistroDetalle(registroDetalle);
+        anexoForm.getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
         anexoForm.setOficioRemisionSir(isOficioRemisionSir);
         return anexoForm;
     }
