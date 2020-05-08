@@ -67,7 +67,11 @@ public class Anexo implements Serializable {
     @XmlTransient
     private String custodiaID;
     @XmlTransient
-    private String csv; // TODO este campo parece que sobra, verificar que no se emplee en NTI
+    private String csv;
+    @XmlTransient
+    private Long perfilCustodia; // Tipo de API utilizado para gestionar el Anexo [DocumentCustody {1} || ArxiuCaib {2}]
+    @XmlTransient
+    private String expedienteID; // uuid del expediente creado en Arxiu
 
     //SIR
     private Boolean firmaValida; // Indicará si la firma es vàlida o no
@@ -93,9 +97,10 @@ public class Anexo implements Serializable {
 
     public Anexo() {
     }
-    
-    
-    
+
+    public Anexo(Long perfilCustodia) {
+        this.perfilCustodia = perfilCustodia;
+    }
 
     /**
      *
@@ -103,6 +108,7 @@ public class Anexo implements Serializable {
     public Anexo(Anexo a) {
       super();
       this.id = a.id;
+      this.perfilCustodia = a.perfilCustodia;
       this.titulo = a.titulo;
       this.tipoDocumental = a.tipoDocumental == null? null: new TipoDocumental(a.tipoDocumental);
       this.validezDocumento = a.validezDocumento;
@@ -174,6 +180,24 @@ public class Anexo implements Serializable {
       this.custodiaID = custodyID;
     }
 
+
+    @Column(name = "PERFIL_CUSTODIA")
+    public Long getPerfilCustodia() {
+        return perfilCustodia;
+    }
+
+    public void setPerfilCustodia(Long perfilCustodia) {
+        this.perfilCustodia = perfilCustodia;
+    }
+
+    @Column(name = "EXPEDIENTEID", length= 256)
+    public String getExpedienteID() {
+        return expedienteID;
+    }
+
+    public void setExpedienteID(String expedienteID) {
+        this.expedienteID = expedienteID;
+    }
 
     @ManyToOne()
     @JoinColumn(name = "TDOCUMENTAL")

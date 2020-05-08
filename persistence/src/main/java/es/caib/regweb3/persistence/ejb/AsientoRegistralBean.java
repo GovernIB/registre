@@ -60,7 +60,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos);
+        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, true);
 
     }
 
@@ -74,7 +74,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
             if (registroEntrada.getRegistroDetalle().getTieneJustificante()) {
                 String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
-                String url = anexoEjb.getUrlValidation(registroEntrada.getRegistroDetalle().getJustificante().getCustodiaID(), true, entidad.getId());
+                String url = anexoEjb.getUrlValidation(registroEntrada.getRegistroDetalle().getJustificante(), entidad.getId());
 
                 return new JustificanteReferencia(csv, url);
 
@@ -86,7 +86,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
             if (registroSalida.getRegistroDetalle().getTieneJustificante()) {
                 String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
-                String url = anexoEjb.getUrlValidation(registroSalida.getRegistroDetalle().getJustificante().getCustodiaID(), true, entidad.getId());
+                String url = anexoEjb.getUrlValidation(registroSalida.getRegistroDetalle().getJustificante(), entidad.getId());
                 return new JustificanteReferencia(csv, url);
             } else {
                 throw new I18NException("registro.justificante.noTiene");

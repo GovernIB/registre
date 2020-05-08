@@ -66,8 +66,6 @@
             <scope>provided</scope>
         </dependency>
 
-
-
         <dependency>
             <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
             <artifactId>pluginsib-documentcustody-api</artifactId>
@@ -75,6 +73,16 @@
             <scope>provided</scope>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.arxiu</groupId>
+            <artifactId>pluginsib-arxiu-caib</artifactId>
+            <version>${arxiu.api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 </project>

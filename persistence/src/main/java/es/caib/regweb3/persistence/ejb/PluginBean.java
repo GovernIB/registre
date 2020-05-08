@@ -189,9 +189,26 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
 
             plugins = findByEntidadTipo(idEntidad, tipoPlugin);
 
-
             if (plugins.size() > 0) {
                 return cargarPlugin(plugins.get(0));
+            }
+        } catch (Exception e) {
+            throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
+        }
+
+        return null;
+    }
+
+    @Override
+    public Properties getPropertiesPlugin(Long idEntidad, Long tipoPlugin) throws I18NException{
+
+        try {
+            List<Plugin> plugins;
+
+            plugins = findByEntidadTipo(idEntidad, tipoPlugin);
+
+            if (plugins.size() > 0) {
+                return cargarPropiedades(plugins.get(0));
             }
         } catch (Exception e) {
             throw new I18NException(e, "error.desconegut", new I18NArgumentString(e.getMessage()));
@@ -233,6 +250,17 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         return null;
     }
 
+    @Override
+    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+
+        List<?> plugins = em.createQuery("Select id from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
+
+        for (Object id : plugins) {
+            remove(findById((Long) id));
+        }
+
+        return plugins.size();
+    }
 
     /**
      *
@@ -268,16 +296,36 @@ public class PluginBean extends BaseEjbJPA<Plugin, Long> implements PluginLocal 
         return org.fundaciobit.pluginsib.core.utils.PluginsManager.instancePluginByClassName(className, BASE_PACKAGE, prop);
     }
 
+    /**
+     *
+     * @param plugin
+     * @return
+     * @throws Exception
+     */
+    private Properties cargarPropiedades(Plugin plugin) throws Exception {
 
-    @Override
-    public Integer eliminarByEntidad(Long idEntidad) throws Exception {
+        String BASE_PACKAGE = RegwebConstantes.REGWEB3_PROPERTY_BASE;
 
-        List<?> plugins = em.createQuery("Select id from Plugin where entidad = :idEntidad").setParameter("idEntidad", idEntidad).getResultList();
-
-        for (Object id : plugins) {
-            remove(findById((Long) id));
+        // Si no existe el plugin, retornamos null
+        if (plugin == null) {
+            log.info("No existe ningun plugin de este tipo definido en el sistema", new Exception());
+            return null;
         }
 
-        return plugins.size();
+        // Obtenemos la clase del Plugin
+        String className = plugin.getClase().trim();
+
+        // Obtenemos sus propiedades
+        Properties prop = new Properties();
+
+        if (plugin.getPropiedadesEntidad() != null && plugin.getPropiedadesEntidad().trim().length() != 0) {
+            prop.load(new StringReader(plugin.getPropiedadesEntidad()));
+        }
+
+        if (plugin.getPropiedadesAdmin() != null && plugin.getPropiedadesAdmin().trim().length() != 0) {
+            prop.load(new StringReader(plugin.getPropiedadesAdmin()));
+        }
+
+        return prop;
     }
 }

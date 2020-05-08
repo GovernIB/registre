@@ -50,7 +50,7 @@ public class AnexoUtils {
 
                 case RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED:
                     if(anexoFull.getSignatureCustody()!=null) {
-                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
+                        extension = obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
                         if (!extensionesPermitidas.contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
@@ -62,7 +62,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED:
 
                     if(anexoFull.getSignatureCustody()!=null) {
-                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
+                        extension = obtenerExtensionAnexo(anexoFull.getSignatureCustody().getName());
                         if (!extensionesPermitidas.contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
@@ -70,7 +70,7 @@ public class AnexoUtils {
                         mensajesError.add(I18NUtils.tradueix("anexo.error.nofirma"));
                     }
                     if(anexoFull.getDocumentoCustody()!=null) {
-                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
+                        extension = obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
                         if (!extensionesPermitidas.contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }
@@ -82,7 +82,7 @@ public class AnexoUtils {
                 case RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA:
 
                     if(anexoFull.getDocumentoCustody()!=null) {
-                        extension = AnexoUtils.obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
+                        extension = obtenerExtensionAnexo(anexoFull.getDocumentoCustody().getName());
                         if (!extensionesPermitidas.contains(extension)) {
                             mensajesError.add(I18NUtils.tradueix("anexo.formato.nopermitido", extension, anexoFull.getAnexo().getTitulo()));
                         }

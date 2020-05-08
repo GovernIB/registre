@@ -1583,7 +1583,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         // Registramos el Registro Entrada
         synchronized (this){
-            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull);
+            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true);
         }
 
         // Creamos la TrazabilidadSir
@@ -1930,7 +1930,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
 
             AnexoFull anexoFull = new AnexoFull();
-            Anexo anexo = new Anexo();
+            Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
             anexo.setTitulo(anexoSir.getNombreFichero());
 

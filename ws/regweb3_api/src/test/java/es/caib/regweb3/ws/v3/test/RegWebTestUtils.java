@@ -237,7 +237,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
         asiento.setLibroCodigo(getTestDestinoLibro());
         asiento.setPresencial(false);
-        asiento.setResumen("Regsitro de test de Marilen");
+        asiento.setResumen("Regsitro de test WS");
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);

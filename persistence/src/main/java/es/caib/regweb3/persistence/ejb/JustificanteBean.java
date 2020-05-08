@@ -1,10 +1,12 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.plugins.arxiu.api.Firma;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
+import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -155,6 +157,7 @@ public class JustificanteBean implements JustificanteLocal {
             // Crea el anexo del justificante firmado
             AnexoFull anexoFull = new AnexoFull();
             Anexo anexo = anexoFull.getAnexo();
+            anexo.setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
             anexo.setTitulo(tituloAnexo);
             anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
             anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", idEntidad));
@@ -190,7 +193,7 @@ public class JustificanteBean implements JustificanteLocal {
             }
 
             // Firma el justificant
-            SignatureCustody sign = signatureServerEjb.signJustificante(pdfJustificant, idioma, idEntidad, peticion, registro.getNumeroRegistroFormateado());
+            SignatureCustody sign = signatureServerEjb.signJustificante(pdfJustificant, idioma, idEntidad, peticion, registro.getNumeroRegistroFormateado(), nombreFichero);
             sign.setName(nombreFichero);
 
 
@@ -258,13 +261,14 @@ public class JustificanteBean implements JustificanteLocal {
      */
     private AnexoFull crearJustificanteArxiu(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
 
-        String custodyID = null;
+        JustificanteArxiu justificanteArxiu;
+        AnexoFull anexoFull = new AnexoFull();
         boolean error = false;
         long tiempo = System.currentTimeMillis();
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         String descripcion = "Generar Justificante Api Arxiu";
-        String numRegFormat = "";
+        String numRegFormat = registro.getNumeroRegistroFormateado();
         Locale locale = new Locale(idioma);
 
         final Entidad entidad = usuarioEntidad.getEntidad();
@@ -283,7 +287,7 @@ public class JustificanteBean implements JustificanteLocal {
 
 
             // Cargamos el plugin de Arxiu
-            IArxiuPlugin iArxiuPlugin = (IArxiuPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE);
+            IArxiuPlugin iArxiuPlugin = arxiuCaibUtils.cargarPlugin(entidad.getId());
 
             // Comprova que existeix el plugin de Arxiu del Justificante
             if (iArxiuPlugin == null) {
@@ -292,8 +296,6 @@ public class JustificanteBean implements JustificanteLocal {
 
             peticion.append("clase: ").append(iArxiuPlugin.getClass().getName()).append(System.getProperty("line.separator"));
 
-            // Asociamos el plugin de Arxiu obtenido
-            arxiuCaibUtils.setArxiuPlugin(iArxiuPlugin);
 
             // Carregam el plugin del Justificant
             IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
@@ -310,59 +312,37 @@ public class JustificanteBean implements JustificanteLocal {
             String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
             String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
-            // Crea el anexo del justificante firmado
-            AnexoFull anexoFull = new AnexoFull();
-            Anexo anexo = anexoFull.getAnexo();
-            anexo.setTitulo(tituloAnexo);
-            anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
-            anexo.setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
-            anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-            anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
-            anexo.setObservaciones(observacionesAnexo);
-            anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
-            anexo.setJustificante(true);
-            anexo.setRegistroDetalle(registro.getRegistroDetalle());
-            anexo.setFechaCaptura(new Date());
-            anexo.setFirmaValida(false);
-
             // Generamos el pdf del Justificante mediante el Plugin
+            long tiempoGenerarPdf = System.currentTimeMillis();
             byte[] pdfJustificant;
             if (registro instanceof RegistroEntrada) {
                 pdfJustificant = justificantePlugin.generarJustificanteEntrada((RegistroEntrada) registro, "", "", "", idioma);
             } else {
                 pdfJustificant = justificantePlugin.generarJustificanteSalida((RegistroSalida) registro, "", "", "", idioma);
             }
+            log.info("Generar pdf justificante: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempoGenerarPdf));
 
             // Firma el justificant
-            SignatureCustody sign = signatureServerEjb.signJustificante(pdfJustificant, idioma, entidad.getId(), peticion, registro.getNumeroRegistroFormateado());
-            sign.setName(nombreFichero);
+            Firma firma = signatureServerEjb.signJustificanteArxiu(pdfJustificant, idioma, entidad.getId(), peticion, registro.getNumeroRegistroFormateado(), nombreFichero);
+
+            // Crea el anexo del justificante firmado
+            Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_ARXIU, tituloAnexo, observacionesAnexo, registro.getRegistroDetalle(), tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
 
             // Hash
-            anexo.setHash(RegwebUtils.obtenerHash(sign.getData()));
-
-            // Asociamos los datos de la firma
-            anexoFull.setSignatureCustody(sign);
-            anexoFull.setSignatureFileDelete(false);
-            anexoFull.getAnexo().setSignType("PAdES");
-            anexoFull.getAnexo().setSignFormat("implicit_enveloped/attached");
-            anexoFull.getAnexo().setSignProfile("AdES-EPES");
-            anexoFull.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_VALIDA);
-            anexoFull.getAnexo().setFechaValidacion(new Date());
+            anexo.setHash(RegwebUtils.obtenerHash(firma.getContingut()));
 
             // Guardamos el Justificante en Arxiu
-            long tiempoArxiu = System.currentTimeMillis();
-            custodyID = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, anexoFull);
-            log.info("Fin generando expediente y documento en Arxiu en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempoArxiu));
+            justificanteArxiu = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, firma);
 
             // Asociamos el CustodyId al anexo que vamos a crear
-            anexo.setCustodiaID(custodyID);
+            anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
+            anexo.setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
 
             // Obtenemos el csv del documwento creado
-            String csv = arxiuCaibUtils.getCsv(custodyID);
-
+            String csv = arxiuCaibUtils.getCsv(anexo.getCustodiaID());
             anexo.setCsv(csv);
 
-            peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
+            peticion.append("custodyID: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
             peticion.append("csv: ").append(csv).append(System.getProperty("line.separator"));
 
             // Guardamos el Anexo
@@ -423,5 +403,37 @@ public class JustificanteBean implements JustificanteLocal {
         custodyParameters.put("ciudadano_idadministrativo", documentAdministratiu);
 
         return custodyParameters;
+    }
+
+    /**
+     *
+     * @param tituloAnexo
+     * @param observaciones
+     * @param registroDetalle
+     * @param tipoDoc
+     * @return
+     */
+    private Anexo crearAnexoJustificante(Long perfilCustodia, String tituloAnexo, String observaciones, RegistroDetalle registroDetalle, TipoDocumental tipoDoc){
+
+        Anexo anexo = new Anexo(perfilCustodia);
+
+        anexo.setTitulo(tituloAnexo);
+        anexo.setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_ORIGINAL);
+        anexo.setTipoDocumental(tipoDoc);
+        anexo.setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+        anexo.setOrigenCiudadanoAdmin(RegwebConstantes.ANEXO_ORIGEN_ADMINISTRACION);
+        anexo.setObservaciones(observaciones);
+        anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
+        anexo.setJustificante(true);
+        anexo.setRegistroDetalle(registroDetalle);
+        anexo.setFechaCaptura(new Date());
+        anexo.setFirmaValida(false);
+        anexo.setSignType("PAdES");
+        anexo.setSignFormat("implicit_enveloped/attached");
+        anexo.setSignProfile("AdES-EPES");
+        anexo.setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_VALIDA);
+        anexo.setFechaValidacion(new Date());
+
+        return anexo;
     }
 }

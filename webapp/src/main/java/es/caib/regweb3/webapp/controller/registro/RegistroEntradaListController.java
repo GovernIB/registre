@@ -63,9 +63,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionEntradaUtilsEJB/local")
-    private OficioRemisionEntradaUtilsLocal oficioRemisionEntradaUtilsEjb;
-
     @EJB(mappedName = "regweb3/SirEnvioEJB/local")
     private SirEnvioLocal sirEnvioEjb;
 
@@ -293,10 +290,12 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
             // Justificante
             if (tieneJustificante) {
+                Anexo justificante = registro.getRegistroDetalle().getJustificante();
 
-                model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
-                String urlValidacion = anexoEjb.getUrlValidation(registro.getRegistroDetalle().getJustificante().getCustodiaID(), true, entidadActiva.getId());
+                model.addAttribute("idJustificante", justificante.getId());
+                String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
                 model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+
             }
 
             // Historicos

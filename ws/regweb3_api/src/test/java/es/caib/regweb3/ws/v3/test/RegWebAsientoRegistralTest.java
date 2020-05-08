@@ -54,7 +54,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
     @Test
     public void crearAsientoConSesion() throws Exception {
-        //for (int i = 0; i < 10; i++) {
+
+        for (int i = 0; i < 1; i++) {
 
             try {
 
@@ -63,7 +64,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 System.out.println("IdSesion: " + idSesion);
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(idSesion, getTestEntidadCodigoDir3(), asientoRegistralWs, null, false, false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(idSesion, getTestEntidadCodigoDir3(), asientoRegistralWs, null, true, false);
 
                 printAsiento(asientoRegistralWs);
 
@@ -83,7 +84,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 System.out.println("Error WsValidationException: " + msg);
                 throw e;
             }
-        //}
+        }
     }
 
     @Test

@@ -55,9 +55,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
     private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
 
-    @EJB(mappedName = "regweb3/OficioRemisionSalidaUtilsEJB/local")
-    private OficioRemisionSalidaUtilsLocal oficioRemisionSalidaUtilsEjb;
-
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
@@ -227,7 +224,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
         }
 
-
         // Anexos completo
         Boolean anexosCompleto = (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registro.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) && puedeEditar && !tieneJustificante;
         if (anexosCompleto) { // Si se muestran los anexos
@@ -254,10 +250,12 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         // Justificante
         if (tieneJustificante) {
+            Anexo justificante = registro.getRegistroDetalle().getJustificante();
 
-            model.addAttribute("idJustificante", anexoEjb.getIdJustificante(registro.getRegistroDetalle().getId()));
-            String urlValidacion = anexoEjb.getUrlValidation(registro.getRegistroDetalle().getJustificante().getCustodiaID(), true, entidadActiva.getId());
+            model.addAttribute("idJustificante", justificante.getId());
+            String urlValidacion = anexoEjb.getUrlValidation(justificante,entidadActiva.getId());
             model.addAttribute("tieneUrlValidacion", StringUtils.isNotEmpty(urlValidacion));
+
         }
 
         // Historicos

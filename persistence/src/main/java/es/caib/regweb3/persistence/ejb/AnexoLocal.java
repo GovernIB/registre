@@ -152,10 +152,11 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     /**
      * Obtiene el contenido físico del documento como byte[]
      *
-     * @param custodiaID
+     * @param anexo
+     * @param idEntidad
      * @return
      */
-    byte[] getArchivoContent(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
+    byte[] getArchivoContent(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
 
     /**
@@ -170,10 +171,10 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     /**
      * Obtiene la info + contenido físico(byte[]) del fichero existente en el sistema de archivos
      *
-     * @param custodiaID
+     * @param anexo
      * @return
      */
-    DocumentCustody getArchivo(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
+    DocumentCustody getArchivo(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
 
     /**
@@ -198,23 +199,22 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     SignatureCustody getSignatureInfoOnly(String custodiaID, Long idEntidad) throws Exception, I18NException;
 
     /**
-     * @param custodiaID
-     * @param isJustificante
+     * @param anexo
      * @param idEntidad
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    SignatureCustody getSignatureInfoOnly(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
+    SignatureCustody getSignatureInfoOnly(Anexo anexo, Long idEntidad) throws Exception, I18NException;
 
     /**
      * Obtiene la firma existente en el sistema de archivos
      *
-     * @param custodiaID
-     * @param isJustificante
+     * @param anexo
+     * @param idEntidad
      * @return
      */
-    SignatureCustody getFirma(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
+    SignatureCustody getFirma(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
     /**
      * Elimina completamente una custodia ( = elimicion completa de Anexo)
@@ -229,19 +229,18 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     /**
      * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
      *
-     * @param custodiaID
-     * @param isJustificante
+     * @param anexo
      * @return
      */
-    String getUrlValidation(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
+    String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
     /**
      * Obtiene el SignatureCustody de un Anexo
      *
-     * @param custodiaID
-     * @param isJustificante
+     * @param anexo
+     * @param idEntidad
      * @return SignatureCustody
      */
-    SignatureCustody descargarFirmaDesdeUrlValidacion(String custodiaID, boolean isJustificante, Long idEntidad) throws I18NException, Exception;
+    SignatureCustody descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
 }

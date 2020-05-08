@@ -378,9 +378,16 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
      */
     public RegistreAnnex transformarARegistreAnnexJustificante(Anexo anexo) throws Exception{
         RegistreAnnex registreAnnex = new RegistreAnnex();
-        //PARCHE uuid Anexo, veure si finalment passam numExpediente#numDoc o no
-        String id = anexo.getCustodiaID();
-        registreAnnex.setFitxerArxiuUuid(id.substring(id.lastIndexOf('#')+1));
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+            //PARCHE uuid Anexo, veure si finalment passam numExpediente#numDoc o no
+            String id = anexo.getCustodiaID();
+            registreAnnex.setFitxerArxiuUuid(id.substring(id.lastIndexOf('#')+1));
+
+        } else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+            registreAnnex.setFitxerArxiuUuid(anexo.getCustodiaID());
+        }
+
         return registreAnnex;
     }
 

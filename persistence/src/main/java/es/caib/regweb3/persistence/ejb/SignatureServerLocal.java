@@ -1,5 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
+import es.caib.plugins.arxiu.api.Firma;
 import es.caib.regweb3.model.utils.AnexoFull;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
@@ -23,15 +24,27 @@ public interface SignatureServerLocal {
     String CONFIG_USERNAME = null;
   
 
-    /**Método que genera la Firma de un File para una Entidad en concreto
+    /**
+     * Método que genera el {@link org.fundaciobit.plugins.documentcustody.api.SignatureCustody} de un Justificante
      * @param pdfsource
      * @param languageUI
      * @param idEntidadActiva
+     * @param fileName
      * @return
      * @throws Exception
      */
-    SignatureCustody signJustificante(byte[] pdfsource, String languageUI,
-                                      Long idEntidadActiva, StringBuilder peticion, String numeroRegistro) throws Exception, I18NException;
+    SignatureCustody signJustificante(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
+
+    /**
+     * Método que genera una  {@link es.caib.plugins.arxiu.api.Firma} de un Justificante
+     * @param pdfsource
+     * @param languageUI
+     * @param idEntidadActiva
+     * @param fileName
+     * @return
+     * @throws Exception
+     */
+    Firma signJustificanteArxiu(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
     
     
     /**

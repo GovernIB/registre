@@ -6,6 +6,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by Fundació BIT.
@@ -71,6 +72,16 @@ public interface PluginLocal extends BaseEjb<Plugin, Long> {
      * @throws Exception
      */
     Object getPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
+
+    /**
+     * Obtiene las Propiedades del plugin determinado
+     * @param idEntidad
+     * @param tipoPlugin
+     * @return
+     * @throws Exception
+     */
+    Properties getPropertiesPlugin(Long idEntidad, Long tipoPlugin) throws I18NException;
+
 
     /**
      * Comprueba si el plugin está definido
