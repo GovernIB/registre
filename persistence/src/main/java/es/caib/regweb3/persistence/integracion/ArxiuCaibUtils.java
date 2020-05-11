@@ -91,16 +91,26 @@ public class ArxiuCaibUtils {
             log.info("Error creando el justificante en Arxiu");
             e.printStackTrace();
 
-            //Eliminamos el documento
-            if(documento != null){
-                log.info("Eliminamos el documento: " + documento.getIdentificador());
-                getArxiuPlugin().documentEsborrar(documento.getIdentificador());
+            try{
+                //Eliminamos el documento
+                if(documento != null){
+                    log.info("Eliminamos el documento: " + documento.getIdentificador());
+                    getArxiuPlugin().documentEsborrar(documento.getIdentificador());
+                }
+            }catch (ArxiuException doc){
+                log.info("Error eliminando el documento: ");
+                e.printStackTrace();
             }
 
-            //Eliminamos el expediente creado
-            if(expediente != null){
-                log.info("Eliminamos el expediente: " + expediente.getIdentificador());
-                getArxiuPlugin().expedientEsborrar(expediente.getIdentificador());
+            try{
+                //Eliminamos el expediente creado
+                if(expediente != null){
+                    log.info("Eliminamos el expediente: " + expediente.getIdentificador());
+                    getArxiuPlugin().expedientEsborrar(expediente.getIdentificador());
+                }
+            }catch (ArxiuException exp){
+                log.info("Error eliminando el expediente: ");
+                e.printStackTrace();
             }
 
             throw e;
