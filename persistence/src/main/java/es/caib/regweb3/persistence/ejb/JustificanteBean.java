@@ -373,7 +373,7 @@ public class JustificanteBean implements JustificanteLocal {
         }finally {
             if(error){
 
-                if (iArxiuPlugin != null){
+                if (iArxiuPlugin != null && justificanteArxiu != null){
                     arxiuCaibUtils.eliminarJustificante(justificanteArxiu);
                 }
             }
