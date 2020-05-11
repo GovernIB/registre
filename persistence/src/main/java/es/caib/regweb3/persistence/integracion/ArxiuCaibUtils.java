@@ -70,28 +70,36 @@ public class ArxiuCaibUtils {
      */
     public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
-        ContingutArxiu expediente;
-        ContingutArxiu documento;
+        ContingutArxiu expediente = null;
+        ContingutArxiu documento = null;
 
         String serieDocumental = getPropertySerieDocumental();
         String codigoProcedimiento = getPropertyCodigoProcedimiento();
 
-        // Creamos el Expediente del Justificante
-        expediente = expedientCrear(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-        log.info("Expediente creado: " + expediente.getIdentificador());
-
-        // Creamos el Documento del Justificante
         try{
 
+            // Creamos el Expediente del Justificante
+            expediente = expedientCrear(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
+            log.info("Expediente creado: " + expediente.getIdentificador());
+
+            // Creamos el Documento del Justificante
             Document doc = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma);
             documento = getArxiuPlugin().documentCrear(doc, expediente.getIdentificador());
             log.info("Documento creado: " + documento.getIdentificador());
 
         }catch (ArxiuException e){
-            log.info("Error creando el documento en Arxiu, eliminamos el expediente: " + expediente.getIdentificador());
+            log.info("Error creando el justificante en Arxiu");
+            e.printStackTrace();
+
+            //Eliminamos el documento
+            if(documento != null){
+                log.info("Eliminamos el documento: " + documento.getIdentificador());
+                getArxiuPlugin().documentEsborrar(documento.getIdentificador());
+            }
 
             //Eliminamos el expediente creado
             if(expediente != null){
+                log.info("Eliminamos el expediente: " + expediente.getIdentificador());
                 getArxiuPlugin().expedientEsborrar(expediente.getIdentificador());
             }
 
