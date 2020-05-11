@@ -261,7 +261,8 @@ public class JustificanteBean implements JustificanteLocal {
      */
     private AnexoFull crearJustificanteArxiu(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
 
-        JustificanteArxiu justificanteArxiu;
+        JustificanteArxiu justificanteArxiu = null;
+        IArxiuPlugin iArxiuPlugin = null;
         AnexoFull anexoFull = new AnexoFull();
         boolean error = false;
         long tiempo = System.currentTimeMillis();
@@ -287,7 +288,7 @@ public class JustificanteBean implements JustificanteLocal {
 
 
             // Cargamos el plugin de Arxiu
-            IArxiuPlugin iArxiuPlugin = arxiuCaibUtils.cargarPlugin(entidad.getId());
+            iArxiuPlugin = arxiuCaibUtils.cargarPlugin(entidad.getId());
 
             // Comprova que existeix el plugin de Arxiu del Justificante
             if (iArxiuPlugin == null) {
@@ -297,7 +298,7 @@ public class JustificanteBean implements JustificanteLocal {
             peticion.append("clase: ").append(iArxiuPlugin.getClass().getName()).append(System.getProperty("line.separator"));
 
 
-            // Carregam el plugin del Justificant
+            // Carregam el plugin del Justificant per generar el pdf
             IJustificantePlugin justificantePlugin = (IJustificantePlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE);
 
             // Comprova que existeix el plugin de justificant
@@ -305,12 +306,6 @@ public class JustificanteBean implements JustificanteLocal {
                 // No s´ha definit cap plugin de Justificant. Consulti amb el seu Administrador.
                 throw new I18NException("error.plugin.nodefinit", new I18NArgumentCode("plugin.tipo.1"));
             }
-
-            // Mensajes traducidos
-            String fileName = I18NLogicUtils.tradueix(locale, "justificante.fichero") + "_" + registro.getNumeroRegistroFormateado() + ".pdf";
-            String nombreFichero = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
-            String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
-            String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
             // Generamos el pdf del Justificante mediante el Plugin
             long tiempoGenerarPdf = System.currentTimeMillis();
@@ -321,6 +316,12 @@ public class JustificanteBean implements JustificanteLocal {
                 pdfJustificant = justificantePlugin.generarJustificanteSalida((RegistroSalida) registro, "", "", "", idioma);
             }
             log.info("Generar pdf justificante: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempoGenerarPdf));
+
+            // Mensajes traducidos
+            String fileName = I18NLogicUtils.tradueix(locale, "justificante.fichero") + "_" + registro.getNumeroRegistroFormateado() + ".pdf";
+            String nombreFichero = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
+            String tituloAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.titulo");
+            String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
             // Firma el justificant
             Firma firma = signatureServerEjb.signJustificanteArxiu(pdfJustificant, idioma, entidad.getId(), peticion, registro.getNumeroRegistroFormateado(), nombreFichero);
@@ -338,7 +339,7 @@ public class JustificanteBean implements JustificanteLocal {
             anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
             anexo.setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
 
-            // Obtenemos el csv del documwento creado
+            // Obtenemos el csv del documento creado
             String csv = arxiuCaibUtils.getCsv(anexo.getCustodiaID());
             anexo.setCsv(csv);
 
@@ -361,6 +362,7 @@ public class JustificanteBean implements JustificanteLocal {
 
         }catch (Exception e){
             error = true;
+
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);
             } catch (Exception ex) {
@@ -368,6 +370,13 @@ public class JustificanteBean implements JustificanteLocal {
             }
             log.error(e.getMessage(), e);
             throw new I18NException(e, "justificante.error", new I18NArgumentString(e.getMessage()));
+        }finally {
+            if(error){
+
+                if (iArxiuPlugin != null){
+                    arxiuCaibUtils.eliminarJustificante(justificanteArxiu);
+                }
+            }
         }
 
 
