@@ -91,26 +91,8 @@ public class ArxiuCaibUtils {
             log.info("Error creando el justificante en Arxiu");
             e.printStackTrace();
 
-            try{
-                //Eliminamos el documento
-                if(documento != null){
-                    log.info("Eliminamos el documento: " + documento.getIdentificador());
-                    getArxiuPlugin().documentEsborrar(documento.getIdentificador());
-                }
-            }catch (ArxiuException doc){
-                log.info("Error eliminando el documento: ");
-                e.printStackTrace();
-            }
-
-            try{
-                //Eliminamos el expediente creado
-                if(expediente != null){
-                    log.info("Eliminamos el expediente: " + expediente.getIdentificador());
-                    getArxiuPlugin().expedientEsborrar(expediente.getIdentificador());
-                }
-            }catch (ArxiuException exp){
-                log.info("Error eliminando el expediente: ");
-                e.printStackTrace();
+            if(expediente != null){
+                eliminarExpediente(expediente.getIdentificador());
             }
 
             throw e;
@@ -271,6 +253,31 @@ public class ArxiuCaibUtils {
         }
 
         return documento;
+    }
+
+    /**
+     * Elimina el Expediente y sus documentos
+     * @param idExpediente
+     */
+    public void eliminarExpediente(String idExpediente){
+
+        Expedient expedient = null;
+        try {
+            expedient = getArxiuPlugin().expedientDetalls(idExpediente, null);
+
+            for(ContingutArxiu contingut:expedient.getContinguts()){
+
+                if(contingut.getTipus().equals(ContingutTipus.DOCUMENT)){
+                    getArxiuPlugin().documentEsborrar(contingut.getIdentificador());
+                }
+            }
+
+            getArxiuPlugin().expedientEsborrar(idExpediente);
+        } catch (Exception e) {
+            log.info("Errro eliminando el expediente " + idExpediente);
+            e.printStackTrace();
+        }
+
     }
 
     /**
