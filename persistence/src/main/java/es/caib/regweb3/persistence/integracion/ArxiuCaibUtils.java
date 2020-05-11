@@ -268,13 +268,14 @@ public class ArxiuCaibUtils {
             for(ContingutArxiu contingut:expedient.getContinguts()){
 
                 if(contingut.getTipus().equals(ContingutTipus.DOCUMENT)){
+                    log.info("Eliminando el documento: " + contingut.getIdentificador());
                     getArxiuPlugin().documentEsborrar(contingut.getIdentificador());
                 }
             }
 
             getArxiuPlugin().expedientEsborrar(idExpediente);
         } catch (Exception e) {
-            log.info("Errro eliminando el expediente " + idExpediente);
+            log.info("Error eliminando el expediente " + idExpediente);
             e.printStackTrace();
         }
 
