@@ -40,6 +40,7 @@ public class ArxiuCaibUtils {
     private static final String PROPERTY_CONCSV_URL = basePluginArxiuCaib + "concsv.url";
     private static final String PROPERTY_CONCSV_USERNAME = basePluginArxiuCaib + "concsv.username";
     private static final String PROPERTY_CONCSV_PASSWORD = basePluginArxiuCaib + "concsv.password";
+    private static final String PROPERTY_CERRAR_EXPEDIENTE = basePluginArxiuCaib + "cerrarExpediente";
 
     private IArxiuPlugin arxiuPlugin;
     private Properties properties;
@@ -86,6 +87,12 @@ public class ArxiuCaibUtils {
             Document doc = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma);
             documento = getArxiuPlugin().documentCrear(doc, expediente.getIdentificador());
             log.info("Documento creado: " + documento.getIdentificador());
+
+            //Cerramos el expediente
+            if(getPropertyCerrarExpediente()){
+                getArxiuPlugin().expedientTancar(expediente.getIdentificador());
+            }
+
 
         }catch (ArxiuException e){
             log.info("Error creando el justificante en Arxiu");
@@ -268,6 +275,10 @@ public class ArxiuCaibUtils {
             for(ContingutArxiu contingut:expedient.getContinguts()){
 
                 if(contingut.getTipus().equals(ContingutTipus.DOCUMENT)){
+                    // Modificamos su estado a borrador para poder eliminarlo
+                    Document documento = getArxiuPlugin().documentDetalls(contingut.getIdentificador(), null,false);
+                    documento.setEstat(DocumentEstat.ESBORRANY);
+                    getArxiuPlugin().documentModificar(documento);
                     log.info("Eliminando el documento: " + contingut.getIdentificador());
                     getArxiuPlugin().documentEsborrar(contingut.getIdentificador());
                 }
@@ -386,7 +397,7 @@ public class ArxiuCaibUtils {
         metadades.setTipusDocumental(DocumentTipus.ALTRES); // TODO Revisar si sería más conveniente poner DocumentTipus.JUSTIFICANT_RECEPCIO
 
         metadades.setExtensio(DocumentExtensio.PDF);
-        metadades.setFormat(getDocumentFormat(DocumentExtensio.PDF));
+        metadades.setFormat(DocumentFormat.PDF);
 
         // Contenido y Firma
         document.setContingut(null);
@@ -784,19 +795,19 @@ public class ArxiuCaibUtils {
     }
 
     private String getPropertyAplicacio() throws Exception {
-        return getProperty(PROPERTY_APLICACION);
+        return getPropertyRequired(PROPERTY_APLICACION);
     }
 
     private String getPropertySerieDocumental() throws Exception {
-        return getProperty(PROPERTY_SERIE_DOCUMENTAL);
+        return getPropertyRequired(PROPERTY_SERIE_DOCUMENTAL);
     }
 
     private String getPropertyCodigoProcedimiento() throws Exception {
-        return getProperty(PROPERTY_CODIGO_PROCEDIMIENTO);
+        return getPropertyRequired(PROPERTY_CODIGO_PROCEDIMIENTO);
     }
 
     private String getPropertyNombreProcedimiento() throws Exception {
-        return getProperty(PROPERTY_NOMBRE_PROCEDIMIENTO);
+        return getPropertyRequired(PROPERTY_NOMBRE_PROCEDIMIENTO);
     }
 
     private String getPropertyConCsvUrl(String custodyId) throws Exception {
@@ -810,14 +821,25 @@ public class ArxiuCaibUtils {
     }
 
     private String getPropertyConCsvUsername() throws Exception {
-        return getProperty(PROPERTY_CONCSV_USERNAME);
+        return getPropertyRequired(PROPERTY_CONCSV_USERNAME);
     }
 
     private String getPropertyConCsvPassword() throws Exception {
-        return getProperty(PROPERTY_CONCSV_PASSWORD);
+        return getPropertyRequired(PROPERTY_CONCSV_PASSWORD);
+    }
+
+    private Boolean getPropertyCerrarExpediente() throws Exception {
+        String propiedad = getProperty(PROPERTY_CERRAR_EXPEDIENTE);
+
+        return "true".equals(propiedad);
     }
 
     public final String getProperty(String name) throws Exception{
+
+        return properties.getProperty(name);
+    }
+
+    public final String getPropertyRequired(String name) throws Exception{
 
         String value = properties.getProperty(name);
 
