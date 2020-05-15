@@ -75,13 +75,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             // Obtenemos el Número de registro
             Libro libro = libroEjb.findById(registroEntrada.getLibro().getId());
-            Oficina oficina = oficinaEjb.findById(registroEntrada.getOficina().getId());
             NumeroRegistro numeroRegistro = contadorEjb.incrementarContador(libro.getContadorEntrada().getId());
             registroEntrada.setNumeroRegistro(numeroRegistro.getNumero());
             registroEntrada.setFecha(numeroRegistro.getFecha());
 
             // Generamos el Número de registro formateado
-            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, oficina));
+            registroEntrada.setNumeroRegistroFormateado(RegistroUtils.numeroRegistroFormateado(registroEntrada, libro, usuarioEntidad.getEntidad()));
 
             // Si no ha introducido ninguna fecha de Origen
             if (registroEntrada.getRegistroDetalle().getFechaOrigen() == null) {
