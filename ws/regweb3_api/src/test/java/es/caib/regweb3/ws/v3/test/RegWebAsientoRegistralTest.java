@@ -66,7 +66,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(idSesion, getTestEntidadCodigoDir3(), asientoRegistralWs, null, true, false);
 
-                printAsiento(asientoRegistralWs);
+                printAsientoBasico(asientoRegistralWs);
 
                 // Verificar el estado de la operación
                 AsientoRegistralSesionWs sesionWs = asientoRegistralApi.verificarAsientoRegistral(getTestEntidadCodigoDir3(), idSesion);
@@ -97,7 +97,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
 
-                printAsiento(asientoRegistralWs);
+                printAsientoBasico(asientoRegistralWs);
 
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
@@ -121,7 +121,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionSir(REGISTRO_SALIDA);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
 
-                printAsiento(asientoRegistralWs);
+                printAsientoBasico(asientoRegistralWs);
 
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
@@ -143,10 +143,10 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             try {
 
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionSir(REGISTRO_SALIDA);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, false);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_NOTIFICACION,true,false);
 
-                printAsiento(asientoRegistralWs);
+                printAsientoBasico(asientoRegistralWs);
 
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
@@ -171,7 +171,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
 
-                printAsiento(asientoRegistralWs);
+                printAsientoBasico(asientoRegistralWs);
 
             } catch (WsI18NException e) {
                 String msg = WsClientUtils.toString(e);
@@ -328,6 +328,20 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         } catch (WsValidationException | WsI18NException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Muestra por pantala el contenido de un AsientoRegistralWs
+     * @param asientoRegistralWs
+     */
+    private void printAsientoBasico(AsientoRegistralWs asientoRegistralWs){
+        System.out.println("-------------------------------------------------------------");
+
+        System.out.println("Num. Registro: " + asientoRegistralWs.getNumeroRegistro());
+        System.out.println("Num. Registro formateado: " + asientoRegistralWs.getNumeroRegistroFormateado());
+        System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
+
+        System.out.println("");
     }
 
     /**
