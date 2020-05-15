@@ -475,6 +475,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--Plugins Fundacio Bit-->
+        <dependency>
+            <groupId>org.fundaciobit.plugins</groupId>
+            <artifactId>plugins-api</artifactId>
+            <version>1.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

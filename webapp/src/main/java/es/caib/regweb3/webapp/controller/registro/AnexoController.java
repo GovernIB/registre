@@ -4,6 +4,7 @@ import es.caib.plugins.arxiu.api.Document;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -346,7 +347,7 @@ public class AnexoController extends BaseController {
             if(justificante != null){
                 obtenerContentType(justificante.getContingut().getTipusMime(), response, justificante.getNom(),null,justificante.getContingut().getContingut());
             }else {
-                log.info("No se obtenido el  justificante");
+                log.info("No se ha obtenido el  justificante");
             }
 
         }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
@@ -403,9 +404,9 @@ public class AnexoController extends BaseController {
                         filename = dc.getName();
                         data = dc.getData();
                     } else {
-                        SignatureCustody sc = anexoEjb.descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
-                        data = sc.getData();
-                        filename = sc.getName();
+                        AnexoSimple anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(anexo, idEntidad);
+                        data = anexoSimple.getData();
+                        filename = anexoSimple.getFilename();
                     }
                 }
 

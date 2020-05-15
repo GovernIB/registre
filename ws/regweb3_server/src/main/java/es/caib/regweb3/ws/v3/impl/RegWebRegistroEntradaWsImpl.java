@@ -4,6 +4,7 @@ import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.DistribucionLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
@@ -27,7 +28,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
@@ -267,7 +267,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
         // 5.- Generamos o descargamos el Justificante
         AnexoFull justificante = null;
-        SignatureCustody sc = null;
+        AnexoSimple anexoSimple = null;
 
         // Si no tiene Justificante, lo generamos
         if(!registroEntrada.getRegistroDetalle().getTieneJustificante()){
@@ -288,7 +288,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
-                sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
             }else{
                 throw new I18NException("registro.justificante.valido");
             }
@@ -304,7 +304,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             // Obtenemos el Justificante
             try{
                 justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
-                sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
             }catch (Exception e){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                 throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -318,7 +318,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         // Alta en la tabla de LOPD
         lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
 
-        return new JustificanteWs(sc.getData());
+        return new JustificanteWs(anexoSimple.getData());
     }
 
     @RolesAllowed({RWE_USUARI})

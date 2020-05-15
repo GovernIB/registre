@@ -4,6 +4,7 @@ import es.caib.dir3caib.ws.api.unidad.Dir3CaibObtenerUnidadesWs;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -25,7 +26,6 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
-import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.wsf.spi.annotation.TransportGuarantee;
 import org.jboss.wsf.spi.annotation.WebContext;
@@ -288,6 +288,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     }
 
                     registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
+                    numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
                     asientoRegistral.setNumeroRegistro(registroEntrada.getNumeroRegistro());
                     asientoRegistral.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
@@ -359,6 +360,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                     // Registrar la salida
                     registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull);
+                    numRegFormat = registroSalida.getNumeroRegistroFormateado();
 
                     asientoRegistral.setNumeroRegistro(registroSalida.getNumeroRegistro());
                     asientoRegistral.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
@@ -493,7 +495,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         AnexoFull justificante = null;
-        SignatureCustody sc = null;
+        AnexoSimple anexoSimple = null;
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 4.- Obtenemos el RegistroEntrada
             RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
@@ -521,7 +523,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
-                    sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
                 }else{
                     throw new I18NException("registro.justificante.valido");
                 }
@@ -537,7 +539,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 // Obtenemos el Justificante
                 try{
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
-                    sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -577,7 +579,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
-                    sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
                 }else{
                     throw new I18NException("registro.justificante.valido");
                 }
@@ -592,7 +594,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 // Obtenemos el Justificante
                 try{
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
-                    sc = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -609,7 +611,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
 
-        return new JustificanteWs(sc.getData());
+        return new JustificanteWs(anexoSimple.getData());
 
     }
 

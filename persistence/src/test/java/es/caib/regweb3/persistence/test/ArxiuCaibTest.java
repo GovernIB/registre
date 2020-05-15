@@ -3,15 +3,13 @@ package es.caib.regweb3.persistence.test;
 
 import es.caib.plugins.arxiu.api.*;
 import es.caib.regweb3.utils.RegwebConstantes;
+import org.fundaciobit.plugins.signature.api.FileInfoSignature;
 import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * @author earrivi
@@ -59,9 +57,84 @@ public class ArxiuCaibTest {
     }
 
     @Test
-    public void testDocumentContignut(){
+    public void testExpedientDetalle(){
 
-        // 75567ead-1dda-4cf6-a861-d2d56bc0d886#613a186e-541c-4c99-9b29-ede70d52c6fa
+        Expedient expedient = iArxiuPlugin.expedientDetalls("ed1dbe3f-74a0-4c53-b983-970de1165e47", null);
+
+        System.out.println("Nombre: " + expedient.getNom());
+        System.out.println("Identificador: " + expedient.getIdentificador());
+
+        for(ContingutArxiu contingutArxiu:expedient.getContinguts()){
+            System.out.println("Tipo: " + contingutArxiu.getTipus().name());
+            System.out.println("Nombre: " + contingutArxiu.getNom());
+            System.out.println("Identificador: " + contingutArxiu.getIdentificador());
+        }
+    }
+
+    @Test
+    public void create_justificante(){
+
+        Expedient expedient = new Expedient();
+        expedient.setNom("EXP_TEST_JUSTIFICANTE");
+        expedient.setIdentificador(null);
+
+        ExpedientMetadades metadades = new ExpedientMetadades();
+        metadades.setIdentificador(null);
+        metadades.setDataObertura(new Date());
+        metadades.setClassificacio("1234");
+        metadades.setEstat(ExpedientEstat.OBERT);
+        metadades.setOrgans(null);
+        metadades.setInteressats(null);
+        metadades.setSerieDocumental("S0002");
+
+        expedient.setMetadades(metadades);
+
+        ContingutArxiu expedienteCreado = iArxiuPlugin.expedientCrear(expedient);
+
+        System.out.println("Id Expediente: " + expedienteCreado.getIdentificador());
+
+
+        Document document = new Document();
+        document.setIdentificador(null);
+        document.setEstat(DocumentEstat.DEFINITIU);
+
+        // Metadatos
+        DocumentMetadades metadadesDoc = new DocumentMetadades();
+        metadadesDoc.setIdentificador(null);
+        metadadesDoc.setSerieDocumental("S0002");
+        metadadesDoc.setOrgans(Collections.singletonList("O00034567"));
+        metadadesDoc.setDataCaptura(new Date());
+
+        metadadesDoc.setOrigen(ContingutOrigen.ADMINISTRACIO);
+        metadadesDoc.setEstatElaboracio(DocumentEstatElaboracio.ORIGINAL);
+        metadadesDoc.setTipusDocumental(DocumentTipus.ALTRES); // TODO Revisar si sería más conveniente poner DocumentTipus.JUSTIFICANT_RECEPCIO
+
+        metadadesDoc.setExtensio(DocumentExtensio.PDF);
+        metadadesDoc.setFormat(DocumentFormat.PDF);
+
+        // Contenido y Firma
+        // Creamos la Firma
+        Firma firma = new Firma();
+        firma.setFitxerNom("justificante_test.pdf");
+        //firma.setContingut(firmaJustificante);
+        //firma.setTamany(firmaJustificante.length);
+        firma.setPerfil(FirmaPerfil.EPES);
+        firma.setTipus(FirmaTipus.PADES);
+        firma.setTipusMime(FileInfoSignature.PDF_MIME_TYPE);
+        firma.setCsvRegulacio("");
+
+        document.setContingut(null);
+        document.setNom(firma.getFitxerNom());
+
+        document.setFirmes(new ArrayList<Firma>());
+        document.getFirmes().add(firma);
+
+        iArxiuPlugin.expedientEsborrar(expedienteCreado.getIdentificador());
+    }
+
+
+    @Test
+    public void testDocumentContignut(){
 
         Document justificante = iArxiuPlugin.documentDetalls("613a186e-541c-4c99-9b29-ede70d52c6fa", null, true);
 

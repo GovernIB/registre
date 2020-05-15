@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import es.caib.plugins.arxiu.api.Document;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.ClientUtils;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -1515,64 +1516,76 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
      * @param idEntidad
      * @return SignatureCustody
      */
-    public SignatureCustody descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+    public AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception {
 
-        // Si es justificante
-        byte[] data = null;
 
-        if (anexo.isJustificante()) {
-            String url = null;
-            try {
-                url = getUrlValidation(anexo, idEntidad);
+        if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
 
-                // Si soporta url, davalla arxiu de la url
-                if (StringUtils.isNotEmpty(url)) {
-                    BufferedInputStream in = null;
-                    ByteArrayOutputStream fout = null;
-                    try {
-                        String username = PropiedadGlobalUtil.getUrlValidationUsername(idEntidad);
-                        String password = PropiedadGlobalUtil.getUrlValidationPassword(idEntidad);
+            // Si es justificante
+            byte[] data = null;
 
-                        if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-                            ClientResponse cr = ClientUtils.commonCall(url, username, password);
-                            in = new BufferedInputStream(cr.getEntityInputStream());
+            if (anexo.isJustificante()) {
+                String url = null;
+                try {
+                    url = getUrlValidation(anexo, idEntidad);
 
-                        } else {
-                            in = new BufferedInputStream(new URL(url).openStream());
+                    // Si soporta url, davalla arxiu de la url
+                    if (StringUtils.isNotEmpty(url)) {
+                        BufferedInputStream in = null;
+                        ByteArrayOutputStream fout = null;
+                        try {
+                            String username = PropiedadGlobalUtil.getUrlValidationUsername(idEntidad);
+                            String password = PropiedadGlobalUtil.getUrlValidationPassword(idEntidad);
+
+                            if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+                                ClientResponse cr = ClientUtils.commonCall(url, username, password);
+                                in = new BufferedInputStream(cr.getEntityInputStream());
+
+                            } else {
+                                in = new BufferedInputStream(new URL(url).openStream());
+                            }
+                            fout = new ByteArrayOutputStream();
+
+                            final byte buffer[] = new byte[1024];
+                            int count;
+                            while ((count = in.read(buffer, 0, 1024)) != -1) {
+                                fout.write(buffer, 0, count);
+                            }
+                            data = fout.toByteArray();
+                        } finally {
+                            if (in != null) {
+                                in.close();
+                            }
+                            if (fout != null) {
+                                fout.close();
+                            }
                         }
-                        fout = new ByteArrayOutputStream();
 
-                        final byte buffer[] = new byte[1024];
-                        int count;
-                        while ((count = in.read(buffer, 0, 1024)) != -1) {
-                            fout.write(buffer, 0, count);
-                        }
-                        data = fout.toByteArray();
-                    } finally {
-                        if (in != null) {
-                            in.close();
-                        }
-                        if (fout != null) {
-                            fout.close();
-                        }
+                        SignatureCustody sc = getSignatureInfoOnly(anexo, idEntidad);
+                        sc.setData(data);
+                        return new AnexoSimple(data, sc.getName());
                     }
 
-                    SignatureCustody sc = getSignatureInfoOnly(anexo, idEntidad);
-                    sc.setData(data);
-                    return sc;
+                } catch (Exception e) {
+                    log.error("Error descarregant justificant des de url de validació (" + url + ")", e);
+                    data = null;
                 }
 
-            } catch (Exception e) {
-                log.error("Error descarregant justificant des de url de validació (" + url + ")", e);
-                data = null;
             }
 
+        }else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
+
+            Document documento = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(),null, true, false);
+
+            return new AnexoSimple(documento.getContingut().getContingut(), documento.getContingut().getArxiuNom());
+
         }
+
 
         // Si no ha soportat url, davalla l'arxiu original
         SignatureCustody sc = getFirma(anexo, idEntidad);
 
-        return sc;
+        return new AnexoSimple(sc.getData(), sc.getName());
     }
 
 }
