@@ -63,7 +63,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private IntegracionLocal integracionEjb;
 
 
     @Override

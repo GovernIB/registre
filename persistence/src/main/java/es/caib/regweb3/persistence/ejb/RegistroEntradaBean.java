@@ -64,7 +64,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private IntegracionLocal integracionEjb;
 
 
     @Override
