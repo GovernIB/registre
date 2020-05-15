@@ -198,12 +198,19 @@ public class ArxiuCaibUtils {
         Document documento = null;
 
         try{
-            documento = getArxiuPlugin().documentDetalls(uuidDocument, version, contenido);
 
-            if(!original){
+            if(!contenido){ // Solo información del Documento, sin contenido
+                return getArxiuPlugin().documentDetalls(uuidDocument, version, false);
+
+            }else if(original){ // Informaicón + Contenido original
+                return getArxiuPlugin().documentDetalls(uuidDocument, version, true);
+
+            }else { // Informaicón + Contenido desde la UrlValidacion
+
+                documento = getArxiuPlugin().documentDetalls(uuidDocument, version, true); // todo Hay que obtener el contenido, porque si no no viene el nombre del fichero
 
                 log.info("Obteniendo el documento desde url validacion: " + uuidDocument);
-                //documento = getArxiuPlugin().documentDetalls(uuidDocument, version, false);
+
                 byte[] data = null;
 
                 try{
@@ -251,8 +258,8 @@ public class ArxiuCaibUtils {
                     log.info("Error obteniendo el documento desde la url de validacion");
                     e.printStackTrace();
                 }
-
             }
+
 
         }catch (Exception e){
             log.info("Error obteniendo el Documento: " + uuidDocument);

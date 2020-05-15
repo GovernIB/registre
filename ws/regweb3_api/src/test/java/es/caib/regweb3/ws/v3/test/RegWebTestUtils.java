@@ -5,6 +5,7 @@ import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.I18NUtils;
 import org.apache.commons.io.IOUtils;
 import org.fundaciobit.genapp.common.utils.Utils;
+import org.fundaciobit.plugins.utils.XTrustProvider;
 
 import javax.xml.ws.BindingProvider;
 import java.io.File;
@@ -65,23 +66,23 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     }
 
     public static String getTestEntidadCodigoDir3() {
-        return testProperties.getProperty("test_entidadcodigodir3");
+        return testProperties.getProperty("test_entidad_dir3");
     }
 
     public static String getTestDestinoCodigoDir3() {
-        return testProperties.getProperty("test_destinocodigodir3");
+        return testProperties.getProperty("test_destino_dir3");
     }
 
     public static String getTestOrigenCodigoDir3() {
-        return testProperties.getProperty("test_origen_codigodir3");
+        return testProperties.getProperty("test_origen_dir3");
     }
 
     public static String getTestOficinaOrigenCodigoDir3() {
-        return testProperties.getProperty("test_oficina_origen_codigodir3");
+        return testProperties.getProperty("test_oficina_origen_dir3");
     }
 
     public static String getTestDestinoLibro() {
-        return testProperties.getProperty("test_destinolibro");
+        return testProperties.getProperty("test_libro");
     }
 
     public static String getTestUserName() {
@@ -113,7 +114,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     }
 
     public static Long getTestCodigoSia() {
-        return new Long(testProperties.getProperty("test_codigosia"));
+        return new Long(testProperties.getProperty("test_codigo_sia"));
     }
 
     public static RegWebHelloWorldWs getHelloWorldApi() throws Exception {
@@ -164,6 +165,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
     public static RegWebAsientoRegistralWs getAsientoRegistralApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_ASIENTO_REGISTRAL);
+
+        if(endpoint.startsWith("https")){
+            XTrustProvider.install();
+        }
 
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebAsientoRegistralWsService service = new RegWebAsientoRegistralWsService(wsdl);
@@ -228,7 +233,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setAplicacionTelematica("REGWEB3");
         asiento.setCodigoAsunto(null);
         asiento.setCodigoSia(getTestCodigoSia());
-        asiento.setCodigoUsuario("caibapp");
+        asiento.setCodigoUsuario(getTestUserName());
         asiento.setEntidadCodigo(getTestEntidadCodigoDir3());
 
         asiento.setEntidadRegistralOrigenCodigo(getTestOficinaOrigenCodigoDir3());
