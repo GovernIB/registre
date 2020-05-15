@@ -170,6 +170,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         UsuarioEntidad usuarioAplicacion = null;
         Entidad entidadActiva = null;
+        AsientoRegistralWs asiento = new AsientoRegistralWs();
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
@@ -290,9 +291,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     registroEntrada = asientoRegistralEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull);
                     numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
-                    asientoRegistral.setNumeroRegistro(registroEntrada.getNumeroRegistro());
-                    asientoRegistral.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
-                    asientoRegistral.setFechaRegistro(registroEntrada.getFecha());
+                    asiento.setNumeroRegistro(registroEntrada.getNumeroRegistro());
+                    asiento.setNumeroRegistroFormateado(registroEntrada.getNumeroRegistroFormateado());
+                    asiento.setFechaRegistro(registroEntrada.getFecha());
 
                     // Distribuir / Generar justificante
                     if(justificante && distribuir){
@@ -362,16 +363,16 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     registroSalida = asientoRegistralEjb.registrarSalida(registroSalida, usuario, interesados, anexosFull);
                     numRegFormat = registroSalida.getNumeroRegistroFormateado();
 
-                    asientoRegistral.setNumeroRegistro(registroSalida.getNumeroRegistro());
-                    asientoRegistral.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
-                    asientoRegistral.setFechaRegistro(registroSalida.getFecha());
+                    asiento.setNumeroRegistro(registroSalida.getNumeroRegistro());
+                    asiento.setNumeroRegistroFormateado(registroSalida.getNumeroRegistroFormateado());
+                    asiento.setFechaRegistro(registroSalida.getFecha());
 
                     // Procesar el Registro de Salida según el Tipo Operación
                     registroSalida = asientoRegistralEjb.procesarRegistroSalida(tipoOperacion, registroSalida);
 
                     //Actualizamos el AsientoRegistral
-                    asientoRegistral.setEstado(registroSalida.getEstado());
-                    asientoRegistral.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
+                    asiento.setEstado(registroSalida.getEstado());
+                    asiento.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
 
                     // Integracion OK
                     peticion.append("oficina: ").append(registroSalida.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
@@ -389,19 +390,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 sesionEjb.finalizarSesion(idSesion, usuarioAplicacion, asientoRegistral.getTipoRegistro(), asientoRegistral.getNumeroRegistroFormateado());
             }
 
-        }catch (I18NException e){
-
-            if(entidadActiva != null){
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
-            }
-
-            // Marcamos la sesión como ERROR
-            if(idSesion != null){
-                sesionEjb.cambiarEstado(idSesion, usuarioAplicacion, RegwebConstantes.SESION_ERROR);
-            }
-
-            throw e;
-        } catch (Exception e){
+        }catch (I18NException | Exception e){
 
             if(entidadActiva != null){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
@@ -415,7 +404,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw e;
         }
 
-        return asientoRegistral;
+        return asiento;
     }
 
 
