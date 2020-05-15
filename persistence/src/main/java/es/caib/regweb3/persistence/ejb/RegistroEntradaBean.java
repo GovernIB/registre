@@ -68,7 +68,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public synchronized RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
+    public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                             UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
