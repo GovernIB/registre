@@ -67,7 +67,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
 
     @Override
-    public synchronized RegistroSalida registrarSalida(RegistroSalida registroSalida,
+    public RegistroSalida registrarSalida(RegistroSalida registroSalida,
                                                        UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException {
 
