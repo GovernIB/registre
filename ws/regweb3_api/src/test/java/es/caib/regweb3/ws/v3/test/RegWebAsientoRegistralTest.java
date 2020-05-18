@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.List;
-
 
 /**
  * Created by earrivi on 06/05/19.
@@ -95,7 +93,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             try {
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -233,10 +231,10 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
         try {
 
-            JustificanteReferenciaWs just = asientoRegistralApi.obtenerReferenciaJustificante(getTestEntidadCodigoDir3(),"PRES-E-192/2020");
+            JustificanteReferenciaWs just = asientoRegistralApi.obtenerReferenciaJustificante(getTestEntidadCodigoDir3(),"L18E256/2020");
 
             System.out.println("Justificante csv: " + just.getCsv());
-            System.out.println("Justificante: url" + just.getUrl());
+            System.out.println("Justificante: url: " + just.getUrl());
 
         } catch (WsValidationException | WsI18NException e) {
             e.printStackTrace();
@@ -247,7 +245,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void obtenerJustificante() throws Exception{
 
-        JustificanteWs justificanteWs = asientoRegistralApi.obtenerJustificante(getTestEntidadCodigoDir3(),"PRES-E-192/2020", RegwebConstantes.REGISTRO_ENTRADA);
+        JustificanteWs justificanteWs = asientoRegistralApi.obtenerJustificante(getTestEntidadCodigoDir3(),"L18E256/2020", RegwebConstantes.REGISTRO_ENTRADA);
 
         Assert.assertNotNull(justificanteWs.getJustificante());
 
@@ -328,87 +326,5 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         } catch (WsValidationException | WsI18NException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Muestra por pantala el contenido de un AsientoRegistralWs
-     * @param asientoRegistralWs
-     */
-    private void printAsientoBasico(AsientoRegistralWs asientoRegistralWs){
-        System.out.println("-------------------------------------------------------------");
-
-        System.out.println("Num. Registro: " + asientoRegistralWs.getNumeroRegistro());
-        System.out.println("Num. Registro formateado: " + asientoRegistralWs.getNumeroRegistroFormateado());
-        System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
-
-        System.out.println("");
-    }
-
-    /**
-     * Muestra por pantala el contenido de un AsientoRegistralWs
-     * @param asientoRegistralWs
-     */
-    private void printAsiento(AsientoRegistralWs asientoRegistralWs){
-        System.out.println("-------------------------------------------------------------");
-
-        System.out.println("Num. Registro: " + asientoRegistralWs.getNumeroRegistroFormateado());
-        System.out.println("Tipo registro: " + asientoRegistralWs.getTipoRegistro());
-        System.out.println("Fecha Registro: " + asientoRegistralWs.getFechaRegistro());
-        System.out.println("Resumen: " + asientoRegistralWs.getResumen());
-
-        printAnexosWs(asientoRegistralWs.getAnexos());
-        printInteresadosWs(asientoRegistralWs.getInteresados());
-
-        System.out.println("");
-    }
-
-    /**
-     *
-     * @param anexos
-     */
-    private void printAnexosWs(List<AnexoWs> anexos){
-
-        System.out.println("");
-        System.out.println("Total anexos: " + anexos.size());
-        for (AnexoWs anexo : anexos) {
-            System.out.println("");
-            System.out.println("Nombre anexo: " + anexo.getTitulo());
-            System.out.println("isJustificante: " + anexo.isJustificante());
-        }
-    }
-
-    /**
-     *
-     * @param interesados
-     */
-    private void printInteresadosWs(List<InteresadoWs> interesados){
-
-        System.out.println("");
-        System.out.println("Total interesados: " + interesados.size());
-
-        for (InteresadoWs i : interesados) {
-                System.out.println("");
-            System.out.println("Interesado: " + printInteresadoWs(i.getInteresado()));
-
-            if(i.getRepresentante() != null){
-                System.out.println("Representante: " +printInteresadoWs(i.getRepresentante()));
-
-            }
-        }
-    }
-
-    private String printInteresadoWs(DatosInteresadoWs i){
-
-        if(i.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)){
-            return i.getRazonSocial() + " " + i.getDocumento();
-
-        }else if(i.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)){
-            return i.getNombre() + " " + i.getApellido1();
-
-        }else if(i.getTipoInteresado().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)){
-            return i.getNombre() + " " + i.getApellido1();
-        }
-
-        return "";
     }
 }
