@@ -32,24 +32,21 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     @ThreadCount(THREAD_COUNT)
     public void crearAsiento() throws Exception {
 
-        for (int i = 0; i < 2; i++) {
+        try {
 
-            try {
+            AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
+            asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
 
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
+            printAsientoBasico(asientoRegistralWs);
 
-                printAsientoBasico(asientoRegistralWs);
-
-            } catch (WsI18NException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsI18NException: " + msg);
-                throw e;
-            } catch (WsValidationException e) {
-                String msg = WsClientUtils.toString(e);
-                System.out.println("Error WsValidationException: " + msg);
-                throw e;
-            }
+        } catch (WsI18NException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsI18NException: " + msg);
+            throw e;
+        } catch (WsValidationException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsValidationException: " + msg);
+            throw e;
         }
     }
 
