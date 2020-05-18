@@ -207,7 +207,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
 
     @Override    
-    public synchronized OficioRemision registrarOficioRemision(OficioRemision oficioRemision,
+    public OficioRemision registrarOficioRemision(OficioRemision oficioRemision,
         Long estado) throws Exception, I18NException, I18NValidationException {
 
         try{
