@@ -12,10 +12,7 @@ import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.validator.AnexoBeanValidator;
 import es.caib.regweb3.persistence.validator.AnexoValidator;
-import es.caib.regweb3.utils.Configuracio;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.utils.RegwebUtils;
-import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.*;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
@@ -263,6 +260,8 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         Long tiempo = System.currentTimeMillis();
+        Long start = System.currentTimeMillis();
+        Long end = 0L;
         String descripcion = "Nuevo anexo ";
         String numRegFormat = "";
         Entidad entidad = null;
@@ -278,11 +277,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             //Obtenemos el registro con sus anexos, interesados y tipo Asunto
             IRegistro registro = getIRegistro(registroID, tipoRegistro);
+
+            end = System.currentTimeMillis();
+            log.info("Iregistro " + TimeUtils.formatElapsedTime(end - start));
             anexo.setRegistroDetalle(registro.getRegistroDetalle());
 
+            start = System.currentTimeMillis();
             //Obtenemos la Entidad
             entidad = registro.getOficina().getOrganismoResponsable().getEntidad();
 
+            end = System.currentTimeMillis();
+            log.info("getEntidad " + TimeUtils.formatElapsedTime(end - start));
             // Obtenemos el Plugin de Custodia correspondiente
             if (anexo.isJustificante()) {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
@@ -299,6 +304,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             peticion.append("custodyID: ").append(custodyID).append(System.getProperty("line.separator"));
 
 
+            start = System.currentTimeMillis();
             // Validar firma del Anexo
             //Solo validamos si no es justificante, no es fichero tecnico y nos indican que se debe validar
             if (!anexo.isJustificante() && validarAnexo && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexo.getTipoDocumento())) {
@@ -308,6 +314,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                             new Locale("es"), force);
                 }
             }
+
+            end = System.currentTimeMillis();
+            log.info("validar firma " + TimeUtils.formatElapsedTime(end - start));
 
             // Validador
             validateAnexo(anexo, isNew);
@@ -342,7 +351,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
             // ----------- CUSTODIA -----------------
-
+            start = System.currentTimeMillis();
             final Map<String, Object> custodyParameters;
             custodyParameters = getCustodyParameters(registro, anexo, anexoFull, usuarioEntidad);
 
@@ -359,10 +368,16 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             updateCustodyInfoOfAnexo(anexoFull, custody, custodyParameters, custodyID,
                     registro, isNew);
 
+            end = System.currentTimeMillis();
+            log.info("updateCustodyInfoOfAnexo " + TimeUtils.formatElapsedTime(end - start));
             // -----------  BBDD -----------------
 
+            start = System.currentTimeMillis();
             // Actualitzam anexo per a que tengui custodyID
             anexo = this.persist(anexo);
+
+            end = System.currentTimeMillis();
+            log.info("Persist anexo " + TimeUtils.formatElapsedTime(end - start));
 
             //Creamos el histórico de las modificaciones del registro debido a los anexos
             if (!anexo.isJustificante()) {
@@ -924,7 +939,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             }
 
-
+/*for (Metadata metadata: metadades){
+    log.info("Key " + metadata.getKey() + "Value " + metadata.getValue());
+}*/
 
              custody2.saveAll(custodyID, custodyParameters, documentCustody,
               signatureCustody, metadades.toArray(new Metadata[metadades.size()]));

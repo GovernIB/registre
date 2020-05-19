@@ -6,6 +6,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
 import org.apache.log4j.Logger;
@@ -37,6 +38,7 @@ public class AnexoConverter extends CommonConverter {
 
    public static AnexoFull getAnexoFull(AnexoWs anexoWs, Long idEntidad,TipoDocumentalLocal tipoDocumentalEjb) throws Exception, I18NException {
 
+      long start = System.currentTimeMillis();
       if (anexoWs == null){return  null;}
 
 
@@ -115,6 +117,9 @@ public class AnexoConverter extends CommonConverter {
       anexoFull.setSignatureCustody(sign);
       anexoFull.setSignatureFileDelete(false);
 
+
+      long end = System.currentTimeMillis();
+      log.info("Anexo Converter " + TimeUtils.formatElapsedTime(end - start));
       return  anexoFull;
    }
 

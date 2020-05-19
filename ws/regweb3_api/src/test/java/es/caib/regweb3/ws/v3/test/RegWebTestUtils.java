@@ -242,7 +242,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
         asiento.setLibroCodigo(getTestDestinoLibro());
         asiento.setPresencial(false);
-        asiento.setResumen("Regsitro de test WS");
+        asiento.setResumen("Regsitro de test  mgonzalez WS");
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
@@ -544,18 +544,18 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaDetached.setFechaCaptura(new Timestamp(new Date().getTime()));
 
             // Fichero
-            final String fichero = "xades_doc.txt";
+            final String fichero = "foto.jpg";
             anexoConFirmaDetached.setFicheroAnexado(RegWebTestUtils
                     .constructFitxerFromResource(fichero));
             anexoConFirmaDetached.setNombreFicheroAnexado(fichero);
             anexoConFirmaDetached.setTipoMIMEFicheroAnexado(Utils.getMimeType(fichero));
 
             // Firma
-            final String firma = "xades_firma.xml";
+            final String firma = "2018-01-24_CAdES_Detached_foto_jpg.csig";
             anexoConFirmaDetached
                     .setFirmaAnexada(RegWebTestUtils.constructFitxerFromResource(firma));
             anexoConFirmaDetached.setNombreFirmaAnexada(firma);
-            anexoConFirmaDetached.setTipoMIMEFirmaAnexada("application/xml");
+            anexoConFirmaDetached.setTipoMIMEFirmaAnexada("application/octet-stream");
 
             anexos.add(anexoConFirmaDetached);
 
@@ -667,4 +667,95 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         return "";
     }
+
+
+    /** METODOS PARA LA CAPA ANTIGUA
+     *
+     */
+
+    /**
+     *
+     *
+     * @return
+     */
+    private RegistroEntradaWs getDatosComunesRegistroEntrada(){
+
+        RegistroEntradaWs registroEntradaWs = new RegistroEntradaWs();
+
+        registroEntradaWs.setDestino(getTestDestinoCodigoDir3());
+        registroEntradaWs.setOficina(getTestOficinaOrigenCodigoDir3());
+        registroEntradaWs.setLibro(getTestDestinoLibro());
+
+        registroEntradaWs.setExtracto(System.currentTimeMillis() + " probando ws");
+        registroEntradaWs.setDocFisica((long) 1);
+        registroEntradaWs.setIdioma("es");
+        registroEntradaWs.setTipoAsunto(getTestTipoAsunto());
+
+        registroEntradaWs.setAplicacion("WsTest");
+        registroEntradaWs.setVersion("1");
+
+        registroEntradaWs.setCodigoUsuario(getTestUserName());
+        registroEntradaWs.setContactoUsuario("earrivi@fundaciobit.org");
+
+        registroEntradaWs.setNumExpediente("");
+        registroEntradaWs.setNumTransporte("");
+        registroEntradaWs.setObservaciones("");
+
+        registroEntradaWs.setRefExterna("");
+        registroEntradaWs.setCodigoAsunto(null);
+        registroEntradaWs.setTipoTransporte("");
+
+        registroEntradaWs.setExpone("expone");
+        registroEntradaWs.setSolicita("solicita");
+
+        return registroEntradaWs;
+    }
+
+    /**
+     *
+     *
+     * @param representante
+     * @return
+     */
+    public RegistroEntradaWs getRegistroEntrada_to_PersonaFisica( Boolean representante) {
+
+        // Datos comunes
+        RegistroEntradaWs registro = getDatosComunesRegistroEntrada();
+
+        // Interesados
+        InteresadoWs interesadoWs = new InteresadoWs();
+
+        // Interesado persona fisica principal
+        interesadoWs.setInteresado(getPersonaFisica());
+
+        // Representante persona fisica
+        if(representante){
+            interesadoWs.setRepresentante(getRepresentante(TIPO_INTERESADO_PERSONA_FISICA));
+        }
+
+        registro.getInteresados().add(interesadoWs);
+
+        try {
+            registro.getAnexos().addAll(getAnexos());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return registro;
+    }
+
+    /**
+     * Muestra por pantala el contenido de un AsientoRegistralWs
+     * @param identificadorWs
+     */
+    public void printIdentificadorWSBasico(IdentificadorWs identificadorWs){
+        System.out.println("-------------------------------------------------------------");
+
+        System.out.println("Num. Registro: " + identificadorWs.getNumero());
+        System.out.println("Num. Registro formateado: " + identificadorWs.getNumeroRegistroFormateado());
+        System.out.println("Fecha Registro: " + identificadorWs.getFecha());
+
+        System.out.println("");
+    }
+
 }
