@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 @RunWith(ConcurrentTestRunner.class)
 public class ConcurrentWsTest extends RegWebTestUtils{
 
-    private final static int THREAD_COUNT = 10;
+    private final static int THREAD_COUNT = 2;
 
     protected static RegWebAsientoRegistralWs asientoRegistralApi;
     protected static RegWebRegistroEntradaWs registroEntradaApi;
@@ -49,6 +49,32 @@ public class ConcurrentWsTest extends RegWebTestUtils{
             throw e;
         }
     }
+
+
+   // @Test
+    @ThreadCount(THREAD_COUNT)
+    public void crearRegistroEntradaApiAntigua() throws Exception {
+
+        try {
+
+
+            RegistroEntradaWs registroEntradaWs = getRegistroEntrada_to_PersonaFisica(false);
+            IdentificadorWs identificadorWs = registroEntradaApi.nuevoRegistroEntrada(getTestEntidadCodigoDir3(),registroEntradaWs);
+
+            printIdentificadorWSBasico(identificadorWs);
+
+
+        } catch (WsI18NException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsI18NException: " + msg);
+            throw e;
+        } catch (WsValidationException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsValidationException: " + msg);
+            throw e;
+        }
+    }
+
 
 
 }
