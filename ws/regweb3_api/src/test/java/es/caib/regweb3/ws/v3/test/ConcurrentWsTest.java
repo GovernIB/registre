@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 @RunWith(ConcurrentTestRunner.class)
 public class ConcurrentWsTest extends RegWebTestUtils{
 
-    private final static int THREAD_COUNT = 2;
+    private final static int THREAD_COUNT = 5;
 
     protected static RegWebAsientoRegistralWs asientoRegistralApi;
     protected static RegWebRegistroEntradaWs registroEntradaApi;
@@ -51,12 +51,11 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     }
 
 
-   // @Test
+    @Test
     @ThreadCount(THREAD_COUNT)
     public void crearRegistroEntradaApiAntigua() throws Exception {
 
         try {
-
 
             RegistroEntradaWs registroEntradaWs = getRegistroEntrada_to_PersonaFisica(false);
             IdentificadorWs identificadorWs = registroEntradaApi.nuevoRegistroEntrada(getTestEntidadCodigoDir3(),registroEntradaWs);

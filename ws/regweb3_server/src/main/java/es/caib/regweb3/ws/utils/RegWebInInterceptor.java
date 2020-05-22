@@ -59,13 +59,14 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
         log.info("  + Method CLASS = " + method.getDeclaringClass());
 
         HttpServletRequest hsr = (HttpServletRequest) message.get("HTTP.REQUEST");
-        log.info(" USR_1:  " + hsr.getRemoteUser());
-        log.info(" ROLE: RWE_SUPERADMIN  " + hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN));
-        log.info(" ROLE: RWE_ADMIN  " + hsr.isUserInRole(RegwebConstantes.RWE_ADMIN));
-        log.info(" ROLE: RWE_USER  " + hsr.isUserInRole(RegwebConstantes.RWE_USUARI));
-        log.info(" ROLE: RWE_WS_ENTRADA  " + hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA));
-        log.info(" ROLE: RWE_WS_SALIDA  " + hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA));
-        log.info(" ROLE: RWE_WS_CIUDADANO  " + hsr.isUserInRole(RegwebConstantes.RWE_WS_CIUDADANO));
+        log.info(" USER:  " + hsr.getRemoteUser());
+
+        if(hsr.isUserInRole(RegwebConstantes.RWE_SUPERADMIN)) log.info(" ROLE: RWE_SUPERADMIN");
+        if(hsr.isUserInRole(RegwebConstantes.RWE_ADMIN)) log.info(" ROLE: RWE_ADMIN ");
+        if(hsr.isUserInRole(RegwebConstantes.RWE_USUARI)) log.info(" ROLE: RWE_USER ");
+        if(hsr.isUserInRole(RegwebConstantes.RWE_WS_ENTRADA)) log.info(" ROLE: RWE_WS_ENTRADA ");
+        if(hsr.isUserInRole(RegwebConstantes.RWE_WS_SALIDA)) log.info(" ROLE: RWE_WS_SALIDA ");
+        if(hsr.isUserInRole(RegwebConstantes.RWE_WS_CIUDADANO)) log.info(" ROLE: RWE_WS_CIUDADANO ");
 
       } catch (Exception e) {
         log.error(e.getMessage());

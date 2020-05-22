@@ -232,6 +232,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             List<AnexoFull> anexosFull = null;
             if (asientoRegistral.getAnexos() != null && asientoRegistral.getAnexos().size() > 0) {
                 anexosFull = procesarAnexos(asientoRegistral.getAnexos(), entidadActiva.getId());
+                peticion.append("anexos: ").append(asientoRegistral.getAnexos().size()).append(System.getProperty("line.separator"));
             }
 
             // Se trata a de un Registro de Entrada

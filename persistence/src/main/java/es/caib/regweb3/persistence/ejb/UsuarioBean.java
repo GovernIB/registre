@@ -81,7 +81,7 @@ public class UsuarioBean extends BaseEjbJPA<Usuario, Long> implements UsuarioLoc
 
     /**
      * Crea un nuevo usuario en REGWEB3, a partir del identificador de Seycon, obtiene sus
-     * datos personales de la bbdd de Seycon.
+     * datos personales de la bbdd de Seycon, aunque no tenga ningún ROL de REGWEB3.
      * @param identificador
      * @return
      * @throws Exception
