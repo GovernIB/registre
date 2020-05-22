@@ -1582,9 +1582,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         List<AnexoFull> anexosFull = procesarAnexos(registroSir, camposNTIs);
 
         // Registramos el Registro Entrada
-        synchronized (this){
-            registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true);
-        }
+        registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario,interesados,anexosFull, true);
+
 
         // Creamos la TrazabilidadSir
         TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_ACEPTADO);

@@ -52,7 +52,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                                           UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos);
+        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, true);
     }
 
     @Override

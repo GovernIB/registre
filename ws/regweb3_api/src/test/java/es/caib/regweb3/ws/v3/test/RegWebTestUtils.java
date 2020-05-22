@@ -242,7 +242,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.setIdioma(RegwebConstantes.IDIOMA_CATALAN_ID);
         asiento.setLibroCodigo(getTestDestinoLibro());
         asiento.setPresencial(false);
-        asiento.setResumen("Regsitro de test  mgonzalez WS");
+        asiento.setResumen("Registro de test  WS");
         asiento.setUnidadTramitacionOrigenCodigo(getTestOrigenCodigoDir3());
         asiento.setUnidadTramitacionDestinoCodigo(getTestDestinoCodigoDir3());
         asiento.setTipoDocumentacionFisicaCodigo(RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC);
@@ -336,7 +336,11 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         asiento.getInteresados().add(interesadoWs);
 
-        //asientoRegistralWs.getAnexos().addAll(getAnexos());
+        try {
+            asiento.getAnexos().addAll(getAnexos());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return asiento;
     }

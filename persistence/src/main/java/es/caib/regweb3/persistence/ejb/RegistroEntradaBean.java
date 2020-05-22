@@ -124,7 +124,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             return registroEntrada;
 
-        } catch (I18NException i18n) {
+        } catch (I18NException | Exception i18n) {
             log.info("Error registrando la entrada");
             i18n.printStackTrace();
             ejbContext.setRollbackOnly();
@@ -136,11 +136,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
             ejbContext.setRollbackOnly();
             throw i18nv;
 
-        } catch (Exception e) {
-            log.info("Error registrando la entrada");
-            e.printStackTrace();
-            ejbContext.setRollbackOnly();
-            throw e;
         }
 
     }
@@ -570,9 +565,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             trazabilidadEjb.persist(trazabilidad);
 
-        } catch (I18NException e) {
-            e.printStackTrace();
-        } catch (I18NValidationException e) {
+        } catch (I18NException | I18NValidationException e) {
+            log.info("Ha ocurrido un error rectificando el registro");
             e.printStackTrace();
         }
 

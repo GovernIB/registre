@@ -191,14 +191,14 @@
     <dependency>
       <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
       <artifactId>pluginsib-documentcustody-filesystem</artifactId>
-      <version>4.0.0</version>
+      <version>${documentcustody.api.version}</version>
     </dependency>
 
 
     <dependency>
       <groupId>org.fundaciobit.pluginsib.documentcustody</groupId>
       <artifactId>pluginsib-documentcustody-alfresco</artifactId>
-      <version>4.0.0</version>
+      <version>${documentcustody.api.version}</version>
       <exclusions>
         <exclusion>
           <groupId>org.slf4j</groupId>

@@ -210,12 +210,13 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
 
             //Asociamos los anexos al Registro de Entrada
             registroEntrada.getRegistroDetalle().setAnexos(null);
+
+            peticion.append("anexos: ").append(registroEntradaWs.getAnexos().size()).append(System.getProperty("line.separator"));
         }
 
         // 12.- Creamos el Registro de Entrada
         try{
             registroEntrada = registroEntradaEjb.registrarEntrada(registroEntrada, usuario, interesados, anexosFull, true);
-
             numRegFormat = registroEntrada.getNumeroRegistroFormateado();
 
         }catch (Exception e){

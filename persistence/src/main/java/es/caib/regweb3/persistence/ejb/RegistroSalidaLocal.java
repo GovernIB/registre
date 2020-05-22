@@ -28,7 +28,7 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
      * @throws Exception
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**

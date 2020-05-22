@@ -67,7 +67,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                                       UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                                       UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -109,7 +109,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 final Long registroID = registroSalida.getId();
                 for (AnexoFull anexoFull : anexos) {
                     anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
-                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_SALIDA, null, true);
+                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_SALIDA, null, validarAnexos);
                     registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
                 }
             }
@@ -123,7 +123,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             return registroSalida;
 
-        } catch (I18NException i18n) {
+        } catch (I18NException | Exception i18n) {
             log.info("Error registrando la salida");
             i18n.printStackTrace();
             ejbContext.setRollbackOnly();
@@ -135,11 +135,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             ejbContext.setRollbackOnly();
             throw i18nv;
 
-        } catch (Exception e) {
-            log.info("Error registrando la salida");
-            e.printStackTrace();
-            ejbContext.setRollbackOnly();
-            throw e;
         }
 
     }
@@ -570,7 +565,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
 
             // Registramos el nuevo registro
-            rectificado = registrarSalida(registroSalida, usuarioEntidad, interesados, anexos);
+            rectificado = registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, false);
 
             // Moficiamos el estado al registro original
             cambiarEstado(idRegistro, RegwebConstantes.REGISTRO_RECTIFICADO);
@@ -583,9 +578,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             trazabilidadEjb.persist(trazabilidad);
 
-        } catch (I18NException e) {
-            e.printStackTrace();
-        } catch (I18NValidationException e) {
+        } catch (I18NException | I18NValidationException e) {
             e.printStackTrace();
         }
 
