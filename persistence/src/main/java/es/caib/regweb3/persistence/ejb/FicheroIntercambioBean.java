@@ -307,8 +307,15 @@ public class FicheroIntercambioBean implements FicheroIntercambioLocal {
                         peticion.append("Motivo: ").append(ficheroIntercambio.getDescripcionTipoAnotacion()).append(System.getProperty("line.separator"));
                     }
                 }else{
-                    log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
-                    throw new ValidacionException(Errores.ERROR_0037, "El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    //Buscamos si ya está rechazado
+                    oficioRemision = oficioRemisionEjb.getBySirRechazado(ficheroIntercambio.getIdentificadorIntercambio(), ficheroIntercambio.getCodigoEntidadRegistralDestino());
+
+                    if(oficioRemision != null){
+                        log.info("Se ha recibido un RECHAZO que ya habia sido rechazado previamente: " + ficheroIntercambio.getIdentificadorIntercambio() + ", volvemos a enviar un ACK");
+                    }else{
+                        log.info("El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
+                        throw new ValidacionException(Errores.ERROR_0065, "El registro recibido no existe en el sistema: " + ficheroIntercambio.getIdentificadorIntercambio());
+                    }
                 }
 
             }
