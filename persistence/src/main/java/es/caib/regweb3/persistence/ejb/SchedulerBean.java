@@ -89,7 +89,9 @@ public class SchedulerBean implements SchedulerLocal{
                 Date inicio = new Date();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                anexoSirEjb.purgarArchivos(entidad.getId());
+                //fijamos un numero máximo de elementos por iteración
+                Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
+                anexoSirEjb.purgarArchivos(entidad.getId(),numElementos);
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
@@ -118,6 +120,7 @@ public class SchedulerBean implements SchedulerLocal{
 
                 // Obtenemos la propiedad global  "getMesesPurgoAnexos"
                 Integer mesesPurgo = PropiedadGlobalUtil.getMesesPurgoAnexos( entidad.getId());
+                Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
 
                 if( mesesPurgo != null && mesesPurgo != -1) { // si nos han indicado meses, borramos.
 
@@ -126,7 +129,8 @@ public class SchedulerBean implements SchedulerLocal{
                     Date inicio = new Date();
                     peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                    anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId(),mesesPurgo);
+                    //Purgamos los anexos de registros distribuidos un máximo de numElementos
+                    anexoEjb.purgarAnexosRegistrosDistribuidos(entidad.getId(), mesesPurgo, numElementos);
 
                     integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
                 }
@@ -159,7 +163,9 @@ public class SchedulerBean implements SchedulerLocal{
                 Date inicio = new Date();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId());
+                //fijamos un numero máximo de elementos por iteración
+                Integer numElementos = PropiedadGlobalUtil.getNumElementosPurgoAnexos(entidad.getId());
+                anexoEjb.purgarAnexosRegistrosAceptados(entidad.getId(), numElementos);
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }

@@ -106,19 +106,22 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * los que han sido confirmados en destino al enviarlos via SIR.
      *
      * @param idEntidad
+     * @param numElementos
      * @return
      * @throws Exception
      */
-    void purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException;
+    void purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException;
 
 
     /**
      * Método que elimina los anexos asociados a registros que ya se han distribuido.
+     * @param idEntidad
      * @param meses
+     * @param numElementos
      * @throws Exception
      * @throws I18NException
      */
-    void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses) throws Exception, I18NException;
+    void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException;
 
 
     /**
@@ -136,10 +139,12 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     /**
      * Obtiene los anexos distribuidos hace x meses que seran los candidatos a purgar.
      *
+     * @param meses numero de meses
+     * @param numElementos numero maximo de anexos que se purgaran en la iteración
      * @return
      * @throws Exception
      */
-    List<String> obtenerCustodyIdAnexosDistribuidos(int meses) throws Exception;
+    List<String> obtenerCustodyIdAnexosDistribuidos(Integer meses, Integer numElementos) throws Exception;
 
     /**
      * Obtiene el id del Justificante que tiene un registroDetalle
@@ -164,6 +169,8 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * Obtiene el contenido físico de la firma como byte[]
      *
      * @param custodiaID
+     * @param isJustificante
+     * @param idEntidad
      * @return
      */
     byte[] getFirmaContent(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;

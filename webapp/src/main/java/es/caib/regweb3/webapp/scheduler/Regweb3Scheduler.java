@@ -56,27 +56,6 @@ public class Regweb3Scheduler {
         }
 
         try {
-            schedulerEjb.purgarAnexosSir();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            schedulerEjb.purgarAnexosDistribuidos();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            schedulerEjb.purgarAnexosRegistrosConfirmados();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
             schedulerEjb.enviarEmailErrorDistribucion();
 
         } catch (Exception e) {
@@ -164,6 +143,61 @@ public class Regweb3Scheduler {
         }
 
     }
+
+
+    /**
+     * Qué hace: purga los anexos de los registros distribuidos
+     * Cuando lo hace: Cada 15 minutos a las 00:00, a las 02:00 y a las 03:00
+     */
+    @Scheduled(cron = "0 0/15 0,2,3 * * *") //
+    public void purgarAnexosDistribuidos(){
+
+        try {
+
+            schedulerEjb.purgarAnexosDistribuidos();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * Qué hace: purga los anexos de los registros sir que han sido aceptados
+     * Cuando lo hace: Cada 20 minutos a las 00:00, a las 02:00 y a las 03:00
+     */
+    @Scheduled(cron = "0 0/20 0,2,3 * * *") //
+    public void purgarAnexosSir(){
+
+        try {
+
+            schedulerEjb.purgarAnexosSir();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    /**
+     * Qué hace: purga los anexos de los registros sir que han sido aceptados
+     * Cuando lo hace: Cada 25 minutos a las 05:00 y a las 06:00
+     */
+    @Scheduled(cron = "0 0/25 5,6 * * *") //
+    public void purgarAnexosRegistrosConfirmados(){
+
+        try {
+
+            schedulerEjb.purgarAnexosRegistrosConfirmados();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     /**
      * Qué hace: Cierra los expedientes que están en DM del Arxiu del GOIB

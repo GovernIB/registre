@@ -1184,13 +1184,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public void purgarAnexosRegistrosAceptados(Long idEntidad) throws Exception, I18NException {
+    public void purgarAnexosRegistrosAceptados(Long idEntidad, Integer numElementos) throws Exception, I18NException {
+
 
         //Obtenemos los anexos de los registros de entrada que han sido aceptados y que no han sido purgados
         Query q = em.createQuery("Select anexos from RegistroEntrada as re left join re.registroDetalle.anexos as anexos where re.estado=:aceptado and  re.usuario.entidad.id=:idEntidad and anexos.purgado =false and anexos.justificante=false");
 
         q.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
         q.setParameter("idEntidad", idEntidad);
+        if(numElementos !=null) {
+            q.setMaxResults(numElementos);
+        }
 
         List<Anexo> anexos = q.getResultList();
 
@@ -1199,6 +1203,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
         qs.setParameter("aceptado", RegwebConstantes.REGISTRO_OFICIO_ACEPTADO);
         qs.setParameter("idEntidad", idEntidad);
+        if(numElementos !=null) {
+            qs.setMaxResults(numElementos);
+        }
 
         anexos.addAll(qs.getResultList());
 
@@ -1214,10 +1221,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     @Override
-    public void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses) throws Exception, I18NException{
+    public void purgarAnexosRegistrosDistribuidos(Long idEntidad, Integer meses, Integer numElementos) throws Exception, I18NException{
 
-        // Obtenemos los custodiaID de todos los anexos que se han distribuido los meses indicados
-        List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(meses);
+        List<String> custodyIds = obtenerCustodyIdAnexosDistribuidos(meses, numElementos);
+
         for (String custodyId : custodyIds) {
             //Purgamos anexo a anexo
             purgarAnexo(custodyId, false, idEntidad);
@@ -1247,7 +1254,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
 
     @Override
-    public List<String> obtenerCustodyIdAnexosDistribuidos(int meses) throws Exception {
+    public List<String> obtenerCustodyIdAnexosDistribuidos(Integer meses, Integer numElementos) throws Exception {
             Date fechaPurgo = DateUtils.addMonths(new Date(), -meses);
 
             // Obtenemos aquellos anexos que corresponden a registros Distribuidos y la fecha de distribución la cogemos de la trazabilidad.
@@ -1258,6 +1265,9 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             q.setParameter("distribuido", RegwebConstantes.REGISTRO_DISTRIBUIDO);
             q.setParameter("tipoDistribucion", RegwebConstantes.TRAZABILIDAD_DISTRIBUCION);
             q.setHint("org.hibernate.readOnly", true);
+            if(numElementos!= null) {
+                q.setMaxResults(numElementos);
+            }
 
             return q.getResultList();
 
