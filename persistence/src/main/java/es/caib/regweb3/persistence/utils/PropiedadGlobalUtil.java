@@ -536,6 +536,20 @@ public class PropiedadGlobalUtil {
 
     }
 
+
+    /**
+     * Propiedad: es.caib.regweb3.anexos.purgo.numelementos
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getNumElementosPurgoAnexos(Long idEntidad) {
+        final String partialPropertyName = "anexos.purgo.numelementos";
+        return  getIntegerByEntidad(idEntidad,partialPropertyName);
+
+    }
+
+
+
     /**
      * Propiedad: es.caib.regweb3.procesados.purgo.meses
      * @param idEntidad

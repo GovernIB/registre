@@ -71,13 +71,16 @@ public class AnexoSirBean extends BaseEjbJPA<AnexoSir, Long> implements AnexoSir
 
     @Override
     @SuppressWarnings("unchecked")
-    public void purgarArchivos(Long idEntidad) throws Exception{
+    public void purgarArchivos(Long idEntidad, Integer numElementos) throws Exception{
 
         Query q = em.createQuery("Select anexoSir from AnexoSir as anexoSir " +
                 "where anexoSir.purgado = false and anexoSir.registroSir.estado = :aceptado");
 
 
         q.setParameter("aceptado", EstadoRegistroSir.ACEPTADO);
+        if(numElementos!= null) {
+            q.setMaxResults(numElementos);
+        }
         //q.setParameter("reenviado", EstadoRegistroSir.REENVIADO_Y_ACK);
         //q.setParameter("rechazado", EstadoRegistroSir.RECHAZADO_Y_ACK);
 
