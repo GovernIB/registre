@@ -147,9 +147,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros distribuidos
-     * Cuando lo hace: Cada 15 minutos a las 00:00, a las 02:00 y a las 03:00
+     * Cuando lo hace: Cada 10 minutos a las 00:00, a las 02:00 y a las 03:00
      */
-    @Scheduled(cron = "0 0/15 0,2,3 * * *") //
+    @Scheduled(cron = "0 0/10 0,2,3 * * *") //
     public void purgarAnexosDistribuidos(){
 
         try {
@@ -165,9 +165,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros sir que han sido aceptados
-     * Cuando lo hace: Cada 20 minutos a las 00:00, a las 02:00 y a las 03:00
+     * Cuando lo hace: Cada 13 minutos a las 05:00, 06:00 y 07:00
      */
-    @Scheduled(cron = "0 0/20 0,2,3 * * *") //
+    @Scheduled(cron = "0 0/13 5,6,7 * * *") //
     public void purgarAnexosSir(){
 
         try {
@@ -183,9 +183,9 @@ public class Regweb3Scheduler {
 
     /**
      * Qué hace: purga los anexos de los registros sir que han sido aceptados
-     * Cuando lo hace: Cada 25 minutos a las 05:00 y a las 06:00
+     * Cuando lo hace: Cada 25 minutos a las 00:00, 02:00 y 03:00
      */
-    @Scheduled(cron = "0 0/25 5,6 * * *") //
+    @Scheduled(cron = "0 0/25 0,2,3 * * *") //
     public void purgarAnexosRegistrosConfirmados(){
 
         try {
