@@ -279,6 +279,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         DatosInteresadoWs organismo = new DatosInteresadoWs();
         organismo.setTipoInteresado((long) 1);
         organismo.setNombre("Presidencia Govern de les Illes Balears");
+        organismo.setRazonSocial("Presidencia Govern de les Illes Balears");
         interesadoWs2.setInteresado(organismo);
 
         registroEntradaWs.getInteresados().add(interesadoWs2);
@@ -325,7 +326,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         AnexoWs anexoFirmaAtached = new AnexoWs();
 
         anexoFirmaAtached.setTitulo("Anexo firma atached");
-        anexoFirmaAtached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA));
+        anexoFirmaAtached.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
         anexoFirmaAtached.setTipoDocumental(getTestAnexoTipoDocumental());
         anexoFirmaAtached.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_DOC_ADJUNTO));
         anexoFirmaAtached.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_ADMINISTRACION);
@@ -392,7 +393,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
         AnexoWs anexoFirmaDetachedCopia = new AnexoWs();
 
         anexoFirmaDetachedCopia.setTitulo("Anexo firma detached copia");
-        anexoFirmaDetachedCopia.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA));
+        anexoFirmaDetachedCopia.setValidezDocumento(CODIGO_SICRES_BY_TIPOVALIDEZDOCUMENTO.get(TIPOVALIDEZDOCUMENTO_COPIA));
         anexoFirmaDetachedCopia.setTipoDocumental(getTestAnexoTipoDocumental());
         anexoFirmaDetachedCopia.setTipoDocumento(CODIGO_SICRES_BY_TIPO_DOCUMENTO.get(TIPO_DOCUMENTO_FORMULARIO));
         anexoFirmaDetachedCopia.setOrigenCiudadanoAdmin(ANEXO_ORIGEN_CIUDADANO);
@@ -437,6 +438,28 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
             e.printStackTrace();
         }
 
+    }
+
+
+    @Test
+    public void crearRegistroEntrada2() {
+        try {
+
+            for (int i = 0; i < 10; i++) {
+                RegistroEntradaWs registroEntradaWs = getRegistroEntrada_to_PersonaFisica(false);
+                IdentificadorWs identificadorWs = registroEntradaApi.nuevoRegistroEntrada(getTestEntidadCodigoDir3(), registroEntradaWs);
+
+                printIdentificadorWSBasico(identificadorWs);
+            }
+
+
+        } catch (WsI18NException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsI18NException: " + msg);
+        } catch (WsValidationException e) {
+            String msg = WsClientUtils.toString(e);
+            System.out.println("Error WsValidationException: " + msg);
+        }
     }
 
 

@@ -752,7 +752,7 @@ public class AnexoController extends BaseController {
      * @param data
      * @throws IOException
      */
-    private void obtenerContentType(String contentType, HttpServletResponse response, String filename, MimetypesFileTypeMap mimeTypesMap, byte[] data) throws IOException {
+    private void obtenerContentType(String contentType, HttpServletResponse response, String filename, MimetypesFileTypeMap mimeTypesMap, byte[] data) throws IOException, Exception {
         OutputStream output;
         if (contentType == null) {
             try {
@@ -771,7 +771,7 @@ public class AnexoController extends BaseController {
             }
         }
         response.setContentType(contentType);
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+        response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(true, filename));
         response.setContentLength(data.length);
 
         output = response.getOutputStream();

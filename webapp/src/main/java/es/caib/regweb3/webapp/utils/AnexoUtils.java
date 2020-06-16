@@ -7,9 +7,16 @@ import org.apache.commons.io.FilenameUtils;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.springframework.web.util.UriUtils;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
  * Created by earrivi on 30/05/2017.
@@ -132,5 +139,39 @@ public class AnexoUtils {
     public static String obtenerExtensionAnexo(String fileName){
 
         return FilenameUtils.getExtension(fileName).toLowerCase();
+    }
+
+
+
+    /**
+     * Retorna el contingut de la capçalera <i>Content-Disposition</i> que compleix
+     * amb https://tools.ietf.org/html/rfc6266#section-5
+     * @param attachment si és true empra attachment, sinó inline
+     * @param filename nom del fitxer suggerit
+     * @return contingut de la capçalera.
+     * @throws Exception
+     */
+    public static String getContentDispositionHeader(boolean attachment, String filename)
+       throws Exception {
+
+        // Preparam el nom suggerit en UTF-8
+        // No podem emprar URLEncoder.encode perquè només és per paràmetres http i
+        // converteix els espais a "+" enlloc de a "%20"
+        String utf8filename = UriUtils.encodePath(filename, "UTF-8");
+
+        // Asseguram que el filename suggerit en ISO-8859-1 no té caràcters incompatibles
+        CharsetEncoder charsetEncoder = ISO_8859_1.newEncoder();
+        if (!charsetEncoder.canEncode(filename)) {
+            charsetEncoder.onUnmappableCharacter(CodingErrorAction.REPLACE);
+            charsetEncoder.replaceWith("_".getBytes(ISO_8859_1) );
+            ByteBuffer buffer = charsetEncoder.encode(CharBuffer.wrap(filename));
+            filename = new String(buffer.array(), ISO_8859_1);
+        }
+
+        // Implementació de RFC6266. La majoria de navegadors soporten la codificació en UTF-8 emprant
+        // "filename*=", pels que no ho soportin, ficam "filename=" abans.
+        return (attachment ? "attachment" : "inline")
+           + "; filename=\"" + filename + "\""
+           + "; filename*=UTF-8''" + utf8filename;
     }
 }
