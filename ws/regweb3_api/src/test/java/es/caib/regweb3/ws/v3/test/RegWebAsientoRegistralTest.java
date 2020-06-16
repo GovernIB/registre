@@ -88,7 +88,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void crearAsiento() throws Exception {
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 10; i++) {
 
             try {
 
@@ -108,6 +108,33 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             }
         }
     }
+
+    @Test
+    public void crearAsientoEntradaConAnexos() throws Exception {
+
+        for (int i = 0; i < 100; i++) {
+
+            try {
+
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,true);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+
+
 
     @Test
     public void crearAsientoSalida() throws Exception {
