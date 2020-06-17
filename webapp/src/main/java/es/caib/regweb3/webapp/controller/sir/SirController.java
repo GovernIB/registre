@@ -480,18 +480,20 @@ public class SirController extends BaseController {
      */
     @RequestMapping(value = "/reenviarIntercambio", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean reenviarMensajeControl(@RequestParam Long idOficioRemision)throws Exception {
+    public Boolean reenviarIntercambio(@RequestParam Long idOficioRemision)throws Exception {
 
         try{
-            log.info("Dentro de reenviarIntercambio: " + idOficioRemision);
-             sirEnvioEjb.reenviarIntercambio(idOficioRemision);
-             return true;
+
+            sirEnvioEjb.reenviarIntercambio(idOficioRemision);
+            return true;
 
         }catch (Exception | I18NException e){
+            log.info("Error volviendo a enviar el intercambio..");
             e.printStackTrace();
         }
 
         return false;
+
     }
 
     /**
