@@ -474,6 +474,27 @@ public class SirController extends BaseController {
     }
 
     /**
+     * Vuelve a enviar un Intercambio, ya enviado previamente
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = "/reenviarIntercambio", method = RequestMethod.GET)
+    @ResponseBody
+    public Boolean reenviarMensajeControl(@RequestParam Long idOficioRemision)throws Exception {
+
+        try{
+            log.info("Dentro de reenviarIntercambio: " + idOficioRemision);
+             sirEnvioEjb.reenviarIntercambio(idOficioRemision);
+             return true;
+
+        }catch (Exception | I18NException e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
      * Reinicia el contador de reintentos SIR
      * @return
      * @throws Exception
@@ -614,9 +635,7 @@ public class SirController extends BaseController {
             }
 
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        } catch (I18NException e) {
+        } catch (Exception | I18NException e) {
             e.printStackTrace();
         }
 

@@ -283,6 +283,11 @@
                                                                         <c:url value="/sir/oficio/reiniciar" var="urlReiniciar"/>
                                                                         <li><a href="javascript:void(0);" onclick="reiniciarContador('${oficioRemision.id}','${urlReiniciar}')"><spring:message code="registroSir.reiniciar"/></a></li>
                                                                     </c:if>
+                                                                    <c:if test="${oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO_ACK || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_RECHAZADO
+                                                                    || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_SIR_REENVIADO_ACK}">
+                                                                        <li class="divider"></li>
+                                                                        <li><a href="javascript:void(0);" onclick='confirm("javascript:reenviarIntercambio(${oficioRemision.id})","<spring:message code="regweb.confirmar.enviarIntercambio" htmlEscape="true"/>")'><spring:message code="intercambio.reenviar"/></a></li>
+                                                                    </c:if>
 
                                                                 </ul>
                                                             </div>
@@ -312,9 +317,12 @@
 <c:import url="../modulos/pie.jsp"/>
 
 <script type="text/javascript">
+    var urlReenviarIntercambio = '<c:url value="/sir/reenviarIntercambio"/>';
     var tradsSir = [];
     tradsSir['registroSir.reiniciar.ok'] = "<spring:message code='registroSir.reiniciar.ok' javaScriptEscape='true' />";
     tradsSir['registroSir.reiniciar.error'] = "<spring:message code='registroSir.reiniciar.error' javaScriptEscape='true' />";
+    tradsSir['intercambio.reenviado.ok'] = "<spring:message code='intercambio.reenviado.ok' javaScriptEscape='true' />";
+    tradsSir['intercambio.reenviado.error'] = "<spring:message code='intercambio.reenviado.error' javaScriptEscape='true' />";
 </script>
 
 <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
