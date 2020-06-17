@@ -428,12 +428,15 @@ public class SirEnvioBean implements SirEnvioLocal {
             peticion.append("Destino: ").append(registroSir.getDecodificacionEntidadRegistralDestino()).append(System.getProperty("line.separator"));
 
             // Enviamos el Registro al Componente CIR
-            emisionEjb.enviarFicheroIntercambio(registroSir);
+            if(registroSir != null){
+                emisionEjb.enviarFicheroIntercambio(registroSir);
+            }
 
             // Integración
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
 
-        }catch(SIRException | I18NException e){
+        }catch(I18NException | Exception e){
+            log.info("Ha ocurrido un error reenviando el intercambio: " + e.getLocalizedMessage());
             e.printStackTrace();
             if (registroSir != null) {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());

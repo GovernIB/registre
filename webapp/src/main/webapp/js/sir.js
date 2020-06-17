@@ -90,9 +90,9 @@ function reenviarIntercambio(idOficioRemision){
         success: function(result) {
 
             if(result === true){
-                mensajeSuccess("#mensajes", tradsMensajesControl['intercambio.reenviado.ok']);
+                mensajeSuccess("#mensajes", tradsSir['intercambio.reenviado.ok']);
             }else{
-                mensajeError("#mensajes", tradsMensajesControl['intercambio.reenviado.error']);
+                mensajeError("#mensajes", tradsSir['intercambio.reenviado.error']);
             }
         }
     });
