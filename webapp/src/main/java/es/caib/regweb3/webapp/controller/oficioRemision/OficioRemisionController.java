@@ -561,7 +561,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroEntrada registroEntradaAEnviar : registrosEntrada) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(
+                        OficioRemision oficioRemision = sirEnvioEjb.enviarIntercambio(
                                 RegwebConstantes.REGISTRO_ENTRADA, registroEntradaAEnviar.getId(),
                                 getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOficinaSIRCodigo());
 
@@ -603,7 +603,7 @@ public class OficioRemisionController extends BaseController {
                     for (RegistroSalida registroSalidaAEnviar : registrosSalida) {
 
                         // Enviamos el Fichero de datos de intercambio al nodo SIR
-                        OficioRemision oficioRemision = sirEnvioEjb.enviarFicheroIntercambio(
+                        OficioRemision oficioRemision = sirEnvioEjb.enviarIntercambio(
                                 RegwebConstantes.REGISTRO_SALIDA, registroSalidaAEnviar.getId(),
                                 getOficinaActiva(request), usuarioEntidad, oficioRemisionForm.getOficinaSIRCodigo());
 

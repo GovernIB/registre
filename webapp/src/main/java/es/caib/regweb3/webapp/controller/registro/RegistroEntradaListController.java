@@ -379,7 +379,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         try {
 
-            sirEnvioEjb.enviarFicheroIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
+            sirEnvioEjb.enviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, getOficinaActiva(request), usuarioEntidad, oficinaSIRCodigo);
             Mensaje.saveMessageInfo(request, getMessage("registroEntrada.envioSir.ok"));
             jsonResponse.setStatus("SUCCESS");
 
@@ -438,7 +438,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         try {
             if (oficinaReenvio != null) {//Si han seleccionado oficina de reenvio
                 //Reenviamos
-                sirEnvioEjb.reenviarRegistro(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, oficinaReenvio, oficinaActiva, usuarioEntidad, reenviarForm.getObservaciones());
+                sirEnvioEjb.reenviarIntercambio(RegwebConstantes.REGISTRO_ENTRADA, idRegistro, oficinaReenvio, oficinaActiva, usuarioEntidad, reenviarForm.getObservaciones());
             }
 
             Mensaje.saveMessageInfo(request, getMessage("registroSir.reenvio.ok"));

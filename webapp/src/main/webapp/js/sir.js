@@ -49,7 +49,7 @@ function enviarConfirmacion(idRegistroSir){
 }
 
 /**
- * Reenviar mensajde de control
+ * Reenviar mensaje de control
  * @param idMensaje
  */
 function reenviarMensaje(idMensaje){
@@ -68,6 +68,31 @@ function reenviarMensaje(idMensaje){
                 mensajeSuccess("#mensajes", tradsMensajesControl['mensajeControl.reenviado.ok']);
             }else{
                 mensajeError("#mensajes", tradsMensajesControl['mensajeControl.reenviado.error']);
+            }
+        }
+    });
+}
+
+/**
+ * Volver a enviar un intercmbio
+ * @param idOficioRemision
+ */
+function reenviarIntercambio(idOficioRemision){
+
+    // Reenviamos el mensaje de control
+    $.ajax({
+        url: urlReenviarIntercambio,
+        data: { idOficioRemision: idOficioRemision },
+        type: "GET",
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(result) {
+
+            if(result === true){
+                mensajeSuccess("#mensajes", tradsMensajesControl['intercambio.reenviado.ok']);
+            }else{
+                mensajeError("#mensajes", tradsMensajesControl['intercambio.reenviado.error']);
             }
         }
     });
