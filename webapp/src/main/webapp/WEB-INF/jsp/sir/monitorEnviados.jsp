@@ -20,7 +20,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li class="active"><i class="fa fa-search"></i> <spring:message code="sir.monitor.envios"/></li>
+                    <li class="active"><i class="fa fa-search"></i> <strong><spring:message code="registroSir.buscador.enviados"/></strong></li>
                 </ol>
             </div>
         </div><!-- /.row -->
