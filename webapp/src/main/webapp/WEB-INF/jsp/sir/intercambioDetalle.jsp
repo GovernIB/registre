@@ -26,6 +26,8 @@
                 </div>
             </div><!-- Fin miga de pan -->
 
+            <c:import url="../modulos/mensajes.jsp"/>
+
             <div class="row">
 
                 <%-- PANEL LATERAL  --%>
@@ -103,7 +105,7 @@
                         </div>
                     </div>
 
-                <%-- TRAZABILIDADES --%>
+                <%-- ESTADOS --%>
                 <div class="col-lg-4">
                     <div class="panel panel-warning">
                         <div class="panel-heading">
@@ -111,7 +113,7 @@
                         </div>
                         <div class="panel-body">
 
-                            <%--TRAZABILIDAD SIR--%>
+                            <%--TRAZABILIDAD RECIBIDO SIR--%>
                             <c:if test="${not empty trazabilidadesSir}">
                                 <c:forEach var="trazabilidadSir" items="${trazabilidadesSir}">
 
@@ -147,7 +149,7 @@
                                 </c:forEach>
                             </c:if>
 
-                            <%--TRAZABILIDAD--%>
+                            <%--TRAZABILIDAD ENVIADO SIR--%>
                             <c:if test="${not empty trazabilidades}">
                                 <c:forEach var="trazabilidad" items="${trazabilidades}">
 
@@ -175,6 +177,13 @@
                                         </a>
                                     </c:if>
                                 </c:forEach>
+
+                                <c:if test="${trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_SIR_ENVIADO}">
+                                    <%--BOTONERA--%>
+                                    <div class="panel-footer center">
+                                        <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/sir/${trazabilidades[0].oficioRemision.id}/anular"/>')" class="btn btn-danger btn-sm"><spring:message code="oficioRemision.anular"/></button></div>
+                                    </div>
+                                </c:if>
                             </c:if>
 
                         </div>

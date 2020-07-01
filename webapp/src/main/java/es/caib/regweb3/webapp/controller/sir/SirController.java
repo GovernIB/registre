@@ -243,25 +243,27 @@ public class SirController extends BaseController {
     /**
      * Controller temporal para anular Oficios enviados a SIR
      */
-    @RequestMapping(value = "/{idIntercambio}/anular", method = RequestMethod.GET)
-    public String anularOficio(@PathVariable String idIntercambio, HttpServletRequest request) throws Exception {
+    @RequestMapping(value = "/{idOficio}/anular", method = RequestMethod.GET)
+    public String anularOficioSir(@PathVariable Long idOficio, HttpServletRequest request) throws Exception {
 
-        OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(idIntercambio);
+        OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficio);
 
         try{
 
-            if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO){
+            if(oficioRemision.getEstado() == RegwebConstantes.OFICIO_SIR_ENVIADO && oficioRemision.getSir()){
 
                 oficioRemision.setEstado(RegwebConstantes.OFICIO_ANULADO);
                 oficioRemision.setFechaEstado(new Date());
                 oficioRemisionEjb.merge(oficioRemision);
 
-                Mensaje.saveMessageInfo(request,"Se ha marcado anulado el oficio de remisión");
+                Mensaje.saveMessageInfo(request,"Se ha anulado el intercambio");
+
+                return "redirect:/sir/"+oficioRemision.getIdentificadorIntercambio()+"/detalle";
             }
 
         }catch (Exception e){
             e.printStackTrace();
-            Mensaje.saveMessageError(request,"Ha ocurrido un error anulando el Oficio: " + e.getMessage());
+            Mensaje.saveMessageError(request,"Ha ocurrido un error anulando el intercambio: " + e.getMessage());
         }
 
         return "redirect:/inici";
@@ -595,6 +597,12 @@ public class SirController extends BaseController {
         return "redirect:/sir/monitorRecibidos";
     }
 
+    /**
+     * Genera el xml del fichero de intercambio enviado
+     * @param idOficioRemision
+     * @param request
+     * @param response
+     */
     @RequestMapping(value = "/{idOficioRemision}/ficheroIntercambio", method = RequestMethod.GET)
     public void generarFicheroIntercambio(@PathVariable("idOficioRemision") Long idOficioRemision, HttpServletRequest request, HttpServletResponse response)  {
         RegistroSir registroSir = null;
@@ -633,9 +641,7 @@ public class SirController extends BaseController {
                 }  catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
-
 
         } catch (Exception | I18NException e) {
             e.printStackTrace();
