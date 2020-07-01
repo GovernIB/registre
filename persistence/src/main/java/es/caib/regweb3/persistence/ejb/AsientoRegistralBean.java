@@ -49,18 +49,18 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                          UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, true);
+        return registroSalidaEjb.registrarSalida(registroSalida, usuarioEntidad, interesados, anexos, validarAnexos);
     }
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                            UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
-        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, true);
+        return registroEntradaEjb.registrarEntrada(registroEntrada, usuarioEntidad, interesados, anexos, validarAnexos);
 
     }
 
