@@ -44,7 +44,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                   UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**
@@ -60,7 +60,7 @@ public interface AsientoRegistralLocal {
      * @throws I18NValidationException
      */
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
-                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos)
+                                     UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;
 
     /**
