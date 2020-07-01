@@ -70,9 +70,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
     public InteresadoLocal interesadoEjb;
 
-    @EJB(mappedName = "regweb3/InteresadoSirEJB/local")
-    private InteresadoSirLocal interesadoSirEjb;
-
 
     /**
      * Listado de registros de entrada
