@@ -5,6 +5,7 @@
         CSV varchar(255),
         CUSTODIAID varchar(256),
         ESTADOFIRMA int4,
+        EXPEDIENTEID varchar(256),
         FECHACAPTURA timestamp not null,
         FECHAVALIDACION timestamp,
         FIRMA bytea,
@@ -15,6 +16,7 @@
         MOTIVONOVALID varchar(255),
         OBSERVACIONES varchar(50),
         ORIGEN int4,
+        PERFIL_CUSTODIA int8,
         PURGADO bool,
         SIGNFORMAT varchar(255),
         SIGNPROFILE varchar(255),
@@ -564,7 +566,7 @@
         DEC_ENT_REG_DEST varchar(80),
         DEC_T_ANOTACION varchar(80),
         EXPEDIENTE varchar(80),
-        EXPONE varchar(4000),
+        EXPONE text,
         EXTRACTO varchar(240),
         FECHAORIGEN timestamp,
         ID_INTERCAMBIO varchar(33),
@@ -578,7 +580,7 @@
         PRESENCIAL bool,
         REFEXT varchar(16),
         RESERVA varchar(4000),
-        SOLICITA varchar(4000),
+        SOLICITA text,
         TIPO_ANOTACION varchar(2),
         TIPODOCFISICA int8,
         TIPOENVIODOC varchar(255),
@@ -683,7 +685,7 @@
         DESC_ERROR varchar(2000),
         DOC_FISICA varchar(1) not null,
         ESTADO int4 not null,
-        EXPONE varchar(4000),
+        EXPONE text,
         FECHA_ESTADO timestamp,
         FECHA_RECEPCION timestamp,
         FECHAR_EGISTRO timestamp not null,
@@ -697,7 +699,7 @@
         OBSERVACIONES varchar(50),
         REF_EXTERNA varchar(16),
         RESUMEN varchar(240) not null,
-        SOLICITA varchar(4000),
+        SOLICITA text,
         TIMESTAMP text,
         TIPO_ANOTACION varchar(2) not null,
         TIPO_REGISTRO int4 not null,
@@ -1421,8 +1423,6 @@
 
     create index RWE_REGMIG_TREG_I on RWE_REGISTRO_MIGRADO (TREGISTRO);
 
-    create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
-
     alter table RWE_REGISTRO_MIGRADO
         add constraint RWE_REGMIG_ENTIDAD_FK
         foreign key (IDENTIDAD)
@@ -1492,6 +1492,8 @@
         add constraint RWE_REPRO_USUARIO_FK
         foreign key (USUARIOENTIDAD)
         references RWE_USUARIO_ENTIDAD;
+
+    create index RWE_SESION_USUENT_FK_I on RWE_SESION (USUARIO);
 
     alter table RWE_SESION
         add constraint RWE_SESION_USUENT_FK
