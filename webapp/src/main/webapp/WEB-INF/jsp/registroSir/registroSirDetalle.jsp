@@ -25,7 +25,7 @@
                         <li><a href="<c:url value="/registroSir/list"/>"><i class="fa fa-list"></i> <spring:message code="registroSir.listado"/></a></li>
                     </c:if>
                     <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
-                        <li><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-list"></i> <spring:message code="sir.monitor.recibidos"/></a></li>
+                        <li><a href="<c:url value="/sir/monitorRecibidos"/>"><i class="fa fa-list"></i> <spring:message code="registroSir.buscador.recibidos"/></a></li>
                     </c:if>
 
                     <li class="active"><i class="fa fa-pencil-square-o"></i> <spring:message code="registroSir.registroSir"/> ${registroSir.numeroRegistro}</li>
