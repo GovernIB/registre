@@ -112,8 +112,8 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroEntrada.getRegistroDetalle());
                     anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_ENTRADA, null, validarAnexos);
-                    registroEntrada.getRegistroDetalle().getAnexosFull().add(anexoFull);
                 }
+                registroEntrada.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
             }
             // Obtenemos el próximo evento del Registro
             Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
