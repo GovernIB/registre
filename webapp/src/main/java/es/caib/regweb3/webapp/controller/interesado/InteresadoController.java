@@ -4,6 +4,7 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Interesado;
 import es.caib.regweb3.model.Persona;
 import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -50,6 +51,9 @@ public class InteresadoController extends BaseController{
 
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
+
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    private InteresadoLocal interesadoEjb;
 
 
     /**

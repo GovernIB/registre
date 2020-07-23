@@ -11,14 +11,12 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.editor.UsuarioEntidadEditor;
 import es.caib.regweb3.webapp.form.EntidadForm;
 import es.caib.regweb3.webapp.form.LibroOrganismo;
-import es.caib.regweb3.webapp.form.PermisoLibroUsuarioForm;
 import es.caib.regweb3.webapp.form.UsuarioEntidadBusquedaForm;
 import es.caib.regweb3.webapp.utils.*;
 import es.caib.regweb3.webapp.validator.EntidadValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
-import org.fundaciobit.pluginsib.userinformation.RolesInfo;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,9 +72,6 @@ public class EntidadController extends BaseController {
     @EJB(mappedName = "regweb3/PendienteEJB/local")
     private PendienteLocal pendienteEjb;
 
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
-
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;
 
@@ -91,9 +86,6 @@ public class EntidadController extends BaseController {
 
     @EJB(mappedName = "regweb3/ContadorEJB/local")
     private ContadorLocal contadorEjb;
-
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
-    private NotificacionLocal notificacionEjb;
 
     @EJB(mappedName = "regweb3/OficioRemisionEJB/local")
     private OficioRemisionLocal oficioRemisionEjb;
@@ -112,6 +104,28 @@ public class EntidadController extends BaseController {
     @ModelAttribute("perfilesCustodia")
     public long[] perfilesCustodia() throws Exception {
         return RegwebConstantes.PERFILES_CUSTODIA;
+    }
+
+
+    /**
+     * Crear Libro
+     */
+    @RequestMapping(value = "/crearLibro", method = RequestMethod.GET)
+    public String crearLibro(Model model, HttpServletRequest request) throws Exception {
+
+        Entidad entidad = getEntidadActiva(request);
+
+        if(entidad.getLibro() == null){
+            Libro libro = new Libro();
+            libro.setCodigo("GOIB");
+            libro.setNombre(entidad.getNombre());
+            libro.setOrganismo(organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId()));
+            entidad.setLibro(libroEjb.crearLibro(libro));
+
+            entidadEjb.merge(entidad);
+        }
+
+        return "redirect:/inicio";
     }
 
     /**
@@ -678,7 +692,7 @@ public class EntidadController extends BaseController {
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
      */
-    @RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.GET)
     public String asignarUsuario(@PathVariable Long idUsuarioEntidad, Model model,
                                  HttpServletRequest request) throws Exception, I18NException {
 
@@ -725,9 +739,9 @@ public class EntidadController extends BaseController {
         }
     }
 
-    /**
+    *//**
      * Guardar un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
-     */
+     *//*
     @RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.POST)
     public String asignarUsuario(@ModelAttribute PermisoLibroUsuarioForm permisoLibroUsuarioForm,
                                  @PathVariable Integer idUsuarioEntidad, SessionStatus status, HttpServletRequest request) {
@@ -757,7 +771,7 @@ public class EntidadController extends BaseController {
 
         status.setComplete();
         return "redirect:/entidad/usuarios";
-    }
+    }*/
 
     /**
      * Eliminar la asignación de un Usuario a una Entidad
@@ -774,7 +788,7 @@ public class EntidadController extends BaseController {
             }
 
             // Eliminamos todos sus PermisoLibroUsuario
-            permisoLibroUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
+            permisoOrganismoUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
 
             // Comprobar si el usuario tiene Registros en la Entidad
             if (entidadEjb.puedoEliminarlo(idUsuarioEntidad)) {

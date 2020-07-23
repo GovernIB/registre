@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.OficioRemisionEntradaUtilsLocal;
@@ -55,21 +54,19 @@ public class AvisoController extends BaseController {
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-            List<Libro> librosAdministrados = getLibrosAdministradosOficina(request);
-            List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
-            List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request);
+            List<Organismo> organismosResponsable = getOrganismosResponsable(request);
 
             Long pendientesVisarEntrada = (long) 0;
             Long pendientesVisarSalida = (long) 0;
-            Long oficiosEntradaInternosPendientesRemision = (long) 0;
+            //Long oficiosEntradaInternosPendientesRemision = (long) 0;
             Long oficiosEntradaExternosPendientesRemision = (long) 0;
-            Long oficiosSalidaInternosPendientesRemision = (long) 0;
+            //Long oficiosSalidaInternosPendientesRemision = (long) 0;
             Long oficiosSalidaExternosPendientesRemision = (long) 0;
 
             /*Registros Pendientes de Visar*/
-            if(librosAdministrados!= null && librosAdministrados.size() > 0){
-                pendientesVisarEntrada = registroEntradaConsultaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
-                pendientesVisarSalida = registroSalidaConsultaEjb.getByLibrosEstadoCount(librosAdministrados, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+            if(organismosResponsable!= null && organismosResponsable.size() > 0){
+                pendientesVisarEntrada = registroEntradaConsultaEjb.getByLibrosEstadoCount(organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
+                pendientesVisarSalida = registroSalidaConsultaEjb.getByLibrosEstadoCount(organismosResponsable, RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
             }
             mav.addObject("pendientesVisarEntrada", pendientesVisarEntrada);
             mav.addObject("pendientesVisarSalida", pendientesVisarSalida);
@@ -84,22 +81,16 @@ public class AvisoController extends BaseController {
             if(entidadActiva.getOficioRemision()){
 
                 // OFICIOS PENDIENTES DE REMISIÓN ENTRADA
-                if(librosRegistroEntrada!= null && librosRegistroEntrada.size() > 0){
+                oficiosEntradaExternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaExternosPendientesRemisionCount(oficinaActiva.getId());
 
-                    oficiosEntradaInternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaInternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada);
-                    oficiosEntradaExternosPendientesRemision = oficioRemisionEntradaUtilsEjb.oficiosEntradaExternosPendientesRemisionCount(oficinaActiva.getId(),librosRegistroEntrada);
-                }
 
                 // OFICIOS PENDIENTES DE REMISIÓN SALIDA
-                if(librosRegistroSalida!= null && librosRegistroSalida.size() > 0){
+                oficiosSalidaExternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO);
 
-                    oficiosSalidaInternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_INTERNO);
-                    oficiosSalidaExternosPendientesRemision = oficioRemisionSalidaUtilsEjb.oficiosSalidaPendientesRemisionCount(oficinaActiva.getId(),librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_EXTERNO);
-                }
 
-                mav.addObject("oficiosEntradaInternosPendientesRemision", oficiosEntradaInternosPendientesRemision);
+                //mav.addObject("oficiosEntradaInternosPendientesRemision", oficiosEntradaInternosPendientesRemision);
                 mav.addObject("oficiosEntradaExternosPendientesRemision", oficiosEntradaExternosPendientesRemision);
-                mav.addObject("oficiosSalidaInternosPendientesRemision", oficiosSalidaInternosPendientesRemision);
+                //mav.addObject("oficiosSalidaInternosPendientesRemision", oficiosSalidaInternosPendientesRemision);
                 mav.addObject("oficiosSalidaExternosPendientesRemision", oficiosSalidaExternosPendientesRemision);
 
                 // OFICIOS PENDIENTES DE LLEGADA

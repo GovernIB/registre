@@ -62,17 +62,10 @@
 
                                     <div class="col-xs-6 espaiLinies">
                                         <div class="col-xs-4 pull-left etiqueta_regweb">
-                                            <label for="oficioRemision.libro.id" rel="popupAbajo"
-                                                   data-content="<spring:message code="registro.ayuda.libroEnviadoSir.busqueda"/>"
-                                                   data-toggle="popover"><spring:message code="oficioRemision.libro"/></label>
+                                            <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:select path="oficioRemision.libro.id" cssClass="chosen-select">
-                                                <form:option value="">...</form:option>
-                                                <c:forEach items="${librosConsulta}" var="libro">
-                                                    <form:option value="${libro.id}">${libro.nombreCompleto}</form:option>
-                                                </c:forEach>
-                                            </form:select>
+                                            <form:select path="idOrganismo" cssClass="chosen-select" items="${organismosConsultaEntrada}" itemValue="id" itemLabel="denominacion"/>
                                         </div>
                                     </div>
                                 </div>

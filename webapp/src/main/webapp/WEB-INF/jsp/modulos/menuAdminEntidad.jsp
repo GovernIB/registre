@@ -5,39 +5,15 @@
 
 <c:if test="${loginInfo.entidadActiva != null}">
 
+    <%--MENÚ CONFIGURACIÓN--%>
     <div class="btn-group">
         <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
-            <spring:message code="menu.configuracion"/> <span class="caret"></span>
+            <i class="fa fa-dashboard"></i> <spring:message code="menu.configuracion"/> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             <li class="submenu-complet"><a href="<c:url value="/entidad/${loginInfo.entidadActiva.id}/edit"/>"><i class="fa fa-institution"></i> <spring:message code="menu.entidad.editar"/></a></li>
             <li class="submenu-complet"><a href="<c:url value="/plugin/list"/>"><i class="fa fa-plug"></i> <spring:message code="plugin.plugins"/></a></li>
             <li class="submenu-complet"><a href="<c:url value="/propiedadGlobal/list"/>"><i class="fa fa-list"></i> <spring:message code="propiedadGlobal.propiedadesGlobales"/></a></li>
-            <li class="divider"></li>
-            <li class="dropdown-submenu-left toggle-left">
-                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="organismo.organigrama"/></a>
-                <ul class="dropdown-menu">
-                    <li><a href="<c:url value="/organismo/list"/>"><i class="fa fa-search"></i> <spring:message code="organismo.listado"/></a></li>
-                    <li><a href="<c:url value="/oficina/list"/>"><i class="fa fa-search"></i> <spring:message code="oficina.listado"/></a></li>
-                    <li><a href="<c:url value="/organismo/arbolList"/>"><i class="fa fa-sitemap"></i> <spring:message code="regweb.organigrama"/></a></li>
-                    <li class="divider"></li>
-                    <li><a href="<c:url value="/libro/list"/>"><i class="fa fa-list-ol"></i> <spring:message code="libro.listado"/></a></li>
-                    <li><a href="<c:url value="/entidad/librosCambiar"/>"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a></li>
-                    <li class="divider"></li>
-                    <li><a href="<c:url value="/entidad/descargas/list"/>"><i class="fa fa-refresh"></i> <spring:message code="organismo.sincronizaciones"/></a></li>
-                </ul>
-            </li>
-            <li class="divider"></li>
-
-            <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
-            <c:if test="${loginInfo.entidadActiva.configuracionPersona != 1}">
-                <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><i class="fa fa-address-book-o"></i> <spring:message code="menu.personas"/></a></li>
-            </c:if>
-
-            <c:if test="${loginInfo.registrosMigrados}">
-                <li class="divider"></li>
-                <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><i class="fa fa-exchange"></i> <spring:message code="informe.migradoLopd"/></a></li>
-            </c:if>
             <li class="divider"></li>
 
             <li class="dropdown-submenu-left toggle-left">
@@ -54,6 +30,16 @@
                 <li class="submenu-complet"><a href="<c:url value="<%=PropiedadGlobalUtil.getDir3CaibServer()%>"/>" target="_blank"><i class="fa fa-institution"></i> <spring:message code="menu.dir3caib"/></a></li>
             </c:if>
 
+            <c:if test="${loginInfo.entidadActiva.configuracionPersona != 1}">
+                <li class="divider"></li>
+                <li class="submenu-complet"><a href="<c:url value="/persona/list"/>"><i class="fa fa-address-book-o"></i> <spring:message code="menu.personas"/></a></li>
+            </c:if>
+
+            <c:if test="${loginInfo.registrosMigrados}">
+                <li class="divider"></li>
+                <li class="submenu-complet"><a href="<c:url value="/registroMigrado/list"/>"><i class="fa fa-exchange"></i> <spring:message code="informe.migradoLopd"/></a></li>
+            </c:if>
+
             <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="/doc/Manual_de_Usuari_Administrador_Entitat_de_RegWeb3.pdf"/>"
                                            target="_blank"><i class="fa fa-file-pdf-o"></i> <spring:message code="menu.manual.aden"/></a></li>
@@ -61,10 +47,29 @@
         </ul>
     </div>
 
+    <%--MENÚ ORGANIGRAMA--%>
+    <div class="btn-group">
+        <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+            <i class="fa fa-institution"></i> <spring:message code="menu.organigrama"/> <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
+            <li class="divider"></li>
+            <li class="submenu-complet"><a href="<c:url value="/organismo/list"/>"><i class="fa fa-institution"></i> <spring:message code="organismo.listado"/></a></li>
+            <li class="submenu-complet"><a href="<c:url value="/oficina/list"/>"><i class="fa fa-home"></i> <spring:message code="oficina.listado"/></a></li>
+            <li class="submenu-complet"><a href="<c:url value="/organismo/arbolList"/>"><i class="fa fa-sitemap"></i> <spring:message code="regweb.organigrama"/></a></li>
+            <li class="divider"></li>
+            <li class="submenu-complet"><a href="<c:url value="/libro/list"/>"><i class="fa fa-list-ol"></i> <spring:message code="libro.listado"/></a></li>
+            <li class="submenu-complet"><a href="<c:url value="/entidad/librosCambiar"/>"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a></li>
+            <li class="divider"></li>
+            <li><a href="<c:url value="/entidad/descargas/list"/>"><i class="fa fa-refresh"></i> <spring:message code="organismo.sincronizaciones"/></a></li>
+        </ul>
+    </div>
+
     <%--MENÚ MONITORIZACIÓN--%>
     <div class="btn-group">
         <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
-            <spring:message code="menu.monitorizacion"/> <span class="caret"></span>
+            <i class="fa fa-cogs"></i> <spring:message code="menu.monitorizacion"/> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             <li class="dropdown-submenu-left toggle-left">
@@ -116,7 +121,7 @@
     <c:if test="${loginInfo.entidadActiva.sir}">
         <div class="btn-group">
             <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
-                <spring:message code="menu.sir"/> <span class="caret"></span>
+                <i class="fa fa-exchange"></i> <spring:message code="menu.sir"/> <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li class="submenu-complet"><a href="<c:url value="/integracion/list/4"/>"><i class="fa fa-gears"></i> <spring:message code="integracion.sir"/></a></li>

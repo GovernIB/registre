@@ -8,8 +8,6 @@ import es.caib.regweb3.model.utils.ObjetoBasico;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Dir3CaibUtils;
-import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.LocalidadJson;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -20,8 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,7 +31,7 @@ import java.util.Locale;
  */
 @Controller
 @RequestMapping(value = "/rest")
-public class RestController {
+public class RestController extends BaseController {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -64,25 +62,19 @@ public class RestController {
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    private TipoDocumentalLocal tipoDocumentalEjb;
-
     @EJB(mappedName = "regweb3/IntegracionEJB/local")
     private IntegracionLocal integracionEjb;
 
     @EJB(mappedName = "regweb3/ColaEJB/local")
     private ColaLocal colaEjb;
 
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
-    private NotificacionLocal notificacionEjb;
 
     @RequestMapping(value = "/busquedaPersonas/{tipoPersona}", method = RequestMethod.POST)
     public @ResponseBody List<ObjetoBasico> busquedaPersonas(@PathVariable Long tipoPersona, @RequestParam String query, HttpServletRequest request) throws Exception {
 
         try {
-            HttpSession session = request.getSession();
-            LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
-            Entidad entidad = loginInfo.getEntidadActiva();
+
+            Entidad entidad = getEntidadActiva(request);
             return personaEjb.busquedaPersonas(query, tipoPersona, entidad.getId());
 
         }catch (Exception e){
@@ -305,6 +297,26 @@ public class RestController {
         log.info("obtenerOficinasSIR");
         Dir3CaibObtenerOficinasWs oficinasService = Dir3CaibUtils.getObtenerOficinasService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
         return oficinasService.obtenerOficinasSIRUnidad(codigoDestinoSIR);
+    }
+
+    /**
+     * Obtiene las {@link es.caib.regweb3.model.Oficina} del Organismo seleccionado
+     */
+    @RequestMapping(value = "/obtenerOficinasEntrada", method = RequestMethod.GET)
+    public @ResponseBody
+    LinkedHashSet<Oficina> obtenerOficinasEntrada(@RequestParam Long id, HttpServletRequest request) throws Exception {
+
+        return getOficinasConsultaEntrada(request, id);
+    }
+
+    /**
+     * Obtiene las {@link es.caib.regweb3.model.Oficina} del Organismo seleccionado
+     */
+    @RequestMapping(value = "/obtenerOficinasSalida", method = RequestMethod.GET)
+    public @ResponseBody
+    LinkedHashSet<Oficina> obtenerOficinasSalida(@RequestParam Long id, HttpServletRequest request) throws Exception {
+
+        return getOficinasConsultaSalida(request, id);
     }
 
 }

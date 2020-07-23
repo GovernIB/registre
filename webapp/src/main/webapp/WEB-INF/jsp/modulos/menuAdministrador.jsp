@@ -4,7 +4,7 @@
 
 <div class="btn-group">
     <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
-        <spring:message code="menu.configuracion"/> <span class="caret"></span>
+        <i class="fa fa-dashboard"></i> <spring:message code="menu.configuracion"/> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         <li class="dropdown-submenu-left toggle-left">

@@ -4,9 +4,6 @@ import es.caib.regweb3.model.CatEstadoEntidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.CatEstadoEntidadLocal;
-import es.caib.regweb3.persistence.ejb.EntidadLocal;
-import es.caib.regweb3.persistence.ejb.OficinaLocal;
-import es.caib.regweb3.persistence.ejb.OrganismoLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -38,14 +35,6 @@ import java.util.List;
 @SessionAttributes({"oficina", "organismo"})
 public class AdminController extends BaseController {
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
 
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
     private CatEstadoEntidadLocal catEstadoEntidadEjb;
@@ -62,7 +51,7 @@ public class AdminController extends BaseController {
         Organismo organismo = new Organismo();
         organismo.setEstado(vigente);
 
-        OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1, false);
+        OrganismoBusquedaForm organismoBusqueda = new OrganismoBusquedaForm(organismo, 1);
 
         model.addAttribute("organismoBusqueda", organismoBusqueda);
         model.addAttribute("entidades", entidadEjb.getAll());
@@ -84,7 +73,7 @@ public class AdminController extends BaseController {
 
         Organismo organismo = busqueda.getOrganismo();
 
-        Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), busqueda.getEntidad(), organismo.getCodigo(), organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
+        Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), busqueda.getEntidad(), organismo);
 
         mav.addObject("paginacion", paginacion);
         mav.addObject("organismoBusqueda", busqueda);

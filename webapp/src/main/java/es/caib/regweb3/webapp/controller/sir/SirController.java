@@ -47,9 +47,6 @@ public class SirController extends BaseController {
     @EJB(mappedName = "regweb3/RegistroSirEJB/local")
     private RegistroSirLocal registroSirEjb;
 
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
-
     @EJB(mappedName = "regweb3/TrazabilidadEJB/local")
     private TrazabilidadLocal trazabilidadEjb;
 
@@ -342,14 +339,14 @@ public class SirController extends BaseController {
 
         ModelAndView mav = new ModelAndView("sir/monitorEnviados");
 
-        // Obtenemos todos los Libros activos de la Entidad
-        List<Libro> libros = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
+        List<Organismo> organismosConsultaEntrada = getOrganismosConsultaEntrada(request);
 
         OficioRemisionBusquedaForm oficioRemisionBusqueda = new OficioRemisionBusquedaForm(new OficioRemision(), 1);
+        oficioRemisionBusqueda.setIdOrganismo(seleccionarOrganismoActivo(request, organismosConsultaEntrada));
 
         model.addAttribute("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        model.addAttribute("librosConsulta", libros);
+        model.addAttribute("organismosConsultaEntrada", organismosConsultaEntrada);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusqueda);
 
         return mav;
@@ -365,19 +362,16 @@ public class SirController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        // Obtenemos todos los Libros activos de la Entidad
-        List<Libro> libros = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
-
         // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
-        Date dataFi = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+        busqueda.setFechaFin(RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()));
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), dataFi,null, oficioRemision, null, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
         mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        mav.addObject("librosConsulta", libros);
+        mav.addObject("organismosConsultaEntrada", getOrganismosConsultaEntrada(request));
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
         return mav;

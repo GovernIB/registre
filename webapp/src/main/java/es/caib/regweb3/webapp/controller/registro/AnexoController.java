@@ -5,7 +5,10 @@ import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
-import es.caib.regweb3.persistence.ejb.*;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
+import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.ejb.SignatureServerLocal;
 import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -68,17 +71,11 @@ public class AnexoController extends BaseController {
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    private TipoDocumentalLocal tipoDocumentalEjb;
-
     @EJB(mappedName = "regweb3/ScanWebModuleEJB/local")
     private ScanWebModuleLocal scanWebModuleEjb;
 
     @EJB(mappedName = "regweb3/SignatureServerEJB/local")
     private SignatureServerLocal signatureServerEjb;
-
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
 
     @Autowired
     ArxiuCaibUtils arxiuCaibUtils;

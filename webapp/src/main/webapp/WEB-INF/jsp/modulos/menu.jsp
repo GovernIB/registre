@@ -96,12 +96,12 @@
                 <%--MENÚ OFICINAS--%>
                 <c:if test="${loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                     <sec:authorize access="hasRole('RWE_USUARI')">
-                        <c:if test="${fn:length(loginInfo.oficinasRegistro) > 1}">
+                        <c:if test="${fn:length(loginInfo.oficinasAcceso) > 1}">
 
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-home"></i> <spring:message code="regweb.oficinas"/> <i class="fa fa-caret-down"></i></a>
                                 <ul class="dropdown-menu scrollable-menu">
-                                    <c:forEach var="oficina" items="${loginInfo.oficinasRegistro}">
+                                    <c:forEach var="oficina" items="${loginInfo.oficinasAcceso}">
                                         <c:if test="${oficina.id != loginInfo.oficinaActiva.id}">
                                             <li><a href="<c:url value="/cambioOficina/${oficina.id}"/>"><i class="fa fa-home"></i> ${oficina.denominacion}
                                                 <c:if test="${oficina.sirEnvio || oficina.sirRecepcion}">

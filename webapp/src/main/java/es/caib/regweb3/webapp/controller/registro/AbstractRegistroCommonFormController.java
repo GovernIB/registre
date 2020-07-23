@@ -5,11 +5,14 @@ import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
+import es.caib.regweb3.webapp.utils.Mensaje;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +38,55 @@ public abstract class AbstractRegistroCommonFormController extends BaseControlle
 
     @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
     private CatNivelAdministracionLocal catNivelAdministracionEjb;
+
+
+    /**
+     * Validaciones antes de permitir editar un registro
+     * @param registro
+     * @param request
+     * @param permiso
+     * @return
+     * @throws Exception
+     */
+    public Boolean validarPermisosEdicion(IRegistro registro, HttpServletRequest request, Long permiso) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        Oficina oficinaActiva = getOficinaActiva(request);
+
+        // Comprobamos que el Registro de Entrada es válido para editarse
+        final List<Long> estados = new ArrayList<Long>();
+        estados.add(RegwebConstantes.REGISTRO_RESERVA);
+        estados.add(RegwebConstantes.REGISTRO_VALIDO);
+
+        if (!estados.contains(registro.getEstado())) {
+            log.info("Este Registro no se puede modificar");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
+            return true;
+        }
+
+        // Si tiene Justificante generado, no se puede editar
+        if (registro.getRegistroDetalle().getTieneJustificante()) {
+            log.info("Este Registro no se puede modificar, porque ya se ha generado su Justificante");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar.justificante"));
+            return true;
+        }
+
+        // Comprobamos que el UsuarioActivo pueda editar ese registro de entrada
+        if(!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registro.getOficina().getOrganismoResponsable().getId(), permiso, true)){
+            log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar"));
+            return true;
+        }
+
+        // Comprobamos si se la oficina activa es la misma donde se creó el registro
+        if(!registro.getOficina().getId().equals(oficinaActiva.getId()) && (registro.getOficina().getOficinaResponsable() != null && !registro.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()))){
+            log.info("Aviso: No puede editar un registro si no se encuentra en la oficina donde se creó");
+            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar.oficina"));
+            return true;
+        }
+
+        return false;
+    }
 
 
     @ModelAttribute("codigosAsunto")

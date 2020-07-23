@@ -504,7 +504,6 @@ function cargarOficinasSIR(url,idElemento,idSelect, valorSelected, todos, mensaj
  * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
  */
 function actualizarSelectLocalidad(url, idSelect, seleccion, valorSelected, todos, async) {
-    var inicio = new Date().getTime();
     var html = '';
     if (seleccion != '-1' && seleccion != null) {
         jQuery.ajax({
@@ -515,9 +514,6 @@ function actualizarSelectLocalidad(url, idSelect, seleccion, valorSelected, todo
             data: {id: seleccion},
             contentType: 'application/json',
             success: function (result) {
-                var finAjax = new Date().getTime();
-                console.log("finAjax");
-                console.log(finAjax - inicio);
                 if (todos) {
                     html = '<option value="-1">...</option>';
                 }
@@ -533,9 +529,6 @@ function actualizarSelectLocalidad(url, idSelect, seleccion, valorSelected, todo
                         + result[i].nombre + '</option>';
                 }
                 html += '</option>';
-                var finFor = new Date().getTime();
-                console.log("finFor");
-                console.log(finFor - inicio);
 
 
                 if (len != 0) {
@@ -546,9 +539,7 @@ function actualizarSelectLocalidad(url, idSelect, seleccion, valorSelected, todo
                     $(idSelect).html(html);
                     $(idSelect).attr("disabled", true).trigger("chosen:updated");
                 }
-                var fin = new Date().getTime();
-                console.log("fin");
-                console.log(fin - inicio);
+
             }
         });
 
@@ -615,62 +606,6 @@ function actualizarSelectTraduccion(url, idSelect, seleccion, valorSelected, tod
 }
 
 /**
- * Carga de valores una tabla
- * @param url donde hacer la petición ajax
- * @param idTabla id de la tabla  donde cargar los datos obtenidos
- * @param denominacion campo de la denominacion del organismo
- */
-function cargarTabla(url, idTabla, denominacion){
-
-    var html = '';
-    html += '<table class="table table-bordered table-hover table-striped tablesorter">';
-    html += '<colgroup>';
-    html += '<col>';
-    html += '<col width="100">';
-    html += '</colgroup>';
-    html += '<thead>';
-    html += '<tr>';
-    html += '<th>NOMBRE</th>';
-    html += '<th>ACCIONES</th>';
-    html += '</tr>';
-    html += '</thead>';
-    html += ' <tbody>';
-    html += ' <tr>';
-
-    jQuery.ajax({
-        crossDomain: true,
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        data: { denominacion: denominacion },
-        success: function(result) {
-            var len = result.length;
-            for ( var i = 0; i < len; i++) {
-
-              html += '<td> FILA </td>';
-
-
-            }
-            html += '</tr>';
-            html += '</tbody>';
-            html += '</table>';
-
-
-            if(len != 0){
-                $(idTabla).attr("display:block");
-                $(idTabla).html(html);
-            }else if(len==0){
-                $(idTabla).attr("display:none");
-                var html='';
-                $(idTabla).html(html);
-            }
-
-        }
-  }) ;
-
-}
-
-/**
 *Función que añade el externo al select indicado y además lo marca como seleccionado
 *(solo se emplea para organismoDestino
 * @param idSelect identificador del select al que añadirle la opción
@@ -683,52 +618,6 @@ function addExterno(idSelect, codigo, denominacion){
     $(idSelect).html(html);
     $(idSelect).attr("disabled",false).trigger("chosen:updated");
 
-}
-
-/** Funcion que carga un select con los valores que obtiene de la url y luego añade al final la oficina externo
- * que le pasamos en valorSelected y denominacionSelected
- * @param url donde hacer la petición ajax
- * @param idSelect id del campo select donde cargar los datos obtenidos
- * @param idEntidad id del campo select donde cargar los datos obtenidos
- * @param valorSelected Valor seleccionado en el select, si es que lo hay. Sirve solo para las modificaciones.
- * @param todos Booleano para definir si incluir la opción de todos (...) en el Select
- * @param denominacionSelected valor de la denominación seleccionada. sirve solo para las modificaciones
-*/
-
-function cargarSelectOficinaExterno(url,idEntidad,idSelect, valorSelected, todos, denominacionSelected){
-    var html = '';
-    jQuery.ajax({
-        crossDomain: true,
-        url: url,
-        type: 'GET',
-        dataType: 'json',
-        data: { codigo: idEntidad },
-        success: function(result) {
-            if(todos){html = '<option value="-1">...</option>';}
-            var len = result.length;
-            var selected='';
-            for ( var i = 0; i < len; i++) {
-                selected='';
-                if(valorSelected != null && result[i].codigo == valorSelected){
-                    selected = 'selected="selected"';
-                }
-                html += '<option '+selected+' value="' + result[i].codigo + '">'
-                    + result[i].denominacion + '</option>';
-            }
-            html += '</option>';
-
-            //añadimos el externo
-            html += '<option value="'+valorSelected+'" selected="selected">'+ denominacionSelected+'</option>';
-            if(len != 0){
-                $(idSelect).html(html);
-            }else if(len==0){
-                $(idSelect).attr("disabled","disabled");
-                var html='';
-                $(idSelect).html(html);
-            }
-            $(idSelect).trigger("chosen:updated");
-        }
-    });
 }
 
 /* Función que hace el reset de un formulario con distintos tipos de inputs.*/

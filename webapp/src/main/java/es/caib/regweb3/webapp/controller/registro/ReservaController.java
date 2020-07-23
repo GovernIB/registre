@@ -48,6 +48,7 @@ public class ReservaController  extends BaseController {
         Usuario usuario = getUsuarioAutenticado(request);
 
         RegistroEntrada registro = new RegistroEntrada();
+        registro.setLibro(getLibroEntidad(request));
         registro.setOficina(oficina);
         RegistroDetalle registroDetalle = new RegistroDetalle();
         registro.setRegistroDetalle(registroDetalle);
@@ -64,7 +65,6 @@ public class ReservaController  extends BaseController {
         model.addAttribute(usuario);
         model.addAttribute(oficina);
         model.addAttribute("registro",registro);
-        model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
         return "registroEntrada/reservaForm";
     }
@@ -84,7 +84,6 @@ public class ReservaController  extends BaseController {
             model.addAttribute(getEntidadActiva(request));
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
-            model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
             return "registroEntrada/reservaForm";
         }else{ // Si no hay errores guardamos el registro
