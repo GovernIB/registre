@@ -10,6 +10,7 @@ import es.caib.regweb3.model.RegistroEntrada;
 public class OficioPendienteBusquedaForm {
 
   private RegistroEntrada registroEntrada;
+
   private Integer pageNumber;
   private Integer anyo;
 

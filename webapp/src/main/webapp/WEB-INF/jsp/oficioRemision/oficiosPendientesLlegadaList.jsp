@@ -117,7 +117,7 @@
                                                     <col width="100">
                                                     <col>
                                                     <col>
-                                                    <col>
+                                                    <%--<col>--%>
                                                     <col width="51">
                                                 </colgroup>
                                                 <thead>
@@ -127,7 +127,7 @@
                                                         <th><spring:message code="oficioRemision.usuario"/></th>
                                                         <th><spring:message code="oficioRemision.oficina"/></th>
                                                         <th><spring:message code="oficioRemision.organismoDestino"/></th>
-                                                        <th><spring:message code="oficioRemision.numero.re"/></th>
+                                                        <%--<th><spring:message code="oficioRemision.numero.re"/></th>--%>
                                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                                     </tr>
                                                 </thead>
@@ -143,14 +143,14 @@
                                                                        data-toggle="popover">${oficioRemision.oficina.denominacion}</label>
                                                             </td>
                                                             <td>${(empty oficioRemision.organismoDestinatario)? oficioRemision.destinoExternoDenominacion : oficioRemision.organismoDestinatario.denominacion}</td>
-                                                            <td>
+                                                            <%--<td>
                                                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
                                                                     ${fn:length(oficioRemision.registrosEntrada)}
                                                                 </c:if>
                                                                 <c:if test="${oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
                                                                     ${fn:length(oficioRemision.registrosSalida)}
                                                                 </c:if>
-                                                            </td>
+                                                            </td>--%>
 
                                                             <td class="center">
                                                                 <a class="btn btn-success btn-sm" href="<c:url value="/oficioRemision/${oficioRemision.id}/aceptar"/>" title="<spring:message code="oficioRemision.aceptar"/>"><span class="fa fa-check"></span></a>

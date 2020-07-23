@@ -12,26 +12,28 @@ import java.util.Date;
  */
 public class OficioRemisionBusquedaForm {
 
-  private OficioRemision oficioRemision;
-  private Integer pageNumber;
-  @DateTimeFormat(pattern = "dd/MM/yyyy")
-  private Date fechaInicio;
-  @DateTimeFormat(pattern = "dd/MM/yyyy")
-  private Date fechaFin;
-  private String usuario;
-  private Long destinoOficioRemision;
-  private Long tipoOficioRemision;
-  private Integer estadoOficioRemision;
+    private OficioRemision oficioRemision;
+    private Long idOrganismo;
+    private Integer pageNumber;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date fechaInicio;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date fechaFin;
+    private String usuario;
+    private Long destinoOficioRemision;
+    private Long tipoOficioRemision;
+    private Integer estadoOficioRemision;
 
 
-  public OficioRemisionBusquedaForm() {}
+    public OficioRemisionBusquedaForm() {
+    }
 
-  public OficioRemisionBusquedaForm(OficioRemision oficioRemision, Integer pageNumber) {
-    this.oficioRemision = oficioRemision;
-    this.pageNumber = pageNumber;
-    this.fechaInicio =  new Date();
-    this.fechaFin =  new Date();
-  }
+    public OficioRemisionBusquedaForm(OficioRemision oficioRemision, Integer pageNumber) {
+        this.oficioRemision = oficioRemision;
+        this.pageNumber = pageNumber;
+        this.fechaInicio = new Date();
+        this.fechaFin = new Date();
+    }
 
     public OficioRemision getOficioRemision() {
         return oficioRemision;
@@ -41,59 +43,67 @@ public class OficioRemisionBusquedaForm {
         this.oficioRemision = oficioRemision;
     }
 
+    public Long getIdOrganismo() {
+        return idOrganismo;
+    }
+
+    public void setIdOrganismo(Long idOrganismo) {
+        this.idOrganismo = idOrganismo;
+    }
+
     public Integer getPageNumber() {
-    return pageNumber;
-  }
+        return pageNumber;
+    }
 
-  public void setPageNumber(Integer pageNumber) {
-    this.pageNumber = pageNumber;
-  }
+    public void setPageNumber(Integer pageNumber) {
+        this.pageNumber = pageNumber;
+    }
 
-  public Date getFechaInicio() {
-    return fechaInicio;
-  }
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
 
-  public void setFechaInicio(Date fechaInicio) {
-    this.fechaInicio = fechaInicio;
-  }
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
 
-  public Date getFechaFin() {
-    return fechaFin;
-  }
+    public Date getFechaFin() {
+        return fechaFin;
+    }
 
-  public void setFechaFin(Date fechaFin) {
-    this.fechaFin = fechaFin;
-  }
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
 
-  public String getUsuario() {
-    return usuario;
-  }
+    public String getUsuario() {
+        return usuario;
+    }
 
-  public void setUsuario(String usuario) {
-    this.usuario = usuario;
-  }
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
 
-  public Long getDestinoOficioRemision() {
-    return destinoOficioRemision;
-  }
+    public Long getDestinoOficioRemision() {
+        return destinoOficioRemision;
+    }
 
-  public void setDestinoOficioRemision(Long destinoOficioRemision) {
-    this.destinoOficioRemision = destinoOficioRemision;
-  }
+    public void setDestinoOficioRemision(Long destinoOficioRemision) {
+        this.destinoOficioRemision = destinoOficioRemision;
+    }
 
-  public Long getTipoOficioRemision() {
-    return tipoOficioRemision;
-  }
+    public Long getTipoOficioRemision() {
+        return tipoOficioRemision;
+    }
 
-  public void setTipoOficioRemision(Long tipoOficioRemision) {
-    this.tipoOficioRemision = tipoOficioRemision;
-  }
+    public void setTipoOficioRemision(Long tipoOficioRemision) {
+        this.tipoOficioRemision = tipoOficioRemision;
+    }
 
-  public Integer getEstadoOficioRemision() {
-    return estadoOficioRemision;
-  }
+    public Integer getEstadoOficioRemision() {
+        return estadoOficioRemision;
+    }
 
-  public void setEstadoOficioRemision(Integer estadoOficioRemision) {
-    this.estadoOficioRemision = estadoOficioRemision;
-  }
+    public void setEstadoOficioRemision(Integer estadoOficioRemision) {
+        this.estadoOficioRemision = estadoOficioRemision;
+    }
 }

@@ -37,7 +37,7 @@
 
                 <div class="panel panel-success">
                 
-                <c:if test="${(not empty librosConsulta) && (not empty oficioRemisionBusqueda)}">
+                <c:if test="${(not empty organismosConsultaEntrada) && (not empty oficioRemisionBusqueda)}">
 
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="oficioRemision.buscador"/></strong> </h3>
@@ -78,12 +78,12 @@
                             </div>
 
                             <div class="form-group col-xs-12">
-                                <div class="col-xs-6">
+                                <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="oficioRemision.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="oficioRemision.libro"/></label>
+                                        <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:select path="oficioRemision.libro.id" items="${librosConsulta}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/>
+                                        <form:select path="idOrganismo" cssClass="chosen-select" items="${organismosConsultaEntrada}" itemValue="id" itemLabel="denominacion"/>
                                     </div>
                                 </div>
                                 <div class="col-xs-6">

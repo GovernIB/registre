@@ -28,36 +28,34 @@ public interface OficioRemisionSalidaUtilsLocal {
     /**
      *
      * @param idOficina
-     * @param libros
      * @param tipoEvento
      * @param total
      * @return
      * @throws Exception
      */
-    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception;
+    LinkedHashSet<Organismo> organismosSalidaPendientesRemisionTipo(Long idOficina, Long tipoEvento, Integer total) throws Exception;
 
     /**
      * Obtiene el total de Registros de Salida que están considerados Oficios de Remisión
      * @param idOficina
-     * @param libros
      * @param tipoEvento
      * @return
      * @throws Exception
      */
-    Long oficiosSalidaPendientesRemisionCount(Long idOficina, List<Libro> libros, Long tipoEvento) throws Exception;
+    Long oficiosSalidaPendientesRemisionCount(Long idOficina, Long tipoEvento) throws Exception;
 
     /**
      * Obtiene todos los Registros de Salida que están considerados Oficios de Remisión de un Organismo destinatario en concreto
      * @param pageNumber
      * @param any
      * @param oficinaActiva Oficina activa
-     * @param idLibro Libro seleccionado
+     * @param idOrganismo
      * @param codigoOrganismo Organismo destinatario seleccionado
      * @param entidadActiva
      * @return
      * @throws Exception
      */
-    OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva, Long tipoEvento) throws Exception;
+    OficiosRemisionOrganismo oficiosSalidaPendientesRemision(Integer pageNumber, Integer any, Oficina oficinaActiva, Long idOrganismo, String codigoOrganismo, Entidad entidadActiva, Long tipoEvento) throws Exception;
 
     /**
      * @param registrosSalida

@@ -11,6 +11,7 @@ import es.caib.regweb3.model.RegistroSalida;
 public class OficioSalidaPendienteBusquedaForm {
 
   private RegistroSalida registroSalida;
+  private Long idOrganismoOrigen;
   private Organismo destinatario;
   private Integer pageNumber;
   private Integer anyo;
@@ -29,6 +30,14 @@ public class OficioSalidaPendienteBusquedaForm {
 
   public void setRegistroSalida(RegistroSalida registroSalida) {
     this.registroSalida = registroSalida;
+  }
+
+  public Long getIdOrganismoOrigen() {
+    return idOrganismoOrigen;
+  }
+
+  public void setIdOrganismoOrigen(Long idOrganismoOrigen) {
+    this.idOrganismoOrigen = idOrganismoOrigen;
   }
 
   public Organismo getDestinatario() {

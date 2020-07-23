@@ -163,7 +163,7 @@
                     </c:if>
 
                     <%--Botón anular oficio--%>
-                    <c:if test="${(oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO) && isAdministradorLibro && oficioRemision.oficina == loginInfo.oficinaActiva}">
+                    <c:if test="${(oficioRemision.estado == RegwebConstantes.OFICIO_INTERNO_ENVIADO || oficioRemision.estado == RegwebConstantes.OFICIO_EXTERNO_ENVIADO) && isResponsableOrganismo && oficioRemision.oficina == loginInfo.oficinaActiva}">
                         <div class="panel-footer">
                             <button type="button" onclick='confirm("<c:url value="/oficioRemision/${oficioRemision.id}/anular"/>","<spring:message code="oficioRemision.anular.confirmar" htmlEscape="true"/>")' class="btn btn-danger btn-sm btn-block"><spring:message code="oficioRemision.anular"/></button>
                         </div>

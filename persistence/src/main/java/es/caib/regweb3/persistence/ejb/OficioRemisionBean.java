@@ -101,7 +101,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, List<Libro> libros, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long destinoOficioRemision, Integer estadoOficioRemision, Long tipoOficioRemision, Boolean sir) throws Exception {
 
         Query q;
         Query q2;
@@ -109,6 +109,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<String> where = new ArrayList<String>();
 
         StringBuilder query = new StringBuilder("Select oficioRemision from OficioRemision as oficioRemision ");
+
+        // Organismo
+        if(idOrganismo != null){
+            where.add(" oficioRemision.oficina.organismoResponsable.id = :idOrganismo ");
+            parametros.put("idOrganismo", idOrganismo);
+        }
 
         // Oficios Remisión no SIR
         where.add(" oficioRemision.sir = :sir "); parametros.put("sir",sir);
@@ -123,13 +129,6 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         // Usuario
         if (StringUtils.isNotEmpty(usuario)) {
             where.add(DataBaseUtils.like("oficioRemision.usuarioResponsable.usuario.identificador", "usuario", parametros, usuario));
-        }
-
-        // Comprobamos si la búsqueda es sobre un libro en concreto o sobre todos a los que tiene acceso el usuario.
-        if(oficioRemision.getLibro().getId() != null && oficioRemision.getLibro().getId() > 0){
-            where.add(" oficioRemision.libro.id = :idLibro"); parametros.put("idLibro",oficioRemision.getLibro().getId());
-        }else if(libros != null){
-            where.add(" oficioRemision.libro in (:libros)"); parametros.put("libros",libros);
         }
 
         // Oficio Remisión Interno o Externo
@@ -255,7 +254,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
                     registroSalida.setUsuario(oficioRemision.getUsuarioResponsable());
                     registroSalida.setOficina(oficioRemision.getOficina());
-                    registroSalida.setOrigen(libro.getOrganismo());
+                    registroSalida.setOrigen(registroEntrada.getOficina().getOrganismoResponsable());
                     registroSalida.setLibro(oficioRemision.getLibro());
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_DISTRIBUIDO);
 
@@ -453,7 +452,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
 
         List<OficioRemision> oficios = q.getResultList();
 
-        // Inicializamos los Registros según su tipo de registro
+        /*// Inicializamos los Registros según su tipo de registro
         if(tipoOficioRemision.equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
             for(OficioRemision oficio:oficios){
                 Hibernate.initialize(oficio.getRegistrosEntrada());
@@ -462,7 +461,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
             for(OficioRemision oficio:oficios){
                 Hibernate.initialize(oficio.getRegistrosSalida());
             }
-        }
+        }*/
 
         paginacion.setListado(oficios);
 
