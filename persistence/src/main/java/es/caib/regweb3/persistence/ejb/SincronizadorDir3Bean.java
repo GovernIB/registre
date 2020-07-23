@@ -34,53 +34,22 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
-
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
-    private CatEstadoEntidadLocal catEstadoEntidadEjb;
-
-    @EJB(mappedName = "regweb3/CatNivelAdministracionEJB/local")
-    private CatNivelAdministracionLocal catNivelAdministracionEjb;
-
-    @EJB(mappedName = "regweb3/CatProvinciaEJB/local")
-    private CatProvinciaLocal catProvinciaEjb;
-
-    @EJB(mappedName = "regweb3/CatComunidadAutonomaEJB/local")
-    private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
-
-    @EJB(mappedName = "regweb3/RelacionSirOfiEJB/local")
-    private RelacionSirOfiLocal relacionSirOfiEjb;
-
-    @EJB(mappedName = "regweb3/RelacionOrganizativaOfiEJB/local")
-    private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
-
-    @EJB(mappedName = "regweb3/EntidadEJB/local")
-    private EntidadLocal entidadEjb;
-
-    @EJB(mappedName = "regweb3/PendienteEJB/local")
-    private PendienteLocal pendienteEjb;
-
-    @EJB(mappedName = "regweb3/DescargaEJB/local")
-    private DescargaLocal descargaEjb;
-
-    @EJB(mappedName = "regweb3/CatLocalidadEJB/local")
-    private CatLocalidadLocal catLocalidadEjb;
-
-    @EJB(mappedName = "regweb3/CatPaisEJB/local")
-    private CatPaisLocal catPaisEjb;
-
-    @EJB(mappedName = "regweb3/CatTipoViaEJB/local")
-    private CatTipoViaLocal catTipoViaEjb;
-
-    @EJB(mappedName = "regweb3/CatServicioEJB/local")
-    private CatServicioLocal catServicioEjb;
-
-    @EJB(mappedName = "regweb3/LibroEJB/local")
-    private LibroLocal libroEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private OficinaLocal oficinaEjb;
+    @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
+    @EJB private CatNivelAdministracionLocal catNivelAdministracionEjb;
+    @EJB private CatProvinciaLocal catProvinciaEjb;
+    @EJB private CatComunidadAutonomaLocal catComunidadAutonomaEjb;
+    @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
+    @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
+    @EJB private EntidadLocal entidadEjb;
+    @EJB private PendienteLocal pendienteEjb;
+    @EJB private DescargaLocal descargaEjb;
+    @EJB private CatLocalidadLocal catLocalidadEjb;
+    @EJB private CatPaisLocal catPaisEjb;
+    @EJB private CatTipoViaLocal catTipoViaEjb;
+    @EJB private CatServicioLocal catServicioEjb;
+    @EJB private LibroLocal libroEjb;
 
     //Caches
     private Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();

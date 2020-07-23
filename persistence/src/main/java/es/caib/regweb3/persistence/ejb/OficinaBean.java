@@ -2,10 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.Dir3CaibObtenerOficinasWs;
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -43,8 +41,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB private CatServicioLocal catServicioEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private LibroLocal libroEjb;
-    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
 
     @Override
@@ -346,29 +342,27 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception {
+    public LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos) throws Exception {
 
         LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 
-        // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
-        for (Libro libro : libros) {
-            Long idOrganismo = libro.getOrganismo().getId();
-            oficinas.addAll(oficinasFuncionales(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_NO));
-            oficinas.addAll(oficinasOrganizativas(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_NO));
+        // Recorremos los Organismos al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
+        for (Organismo organismo : organismos) {
+            oficinas.addAll(oficinasFuncionales(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
+            oficinas.addAll(oficinasOrganizativas(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
         }
 
         return oficinas;
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasSIR(List<Libro> libros) throws Exception {
+    public LinkedHashSet<Oficina> oficinasSIR(List<Organismo> organismos) throws Exception {
 
         LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 
-        // Recorremos los Libros y a partir del Organismo al que pertenecen, obtenemos las Oficinas con relación SIR
-        for (Libro libro : libros) {
-            Long idOrganismo = libro.getOrganismo().getId();
-            oficinas.addAll(oficinasSIR(idOrganismo));
+        // Recorremos los Organismos y obtenemos las Oficinas con relación SIR
+        for (Organismo organismo : organismos) {
+            oficinas.addAll(oficinasSIR(organismo.getId()));
         }
 
         return oficinas;
@@ -438,7 +432,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
+    public LinkedHashSet<Oficina> oficinasServicioCompleto(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
 
@@ -448,7 +442,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
         oficinas.addAll(oficinasOrganizativas(idOrganismo, oficinaVirtual));
 
         if (organismo.getOrganismoSuperior() != null /*&& !organismo.getEdp()*/) {
-            oficinas.addAll(oficinasServicio(organismo.getOrganismoSuperior().getId(), oficinaVirtual));
+            oficinas.addAll(oficinasServicioCompleto(organismo.getOrganismoSuperior().getId(), oficinaVirtual));
         }
 
         return  oficinas;
@@ -458,7 +452,7 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     @Override
     public Boolean tieneOficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception {
 
-        LinkedHashSet<Oficina> oficinas = oficinasServicio(idOrganismo, oficinaVirtual);
+        LinkedHashSet<Oficina> oficinas = oficinasServicioCompleto(idOrganismo, oficinaVirtual);
 
         return oficinas.size() > 0;
     }
@@ -583,25 +577,6 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
 
         return paginacion;
 
-    }
-
-    @Override
-    public LinkedHashSet<UsuarioEntidad> usuariosPermisoOficina(Long idOficina) throws Exception{
-
-        LinkedHashSet<Libro> libros = new LinkedHashSet<Libro>();
-        LinkedHashSet<UsuarioEntidad> usuarios = new LinkedHashSet<UsuarioEntidad>();
-
-        //Obtener los usuarios que registran en esa oficina
-        LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(findById(idOficina),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-
-        // Obtenemos los libros de cada Organismo
-        for (Organismo organismo : organismos) {
-            libros.addAll(libroEjb.getLibrosActivosOrganismo(organismo.getId()));
-        }
-
-        usuarios.addAll(permisoLibroUsuarioEjb.getUsuariosPermiso(libros, RegwebConstantes.PERMISO_SIR));
-
-        return usuarios;
     }
 
     /**

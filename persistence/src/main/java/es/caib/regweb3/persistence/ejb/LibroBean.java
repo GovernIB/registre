@@ -347,10 +347,12 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         Contador contadorEntrada = contadorEjb.persist(new Contador());
         Contador contadorSalida = contadorEjb.persist(new Contador());
         Contador contadorOficio = contadorEjb.persist(new Contador());
+        Contador contadorSir = contadorEjb.persist(new Contador());
 
         libro.setContadorEntrada(contadorEntrada);
         libro.setContadorSalida(contadorSalida);
         libro.setContadorOficioRemision(contadorOficio);
+        libro.setContadorSir(contadorSir);
 
         return persist(libro);
     }

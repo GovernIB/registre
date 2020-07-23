@@ -84,6 +84,9 @@ public class Entidad implements Serializable {
     private Integer posYsello;
     @XmlTransient
     private Long perfilCustodia;
+
+    @XmlTransient
+    private Libro libro;
     
 
     public Entidad() {
@@ -376,6 +379,17 @@ public class Entidad implements Serializable {
 
     public void setPerfilCustodia(Long perfilCustodia) {
         this.perfilCustodia = perfilCustodia;
+    }
+
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn (name="LIBRO")
+    @ForeignKey(name="RWE_ENTIDAD_LIBRO_FK")
+    public Libro getLibro() {
+        return libro;
+    }
+
+    public void setLibro(Libro libro) {
+        this.libro = libro;
     }
 
     @Override

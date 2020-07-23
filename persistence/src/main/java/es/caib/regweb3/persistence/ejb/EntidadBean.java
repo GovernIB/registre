@@ -47,7 +47,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @EJB private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
     @EJB private PlantillaLocal plantillaEjb;
     @EJB private LopdLocal lopdEjb;
-    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
     @EJB private RelacionOrganizativaOfiLocal relacionOrganizativaOfiEjb;
     @EJB private RelacionSirOfiLocal relacionSirOfiEjb;
     @EJB private OficinaLocal oficinaEjb;
@@ -108,7 +108,14 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Entidad nuevaEntidad(Entidad entidad) throws Exception{
 
-        entidad.setContadorSir(contadorEjb.persist(new Contador()));
+        //entidad.setContadorSir(contadorEjb.persist(new Contador()));
+
+        // Libro único
+        Libro libro = new Libro();
+        libro.setCodigo(entidad.getLibro().getCodigo());
+        libro.setNombre(entidad.getLibro().getNombre());
+        entidad.setLibro(libroEjb.crearLibro(libro));
+
         entidad = persist(entidad);
 
         // Creamos el UsuarioEntidad del propietario
@@ -403,8 +410,8 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         //Eliminamos todos los datos relacionados con los RegistrosEntradad y RegistrosSalida
         eliminarRegistros(idEntidad);
 
-        // PERMISO LIBRO USUARIO 
-        log.info("PermisoLibroUsuarios eliminados: " + permisoLibroUsuarioEjb.eliminarByEntidad(idEntidad));
+        // PERMISO ORGANISMO USUARIO
+        log.info("PermisoOrganismoUsuarios eliminados: " + permisoOrganismoUsuarioEjb.eliminarByEntidad(idEntidad));
 
         // LIBROS 
         log.info("Libros eliminados: " + libroEjb.eliminarByEntidad(idEntidad));

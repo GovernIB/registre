@@ -1,9 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.utils.Paginacion;
 
 import javax.annotation.security.RolesAllowed;
@@ -147,7 +146,7 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @return
      * @throws Exception
      */
-    LinkedHashSet<Oficina> oficinasServicio(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
+    LinkedHashSet<Oficina> oficinasServicioCompleto(Long idOrganismo, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Booleano si tiene Oficinas(Funcionales y Organizativas) que dan servicio a un Organismo,
@@ -161,20 +160,20 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
 
 
     /**
-     * Obtiene las Oficinas que dan servicio a los Libros seleccionados
-     * @param libros
+     * Obtiene las Oficinas que dan servicio a los Organismos seleccionados
+     * @param organismos
      * @return
      * @throws Exception
      */
-    LinkedHashSet<Oficina> oficinasRegistro(List<Libro> libros) throws Exception;
+    LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos) throws Exception;
 
     /**
      * Obtiene las Oficinas que dan servicio SIR a los Libros seleccionados
-     * @param libros
+     * @param organismos
      * @return
      * @throws Exception
      */
-    LinkedHashSet<Oficina> oficinasSIR(List<Libro> libros) throws Exception;
+    LinkedHashSet<Oficina> oficinasSIR(List<Organismo> organismos) throws Exception;
 
     /**
      * Consulta si una Oficina puede recibir via SIR
@@ -227,14 +226,6 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
      * @throws Exception
      */
     Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad) throws Exception;
-
-    /**
-     * Obtiene los usuarios que le dan servicio a una Oficina con el permiso indicado
-     * @param idOficina
-     * @return
-     * @throws Exception
-     */
-    LinkedHashSet<UsuarioEntidad> usuariosPermisoOficina(Long idOficina) throws Exception;
 
     /**
      * Obtiene el id de la Entidad a la que pertenece la Oficina
