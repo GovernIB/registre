@@ -150,7 +150,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 7.- Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
+        if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_SALIDA, true)) {
             throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
         }
 
@@ -252,7 +252,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         if(!registroSalida.getRegistroDetalle().getTieneJustificante()){
 
             // Permisos para Modificar el RegistroSalida?
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
                 throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
             }
 
@@ -274,7 +274,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }else{ // Tiene Justificante, lo obtenemos
 
             // Permisos para Consultar el RegistroSalida?
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
                 throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
             }
 
@@ -332,7 +332,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 7.- Comprobamos que el usuario tiene permisos de modificación para el RegistroSalida
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getLibro().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
+        if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
             throw new I18NException("registroEntrada.usuario.permisos", usuarioEntidad.getNombreCompleto());
         }
 
@@ -376,8 +376,8 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 5.- Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-            throw new I18NException("registroSalida.usuario.permisos", usuarioEntidad.getUsuario().getNombreCompleto());
+        if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+            throw new I18NException("registroEntrada.usuario.permisos", usuarioEntidad.getUsuario().getNombreCompleto());
         }
 
         // Retornamos el RegistroSalidaResponseWs
@@ -456,17 +456,17 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         // 3.- Existe libro
         Libro libro = validarLibro(codigoLibro, usuarioEntidad.getEntidad().getId());
 
-        // 4.- Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
-        if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), libro.getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-            throw new I18NException("registroEntrada.usuario.permisos", usuario);
-        }
-
-        // 3.- Obtenemos el registro
+        // 4.- Obtenemos el registro
         RegistroSalida registro;
         registro = registroSalidaConsultaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro
                     + "/" + anyo + " (" + libro + ")");
+        }
+
+        // 5.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
+        if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registro.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+            throw new I18NException("registroEntrada.usuario.permisos", usuario);
         }
 
         // LOPD

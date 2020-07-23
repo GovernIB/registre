@@ -57,8 +57,8 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = "regweb3/LibroEJB/local")
     public LibroLocal libroEjb;
 
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     @EJB(mappedName = "regweb3/PendienteEJB/local")
     public PendienteLocal pendienteEjb;

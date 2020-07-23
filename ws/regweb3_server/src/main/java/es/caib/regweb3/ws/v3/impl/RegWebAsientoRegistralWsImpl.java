@@ -149,7 +149,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         if(sesion.getEstado().equals(RegwebConstantes.SESION_FINALIZADA)){
 
             AsientoRegistralWs asientoRegistral = AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, sesion.getNumeroRegistro(), sesion.getTipoRegistro(),
-                    UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
+                    UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoOrganismoUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
 
             asientoRegistralSesionWs.setAsientoRegistralWs(asientoRegistral);
         }
@@ -244,7 +244,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 }
 
                 // Comprobar PERMISO_REGISTRO_ENTRADA de usuario aplicación
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_ENTRADA, true)) {
+                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_ENTRADA, true)) {
                     throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
                 }
 
@@ -325,7 +325,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 }
 
                 // Comprobar PERMISO_REGISTRO_SALIDA de usuario aplicación
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), libro.getId(), PERMISO_REGISTRO_SALIDA, true)) {
+                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioAplicacion.getId(), oficina.getOrganismoResponsable().getId(), PERMISO_REGISTRO_SALIDA, true)) {
                     throw new I18NException("registro.usuario.permisos", usuarioAplicacion.getNombreCompleto(), libro.getCodigo());
                 }
 
@@ -442,7 +442,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             asientoRegistralWs = AsientoRegistralConverter.getAsientoRegistral(usuarioEntidad, numeroRegistroFormateado, tipoRegistro,
-                    UsuarioAplicacionCache.get().getIdioma(), conAnexos, true, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
+                    UsuarioAplicacionCache.get().getIdioma(), conAnexos, true, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoOrganismoUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb);
 
         }catch (Exception e){
 
@@ -498,7 +498,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             if(!registroEntrada.getRegistroDetalle().getTieneJustificante()){
 
                 // Permisos para Modificar el RegistroEntrada?
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)) {
+                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)) {
                     throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
                 }
 
@@ -522,7 +522,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }else{ // Tiene Justificante, lo obtenemos
 
                 // Permisos para Consultar el RegistroEntrada?
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
+                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
                     throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
                 }
 
@@ -555,7 +555,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             if(!registroSalida.getRegistroDetalle().getTieneJustificante()){
 
                 // Permisos para Modificar el RegistroSalida?
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
+                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
                     throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
                 }
 
@@ -577,7 +577,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }else{ // Tiene Justificante, lo obtenemos
 
                 // Permisos para Consultar el RegistroSalida?
-                if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
                     throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
                 }
 
@@ -663,7 +663,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         // 3.- Comprobamos que el usuario tiene permisos para Distribuir el registro
-        if(!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
+        if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
             throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
 
@@ -790,7 +790,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             for (RegistroEntrada entrada : entradas) {
 
                 asientos.add(AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, entrada.getNumeroRegistroFormateado(), REGISTRO_ENTRADA,
-                        UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoLibroUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
+                        UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoOrganismoUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
 
             }
             resultado.setResults(asientos);
