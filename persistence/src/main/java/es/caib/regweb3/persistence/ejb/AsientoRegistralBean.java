@@ -39,7 +39,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @EJB private SirEnvioLocal sirEnvioEjb;
     @EJB private JustificanteLocal justificanteEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
     @EJB private DistribucionLocal distribucionEjb;
 
     @Override
@@ -169,7 +169,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
         DistribucionLocal asynchDistribucion = AsyncUtils.mixinAsync(distribucionEjb);
 
         //  Comprobamos que el usuario tiene permisos para Distribuir el registro
-        if(!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
+        if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
             throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
 
