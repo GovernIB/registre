@@ -13,6 +13,7 @@ import java.util.Date;
 public class RegistroSalidaBusqueda implements Serializable {
 
     private RegistroSalida registroSalida;
+    private Long idOrganismo;
     private Integer pageNumber;
     private Date fechaInicio;
     private Date fechaFin;
@@ -39,6 +40,14 @@ public class RegistroSalidaBusqueda implements Serializable {
 
     public void setRegistroSalida(RegistroSalida registroSalida) {
         this.registroSalida = registroSalida;
+    }
+
+    public Long getIdOrganismo() {
+        return idOrganismo;
+    }
+
+    public void setIdOrganismo(Long idOrganismo) {
+        this.idOrganismo = idOrganismo;
     }
 
     public Integer getPageNumber() {

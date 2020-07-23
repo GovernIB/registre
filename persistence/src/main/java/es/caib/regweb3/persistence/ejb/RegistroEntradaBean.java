@@ -341,7 +341,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
 
 
-        if (isOficioRemisionExterno(registroEntrada.getId())) { // Externo
+        if (registroEntrada.getDestino() == null) { // Externo
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
             if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(idOficina)) {
@@ -354,7 +354,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
-        } else {
+        } /*else {
 
             //Añadido marilen, si no se busca antes da un lazy al intentar cargar las relacionesOrganizativasOfi en el método getByOficinaActiva
             Oficina oficina = oficinaEjb.findById(registroEntrada.getOficina().getId());
@@ -372,7 +372,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 return RegwebConstantes.EVENTO_OFICIO_INTERNO;
             }
 
-        }
+        }*/
 
         return RegwebConstantes.EVENTO_DISTRIBUIR;
     }

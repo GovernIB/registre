@@ -1,6 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -37,7 +37,7 @@ public interface RegistroSalidaConsultaLocal{
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
 
     
     /**
@@ -88,23 +88,31 @@ public interface RegistroSalidaConsultaLocal{
     Long getLibro(Long idRegistroSalida) throws Exception;
 
     /**
-     * Busca los Registros de Salida de un listado de Libros en función de su estado.
-     * @param libros
-     * @param idEstado
+     * Retorna el Organismo al que pertenece el RegistroSalida
+     * @param idRegistroSalida
      * @return
      * @throws Exception
      */
-    Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
+    Organismo getOrganismo(Long idRegistroSalida) throws Exception;
 
     /**
      * Busca los Registros de Salida de un listado de Libros en función de su estado.
-     * @param inicio
-     * @param libros
+     * @param organismos
      * @param idEstado
      * @return
      * @throws Exception
      */
-    List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
+    Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception;
+
+    /**
+     * Busca los Registros de Salida de un listado de Organismos en función de su estado.
+     * @param inicio
+     * @param organismos
+     * @param idEstado
+     * @return
+     * @throws Exception
+     */
+    List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception;
 
     /**
      * Busca los Registros de Salida de un Libro.

@@ -89,33 +89,12 @@
 
                            <div class="form-group col-xs-12">
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                   <label for="libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
-                               </div>
-                               <div class="col-xs-10">
-                                   <c:if test="${empty registroEntrada.id}">
-                                       <form:select path="libro.id" items="${libros}" itemValue="id"
-                                                    itemLabel="nombreCompleto" cssClass="chosen-select"/> <form:errors
-                                           path="libro.id" cssClass="help-block" element="span"/>
-                                   </c:if>
-
-                                   <c:if test="${not empty registroEntrada.id}">
-                                       <form:select path="libro.id" class="chosen-select">
-                                           <form:option
-                                                   value="${registroEntrada.libro.id}">${registroEntrada.libro.nombreCompleto}</form:option>
-                                       </form:select>
-                                   </c:if>
-                               </div>
-                           </div>
-
-                           <div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                    <label for="registroDetalle.extracto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.extracto.entrada"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.extracto"/></label>
                                </div>
                                <div class="col-xs-10">
                                    <form:textarea path="registroDetalle.extracto" rows="2" cssClass="form-control" maxlength="240"/> <form:errors path="registroDetalle.extracto" cssClass="help-block" element="span"/>
                                </div>
                            </div>
-
 
 
                            <div class="form-group col-xs-12">
@@ -149,22 +128,6 @@
 
                                <!-- Fin de gestión de organismo destino -->
                            </div>
-
-                           <%--<div class="form-group col-xs-12">
-                               <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                   <label for="registroDetalle.tipoAsunto.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
-                               </div>
-                               <div class="col-xs-10">
-
-                                   <form:select path="registroDetalle.tipoAsunto.id"  cssClass="chosen-select" onchange="actualizarCodigosAsunto(this)">
-                                       <form:option value="-1">...</form:option>
-                                       <form:options items="${tiposAsunto}" itemValue="id"
-                                                     itemLabel="traducciones['${pageContext.response.locale}'].nombre"/>
-                                   </form:select>
-                                   <form:errors path="registroDetalle.tipoAsunto" cssClass="help-block" element="span"/>
-                                   <form:errors path="registroDetalle.tipoAsunto.id" cssClass="help-block" element="span"/>
-                               </div>
-                           </div>--%>
 
                            <div class="form-group col-xs-12">
                                <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">

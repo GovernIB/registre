@@ -2,7 +2,6 @@ package es.caib.regweb3.persistence.ejb;
 
 
 import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -98,7 +97,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -111,6 +110,24 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         // Entidad
         where.add(" registroEntrada.usuario.entidad.id =:idEntidad  ");
         parametros.put("idEntidad", idEntidad);
+
+        // Organismo
+        if(idOrganismo != null){
+            where.add(" registroEntrada.oficina.organismoResponsable.id = :idOrganismo ");
+            parametros.put("idOrganismo", idOrganismo);
+        }
+
+        // Oficina Registro
+        if (re.getOficina() != null && (re.getOficina().getId() != null && re.getOficina().getId() > 0)) {
+            where.add(" registroEntrada.oficina.id = :idOficina ");
+            parametros.put("idOficina", re.getOficina().getId());
+        }
+
+        // Estado registro
+        if (re.getEstado() != null && re.getEstado() > 0) {
+            where.add(" registroEntrada.estado = :idEstadoRegistro ");
+            parametros.put("idEstadoRegistro", re.getEstado());
+        }
 
         // Numero registro
         if (StringUtils.isNotEmpty(re.getNumeroRegistroFormateado())) {
@@ -168,22 +185,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             parametros.put("organoDest", organoDest);
         }
 
-        // Estado registro
-        if (re.getEstado() != null && re.getEstado() > 0) {
-            where.add(" registroEntrada.estado = :idEstadoRegistro ");
-            parametros.put("idEstadoRegistro", re.getEstado());
-        }
-
         // Tipo documentación física
         if (re.getRegistroDetalle().getTipoDocumentacionFisica() != null && re.getRegistroDetalle().getTipoDocumentacionFisica() > 0) {
             where.add(" registroEntrada.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
             parametros.put("tipoDocumentacion", re.getRegistroDetalle().getTipoDocumentacionFisica());
-        }
-
-        // Oficina Registro
-        if (re.getOficina() != null && (re.getOficina().getId() != null && re.getOficina().getId() > 0)) {
-            where.add(" registroEntrada.oficina.id = :idOficina ");
-            parametros.put("idOficina", re.getOficina().getId());
         }
 
         // Intervalo fechas
@@ -191,12 +196,6 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         parametros.put("fechaInicio", fechaInicio);
         where.add(" registroEntrada.fecha <= :fechaFin) ");
         parametros.put("fechaFin", fechaFin);
-
-        // Libro
-        if(re.getLibro().getId() !=  null && re.getLibro().getId() > 0){
-            where.add(" registroEntrada.libro.id = :idLibro");
-            parametros.put("idLibro", re.getLibro().getId());
-        }
 
         // Buscamos registros de entrada con anexos
         if (anexos) {
@@ -382,14 +381,14 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception {
+    public List<RegistroEntrada> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select re from RegistroEntrada as re where re.libro in (:libros) " +
+        q = em.createQuery("Select re from RegistroEntrada as re where re.oficina.organismoResponsable in (:organismos) " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
-        q.setParameter("libros", libros);
+        q.setParameter("organismos", organismos);
         q.setParameter("idEstado", idEstado);
 
         q.setFirstResult(inicio);
@@ -402,14 +401,14 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception {
+    public Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.libro in (:libros) " +
+        q = em.createQuery("Select count(re.id) from RegistroEntrada as re where re.oficina.organismoResponsable in (:organismos) " +
                 "and re.estado = :idEstado");
 
-        q.setParameter("libros", libros);
+        q.setParameter("organismos", organismos);
         q.setParameter("idEstado", idEstado);
         q.setHint("org.hibernate.readOnly", true);
 
@@ -511,6 +510,27 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         if (libros.size() > 0) {
             return libros.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Organismo getOrganismo(Long idRegistroEntrada) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select re.oficina.organismoResponsable.id, re.oficina.organismoResponsable.codigo, re.oficina.organismoResponsable.denominacion from RegistroEntrada as re where re.id = :idRegistroEntrada ");
+
+        q.setParameter("idRegistroEntrada", idRegistroEntrada);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Object[]> organismos = q.getResultList();
+
+        if (organismos.size() > 0) {
+
+            return new Organismo((Long) organismos.get(0)[0], (String) organismos.get(0)[1], (String) organismos.get(0)[2]);
         } else {
             return null;
         }

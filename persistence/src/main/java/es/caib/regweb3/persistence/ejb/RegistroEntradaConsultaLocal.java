@@ -1,6 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -42,7 +42,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroEntrada registroEntrada, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
 
     /**
      * Busca los Registros de Entrada de una OficinaActiva en función de su estado.
@@ -88,22 +88,22 @@ public interface RegistroEntradaConsultaLocal {
      * Busca los Registros de Entrada de un listado de Libros en función de su estado.
      *
      * @param inicio
-     * @param libros
+     * @param organismos
      * @param idEstado
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception;
+    List<RegistroEntrada> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception;
 
     /**
-     * Busca los Registros de Entrada de un listado de Libros en función de su estado.
+     * Busca los Registros de Entrada de un listado de Organismos en función de su estado.
      *
-     * @param libros
+     * @param organismos
      * @param idEstado
      * @return
      * @throws Exception
      */
-    Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception;
+    Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception;
 
 
     /**
@@ -156,6 +156,14 @@ public interface RegistroEntradaConsultaLocal {
      * @throws Exception
      */
     Long getLibro(Long idRegistroEntrada) throws Exception;
+
+    /**
+     * Retorna el Organismo al que pertenece el RegistroEntrada
+     * @param idRegistroEntrada
+     * @return
+     * @throws Exception
+     */
+    Organismo getOrganismo(Long idRegistroEntrada) throws Exception;
 
     /**
      * Comprueba si un Registro de Entrada se puede tramitar o no
