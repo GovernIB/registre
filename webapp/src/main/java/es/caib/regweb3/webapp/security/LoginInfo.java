@@ -21,7 +21,6 @@ import java.util.*;
  */
 public class LoginInfo {
 
-
     private Usuario usuarioAutenticado;
     private List<Rol> rolesAutenticado;
     private Rol rolActivo;
@@ -29,8 +28,17 @@ public class LoginInfo {
     private Entidad entidadActiva;
     private UsuarioEntidad usuarioEntidadActivo;
     private Boolean registrosMigrados;
-    private List<Libro> librosAdministrados;
-    private LinkedHashSet<Oficina> oficinasRegistro;
+    private List<Organismo> organismosRegistroEntrada;
+    private List<Organismo> organismosRegistroSalida;
+    private List<Organismo> organismosConsultaEntrada;
+    private List<Organismo> organismosConsultaSalida;
+    private List<Organismo> organismosResponsable;
+    private LinkedHashSet<Oficina> oficinasAcceso;
+    private LinkedHashSet<Oficina> oficinasRegistroEntrada;
+    private LinkedHashSet<Oficina> oficinasRegistroSalida;
+    private LinkedHashSet<Oficina> oficinasConsultaEntrada;
+    private LinkedHashSet<Oficina> oficinasConsultaSalida;
+    private LinkedHashSet<Oficina> oficinasResponsable;
     private Oficina oficinaActiva;
     private LinkedHashSet<Organismo> organismosOficinaActiva;
     private Configuracion configuracion;
@@ -47,7 +55,16 @@ public class LoginInfo {
         this.springSecurityUser = springSecurityUser;
         this.springRoles = springRoles;
         entidades = new ArrayList<Entidad>();
-        oficinasRegistro = new LinkedHashSet<Oficina>();
+        organismosRegistroEntrada = new ArrayList<Organismo>();
+        organismosRegistroSalida = new ArrayList<Organismo>();
+        organismosConsultaEntrada = new ArrayList<Organismo>();
+        organismosConsultaSalida = new ArrayList<Organismo>();
+        organismosResponsable = new ArrayList<Organismo>();
+        oficinasRegistroEntrada = new LinkedHashSet<Oficina>();
+        oficinasRegistroSalida = new LinkedHashSet<Oficina>();
+        oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
+        oficinasConsultaSalida = new LinkedHashSet<Oficina>();
+        oficinasResponsable = new LinkedHashSet<Oficina>();
     }
 
     public Entidad getEntidadActiva() {
@@ -179,20 +196,92 @@ public class LoginInfo {
         this.registrosMigrados = registrosMigrados;
     }
 
-    public List<Libro> getLibrosAdministrados() {
-        return librosAdministrados;
+    public List<Organismo> getOrganismosRegistroEntrada() {
+        return organismosRegistroEntrada;
     }
 
-    public void setLibrosAdministrados(List<Libro> librosAdministrados) {
-        this.librosAdministrados = librosAdministrados;
+    public void setOrganismosRegistroEntrada(List<Organismo> organismosRegistroEntrada) {
+        this.organismosRegistroEntrada = organismosRegistroEntrada;
     }
 
-    public LinkedHashSet<Oficina> getOficinasRegistro() {
-        return oficinasRegistro;
+    public List<Organismo> getOrganismosRegistroSalida() {
+        return organismosRegistroSalida;
     }
 
-    public void setOficinasRegistro(LinkedHashSet<Oficina> oficinasRegistro) {
-        this.oficinasRegistro = oficinasRegistro;
+    public void setOrganismosRegistroSalida(List<Organismo> organismosRegistroSalida) {
+        this.organismosRegistroSalida = organismosRegistroSalida;
+    }
+
+    public List<Organismo> getOrganismosConsultaEntrada() {
+        return organismosConsultaEntrada;
+    }
+
+    public void setOrganismosConsultaEntrada(List<Organismo> organismosConsultaEntrada) {
+        this.organismosConsultaEntrada = organismosConsultaEntrada;
+    }
+
+    public List<Organismo> getOrganismosConsultaSalida() {
+        return organismosConsultaSalida;
+    }
+
+    public void setOrganismosConsultaSalida(List<Organismo> organismosConsultaSalida) {
+        this.organismosConsultaSalida = organismosConsultaSalida;
+    }
+
+    public List<Organismo> getOrganismosResponsable() {
+        return organismosResponsable;
+    }
+
+    public void setOrganismosResponsable(List<Organismo> organismosResponsable) {
+        this.organismosResponsable = organismosResponsable;
+    }
+
+    public LinkedHashSet<Oficina> getOficinasAcceso() {
+        return oficinasAcceso;
+    }
+
+    public void setOficinasAcceso(LinkedHashSet<Oficina> oficinasAcceso) {
+        this.oficinasAcceso = oficinasAcceso;
+    }
+
+    public LinkedHashSet<Oficina> getOficinasRegistroEntrada() {
+        return oficinasRegistroEntrada;
+    }
+
+    public void setOficinasRegistroEntrada(LinkedHashSet<Oficina> oficinasRegistroEntrada) {
+        this.oficinasRegistroEntrada = oficinasRegistroEntrada;
+    }
+
+    public LinkedHashSet<Oficina> getOficinasRegistroSalida() {
+        return oficinasRegistroSalida;
+    }
+
+    public void setOficinasRegistroSalida(LinkedHashSet<Oficina> oficinasRegistroSalida) {
+        this.oficinasRegistroSalida = oficinasRegistroSalida;
+    }
+
+    public LinkedHashSet<Oficina> getOficinasConsultaEntrada() {
+        return oficinasConsultaEntrada;
+    }
+
+    public void setOficinasConsultaEntrada(LinkedHashSet<Oficina> oficinasConsultaEntrada) {
+        this.oficinasConsultaEntrada = oficinasConsultaEntrada;
+    }
+
+    public LinkedHashSet<Oficina> getOficinasConsultaSalida() {
+        return oficinasConsultaSalida;
+    }
+
+    public void setOficinasConsultaSalida(LinkedHashSet<Oficina> oficinasConsultaSalida) {
+        this.oficinasConsultaSalida = oficinasConsultaSalida;
+    }
+
+    public LinkedHashSet<Oficina> getOficinasResponsable() {
+        return oficinasResponsable;
+    }
+
+    public void setOficinasResponsable(LinkedHashSet<Oficina> oficinasResponsable) {
+        this.oficinasResponsable = oficinasResponsable;
     }
 
     public LinkedHashSet<Organismo> getOrganismosOficinaActiva() {
@@ -263,6 +352,8 @@ public class LoginInfo {
         }
     }
 
+
+
     /**
      * Resetea los datos para del usuario autenticado
      */
@@ -270,8 +361,17 @@ public class LoginInfo {
         this.entidades = new ArrayList<Entidad>();
         this.entidadActiva = null;
         this.registrosMigrados = null;
-        this.librosAdministrados = null;
-        this.oficinasRegistro = new LinkedHashSet<Oficina>();
+        this.organismosRegistroEntrada =  new ArrayList<Organismo>();
+        this.organismosRegistroSalida =  new ArrayList<Organismo>();
+        this.organismosConsultaEntrada =  new ArrayList<Organismo>();
+        this.organismosConsultaSalida =  new ArrayList<Organismo>();
+        this.organismosResponsable =  new ArrayList<Organismo>();
+        this.oficinasRegistroEntrada = new LinkedHashSet<Oficina>();
+        this.oficinasRegistroSalida = new LinkedHashSet<Oficina>();
+        this.oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
+        this.oficinasConsultaSalida = new LinkedHashSet<Oficina>();
+        this.oficinasAcceso = new LinkedHashSet<Oficina>();
+        this.oficinasResponsable= new LinkedHashSet<Oficina>();
         this.oficinaActiva = null;
         this.organismosOficinaActiva = null;
         this.configuracion = null;
@@ -289,8 +389,7 @@ public class LoginInfo {
                 ", entidadActiva=" + entidadActiva.getNombre() +
                 ", usuarioEntidadActivo=" + usuarioEntidadActivo.getNombreCompleto() +
                 ", registrosMigrados=" + registrosMigrados +
-                ", librosAdministrados=" + Arrays.toString(librosAdministrados.toArray()) +
-                ", oficinasRegistro=" + Arrays.toString(oficinasRegistro.toArray()) +
+                ", oficinasRegistroEntrada=" + Arrays.toString(oficinasRegistroEntrada.toArray()) +
                 ", oficinaActiva=" + oficinaActiva.getDenominacion() +
                 ", organismosOficinaActiva=" + Arrays.toString(organismosOficinaActiva.toArray()) +
                 ", configuracion=" + configuracion +
