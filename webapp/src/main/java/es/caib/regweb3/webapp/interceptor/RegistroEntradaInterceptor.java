@@ -1,11 +1,8 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.model.utils.RegistroBasico;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.PermisoOrganismoUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
-import es.caib.regweb3.persistence.ejb.RegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -17,9 +14,6 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Fundació BIT.
@@ -33,17 +27,11 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
-
-    @EJB(mappedName = "regweb3/RegistroEntradaEJB/local")
-    private RegistroEntradaLocal registroEntradaEjb;
-
     @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    private TipoDocumentalLocal tipoDocumentalEjb;
+    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -84,8 +72,8 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al listado de RegistroEntrada
         if(url.equals("/registroEntrada/list")){
 
-            if(permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA ,false).size() == 0){
-                log.info("Aviso: No hay ningún libro con permisos para consultar");
+            if(loginInfo.getOrganismosConsultaEntrada().size() == 0){
+                log.info("Aviso: No hay ningún organismo con permisos para consultar registros");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.consultaRegistro"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
@@ -97,111 +85,33 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
 
             String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
 
-            Long idLibro = registroEntradaConsultaEjb.getLibro(Long.valueOf(idRegistroEntrada));
+            Organismo organismo = registroEntradaConsultaEjb.getOrganismo(Long.valueOf(idRegistroEntrada));
 
-            if(idLibro != null){
-                if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),idLibro,RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA, false)){
+            if(organismo != null){
+                if(!loginInfo.getOrganismosConsultaEntrada().contains(organismo)){
                     log.info("Aviso: No tiene permisos para consultar este registro");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.consultaRegistro"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
-            }else{ // Id de Registro invalido
-                log.info("Aviso: No tiene permisos para consultar este registro");
+            }else{ // Id de Organismo invalido
+                log.info("Aviso: El organismo no existe");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.libro.noExiste"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
-
         }
 
-        // Comprobaciones previas al registro de un RegistroEntrada
+        // Comprobamos si en la OficinaActiva el usuario puede registrar
         if(url.equals("/registroEntrada/new") || url.equals("/registroEntrada/reserva")){
 
-            //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-            if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
-                log.info("No hay configurado el formato del numero de registro para la Entidad activa");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-            // Comprobamos si el usuario dispone de algún libro donde registrar
-            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-            if (permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA).size() == 0) {
-                log.info("Aviso: No hay ningún libro con permisos para registrar");
+            if(!loginInfo.getOficinasRegistroEntrada().contains(oficinaActiva)){
+                log.info("Aviso: No tiene permisos para registrar en el Organismo: " + oficinaActiva.getOrganismoResponsable().getDenominacion());
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
-
-            if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
-                log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
         }
-
-        // Comprobaciones previas a la edición de un RegistroEntrada
-        if(url.contains("edit") && request.getMethod().equals("GET")){
-       
-            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/edit", ""); //Obtenemos el id a partir de la url
-
-            RegistroEntrada registroEntrada = registroEntradaEjb.findById(Long.valueOf(idRegistroEntrada));
-
-            // Comprobamos que el Registro de Entrada es válido para editarse
-            final List<Long> estados = new ArrayList<Long>();
-            estados.add(RegwebConstantes.REGISTRO_RESERVA);
-            estados.add(RegwebConstantes.REGISTRO_VALIDO);
-
-            if (!estados.contains(registroEntrada.getEstado())) {
-                log.info("Este RegistroEntrada no se puede modificar");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-            // Si tiene Justificante generado, no se puede editar
-            if (registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                log.info("Este RegistroEntrada no se puede modificar, porque ya se ha generado su Justificante");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.modificar.justificante"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-            // Comprobamos que el UsuarioActivo pueda editar ese registro de entrada
-            if(!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(),registroEntrada.getLibro().getId(),RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)){
-                log.info("Aviso: No dispone de los permisos necesarios para editar el registro");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-            // Comprobamos si se la oficina activa es la misma donde se creó el registro
-            if(!registroEntrada.getOficina().getId().equals(oficinaActiva.getId()) && (registroEntrada.getOficina().getOficinaResponsable() != null && !registroEntrada.getOficina().getOficinaResponsable().getId().equals(oficinaActiva.getId()))){
-                log.info("Aviso: No puede editar un registro si no se encuentra en la oficina donde se creó");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.editar.oficina"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-
-        }
-
-        // Comprobaciones previas al reenvio
-        if(url.contains("reenviar")){
-            String idRegistroEntrada =  url.replace("/registroEntrada/","").replace("/reenviar", ""); //Obtenemos el id a partir de la url
-
-            RegistroBasico registroEntrada = registroEntradaConsultaEjb.findByIdLigero(Long.valueOf(idRegistroEntrada));
-
-            // Comprobamos que está Rechazado
-            if(!(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO) || registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO))){
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registro.reenvioSir"));
-                response.sendRedirect("/regweb3/aviso");
-                return false;
-            }
-        }
-
 
         return true;
     }

@@ -237,8 +237,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
                 return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
-            } else if (isOficioRemisionInterno(registroSalida, organismosCodigo)) {
-                return RegwebConstantes.EVENTO_OFICIO_INTERNO;
             }
         }
 

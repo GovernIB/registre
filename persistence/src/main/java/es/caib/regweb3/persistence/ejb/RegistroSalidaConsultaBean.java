@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
@@ -77,7 +76,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -90,6 +89,24 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         // Entidad
         where.add(" registroSalida.usuario.entidad.id =:idEntidad  ");
         parametros.put("idEntidad", idEntidad);
+
+        // Organismo
+        if(idOrganismo != null){
+            where.add(" registroSalida.oficina.organismoResponsable.id = :idOrganismo ");
+            parametros.put("idOrganismo", idOrganismo);
+        }
+
+        // Oficina Registro
+        if (registroSalida.getOficina() != null && (registroSalida.getOficina().getId() != null && registroSalida.getOficina().getId() > 0)) {
+            where.add(" registroSalida.oficina.id = :idOficina ");
+            parametros.put("idOficina", registroSalida.getOficina().getId());
+        }
+
+        // Estado registro
+        if (registroSalida.getEstado() != null && registroSalida.getEstado() > 0) {
+            where.add(" registroSalida.estado = :idEstadoRegistro ");
+            parametros.put("idEstadoRegistro", registroSalida.getEstado());
+        }
 
         // Numero registro
         if (StringUtils.isNotEmpty(registroSalida.getNumeroRegistroFormateado())) {
@@ -147,22 +164,10 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
             parametros.put("organoOrigen", organoOrigen);
         }
 
-        // Estado registro
-        if (registroSalida.getEstado() != null && registroSalida.getEstado() > 0) {
-            where.add(" registroSalida.estado = :idEstadoRegistro ");
-            parametros.put("idEstadoRegistro", registroSalida.getEstado());
-        }
-
         // Tipo documentación física
         if (registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null && registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() > 0) {
             where.add(" registroSalida.registroDetalle.tipoDocumentacionFisica = :tipoDocumentacion ");
             parametros.put("tipoDocumentacion", registroSalida.getRegistroDetalle().getTipoDocumentacionFisica());
-        }
-
-        // Oficina Registro
-        if (registroSalida.getOficina().getId() != null && registroSalida.getOficina().getId() > 0) {
-            where.add(" registroSalida.oficina.id = :idOficina ");
-            parametros.put("idOficina", registroSalida.getOficina().getId());
         }
 
         // Intervalo fechas
@@ -170,12 +175,6 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         parametros.put("fechaInicio", fechaInicio);
         where.add(" registroSalida.fecha <= :fechaFin) ");
         parametros.put("fechaFin", fechaFin);
-
-        // Libro
-        if(registroSalida.getLibro().getId() !=  null && registroSalida.getLibro().getId() > 0) {
-            where.add(" registroSalida.libro.id = :idLibro");
-            parametros.put("idLibro", registroSalida.getLibro().getId());
-        }
 
         // Buscamos registros de sañida con anexos
         if (anexos) {
@@ -338,14 +337,34 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public Long getByLibrosEstadoCount(List<Libro> libros, Long idEstado) throws Exception {
+    @SuppressWarnings(value = "unchecked")
+    public Organismo getOrganismo(Long idRegistroSalida) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select count(re.id) from RegistroSalida as re where re.libro in (:libros) " +
-                "and re.estado = :idEstado");
+        q = em.createQuery("Select rs.oficina.organismoResponsable.id, rs.oficina.organismoResponsable.codigo, rs.oficina.organismoResponsable.denominacion from RegistroSalida as rs where rs.id = :idRegistroSalida ");
 
-        q.setParameter("libros", libros);
+        q.setParameter("idRegistroSalida", idRegistroSalida);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Object[]> organismos = q.getResultList();
+
+        if (organismos.size() > 0) {
+            return new Organismo((Long) organismos.get(0)[0], (String) organismos.get(0)[1], (String) organismos.get(0)[2]);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Long getByLibrosEstadoCount(List<Organismo> organismos, Long idEstado) throws Exception {
+
+        Query q;
+
+        q = em.createQuery("Select count(rs.id) from RegistroSalida as rs where rs.oficina.organismoResponsable in (:organismos) " +
+                "and rs.estado = :idEstado");
+
+        q.setParameter("organismos", organismos);
         q.setParameter("idEstado", idEstado);
         q.setHint("org.hibernate.readOnly", true);
 
@@ -354,14 +373,14 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Libro> libros, Long idEstado) throws Exception {
+    public List<RegistroSalida> getByLibrosEstado(int inicio, List<Organismo> organismos, Long idEstado) throws Exception {
 
         Query q;
 
-        q = em.createQuery("Select re from RegistroSalida as re where re.libro in (:libros) " +
+        q = em.createQuery("Select re from RegistroSalida as re where re.oficina.organismoResponsable in (:organismos) " +
                 "and re.estado = :idEstado order by re.fecha desc");
 
-        q.setParameter("libros", libros);
+        q.setParameter("organismos", organismos);
         q.setParameter("idEstado", idEstado);
 
         q.setFirstResult(inicio);

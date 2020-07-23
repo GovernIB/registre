@@ -55,24 +55,16 @@
                         <div class="panel-body">
                         
                         <div class="col-xs-12">
-                        
+
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="registroEntrada.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.busqueda"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
+                                    <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:select path="registroEntrada.libro.id" cssClass="chosen-select" id="llibre">
-                                        <c:forEach var="libro" items="${librosConsulta}">
-                                            <c:if test="${libro.activo}">
-                                                <form:option value="${libro.id}">${libro.nombreCompleto}</form:option>
-                                            </c:if>
-                                            <c:if test="${!libro.activo}">
-                                                <form:option value="${libro.id}" cssClass="rojo">${libro.nombreCompleto}</form:option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </form:select>
+                                    <form:select path="idOrganismo" cssClass="chosen-select" items="${organismosConsultaEntrada}" itemValue="id" itemLabel="denominacion" onchange="actualizarOficinas()"/>
                                 </div>
                             </div>
+
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
                                     <label for="registroEntrada.estado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.estado.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.estado"/></label>
@@ -84,6 +76,44 @@
                                             <form:option value="${estado}"><spring:message code="registro.estado.${estado}"/></form:option>
                                         </c:forEach>
                                     </form:select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12">
+                            <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-4 pull-left etiqueta_regweb">
+                                    <label for="registroEntrada.oficina.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover" disabled="true"><spring:message code="registro.oficinaRegistro"/></label>
+                                </div>
+                                <div class="col-xs-8">
+                                    <form:select path="registroEntrada.oficina.id" cssClass="chosen-select" disabled="true"/>
+                                    <%--<form:select path="registroEntrada.oficina.id" cssClass="chosen-select" id="oficina">
+                                        <form:option value="" label="..."/>
+                                        <c:forEach var="oficina" items="${oficinasConsultaEntrada}">
+                                            <form:option value="${oficina.id}">${oficina.denominacion}</form:option>
+                                        </c:forEach>
+                                    </form:select>--%>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-6 espaiLinies">
+                                <div class="col-xs-4 pull-left etiqueta_regweb">
+                                    <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
+                                </div>
+                                <div class="col-xs-6">
+                                    <form:select path="organDestinatari" cssClass="chosen-select">
+                                        <form:option value="" label="..."/>
+                                        <c:forEach items="${organosDestino}" var="organismo">
+                                            <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
+                                        </c:forEach>
+                                    </form:select>
+                                    <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
+                                    <form:hidden path="organDestinatariNom"/>
+                                </div>
+                                <div class="col-xs-2 boto-mesOpcions">
+                                    <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
+                                       onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
+                                       class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
                                 </div>
                             </div>
                             
@@ -140,16 +170,14 @@
                          </div>
 
                         <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
-                        <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id &&
-                        empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
+                        <c:if test="${empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
                         empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                         empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                         empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
                         empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                         </c:if>
-                        <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id ||
-                        not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
+                        <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                         not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                         not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                         not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
@@ -195,42 +223,6 @@
                                     <div class="col-xs-8">
                                         <form:input  path="interessatDoc" cssClass="form-control" maxlength="17"/>
                                         <form:errors path="interessatDoc" cssClass="help-block" element="span"/>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12">
-                                <div class="col-xs-6 espaiLinies">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="registroEntrada.oficina.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.oficina.busqueda"/>" data-toggle="popover"><spring:message code="registro.oficinaRegistro"/></label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <form:select path="registroEntrada.oficina.id" cssClass="chosen-select">
-                                            <form:option value="" label="..."/>
-                                            <c:forEach var="oficinaRegistro" items="${oficinasRegistro}">
-                                                <form:option value="${oficinaRegistro.id}">${oficinaRegistro.denominacion}</form:option>
-                                            </c:forEach>
-                                        </form:select>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 espaiLinies">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="organDestinatari" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.organDestinatari"/></label>
-                                    </div>
-                                    <div class="col-xs-6">
-                                        <form:select path="organDestinatari" cssClass="chosen-select">
-                                            <form:option value="" label="..."/>
-                                            <c:forEach items="${organosDestino}" var="organismo">
-                                                <option value="${organismo.codigo}" <c:if test="${registroEntradaBusqueda.organDestinatari == organismo.codigo}">selected="selected"</c:if>>${organismo.denominacion}</option>
-                                            </c:forEach>
-                                        </form:select>
-                                        <form:errors path="organDestinatari" cssClass="help-block" element="span"/>
-                                        <form:hidden path="organDestinatariNom"/>
-                                    </div>
-                                    <div class="col-xs-2 boto-mesOpcions">
-                                        <a data-toggle="modal" role="button" href="#modalBuscadorlistaRegEntrada"
-                                           onclick="inicializarBuscador('#codNivelAdministracionlistaRegEntrada','#codComunidadAutonomalistaRegEntrada','#provincialistaRegEntrada','#localidadlistaRegEntrada','${loginInfo.oficinaActiva.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${loginInfo.oficinaActiva.organismoResponsable.codAmbComunidad.codigoComunidad}', 'listaRegEntrada' );"
-                                           class="btn btn-info btn-sm"><spring:message code="regweb.buscar"/></a>
                                     </div>
                                 </div>
                             </div>
@@ -302,12 +294,12 @@
                         <div class="col-xs-12 pad-bottom15 mesOpcions">
                             <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
                                 <%--Comprueba si debe mostrar mas opciones o menos--%>
-                                <c:if test="${empty registroEntradaBusqueda.registroEntrada.oficina.id && empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom
+                                <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom
                                 && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos
                                 && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
-                                <c:if test="${not empty registroEntradaBusqueda.registroEntrada.oficina.id || not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom
+                                <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom
                                 || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones || not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos
                                 || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
@@ -469,7 +461,7 @@
                                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
 
                                                                     <%--Botón editar--%>
-                                                                    <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar && !registro.registroDetalle.tieneJustificante}">
+                                                                    <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeo && !registro.registroDetalle.tieneJustificante}">
                                                                         <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                                     </c:if>
 
@@ -530,6 +522,16 @@
 
 <!-- Cambia la imagen de la búsqueda avanzada-->
 <script type="text/javascript">
+
+    // Gestión de los cambios de Oficina
+    $(window).load(function() {
+        actualizarOficinas();
+    });
+
+    function actualizarOficinas(){
+        <c:url var="obtenerOficinasEntrada" value="/rest/obtenerOficinasEntrada" />
+        actualizarSelect('${obtenerOficinasEntrada}','#registroEntrada\\.oficina\\.id',$('#idOrganismo option:selected').val(),'${registroEntradaBusqueda.registroEntrada.oficina.id}',true,true);
+    }
 
     // Posicionamos el ratón en el campo indicado al cargar el modal
     $('#modalBuscadorlistaRegEntrada').on('shown.bs.modal', function () {

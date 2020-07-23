@@ -130,13 +130,6 @@
 
                             <div class="panel-footer center">
 
-                                <%--OFICIO DE REMISIÓN INTERNO--%>
-                                <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_INTERNO}">
-                                    <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision/2"/>')" class="btn btn-success btn-sm btn-block">
-                                        <spring:message code="oficioRemision.boton.crear.interno"/>
-                                    </button>
-                                </c:if>
-
                                 <%--OFICIO DE REMISIÓN EXTERNO--%>
                                 <c:if test="${registro.evento == RegwebConstantes.EVENTO_OFICIO_EXTERNO}">
                                     <button type="button" onclick="goTo('<c:url value="/oficioRemision/entradasPendientesRemision/3"/>')" class="btn btn-success btn-sm btn-block">
@@ -230,7 +223,7 @@
                         </c:if>
 
                         <%--Botón Visar--%>
-                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isAdministradorLibro}">
+                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR && isResponsableOrganismo}">
                             <div class="btn-group"><button type="button" onclick='javascript:confirm("<c:url value="/registroEntrada/${registro.id}/visar"/>","<spring:message code="regweb.confirmar.visar" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="regweb.visar"/></button></div>
                         </c:if>
 

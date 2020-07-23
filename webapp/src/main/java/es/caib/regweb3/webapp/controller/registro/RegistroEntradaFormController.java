@@ -7,8 +7,8 @@ import es.caib.dir3caib.ws.api.unidad.UnidadTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.PlantillaJson;
 import es.caib.regweb3.persistence.ejb.CodigoAsuntoLocal;
+import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.OrganismoLocal;
 import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
@@ -58,8 +58,8 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @EJB(mappedName = "regweb3/CodigoAsuntoEJB/local")
     private CodigoAsuntoLocal codigoAsuntoEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    private OrganismoLocal organismoEjb;
+    @EJB(mappedName = "regweb3/InteresadoEJB/local")
+    private InteresadoLocal interesadoEjb;
 
 
     /**
@@ -83,13 +83,12 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         eliminarVariableSesion(request, RegwebConstantes.SESSION_INTERESADOS_ENTRADA);
 
         // Cargamos los datos de la Plantilla en el Registro Entrada
-        RegistroEntrada registroEntrada = cargarPlantillaRegistroEntrada(plantilla, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen, request.getSession());
+        RegistroEntrada registroEntrada = cargarPlantillaRegistroEntrada(plantilla, oficinaActiva, entidadActiva, organismosOficinaActiva, oficinasOrigen, request);
 
         model.addAttribute(entidadActiva);
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficinaActiva);
         model.addAttribute("registroEntrada",registroEntrada);
-        model.addAttribute("libros", getLibrosRegistroEntrada(request));
         organismosOficinaActiva.add(registroEntrada.getDestino());
         model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen", oficinasOrigen);
@@ -110,6 +109,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         registroEntrada.setOficina(oficina);
+        registroEntrada.setLibro(getLibroEntidad(request));
         registroEntrada.getRegistroDetalle().setPresencial(true);
 
         //Eliminamos los posibles interesados de la Sesion
@@ -119,7 +119,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute(getUsuarioAutenticado(request));
         model.addAttribute(oficina);
         model.addAttribute("registroEntrada",registroEntrada);
-        model.addAttribute("libros", getLibrosRegistroEntrada(request));
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
 
@@ -159,7 +158,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
-            model.addAttribute("libros", getLibrosRegistroEntrada(request));
 
             // Organismo destino: Select
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
@@ -256,6 +254,10 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         try {
             registroEntrada = registroEntradaEjb.findById(idRegistro);
 
+            if(validarPermisosEdicion(registroEntrada, request, RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)){
+                return "redirect:/aviso";
+            }
+
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             Set<Oficina> oficinasOrigen = getOficinasOrigen(request);
 
@@ -295,7 +297,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
         return "registroEntrada/registroEntradaForm";
     }
-
 
     /**
      * Editar un {@link es.caib.regweb3.model.RegistroEntrada}
@@ -443,7 +444,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
 
             // Comprobamos si el usuario tiene permisos para registrar el registro rectificado
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getLibro().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA, true)) {
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA, true)) {
                 Mensaje.saveMessageError(request, I18NUtils.tradueix("aviso.registro.permisos"));
                 return "redirect:/registroEntrada/"+idRegistro+"/detalle";
             }
@@ -570,7 +571,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
      * @return
      * @throws Exception
      */
-    private RegistroEntrada cargarPlantillaRegistroEntrada(Plantilla plantilla, Oficina oficinaActiva, Entidad entidadActiva, LinkedHashSet<Organismo> organismosOficinaActiva, LinkedHashSet<Oficina> oficinasOrigen, HttpSession session) throws Exception{
+    private RegistroEntrada cargarPlantillaRegistroEntrada(Plantilla plantilla, Oficina oficinaActiva, Entidad entidadActiva, LinkedHashSet<Organismo> organismosOficinaActiva, LinkedHashSet<Oficina> oficinasOrigen, HttpServletRequest request) throws Exception{
 
         RegistroEntrada registroEntrada = new RegistroEntrada();
         registroEntrada.getRegistroDetalle().setPresencial(true);
@@ -582,15 +583,11 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         // ID registro Entrada
         registroEntrada.setId(null);
         // Libro
-        Libro libro = libroEjb.findByCodigo(plantillaJson.getIdLibro());
-        registroEntrada.setLibro(libro);
+        registroEntrada.setLibro(getLibroEntidad(request));
         // Oficina
         registroEntrada.setOficina(oficinaActiva);
         // Extracto
         registroEntrada.getRegistroDetalle().setExtracto(plantillaJson.getExtracto());
-        // Tipo Asunto
-        /*TipoAsunto tipoAsunto = tipoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdTipoAsunto()));
-        registroEntrada.getRegistroDetalle().setTipoAsunto(tipoAsunto);*/
         // Código Asunto
         if(plantillaJson.getIdCodigoAsunto()!=null && !plantillaJson.getIdCodigoAsunto().equals("")) {
             CodigoAsunto codigoAsunto = codigoAsuntoEjb.findById(Long.parseLong(plantillaJson.getIdCodigoAsunto()));
@@ -628,6 +625,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             Interesado organismo = new Interesado(codigoDIR3,denominacion);
 
             interesados.add(organismo);
+            HttpSession session = request.getSession();
             session.setAttribute(RegwebConstantes.SESSION_INTERESADOS_ENTRADA, interesados);
         }
 
@@ -697,7 +695,6 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     @InitBinder("registroEntrada")
     public void initBinder(WebDataBinder binder) {
         binder.setDisallowedFields("id");
-        //binder.setDisallowedFields("registroDetalle.id");
         binder.setDisallowedFields("tipoInteresado");
         binder.setDisallowedFields("organismoInteresado");
         binder.setDisallowedFields("fecha");
