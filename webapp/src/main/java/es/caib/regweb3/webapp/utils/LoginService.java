@@ -49,8 +49,8 @@ public class LoginService {
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     private UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     private OficinaLocal oficinaEjb;
@@ -156,7 +156,7 @@ public class LoginService {
             asignarEntidadesOperador(loginInfo, loginInfo.getEntidadActiva());
 
             //Asignamos las oficinas donde tiene acceso el usuario operador
-            asignarOficinasRegistro(loginInfo);
+            asignarOficinas(loginInfo);
 
             // Asigna la Configuración del SuperAdministrador
         } else if (rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)) {
@@ -238,63 +238,90 @@ public class LoginService {
     }
 
     /**
-     * Asigna las Oficinas a las cuales el UsuarioEntidad puede Registrar y puede Administrar
+     * Asigna las Oficinas del UsuarioEntidad autenticado
      *
      * @param loginInfo
      * @throws Exception
      */
-    private void asignarOficinasRegistro(LoginInfo loginInfo) throws Exception {
+    private void asignarOficinas(LoginInfo loginInfo) throws Exception {
 
-        //Obtenemos los Libros donde el UsuarioEntidad tenga permisos de (Registro, Modificación o Administración)
-        List<Libro> librosRegistro = permisoLibroUsuarioEjb.getLibrosRegistro(loginInfo.getUsuarioEntidadActivo().getId());
-        log.info("Libros registro usuario: " + Arrays.toString(librosRegistro.toArray()));
+        // Obtenemos los Organismos donde el usuario puede Registrar entradas y de ahí las oficinas que dan servicio
+        List<Organismo> organismosRegistroEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+        LinkedHashSet<Oficina> oficinasRegistroEntrada = oficinaEjb.oficinasServicio(organismosRegistroEntrada);
 
-        // Si no hay libros en los que podamos registrar, buscamos en los que podamos consultar.
-        if (librosRegistro.isEmpty()) {
-            librosRegistro = permisoLibroUsuarioEjb.getLibrosConsulta(loginInfo.getUsuarioEntidadActivo().getId());
-            log.info("Libros registro consulta: " + Arrays.toString(librosRegistro.toArray()));
-        }
+        loginInfo.setOrganismosRegistroEntrada(organismosRegistroEntrada);
+        loginInfo.setOficinasRegistroEntrada(oficinasRegistroEntrada);
 
-        //Obtenemos los Libros donde el UsuarioEntidad puede Administrar
-        loginInfo.setLibrosAdministrados(permisoLibroUsuarioEjb.getLibrosAdministrados(loginInfo.getUsuarioEntidadActivo().getId()));
-        log.info("Libros administrados usuario: " + Arrays.toString(loginInfo.getLibrosAdministrados().toArray()));
+        log.info("Organismos registro entrada usuario: " + Arrays.toString(organismosRegistroEntrada.toArray()));
+        log.info("Oficinas registro entrada usuario: " + Arrays.toString(oficinasRegistroEntrada.toArray()));
 
-        // Obtenemos las Oficinas que pueden registrar en los Libros
-        loginInfo.setOficinasRegistro(oficinaEjb.oficinasRegistro(librosRegistro));
-        log.info("Oficinas registro usuario: " + Arrays.toString(loginInfo.getOficinasRegistro().toArray()));
+        // Obtenemos los Organismos donde el usuario puede Registrar salidas y de ahí las oficinas que dan servicio
+        List<Organismo> organismosRegistroSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
+        LinkedHashSet<Oficina> oficinasRegistroSalida = oficinaEjb.oficinasServicio(organismosRegistroSalida);
+
+        loginInfo.setOrganismosRegistroSalida(organismosRegistroSalida);
+        loginInfo.setOficinasRegistroSalida(oficinasRegistroSalida);
+
+        log.info("Organismos registro salida usuario: " + Arrays.toString(organismosRegistroSalida.toArray()));
+        log.info("Oficinas registro salida usuario: " + Arrays.toString(oficinasRegistroSalida.toArray()));
+
+
+        // Obtenemos los Organismos donde el usuario puede consultar entradas y de ahí las oficinas que dan servicio
+        List<Organismo> organismosConsultaEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
+        LinkedHashSet<Oficina> oficinasConsultaEntrada = oficinaEjb.oficinasServicio(organismosConsultaEntrada);
+
+        loginInfo.setOrganismosConsultaEntrada(organismosConsultaEntrada);
+        loginInfo.setOficinasConsultaEntrada(oficinasConsultaEntrada);
+
+        log.info("Organismos consulta entrada: " + Arrays.toString(organismosConsultaEntrada.toArray()));
+        log.info("Oficinas consulta entrada: " + Arrays.toString(oficinasConsultaEntrada.toArray()));
+
+        // Obtenemos los Organismos donde el usuario puede consultar salidas y de ahí las oficinas que dan servicio
+        List<Organismo> organismosConsultaSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
+        LinkedHashSet<Oficina> oficinasConsultaSalida = oficinaEjb.oficinasServicio(organismosConsultaSalida);
+
+        loginInfo.setOrganismosConsultaSalida(organismosConsultaSalida);
+        loginInfo.setOficinasConsultaSalida(oficinasConsultaSalida);
+
+        log.info("Organismos consulta salida: " + Arrays.toString(organismosConsultaSalida.toArray()));
+        log.info("Oficinas consulta salida: " + Arrays.toString(oficinasConsultaSalida.toArray()));
+
+        // Creamos la lista de Oficinas en las que el usuario puede situarse
+        loginInfo.getOficinasAcceso().addAll(oficinasRegistroEntrada);
+        loginInfo.getOficinasAcceso().addAll(oficinasRegistroSalida);
+        loginInfo.getOficinasAcceso().addAll(oficinasConsultaEntrada);
+        loginInfo.getOficinasAcceso().addAll(oficinasConsultaSalida);
+
+        // Obtenemos los Organismos donde el UsuarioEntidad es responsable
+        loginInfo.setOrganismosResponsable(permisoOrganismoUsuarioEjb.getOrganismosAdministrados(loginInfo.getUsuarioEntidadActivo().getId()));
+        log.info("Organismos responsable usuario: " + Arrays.toString(loginInfo.getOrganismosResponsable().toArray()));
 
         // Si la Entidad está en SIR, obtenemos las Oficinas SIR a las que tiene acceso
         if (loginInfo.getEntidadActiva().getSir()) {
 
-            //Obtenemos los Libros donde el UsuarioEntidad tenga permiso SIR
-            List<Libro> librosSIR = permisoLibroUsuarioEjb.getLibrosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_SIR, false);
-            log.info("Libros SIR usuario: " + Arrays.toString(librosSIR.toArray()));
-
-            //Obtenemos las Oficinas que pueden operar con los Libros anteriores
-            LinkedHashSet<Oficina> oficinasSIR = oficinaEjb.oficinasSIR(librosRegistro);  // Utilizamos un Set porque no permite duplicados
-            log.info("Oficinas SIR usuario: " + Arrays.toString(oficinasSIR.toArray()));
+            //Obtenemos los Organismos donde el UsuarioEntidad tenga permiso SIR
+            LinkedHashSet<Oficina> oficinasSIR = permisoOrganismoUsuarioEjb.getOficinasSir(loginInfo.getUsuarioEntidadActivo().getId());
+            log.info("Organismos SIR usuario: " + Arrays.toString(oficinasSIR.toArray()));
 
             // Las añadimos al listado general de oficinas
-            loginInfo.getOficinasRegistro().addAll(oficinasSIR);
+            loginInfo.getOficinasAcceso().addAll(oficinasSIR);
 
             // Indicamos si la oficina es SIR para que aparezca en el listado
-            for (Oficina oficina : loginInfo.getOficinasRegistro()) {
+            for (Oficina oficina : loginInfo.getOficinasAcceso()) {
 
                 oficina.setSirRecepcion(oficinaEjb.isSIRRecepcion(oficina.getId()));
                 oficina.setSirEnvio(oficinaEjb.isSIREnvio(oficina.getId()));
-
             }
         }
 
-
         // Comprobamos si el usuario tiene última Oficina utilizada.
-        if (loginInfo.getUsuarioEntidadActivo().getUltimaOficina() != null && loginInfo.getOficinasRegistro().contains(new Oficina(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()))) {
+        if (loginInfo.getUsuarioEntidadActivo().getUltimaOficina() != null && loginInfo.getOficinasAcceso().contains(new Oficina(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()))) {
 
             asignarOficinaActiva(oficinaEjb.findById(loginInfo.getUsuarioEntidadActivo().getUltimaOficina().getId()), loginInfo);
 
-        } else if (loginInfo.getOficinasRegistro().size() > 0) {
+        } else if (loginInfo.getOficinasAcceso().size() > 0) {
 
-            asignarOficinaActiva(oficinaEjb.findById(loginInfo.getOficinasRegistro().iterator().next().getId()), loginInfo);
+            asignarOficinaActiva(oficinaEjb.findById(loginInfo.getOficinasAcceso().iterator().next().getId()), loginInfo);
         }
 
         //RegistrosMigrados
@@ -358,7 +385,7 @@ public class LoginService {
         setUsuarioEntidadActivo(loginInfo, entidadNueva);
 
         if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_USUARI)) { // Solo si es Operador
-            asignarOficinasRegistro(loginInfo);
+            asignarOficinas(loginInfo);
 
         } else {
             tieneMigrados(loginInfo);

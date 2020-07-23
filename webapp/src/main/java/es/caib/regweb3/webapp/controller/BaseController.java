@@ -1,7 +1,5 @@
 package es.caib.regweb3.webapp.controller;
 
-import es.caib.dir3caib.ws.api.oficina.ContactoTF;
-import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.Configuracio;
@@ -28,20 +26,14 @@ public class BaseController {
 
     protected final Logger log = Logger.getLogger(getClass());
 
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    public PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     public UsuarioEntidadLocal usuarioEntidadEjb;
 
-    @EJB(mappedName = "regweb3/OrganismoEJB/local")
-    public OrganismoLocal organismoEjb;
-
     @EJB(mappedName = "regweb3/OficinaEJB/local")
     public OficinaLocal oficinaEjb;
-
-    @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
 
     @EJB(mappedName = "regweb3/EntidadEJB/local")
     public EntidadLocal entidadEjb;
@@ -62,8 +54,10 @@ public class BaseController {
     public RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
     @EJB(mappedName = "regweb3/NotificacionEJB/local")
-    private NotificacionLocal notificacionBean;
+    public NotificacionLocal notificacionEjb;
 
+    @EJB(mappedName = "regweb3/OrganismoEJB/local")
+    public OrganismoLocal organismoEjb;
 
 
     /**
@@ -107,18 +101,6 @@ public class BaseController {
     protected UsuarioEntidad getUsuarioEntidadActivo(HttpServletRequest request) throws Exception{
 
         return getLoginInfo(request).getUsuarioEntidadActivo();
-    }
-
-    /**
-     * Retorna los Libros Administrados del UsuarioEntidad Avtico
-     * @param request
-     * @return
-     */
-    @SuppressWarnings(value = "unchecked")
-    protected List<Libro> getLibrosAdministrados(HttpServletRequest request) throws Exception{
-
-        return getLoginInfo(request).getLibrosAdministrados();
-
     }
 
     /**
@@ -236,92 +218,157 @@ public class BaseController {
     @SuppressWarnings(value = "unchecked")
     protected LinkedHashSet<Oficina> getOficinasAutenticado(HttpServletRequest request){
 
-        return getLoginInfo(request).getOficinasRegistro();
+        return getLoginInfo(request).getOficinasAcceso();
 
     }
-    
-    
+
     /**
-     * Obtenemos los Libros de la EntidadActiva en los que el UsuarioEntidad actual tiene permisos para consultar registros de entrada
+     * Retorna el Libro de la EntidadActiva
      * @param request
      * @return
      * @throws Exception
      */
-    protected List<Libro> getLibrosConsultaEntradas(HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        return permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA, false);
+    protected Libro getLibroEntidad(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getEntidadActiva().getLibro();
     }
 
     /**
-     * Obtenemos los Libros de los Organismos a los que la OficinaActiva da servicio
-     * y en los que el UsuarioEntidad actual tiene permisos para registrar entradas
+     * Retorna los Organismos a las que el Usuario autenticado puede registrar entradas
      * @param request
      * @return
      * @throws Exception
      */
-    protected List<Libro> getLibrosRegistroEntrada(HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-
-        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
+    protected List<Organismo> getOrganismosRegistroEntrada(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOrganismosRegistroEntrada();
     }
-    
 
     /**
-     * Obtenemos los Libros de los Organismos a los que la OficinaActiva da servicio
-     * y en los que el UsuarioEntidad actual tiene permisos para registrar salidas
+     * Retorna los Organismos a las que el Usuario autenticado puede registrar salidas
      * @param request
      * @return
      * @throws Exception
      */
-    protected List<Libro> getLibrosRegistroSalida(HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-
-        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
+    protected List<Organismo> getOrganismosRegistroSalida(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOrganismosRegistroSalida();
     }
 
+
     /**
-     * Obtenemos los Libros de los Organismos a los que la OficinaActiva da servicio
-     * y en los que el UsuarioEntidad actual tiene permisos para administrar
+     * Retorna las Oficinas a las que el Usuario autenticado tiene acceso
      * @param request
      * @return
      * @throws Exception
      */
-    protected List<Libro> getLibrosAdministradosOficina(HttpServletRequest request) throws Exception {
-
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-        Oficina oficinaActiva = getOficinaActiva(request);
-
-        // Obtenemos los Organismos a los que da servicio una Oficina
-        Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-
-        return permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_ADMINISTRACION_LIBRO);
+    protected LinkedHashSet<Oficina> getOficinasAcceso(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOficinasAcceso();
     }
 
-
-
     /**
-     * Obtenemos los Libros de la Entidad Activa en los que el UsuarioEntidad actual tiene permisos para consultar registros de salida
+     * Retorna las Oficinas a las que el Usuario autenticado puede consultar registros de entrada
      * @param request
      * @return
      * @throws Exception
      */
-    protected List<Libro> getLibrosConsultaSalidas(HttpServletRequest request) throws Exception {
+    protected LinkedHashSet<Oficina> getOficinasConsultaEntrada(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOficinasConsultaEntrada();
+    }
+
+    /**
+     * Retorna las Oficinas de un Organismo a las que el Usuario autenticado puede consultar registros de entrada
+     * @param request
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    protected LinkedHashSet<Oficina> getOficinasConsultaEntrada(HttpServletRequest request, Long idOrganismo) throws Exception {
+        LinkedHashSet<Oficina> oficinas = getLoginInfo(request).getOficinasConsultaEntrada();
+        LinkedHashSet<Oficina> oficinasOrganismo = new LinkedHashSet<>();
+
+        Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
+
+        // Solo almacenamos las que dependen del Organismo
+        for(Oficina oficina:oficinas){
+            if(oficina.getOrganismoResponsable().equals(organismo)){
+                oficinasOrganismo.add(oficina);
+            }
+        }
+
+        return oficinasOrganismo;
+    }
+
+    /**
+     * Retorna los Organismos a las que el Usuario autenticado puede consultar registros de entrada
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected List<Organismo> getOrganismosConsultaEntrada(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOrganismosConsultaEntrada();
+    }
+
+    /**
+     * Retorna las Oficinas a las que el Usuario autenticado puede consultar registros de salida
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected LinkedHashSet<Oficina> getOficinasConsultaSalida(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOficinasConsultaSalida();
+    }
+
+    /**
+     * Retorna las Oficinas de un Organismo a las que el Usuario autenticado puede consultar registros de salida
+     * @param request
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    protected LinkedHashSet<Oficina> getOficinasConsultaSalida(HttpServletRequest request, Long idOrganismo) throws Exception {
+        LinkedHashSet<Oficina> oficinas = getLoginInfo(request).getOficinasConsultaSalida();
+        LinkedHashSet<Oficina> oficinasOrganismo = new LinkedHashSet<>();
+
+        Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
+
+        // Solo almacenamos las que dependen del Organismo
+        for(Oficina oficina:oficinas){
+            if(oficina.getOrganismoResponsable().equals(organismo)){
+                oficinasOrganismo.add(oficina);
+            }
+        }
+
+        return oficinasOrganismo;
+    }
+
+    /**
+     * Retorna los Organismos a las que el Usuario autenticado puede consultar registros de salida
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected List<Organismo> getOrganismosConsultaSalida(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOrganismosConsultaSalida();
+    }
+
+    /**
+     * Retorna las Oficinas a las que el Usuario autenticado es responsable
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected LinkedHashSet<Oficina> getOficinasResponsable(HttpServletRequest request) throws Exception {
+        return getLoginInfo(request).getOficinasResponsable();
+    }
+
+    /**
+     * Obtiene los Organismos del UsuarioActivo de los que es responsable
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected  List<Organismo> getOrganismosResponsable(HttpServletRequest request) throws Exception{
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        return permisoLibroUsuarioEjb.getLibrosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA, false);
+        return permisoOrganismoUsuarioEjb.getOrganismosAdministrados(usuarioEntidad.getId());
     }
 
     /**
@@ -381,24 +428,31 @@ public class BaseController {
     }
 
     /**
-     * Retorna el libro de cuyo OrganismoRespnsable coincide con el de la OficinaActiva y está activo
+     * Retorna el Organismo al que pertenece la OficinaActiva
      * @param request
-     * @param libros
      * @return
      * @throws Exception
      */
-    public Libro seleccionarLibroOficinaActiva(HttpServletRequest request,List<Libro> libros) throws Exception{
+    public Long seleccionarOrganismoActivo(HttpServletRequest request, List<Organismo> organismos) throws Exception{
 
         Oficina oficinaActiva = getOficinaActiva(request);
-        for (Libro libro:libros){
-            if(libro.getActivo() && libro.getOrganismo().equals(oficinaActiva.getOrganismoResponsable())){
-                return libro;
+
+        for (Organismo organismo:organismos){
+
+            if(oficinaActiva.getOrganismoResponsable().equals(organismo)){
+                return organismo.getId();
             }
+
         }
         return null;
     }
-    
-    
+
+    /**
+     *
+     * @param errores
+     * @param bean
+     * @return
+     */
     public List<FieldError> setDefaultMessageToErrors(List<FieldError> errores, String bean) {
 
       if (errores == null) {
@@ -443,31 +497,13 @@ public class BaseController {
       
     }
 
-    /**
-     * Método que obtiene los contactos de la oficina Sir de destino
-     * @param oficinaSir
-     * @return
-     * @throws Exception
-     */
-    public String getContactosOficinaSir(OficinaTF oficinaSir) throws Exception {
-        StringBuilder stb = new StringBuilder();
-        for(ContactoTF contactoTF: oficinaSir.getContactos()){
-            String scontactoTF = "<b>" + contactoTF.getTipoContacto()+"</b>: "+ contactoTF.getValorContacto();
-            stb.append(scontactoTF);
-            stb.append("<br>");
-        }
-
-        return stb.toString();
-
-    }
-
     @ModelAttribute("notificacionesPendientes")
     public Long notificacionesPendientes(HttpServletRequest request) throws Exception {
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
         if (usuarioEntidad != null && (isAdminEntidad(request) || isOperador(request))) {
 
-            return notificacionBean.notificacionesPendientes(usuarioEntidad.getId());
+            return notificacionEjb.notificacionesPendientes(usuarioEntidad.getId());
         }
 
         return 0L;
