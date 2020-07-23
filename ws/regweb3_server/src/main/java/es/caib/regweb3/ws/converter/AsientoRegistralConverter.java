@@ -195,7 +195,7 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @param conAnexos
     * @param registroEntradaConsultaEjb
     * @param registroSalidaConsultaEjb
-    * @param permisoLibroUsuarioEjb
+    * @param permisoOrganismoUsuarioEjb
     * @param oficioRemisionEjb
     * @param trazabilidadEjb
     * @param lopdEjb
@@ -204,7 +204,7 @@ public class AsientoRegistralConverter extends CommonConverter {
     * @throws I18NException
     */
    public static AsientoRegistralWs getAsientoRegistral(UsuarioEntidad usuario, String numeroRegistro, Long tipoRegistro, String idioma, Boolean conAnexos, Boolean comprobarPermisos,
-                                                        RegistroEntradaConsultaLocal registroEntradaConsultaEjb, RegistroSalidaConsultaLocal registroSalidaConsultaEjb, PermisoLibroUsuarioLocal permisoLibroUsuarioEjb,
+                                                        RegistroEntradaConsultaLocal registroEntradaConsultaEjb, RegistroSalidaConsultaLocal registroSalidaConsultaEjb, PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb,
                                                         OficioRemisionLocal oficioRemisionEjb, TrazabilidadSirLocal trazabilidadEjb, LopdLocal lopdEjb) throws Exception, I18NException {
 
       AsientoRegistralWs asientoRegistral = new AsientoRegistralWs(tipoRegistro);
@@ -224,7 +224,7 @@ public class AsientoRegistralConverter extends CommonConverter {
 
          // Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
          if(comprobarPermisos){
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registro.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
                throw new I18NException("registroEntrada.usuario.permisos", usuario.getUsuario().getNombreCompleto());
             }
          }
@@ -262,8 +262,8 @@ public class AsientoRegistralConverter extends CommonConverter {
 
          // Comprobamos que el usuario tiene permisos de lectura para el RegistroSalida
          if(comprobarPermisos){
-            if (!permisoLibroUsuarioEjb.tienePermiso(usuario.getId(), registro.getLibro().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-               throw new I18NException("registroSalida.usuario.permisos", usuario.getUsuario().getNombreCompleto());
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registro.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
+               throw new I18NException("registroEntrada.usuario.permisos", usuario.getUsuario().getNombreCompleto());
             }
          }
 
