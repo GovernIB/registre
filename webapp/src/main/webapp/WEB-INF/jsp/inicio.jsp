@@ -453,7 +453,7 @@
                                 </c:if>
 
                                 <%--OFICIOS DE ENTRADA PENDIENTES DE REMISIÓN INTERNOS--%>
-                                <c:if test="${not empty organismosOficioRemisionEntradaInternos}">
+                                <%--<c:if test="${not empty organismosOficioRemisionEntradaInternos}">
                                     <div class="col-xs-6 filas">
 
                                         <div id="pendientesRemEnt" class="panel panel-success">
@@ -496,7 +496,7 @@
                                         </div>
 
                                     </div>
-                                </c:if>
+                                </c:if>--%>
 
                                 <%--OFICIOS DE ENTRADA PENDIENTES DE EXTERNOS--%>
                                 <c:if test="${not empty organismosOficioRemisionEntradaExternos}">

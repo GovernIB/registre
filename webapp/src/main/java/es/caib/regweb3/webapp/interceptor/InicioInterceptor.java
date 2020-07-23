@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.PendienteLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
@@ -48,6 +49,9 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
     @EJB(mappedName = "regweb3/PendienteEJB/local")
     private PendienteLocal pendienteEjb;
+
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    private TipoDocumentalLocal tipoDocumentalEjb;
 
 
     @Override
@@ -202,6 +206,22 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
                         log.info("La propiedad Dir3CaibPassword no está definida");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+
+                    // Tipo documental existente
+                    if(tipoDocumentalEjb.getByEntidad(loginInfo.getEntidadActiva().getId()).size()==0){
+                        log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
+                        response.sendRedirect("/regweb3/aviso");
+                        return false;
+                    }
+
+                    //Comprobamos que se haya definido un formato para el número de registro en la Entidad
+                    if(loginInfo.getEntidadActiva().getNumRegistro() == null || loginInfo.getEntidadActiva().getNumRegistro().length()==0){
+                        log.info("No hay configurado el formato del numero de registro para la Entidad activa");
+                        Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
                         response.sendRedirect("/regweb3/aviso");
                         return false;
                     }

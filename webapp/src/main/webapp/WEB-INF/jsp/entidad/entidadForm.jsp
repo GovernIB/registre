@@ -117,6 +117,7 @@
                                 <sec:authorize access="hasRole('RWE_ADMIN')">
                                     <ul class="nav nav-tabs" id="myTab">
                                         <li><a href="#Datos" data-toggle="tab"><spring:message code="entidad.datos"/></a></li>
+                                        <li><a href="#Libro" data-toggle="tab"><spring:message code="libro.libro"/></a></li>
                                         <li><a href="#Formatos" data-toggle="tab"><spring:message code="entidad.formatos"/></a></li>
                                         <li><a href="#Configuracion" data-toggle="tab"><spring:message code="entidad.configuracion"/></a></li>
                                     </ul>
@@ -198,6 +199,27 @@
 
                                         </div>
                                         <!-- Fi datos -->
+
+                                        <div class="tab-pane" id="Libro">
+                                            <div class="col-xs-12">
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.libro.nombre"><span class="text-danger">*</span> <spring:message code="regweb.nombre"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:input path="entidad.libro.nombre" cssClass="form-control"/> <form:errors path="entidad.libro.nombre" cssClass="help-block" element="span"/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.libro.codigo"><span class="text-danger">*</span> <spring:message code="libro.codigo"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:input path="entidad.libro.codigo" cssClass="form-control" maxlength="4"/> <form:errors path="entidad.libro.codigo" cssClass="help-block" element="span"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="tab-pane" id="Formatos">
 

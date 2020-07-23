@@ -1,3 +1,4 @@
+
 <%@ page import="es.caib.regweb3.persistence.utils.PropiedadGlobalUtil" %>
 <%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -52,14 +53,13 @@
             <li><a href="<c:url value="/oficioRemision/list"/>"><i class="fa fa-envelope-o"></i> <spring:message code="oficioRemision.listado"/></a></li>
             <li><a href="<c:url value="/oficioRemision/aceptados/list"/>"><i class="fa fa-envelope-open-o"></i> <spring:message code="oficioRemision.aceptados"/></a></li>
             <li class="divider"></li>
-            <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
-            <li class="divider"></li>
-            <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.internos"/></a></li>
+<%--        <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/2"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.internos"/></a></li>--%>
             <li><a href="<c:url value="/oficioRemision/entradasPendientesRemision/3"/>"><i class="fa fa-mail-forward text-info"></i> <spring:message code="registroEntrada.oficiosRemision.externos"/></a></li>
             <li class="divider"></li>
-            <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.internos"/></a></li>
+<%--        <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/2"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.internos"/></a></li>--%>
             <li><a href="<c:url value="/oficioRemision/salidasPendientesRemision/3"/>"><i class="fa fa-mail-forward text-danger"></i> <spring:message code="registroSalida.oficiosRemision.externos"/></a></li>
-
+            <li class="divider"></li>
+            <li><a href="<c:url value="/oficioRemision/pendientesLlegada/list"/>"><i class="fa fa-mail-reply"></i> <spring:message code="oficioRemision.pendientesLlegada"/></a></li>
         </ul>
     </div>
 </c:if>
@@ -111,12 +111,12 @@
                 <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message
                         code="menu.estadisticas"/></a>
                 <ul class="dropdown-menu">
-                    <c:if test="${fn:length(loginInfo.librosAdministrados) > 0}">
+                    <c:if test="${fn:length(loginInfo.organismosResponsable) > 0}">
                         <li><a href="<c:url value="/informe/indicadores"/>"><i class="fa fa-bar-chart"></i> <spring:message code="informe.indicadores"/></a></li>
                         <li><a href="<c:url value="/informe/indicadoresOficina"/>"><i class="fa fa-bar-chart"></i> <spring:message code="informe.indicadoresOficina"/></a></li>
                     </c:if>
                     <li><a href="<c:url value="/informe/libroRegistro"/>"><i class="fa fa-book"></i> <spring:message code="menu.libro"/></a></li>
-                    <c:if test="${fn:length(loginInfo.librosAdministrados) > 0}">
+                    <c:if test="${fn:length(loginInfo.organismosResponsable) > 0}">
                         <li class="divider"></li>
                         <li><a href="<c:url value="/informe/usuarioLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.usuarioLopd"/></a></li>
                         <li><a href="<c:url value="/informe/registroLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.registroLopd"/></a></li>

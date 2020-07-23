@@ -4,7 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.model.TraduccionTipoDocumental;
 import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
@@ -36,9 +34,6 @@ public class TipoDocumentalController extends BaseController {
 
     @Autowired
     private TipoDocumentalValidator tipoDocumentalValidator;
-
-    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
-    private TipoDocumentalLocal tipoDocumentalEjb;
 
     /**
      * Listado de todos los TipoDocumental

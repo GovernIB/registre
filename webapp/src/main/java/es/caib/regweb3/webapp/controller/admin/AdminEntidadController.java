@@ -46,20 +46,14 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @Autowired
     private RegistroSalidaBusquedaValidator registroSalidaBusquedaValidator;
 
-    @EJB(mappedName = "regweb3/LopdEJB/local")
-    public LopdLocal lopdEjb;
-
     @EJB(mappedName = "regweb3/LibroEJB/local")
-    public LibroLocal libroEjb;
+    private LibroLocal libroEjb;
 
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
-
-    @EJB(mappedName = "regweb3/ColaEJB/local")
-    private ColaLocal colaEjb;
 
     @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
     private AsientoRegistralLocal asientoRegistralEjb;
@@ -68,7 +62,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     private PersonaLocal personaEjb;
 
     @EJB(mappedName = "regweb3/InteresadoEJB/local")
-    public InteresadoLocal interesadoEjb;
+    private InteresadoLocal interesadoEjb;
 
 
     /**
@@ -139,7 +133,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), false, null, busqueda.getUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), null,busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), false, null, busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -231,7 +225,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) ||
                     registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_DISTRIBUYENDO)){
 
-                Cola elemento = colaEjb.findByIdObjetoEstado(registroEntrada.getId(), usuarioEntidad.getEntidad().getId(), RegwebConstantes.COLA_ESTADO_PROCESADO);
+                //Cola elemento = colaEjb.findByIdObjetoEstado(registroEntrada.getId(), usuarioEntidad.getEntidad().getId(), RegwebConstantes.COLA_ESTADO_PROCESADO);
 
                 //if(elemento != null){ todo: Añadir esta validación al solucionar el bug de Distribuyendo
 
@@ -321,7 +315,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), false, null, busqueda.getUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(),null, busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), false, null, busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);

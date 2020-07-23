@@ -100,7 +100,7 @@ public class ComunController extends BaseController {
 
         HttpSession session = request.getSession();
 
-        LinkedHashSet<Oficina> oficinasAutenticado = getOficinasAutenticado(request);
+        LinkedHashSet<Oficina> oficinasAutenticado = getOficinasAcceso(request);
 
         try {
             Oficina oficinaNueva = oficinaEjb.findById(oficinaId);

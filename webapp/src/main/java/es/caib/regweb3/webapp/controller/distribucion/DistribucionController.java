@@ -97,7 +97,7 @@ public class DistribucionController extends BaseController {
             // Ponemos la hora 23:59 a la fecha fin
             Date fechaFin = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
 
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), fechaFin, registroEntrada, "", "", "", "", null, false, "", null, entidad.getId());
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), null,busqueda.getFechaInicio(), fechaFin, registroEntrada, "", "", "", "", null, false, "", null, entidad.getId());
 
             busqueda.setPageNumber(1);
 

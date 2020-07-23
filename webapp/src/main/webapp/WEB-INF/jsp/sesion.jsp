@@ -21,7 +21,7 @@
                     <div class="col-xs-12">
 
                         <ol class="breadcrumb">
-                            <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
+                            <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
                         </ol>
 
                     </div>

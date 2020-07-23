@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.validator;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.EntidadLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -40,7 +41,8 @@ public class EntidadValidator implements Validator {
     @Override
     public void validate(Object o, Errors errors) {
 
-        EntidadForm entidad = (EntidadForm)o;
+        EntidadForm entidadForm = (EntidadForm)o;
+        Entidad entidad = entidadForm.getEntidad();
 
         HttpServletRequest request =
                 ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
@@ -53,7 +55,15 @@ public class EntidadValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.nombre", "error.valor.requerido", "El camp és obligatori");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.descripcion", "error.valor.requerido", "El camp és obligatori");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.codigoDir3", "error.valor.requerido", "El camp és obligatori");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.libro.nombre", "error.valor.requerido", "El camp és obligatori");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.libro.codigo", "error.valor.requerido", "El camp és obligatori");
 
+        // Tamaño campo Libro
+        if(entidad.getLibro().getCodigo() != null && entidad.getLibro().getCodigo().length() > 4){
+            errors.rejectValue("codigo", "libro.codigo.largo", "El camp és obligatori");
+        }
+
+        // Validaciones solo si es Administrador de Entidad
         if(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)){
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.colorMenu", "error.valor.requerido", "El camp és obligatori");
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "entidad.sello", "error.valor.requerido", "El camp Format Segell és obligatori");
@@ -61,39 +71,37 @@ public class EntidadValidator implements Validator {
         }
 
         /*Validación del campo único CodigoDir3*/
-        if(entidad.getEntidad().getCodigoDir3() != null && entidad.getEntidad().getCodigoDir3().length() > 0){
+        if(entidad.getCodigoDir3() != null && entidad.getCodigoDir3().length() > 0){
             try {
-                if(entidad.getEntidad().getId() != null){ // Es una modificación
+                if(entidad.getId() != null){ // Es una modificación
 
-                    if(entidadEjb.existeCodigoDir3Edit(entidad.getEntidad().getCodigoDir3(),entidad.getEntidad().getId())){
+                    if(entidadEjb.existeCodigoDir3Edit(entidad.getCodigoDir3(),entidad.getId())){
                         errors.rejectValue("entidad.codigoDir3","entidad.codigoDir3.existe","El código ya existe");
                     }
 
                 }else{
-                    if(entidadEjb.findByCodigoDir3(entidad.getEntidad().getCodigoDir3()) != null){
+                    if(entidadEjb.findByCodigoDir3(entidad.getCodigoDir3()) != null){
                         errors.rejectValue("entidad.codigoDir3","entidad.codigoDir3.existe","El código ya existe");
                     }
-
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
 
         /*Validación de la Posición del Sello: (X, Y)*/
-        if(entidad.getEntidad().getPosXsello() != null){ //Comprueba que PosX tiene valor
+        if(entidad.getPosXsello() != null){ //Comprueba que PosX tiene valor
             try {
-                if(entidad.getEntidad().getPosYsello() != null){ //PosY también tiene valor
-                    if(entidad.getEntidad().getPosXsello() > 155){ //Valor máximo de PosX = 155
+                if(entidad.getPosYsello() != null){ //PosY también tiene valor
+                    if(entidad.getPosXsello() > 155){ //Valor máximo de PosX = 155
                         errors.rejectValue("entidad.posXsello","entidad.sello.valorXmax","Valor máximo = 155");
-                    }else if(entidad.getEntidad().getPosXsello() < 10){ //Valor mínimo de PosX = 10
+                    }else if(entidad.getPosXsello() < 10){ //Valor mínimo de PosX = 10
                         errors.rejectValue("entidad.posXsello","entidad.sello.valorXmin","Valor mínimo = 10");
                     }
-                    if(entidad.getEntidad().getPosYsello() > 264){ //Valor máximo de PosY = 264
+                    if(entidad.getPosYsello() > 264){ //Valor máximo de PosY = 264
                         errors.rejectValue("entidad.posYsello","entidad.sello.valorYmax","Valor máximo = 264");
-                    }else if(entidad.getEntidad().getPosYsello() < 10){ //Valor mínimo de PosY = 10
+                    }else if(entidad.getPosYsello() < 10){ //Valor mínimo de PosY = 10
                         errors.rejectValue("entidad.posYsello","entidad.sello.valorYmin","Valor mínimo = 10");
                     }
                 }else{ // Si PosY no tiene valor, indica error
@@ -105,18 +113,18 @@ public class EntidadValidator implements Validator {
             }
 
         }else{  // PosX no tiene valor
-            if(entidad.getEntidad().getPosYsello() != null){ // Si PosY tiene valor, indica error
+            if(entidad.getPosYsello() != null){ // Si PosY tiene valor, indica error
                 errors.rejectValue("entidad.posXsello","entidad.posicion.necesario","Debe completar las dos posiciones");
             }
         }
 
         /*Validación de Format Num.Registre*/
-        if(entidad.getEntidad().getNumRegistro() != null){
+        if(entidad.getNumRegistro() != null){
             try {
-                if(!entidad.getEntidad().getNumRegistro().contains("${numLlibre}")){ //Si no conté el camp numLlibre
+                if(!entidad.getNumRegistro().contains("${numLlibre}")){ //Si no conté el camp numLlibre
                     errors.rejectValue("entidad.numRegistro","error.numRegistre.incorrecto","error.numRegistre.numLlibre");
                 }
-                if(!entidad.getEntidad().getNumRegistro().contains("${tipusRegistre}")){ //Si no conté el camp tipusRegistre
+                if(!entidad.getNumRegistro().contains("${tipusRegistre}")){ //Si no conté el camp tipusRegistre
                     errors.rejectValue("entidad.numRegistro","error.numRegistre.incorrecto","error.numRegistre.tipusRegistre");
                 }
             } catch (Exception e) {

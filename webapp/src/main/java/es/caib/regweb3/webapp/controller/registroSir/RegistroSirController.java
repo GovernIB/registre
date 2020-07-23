@@ -144,19 +144,16 @@ public class RegistroSirController extends BaseController {
 
         ModelAndView mav = new ModelAndView("registroSir/enviadosList");
 
-        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
+        List<Organismo> organismosConsultaEntrada = getOrganismosConsultaEntrada(request);
 
-        // Fijamos un libro por defecto
-        OficioRemision oficioRemision = new OficioRemision();
-        oficioRemision.setLibro(seleccionarLibroOficinaActiva(request, librosConsulta));
-        OficioRemisionBusquedaForm oficioRemisionBusqueda = new OficioRemisionBusquedaForm(oficioRemision, 1);
+        OficioRemisionBusquedaForm oficioRemisionBusqueda = new OficioRemisionBusquedaForm(new OficioRemision(), 1);
+        oficioRemisionBusqueda.setIdOrganismo(seleccionarOrganismoActivo(request, organismosConsultaEntrada));
         oficioRemisionBusqueda.setFechaInicio(new Date());
         oficioRemisionBusqueda.setFechaFin(new Date());
 
         model.addAttribute("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        model.addAttribute("librosConsulta", librosConsulta);
+        model.addAttribute("organismosConsultaEntrada", organismosConsultaEntrada);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusqueda);
 
         return mav;
@@ -172,19 +169,16 @@ public class RegistroSirController extends BaseController {
 
         OficioRemision oficioRemision = busqueda.getOficioRemision();
 
-        // Obtenemos los Libros donde el usuario tiene permisos de Consulta
-        List<Libro> librosConsulta = getLibrosConsultaEntradas(request);
-
         // Ajustam la dataFi per a que ens trobi els oficis del mateix dia
-        Date dataFi = RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin());
+        busqueda.setFechaFin(RegistroUtils.ajustarHoraBusqueda(busqueda.getFechaFin()));
 
-        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(), busqueda.getFechaInicio(), dataFi,null, oficioRemision, librosConsulta, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
+        Paginacion paginacion = oficioRemisionEjb.busqueda(busqueda.getPageNumber(),busqueda.getIdOrganismo(), busqueda.getFechaInicio(), busqueda.getFechaFin(),null, oficioRemision, busqueda.getDestinoOficioRemision(), busqueda.getEstadoOficioRemision(), busqueda.getTipoOficioRemision(), true);
 
         busqueda.setPageNumber(1);
         mav.addObject("paginacion", paginacion);
         mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        mav.addObject("librosConsulta", librosConsulta);
+        mav.addObject("organismosConsultaEntrada", getOrganismosConsultaEntrada(request));
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
         return mav;
@@ -211,8 +205,9 @@ public class RegistroSirController extends BaseController {
             // Tengo permisos para gestionarlo?
             if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistral())){
 
-                // Obtenemos los libros del Organismo destinatário del RegistroSir
-                List<Libro> libros = getLibrosRegistroEntrada(request);
+                // Libro único
+                List<Libro> libros = new ArrayList<>();
+                libros.add(getLibroEntidad(request));
 
                 model.addAttribute("libros",libros);
                 model.addAttribute("registrarForm", new RegistrarForm());
@@ -385,13 +380,6 @@ public class RegistroSirController extends BaseController {
     public Long[] idiomas() throws Exception {
         return RegwebConstantes.IDIOMAS_REGISTRO;
     }
-
-   /* @ModelAttribute("tiposAsunto")
-    public List<TipoAsunto> tiposAsunto(HttpServletRequest request) throws Exception {
-
-        Entidad entidadActiva = getEntidadActiva(request);
-        return tipoAsuntoEjb.getActivosEntidad(entidadActiva.getId());
-    }*/
 
     @ModelAttribute("tiposValidezDocumento")
     public Long[] validezDocumento() throws Exception {

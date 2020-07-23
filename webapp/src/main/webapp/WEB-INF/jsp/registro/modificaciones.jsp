@@ -8,14 +8,14 @@
         <table id="historicos" class="table table-bordered table-hover table-striped">
             <colgroup>
                 <col>
-                <c:if test="${isAdministradorLibro}"> <col> </c:if>
+                <c:if test="${isResponsableOrganismo}"> <col> </c:if>
                 <col>
                 <col width="100">
             </colgroup>
             <thead>
             <tr>
                 <th><spring:message code="historicoEntrada.fecha"/></th>
-                <c:if test="${isAdministradorLibro}"> <th><spring:message code="historicoEntrada.usuario"/></th> </c:if>
+                <c:if test="${isResponsableOrganismo}"> <th><spring:message code="historicoEntrada.usuario"/></th> </c:if>
                 <th><spring:message code="historicoEntrada.modificacion"/></th>
                 <th><spring:message code="historicoEntrada.estado"/></th>
                 <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -26,7 +26,7 @@
             <c:forEach var="historico" items="${historicos}">
                 <tr>
                     <td><fmt:formatDate value="${historico.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                    <c:if test="${isAdministradorLibro}"> <td>${historico.usuario.nombreCompleto}</td> </c:if>
+                    <c:if test="${isResponsableOrganismo}"> <td>${historico.usuario.nombreCompleto}</td> </c:if>
                     <td>${historico.modificacion}</td>
                     <td>
                         <c:import url="../registro/estadosRegistro.jsp">

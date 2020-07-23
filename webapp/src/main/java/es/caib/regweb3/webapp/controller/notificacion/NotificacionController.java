@@ -4,8 +4,6 @@ import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Notificacion;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.ejb.NotificacionLocal;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,12 +29,6 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/notificacion")
 public class NotificacionController extends BaseController {
-
-    @EJB(mappedName = "regweb3/NotificacionEJB/local")
-    private NotificacionLocal notificacionEjb;
-
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     /**
      * Listado de todas las {@link Notificacion}
@@ -159,9 +150,9 @@ public class NotificacionController extends BaseController {
                 for (Long destinatario : notificacion.getDestinatarios()) {
 
                     if(destinatario.equals((long) -1)){ // Se ha seleccionado todos los usuarios
-                        usuarios.addAll(permisoLibroUsuarioEjb.getUsuariosRegistroEntidad(usuarioActivo.getEntidad().getId()));
+                        usuarios.addAll(permisoOrganismoUsuarioEjb.getUsuariosRegistroEntidad(usuarioActivo.getEntidad().getId()));
                     }else{
-                        usuarios.addAll(permisoLibroUsuarioEjb.getUsuariosRegistroOrganismo(notificacion.getDestinatarios()));
+                        usuarios.addAll(permisoOrganismoUsuarioEjb.getUsuariosRegistroOrganismo(notificacion.getDestinatarios()));
                     }
                 }
             }

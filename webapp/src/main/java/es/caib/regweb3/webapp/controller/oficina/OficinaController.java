@@ -4,7 +4,6 @@ import es.caib.regweb3.model.CatEstadoEntidad;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.persistence.ejb.CatEstadoEntidadLocal;
-import es.caib.regweb3.persistence.ejb.OficinaLocal;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -27,9 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 public class OficinaController extends BaseController {
 
     protected final Logger log = Logger.getLogger(getClass());
-
-    @EJB(mappedName = "regweb3/OficinaEJB/local")
-    private OficinaLocal oficinaEjb;
 
     @EJB(mappedName = "regweb3/CatEstadoEntidadEJB/local")
     private CatEstadoEntidadLocal catEstadoEntidadEjb;

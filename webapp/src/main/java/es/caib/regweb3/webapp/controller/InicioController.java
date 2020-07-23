@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.persistence.ejb.*;
@@ -15,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashSet;
-import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -60,9 +58,6 @@ public class InicioController extends BaseController{
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
 
-            List<Libro> librosRegistroEntrada = getLibrosRegistroEntrada(request);
-            List<Libro> librosRegistroSalida = getLibrosRegistroSalida(request);
-
 
             /* RESERVA DE NÚMERO */
             mav.addObject("reservas", registroEntradaConsultaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
@@ -70,37 +65,29 @@ public class InicioController extends BaseController{
             /* OFICIOS PENDIENTES DE REMISIÓN */
             if(entidadActiva.getOficioRemision()){
 
-                // Comprueba si hay libros de Registro de entrada
-                if(librosRegistroEntrada.size() > 0) {
 
-                    // Obtenemos los Organismos que tienen Registros pendientes de tramitar por medio de un Oficio de Revisión
-                    //mav.addObject("organismosOficioRemisionEntrada", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemision(oficinaActiva.getId(), librosRegistroEntrada,getOrganismosOficioRemision(organismosOficinaActiva), RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                //mav.addObject("organismosOficioRemisionEntradaInternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(),  RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
-                    mav.addObject("organismosOficioRemisionEntradaInternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionInternos(oficinaActiva.getId(), librosRegistroEntrada, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                    mav.addObject("organismosOficioRemisionEntradaExternos", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada, RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-
-                    // Oficios de entrada SIR
-                    if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                        mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), librosRegistroEntrada,RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                    }
-
-                    // Obtenemos los Oficios pendientes de Llegada
-                    mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                // Oficios de entrada SIR
+                if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
+                    mav.addObject("organismosOficioRemisionEntradaSir", oficioRemisionEntradaUtilsEjb.organismosEntradaPendientesRemisionExternosTipo(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 }
 
-                if(librosRegistroSalida.size() > 0) {
+                // Obtenemos los Oficios pendientes de Llegada
+                mav.addObject("oficiosPendientesLlegada", oficioRemisionEjb.oficiosPendientesLlegada(organismosOficinaActiva, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
-                    // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
-                    //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId(), 10));
-                    mav.addObject("organismosOficioRemisionSalidaInternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_INTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                    mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
-                    // Oficios de salida SIR
-                    if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
-                        mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
-                    }
+                // Obtenemos los Organismos que tienen Registros de salida pendientes de tramitar por medio de un Oficio de Revisión,
+                //mav.addObject("organismosOficioRemisionSalida", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemision(oficinaActiva.getId(), librosRegistroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva), entidadActiva.getId(), 10));
+                //mav.addObject("organismosOficioRemisionSalidaInternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), librosRegistroSalida, RegwebConstantes.EVENTO_OFICIO_INTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
+                mav.addObject("organismosOficioRemisionSalidaExternos", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_EXTERNO, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
 
+                // Oficios de salida SIR
+                if(entidadActiva.getSir() && oficinaActiva.getSirEnvio()) {
+                    mav.addObject("organismosOficioRemisionSalidaSir", oficioRemisionSalidaUtilsEjb.organismosSalidaPendientesRemisionTipo(oficinaActiva.getId(), RegwebConstantes.EVENTO_OFICIO_SIR, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
                 }
+
             }
 
             /* REGISTROS SIR */
