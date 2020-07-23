@@ -181,6 +181,7 @@
         TEXTOPIE varchar2(4000 char),
         TIPSCAN varchar2(20 char),
         CONTADOR_SIR number(19,0),
+        LIBRO number(19,0),
         LOGOMENU number(19,0),
         LOGOPIE number(19,0),
         LOGOSELLO number(19,0),
@@ -302,6 +303,7 @@
         CONTADOR_ENTRADA number(19,0),
         CONTADOR_OFICIO_REMISION number(19,0),
         CONTADOR_SALIDA number(19,0),
+        CONTADOR_SIR number(19,0),
         ORGANISMO number(19,0)
     );
 
@@ -434,6 +436,7 @@
         NIVELJERARQUICO number(19,0),
         NOMBREVIA varchar2(300 char),
         NUMVIA varchar2(20 char),
+        PERMITE_USUARIOS number(1,0),
         CODAMBCOMUNIDAD number(19,0),
         CODAMBPROVINCIA number(19,0),
         PAIS number(19,0),
@@ -687,7 +690,7 @@
         ORDEN number(10,0) not null
     );
 
-     create table RWE_SESION (
+    create table RWE_SESION (
         ID number(19,0) not null,
         ESTADO number(19,0),
         FECHA timestamp,
@@ -1068,6 +1071,11 @@
         references RWE_ARCHIVO;
 
     alter table RWE_ENTIDAD
+        add constraint RWE_ENTIDAD_LIBRO_FK
+        foreign key (LIBRO)
+        references RWE_LIBRO;
+
+    alter table RWE_ENTIDAD
         add constraint RWE_ENTIDAD_USU_PROP_FK
         foreign key (PROPIETARIO)
         references RWE_USUARIO;
@@ -1151,6 +1159,11 @@
         add constraint RWE_INTERESADOSIR_REGSIR_FK
         foreign key (REGISTRO_SIR)
         references RWE_REGISTRO_SIR;
+
+    alter table RWE_LIBRO
+        add constraint RWE_LIBRO_CONT_SIR_FK
+        foreign key (CONTADOR_SIR)
+        references RWE_CONTADOR;
 
     alter table RWE_LIBRO
         add constraint RWE_LIBRO_CONT_SAL_FK
@@ -1602,3 +1615,4 @@
     alter table RWE_ROL add constraint RWE_ROL_NOMBRE_uk unique (NOMBRE);
     alter table RWE_USUARIO add constraint RWE_USUARIO_IDENTIFICADOR_uk unique (IDENTIFICADOR);
  -- FINAL UNIQUES
+

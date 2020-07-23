@@ -20,7 +20,6 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-home"></i> <spring:message code="organismo.organismos"/></a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="organismo.usuarios"/></li>
                 </ol>
             </div>
@@ -161,7 +160,7 @@
                                                     <col>
                                                     <col>
                                                     <col>
-                                                    <col width="101">
+                                                    <col width="130">
                                                 </colgroup>
                                                 <thead>
                                                 <tr>
@@ -211,7 +210,7 @@
                                                         <td class="center">
                                                             <c:if test="${usuarioEntidad.usuario.rwe_usuari == true || usuarioEntidad.usuario.rwe_ws_entrada == true
                                                             || usuarioEntidad.usuario.rwe_ws_salida == true || usuarioEntidad.usuario.rwe_ws_ciudadano == true}">
-                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/entidad/permisos/${usuarioEntidad.id}"/>" title="<spring:message code="usuario.modificar.permisos"/>"><span class="fa fa-key"></span></a>
+                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/permisos/${usuarioEntidad.id}"/>" title="<spring:message code="usuario.modificar.permisos"/>"><span class="fa fa-key"></span></a>
                                                             </c:if>
                                                             <c:if test="${usuarioEntidad.usuario.rwe_usuari == false && usuarioEntidad.usuario.rwe_ws_entrada == false
                                                             && usuarioEntidad.usuario.rwe_ws_salida == false && usuarioEntidad.usuario.rwe_ws_ciudadano == false}">

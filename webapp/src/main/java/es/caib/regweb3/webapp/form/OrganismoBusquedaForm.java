@@ -15,15 +15,13 @@ public class OrganismoBusquedaForm implements Serializable {
     private Organismo organismo;
     private Long entidad;
     private Integer pageNumber;
-    private Boolean libros;
 
     public OrganismoBusquedaForm() {
     }
 
-    public OrganismoBusquedaForm(Organismo organismo, Integer pageNumber, Boolean libros) {
+    public OrganismoBusquedaForm(Organismo organismo, Integer pageNumber) {
         this.organismo = organismo;
         this.pageNumber = pageNumber;
-        this.libros = libros;
     }
 
     public Organismo getOrganismo() {
@@ -49,8 +47,4 @@ public class OrganismoBusquedaForm implements Serializable {
     public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
     }
-
-    public Boolean getLibros() { return libros; }
-
-    public void setLibros(Boolean libros) { this.libros = libros; }
 }

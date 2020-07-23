@@ -107,10 +107,7 @@ public class UsuarioExisteController extends BaseController {
                     usuarioEntidad = new UsuarioEntidad();
                     usuarioEntidad.setUsuario(usuarioExistente);
                     usuarioEntidad.setEntidad(entidad);
-                    UsuarioEntidad usuarioEntidadCreado = usuarioEntidadEjb.persist(usuarioEntidad);
-
-                    // Se crean los permisos para el nuevo Usuario creado
-                    permisoLibroUsuarioEjb.crearPermisosUsuarioNuevo(usuarioEntidadCreado, getEntidadActiva(request).getId());
+                    usuarioEntidadEjb.persist(usuarioEntidad);
 
                     Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.nuevo.ok"));
                     return "redirect:/entidad/usuarios";
@@ -122,8 +119,6 @@ public class UsuarioExisteController extends BaseController {
                     }else{
                         usuarioEntidad.setActivo(true);
                         usuarioEntidadEjb.merge(usuarioEntidad);
-                        // Se crean los permisos para el Usuario activado
-                        permisoLibroUsuarioEjb.crearPermisosUsuarioNuevo(usuarioEntidad, getEntidadActiva(request).getId());
                         Mensaje.saveMessageInfo(request, getMessage("usuarioEntidad.existente.inactivo"));
                     }
                 }

@@ -38,7 +38,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     private EntityManager em;
 
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
-    @EJB public LibroLocal libroEjb;
+    @EJB private LibroLocal libroEjb;
 
 
     @Override
@@ -445,7 +445,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad, Boolean libros) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, Long idEntidad, Organismo organismo) throws Exception {
 
         Query q;
         Query q2;
@@ -454,20 +454,19 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         StringBuilder query = new StringBuilder("Select organismo from Organismo as organismo ");
 
-        if (StringUtils.isNotEmpty(codigo)) {
-            where.add(DataBaseUtils.like("organismo.codigo", "codigo", parametros, codigo));
+        if (StringUtils.isNotEmpty(organismo.getCodigo())) {
+            where.add(DataBaseUtils.like("organismo.codigo", "codigo", parametros, organismo.getCodigo()));
         }
-        if (StringUtils.isNotEmpty(denominacion)) {
-            where.add(DataBaseUtils.like("organismo.denominacion", "denominacion", parametros, denominacion));
+        if (StringUtils.isNotEmpty(organismo.getDenominacion())) {
+            where.add(DataBaseUtils.like("organismo.denominacion", "denominacion", parametros, organismo.getDenominacion()));
         }
-        if (idCatEstadoEntidad != null && idCatEstadoEntidad > 0) {
+        if (organismo.getEstado().getId() != null && organismo.getEstado().getId() > 0) {
             where.add(" organismo.estado.id = :idCatEstadoEntidad");
-            parametros.put("idCatEstadoEntidad", idCatEstadoEntidad);
+            parametros.put("idCatEstadoEntidad", organismo.getEstado().getId());
         }
-        // Buscamos registros de entrada con anexos
-        if (libros) {
-            where.add(" organismo.id in (select distinct(libro.organismo.id) from Libro as libro) ");
-        }
+
+        /*where.add(" organismo.permiteUsuarios = :permiteUsuarios");
+        parametros.put("permiteUsuarios", organismo.getPermiteUsuarios());*/
 
         // Añadimos la Entidad
         where.add("organismo.entidad.id = :idEntidad ");
@@ -644,6 +643,50 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         return oficinasSir;
     }
 
+
+    /**
+     * Activa la opción de permitir usuarios de un Organismo
+     * @param idOrganismo
+     * @throws Exception
+     */
+    public void activarUsuarios(Long idOrganismo) throws Exception {
+
+        em.createQuery("update from Organismo set permiteUsuarios = true where id  =:idOrganismo")
+                .setParameter("idOrganismo", idOrganismo).executeUpdate();
+    }
+
+    /**
+     * Desactiva la opción de permitir usuarios de un Organismo
+     * @param idOrganismo
+     * @throws Exception
+     */
+    public void desactivarUsuarios(Long idOrganismo) throws Exception {
+
+        em.createQuery("update from Organismo set permiteUsuarios = false where id  =:idOrganismo")
+                .setParameter("idOrganismo", idOrganismo).executeUpdate();
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> getPermitirUsuarios(Long entidad) throws Exception {
+
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
+                "organismo.entidad.id = :entidad and organismo.permiteUsuarios = true");
+
+        q.setParameter("entidad", entidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Organismo> organismos =  new ArrayList<Organismo>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Organismo organismo = new Organismo((Long)object[0],(String)object[1],(String)object[2]);
+            organismos.add(organismo);
+        }
+
+        return organismos;
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
