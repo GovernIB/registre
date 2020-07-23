@@ -15,7 +15,6 @@ public class OficioRemisionForm {
     private Long idOrganismo;
     private String organismoExternoCodigo;
     private String organismoExternoDenominacion;
-    private Long idLibro;
     private String oficinaSIRCodigo;
 
     public OficioRemisionForm() {
@@ -47,14 +46,6 @@ public class OficioRemisionForm {
 
     public void setIdOrganismo(Long idOrganismo) {
         this.idOrganismo = idOrganismo;
-    }
-
-    public Long getIdLibro() {
-        return idLibro;
-    }
-
-    public void setIdLibro(Long idLibro) {
-        this.idLibro = idLibro;
     }
 
     public String getOrganismoExternoCodigo() {

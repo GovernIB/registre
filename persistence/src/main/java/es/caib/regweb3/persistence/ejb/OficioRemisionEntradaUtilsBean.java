@@ -90,18 +90,16 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, List<Libro> libros, Long tipoEvento, Integer total) throws Exception {
+    public List<Organismo> organismosEntradaPendientesRemisionExternosTipo(Long idOficina, Long tipoEvento, Integer total) throws Exception {
 
         // Obtenemos los Organismos destinatarios EXTERNOS que tiene Oficios de Remision pendientes de tramitar
         Query q;
         q = em.createQuery("Select distinct re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re where " +
-                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
-                "re.destino is null and re.evento = :tipoEvento ");
+                "re.estado = :valido and re.oficina.id = :idOficina  and re.destino is null and re.evento = :tipoEvento ");
 
         // Parámetros
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("libros", libros);
         q.setParameter("tipoEvento", tipoEvento);
         q.setHint("org.hibernate.readOnly", true);
 
@@ -142,17 +140,16 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
     }
 
     @Override
-    public Long oficiosEntradaExternosPendientesRemisionCount(Long idOficina, List<Libro> libros) throws Exception {
+    public Long oficiosEntradaExternosPendientesRemisionCount(Long idOficina) throws Exception {
 
         // Total oficios externos
         Query q;
         q = em.createQuery("Select count(re.id) from RegistroEntrada as re where " +
-                "re.estado = :valido and re.oficina.id = :idOficina and re.libro in (:libros) and " +
+                "re.estado = :valido and re.oficina.id = :idOficina and " +
                 "re.destino is null and re.evento = :oficio_externo ");
 
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("libros", libros);
         q.setParameter("oficio_externo", RegwebConstantes.EVENTO_OFICIO_EXTERNO);
         q.setHint("org.hibernate.readOnly", true);
 
@@ -162,24 +159,24 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, Long idLibro, String codigoOrganismo, Entidad entidadActiva) throws Exception {
+    public OficiosRemisionOrganismo oficiosEntradaPendientesRemision(Long tipoEvento, Integer pageNumber, final Integer resultsPerPage, Integer any, Oficina oficinaActiva, String codigoOrganismo, Entidad entidadActiva) throws Exception {
 
         OficiosRemisionOrganismo oficios = new OficiosRemisionOrganismo();
         Oficio oficio = oficioRemisionEjb.obtenerTipoOficio(codigoOrganismo, entidadActiva.getId());
 
         if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_INTERNO)) {
 
-            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
-            oficios.setOrganismo(organismo);
-            oficios.setVigente(organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
-            oficios.setOficinas(oficinaEjb.tieneOficinasServicio(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
+            Organismo destino = organismoEjb.findByCodigoEntidadSinEstadoLigero(codigoOrganismo, entidadActiva.getId());
+            oficios.setOrganismo(destino);
+            oficios.setVigente(destino.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+            oficios.setOficinas(oficinaEjb.tieneOficinasServicio(destino.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
 
             // Organismo extinguido, obtenemos los organismos sustitutos
             if (!oficios.getVigente()) {
                 Set<Organismo> historicosFinales = new HashSet<Organismo>();
                 Set<Organismo> sustitutos = new HashSet<Organismo>();
                 //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
-                organismoEjb.obtenerHistoricosFinales(organismo.getId(), historicosFinales);
+                organismoEjb.obtenerHistoricosFinales(destino.getId(), historicosFinales);
                 for (Organismo historico : historicosFinales) {
                     //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
                     if (oficinaEjb.tieneOficinasServicio(historico.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)) {
@@ -192,7 +189,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
             }
 
             // Buscamos los Registros de Entrada internos, pendientes de tramitar mediante un Oficio de Remision
-            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber, resultsPerPage, organismo.getId(), any, oficinaActiva.getId(), idLibro));
+            oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber, resultsPerPage, destino.getId(), any, oficinaActiva.getId()));
 
 
         } else if (tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_EXTERNO) || tipoEvento.equals(RegwebConstantes.EVENTO_OFICIO_SIR)) {
@@ -289,9 +286,9 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
                 //Buscamos los Registros de Entrada externos, pendientes de tramitar mediante un Oficio de Remision
                 if (oficio.getExterno()) {
-                    oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), idLibro, tipoEvento));
+                    oficios.setPaginacion(oficiosRemisionByOrganismoExterno(pageNumber, resultsPerPage, codigoOrganismo, any, oficinaActiva.getId(), tipoEvento));
                 } else if (oficio.getEdpExterno()) {
-                    oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber, resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId(), idLibro));
+                    oficios.setPaginacion(oficiosRemisionByOrganismoInterno(pageNumber, resultsPerPage, organismoEjb.findByCodigoLigero(codigoOrganismo).getId(), any, oficinaActiva.getId()));
                 }
 
             }
@@ -303,7 +300,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber, final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina, Long idLibro) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoInterno(Integer pageNumber, final Integer resultsPerPage, Long idOrganismo, Integer any, Long idOficina) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -314,8 +311,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         Query q2;
 
         StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
-                " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
-                "and re.destino.id = :idOrganismo and re.estado = :valido and re.evento = :eventoInterno ");
+                " re.oficina.id = :idOficina and re.destino.id = :idOrganismo and re.estado = :valido and re.evento = :eventoInterno ");
 
         q2 = em.createQuery(query.toString().replaceAll("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destino, re.registroDetalle.extracto", "Select count(re.id)"));
         query.append(" order by re.fecha desc ");
@@ -329,14 +325,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         }
         q.setParameter("idOrganismo", idOrganismo);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("idLibro", idLibro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
         q.setHint("org.hibernate.readOnly", true);
 
         q2.setParameter("idOrganismo", idOrganismo);
         q2.setParameter("idOficina", idOficina);
-        q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("eventoInterno", RegwebConstantes.EVENTO_OFICIO_INTERNO);
         q2.setHint("org.hibernate.readOnly", true);
@@ -378,7 +372,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
 
 
     @SuppressWarnings(value = "unchecked")
-    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long idLibro, Long tipoEvento) throws Exception {
+    private Paginacion oficiosRemisionByOrganismoExterno(Integer pageNumber, final Integer resultsPerPage, String codigoOrganismo, Integer any, Long idOficina, Long tipoEvento) throws Exception {
 
         String anyWhere = "";
         if (any != null) {
@@ -386,8 +380,7 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         }
 
         StringBuilder query = new StringBuilder("Select re.id, re.numeroRegistroFormateado, re.fecha, re.oficina, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.registroDetalle.extracto from RegistroEntrada as re where " + anyWhere +
-                " re.libro.id = :idLibro and re.oficina.id = :idOficina " +
-                " and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido and re.evento = :tipoEvento");
+                " re.oficina.id = :idOficina and re.destino is null and re.destinoExternoCodigo = :codigoOrganismo and re.estado = :valido and re.evento = :tipoEvento");
 
         Query q;
         Query q2;
@@ -403,14 +396,12 @@ public class OficioRemisionEntradaUtilsBean implements OficioRemisionEntradaUtil
         }
         q.setParameter("codigoOrganismo", codigoOrganismo);
         q.setParameter("idOficina", idOficina);
-        q.setParameter("idLibro", idLibro);
         q.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q.setHint("org.hibernate.readOnly", true);
 
         q.setParameter("tipoEvento", tipoEvento);
         q2.setParameter("codigoOrganismo", codigoOrganismo);
         q2.setParameter("idOficina", idOficina);
-        q2.setParameter("idLibro", idLibro);
         q2.setParameter("valido", RegwebConstantes.REGISTRO_VALIDO);
         q2.setParameter("tipoEvento", tipoEvento);
         q2.setHint("org.hibernate.readOnly", true);

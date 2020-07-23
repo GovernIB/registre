@@ -26,16 +26,15 @@ public interface OficioRemisionLocal extends BaseEjb<OficioRemision, Long> {
     /**
      * Realizada una Búsqueda según los parámetros
      * @param pageNumber
-     * @param usuario
+     * @param idOrganismo
      * @param fechaInicio
      * @param fechaFin
      * @param oficioRemision
-     * @param libros
      * @param tipoOficioRemision
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, List<Libro> libros, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
+    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, String usuario, OficioRemision oficioRemision, Long tipoOficioRemision, Integer estadoOficioRemision, Long tipoRegistro, Boolean sir) throws Exception;
 
     /**
      * Registra un OficioRemision asignandole número

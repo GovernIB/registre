@@ -2,7 +2,7 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.ModeloOficioRemisionLocal;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.PermisoOrganismoUsuarioLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -32,8 +32,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb3/ModeloOficioRemisionEJB/local")
     private ModeloOficioRemisionLocal modeloOficioRemisionEjb;
 
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
+    private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
 
     @Override
@@ -88,13 +88,9 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al listado de OficioRemision
         if (url.equals("/oficioRemision/list")) {
 
-            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-
-            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
-
-            // Mira que el usuario tiene permisos consulta de entrada en los Libros
-            if (libros.size() == 0) {
-                log.info("Aviso: No tiene permisos para consultar Oficios de Remision");
+            // Mira que el usuario tiene permisos consulta de entrada en los Organismos
+            if(permisoOrganismoUsuarioEjb.getOrganismosPermiso(usuarioEntidad.getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA).size() == 0){
+                log.info("Aviso: No hay ningún organismo con permisos para consultar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
@@ -106,10 +102,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
-            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
-
-            // Mira que el usuario tiene permisos consulta de entrada en los Libros
-            if (libros.size() == 0) {
+            // Comprueba que el usuario tiene permiso
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficinaActiva.getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA, true)) {
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
                 response.sendRedirect("/regweb3/aviso");
@@ -122,10 +116,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
-            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
-
-            // Mira que el usuario tiene permisos consulta de entrada en los Libros
-            if (libros.size() == 0) {
+            // Comprueba que el usuario tiene permiso
+            if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficinaActiva.getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA, true)) {
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.list"));
                 response.sendRedirect("/regweb3/aviso");
@@ -137,10 +129,8 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
 
-            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosOrganismoPermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
-
-            // Mira que el usuario tiene permisos consulta de entrada en los Libros
-            if (libros.size() == 0) {
+            // Comprueba que el usuario tiene permiso
+            if(permisoOrganismoUsuarioEjb.tienePermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA)){
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.aceptar"));
                 response.sendRedirect("/regweb3/aviso");

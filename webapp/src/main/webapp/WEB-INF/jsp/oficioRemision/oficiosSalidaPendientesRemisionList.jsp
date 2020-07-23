@@ -87,43 +87,32 @@
 
                                     <div class="col-xs-12">
                                         <div class="col-xs-6 espaiLinies">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                                    <label for="registroSalida.libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libroOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.libro"/></label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:select path="registroSalida.libro.id" items="${librosRegistro}"
-                                                                 itemValue="id" itemLabel="nombreCompleto"
-                                                                 cssClass="chosen-select"/>
-                                                </div>
+                                            <div class="col-xs-4 pull-left etiqueta_regweb">
+                                                <label for="destinatario.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.destinatario"/></label>
                                             </div>
-                                            <div class="col-xs-6 espaiLinies">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                                    <label for="anyo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anyoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.anyRegistro"/></label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:select path="anyo" cssClass="chosen-select">
-                                                        <form:option value="" label="..."/>
-                                                        <c:forEach items="${anys}" var="anyo">
-                                                            <form:option value="${anyo}">${anyo}</form:option>
-                                                        </c:forEach>
-                                                    </form:select>
-                                                </div>
+                                            <div class="col-xs-8">
+                                                <form:select path="destinatario.codigo" items="${organismosDestino}" itemValue="codigo" itemLabel="denominacion" cssClass="chosen-select"/>
                                             </div>
-                                    </div>
-                                    <div class="col-xs-12">
-                                        <div class="col-xs-6 espaiLinies">
-                                                <div class="col-xs-4 pull-left etiqueta_regweb">
-                                                    <label for="destinatario.codigo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destinoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.destinatario"/></label>
-                                                </div>
-                                                <div class="col-xs-8">
-                                                    <form:select path="destinatario.codigo" items="${organismosDestino}" itemValue="codigo" itemLabel="denominacion" cssClass="chosen-select"/>
-                                                </div>
-                                            </div>
+                                        </div>
 
-                                            <div class="form-group col-xs-12">
-                                                <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                        <div class="col-xs-6 espaiLinies">
+                                            <div class="col-xs-4 pull-left etiqueta_regweb">
+                                                <label for="anyo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anyoOficio.busqueda"/>" data-toggle="popover"><spring:message code="registroSalida.anyRegistro"/></label>
                                             </div>
+                                            <div class="col-xs-8">
+                                                <form:select path="anyo" cssClass="chosen-select">
+                                                    <form:option value="" label="..."/>
+                                                    <c:forEach items="${anys}" var="anyo">
+                                                        <form:option value="${anyo}">${anyo}</form:option>
+                                                    </c:forEach>
+                                                </form:select>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="form-group col-xs-12">
+                                        <button type="submit" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></button>
+                                    </div>
+
                             </form:form>
                         </c:if>
 
@@ -210,7 +199,7 @@
                                                            value="${oficiosRemisionOrganismo.organismo.denominacion}"/>
                                                 </c:if>
 
-                                                <input type="hidden" id="idLibro" name="idLibro" value="${registroSalidaBusqueda.registroSalida.libro.id}"/>
+                                                <%--<input type="hidden" id="idLibro" name="idLibro" value="${registroSalidaBusqueda.registroSalida.libro.id}"/>--%>
 
                                                 <table class="table table-bordered table-hover table-striped tablesorter">
                                                     <colgroup>
