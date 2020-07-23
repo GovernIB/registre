@@ -1,5 +1,6 @@
 package es.caib.regweb3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.Index;
@@ -186,6 +187,7 @@ public class Oficina implements Serializable{
     @ManyToOne()
     @JoinColumn(name="ORGANISMORESPONSABLE")
     @ForeignKey(name="RWE_OFICINA_ORGANISMO_FK")
+    @JsonIgnore
     public Organismo getOrganismoResponsable() {
         return organismoResponsable;
     }
@@ -197,6 +199,7 @@ public class Oficina implements Serializable{
     @ManyToOne()
     @JoinColumn(name="OFICINARESPONSABLE")
     @ForeignKey(name="RWE_OFICINA_OFICINA_FK")
+    @JsonIgnore
     public Oficina getOficinaResponsable() {
         return oficinaResponsable;
     }
@@ -211,6 +214,7 @@ public class Oficina implements Serializable{
     */
     @OneToMany(mappedBy="oficina")
     @ForeignKey(name="RWE_OFICINA_RELORGOFI_FK")
+    @JsonIgnore
     public Set<RelacionOrganizativaOfi> getOrganizativasOfi() {
       return organizativasOfi;
     }
@@ -231,6 +235,7 @@ public class Oficina implements Serializable{
      * Retorna todos los Organismos a los que la Oficina da servicio
      */
     @Transient
+    @JsonIgnore
     public LinkedHashSet<Organismo> getOrganismosFuncionales(String estado) {
 
         LinkedHashSet<Organismo> organismos = new LinkedHashSet<Organismo>();
@@ -250,6 +255,7 @@ public class Oficina implements Serializable{
     }
 
     @Transient
+    @JsonIgnore
     public Set<Long> getOrganismosFuncionalesId() {
 
         Set<Organismo> organismos = getOrganismosFuncionales(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
@@ -266,6 +272,7 @@ public class Oficina implements Serializable{
     @ManyToOne()
     @JoinColumn(name = "PAIS")
     @ForeignKey(name = "RWE_OFICINA_PAIS_FK")
+    @JsonIgnore
     public CatPais getCodPais() {
         return codPais;
     }
@@ -277,6 +284,7 @@ public class Oficina implements Serializable{
     @ManyToOne()
     @JoinColumn(name = "COMUNIDAD")
     @ForeignKey(name = "RWE_OFICINA_COMUNIDAD_FK")
+    @JsonIgnore
     public CatComunidadAutonoma getCodComunidad() {
         return codComunidad;
     }
@@ -288,6 +296,7 @@ public class Oficina implements Serializable{
     @ManyToOne()
     @JoinColumn(name = "LOCALIDAD")
     @ForeignKey(name = "RWE_OFICINA_LOCALIDAD_FK")
+    @JsonIgnore
     public CatLocalidad getLocalidad() {
         return localidad;
     }
@@ -299,6 +308,7 @@ public class Oficina implements Serializable{
     @ManyToOne()
     @JoinColumn(name = "TIPOVIA")
     @ForeignKey(name = "RWE_OFICINA_TIPOVIA_FK")
+    @JsonIgnore
     public CatTipoVia getTipoVia() {
         return tipoVia;
     }
@@ -308,6 +318,7 @@ public class Oficina implements Serializable{
     }
 
     @Column(name = "NOMBREVIA", length = 300)
+    @JsonIgnore
     public String getNombreVia() {
         return nombreVia;
     }
@@ -317,6 +328,7 @@ public class Oficina implements Serializable{
     }
 
     @Column(name = "NUMVIA", length = 20)
+    @JsonIgnore
     public String getNumVia() {
         return numVia;
     }
@@ -326,6 +338,7 @@ public class Oficina implements Serializable{
     }
 
     @Column(name = "CODPOSTAL", length = 14)
+    @JsonIgnore
     public String getCodPostal() {
         return codPostal;
     }
@@ -338,6 +351,7 @@ public class Oficina implements Serializable{
     @JoinTable(name = "RWE_OFICINA_SERVICIO", joinColumns = { @JoinColumn(name = "IDOFICINA") }, inverseJoinColumns = { @JoinColumn(name = "IDSERVICIO") })
     @ForeignKey(name = "RWE_SERVICIO_OFICINA_FK", inverseName = "RWE_OFICINA_SERVICIO_FK")
     @OrderBy("id")
+    @JsonIgnore
     public Set<CatServicio> getServicios() {
         return servicios;
     }
@@ -347,6 +361,7 @@ public class Oficina implements Serializable{
     }
 
     @Transient
+    @JsonIgnore
     public Boolean getSirRecepcion() {
         return isSirRecepcion;
     }
@@ -356,6 +371,7 @@ public class Oficina implements Serializable{
     }
 
     @Transient
+    @JsonIgnore
     public Boolean getSir() {
         return isSir;
     }
@@ -365,6 +381,7 @@ public class Oficina implements Serializable{
     }
 
     @Transient
+    @JsonIgnore
     public Boolean getSirEnvio() {
         return isSirEnvio;
     }
@@ -374,6 +391,7 @@ public class Oficina implements Serializable{
     }
 
     @Transient
+    @JsonIgnore
     public Boolean getOficinaSir() {
 
         for (CatServicio servicio : servicios) {
@@ -384,6 +402,11 @@ public class Oficina implements Serializable{
             }
         }
         return false;
+    }
+
+    @Transient
+    public String getNombre(){
+        return getDenominacion();
     }
 
     @Override

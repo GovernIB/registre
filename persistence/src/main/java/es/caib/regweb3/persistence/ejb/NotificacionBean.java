@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Notificacion;
 import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -33,9 +34,11 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     private EntityManager em;
 
     @EJB private OficinaLocal oficinaEjb;
+    @EJB private OrganismoLocal organismoEjb;
     @EJB private RegistroSirLocal registroSirEjb;
     @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
+    @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     @Override
     public Notificacion getReference(Long id) throws Exception {
@@ -212,7 +215,10 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
 
             if(registroSirEjb.getPendientesProcesarCount(oficina.getCodigo()) > 10){
                 log.info("Conunicaciones RegistrosSirPendientes para la oficina: " + oficina.getDenominacion());
-                LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
+
+                //Obtener los usuarios con Permiso SIR en la Oficina indicada
+                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
                 for (UsuarioEntidad usuario : usuarios) {
@@ -241,7 +247,10 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
             // Registros entrada Rechazados o Devueltos al origen
             if(registroEntradaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
                 log.info("Conunicaciones Entradas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
-                LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
+
+                //Obtener los usuarios con Permiso SIR en la Oficina indicada
+                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
                 for (UsuarioEntidad usuario : usuarios) {
@@ -261,7 +270,10 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
             // Registros salida Rechazados o Devueltos al origen
             if(registroSalidaConsultaEjb.getSirRechazadosReenviadosCount(oficina.getId()) > 0){
                 log.info("Conunicaciones Salidas RechazadosDevueltos para la oficina: " + oficina.getDenominacion());
-                LinkedHashSet<UsuarioEntidad> usuarios = oficinaEjb.usuariosPermisoOficina(oficina.getId());
+
+                //Obtener los usuarios con Permiso SIR en la Oficina indicada
+                LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina,RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
+                List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosPermiso(organismos, RegwebConstantes.PERMISO_SIR);
 
                 //Crear notificación para cada usuario
                 for (UsuarioEntidad usuario : usuarios) {

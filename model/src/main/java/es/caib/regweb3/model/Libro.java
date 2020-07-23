@@ -41,6 +41,8 @@ public class Libro implements Serializable {
     @XmlTransient
     private Contador contadorOficioRemision;
     @XmlTransient
+    private Contador contadorSir;
+    @XmlTransient
     private Organismo organismo;
 
     public Libro() {
@@ -152,6 +154,17 @@ public class Libro implements Serializable {
         this.contadorOficioRemision = contadorOficioRemision;
     }
 
+    @ManyToOne(cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "CONTADOR_SIR")
+    @ForeignKey(name = "RWE_LIBRO_CONT_SIR_FK")
+    public Contador getContadorSir() {
+        return contadorSir;
+    }
+
+    public void setContadorSir(Contador contadorSir) {
+        this.contadorSir = contadorSir;
+    }
+
     @ManyToOne()
     @JoinColumn(name = "ORGANISMO")
     @ForeignKey(name = "RWE_LIBRO_ORGANISMO_FK")
@@ -170,7 +183,11 @@ public class Libro implements Serializable {
 
     @Transient
     public String getNombreCompleto(){
-        return getOrganismo().getDenominacion() + " - " + getNombre();
+        if(getOrganismo() != null){
+            return getOrganismo().getDenominacion() + " - " + getNombre();
+        }else{
+            return getNombre();
+        }
     }
 
     @Transient
