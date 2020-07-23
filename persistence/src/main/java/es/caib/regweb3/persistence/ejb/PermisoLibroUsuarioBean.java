@@ -229,7 +229,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select distinct plu.libro.id, plu.libro.nombre,plu.libro.codigo, plu.libro.organismo.id, plu.libro.organismo.denominacion from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and " +
-                "(plu.permiso = " + PERMISO_ADMINISTRACION_LIBRO + " and plu.activo = true)");
+                "(plu.permiso = " + PERMISO_RESPONSABLE_OFICINA + " and plu.activo = true)");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("vigente",vigente.getId());
@@ -376,7 +376,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         Query q = em.createQuery("Select plu.id from PermisoLibroUsuario as plu where " +
                 "plu.usuario.id = :idUsuarioEntidad and plu.libro.id= :idLibro and plu.libro.organismo.estado.id = :vigente and " +
                 "plu.libro.activo = true and " +
-                "(plu.permiso = " + PERMISO_ADMINISTRACION_LIBRO + " and plu.activo = true)");
+                "(plu.permiso = " + PERMISO_RESPONSABLE_OFICINA + " and plu.activo = true)");
 
         q.setParameter("idUsuarioEntidad",idUsuarioEntidad);
         q.setParameter("idLibro",idLibro);

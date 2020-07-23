@@ -167,13 +167,11 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
    /**
      * Realiza la búsqueda por nombre de los organismos de una entidad
      * @param pageNumber
-     * @param idEntidad
-     * @param denominacion
-     * @param libros
+     * @param organismo
      * @return Paginacion
      * @throws Exception
     */
-   Paginacion busqueda(Integer pageNumber, Long idEntidad, String codigo, String denominacion, Long idCatEstadoEntidad, Boolean libros) throws Exception;
+   Paginacion busqueda(Integer pageNumber, Long idEntidad, Organismo organismo) throws Exception;
 
    /**
      * Método que obtiene los organismos vigentes y en los que puede registrar la oficina activa.
@@ -202,6 +200,28 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
    * @throws Exception
    */
   List<String> organismoSir(Long idOrganismo) throws Exception;
+
+    /**
+     * Activa la opción de permitir usuarios de un Organismo
+     * @param idOrganismo
+     * @throws Exception
+     */
+    void activarUsuarios(Long idOrganismo) throws Exception;
+
+    /**
+     * Desactiva la opción de permitir usuarios de un Organismo
+     * @param idOrganismo
+     * @throws Exception
+     */
+    void desactivarUsuarios(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene todos los Organismos que permiten asociar usuarios
+     * @param entidad
+     * @return
+     * @throws Exception
+     */
+    List<Organismo> getPermitirUsuarios(Long entidad) throws Exception;
 
     /**
      * Elimina los Organismos de una Entidad

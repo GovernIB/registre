@@ -19,8 +19,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <ol class="breadcrumb">
-                    <li><a href="<c:url value="/inici"/>" ><i class="fa fa-power-off"></i> <spring:message code="regweb.inicio"/></a></li>
-                    <li><a href="<c:url value="/entidad/${entidad.id}/edit"/>" ><i class="fa fa-institution"></i> ${entidad.nombre}</a></li>
+                    <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
                     <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="organismo.organismos"/></li>
                 </ol>
             </div>
@@ -78,14 +77,14 @@
                                         <form:errors path="organismo.estado.id" cssClass="help-block" element="span"/>
                                     </div>
                                 </div>
-                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                <%--<div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <form:label path="libros"><spring:message code="organismo.buscador.libros"/></form:label>
+                                        <form:label path="organismo.permiteUsuarios"><spring:message code="organismo.permiteUsuarios"/></form:label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:checkbox path="libros"/>
+                                        <form:checkbox path="organismo.permiteUsuarios"/>
                                     </div>
-                                </div>
+                                </div>--%>
                             </div>
 
                             <div class="form-group col-xs-12">
@@ -127,8 +126,7 @@
                                                     <th><spring:message code="organismo.organismoSuperior"/></th>
                                                     <th>EDP</th>
                                                     <th class="center"><spring:message code="organismo.estado"/></th>
-                                                    <th class="center"><spring:message code="organismo.libros"/></th>
-                                                    <th width="100" class="center"><spring:message code="regweb.acciones"/></th>
+                                                    <th width="130" class="center"><spring:message code="regweb.acciones"/></th>
                                                 </tr>
                                                 </thead>
 
@@ -154,13 +152,13 @@
                                                             </c:if>
                                                         </td>
                                                         <td class="center">${organismo.estado.descripcionEstadoEntidad}</td>
-                                                        <td class="center">${fn:length(organismo.libros)}</td>
                                                         <td class="center">
-                                                            <c:if test="${organismo.estado.codigoEstadoEntidad == RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
-                                                                <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${organismo.id}/libros"/>" title="<spring:message code="organismo.libros"/>"><span class="fa fa-book"></span></a>
+                                                            <c:if test="${organismo.permiteUsuarios}">
+                                                                <a class="btn btn-primary btn-sm" href="<c:url value="/organismo/${organismo.id}/usuarios"/>" title="Ver usuarios"><span class="fa fa-users"></span></a>
+                                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/desactivarUsuarios"/>","<spring:message code="organismo.usuarios.desactivar" htmlEscape="true"/>")' href="javascript:void(0);" title="Desactivar usuarios"><span class="fa fa-close"></span></a>
                                                             </c:if>
-                                                            <c:if test="${organismo.estado.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
-                                                                <a class="btn btn-warning btn-sm disabled" title="<spring:message code="organismo.libros.no"/>"><span class="fa fa-book"></span></a>
+                                                            <c:if test="${not organismo.permiteUsuarios}">
+                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/activarUsuarios"/>","<spring:message code="organismo.usuarios.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="Activar usurios"><span class="fa fa-check"></span></a>
                                                             </c:if>
                                                             <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/oficinas"/>" title="<spring:message code="organismo.oficinas"/>"><span class="fa fa-home"></span></a>
                                                         </td>

@@ -85,6 +85,9 @@ public class Organismo implements Serializable {
     @XmlTransient
     private Set<Organismo> historicoUO; // relacion de historicos
 
+    @XmlTransient
+    private Boolean permiteUsuarios = false; // Permite asociar usuarios
+
 
     public Organismo() {}
 
@@ -398,6 +401,14 @@ public class Organismo implements Serializable {
       this.historicoUO = historicoUO;
     }
 
+    @Column(name="PERMITE_USUARIOS")
+    public Boolean getPermiteUsuarios() {
+        return permiteUsuarios;
+    }
+
+    public void setPermiteUsuarios(Boolean permiteUsuarios) {
+        this.permiteUsuarios = permiteUsuarios;
+    }
 
     @Transient
     public String getNombreCompleto(){

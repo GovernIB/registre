@@ -6,13 +6,10 @@ import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
-import es.caib.regweb3.webapp.editor.UsuarioEditor;
 import es.caib.regweb3.webapp.form.OrganismoBusquedaForm;
-import es.caib.regweb3.webapp.validator.LibroValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import es.caib.regweb3.webapp.utils.Mensaje;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,9 +30,6 @@ import java.util.Map;
 @RequestMapping(value = "/organismo")
 @SessionAttributes(types = Organismo.class)
 public class OrganismoController extends BaseController {
-
-    @Autowired
-    private LibroValidator libroValidator;
     
     @EJB(mappedName = "regweb3/DescargaEJB/local")
     private DescargaLocal descargaEjb;
@@ -60,14 +54,12 @@ public class OrganismoController extends BaseController {
    public String listado(Model model, HttpServletRequest request) throws  Exception{
 
        Entidad entidad = getEntidadActiva(request);
-       CatEstadoEntidad vigente = catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
 
        Organismo organismo = new Organismo();
-       organismo.setEstado(vigente);
+       organismo.setEstado(catEstadoEntidadEjb.findByCodigo(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+       OrganismoBusquedaForm organismoBusqueda =  new OrganismoBusquedaForm(organismo,1);
 
-       OrganismoBusquedaForm organismoBusqueda =  new OrganismoBusquedaForm(organismo,1, false);
-
-       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), null, null, vigente.getId(), false);
+       Paginacion paginacion = organismoEjb.busqueda(1, entidad.getId(), organismo);
 
        // Mirant si es una sincronitzacio o actualitzacio
        Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
@@ -96,7 +88,7 @@ public class OrganismoController extends BaseController {
       Organismo organismo = busqueda.getOrganismo();
       Entidad entidad = getEntidadActiva(request);
 
-      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), organismo.getCodigo(), organismo.getDenominacion(), organismo.getEstado().getId(), busqueda.getLibros());
+      Paginacion paginacion = organismoEjb.busqueda(busqueda.getPageNumber(), entidad.getId(), organismo);
 
       // Mirant si es una sincronitzacio o actualitzacio per mostrar botó de sincro o actualizar
       Descarga descarga = descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidad.getId());
@@ -123,7 +115,7 @@ public class OrganismoController extends BaseController {
         ModelAndView mav = new ModelAndView("organismo/oficinasList");
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
-        LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI);
+        LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasServicioCompleto(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI);
 
         mav.addObject("organismo", organismo);
         mav.addObject("oficinas", oficinas);
@@ -139,15 +131,77 @@ public class OrganismoController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(value = "/{idOrganismo}/usuarios", method = RequestMethod.GET)
-    public ModelAndView usuarios(@PathVariable Long idOrganismo)throws Exception {
-
-        ModelAndView mav = new ModelAndView("usuario/usuariosList");
+    public String usuariosOrganismo(@PathVariable Long idOrganismo, Model model, HttpServletRequest request)throws Exception {
 
         Organismo organismo = organismoEjb.findById(idOrganismo);
+        Entidad entidadActiva = getEntidadActiva(request);
 
-        mav.addObject("organismo", organismo);
 
-        return mav;
+        // Comprueba que el Organismo existe
+        if(organismo == null) {
+            log.info("No existe este organismo");
+            Mensaje.saveMessageError(request, getMessage("aviso.organismo.noExiste"));
+            return "redirect:/organismo/list";
+        }
+
+        // Comprueba que el Organismo pertenece a la Entida Activa
+        if(!organismo.getEntidad().equals(entidadActiva)) {
+            log.info("No administra este Organismo");
+            Mensaje.saveMessageError(request, getMessage("aviso.rol"));
+            return "redirect:/organismo/list";
+        }
+
+        List<PermisoOrganismoUsuario> pou = permisoOrganismoUsuarioEjb.findByOrganismo(organismo.getId());
+        List<UsuarioEntidad> usuarios = permisoOrganismoUsuarioEjb.getUsuariosEntidadByOrganismo(organismo.getId());
+
+        model.addAttribute("organismo", organismo);
+        model.addAttribute("pou", pou);
+        model.addAttribute("permisos", RegwebConstantes.PERMISOS);
+        model.addAttribute("usuarios", usuarios);
+
+        return "organismo/usuariosOrganismoList";
+
+    }
+
+
+
+    /**
+     * Activar los usuarios de un {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/{idOrganismo}/activarUsuarios")
+    public String activarUsuariosOrganismo(@PathVariable Long idOrganismo, HttpServletRequest request) {
+
+        try {
+            organismoEjb.activarUsuarios(idOrganismo);
+
+            return "redirect:/organismo/list";
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/organismo/list";
+    }
+
+    /**
+     * Desactiv los usuarios de un {@link es.caib.regweb3.model.Organismo}
+     */
+    @RequestMapping(value = "/{idOrganismo}/desactivarUsuarios")
+    public String desactivarrUsuariosOrganismo(@PathVariable Long idOrganismo, HttpServletRequest request) {
+
+        try {
+            organismoEjb.desactivarUsuarios(idOrganismo);
+
+            // Eliminamos los permisos de los usuarios de ese Organismo
+            permisoOrganismoUsuarioEjb.eliminarPermisosOrganismo(idOrganismo);
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
+            e.printStackTrace();
+        }
+
+        return "redirect:/organismo/list";
     }
 
     /**
@@ -340,13 +394,6 @@ public class OrganismoController extends BaseController {
     @ModelAttribute("estados")
     public List<CatEstadoEntidad> estados() throws Exception {
         return catEstadoEntidadEjb.getAll();
-    }
-
-    @InitBinder("libro")
-    public void initBinder(WebDataBinder binder) {
-
-        binder.registerCustomEditor(Usuario.class, "administradores",new UsuarioEditor());
-        binder.setValidator(this.libroValidator);
     }
 
 }

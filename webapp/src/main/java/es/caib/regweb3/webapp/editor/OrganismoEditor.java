@@ -19,7 +19,6 @@ public class OrganismoEditor extends PropertyEditorSupport {
     public OrganismoEditor(){
 
         super();
-        log.info("dentro constructor");
     }
 
     public void setAsText(String text) throws IllegalArgumentException {
