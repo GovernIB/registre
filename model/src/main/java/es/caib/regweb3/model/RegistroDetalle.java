@@ -428,6 +428,9 @@ public class RegistroDetalle implements Serializable {
     @LazyCollection(value= LazyCollectionOption.FALSE)
     @OrderBy("id")
     public List<Anexo> getAnexos() {
+        if(anexos == null){
+            return new ArrayList<Anexo>();
+        }
         return anexos;
     }
 

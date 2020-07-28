@@ -53,6 +53,8 @@
 
                     <form:form modelAttribute="registrarForm" action="${urlAceptar}" method="post" cssClass="form-horizontal">
 
+
+
                     <%-- Se muestra la Botonera si el RegistroSir está pendiente de procesar--%>
                     <c:if test="${registroSir.estado == 'RECIBIDO' && loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
 
@@ -60,32 +62,19 @@
                         <div class="panel-footer">
 
                             <div class="panel-heading senseMargesLaterals">
-                                <h3 class="panel-title">
+                                <h3 class="panel-title center">
                                     <strong><spring:message code="registro.completar"/></strong>
                                 </h3>
                             </div>
 
-                            <%--Si s'ha de triar llibre--%>
-                            <c:if test="${fn:length(libros) > 1}">
-                                <div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label">
-                                        <label for="idLibro"><span class="text-danger">*</span> <spring:message
-                                                code="libro.libro"/></label>
-                                    </div>
-                                    <div class="col-xs-7 no-pad-right" id="libro">
-                                        <form:select path="idLibro" cssClass="chosen-select">
-                                            <form:options items="${libros}" itemValue="id" itemLabel="nombre"/>
-                                        </form:select>
-                                        <span class="errors"></span>
-                                    </div>
-                                </div>
-                            </c:if>
-                            <c:if test="${fn:length(libros) == 1}">
-                                <form:hidden path="idLibro" value="${libros[0].id}"/>
-                            </c:if>
+                            <%--Libro único--%>
+                            <form:hidden path="idLibro" value="${libro.id}"/>
+
+                            <%--Distribuir--%>
+                            <form:hidden path="distribuir"/>
 
                             <%--Si hay al menos un Libro, podemos aceptar el RegistroSir--%>
-                            <c:if test="${fn:length(libros) >= 1}">
+                            <c:if test="${not empty libro}">
 
                                 <%--Idioma--%>
                                 <div class="form-group col-xs-12">
@@ -109,55 +98,43 @@
                                     </div>
                                 </div>
 
-                                <%--TipoAsunto--%>
-
-                                <%--<div class="form-group col-xs-12">
-                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="idTipoAsunto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoAsunto"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.tipoAsunto"/></label>
-                                    </div>
-                                    <div class="col-xs-7 no-pad-right" id="tipoAsunto">
-                                        <form:select path="idTipoAsunto" cssClass="chosen-select">
-                                            <form:option value="-1">...</form:option>
-                                            <form:options items="${tiposAsunto}" itemValue="id" itemLabel="traduccion.nombre"/>
-                                        </form:select>
-                                        <span class="errors"></span>
-                                    </div>
-                                </div>--%>
-
-                                <%--Organismos Sustitutos del Extinguido--%>
-                            <c:if test="${registroSir.codigoUnidadTramitacionDestino != null && not empty sustitutos}">
-                                <c:if test="${not  empty estadoDestino and estadoDestino.codigoEstadoEntidad != RegwebConstantes.ESTADO_ENTIDAD_VIGENTE}">
-                                <div class="form-group col-xs-12">
-                                    <span class="text-vermell ">
-                                        <strong><spring:message code="registroSir.organismo.destino.extinguido"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>
-                                        <spring:message code="registroSir.organismo.destino.extinguido2"/></strong>
-                                    </span>
-                                </div>
-
-                                    <div class="form-group col-xs-12">
-                                        <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="codigoSustituto" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.denominacion.organismo"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino.sustituto"/></label>
-                                        </div>
-                                        <div class="col-xs-7 no-pad-right" id="idSustituto">
-                                            <form:select path="codigoSustituto" cssClass="chosen-select">
-                                                <form:options items="${sustitutos}" itemValue="codigo" itemLabel="denominacion"/>
-                                            </form:select>
-                                            <span class="errors"></span>
-                                        </div>
+                                <%--Si la unidad tramitación destino está extinguida, lo informamos--%>
+                                <c:if test="${extinguido}">
+                                    <div class="form-group col-xs-12 center">
+                                        <span class="text-vermell">
+                                            <strong>
+                                                <spring:message code="registroSir.organismo.destino.extinguido" arguments="${registroSir.decodificacionUnidadTramitacionDestino}"/>
+                                            </strong>
+                                        </span>
                                     </div>
                                 </c:if>
-                            </c:if>
+
+                                <%--Organismo destino--%>
+                                <div class="form-group col-xs-12">
+                                    <div class="col-xs-5 pull-left etiqueta_regweb control-label textEsq">
+                                        <label for="idOrganismoDestino" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.destino"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.organismoDestino"/></label>
+                                    </div>
+                                    <div class="col-xs-7">
+                                        <form:select path="idOrganismoDestino" cssClass="chosen-select" items="${organismosOficinaActiva}" itemValue="id" itemLabel="denominacion"/>
+                                    </div>
+                                </div>
 
                                 <div class="row">
                                     <div class="col-xs-12 list-group-item-heading">
                                         <c:if test="${registroSir.documentacionFisica!=RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir()","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
+                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir(false)","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-primary btn-sm btn-block">
                                                 <spring:message code="registroSir.aceptar"/>
+                                            </button>
+                                            <button type="button" onclick='javascript:confirm("javascript:aceptarRegistroSir(true)","<spring:message code="regweb.confirmar.registroSIR" htmlEscape="true"/>")' href="javascript:void(0);" class="btn btn-success btn-sm btn-block">
+                                                <spring:message code="registroSir.aceptar.distribuir"/>
                                             </button>
                                         </c:if>
                                         <c:if test="${registroSir.documentacionFisica==RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
-                                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="aceptarRegistroSir()">
+                                            <button type="button" class="btn btn-primary btn-sm btn-block" onclick="aceptarRegistroSir(false)">
                                                 <spring:message code="registroSir.aceptar"/>
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-sm btn-block" onclick="aceptarRegistroSir(true)">
+                                                <spring:message code="registroSir.aceptar.distribuir"/>
                                             </button>
                                         </c:if>
                                     </div>
@@ -168,7 +145,7 @@
                             </c:if>
 
                             <%--Si no hay Libros no podremos aceptar el RegistroSir--%>
-                            <c:if test="${empty libros}">
+                            <c:if test="${empty libro}">
                                 <spring:message code="registroSir.libro.noexiste"/> <c:if test="${not empty registroSir.decodificacionUnidadTramitacionDestino}"> ${registroSir.decodificacionUnidadTramitacionDestino}</c:if>.
                                 <spring:message code="registroSir.noaceptar"/>
                             </c:if>
@@ -334,7 +311,8 @@
 
 <script type="application/javascript">
     // Realiza el Registro de un registroSir
-    function aceptarRegistroSir() {
+    function aceptarRegistroSir(isDistribuir) {
+        $('#distribuir').val(isDistribuir);
         var libro = true;
         var idioma = true;
         var tipoAsunto = true;

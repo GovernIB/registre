@@ -13,16 +13,10 @@ public class RegistrarForm {
     private Long idLibro;
     private Long idIdioma;
     private Long idTipoAsunto;
-    private String codigoSustituto; //Organismo Sustituto escogido
-
     private List<CamposNTI> camposNTIs;
+    private Long idOrganismoDestino;
+    private Boolean distribuir;
 
-    public RegistrarForm(Long idLibro, Long idIdioma, Long idTipoAsunto,String codigoSustituto) {
-        this.idLibro = idLibro;
-        this.idIdioma = idIdioma;
-        this.idTipoAsunto = idTipoAsunto;
-        this.codigoSustituto = codigoSustituto;
-    }
 
     public RegistrarForm() {
 
@@ -52,14 +46,6 @@ public class RegistrarForm {
         this.idTipoAsunto = idTipoAsunto;
     }
 
-    public String getCodigoSustituto() {
-        return codigoSustituto;
-    }
-
-    public void setCodigoSustituto(String codigoSustituto) {
-        this.codigoSustituto = codigoSustituto;
-    }
-
     public List<CamposNTI> getCamposNTIs() {
         return camposNTIs;
     }
@@ -68,4 +54,19 @@ public class RegistrarForm {
         this.camposNTIs = camposNTIs;
     }
 
+    public Long getIdOrganismoDestino() {
+        return idOrganismoDestino;
+    }
+
+    public void setIdOrganismoDestino(Long idOrganismoDestino) {
+        this.idOrganismoDestino = idOrganismoDestino;
+    }
+
+    public Boolean getDistribuir() {
+        return distribuir;
+    }
+
+    public void setDistribuir(Boolean distribuir) {
+        this.distribuir = distribuir;
+    }
 }
