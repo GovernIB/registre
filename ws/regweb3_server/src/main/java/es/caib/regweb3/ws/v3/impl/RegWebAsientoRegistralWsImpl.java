@@ -388,7 +388,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Ha funcionado bien, finalizamos la sesion
             if(idSesion != null){
-                sesionEjb.finalizarSesion(idSesion, usuarioAplicacion, asientoRegistral.getTipoRegistro(), asientoRegistral.getNumeroRegistroFormateado());
+                sesionEjb.finalizarSesion(idSesion, usuarioAplicacion, asientoRegistral.getTipoRegistro(), asiento.getNumeroRegistroFormateado());
             }
 
         }catch (I18NException | Exception e){
