@@ -24,7 +24,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -195,8 +197,7 @@ public class RegistroSirController extends BaseController {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
-        //si el estado del registro sir  es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
-        model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado()));
+
 
 
         // Si el registro sir cuyo estado es RECIBIDO
@@ -205,53 +206,31 @@ public class RegistroSirController extends BaseController {
             // Tengo permisos para gestionarlo?
             if(getOficinaActiva(request).getCodigo().equals(registroSir.getCodigoEntidadRegistral())){
 
-                // Libro único
-                List<Libro> libros = new ArrayList<>();
-                libros.add(getLibroEntidad(request));
-
-                model.addAttribute("libros",libros);
+                model.addAttribute("libro",getLibroEntidad(request)); // Libro único
+                model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
                 model.addAttribute("registrarForm", new RegistrarForm());
-                model.addAttribute("rechazarForm", new RechazarForm());
-                model.addAttribute("reenviarForm", new ReenviarForm());
 
-                // Si se ha indicado la unida de tramitación destino, comprobamos que esté vigente
-                if(registroSir.getCodigoUnidadTramitacionDestino()!=null){
-                    UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-                    Organismo organismoDestino = organismoEjb.findByCodigoEntidadSinEstadoLigero(registroSir.getCodigoUnidadTramitacionDestino(),usuarioEntidad.getEntidad().getId());
-                    if(organismoDestino!=null) {
-                        CatEstadoEntidad estado = organismoDestino.getEstado();
-                        //Si el órgano está extinguido obtenemos sus órganos sustitutos
-                        if (!RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(estado.getCodigoEstadoEntidad())) {
-                            Set<Organismo> historicosFinales = new HashSet<Organismo>();
-                            Set<Organismo> sustitutos = new HashSet<Organismo>();
-                            //Obtenemos los organismos vigentes que lo sustituyen que se devolverán en la variable historicosFinales;
-                            organismoEjb.obtenerHistoricosFinales(organismoDestino.getId(), historicosFinales);
+                // Comprobamos que la unida de tramitación destino está VIGENTE
+                if(registroSir.getCodigoUnidadTramitacionDestino() !=null ){
 
-                            for (Organismo organismo : historicosFinales) {
-                                //Solo devolvemos aquellos sustitutos que tienen oficinas que le dan servicio
-                                if (oficinaEjb.tieneOficinasServicio(organismoDestino.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO)) {
-                                    sustitutos.add(organismo);
-                                }
-                            }
-                            model.addAttribute("sustitutos", sustitutos);
-                        }
-                        model.addAttribute("estadoDestino", estado);
+                    Organismo organismoDestino = organismoEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionDestino(),getEntidadActiva(request).getId());
+                    if(organismoDestino == null) {
+                        model.addAttribute("extinguido", true);
                     }
-
                 }
             }else{
                 Mensaje.saveMessageError(request, getMessage("registroSir.error.destino"));
                 return  "redirect:/registroSir/list";
             }
 
-        }else{
-            model.addAttribute("rechazarForm", new RechazarForm());
-            model.addAttribute("reenviarForm", new ReenviarForm());
         }
 
+        model.addAttribute("puedeReenviar",  sirEnvioEjb.puedeReenviarRegistroSir(registroSir.getEstado())); // si el estado es RECIBIDO, REENVIADO o REENVIADO_Y_ERROR se puede reenviar
         model.addAttribute("trazabilidades", trazabilidadSirEjb.getByRegistroSir(registroSir.getId()));
         model.addAttribute("registroSir",registroSir);
         model.addAttribute("anexosSirFull",componerAnexoSirFull(registroSir.getAnexos()));
+        model.addAttribute("rechazarForm", new RechazarForm());
+        model.addAttribute("reenviarForm", new ReenviarForm());
 
         return "registroSir/registroSirDetalle";
     }
@@ -272,14 +251,14 @@ public class RegistroSirController extends BaseController {
 
         // Comprobamos si ya ha sido confirmado
         if(registroSir.getEstado().equals(EstadoRegistroSir.ACEPTADO)){
-            Mensaje.saveMessageError(request, getMessage("registroSir.procesado.error"));
+            Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
             return variableReturn;
         }
 
         // Procesa el RegistroSir
         try{
 
-            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getCodigoSustituto());
+            RegistroEntrada registroEntrada = sirEnvioEjb.aceptarRegistroSir(registroSir, usuarioEntidad, oficinaActiva, registrarForm.getIdLibro(), registrarForm.getIdIdioma(), registrarForm.getCamposNTIs(), registrarForm.getIdOrganismoDestino(), registrarForm.getDistribuir());
 
             variableReturn = "redirect:/registroEntrada/" + registroEntrada.getId() + "/detalle";
 
@@ -309,7 +288,7 @@ public class RegistroSirController extends BaseController {
 
         // Comprobamos si ya ha sido confirmado
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECHAZADO)){
-            Mensaje.saveMessageError(request, getMessage("registroSir.procesado.error"));
+            Mensaje.saveMessageError(request, getMessage("registroSir.estado.error"));
             return variableReturn;
         }
 
