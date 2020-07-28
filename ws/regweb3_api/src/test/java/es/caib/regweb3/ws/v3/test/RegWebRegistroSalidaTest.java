@@ -42,7 +42,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
     public void obtenerRegistroSalida() {
 
         try {
-            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("SALU-S-103/2019", "earrivi",getTestEntidadCodigoDir3());
+            RegistroSalidaResponseWs registroSalidaWs = registroSalidaApi.obtenerRegistroSalida("GOIB-S-7/2020", "earrivi",getTestEntidadCodigoDir3());
             System.out.printf("Idioma: " + registroSalidaWs.getIdiomaCodigo() + "\n");
             System.out.printf("Idioma: " + registroSalidaWs.getIdiomaDescripcion() + "\n");
             System.out.printf("CodigoAsunto: " + registroSalidaWs.getCodigoAsuntoCodigo() + "\n");
@@ -179,6 +179,7 @@ public class RegWebRegistroSalidaTest extends RegWebTestUtils{
             //IdentificadorWs identificadorWs = registroSalidaApi.altaRegistroSalida(registroSalidaWs);
             IdentificadorWs identificadorWs = registroSalidaApi.nuevoRegistroSalida(getTestEntidadCodigoDir3(),registroSalidaWs);
             System.out.println("NumeroSalida: " + identificadorWs.getNumero());
+            System.out.println("NumeroSalidaFormt: " + identificadorWs.getNumeroRegistroFormateado());
             System.out.println("Fecha: " + identificadorWs.getFecha());
         } catch (WsI18NException e) {
             String msg = WsClientUtils.toString(e);

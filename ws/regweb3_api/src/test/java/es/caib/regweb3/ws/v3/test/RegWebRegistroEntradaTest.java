@@ -51,7 +51,7 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
     public void obtenerRegistroEntrada() {
 
         try {
-            RegistroEntradaResponseWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("SALU-E-178/2019", "earrivi", getTestEntidadCodigoDir3());
+            RegistroEntradaResponseWs registroEntradaWs = registroEntradaApi.obtenerRegistroEntrada("GOIB-E-117/2020", "earrivi", getTestEntidadCodigoDir3());
 
             System.out.printf("Idioma: " + registroEntradaWs.getIdiomaCodigo() + "\n");
             System.out.printf("Idioma: " + registroEntradaWs.getIdiomaDescripcion() + "\n");

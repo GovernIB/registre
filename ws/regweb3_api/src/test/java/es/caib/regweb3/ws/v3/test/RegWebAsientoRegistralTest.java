@@ -86,9 +86,9 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
     @Test
-    public void crearAsiento() throws Exception {
+    public void crearAsientoEntrada() throws Exception {
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
 
             try {
 
@@ -112,7 +112,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void crearAsientoEntradaConAnexos() throws Exception {
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
 
             try {
 
