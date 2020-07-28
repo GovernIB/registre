@@ -337,7 +337,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.getInteresados().add(interesadoWs);
 
         try {
-            asiento.getAnexos().addAll(getAnexos());
+            //asiento.getAnexos().addAll(getAnexos());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -561,7 +561,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             anexoConFirmaDetached.setNombreFirmaAnexada(firma);
             anexoConFirmaDetached.setTipoMIMEFirmaAnexada("application/octet-stream");
 
-            anexos.add(anexoConFirmaDetached);
+            //anexos.add(anexoConFirmaDetached);
 
         }
 
