@@ -8,7 +8,6 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonFormController;
-import es.caib.regweb3.webapp.editor.LibroEditor;
 import es.caib.regweb3.webapp.form.*;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
@@ -35,7 +34,6 @@ import java.util.*;
 
 public class InformeController extends AbstractRegistroCommonFormController {
 
-    //protected final Logger log = Logger.getLogger(getClass());
 
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
@@ -52,6 +50,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
     @EJB(mappedName = "regweb3/InformeEJB/local")
     private InformeLocal informeEjb;
 
+    private SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat formatDateLong = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+    private SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
+    private SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+
 
     /**
      * Listado de registros
@@ -61,11 +65,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
     @RequestMapping(value = "/libroRegistro", method = RequestMethod.GET)
     public String libroRegistro(Model model, HttpServletRequest request)throws Exception {
 
-        InformeLibroBusquedaForm informeLibroBusquedaForm = new InformeLibroBusquedaForm();
-        informeLibroBusquedaForm.setFechaFin(new Date());
-        model.addAttribute("informeLibroBusquedaForm",informeLibroBusquedaForm);
-        model.addAttribute("libros", libros(request));
-        model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
+        InformeOrganismoBusquedaForm informeOrganismoBusquedaForm = new InformeOrganismoBusquedaForm();
+        informeOrganismoBusquedaForm.setFechaFin(new Date());
+
         if(getRolActivo(request).getId().equals(RegwebConstantes.RWE_USUARI_ID)) {
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             model.addAttribute("organosDestino", organismosOficinaActiva);
@@ -74,9 +76,10 @@ public class InformeController extends AbstractRegistroCommonFormController {
             model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(getEntidadActiva(request).getId()));
         }
 
-        // Obtenemos los usuarios de la Entidad
-        List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
-        model.addAttribute("usuariosEntidad", usuariosEntidad);
+        model.addAttribute("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("informeOrganismoBusquedaForm", informeOrganismoBusquedaForm);
+        model.addAttribute("organismosConsulta", organismos(request));
+        model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         return "informe/libroRegistro";
     }
@@ -85,42 +88,44 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * Realiza la busqueda de registros según los parametros del formulario
      */
     @RequestMapping(value = "/libroRegistro", method = RequestMethod.POST)
-    public ModelAndView libroRegistro(@ModelAttribute InformeLibroBusquedaForm informeLibroBusquedaForm, HttpServletRequest request)throws Exception {
+    public ModelAndView libroRegistro(@ModelAttribute InformeOrganismoBusquedaForm informeOrganismoBusquedaForm, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = null;
 
-        if(informeLibroBusquedaForm.getFormato().equals("pdf")){
+        if(informeOrganismoBusquedaForm.getFormato().equals("pdf")){
             mav = new ModelAndView("libroRegistroPdf");
-        }else if(informeLibroBusquedaForm.getFormato().equals("excel")){
+        }else if(informeOrganismoBusquedaForm.getFormato().equals("excel")){
             mav = new ModelAndView("libroRegistroExcel");
         }
 
+
+        log.info("Organismos id: " + informeOrganismoBusquedaForm.getIdOrganismo());
+
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        Set<String> campos = informeLibroBusquedaForm.getCampos();
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+        Set<String> campos = informeOrganismoBusquedaForm.getCampos();
 
-        // Obtener los registros del libro
-        ArrayList<ArrayList<String>> registrosLibro = new ArrayList<ArrayList<String>>();
 
-        Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeLibroBusquedaForm.getFechaFin());
+        // Obtener los registros del Organismo
+        ArrayList<ArrayList<String>> registrosOrganismo = new ArrayList<ArrayList<String>>();
 
-        Long idOficina = informeLibroBusquedaForm.getIdOficina();
+        Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeOrganismoBusquedaForm.getFechaFin());
+
+        Long idOficina = informeOrganismoBusquedaForm.getIdOficina();
         String nomOficina = "";
         if(idOficina != -1){
             nomOficina = oficinaEjb.findById(idOficina).getDenominacion();
         }
 
         String codigoOrganDest = "";
-        if(!informeLibroBusquedaForm.getOrganDestinatari().equals("")){
-            codigoOrganDest = informeLibroBusquedaForm.getOrganDestinatari();
+        if(!informeOrganismoBusquedaForm.getOrganDestinatari().equals("")){
+            codigoOrganDest = informeOrganismoBusquedaForm.getOrganDestinatari();
         }
 
         String nomOrganismeDest = "";
         if(!codigoOrganDest.equals("")) {
-            if(!informeLibroBusquedaForm.getOrganDestinatariNom().equals("")) {
-                nomOrganismeDest = informeLibroBusquedaForm.getOrganDestinatariNom();
+            if(!informeOrganismoBusquedaForm.getOrganDestinatariNom().equals("")) {
+                nomOrganismeDest = informeOrganismoBusquedaForm.getOrganDestinatariNom();
             } else{
                 nomOrganismeDest = organismoEjb.findByCodigoEntidad(codigoOrganDest, usuarioEntidad.getEntidad().getId()).getDenominacion();
             }
@@ -135,144 +140,144 @@ public class InformeController extends AbstractRegistroCommonFormController {
         }
 
         // REGISTROS DE ENTRADA
-        if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
+        if(informeOrganismoBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_ENTRADA)){
             Long start = System.currentTimeMillis();
-            List<RegistroEntrada> registrosEntrada = informeEjb.buscaLibroRegistroEntradas(informeLibroBusquedaForm.getFechaInicio(),
-                    dataFi, informeLibroBusquedaForm.getNumeroRegistroFormateado(), informeLibroBusquedaForm.getInteressatNom(),
-                    informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
-                    informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
-                    informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+            List<RegistroEntrada> registrosEntrada = informeEjb.buscaRegistroEntradasOrganismo(informeOrganismoBusquedaForm.getFechaInicio(),
+                    dataFi, informeOrganismoBusquedaForm.getNumeroRegistroFormateado(), informeOrganismoBusquedaForm.getInteressatNom(),
+                    informeOrganismoBusquedaForm.getInteressatLli1(), informeOrganismoBusquedaForm.getInteressatLli2(), informeOrganismoBusquedaForm.getInteressatDoc(),
+                    informeOrganismoBusquedaForm.getAnexos(), informeOrganismoBusquedaForm.getObservaciones(),
+                    informeOrganismoBusquedaForm.getExtracto(), informeOrganismoBusquedaForm.getUsuario(), informeOrganismoBusquedaForm.getIdOrganismo(),
+                    informeOrganismoBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
             Long end = System.currentTimeMillis();
             log.info("Tiempo informeEjb.buscaLibroRegistroEntradas: " + TimeUtils.formatElapsedTime(end - start));
 
             start = System.currentTimeMillis();
             for (int i = 0; i < registrosEntrada.size(); i++) {
-                registrosLibro.add(new ArrayList<String>());
+                registrosOrganismo.add(new ArrayList<String>());
                 RegistroEntrada registroEntrada = registrosEntrada.get(i);
 
                 for (String valorCamp : campos) {
                     if (valorCamp.equals("codAs")) {
                         if (registroEntrada.getRegistroDetalle().getCodigoAsunto() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getCodigoAsunto().getCodigo());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getCodigoAsunto().getCodigo());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("anyRe")) {
                         if (registroEntrada.getFecha() != null) {
                             String anoRegistro = formatYear.format(registroEntrada.getFecha());
-                            registrosLibro.get(i).add(anoRegistro);
+                            registrosOrganismo.get(i).add(anoRegistro);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("estat")) {
-                        registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." + registroEntrada.getEstado()));
+                        registrosOrganismo.get(i).add(I18NUtils.tradueix("registro.estado." + registroEntrada.getEstado()));
                     } else if (valorCamp.equals("exped")) {
                         if (registroEntrada.getRegistroDetalle().getExpediente() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getExpediente());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getExpediente());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("extra")) {
                         if (registroEntrada.getRegistroDetalle().getExtracto() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getExtracto());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getExtracto());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("data")) {
                         if (registroEntrada.getFecha() != null) {
-                            String fechaRegistro = formatDate.format(registroEntrada.getFecha());
-                            registrosLibro.get(i).add(fechaRegistro);
+                            String fechaRegistro = formatDateLong.format(registroEntrada.getFecha());
+                            registrosOrganismo.get(i).add(fechaRegistro);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("numRe")) {
                         if (registroEntrada.getNumeroRegistroFormateado() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getNumeroRegistroFormateado());
+                            registrosOrganismo.get(i).add(registroEntrada.getNumeroRegistroFormateado());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("ofici")) {
                         if (registroEntrada.getOficina().getDenominacion() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getOficina().getDenominacion());
+                            registrosOrganismo.get(i).add(registroEntrada.getOficina().getDenominacion());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     }  else if (valorCamp.equals("obser")) {
                         if (registroEntrada.getRegistroDetalle().getObservaciones() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getObservaciones());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getObservaciones());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("llibr")) {
                         if (registroEntrada.getLibro().getNombre() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getLibro().getNombre());
+                            registrosOrganismo.get(i).add(registroEntrada.getLibro().getNombre());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("docFi")) {
                         if (registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica() != null) {
-                            registrosLibro.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica()));
+                            registrosOrganismo.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroEntrada.getRegistroDetalle().getTipoDocumentacionFisica()));
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("orgDe")) {
                         if (registroEntrada.getDestinoExternoCodigo() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getDestinoExternoDenominacion());
+                            registrosOrganismo.get(i).add(registroEntrada.getDestinoExternoDenominacion());
                         } else {
                             if (registroEntrada.getDestino() != null) {
-                                registrosLibro.get(i).add(registroEntrada.getDestino().getDenominacion());
+                                registrosOrganismo.get(i).add(registroEntrada.getDestino().getDenominacion());
                             } else {
-                                registrosLibro.get(i).add("");
+                                registrosOrganismo.get(i).add("");
                             }
                         }
                     } else if (valorCamp.equals("idiom")) {
                         if (registroEntrada.getRegistroDetalle().getIdioma() != null) {
                             final String nombre = I18NUtils.tradueix("idioma." + registroEntrada.getRegistroDetalle().getIdioma());
-                            registrosLibro.get(i).add(nombre);
+                            registrosOrganismo.get(i).add(nombre);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("refEx")) {
                         if (registroEntrada.getRegistroDetalle().getReferenciaExterna() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getReferenciaExterna());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getReferenciaExterna());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("trans")) {
                         if (registroEntrada.getRegistroDetalle().getTransporte() != null) {
-                            registrosLibro.get(i).add(I18NUtils.tradueix("transporte." + registroEntrada.getRegistroDetalle().getTransporte()));
+                            registrosOrganismo.get(i).add(I18NUtils.tradueix("transporte." + registroEntrada.getRegistroDetalle().getTransporte()));
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("numTr")) {
                         if (registroEntrada.getRegistroDetalle().getNumeroTransporte() != null) {
                             final String nombre = I18NUtils.tradueix("idioma." + registroEntrada.getRegistroDetalle().getIdioma());
-                            registrosLibro.get(i).add(nombre);
+                            registrosOrganismo.get(i).add(nombre);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("orgOr")) {
                         if (registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigenExternoCodigo());
                         } else {
                             if (registroEntrada.getRegistroDetalle().getOficinaOrigen() != null) {
-                                registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                                registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                             } else {
-                                registrosLibro.get(i).add("");
+                                registrosOrganismo.get(i).add("");
                             }
                         }
                     } else if (valorCamp.equals("numOr")) {
                         if (registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getNumeroRegistroOrigen());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("datOr")) {
                         if (registroEntrada.getRegistroDetalle().getFechaOrigen() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getFechaOrigen().toString());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getFechaOrigen().toString());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("nomIn")) {
                         if (registroEntrada.getRegistroDetalle().getInteresados() != null) {
@@ -291,9 +296,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                     interessats = interessats + ", ";
                                 }
                             }
-                            registrosLibro.get(i).add(interessats);
+                            registrosOrganismo.get(i).add(interessats);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("intMa")) {
                         if (registroEntrada.getRegistroDetalle().getInteresados() != null) {
@@ -310,15 +315,15 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                     }
                                 }
                             }
-                            registrosLibro.get(i).add(mailInteressats);
+                            registrosOrganismo.get(i).add(mailInteressats);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("aplic")) {
                         if (registroEntrada.getRegistroDetalle().getAplicacion() != null) {
-                            registrosLibro.get(i).add(registroEntrada.getRegistroDetalle().getAplicacion());
+                            registrosOrganismo.get(i).add(registroEntrada.getRegistroDetalle().getAplicacion());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     }
                 }
@@ -334,142 +339,142 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
 
         // REGISTROS DE SALIDA
-        }else if(informeLibroBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_SALIDA)){
+        }else if(informeOrganismoBusquedaForm.getTipo().equals(RegwebConstantes.REGISTRO_SALIDA)){
 
-            List<RegistroSalida> registrosSalida = informeEjb.buscaLibroRegistroSalidas(informeLibroBusquedaForm.getFechaInicio(),
-                    dataFi, informeLibroBusquedaForm.getNumeroRegistroFormateado(), informeLibroBusquedaForm.getInteressatNom(),
-                    informeLibroBusquedaForm.getInteressatLli1(), informeLibroBusquedaForm.getInteressatLli2(), informeLibroBusquedaForm.getInteressatDoc(),
-                    informeLibroBusquedaForm.getAnexos(), informeLibroBusquedaForm.getObservaciones(),
-                    informeLibroBusquedaForm.getExtracto(), informeLibroBusquedaForm.getUsuario(), informeLibroBusquedaForm.getLibros(),
-                    informeLibroBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
+            List<RegistroSalida> registrosSalida = informeEjb.buscaRegistroSalidasOrganismo(informeOrganismoBusquedaForm.getFechaInicio(),
+                    dataFi, informeOrganismoBusquedaForm.getNumeroRegistroFormateado(), informeOrganismoBusquedaForm.getInteressatNom(),
+                    informeOrganismoBusquedaForm.getInteressatLli1(), informeOrganismoBusquedaForm.getInteressatLli2(), informeOrganismoBusquedaForm.getInteressatDoc(),
+                    informeOrganismoBusquedaForm.getAnexos(), informeOrganismoBusquedaForm.getObservaciones(),
+                    informeOrganismoBusquedaForm.getExtracto(), informeOrganismoBusquedaForm.getUsuario(), informeOrganismoBusquedaForm.getIdOrganismo(),
+                    informeOrganismoBusquedaForm.getEstado(), idOficina, codigoOrganDest, usuarioEntidad.getEntidad().getId(), mostraInteressats);
 
 
             for (int i = 0; i < registrosSalida.size(); i++) {
-                registrosLibro.add(new ArrayList<String>());
+                registrosOrganismo.add(new ArrayList<String>());
                 RegistroSalida registroSalida = registrosSalida.get(i);
 
                 for (String valorCamp : campos) {
                     if (valorCamp.equals("codAs")) {
                         if (registroSalida.getRegistroDetalle().getCodigoAsunto() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getCodigoAsunto().getCodigo());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getCodigoAsunto().getCodigo());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("anyRe")) {
                         if (registroSalida.getFecha() != null) {
                             String anoRegistro = formatYear.format(registroSalida.getFecha());
-                            registrosLibro.get(i).add(anoRegistro);
+                            registrosOrganismo.get(i).add(anoRegistro);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("estat")) {
                         if (registroSalida.getEstado() != null) {
-                            registrosLibro.get(i).add(I18NUtils.tradueix("registro.estado." + registroSalida.getEstado()));
+                            registrosOrganismo.get(i).add(I18NUtils.tradueix("registro.estado." + registroSalida.getEstado()));
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("exped")) {
                         if (registroSalida.getRegistroDetalle().getExpediente() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getExpediente());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getExpediente());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("extra")) {
                         if (registroSalida.getRegistroDetalle().getExtracto() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getExtracto());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getExtracto());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("data")) {
                         if (registroSalida.getFecha() != null) {
-                            registrosLibro.get(i).add(registroSalida.getFecha().toString());
+                            registrosOrganismo.get(i).add(registroSalida.getFecha().toString());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("numRe")) {
                         if (registroSalida.getNumeroRegistroFormateado() != null) {
-                            registrosLibro.get(i).add(registroSalida.getNumeroRegistroFormateado());
+                            registrosOrganismo.get(i).add(registroSalida.getNumeroRegistroFormateado());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("ofici")) {
                         if (registroSalida.getOficina().getDenominacion() != null) {
-                            registrosLibro.get(i).add(registroSalida.getOficina().getDenominacion());
+                            registrosOrganismo.get(i).add(registroSalida.getOficina().getDenominacion());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     }  else if (valorCamp.equals("obser")) {
                         if (registroSalida.getRegistroDetalle().getObservaciones() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getObservaciones());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getObservaciones());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("llibr")) {
                         if (registroSalida.getLibro().getNombre() != null) {
-                            registrosLibro.get(i).add(registroSalida.getLibro().getNombre());
+                            registrosOrganismo.get(i).add(registroSalida.getLibro().getNombre());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("docFi")) {
                         if (registroSalida.getRegistroDetalle().getTipoDocumentacionFisica() != null) {
 
-                            registrosLibro.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroSalida.getRegistroDetalle().getTipoDocumentacionFisica()));
+                            registrosOrganismo.get(i).add(I18NUtils.tradueix("tipoDocumentacionFisica." + registroSalida.getRegistroDetalle().getTipoDocumentacionFisica()));
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("orgDe")) {
                         if (registroSalida.getOrigen() != null) {
-                            registrosLibro.get(i).add(registroSalida.getOrigen().getDenominacion());
+                            registrosOrganismo.get(i).add(registroSalida.getOrigen().getDenominacion());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("idiom")) {
                         if (registroSalida.getRegistroDetalle().getIdioma() != null) {
                             final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma());
-                            registrosLibro.get(i).add(nombre);
+                            registrosOrganismo.get(i).add(nombre);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("refEx")) {
                         if (registroSalida.getRegistroDetalle().getReferenciaExterna() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getReferenciaExterna());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getReferenciaExterna());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("trans")) {
                         if (registroSalida.getRegistroDetalle().getTransporte() != null) {
-                            registrosLibro.get(i).add(I18NUtils.tradueix("transporte." + registroSalida.getRegistroDetalle().getTransporte()));
+                            registrosOrganismo.get(i).add(I18NUtils.tradueix("transporte." + registroSalida.getRegistroDetalle().getTransporte()));
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("numTr")) {
                         if (registroSalida.getRegistroDetalle().getNumeroTransporte() != null) {
                             final String nombre = I18NUtils.tradueix("idioma." + registroSalida.getRegistroDetalle().getIdioma());
-                            registrosLibro.get(i).add(nombre);
+                            registrosOrganismo.get(i).add(nombre);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("orgOr")) {
                         if (registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo());
                         } else {
                             if (registroSalida.getRegistroDetalle().getOficinaOrigenExternoCodigo() != null) {
-                                registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
+                                registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getOficinaOrigen().getDenominacion());
                             } else {
-                                registrosLibro.get(i).add("");
+                                registrosOrganismo.get(i).add("");
                             }
                         }
                     } else if (valorCamp.equals("numOr")) {
                         if (registroSalida.getRegistroDetalle().getNumeroRegistroOrigen() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getNumeroRegistroOrigen());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("datOr")) {
                         if (registroSalida.getRegistroDetalle().getFechaOrigen() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getFechaOrigen().toString());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getFechaOrigen().toString());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("nomIn")) {
                         if (registroSalida.getRegistroDetalle().getInteresados() != null) {
@@ -488,9 +493,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                     interessats = interessats + ", ";
                                 }
                             }
-                            registrosLibro.get(i).add(interessats);
+                            registrosOrganismo.get(i).add(interessats);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("intMa")) {
                         if (registroSalida.getRegistroDetalle().getInteresados() != null) {
@@ -507,15 +512,15 @@ public class InformeController extends AbstractRegistroCommonFormController {
                                     }
                                 }
                             }
-                            registrosLibro.get(i).add(mailInteressats);
+                            registrosOrganismo.get(i).add(mailInteressats);
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("aplic")) {
                         if (registroSalida.getRegistroDetalle().getAplicacion() != null) {
-                            registrosLibro.get(i).add(registroSalida.getRegistroDetalle().getAplicacion());
+                            registrosOrganismo.get(i).add(registroSalida.getRegistroDetalle().getAplicacion());
                         } else {
-                            registrosLibro.get(i).add("");
+                            registrosOrganismo.get(i).add("");
                         }
                     }
                 }
@@ -530,29 +535,29 @@ public class InformeController extends AbstractRegistroCommonFormController {
             mav.addObject("tipo", RegwebConstantes.INFORME_TIPO_REGISTRO_SALIDA);
         }
 
-        if(informeLibroBusquedaForm.getFechaInicio() != null){
-            String fechaInicio = formatDate.format(informeLibroBusquedaForm.getFechaInicio());
+        if(informeOrganismoBusquedaForm.getFechaInicio() != null){
+            String fechaInicio = formatDate.format(informeOrganismoBusquedaForm.getFechaInicio());
             mav.addObject("fechaInicio", fechaInicio);
         }
 
-        if(informeLibroBusquedaForm.getFechaInicio() != null){
-            String fechaFin = formatDate.format(informeLibroBusquedaForm.getFechaFin());
+        if(informeOrganismoBusquedaForm.getFechaInicio() != null){
+            String fechaFin = formatDate.format(informeOrganismoBusquedaForm.getFechaFin());
             mav.addObject("fechaFin", fechaFin);
         }
 
         mav.addObject("campos", campos);
-        mav.addObject("registrosLibro", registrosLibro);
-        mav.addObject("numRegistro", informeLibroBusquedaForm.getNumeroRegistroFormateado());
-        mav.addObject("extracto", informeLibroBusquedaForm.getExtracto());
-        mav.addObject("estado", informeLibroBusquedaForm.getEstado());
-        mav.addObject("nombreInteresado", informeLibroBusquedaForm.getInteressatNom());
-        mav.addObject("apell1Interesado", informeLibroBusquedaForm.getInteressatLli1());
-        mav.addObject("apell2Interesado", informeLibroBusquedaForm.getInteressatLli2());
-        mav.addObject("docInteresado", informeLibroBusquedaForm.getInteressatDoc());
+        mav.addObject("registrosOrganismo", registrosOrganismo);
+        mav.addObject("numRegistro", informeOrganismoBusquedaForm.getNumeroRegistroFormateado());
+        mav.addObject("extracto", informeOrganismoBusquedaForm.getExtracto());
+        mav.addObject("estado", informeOrganismoBusquedaForm.getEstado());
+        mav.addObject("nombreInteresado", informeOrganismoBusquedaForm.getInteressatNom());
+        mav.addObject("apell1Interesado", informeOrganismoBusquedaForm.getInteressatLli1());
+        mav.addObject("apell2Interesado", informeOrganismoBusquedaForm.getInteressatLli2());
+        mav.addObject("docInteresado", informeOrganismoBusquedaForm.getInteressatDoc());
         mav.addObject("oficinaReg", nomOficina);
-        mav.addObject("anexos", informeLibroBusquedaForm.getAnexos());
-        mav.addObject("observaciones", informeLibroBusquedaForm.getObservaciones());
-        mav.addObject("usuario", informeLibroBusquedaForm.getUsuario());
+        mav.addObject("anexos", informeOrganismoBusquedaForm.getAnexos());
+        mav.addObject("observaciones", informeOrganismoBusquedaForm.getObservaciones());
+        mav.addObject("usuario", informeOrganismoBusquedaForm.getUsuario());
         mav.addObject("organDest", nomOrganismeDest);
 
         return mav;
@@ -587,16 +592,13 @@ public class InformeController extends AbstractRegistroCommonFormController {
         List<Oficina> oficinas = oficinaEjb.findByEntidad(entidadActiva.getId());
         List<Organismo> organismos = organismoEjb.findByEntidadReduce(entidadActiva.getId());
 
-        ModelAndView mav = null;
+        ModelAndView mav = new ModelAndView();
 
         if(formato.equals("pdf")){
-            mav = new ModelAndView("indicadoresPdf");
+            mav.setViewName("indicadoresPdf");
         }else if(formato.equals("excel")){
-            mav = new ModelAndView("indicadoresExcel");
+            mav.setViewName("indicadoresExcel");
         }
-
-
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
 
         // Intervalo de fechas seleccionado
         mav.addObject("fechaInicio", formatDate.format(informeIndicadoresBusquedaForm.getFechaInicio()));
@@ -608,7 +610,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         Date dataFi = RegistroUtils.ajustarHoraBusqueda(informeIndicadoresBusquedaForm.getFechaFin());
         Date dataInici = informeIndicadoresBusquedaForm.getFechaInicio();
-
 
 
         // Según el tipo de informe seleccionado
@@ -748,7 +749,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
         usuarioLopdBusqueda.setFechaFin(new Date());
 
         model.addAttribute("usuarios", usuarios(request));
-        model.addAttribute("libros", libros(request));
+        model.addAttribute("libros", libroEjb.getLibrosEntidad(getEntidadActiva(request).getId()));
+        model.addAttribute("usuarios", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("usuarioLopdBusqueda",usuarioLopdBusqueda);
 
         return "informe/usuarioLopd";
@@ -827,13 +829,13 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
             List<Libro> libros = null;
 
-            // Es operador
+           /* // Es operador
             if (isOperador(request)) {
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 // Obtenemos los Libros de los cuales el Usuario es administrador
                 libros = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
-            }
+            }*/
 
             // Es Administrador de Entidad
             if (isAdminEntidad(request)) {
@@ -906,8 +908,8 @@ public class InformeController extends AbstractRegistroCommonFormController {
         busqueda.setPageNumber(1);
         mav.addObject("usuarioLopdBusqueda",busqueda);
         mav.addObject("paginacion", paginacion);
-        mav.addObject("usuarios", usuarios(request));
-        mav.addObject("libros", libros(request));
+        mav.addObject("usuarios", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
+        mav.addObject("libros", libroEjb.getLibrosEntidad(getEntidadActiva(request).getId()));
         mav.addObject("tipo", tipo);
         mav.addObject("accion", accion);
         mav.addObject("usuario", usuarioEntidadEjb.findById(busqueda.getUsuario()).getUsuario());
@@ -925,7 +927,9 @@ public class InformeController extends AbstractRegistroCommonFormController {
     public String registroLopd(Model model, HttpServletRequest request)throws Exception {
 
         RegistroLopdBusqueda registroLopdBusqueda = new RegistroLopdBusqueda(1);
-        model.addAttribute("libros", libros(request));
+        registroLopdBusqueda.setFechaFin(new Date());
+
+        model.addAttribute("libros", libroEjb.getLibrosEntidad(getEntidadActiva(request).getId()));
         model.addAttribute("registroLopdBusqueda",registroLopdBusqueda);
 
         return "informe/registroLopd";
@@ -975,7 +979,7 @@ public class InformeController extends AbstractRegistroCommonFormController {
         }
 
         mav.addObject("idTipoRegistro", busqueda.getTipoRegistro());
-        mav.addObject("libros", libros(request));
+        mav.addObject("libros", libroEjb.getLibrosEntidad(getEntidadActiva(request).getId()));
 
 
         return mav;
@@ -990,7 +994,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         Entidad entidadActiva = getEntidadActiva(request);
 
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         Integer numRegistro = null;
         String anyoRegistro = "";
         Libro libro = null;
@@ -1104,9 +1107,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
         }else if(formato.equals("excel")){
             mav = new ModelAndView("registroLopdExcel");
         }
-
-        SimpleDateFormat formatDateLong = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
 
         mav.addObject("tipoRegistro", tipoRegistro);
 
@@ -1238,8 +1238,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
             mav = new ModelAndView("indicadoresOficinaExcel");
         }
 
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
-
         //Nombre de la Oficina seleccionada
         Oficina oficina = oficinaEjb.findById(informeIndicadoresOficinaBusquedaForm.getOficina());
         if(oficina != null) {
@@ -1273,27 +1271,35 @@ public class InformeController extends AbstractRegistroCommonFormController {
     }
 
 
-    private List<Libro> libros(HttpServletRequest request) throws Exception {
 
-        List<Libro> libros = null;
+    /**
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    private List<Organismo> organismos(HttpServletRequest request) throws Exception {
+
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        List<Organismo> organismos = null;
 
         // Es operador
         if(isOperador(request)){
 
             // Obtenemos los Libros de los cuales el Usuario es administrador
-            libros = getLibrosAdministrados(request);
+            organismos = permisoOrganismoUsuarioEjb.getOrganismosAdministrados(usuarioEntidad.getId());
 
-            if(libros.size()==0) {
-                libros = getLibrosConsultaEntradas(request);
+            if(organismos.size()==0) {
+                organismos = getOrganismosConsultaEntrada(request);
             }
         }
 
         // Es Administrador de Entidad
         if(isAdminEntidad(request)){
-            libros = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
+            organismos = organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId());
         }
 
-        return libros;
+        return organismos;
     }
 
     /**
@@ -1317,6 +1323,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
         return oficinas;
     }
 
+    /**
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
     private List<UsuarioEntidad> usuarios(HttpServletRequest request) throws Exception {
 
         getRolActivo(request);
@@ -1332,24 +1344,24 @@ public class InformeController extends AbstractRegistroCommonFormController {
         if(isOperador(request)){
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-            List<Libro> libros = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
+            List<Organismo> organismos = permisoOrganismoUsuarioEjb.getOrganismosAdministrados(usuarioEntidad.getId());
 
             // Obtenemos los usuarios de los libros de los cuales el Usuario es administrador
-            usuarios = permisoLibroUsuarioEjb.getUsuariosEntidadEnLibros(libros);
+            usuarios = permisoOrganismoUsuarioEjb.getUsuariosEntidadByOrganismos(organismos);
         }
 
         return usuarios;
     }
 
     /**
-     * Obtiene los {@link es.caib.regweb3.model.UsuarioEntidad} del Libro Seleccionado
+     * Obtiene los {@link es.caib.regweb3.model.UsuarioEntidad} del Organismo Seleccionado
      */
     @RequestMapping(value = "/obtenerUsuarios", method = RequestMethod.GET)
     public @ResponseBody
     List<UsuarioEntidad> obtenerUsuarios(@RequestParam Long id,HttpServletRequest request) throws Exception {
 
         if(id != -1) {
-            return permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(id);
+            return permisoOrganismoUsuarioEjb.getUsuariosEntidadByOrganismo(id);
         }else{
             return usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         }
@@ -1357,74 +1369,36 @@ public class InformeController extends AbstractRegistroCommonFormController {
     }
 
     /**
-     * Obtiene los {@link es.caib.regweb3.model.Libro} del Usuario actual y Tipo Registro seleccionado
+     * Obtiene los {@link es.caib.regweb3.model.Organismo} del Usuario actual y Tipo Registro seleccionado
      */
-    @RequestMapping(value = "/obtenerLibros", method = RequestMethod.GET)
+    @RequestMapping(value = "/obtenerOrganismos", method = RequestMethod.GET)
     public @ResponseBody
-    List<Libro> obtenerLibros(HttpServletRequest request, @RequestParam Long id) throws Exception {
+    List<Organismo> obtenerOrganismos(HttpServletRequest request, @RequestParam Long id) throws Exception {
 
-        List<Libro> libros = null;
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        List<Organismo> organismos = null;
 
         // Es operador
         if(isOperador(request)){
 
-            // Obtenemos los Libros de los cuales el Usuario es administrador
-            if(getLibrosAdministrados(request).size()>0) {
-                libros = getLibrosAdministrados(request);
+            // Obtenemos los ORganismos de los cuales el Usuario es administrador
+            organismos = getOrganismosResponsable(request);
+
+            if(organismos.size()>0) {
+                return organismos ;
             }else if(id.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
-                libros = getLibrosConsultaEntradas(request);
+                organismos = getOrganismosConsultaEntrada(request);
             }else{
-                libros = getLibrosConsultaSalidas(request);
+                organismos = getOrganismosConsultaSalida(request);
             }
         }
 
         // Es Administrador de Entidad
         if(isAdminEntidad(request)){
-            libros = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
+            organismos = organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId());
         }
 
-        return libros;
-    }
-
-    @ModelAttribute("estados")
-    public Long[] estados() throws Exception {
-        return RegwebConstantes.ESTADOS_REGISTRO;
-    }
-
-    @InitBinder("informeLibroBusquedaForm")
-    public void initBinderLibroRegistro(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
-        binder.registerCustomEditor(java.util.Date.class, dateEditor);
-        binder.registerCustomEditor(Libro.class, "libros",new LibroEditor());
-    }
-
-    @InitBinder("informeIndicadoresBusquedaForm")
-    public void initBinderIndicadores(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
-        binder.registerCustomEditor(java.util.Date.class, dateEditor);
-    }
-
-    @InitBinder("usuarioLopdBusqueda")
-    public void initBinderUsuarioLopd(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
-        binder.registerCustomEditor(java.util.Date.class, dateEditor);
-    }
-
-    @InitBinder("registroLopdBusqueda")
-    public void initBinderRegistroLopd(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
-        binder.registerCustomEditor(java.util.Date.class, dateEditor);
-    }
-
-    @InitBinder("informeIndicadoresOficinaBusquedaForm")
-    public void initBinderIndicadoresOficina(WebDataBinder binder) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        CustomDateEditor dateEditor = new CustomDateEditor(sdf, true);
-        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+        return organismos;
     }
 
     /**
@@ -1438,7 +1412,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresEntradaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         List<String> entradaAnosValor = new ArrayList<String>();
         List<String> entradaAnosNombre = new ArrayList<String>();
 
@@ -1488,7 +1461,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
      */
     private void totalRegistresSalidaAny(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
 
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
         List<String> salidaAnosValor = new ArrayList<String>();
         List<String> salidaAnosNombre = new ArrayList<String>();
 
@@ -1538,10 +1510,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @throws Exception
      */
     private void totalRegistresEntradaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
-
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
-        SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
 
         List<String> entradaMesesValor = new ArrayList<String>();
         List<String> entradaMesesNombre = new ArrayList<String>();
@@ -1627,10 +1595,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
      * @throws Exception
      */
     private void totalRegistresSalidaMes(ModelAndView mav, Date dataInici, Date dataFi, Long idEntidad, Long idOficina) throws Exception{
-
-        SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-        SimpleDateFormat formatMes = new SimpleDateFormat("MMMMM", new Locale("ca"));
-        SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
 
         List<String> salidaMesesValor = new ArrayList<String>();
         List<String> salidaMesesNombre = new ArrayList<String>();
@@ -1969,5 +1933,41 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
         mav.addObject("salidaIdiomaValor", salidaIdiomaValor);
         mav.addObject("salidaIdiomaNombre", salidaIdiomaNombre);
+    }
+
+    @ModelAttribute("estados")
+    public Long[] estados() throws Exception {
+        return RegwebConstantes.ESTADOS_REGISTRO;
+    }
+
+    @InitBinder("informeOrganismoBusquedaForm")
+    public void initBinderOrganismoRegistro(WebDataBinder binder) {
+        CustomDateEditor dateEditor = new CustomDateEditor(formatDate, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+        //binder.registerCustomEditor(Organismo.class, "organismos",new OrganismoEditor());
+    }
+
+    @InitBinder("informeIndicadoresBusquedaForm")
+    public void initBinderIndicadores(WebDataBinder binder) {
+        CustomDateEditor dateEditor = new CustomDateEditor(formatDate, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+    }
+
+    @InitBinder("usuarioLopdBusqueda")
+    public void initBinderUsuarioLopd(WebDataBinder binder) {
+        CustomDateEditor dateEditor = new CustomDateEditor(formatDate, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+    }
+
+    @InitBinder("registroLopdBusqueda")
+    public void initBinderRegistroLopd(WebDataBinder binder) {
+        CustomDateEditor dateEditor = new CustomDateEditor(formatDate, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
+    }
+
+    @InitBinder("informeIndicadoresOficinaBusquedaForm")
+    public void initBinderIndicadoresOficina(WebDataBinder binder) {
+        CustomDateEditor dateEditor = new CustomDateEditor(formatDate, true);
+        binder.registerCustomEditor(java.util.Date.class, dateEditor);
     }
 }

@@ -57,7 +57,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
         String organDest = (String) model.get("organDest");
 
         Set<String> campos = (Set<String>) model.get("campos");
-        ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
+        ArrayList<ArrayList<String>> registrosOrganismo = (ArrayList<ArrayList<String>>) model.get("registrosOrganismo");
 
         HSSFSheet sheet = workbook.createSheet("REGWEB3");
         sheet.setFitToPage(true);
@@ -293,8 +293,8 @@ public class LibroRegistroExcel extends AbstractExcelView {
         }
 
         // Filas
-        if(registrosLibro.size()>0){
-            for (ArrayList<String> aRegistrosLibro : registrosLibro) {
+        if(registrosOrganismo.size()>0){
+            for (ArrayList<String> aRegistrosLibro : registrosOrganismo) {
                 HSSFRow row = sheet.createRow(rowNum++);
                 for (int g = 0; g < aRegistrosLibro.size(); g++) {
                     row.createCell(g).setCellValue(aRegistrosLibro.get(g));

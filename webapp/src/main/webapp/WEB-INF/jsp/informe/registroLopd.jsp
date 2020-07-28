@@ -35,7 +35,7 @@
 
                 <div class="panel panel-warning">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><i class="fa fa-search"></i><spring:message code="informe.registroLopd"/> </h3>
+                        <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.registroLopd"/> </strong></h3>
                     </div>
                     <div class="panel-body">
                         <form:form modelAttribute="registroLopdBusqueda" method="post" cssClass="form-horizontal" name="registroLopdBusqueda" onsubmit="return validaFormulario(this)">

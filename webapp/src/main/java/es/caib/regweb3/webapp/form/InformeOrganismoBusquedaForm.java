@@ -1,6 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
-import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 
 import java.util.Date;
 import java.util.List;
@@ -11,14 +11,14 @@ import java.util.Set;
  *
  * @author jpernia
  */
-public class InformeLibroBusquedaForm {
+public class InformeOrganismoBusquedaForm {
 
     private Date fechaInicio;
     private Date fechaFin;
     private Long tipo;
     private String formato;
     private Set<String> campos;
-    private List<Libro> libros;
+    private Long idOrganismo;
     private Boolean anexos;
     private String interessatNom;
     private String interessatLli1;
@@ -33,16 +33,16 @@ public class InformeLibroBusquedaForm {
     private Long estado;
     private Long idOficina;
 
-    public InformeLibroBusquedaForm(Date fechaInicio, Date fechaFin, Long tipo, String formato, Set<String> campos, String usuario,
-                                    List<Libro> libros, Boolean anexos, String interessatNom, String interessatLli1, String interessatLli2,
-                                    String interessatDoc, String organDestinatari, String organDestinatariNom, String observaciones,
-                                    String extracto, String numeroRegistroFormateado, Long estado, Long idOficina) {
+    public InformeOrganismoBusquedaForm(Date fechaInicio, Date fechaFin, Long tipo, String formato, Set<String> campos, String usuario,
+                                        List<Organismo> organismos, Boolean anexos, String interessatNom, String interessatLli1, String interessatLli2,
+                                        String interessatDoc, String organDestinatari, String organDestinatariNom, String observaciones,
+                                        String extracto, String numeroRegistroFormateado, Long estado, Long idOficina) {
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.tipo = tipo;
         this.formato = formato;
         this.campos = campos;
-        this.libros = libros;
+        this.idOrganismo = idOrganismo;
         this.anexos = anexos;
         this.interessatNom = interessatNom;
         this.interessatLli1 = interessatLli1;
@@ -58,7 +58,7 @@ public class InformeLibroBusquedaForm {
         this.idOficina = idOficina;
     }
 
-    public InformeLibroBusquedaForm() {
+    public InformeOrganismoBusquedaForm() {
 
     }
 
@@ -102,12 +102,12 @@ public class InformeLibroBusquedaForm {
         this.campos = campos;
     }
 
-    public List<Libro> getLibros() {
-        return libros;
+    public Long getIdOrganismo() {
+        return idOrganismo;
     }
 
-    public void setLibros(List<Libro> libros) {
-        this.libros = libros;
+    public void setIdOrganismo(Long idOrganismo) {
+        this.idOrganismo = idOrganismo;
     }
 
     public Boolean getAnexos() {return anexos; }

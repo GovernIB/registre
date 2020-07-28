@@ -73,7 +73,7 @@
                                         <label for="libro" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.usuarioLopd"/>" data-toggle="popover"><spring:message code="libro.libro"/></label>
                                     </div>
                                     <div class="col-xs-8">
-                                        <form:select path="libro"  cssClass="chosen-select" onchange="actualizarUsuarios(this)">
+                                        <form:select path="libro"  cssClass="chosen-select">
                                             <form:option path="libro" value="-1" selected="selected">...</form:option>
                                             <form:options path="libro" items="${libros}" itemValue="id" itemLabel="libroOrganismo"/>
                                         </form:select>
@@ -85,10 +85,7 @@
                                     </div>
                                     <div class="col-xs-8" id="user">
                                         <div>
-                                            <form:select path="usuario" cssClass="chosen-select" multiple="false">
-                                                <form:option path="usuario" value="-1" selected="selected">...</form:option>
-                                                <form:options path="usuario" items="${usuarios}" itemValue="id" itemLabel="nombreCompleto"/>
-                                            </form:select>
+                                            <form:select path="usuario" cssClass="chosen-select" items="${usuarios}" itemValue="id" itemLabel="nombreCompleto"/>
                                         </div>
                                         <span class="errors"></span>
                                     </div>

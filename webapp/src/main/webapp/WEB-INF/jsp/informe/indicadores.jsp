@@ -41,7 +41,7 @@
                             <div class="col-xs-12">
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                        <label for="tipo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoLibro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
+                                        <label for="tipo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoLibro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="regweb.tipoRegistro"/></label>
                                     </div>
                                     <div class="col-xs-8 no-pad-right">
                                         <form:select path="tipo" cssClass="chosen-select">

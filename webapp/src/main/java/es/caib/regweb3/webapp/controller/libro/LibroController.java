@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.controller.libro;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -177,7 +180,7 @@ public class LibroController extends BaseController {
                 Libro libroCreado =libroEjb.crearLibro(libro);
 
                 // Se crean los permisos para el nuevo Libro creado
-                permisoLibroUsuarioEjb.crearPermisosLibroNuevo(libroCreado, getEntidadActiva(request).getId());
+                //permisoLibroUsuarioEjb.crearPermisosLibroNuevo(libroCreado, getEntidadActiva(request).getId());
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.guardar.registro"));
             }catch (Exception e) {
@@ -344,47 +347,6 @@ public class LibroController extends BaseController {
 
         return "redirect:/libro/"+libro.getOrganismo().getId()+"/libros";
 
-    }
-
-    /**
-     * Listado de usuarios y sus permisos de un libro
-     * @param idLibro
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/{idLibro}/usuarios", method = RequestMethod.GET)
-    public String usuariosLibro(Model model, @PathVariable Long idLibro, HttpServletRequest request)throws Exception {
-
-        HttpSession session = request.getSession();
-        Entidad entidadActiva = getEntidadActiva(request);
-
-//        ModelAndView mav = new ModelAndView("libro/usuariosLibroList");
-
-        Libro libro = libroEjb.findById(idLibro);
-
-        // Comprueba que el Libro existe
-        if(libro == null) {
-            log.info("No existe este libro");
-            Mensaje.saveMessageError(request, getMessage("aviso.libro.noExiste"));
-            return "redirect:/organismo/list";
-        }
-
-        // Comprueba que el Libro pertenece a la Entida Activa
-        if(!libro.getOrganismo().getEntidad().equals(entidadActiva)) {
-            log.info("No es administrador de este libro");
-            Mensaje.saveMessageError(request, getMessage("aviso.libro.noAdministrador"));
-            return "redirect:/organismo/list";
-        }
-
-        List<PermisoLibroUsuario> plu = permisoLibroUsuarioEjb.findByLibro(libro.getId());
-        List<UsuarioEntidad> usuarios = permisoLibroUsuarioEjb.getUsuariosEntidadByLibro(libro.getId());
-
-        model.addAttribute("libro", libro);
-        model.addAttribute("plu", plu);
-        model.addAttribute("permisos", RegwebConstantes.PERMISOS);
-        model.addAttribute("usuarios", usuarios);
-
-        return "libro/usuariosLibroList";
     }
 
 
