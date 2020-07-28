@@ -1,6 +1,6 @@
 package es.caib.regweb3.webapp.interceptor;
 
-import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
@@ -36,17 +36,13 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
             HttpSession session = request.getSession();
             LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
             Rol rolActivo = loginInfo.getRolActivo();
-            List<Libro> librosAdm = loginInfo.getLibrosAdministrados();
+            //List<Libro> librosAdm = loginInfo.getLibrosAdministrados();
+            List<Organismo> organismosResponsable = loginInfo.getOrganismosResponsable();
 
-            if(librosAdm != null){
-                if(librosAdm.size() == 0){
-                    librosAdm = null;
-                }
-            }
 
-            // Comprobamos que el usuario dispone del Rol RWE_ADMIN o tiene Libros Administrados
+            // Comprobamos que el usuario dispone del Rol RWE_ADMIN
             if(url.equals("/informe/registroLopd")||url.equals("/informe/usuarioLopd")) {
-                if (!(librosAdm != null || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
+                if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");
@@ -56,7 +52,7 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
 
             // Comprobamos que el usuario dispone del RWE_ADMIN
             if(url.equals("/informe/indicadores")) {
-                if (!(librosAdm != null || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
+                if (!(organismosResponsable != null || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");
@@ -81,7 +77,7 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
                 String idRegistro = tokens.nextToken();
                 String tipoRegistro = tokens.nextToken();
 
-                if (!(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN) || rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI))) {
+                if (!(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");

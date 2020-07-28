@@ -1,6 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Interesado;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
@@ -35,7 +38,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -125,9 +128,9 @@ public class InformeBean implements InformeLocal {
         where.add(" registroEntrada.fecha <= :fechaFin) ");
         parametros.put("fechaFin", fechaFin);
 
-        // Libro
-        where.add(" registroEntrada.libro in (:libros)");
-        parametros.put("libros", libros);
+        // Organismo
+        where.add(" registroEntrada.oficina.organismoResponsable.id = :idOrganismo");
+        parametros.put("idOrganismo", idOrganismo);
 
         // Buscamos registros de entrada con anexos
         if (anexos) {
@@ -264,7 +267,7 @@ public class InformeBean implements InformeLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
+    public List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String extracto, String usuario, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -356,9 +359,9 @@ public class InformeBean implements InformeLocal {
         where.add(" registroSalida.fecha <= :fechaFin) ");
         parametros.put("fechaFin", fechaFin);
 
-        // Libro
-        where.add(" registroSalida.libro in (:libros)");
-        parametros.put("libros", libros);
+        //Organismo
+        where.add(" registroSalida.oficina.organismoResponsable.id = :idOrganismo");
+        parametros.put("idOrganismo", idOrganismo);
 
         // Buscamos registros de entrada con anexos
         if (anexos) {
@@ -503,7 +506,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and " +
-                "registroEntrada.libro.organismo.entidad.id = :idEntidad ");
+                "registroEntrada.usuario.entidad.id = :idEntidad ");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -522,7 +525,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count (registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.estado != :anulado and registroSalida.estado != :reserva and " +
-                "registroSalida.libro.organismo.entidad.id = :idEntidad");
+                "registroSalida.usuario.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -619,7 +622,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.libro.organismo.entidad.id = :idEntidad");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.usuario.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -639,7 +642,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroEntrada.id) from RegistroEntrada as registroEntrada where registroEntrada.fecha >= :fechaInicio " +
                 "and registroEntrada.fecha <= :fechaFin and registroEntrada.registroDetalle.idioma = :idioma and " +
-                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.libro.organismo.entidad.id = :idEntidad");
+                "registroEntrada.estado != :anulado and registroEntrada.estado != :reserva and registroEntrada.usuario.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -715,7 +718,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.tipoAsunto.id = :tipoAsunto and " +
-                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.libro.organismo.entidad.id = :idEntidad");
+                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.usuario.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);
@@ -735,7 +738,7 @@ public class InformeBean implements InformeLocal {
 
         q = em.createQuery("Select count(registroSalida.id) from RegistroSalida as registroSalida where registroSalida.fecha >= :fechaInicio " +
                 "and registroSalida.fecha <= :fechaFin and registroSalida.registroDetalle.idioma = :idioma and " +
-                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.libro.organismo.entidad.id = :idEntidad");
+                "registroSalida.estado != :anulado and registroSalida.estado != :reserva and registroSalida.usuario.entidad.id = :idEntidad");
 
         q.setParameter("fechaInicio", fechaInicio);
         q.setParameter("fechaFin", fechaFin);

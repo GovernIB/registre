@@ -94,6 +94,14 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
     List<UsuarioEntidad> getUsuariosEntidadByOrganismo(Long idOrganismo) throws Exception;
 
     /**
+     * etorna los {@link UsuarioEntidad} de una lista de {@link Organismo}
+     * @param organismos
+     * @return
+     * @throws Exception
+     */
+    List<UsuarioEntidad> getUsuariosEntidadByOrganismos(List<Organismo> organismos) throws Exception;
+
+    /**
      * Retorna los {@link Organismo} en los que un UsuarioEntidad tiene acceso según el permiso dado
      * @param idUsuarioEntidad
      * @param idPermiso

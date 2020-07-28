@@ -57,7 +57,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         String organDest = (String) model.get("organDest");
 
         Set<String> campos = (Set<String>) model.get("campos");
-        ArrayList<ArrayList<String>> registrosLibro = (ArrayList<ArrayList<String>>) model.get("registrosLibro");
+        ArrayList<ArrayList<String>> registrosOrganismo = (ArrayList<ArrayList<String>>) model.get("registrosOrganismo");
 
         //Configuraciones generales formato pdf
         if(campos.size() > 4){
@@ -164,7 +164,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         PdfPTable table = new PdfPTable(campos.size());
         table.setWidthPercentage(100);
 
-        if((campos != null)&&registrosLibro.size()>0){
+        if((campos != null)&&registrosOrganismo.size()>0){
 
             if(campos.size()!=0){
 
@@ -294,7 +294,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
             table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
             table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 
-            for (ArrayList<String> aRegistrosLibro : registrosLibro) {
+            for (ArrayList<String> aRegistrosLibro : registrosOrganismo) {
                 for (String anARegistrosLibro : aRegistrosLibro) {
                     table.addCell(new Paragraph(anARegistrosLibro, font10));
                 }
@@ -303,7 +303,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
             document.add(table);
 
         }
-        if(registrosLibro.size()==0){
+        if(registrosOrganismo.size()==0){
             PdfPTable buit = new PdfPTable(1);
             buit.setWidthPercentage(100);
             buit.getDefaultCell().setBackgroundColor(BaseColor.WHITE);

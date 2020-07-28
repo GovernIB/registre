@@ -1,6 +1,5 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.model.RegistroEntrada;
 import es.caib.regweb3.model.RegistroSalida;
 
@@ -33,7 +32,7 @@ public interface InformeLocal {
      * @param observaciones
      * @param usuario
      * @param extracto
-     * @param libros
+     * @param idOrganismo
      * @param estado
      * @param idOficina
      * @param organoDest
@@ -41,7 +40,7 @@ public interface InformeLocal {
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> buscaLibroRegistroEntradas(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception;
+    List<RegistroEntrada> buscaRegistroEntradasOrganismo(Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoDest, Long idEntidad, Boolean mostraInteressats) throws Exception;
 
     /**
      * Busca los Registros de Salida en función de varios parámetros
@@ -57,14 +56,14 @@ public interface InformeLocal {
      * @param observaciones
      * @param usuario
      * @param extracto
-     * @param libros
+     * @param idORganismo
      * @param estado
      * @param idOficina
      * @param organoOrig
      * @return
      * @throws Exception
      */
-    List<RegistroSalida> buscaLibroRegistroSalidas(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, List<Libro> libros, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception;
+    List<RegistroSalida> buscaRegistroSalidasOrganismo(Date fechaInicio, Date fechaFin, String numRegistroFormateado, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, String extracto, Long idOrganismo, Long estado, Long idOficina, String organoOrig, Long idEntidad, Boolean mostraInteressats) throws Exception;
 
     /**
      * Busca los Registros de Entrada que no estén anulados ni pendientes en función de la una fecha inicio, una fecha fin, de la Entidad Activa

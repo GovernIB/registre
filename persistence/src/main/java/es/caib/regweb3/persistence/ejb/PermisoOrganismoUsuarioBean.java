@@ -202,6 +202,27 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public List<UsuarioEntidad> getUsuariosEntidadByOrganismos(List<Organismo> organismos) throws Exception{
+
+        Query q = em.createQuery("Select distinct pou.usuario.id, pou.usuario.usuario from PermisoOrganismoUsuario as pou where " +
+                "pou.organismo in (:organismos)");
+
+        q.setParameter("organismos", organismos);
+
+        List<Object[]> result = q.getResultList();
+        List<UsuarioEntidad> usuarios = new ArrayList<UsuarioEntidad>();
+
+        for (Object[] object : result) {
+            UsuarioEntidad usuarioEntidad = new UsuarioEntidad((Long) object[0], (Usuario) object[1], null);
+
+            usuarios.add(usuarioEntidad);
+        }
+
+        return usuarios;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Organismo> getOrganismosPermiso(Long idUsuarioEntidad, Long idPermiso) throws Exception{
 
         Query q = em.createQuery("Select distinct pou.organismo.id, pou.organismo.codigo, pou.organismo.denominacion from PermisoOrganismoUsuario as pou where " +
@@ -455,9 +476,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         for (Object[] object : result){
 
-            Organismo organismo = new Organismo((Long) object[0], (String) object[1]);
-
-            organismos.add(organismo);
+            organismos.add(new Organismo((Long) object[0], (String) object[1], (String) object[2]));
         }
 
         return organismos;

@@ -37,7 +37,7 @@
                             <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.libroRegistro"/></strong> </h3>
                         </div>
                         <div class="panel-body">
-                            <form:form modelAttribute="informeLibroBusquedaForm" method="post" cssClass="form-horizontal" name="informeLibroBusquedaForm" onsubmit="return validaFormulario(this)">
+                            <form:form modelAttribute="informeOrganismoBusquedaForm" method="post" cssClass="form-horizontal" name="informeOrganismoBusquedaForm" onsubmit="return validaFormulario(this)">
 
                                 <div class="col-xs-12">
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat">
@@ -45,9 +45,9 @@
                                             <label for="tipo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoLibro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="informe.tipoLibro"/></label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:select path="tipo" cssClass="chosen-select" onchange="actualizarLibros(this.selectedIndex)">
-                                                <form:option value="1" default="default"><spring:message code="informe.entrada"/></form:option>
-                                                <form:option value="2"><spring:message code="informe.salida"/></form:option>
+                                            <form:select path="tipo" cssClass="chosen-select" onchange="actualizarOrganismos(this.selectedIndex)">
+                                                <form:option value="1" default="default"><spring:message code="registroSir.tipoRegistro.0"/></form:option>
+                                                <form:option value="2"><spring:message code="registroSir.tipoRegistro.1"/></form:option>
                                             </form:select>
                                         </div>
                                     </div>
@@ -65,19 +65,19 @@
                                 </div>
 
                                 <div class="col-xs-12">
-                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat libros1">
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat organismos1">
                                         <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
-                                            <label for="libros" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
+                                            <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro.libroRegistro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="organismo.organismos"/></label>
                                         </div>
-                                        <div class="col-xs-8" id="libr">
-                                            <c:if test="${fn:length(libros) eq 1}">
-                                                <form:select path="libros" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select" multiple="false"/>
+                                        <div class="col-xs-8" id="organismosDiv">
+                                            <c:if test="${fn:length(organismosConsulta) eq 1}">
+                                                <form:select path="idOrganismo" items="${organismosConsulta}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" />
                                             </c:if>
-                                            <c:if test="${fn:length(libros) gt 1}">
-                                                <spring:message code="informe.libros" var="varLibros"/>
-                                                <form:select data-placeholder="${varLibros}" path="libros" items="${libros}" itemValue="id" itemLabel="libroOrganismo" cssClass="chosen-select" multiple="true"/>
+                                            <c:if test="${fn:length(organismosConsulta) gt 1}">
+                                                <spring:message code="informe.organismos" var="varOrganismosConsulta"/>
+                                                <form:select data-placeholder="${varOrganismosConsulta}" path="idOrganismo" items="${organismosConsulta}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" />
                                             </c:if>
-                                            <span id="librosErrors"></span>
+                                            <span id="organismosErrors"></span>
                                         </div>
                                     </div>
                                     <div class="form-group col-xs-6 espaiLinies senseMargeLat campos1">
@@ -144,18 +144,18 @@
                                 </div>
 
                                 <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
-                                <c:if test="${empty informeLibroBusquedaForm.interessatDoc &&
-                                empty informeLibroBusquedaForm.interessatNom &&
-                                empty informeLibroBusquedaForm.organDestinatari &&
-                                empty informeLibroBusquedaForm.observaciones &&
-                                empty informeLibroBusquedaForm.usuario && !informeLibroBusquedaForm.anexos}">
+                                <c:if test="${empty informeOrganismoBusquedaForm.interessatDoc &&
+                                empty informeOrganismoBusquedaForm.interessatNom &&
+                                empty informeOrganismoBusquedaForm.organDestinatari &&
+                                empty informeOrganismoBusquedaForm.observaciones &&
+                                empty informeOrganismoBusquedaForm.usuario && !informeOrganismoBusquedaForm.anexos}">
                                   <div id="demo" class="collapse">
                                 </c:if>
-                                <c:if test="${not empty informeLibroBusquedaForm.interessatDoc ||
-                                not empty informeLibroBusquedaForm.interessatNom ||
-                                not empty informeLibroBusquedaForm.organDestinatari ||
-                                not empty informeLibroBusquedaForm.observaciones ||
-                                not empty informeLibroBusquedaForm.usuario || informeLibroBusquedaForm.anexos}">
+                                <c:if test="${not empty informeOrganismoBusquedaForm.interessatDoc ||
+                                not empty informeOrganismoBusquedaForm.interessatNom ||
+                                not empty informeOrganismoBusquedaForm.organDestinatari ||
+                                not empty informeOrganismoBusquedaForm.observaciones ||
+                                not empty informeOrganismoBusquedaForm.usuario || informeOrganismoBusquedaForm.anexos}">
                                   <div id="demo" class="collapse in">
                                 </c:if>
 
@@ -362,9 +362,9 @@
 <!-- Modifica los Libros según el tipo de Registro elegido -->
 <script type="text/javascript">
 
-function actualizarLibros(tipo){
-    <c:url var="obtenerLibros" value="/informe/obtenerLibros" />
-    actualizarLibrosTodos('${obtenerLibros}','#libros',$('#tipo option:selected').val(),$('#libros option:selected').val(),true);
+function actualizarOrganismos(tipo){
+    <c:url var="obtenerOrganismos" value="/informe/obtenerOrganismos" />
+    actualizarOrganismosTodos('${obtenerOrganismos}','#organismos',$('#tipo option:selected').val(),$('#organismos option:selected').val(),true);
     // Mostram el camp segons el tipus de registre que cercam
     if(tipo==0){
         $("#orgDest").removeClass("hidden");
@@ -382,33 +382,33 @@ function actualizarLibros(tipo){
 <script type="text/javascript">
 
 //Valida los libros seleccionados (libros, nombre del libro)
-function librosSeleccionados(select, camp) {
-var variable = '';
-var htmlBuit = '';
-// Valor de los libros
-var value = $(select).val();
-var numLibros = 0;
-if (value!=null && value!=""){
-    // Número de los libros en el select
-    numLibros = value.length;
-}
-// Si hay menos de un libro seleccionado, retorna error
-if (numLibros<1){
-    variable = "#" + camp + " span#librosErrors";
-    htmlBuit = "<span id='librosErrors' class='help-block'>És obligatori elegir almanco 1 llibre</span>";
-    $(variable).html(htmlBuit);
-    $(variable).parents(".libros1").addClass("has-error");
-    $('ul.chosen-choices').css('border-color','#a94442');
-    return false;
-}else{
-    variable = "#" + camp + " span:contains('elegir')";
-    $(variable).removeClass("help-block");
-    $(variable).parents(".libros1").removeClass("has-error");
-    htmlBuit = "<span id='librosErrors'></span>";
-    $(variable).html(htmlBuit);
-    $('ul.chosen-choices').css('border-color','#aaa');
-    return true;
-}
+function organismosSeleccionados(select, camp) {
+    var variable = '';
+    var htmlBuit = '';
+    // Valor de los libros
+    var value = $(select).val();
+    var numOrganismos = 0;
+    if (value!=null && value!=""){
+        // Número de los organismos en el select
+        numOrganismos = value.length;
+    }
+    // Si hay menos de un libro seleccionado, retorna error
+    if (numOrganismos<1){
+        variable = "#" + camp + " span#organismosErrors";
+        htmlBuit = "<span id='organismosErrors' class='help-block'>És obligatori elegir al manco 1 organisme</span>";
+        $(variable).html(htmlBuit);
+        $(variable).parents(".organismos1").addClass("has-error");
+        $('ul.chosen-choices').css('border-color','#a94442');
+        return false;
+    }else{
+        variable = "#" + camp + " span:contains('elegir')";
+        $(variable).removeClass("help-block");
+        $(variable).parents(".organismos1").removeClass("has-error");
+        htmlBuit = "<span id='organismosErrors'></span>";
+        $(variable).html(htmlBuit);
+        $('ul.chosen-choices').css('border-color','#aaa');
+        return true;
+    }
 }
 
 //Valida los campos seleccionados (campos, nombre del campo)
@@ -445,7 +445,7 @@ if (numCampos<2){
 function validaFormulario(form) {
     var fechaInicio = true;
     var fechaFin = true;
-    var libros = true;
+    var organismos = true;
     var campos = true;
     var fechas = true;
     // Valida el formato de Fecha de Inicio
@@ -463,21 +463,21 @@ function validaFormulario(form) {
         }
     }
     // Valida los libros seleccionados
-    if (!librosSeleccionados(form.libros, 'libr')){
-        libros = false;
+    if (!organismosSeleccionados(form.idOrganismo, 'organismosDiv')){
+        organismos = false;
     }
     // Valida los campos seleccionados
     if (!camposSeleccionados(form.campos, 'campos')){
         campos = false;
     }
     // Si todos los campos son correctos, hace el submit
-    return (fechaInicio) && (fechaFin) && (libros) && (campos) && (fechas);
+    return (fechaInicio) && (fechaFin) && (organismos) && (campos) && (fechas);
 }
 
 </script>
 
 <script type="text/javascript">
-function actualizarLibrosTodos(url, idSelect, seleccion, valorSelected, todos){
+function actualizarOrganismosTodos(url, idSelect, seleccion, valorSelected, todos){
     var html = '';
     if(seleccion != '-1'){
         jQuery.ajax({
@@ -496,7 +496,7 @@ function actualizarLibrosTodos(url, idSelect, seleccion, valorSelected, todos){
                         selected = 'selected="selected"';
                     }
                     html += '<option '+selected+' value="' + result[i].id + '">'
-                    + result[i].libroOrganismo + '</option>';
+                    + result[i].denominacion + '</option>';
                 }
                 html += '</option>';
 
