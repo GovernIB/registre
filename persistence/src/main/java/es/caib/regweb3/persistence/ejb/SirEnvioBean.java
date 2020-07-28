@@ -64,7 +64,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private DistribucionLocal distribucionEjb;
-
+    @EJB private OrganismoLocal organismoEjb;
 
 
     @Override
@@ -101,8 +101,10 @@ public class SirEnvioBean implements SirEnvioLocal {
                         camposNTIS.add(campoNTI);
                     }
 
+                    Organismo organismoDestino = organismoEjb.findByCodigoEntidad(destino, idEntidad);
+
                     //Aceptar el RegistroSir
-                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS,destino);
+                    RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(), true);
 
                     // Copiamos cada anexo en la carpeta creada
                     for(AnexoSir anexoSir:registroSir.getAnexos()){
@@ -453,7 +455,7 @@ public class SirEnvioBean implements SirEnvioLocal {
      * @throws Exception
      */
     @Override
-    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, String codigoSustituto)
+    public RegistroEntrada aceptarRegistroSir(RegistroSir registroSir, UsuarioEntidad usuario, Oficina oficinaActiva, Long idLibro, Long idIdioma, List<CamposNTI> camposNTIs, Long idOrganismoDestino, Boolean distribuir)
             throws Exception, I18NException, I18NValidationException {
 
         Date inicio = new Date();
@@ -473,10 +475,15 @@ public class SirEnvioBean implements SirEnvioLocal {
         try {
             // Creamos y registramos el RegistroEntrada a partir del RegistroSir aceptado
 
-            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, camposNTIs, codigoSustituto);
+            registroEntrada = registroSirEjb.aceptarRegistroSirEntrada(registroSir, usuario, oficinaActiva, idLibro, idIdioma, camposNTIs, idOrganismoDestino);
 
             // Enviamos el Mensaje de Confirmación
             enviarMensajeConfirmacion(registroSir, registroEntrada.getNumeroRegistroFormateado(), registroEntrada.getFecha());
+
+            // Distribuimos el Registro de Entrada si así se ha indicado
+            if(distribuir){
+                distribucionEjb.distribuir(registroEntrada, usuario);
+            }
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroSir.getEntidad().getId(), registroSir.getIdentificadorIntercambio());
