@@ -67,7 +67,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,
-                                                       UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexos, Boolean validarAnexos)
+                                                       UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException {
 
         try {
@@ -105,13 +105,15 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
             }
 
             // Procesamos los anexos
-            if (anexos != null && anexos.size() != 0) {
+            if (anexosFull != null && anexosFull.size() != 0) {
                 final Long registroID = registroSalida.getId();
-                for (AnexoFull anexoFull : anexos) {
+                for (AnexoFull anexoFull : anexosFull) {
                     anexoFull.getAnexo().setRegistroDetalle(registroSalida.getRegistroDetalle());
-                    anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_SALIDA, null, validarAnexos);
-                    registroSalida.getRegistroDetalle().getAnexosFull().add(anexoFull);
+                    AnexoFull anexoFullCreado = anexoEjb.crearAnexo(anexoFull, usuarioEntidad, registroID, REGISTRO_SALIDA, null, validarAnexos);
+
+                    registroSalida.getRegistroDetalle().getAnexos().add(anexoFullCreado.getAnexo());
                 }
+                registroSalida.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
             }
 
             // Obtenemos el próximo evento del Registro
