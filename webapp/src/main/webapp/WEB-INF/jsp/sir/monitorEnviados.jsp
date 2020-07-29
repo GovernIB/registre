@@ -37,7 +37,7 @@
 
                 <div class="panel panel-warning">
 
-                    <c:if test="${(not empty librosConsulta) && (not empty oficioRemisionBusqueda)}">
+                    <c:if test="${(not empty organismos) && (not empty oficioRemisionBusqueda)}">
 
                         <div class="panel-heading">
                             <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message
@@ -65,7 +65,12 @@
                                             <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
                                         </div>
                                         <div class="col-xs-8">
-                                            <form:select path="idOrganismo" cssClass="chosen-select" items="${organismosConsultaEntrada}" itemValue="id" itemLabel="denominacion"/>
+                                            <form:select path="idOrganismo" cssClass="chosen-select">
+                                                <form:option value="">...</form:option>
+                                                <c:forEach items="${organismos}" var="organismo">
+                                                    <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
+                                                </c:forEach>
+                                            </form:select>
                                         </div>
                                     </div>
                                 </div>

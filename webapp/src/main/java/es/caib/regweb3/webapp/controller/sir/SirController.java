@@ -339,14 +339,13 @@ public class SirController extends BaseController {
 
         ModelAndView mav = new ModelAndView("sir/monitorEnviados");
 
-        List<Organismo> organismosConsultaEntrada = getOrganismosConsultaEntrada(request);
+        List<Organismo> organismos = organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId());
 
         OficioRemisionBusquedaForm oficioRemisionBusqueda = new OficioRemisionBusquedaForm(new OficioRemision(), 1);
-        oficioRemisionBusqueda.setIdOrganismo(seleccionarOrganismoActivo(request, organismosConsultaEntrada));
 
         model.addAttribute("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         model.addAttribute("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        model.addAttribute("organismosConsultaEntrada", organismosConsultaEntrada);
+        model.addAttribute("organismos", organismos);
         model.addAttribute("oficioRemisionBusqueda", oficioRemisionBusqueda);
 
         return mav;
@@ -371,7 +370,7 @@ public class SirController extends BaseController {
         mav.addObject("paginacion", paginacion);
         mav.addObject("estadosOficioRemision", RegwebConstantes.ESTADOS_OFICIO_REMISION_SIR);
         mav.addObject("tiposOficioRemision", RegwebConstantes.TIPOS_OFICIO_REMISION);
-        mav.addObject("organismosConsultaEntrada", getOrganismosConsultaEntrada(request));
+        mav.addObject("organismos", organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId()));
         mav.addObject("oficioRemisionBusqueda", busqueda);
 
         return mav;
