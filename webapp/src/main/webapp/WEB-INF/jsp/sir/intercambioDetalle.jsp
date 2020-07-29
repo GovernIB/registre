@@ -26,6 +26,8 @@
                 </div>
             </div><!-- Fin miga de pan -->
 
+            <div id="mensajes"></div>
+
             <c:import url="../modulos/mensajes.jsp"/>
 
             <div class="row">
@@ -54,7 +56,12 @@
                                 <div class="panel-footer center">
                                     <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="registroSir.detalle"/></button></div>
                                 </div>
-
+                                <div class="panel-footer center">
+                                    <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarACK(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-info btn-sm"><spring:message code="mensajeControl.enviar.ACK"/></button></div>
+                                    <c:if test="${registroSir.estado == 'ACEPTADO'}">
+                                        <div class="btn-group"><button type="button" onclick='confirm("javascript:enviarConfirmacion(${registroSir.id})","<spring:message code="regweb.confirmar.enviarMensaje" htmlEscape="true"/>")' class="btn btn-success btn-sm"><spring:message code="mensajeControl.enviar.confirmacion"/></button></div>
+                                    </c:if>
+                                </div>
                             </c:if>
 
                             <%--DETALLE REGISTRO ENVIADO SIR--%>
@@ -246,6 +253,20 @@
     </div> <!-- /container -->
 
     <c:import url="../modulos/pie.jsp"/>
+
+    <script type="text/javascript">
+
+        var urlEnviarACK = '<c:url value="/sir/enviarACK"/>';
+        var urlEnviarConfirmacion = '<c:url value="/sir/enviarConfirmacion"/>';
+        var tradsMensajeControl = [];
+        tradsMensajeControl['mensajeControl.ACK.enviado.ok'] = "<spring:message code='mensajeControl.ACK.enviado.ok' javaScriptEscape='true' />";
+        tradsMensajeControl['mensajeControl.ACK.enviado.error'] = "<spring:message code='mensajeControl.ACK.enviado.error' javaScriptEscape='true' />";
+        tradsMensajeControl['mensajeControl.confirmacion.enviado.ok'] = "<spring:message code='mensajeControl.confirmacion.enviado.ok' javaScriptEscape='true' />";
+        tradsMensajeControl['mensajeControl.confirmacion.enviado.error'] = "<spring:message code='mensajeControl.confirmacion.enviado.error' javaScriptEscape='true' />";
+
+    </script>
+
+    <script type="text/javascript" src="<c:url value="/js/sir.js"/>"></script>
 
 </body>
 </html>
