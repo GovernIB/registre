@@ -1,7 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.PermisoLibroUsuario;
+import es.caib.regweb3.model.PermisoOrganismoUsuario;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
@@ -333,7 +333,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,Long idEntidad,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idLibro) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,Long idEntidad,String identificador,String nombre, String apellido1, String apellido2, String documento, Long tipoUsuario, Long idOrganismo) throws Exception {
 
         Query q;
         Query q2;
@@ -342,12 +342,11 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         StringBuilder query;
 
-        if (idLibro != null && idLibro > 0) { //Si s'ha triat un llibre a la cerca
-            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad, PermisoLibroUsuario as permLibUsu ");
+        if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un Organismo a la cerca
+            query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad, PermisoOrganismoUsuario as pou ");
         } else{  //Si NO s'ha triat cap llibre a la cerca
             query = new StringBuilder("Select DISTINCT usuarioEntidad.id, usuarioEntidad.usuario from UsuarioEntidad as usuarioEntidad ");
         }
-
 
         if(identificador!= null && identificador.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.identificador","identificador",parametros,identificador));}
         if(nombre!= null && nombre.length() > 0){where.add(DataBaseUtils.like("usuarioEntidad.usuario.nombre","nombre",parametros,nombre));}
@@ -359,11 +358,11 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             parametros.put("tipoUsuario", tipoUsuario);
         }
 
-        if (idLibro != null && idLibro > 0) { //Si s'ha triat un llibre a la cerca
-            where.add("usuarioEntidad.id = permLibUsu.usuario.id ");
-            where.add("permLibUsu.libro.id = :idLibro ");
-            parametros.put("idLibro", idLibro);
-            where.add("permLibUsu.activo = true ");
+        if (idOrganismo != null && idOrganismo > 0) { //Si s'ha triat un llibre a la cerca
+            where.add("usuarioEntidad.id = pou.usuario.id ");
+            where.add("pou.organismo.id = :idOrganismo ");
+            parametros.put("idOrganismo", idOrganismo);
+            where.add("pou.activo = true ");
         }
 
         where.add("usuarioEntidad.entidad.id = :idEntidad "); parametros.put("idEntidad",idEntidad);
@@ -506,7 +505,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<PermisoLibroUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idLibro, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws Exception {
+    public List<PermisoOrganismoUsuario> getExportarExcel(Long idEntidad, String identificador, String nombre, String apellido1, String apellido2, String documento, Long tipo, Long idOrganismo, Long permisoRegEntrada, Long permisoRegSalida, Long permisoSir) throws Exception {
 
         Query q;
         Map<String, Object> parametros = new HashMap<String, Object>();
@@ -514,42 +513,42 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
         StringBuilder query;
 
-        List<PermisoLibroUsuario> permisos = new ArrayList<PermisoLibroUsuario>();
+        List<PermisoOrganismoUsuario> permisos = new ArrayList<PermisoOrganismoUsuario>();
 
-        if (idLibro != null && idLibro > 0) { //S'HA TRIAT UN LLIBRE
+        if (idOrganismo != null && idOrganismo > 0) { //S'HA TRIAT UN LLIBRE
 
-            query = new StringBuilder("Select permLibUsu.usuario.id, permLibUsu.usuario.usuario.identificador, permLibUsu.usuario.usuario.nombre, permLibUsu.usuario.usuario.apellido1, permLibUsu.usuario.usuario.apellido2, permLibUsu.usuario.usuario.documento, permLibUsu.usuario.usuario.tipoUsuario, permLibUsu.usuario.usuario.email, permLibUsu.permiso, permLibUsu.id from PermisoLibroUsuario as permLibUsu ");
+            query = new StringBuilder("Select pou.usuario.id, pou.usuario.usuario.identificador, pou.usuario.usuario.nombre, pou.usuario.usuario.apellido1, pou.usuario.usuario.apellido2, pou.usuario.usuario.documento, pou.usuario.usuario.tipoUsuario, pou.usuario.usuario.email, pou.permiso, pou.id from PermisoOrganismoUsuario as pou ");
 
             if (identificador != null && identificador.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.identificador", "identificador", parametros, identificador));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.identificador", "identificador", parametros, identificador));
             }
             if (nombre != null && nombre.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.nombre", "nombre", parametros, nombre));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.nombre", "nombre", parametros, nombre));
             }
             if (apellido1 != null && apellido1.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.apellido1", "apellido1", parametros, apellido1));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.apellido1", "apellido1", parametros, apellido1));
             }
             if (apellido2 != null && apellido2.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.apellido2", "apellido2", parametros, apellido2));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.apellido2", "apellido2", parametros, apellido2));
             }
             if (documento != null && documento.length() > 0) {
-                where.add(" upper(permLibUsu.usuario.usuario.documento) like upper(:documento) ");
+                where.add(" upper(pou.usuario.usuario.documento) like upper(:documento) ");
                 parametros.put("documento", "%" + documento.toLowerCase() + "%");
             }
             if (tipo != 0) {
-                where.add("permLibUsu.usuario.usuario.tipoUsuario = :tipo ");
+                where.add("pou.usuario.usuario.tipoUsuario = :tipo ");
                 parametros.put("tipo", tipo);
             }
 
-            where.add("permLibUsu.libro.id = :idLibro ");
-            parametros.put("idLibro", idLibro);
-            where.add("permLibUsu.activo = true ");
-            where.add("permLibUsu.libro.activo = true ");
+            where.add("pou.organismo.id = :idOrganismo ");
+            parametros.put("idOrganismo", idOrganismo);
+            where.add("pou.activo = true ");
+            where.add("pou.organismo.permiteUsuarios = true ");
 
-            where.add("permLibUsu.usuario.entidad.id = :idEntidad ");
+            where.add("pou.usuario.entidad.id = :idEntidad ");
             parametros.put("idEntidad", idEntidad);
 
-            where.add("(permLibUsu.permiso = :permisoRegEntrada or permLibUsu.permiso = :permisoRegSalida or permLibUsu.permiso = :permisoSir) ");
+            where.add("(pou.permiso = :permisoRegEntrada or pou.permiso = :permisoRegSalida or pou.permiso = :permisoSir) ");
             parametros.put("permisoRegEntrada", permisoRegEntrada);
             parametros.put("permisoRegSalida", permisoRegSalida);
             parametros.put("permisoSir", permisoSir);
@@ -564,7 +563,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                     query.append(w);
                     count++;
                 }
-                query.append("order by permLibUsu.usuario.id");
+                query.append("order by pou.usuario.id");
                 q = em.createQuery(query.toString());
 
                 for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -572,7 +571,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 }
 
             } else {
-                query.append("order by permLibUsu.usuario.id");
+                query.append("order by pou.usuario.id");
                 q = em.createQuery(query.toString());
             }
 
@@ -580,39 +579,39 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             List<Object[]> result = q.getResultList();
 
             for (Object[] object : result) {
-                PermisoLibroUsuario permisoLibroUsuario = new PermisoLibroUsuario((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
+                PermisoOrganismoUsuario permisoOrganismoUsuario = new PermisoOrganismoUsuario((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
                         (String) object[4], (String) object[5], (Long) object[6], (String) object[7], (Long) object[8], (Long) object[9]);
 
-                permisos.add(permisoLibroUsuario);
+                permisos.add(permisoOrganismoUsuario);
             }
 
 
         } else { // NO S'HA TRIAT LLIBRE
 
-            query = new StringBuilder("Select distinct permLibUsu.usuario.id, permLibUsu.usuario.usuario.identificador, permLibUsu.usuario.usuario.nombre, permLibUsu.usuario.usuario.apellido1, permLibUsu.usuario.usuario.apellido2, permLibUsu.usuario.usuario.documento, permLibUsu.usuario.usuario.tipoUsuario, permLibUsu.usuario.usuario.email from PermisoLibroUsuario as permLibUsu ");
+            query = new StringBuilder("Select distinct pou.usuario.id, pou.usuario.usuario.identificador, pou.usuario.usuario.nombre, pou.usuario.usuario.apellido1, pou.usuario.usuario.apellido2, pou.usuario.usuario.documento, pou.usuario.usuario.tipoUsuario, pou.usuario.usuario.email from PermisoOrganismoUsuario as pou ");
 
             if (identificador != null && identificador.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.identificador", "identificador", parametros, identificador));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.identificador", "identificador", parametros, identificador));
             }
             if (nombre != null && nombre.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.nombre", "nombre", parametros, nombre));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.nombre", "nombre", parametros, nombre));
             }
             if (apellido1 != null && apellido1.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.apellido1", "apellido1", parametros, apellido1));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.apellido1", "apellido1", parametros, apellido1));
             }
             if (apellido2 != null && apellido2.length() > 0) {
-                where.add(DataBaseUtils.like("permLibUsu.usuario.usuario.apellido2", "apellido2", parametros, apellido2));
+                where.add(DataBaseUtils.like("pou.usuario.usuario.apellido2", "apellido2", parametros, apellido2));
             }
             if (documento != null && documento.length() > 0) {
-                where.add(" upper(permLibUsu.usuario.usuario.documento) like upper(:documento) ");
+                where.add(" upper(pou.usuario.usuario.documento) like upper(:documento) ");
                 parametros.put("documento", "%" + documento.toLowerCase() + "%");
             }
             if (tipo != 0) {
-                where.add("permLibUsu.usuario.usuario.tipoUsuario = :tipo ");
+                where.add("pou.usuario.usuario.tipoUsuario = :tipo ");
                 parametros.put("tipo", tipo);
             }
 
-            where.add("permLibUsu.usuario.entidad.id = :idEntidad ");
+            where.add("pou.usuario.entidad.id = :idEntidad ");
             parametros.put("idEntidad", idEntidad);
 
             if (parametros.size() != 0) {
@@ -625,7 +624,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                     query.append(w);
                     count++;
                 }
-                query.append("order by permLibUsu.usuario.id");
+                query.append("order by pou.usuario.id");
                 q = em.createQuery(query.toString());
 
                 for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -633,7 +632,7 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
                 }
 
             } else {
-                query.append("order by permLibUsu.usuario.id");
+                query.append("order by pou.usuario.id");
                 q = em.createQuery(query.toString());
             }
 
@@ -641,10 +640,10 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
             List<Object[]> result = q.getResultList();
 
             for (Object[] object : result) {
-                PermisoLibroUsuario permisoLibroUsuario = new PermisoLibroUsuario((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
+                PermisoOrganismoUsuario permisoOrganisdmoUsuario = new PermisoOrganismoUsuario((Long) object[0], (String) object[1], (String) object[2], (String) object[3],
                         (String) object[4], (String) object[5], (Long) object[6], (String) object[7], null, null);
 
-                permisos.add(permisoLibroUsuario);
+                permisos.add(permisoOrganisdmoUsuario);
             }
         }
 
