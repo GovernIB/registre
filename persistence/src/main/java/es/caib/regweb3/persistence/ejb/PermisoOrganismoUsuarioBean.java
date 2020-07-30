@@ -527,9 +527,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     @Override
     public void eliminarByUsuario(Long idUsuarioEntidad) throws Exception {
 
-        Integer eliminados = em.createQuery("delete from PermisoOrganismoUsuario where usuario.id=:idUsuarioEntidad ").setParameter("idUsuarioEntidad", idUsuarioEntidad).executeUpdate();
-
-        log.info(eliminados + " Permisos eliminados del usuario: " + idUsuarioEntidad);
+        em.createQuery("delete from PermisoOrganismoUsuario where usuario.id=:idUsuarioEntidad ").setParameter("idUsuarioEntidad", idUsuarioEntidad).executeUpdate();
 
     }
 

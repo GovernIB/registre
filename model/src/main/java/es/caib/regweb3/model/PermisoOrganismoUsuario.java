@@ -31,6 +31,13 @@ public class PermisoOrganismoUsuario implements Serializable {
     public PermisoOrganismoUsuario() {
     }
 
+    public PermisoOrganismoUsuario(Long idUsuario, String identificador, String nombre, String apellido1,
+                               String apellido2, String documento, Long tipo, String mail, Long permiso, Long id) {
+        this.usuario = new UsuarioEntidad(idUsuario,identificador, nombre, apellido1, apellido2, documento, tipo, mail);
+        this.permiso = permiso;
+        this.id = id;
+    }
+
     public PermisoOrganismoUsuario(Long id, Boolean activo, Long idUsuario) {
         this.id = id;
         this.activo = activo;

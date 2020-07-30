@@ -1,6 +1,6 @@
 package es.caib.regweb3.webapp.form;
 
-import es.caib.regweb3.model.Libro;
+import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
 
 import java.io.Serializable;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class UsuarioEntidadBusquedaForm implements Serializable {
 
     private UsuarioEntidad usuarioEntidad;
-    private Libro libro;
+    private Organismo organismo;
     private Integer pageNumber;
 
     public UsuarioEntidadBusquedaForm() {
@@ -33,12 +33,12 @@ public class UsuarioEntidadBusquedaForm implements Serializable {
         this.usuarioEntidad = usuarioEntidad;
     }
 
-    public Libro getLibro() {
-        return libro;
+    public Organismo getOrganismo() {
+        return organismo;
     }
 
-    public void setLibro(Libro libro) {
-        this.libro = libro;
+    public void setOrganismo(Organismo organismo) {
+        this.organismo = organismo;
     }
 
     public Integer getPageNumber() {

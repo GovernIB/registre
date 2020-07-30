@@ -170,8 +170,7 @@ public class EntidadController extends BaseController {
 
         model.addAttribute("usuarioEntidadBusqueda", usuarioEntidadBusqueda);
         model.addAttribute("entidad", entidad);
-        List<Libro> librosEntidad = libroEjb.getLibrosEntidad(entidad.getId());
-        model.addAttribute("libros", librosEntidad);
+        model.addAttribute("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
 
         return "entidad/usuariosList";
     }
@@ -189,19 +188,18 @@ public class EntidadController extends BaseController {
 
         ModelAndView mav = new ModelAndView("entidad/usuariosList");
         Usuario usuario = busqueda.getUsuarioEntidad().getUsuario();
-        Libro libro = busqueda.getLibro();
+        Organismo organismo = busqueda.getOrganismo();
         Entidad entidad = getEntidadActiva(request);
 
         Paginacion paginacion = usuarioEntidadEjb.busqueda(busqueda.getPageNumber(),
                 entidad.getId(), usuario.getIdentificador(), usuario.getNombre(),
                 usuario.getApellido1(), usuario.getApellido2(), usuario.getDocumento(),
-                usuario.getTipoUsuario(), libro.getId());
+                usuario.getTipoUsuario(), organismo.getId());
 
         busqueda.setPageNumber(1);
         mav.addObject("entidad", entidad);
         mav.addObject("paginacion", paginacion);
-        List<Libro> librosEntidad = libroEjb.getLibrosEntidad(entidad.getId());
-        mav.addObject("libros", librosEntidad);
+        mav.addObject("organismos", organismoEjb.getPermitirUsuarios(entidad.getId()));
         mav.addObject("usuarioEntidadBusqueda", busqueda);
 
 
@@ -1194,17 +1192,16 @@ public class EntidadController extends BaseController {
         String apellido2 = request.getParameter("apellido2");
         String documento = request.getParameter("documento");
         Long tipo = Long.valueOf(request.getParameter("tipo"));
-        Long idLibro = Long.valueOf(request.getParameter("idLibro"));
+        Long idOrganismo = Long.valueOf(request.getParameter("idOrganismo"));
 
-        List<PermisoLibroUsuario> permisos = usuarioEntidadEjb.getExportarExcel(entidad.getId(), identificador, nombre, apellido1, apellido2, documento, tipo, idLibro, RegwebConstantes.PERMISO_REGISTRO_ENTRADA, RegwebConstantes.PERMISO_REGISTRO_SALIDA, RegwebConstantes.PERMISO_SIR);
+        List<PermisoOrganismoUsuario> permisos = usuarioEntidadEjb.getExportarExcel(entidad.getId(), identificador, nombre, apellido1, apellido2, documento, tipo, idOrganismo, RegwebConstantes.PERMISO_REGISTRO_ENTRADA, RegwebConstantes.PERMISO_REGISTRO_SALIDA, RegwebConstantes.PERMISO_SIR);
 
         mav.addObject("permisos", permisos);
 
-        if (idLibro != -1) {
-            Libro libro = libroEjb.findById(idLibro);
-            mav.addObject("libro", libro.getNombre());
+        if (idOrganismo != -1) {
+            mav.addObject("organismo", organismoEjb.findByIdLigero(idOrganismo).getDenominacion());
         } else {
-            mav.addObject("libro", null);
+            mav.addObject("organismo", null);
         }
 
         return mav;
