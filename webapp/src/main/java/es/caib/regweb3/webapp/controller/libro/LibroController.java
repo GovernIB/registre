@@ -114,7 +114,7 @@ public class LibroController extends BaseController {
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.Libro}
-     */
+     *//*
     @RequestMapping(value = "/{idOrganismo}/new", method = RequestMethod.GET)
     public String nuevoLibro(Model model, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) throws Exception {
 
@@ -162,11 +162,11 @@ public class LibroController extends BaseController {
         model.addAttribute("organismo", organismo);
 
         return "libro/libroForm";
-    }
+    }*/
 
     /**
      * Guardar un nuevo {@link es.caib.regweb3.model.Libro}
-     */
+     *//*
     @RequestMapping(value = "/{idOrganismo}/new", method = RequestMethod.POST)
     public String nuevoLibro(@ModelAttribute Libro libro,BindingResult result, SessionStatus status,@PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) {
 
@@ -191,7 +191,7 @@ public class LibroController extends BaseController {
             status.setComplete();
             return "redirect:/libro/"+idOrganismo+"/libros";
         }
-    }
+    }*/
 
     /**
      * Carga el formulario para modificar un {@link es.caib.regweb3.model.Libro}
@@ -285,7 +285,7 @@ public class LibroController extends BaseController {
 
     /**
      * Eliminar un {@link es.caib.regweb3.model.Libro}
-     */
+     *//*
     @RequestMapping(value = "/{idLibro}/{idOrganismo}/delete")
     public String eliminarLibro(@PathVariable("idLibro") Long idLibro, @PathVariable("idOrganismo") Long idOrganismo, HttpServletRequest request) {
 
@@ -314,7 +314,7 @@ public class LibroController extends BaseController {
         }
 
         return "redirect:/libro/"+idOrganismo+"/libros";
-    }
+    }*/
 
     /**
      * Inicializa los contadores del libro {@link es.caib.regweb3.model.Libro}
