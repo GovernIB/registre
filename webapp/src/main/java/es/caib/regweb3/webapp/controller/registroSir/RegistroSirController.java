@@ -197,9 +197,6 @@ public class RegistroSirController extends BaseController {
 
         RegistroSir registroSir = registroSirEjb.findById(idRegistroSir);
 
-
-
-
         // Si el registro sir cuyo estado es RECIBIDO
         if(registroSir.getEstado().equals(EstadoRegistroSir.RECIBIDO) && isOperador(request)){
 

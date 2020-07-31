@@ -3,7 +3,6 @@ package es.caib.regweb3.webapp.interceptor;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioEntidadLocal;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -29,9 +28,6 @@ import javax.servlet.http.HttpSession;
 public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
 
     protected final Logger log = Logger.getLogger(getClass());
-
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    public PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @EJB(mappedName = "regweb3/UsuarioEntidadEJB/local")
     public UsuarioEntidadLocal usuarioEntidadEjb;
@@ -81,31 +77,6 @@ public class RegistroSirInterceptor extends HandlerInterceptorAdapter {
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.archivospath"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
-            }
-
-            // Comprobaciones previas al detalle de un RegistroSir
-            if(url.contains("detalle")){
-
-                String idPreRegistro =  url.replace("/registroSir/","").replace("/detalle", ""); //Obtenemos el id a partir de la url
-
-                /*RegistroSir registroSir = registroSirEjb.findById(Long.valueOf(idPreRegistro));
-
-                // Comprobamos que el PreRegistro existe
-                if(registroSir == null){
-                    log.info("Aviso: No existeix aquest registroSir");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registroSir.detalle"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-
-                // Comprobamos que el PreRegistro tiene como destino nuestra Oficina Activa
-                if(!registroSir.getCodigoEntidadRegistralDestino().equals(oficinaActiva.getCodigo())){
-                    log.info("Aviso: No és d'aquesta oficina");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.registroSir.detalle"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }*/
-
             }
 
             return true;
