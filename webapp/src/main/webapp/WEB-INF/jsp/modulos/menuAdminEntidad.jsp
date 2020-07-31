@@ -60,7 +60,6 @@
             <li class="submenu-complet"><a href="<c:url value="/organismo/arbolList"/>"><i class="fa fa-sitemap"></i> <spring:message code="regweb.organigrama"/></a></li>
             <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="/libro/list"/>"><i class="fa fa-list-ol"></i> <spring:message code="libro.listado"/></a></li>
-            <li class="submenu-complet"><a href="<c:url value="/entidad/librosCambiar"/>"><i class="fa fa-book"></i> <spring:message code="entidad.cambiarlibros"/></a></li>
             <li class="divider"></li>
             <li><a href="<c:url value="/entidad/descargas/list"/>"><i class="fa fa-refresh"></i> <spring:message code="organismo.sincronizaciones"/></a></li>
         </ul>
