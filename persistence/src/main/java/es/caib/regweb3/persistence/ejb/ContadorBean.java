@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Contador;
+import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -96,6 +97,16 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
         q.setParameter("idContador", idContador);
         q.executeUpdate();
         em.flush();
+    }
+
+    @Override
+    public void reiniciarContadoresLibro(Libro libro) throws Exception{
+
+
+        reiniciarContador(libro.getContadorEntrada().getId());
+        reiniciarContador(libro.getContadorSalida().getId());
+        reiniciarContador(libro.getContadorOficioRemision().getId());
+        reiniciarContador(libro.getContadorSir().getId());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Contador;
+import es.caib.regweb3.model.Libro;
 import es.caib.regweb3.persistence.utils.NumeroRegistro;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,6 +31,13 @@ public interface ContadorLocal extends BaseEjb<Contador, Long> {
      * @throws Exception
      */
     void reiniciarContador(Long idContador) throws Exception;
+
+    /**
+     * Reinicia todos los contadores de un Libro
+     * @param libro
+     * @throws Exception
+     */
+    void reiniciarContadoresLibro(Libro libro) throws Exception;
 
     /**
      * Obtiene una secuenta de 8 dígitos a partir del Contador Sir de la Entidad
