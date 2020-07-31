@@ -19,7 +19,6 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
-                    <li><a href="<c:url value="/organismo/list"/>"><i class="fa fa-institution"></i> ${entidad.nombre}</a></li>
                     <li class="active"><i class="fa fa-list-ol"></i> <spring:message code="libro.listado"/></li>
                 </ol>
             </div>
@@ -61,8 +60,9 @@
                                         <th><spring:message code="libro.contador.entrada"/></th>
                                         <th><spring:message code="libro.contador.salida"/></th>
                                         <th><spring:message code="libro.contador.oficio"/></th>
+                                        <th><spring:message code="libro.contador.sir"/></th>
                                         <th><spring:message code="regweb.activo"/></th>
-                                        <th width="160" class="center"><spring:message code="regweb.acciones"/></th>
+                                        <th width="95" class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -74,15 +74,16 @@
                                             <td>${libro.contadorEntrada.numero}</td>
                                             <td>${libro.contadorSalida.numero}</td>
                                             <td>${libro.contadorOficioRemision.numero}</td>
+                                            <td>${libro.contadorSir.numero}</td>
                                             <td>
                                                 <c:if test="${libro.activo}"><span class="label label-success">Si</span></c:if>
                                                 <c:if test="${not libro.activo}"><span class="label label-danger">No</span></c:if>
                                             </td>
                                             <td>
-                                                <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>
+                                                <%--<a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>--%>
                                                 <a class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/inicializar"/>","<spring:message code="regweb.confirmar.inicializacion" htmlEscape="true"/>")' title="<spring:message code="libro.inicializar"/>"><span class="fa fa-clock-o"></span></a>
                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.organismo.id}/${libro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
-                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/${libro.organismo.id}/delete"/>", "<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' title="Eliminar" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>
+                                                <%--<a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/${libro.organismo.id}/delete"/>", "<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' title="Eliminar" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>--%>
                                             </td>
                                         </tr>
                                     </c:forEach>
