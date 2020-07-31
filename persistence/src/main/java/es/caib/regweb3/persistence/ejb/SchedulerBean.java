@@ -207,7 +207,7 @@ public class SchedulerBean implements SchedulerLocal{
         List<Entidad> entidades = entidadEjb.getAll();
         StringBuilder peticion = new StringBuilder();
         long tiempo = System.currentTimeMillis();
-        String descripcion = "Reiniciar contadores de todos los libros";
+        String descripcion = "Reiniciar contadores de todas las entidades";
         Entidad entidadActiva = null;
 
         try{
@@ -219,10 +219,8 @@ public class SchedulerBean implements SchedulerLocal{
                 Date inicio = new Date();
                 peticion.append("entidad: ").append(entidad.getNombre()).append(System.getProperty("line.separator"));
 
-                //Reiniciar contadores de todos los libros
-                libroEjb.reiniciarContadoresEntidadTask(entidad.getId());
-                //Reiniciar contador SIR
-                contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
+                //Reinicia los contadores del Libro único de la entidad
+                contadorEjb.reiniciarContadoresLibro(entidad.getLibro());
 
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SCHEDULERS, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), "");
             }
