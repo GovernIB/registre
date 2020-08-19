@@ -94,7 +94,7 @@
                                                 <form:option value="numRe" selected="selected"><spring:message code="registroEntrada.numeroRegistro"/></form:option>
                                                 <form:option value="extra" selected="selected"><spring:message code="registroEntrada.extracto"/></form:option>
                                                 <%--<form:option value="tipAs" selected="selected"><spring:message code="registroEntrada.tipoAsunto"/></form:option>--%>
-                                                <form:option value="nomIn" selected="selected"><spring:message code="registroEntrada.interesados"/></form:option>
+                                                <form:option value="nomIn"><spring:message code="registroEntrada.interesados"/></form:option>
                                                 <form:option value="orgOr" selected="selected"><spring:message code="registroEntrada.oficinaOrigen"/></form:option>
                                                 <form:option value="numOr" selected="selected"><spring:message code="registroEntrada.numeroRegistroOrigen"/></form:option>
                                                 <form:option value="datOr" selected="selected"><spring:message code="registroEntrada.dataOrigen"/></form:option>
