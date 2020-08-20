@@ -1031,6 +1031,44 @@ function validaFechasConjuntas(fechaInicio, fechaFin, campInicio, campFin){
     return !!((posterior) && (inicioCorrecta) && (finCorrecta));
 }
 
+//Valida que si está seleccionado el campo Interesados, no puede seleccionar más de 1 mes
+function validaInteresados(camps, fechaInicio, fechaFin, campInicio) {
+    var campos = $(camps).val();
+    var interesados = campos.includes('nomIn');
+    var valido = false;
+
+    if (interesados) {
+        var anoInicio = parseInt(fechaInicio.substring(6,10));
+        var mesInicio = fechaInicio.substring(3,5);
+        var diaInicio = fechaInicio.substring(0,2);
+        var anoFin = parseInt(fechaFin.substring(6,10));
+        var mesFin = fechaFin.substring(3,5);
+        var diaFin = fechaFin.substring(0,2);
+
+        var months = anoFin*12 + mesFin - (anoInicio*12 + mesInicio);
+        if (diaFin<diaInicio){
+            months = months - 1;
+        }
+
+        if (months < 1) {
+            var variable = "#" + campInicio + " span.errors";
+            var htmlNormal = "<span id='"+ campInicio +".errors'></span>";
+            $(variable).html(htmlNormal);
+            $(variable).parents(".form-group").removeClass("has-error");
+            valido = true;
+        }else{
+            var variable = "#" + campInicio + " span.errors";
+            var formatoHtml = "<span id='"+ campInicio +".errors' class='help-block'>" + $('#error4').val() + "</span>";
+            $(variable).html(formatoHtml);
+            $(variable).parents(".form-group").addClass("has-error");
+        }
+    }else{
+        valido = true;
+    }
+
+    return valido;
+}
+
 // Valida que el valor introducido en el campo numeroRegistro sea un número entero
 function validaEntero(numeroRegistro, campNumeroRegistro){
 
@@ -1103,6 +1141,19 @@ function validaSelect(valorCampo,campo){
         $(variable).parents(".form-group").addClass("has-error");
     }
     return valorCampo!='-1';
+}
+
+// Activa o desactiva el campo de mail para enviar justificante por correo
+function activaEnvioMail() {
+    var checkBox = document.getElementById("checkMail");
+
+    // Si está seleccionado el check, se activa el campo de mail
+    if (checkBox.checked == true){
+        $('#valorMail').removeAttr("disabled","disabled");
+    } else {
+        $('#valorMail').val("");
+        $('#valorMail').attr("disabled","disabled");
+    }
 }
 
 /**

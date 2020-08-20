@@ -331,6 +331,8 @@
                                 <input id="error2" type="hidden" value="${errorFin}"/>
                                 <c:set var="errorInicioFin"><spring:message code="error.fechaInicioFin.posterior"/></c:set>
                                 <input id="error3" type="hidden" value="${errorInicioFin}"/>
+                                <c:set var="errorInteresados"><spring:message code="error.fechaInicioFin.interesados"/></c:set>
+                                <input id="error4" type="hidden" value="${errorInteresados}"/>
 
                             </form:form>
                     </div>
@@ -448,6 +450,7 @@ function validaFormulario(form) {
     var libros = true;
     var campos = true;
     var fechas = true;
+    var selectInt = true;
     // Valida el formato de Fecha de Inicio
     if (!validaFecha(form.fechaInicio, 'fechaInicio')) {
         fechaInicio = false;
@@ -462,6 +465,10 @@ function validaFormulario(form) {
             fechas = false;
         }
     }
+    // Si está seleccionado el campo Interesados, no puede seleccionar más de 1 mes
+    if (!validaInteresados(form.campos, form.fechaInicio.value, form.fechaFin.value, 'fechaInicio')) {
+        selectInt = false;
+    }
     // Valida los libros seleccionados
     if (!librosSeleccionados(form.libros, 'libr')){
         libros = false;
@@ -471,7 +478,7 @@ function validaFormulario(form) {
         campos = false;
     }
     // Si todos los campos son correctos, hace el submit
-    return (fechaInicio) && (fechaFin) && (libros) && (campos) && (fechas);
+    return (fechaInicio) && (fechaFin) && (libros) && (campos) && (fechas) && (selectInt);
 }
 
 </script>
