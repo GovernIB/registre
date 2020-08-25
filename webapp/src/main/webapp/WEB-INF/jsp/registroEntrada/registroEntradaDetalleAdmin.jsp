@@ -57,23 +57,23 @@
                     </div>
 
                     <%--BOTONERA--%>
-                    <c:if test="${tieneJustificante}"> <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
+                    <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
+                    <c:if test="${tieneJustificante}">
                         <div class="panel-footer center">
-
-                            <%-- Si no tiene urlValidación solo podrá descargar el original --%>
+                                <%-- Si no tiene urlValidación solo podrá descargar el original --%>
                             <c:if test="${!tieneUrlValidacion}">
-                             <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
+                                <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarJustificante/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
                             </c:if>
 
-                            <%-- Si tiene urlValidación se podrá descargar el original o con el csv incrustado --%>
+                                <%-- Si tiene urlValidación se podrá descargar el original o con el csv incrustado --%>
                             <c:if test="${tieneUrlValidacion}">
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                                         <spring:message code="justificante.boton"/> <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.original"/></a></li>
-                                        <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/false"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.concsv"/></a></li>
+                                        <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarJustificante/${idJustificante}/true"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.original"/></a></li>
+                                        <li class="submenu-complet"><a onclick="goTo('<c:url value="/anexo/descargarJustificante/${idJustificante}/false"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="justificante.concsv"/></a></li>
                                     </ul>
                                 </div>
                             </c:if>
@@ -163,14 +163,6 @@
 <script type="text/javascript" src="<c:url value="/js/plantilla.js"/>"></script>
 
 <script type="text/javascript">
-
-    // Descarga el justificante si se ha generado manualmente
-    window.onload = function descargaJustificante(){
-        <c:if test="${param.justificante==true}">
-            mensajeSuccess('#mensajes', '<spring:message code="justificante.generando.success" javaScriptEscape='true'/>');
-            goTo('<c:url value="/anexo/descargarFirma/${idJustificante}/false"/>');
-        </c:if>
-    };
 
     // Muestra los datos del hitórico seleccionado y oculta el resto
     function comparaRegistros(idHistorico){
