@@ -277,7 +277,7 @@ public class ArxiuCaibUtils {
 
         Expedient expedient = null;
         try {
-            expedient = getArxiuPlugin().expedientDetalls(idExpediente, null);
+            /*expedient = getArxiuPlugin().expedientDetalls(idExpediente, null);
 
             for(ContingutArxiu contingut:expedient.getContinguts()){
 
@@ -289,7 +289,7 @@ public class ArxiuCaibUtils {
                     log.info("Eliminando el documento: " + contingut.getIdentificador());
                     getArxiuPlugin().documentEsborrar(contingut.getIdentificador());
                 }
-            }
+            }*/
 
             getArxiuPlugin().expedientEsborrar(idExpediente);
         } catch (Exception e) {
