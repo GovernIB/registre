@@ -8,7 +8,6 @@ import org.hibernate.annotations.Index;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -254,20 +253,6 @@ public class Oficina implements Serializable{
 
     }
 
-    @Transient
-    @JsonIgnore
-    public Set<Long> getOrganismosFuncionalesId() {
-
-        Set<Organismo> organismos = getOrganismosFuncionales(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        Set<Long> organismosId = new HashSet<Long>();
-
-        for(Organismo organismo:organismos){
-            organismosId.add(organismo.getId());
-        }
-
-        return organismosId;
-
-    }
 
     @ManyToOne()
     @JoinColumn(name = "PAIS")
