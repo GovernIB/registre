@@ -14,6 +14,7 @@ import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -100,8 +101,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al listado de Oficios de Remisión Pendientes
         if (url.contains("entradasPendientesRemision") ) {
 
-            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-
             // Comprueba que el usuario tiene permiso
             if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficinaActiva.getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA, true)) {
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
@@ -114,8 +113,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
         // Comprobaciones previas al listado de Oficios de Remisión Pendientes
         if (url.contains("salidasPendientesRemision") ) {
 
-            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
-
             // Comprueba que el usuario tiene permiso
             if (!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), oficinaActiva.getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA, true)) {
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
@@ -127,10 +124,17 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
         if (url.contains("aceptar")) {
 
-            Set<Long> organismos = oficinaActiva.getOrganismosFuncionalesId();
+            //Obtenemos los Organismos a los que da servicio la Oficina
+            Set<Organismo> organismos = loginInfo.getOrganismosOficinaActiva();
+            Set<Long> organismosId = new HashSet<Long>();
+
+            for(Organismo organismo:organismos){
+                organismosId.add(organismo.getId());
+                log.info(organismo.getId());
+            }
 
             // Comprueba que el usuario tiene permiso
-            if(permisoOrganismoUsuarioEjb.tienePermiso(organismos, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA)){
+            if(!permisoOrganismoUsuarioEjb.tienePermiso(organismosId, usuarioEntidad.getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA)){
                 log.info("Aviso: No tiene permisos para procesar Oficios de Remision");
                 Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.oficioRemision.aceptar"));
                 response.sendRedirect("/regweb3/aviso");
