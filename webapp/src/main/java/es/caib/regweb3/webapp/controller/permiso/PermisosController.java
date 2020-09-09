@@ -1,17 +1,16 @@
 package es.caib.regweb3.webapp.controller.permiso;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.PermisoOrganismoUsuario;
-import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
+import es.caib.regweb3.model.*;
+import es.caib.regweb3.persistence.ejb.LibroLocal;
+import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
+import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PermisoOrganismoUsuarioForm;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
-import org.fundaciobit.pluginsib.userinformation.RolesInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,8 +32,17 @@ import java.util.List;
 @RequestMapping(value = "/permisos")
 public class PermisosController extends BaseController {
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
+    @Autowired
+    private RolUtils rolUtils;
+
+    @EJB(mappedName = "regweb3/UsuarioEJB/local")
+    private UsuarioLocal usuarioEjb;
+
+    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
+    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+
+    @EJB(mappedName = "regweb3/LibroEJB/local")
+    private LibroLocal libroEjb;
 
     /**
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
@@ -78,14 +85,14 @@ public class PermisosController extends BaseController {
         Entidad entidad = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
 
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
-        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuarioEntidad.getUsuario().getIdentificador());
+        // Obtenemos los Roles del usuario mediante plugin correspondiento
+        List<Rol> roles = rolUtils.obtenerRolesUserPlugin(usuarioEntidad.getUsuario().getIdentificador());
 
-        List<String> roles = new ArrayList<String>();
-        Collections.addAll(roles, rolesInfo.getRoles());
+        // Actualizamos los Roles
+        usuarioEjb.actualizarRoles(usuarioEntidad.getUsuario(), roles);
 
         // Si no dispone de algún ROL, no se le pueden asignar permisos
-        if (roles.contains("RWE_USUARI") || roles.contains("RWE_WS_SALIDA") || roles.contains("RWE_WS_ENTRADA") || !usuarioEntidad.getActivo()) {
+        if (roles.contains(new Rol("RWE_USUARI")) || roles.contains(new Rol("RWE_WS_SALIDA")) || roles.contains(new Rol("RWE_WS_ENTRADA")) || !usuarioEntidad.getActivo()) {
 
             PermisoOrganismoUsuarioForm permisoOrganismoUsuarioForm = new PermisoOrganismoUsuarioForm();
             permisoOrganismoUsuarioForm.setUsuarioEntidad(usuarioEntidad);
@@ -149,6 +156,88 @@ public class PermisosController extends BaseController {
 
         status.setComplete();
         return "redirect:/entidad/usuarios";
+    }
+
+    /**
+     * Eliminar la asignación de un Usuario a una Entidad
+     */
+    @RequestMapping(value = "/{idUsuarioEntidad}/delete", method = RequestMethod.GET)
+    public String eliminarAsignacion(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) {
+
+        try {
+            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
+
+            if (entidadEjb.esAdministrador(usuarioEntidad.getEntidad().getId(), usuarioEntidad)) {
+                Mensaje.saveMessageError(request, getMessage("usuarioEntidad.administrador"));
+                return "redirect:/entidad/usuarios";
+            }
+
+            // Eliminamos todos sus PermisoLibroUsuario
+            permisoOrganismoUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
+
+            // Comprobar si el usuario tiene Registros en la Entidad
+            if (entidadEjb.puedoEliminarlo(idUsuarioEntidad)) {
+                // Eliminamos las notificaciones
+                notificacionEjb.eliminarByUsuario(usuarioEntidad.getId());
+                // Si no tiene registros relacinados, lo eliminamos definitivamente.
+                usuarioEntidadEjb.remove(usuarioEntidad);
+
+                Mensaje.saveMessageInfo(request, getMessage("usuario.eliminado"));
+            } else {
+                // Desactivamos este usuario de la Entidad
+                usuarioEntidad.setActivo(false);
+                usuarioEntidadEjb.merge(usuarioEntidad);
+
+                Mensaje.saveMessageInfo(request, getMessage("usuario.desactivado"));
+            }
+
+        } catch (Exception e) {
+            Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
+            e.printStackTrace();
+        }
+
+        return "redirect:/entidad/usuarios";
+    }
+
+    /**
+     * Migrar permisos existentes
+     */
+    @RequestMapping(value = "/migrarPermisos/{idLibro}", method = RequestMethod.GET)
+    public String migrarPermisos(@PathVariable Long idLibro, HttpServletRequest request) throws Exception {
+
+        Libro libro = libroEjb.findById(idLibro);
+
+        if(libro != null && libro.getActivo()){
+
+            // Activamos que el organismo pueda tener usuarios
+            Organismo organismo = libro.getOrganismo();
+            organismo.setPermiteUsuarios(true);
+            organismoEjb.merge(organismo);
+
+            // Obtenemos los permisos del libro
+            List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByLibro(idLibro);
+
+            for(PermisoLibroUsuario plu:permisos){
+
+                PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
+                pou.setOrganismo(organismo);
+                pou.setPermiso(plu.getPermiso());
+                pou.setUsuario(plu.getUsuario());
+                pou.setActivo(plu.getActivo());
+
+                permisoOrganismoUsuarioEjb.persist(pou);
+
+            }
+
+            // Inactivamos el libro
+            libro.setActivo(false);
+            libroEjb.merge(libro);
+
+            Mensaje.saveMessageInfo(request,"Se han creado " + permisos.size() + " permisos");
+        }
+
+
+        return "redirect:/libro/list";
     }
 
 

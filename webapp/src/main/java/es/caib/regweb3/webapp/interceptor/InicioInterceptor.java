@@ -1,5 +1,6 @@
 package es.caib.regweb3.webapp.interceptor;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
 import es.caib.regweb3.persistence.ejb.PendienteLocal;
 import es.caib.regweb3.persistence.ejb.PluginLocal;
@@ -141,8 +142,10 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                 // Comprobaciones de Configuración obligatoria de la aplicación
                 if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_USUARI)) {
 
+                    Entidad entidadActiva =  loginInfo.getEntidadActiva();
+
                     //No permitir que se hagan registros si la entidad está en mantenimiento
-                    if (loginInfo.getEntidadActiva().getMantenimiento() || tienePendientesDeProcesar) {
+                    if (entidadActiva.getMantenimiento() || tienePendientesDeProcesar) {
                         log.info("Tareas de Mantenimiento");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tareasmantenimiento"));
                         response.sendRedirect("/regweb3/aviso");
@@ -150,14 +153,14 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
 
                     //Plugin Generación Justificante
-                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
+                    if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
                         log.info("No existe el plugin de generación del justificante");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
                         response.sendRedirect("/regweb3/aviso");
                         return false;
                     }
                     //Plugin Custodia Justificante
-                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+                    if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
                         log.info("No existe el plugin de custodia del justificante");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
                         response.sendRedirect("/regweb3/aviso");
@@ -165,7 +168,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     }
                     // Plugin Custodia
-                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
+                    if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
                         log.info("No existe el plugin de custodia");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
                         response.sendRedirect("/regweb3/aviso");
@@ -173,7 +176,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     }
                     //Plugin Firma en Servidor
-                    if (!pluginEjb.existPlugin(loginInfo.getEntidadActiva().getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
+                    if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
                         log.info("No existe el plugin de firma en servidor");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
                         response.sendRedirect("/regweb3/aviso");
@@ -181,7 +184,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     }
                     // Sir ServerBAse
-                    if (loginInfo.getEntidadActiva().getSir() && Configuracio.getSirServerBase() == null) {
+                    if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
                         log.info("Error, falta propiedad sirserverbase");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
                         response.sendRedirect("/regweb3/aviso");
@@ -211,7 +214,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
 
                     // Tipo documental existente
-                    if(tipoDocumentalEjb.getByEntidad(loginInfo.getEntidadActiva().getId()).size()==0){
+                    if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
                         log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
                         response.sendRedirect("/regweb3/aviso");
@@ -219,7 +222,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
 
                     //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-                    if(loginInfo.getEntidadActiva().getNumRegistro() == null || loginInfo.getEntidadActiva().getNumRegistro().length()==0){
+                    if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
                         log.info("No hay configurado el formato del numero de registro para la Entidad activa");
                         Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
                         response.sendRedirect("/regweb3/aviso");

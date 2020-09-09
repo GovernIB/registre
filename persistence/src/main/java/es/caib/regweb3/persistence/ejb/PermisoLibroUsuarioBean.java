@@ -119,7 +119,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
     @SuppressWarnings(value = "unchecked")
     public List<PermisoLibroUsuario> findByLibro(Long idLibro) throws Exception {
 
-        Query q = em.createQuery("Select plu.id, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro order by plu.permiso");
+        Query q = em.createQuery("Select plu.id, plu.permiso, plu.activo, plu.usuario.id from PermisoLibroUsuario as plu where plu.libro.id = :idLibro order by plu.usuario.id");
 
         q.setParameter("idLibro",idLibro);
 
@@ -128,7 +128,7 @@ public class PermisoLibroUsuarioBean extends BaseEjbJPA<PermisoLibroUsuario, Lon
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            PermisoLibroUsuario plu = new PermisoLibroUsuario((Long) object[0], (Boolean) object[1], (Long) object[2]);
+            PermisoLibroUsuario plu = new PermisoLibroUsuario((Long) object[0],(Long) object[1], (Boolean) object[2], (Long) object[3]);
 
             plus.add(plu);
         }

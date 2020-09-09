@@ -51,14 +51,6 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
      */
     List<PermisoOrganismoUsuario> findByUsuario(Long idUsuarioEntidad) throws Exception;
 
-    /**
-     * Retorna los {@link PermisoOrganismoUsuario} a partir de un {@link UsuarioEntidad}
-     * y una lista de {@link Organismo}
-     * @param idUsuarioEntidad
-     * @return
-     * @throws Exception
-     */
-    List<PermisoOrganismoUsuario> findByUsuarioOrganismos(Long idUsuarioEntidad, List<Organismo> organismos) throws Exception;
 
     /**
      * Obtiene los Organismos asociados de un UsuarioEntidad
@@ -84,6 +76,14 @@ public interface PermisoOrganismoUsuarioLocal extends BaseEjb<PermisoOrganismoUs
      * @throws Exception
      */
     List<PermisoOrganismoUsuario> findByOrganismo(Long idOrganismo) throws Exception;
+
+    /**
+     * Comprueba si un Organismos tiene permisos
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    Boolean tienePermisos(Long idOrganismo) throws Exception;
 
     /**
      * Retorna los {@link UsuarioEntidad} de un {@link Organismo}

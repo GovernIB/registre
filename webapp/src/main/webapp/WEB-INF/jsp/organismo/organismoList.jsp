@@ -154,11 +154,11 @@
                                                         <td class="center">${organismo.estado.descripcionEstadoEntidad}</td>
                                                         <td class="center">
                                                             <c:if test="${organismo.permiteUsuarios}">
-                                                                <a class="btn btn-primary btn-sm" href="<c:url value="/organismo/${organismo.id}/usuarios"/>" title="Ver usuarios"><span class="fa fa-users"></span></a>
-                                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/desactivarUsuarios"/>","<spring:message code="organismo.usuarios.desactivar" htmlEscape="true"/>")' href="javascript:void(0);" title="Desactivar usuarios"><span class="fa fa-close"></span></a>
+                                                                <a class="btn btn-primary btn-sm" href="<c:url value="/organismo/${organismo.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>
+                                                                <a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/desactivarUsuarios"/>","<spring:message code="organismo.usuarios.desactivar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="organismo.usuarios.desactivar"/>"><span class="fa fa-close"></span></a>
                                                             </c:if>
                                                             <c:if test="${not organismo.permiteUsuarios}">
-                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/activarUsuarios"/>","<spring:message code="organismo.usuarios.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="Activar usurios"><span class="fa fa-check"></span></a>
+                                                                <a class="btn btn-primary btn-sm" onclick='javascript:confirm("<c:url value="/organismo/${organismo.id}/activarUsuarios"/>","<spring:message code="organismo.usuarios.activar" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="organismo.usuarios.activar"/>"><span class="fa fa-check"></span></a>
                                                             </c:if>
                                                             <a class="btn btn-warning btn-sm" href="<c:url value="/organismo/${organismo.id}/oficinas"/>" title="<spring:message code="organismo.oficinas"/>"><span class="fa fa-home"></span></a>
                                                         </td>

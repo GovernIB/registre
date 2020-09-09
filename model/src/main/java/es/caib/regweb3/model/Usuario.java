@@ -225,41 +225,17 @@ public class Usuario implements Serializable {
     @Transient
     public void setRoles(List<Rol> roles){
 
-        if(roles.contains(new Rol(RegwebConstantes.RWE_SUPERADMIN))){
-            setRwe_superadmin(true);
-        }else{
-            setRwe_superadmin(false);
-        }
+        setRwe_superadmin(roles.contains(new Rol(RegwebConstantes.RWE_SUPERADMIN)));
 
-        if(roles.contains(new Rol(RegwebConstantes.RWE_ADMIN))){
-            setRwe_admin(true);
-        }else{
-            setRwe_admin(false);
-        }
+        setRwe_admin(roles.contains(new Rol(RegwebConstantes.RWE_ADMIN)));
 
-        if(roles.contains(new Rol(RegwebConstantes.RWE_USUARI))){
-            setRwe_usuari(true);
-        }else{
-            setRwe_usuari(false);
-        }
+        setRwe_usuari(roles.contains(new Rol(RegwebConstantes.RWE_USUARI)));
 
-        if(roles.contains(new Rol(RegwebConstantes.RWE_WS_ENTRADA))){
-            setRwe_ws_entrada(true);
-        }else{
-            setRwe_ws_entrada(false);
-        }
+        setRwe_ws_entrada(roles.contains(new Rol(RegwebConstantes.RWE_WS_ENTRADA)));
 
-        if(roles.contains(new Rol(RegwebConstantes.RWE_WS_SALIDA))){
-            setRwe_ws_salida(true);
-        }else{
-            setRwe_ws_salida(false);
-        }
+        setRwe_ws_salida(roles.contains(new Rol(RegwebConstantes.RWE_WS_SALIDA)));
 
-        if(roles.contains(new Rol(RegwebConstantes.RWE_WS_CIUDADANO))){
-            setRwe_ws_ciudadano(true);
-        }else{
-            setRwe_ws_ciudadano(false);
-        }
+        setRwe_ws_ciudadano(roles.contains(new Rol(RegwebConstantes.RWE_WS_CIUDADANO)));
 
     }
 

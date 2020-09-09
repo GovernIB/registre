@@ -53,11 +53,11 @@
             <i class="fa fa-institution"></i> <spring:message code="menu.organigrama"/> <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
-            <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="/organismo/list"/>"><i class="fa fa-institution"></i> <spring:message code="organismo.listado"/></a></li>
             <li class="submenu-complet"><a href="<c:url value="/oficina/list"/>"><i class="fa fa-home"></i> <spring:message code="oficina.listado"/></a></li>
             <li class="submenu-complet"><a href="<c:url value="/organismo/arbolList"/>"><i class="fa fa-sitemap"></i> <spring:message code="regweb.organigrama"/></a></li>
+            <li class="divider"></li>
+            <li class="submenu-complet"><a href="<c:url value="/entidad/usuarios"/>"><i class="fa fa-users"></i> <spring:message code="menu.usuarios"/></a></li>
             <li class="divider"></li>
             <li class="submenu-complet"><a href="<c:url value="/libro/list"/>"><i class="fa fa-list-ol"></i> <spring:message code="libro.listado"/></a></li>
             <li class="divider"></li>
