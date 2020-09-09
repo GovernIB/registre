@@ -49,7 +49,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @EJB private CatPaisLocal catPaisEjb;
     @EJB private CatTipoViaLocal catTipoViaEjb;
     @EJB private CatServicioLocal catServicioEjb;
-    @EJB private LibroLocal libroEjb;
+    @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     //Caches
     private Map<Long, CatProvincia> cacheProvincia = new TreeMap<Long, CatProvincia>();
@@ -148,7 +148,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
 
 
             // Obtenemos los organismos vigentes de la entidad que tienen libros
-            List<Organismo> vigentes = libroEjb.organismosConLibro(entidadId);
+            List<Organismo> vigentes = organismoEjb.getPermitirUsuarios(entidadId);
 
             for (Organismo organismo : vigentes) {
 
@@ -606,8 +606,8 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
                     || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(estado)
                     || RegwebConstantes.ESTADO_ENTIDAD_ANULADO.equals(estado)) {
 
-                // Creamos un registro en la tabla RWE_PENDIENTE
-                if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
+                // Si el Organismos tiene permisos asignados, creamos un registro en Pendiente
+                if (permisoOrganismoUsuarioEjb.tienePermisos(organismo.getId())) {
 
                     pendienteEjb.persist(new Pendiente(organismo.getId(), false, organismo.getEstado().getCodigoEstadoEntidad()));
                 }

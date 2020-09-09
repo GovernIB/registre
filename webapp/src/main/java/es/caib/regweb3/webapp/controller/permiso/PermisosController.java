@@ -48,8 +48,7 @@ public class PermisosController extends BaseController {
      * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
      */
     @RequestMapping(value = "/{idUsuarioEntidad}/{idOrganismo}/asignar", method = RequestMethod.GET)
-    public String asignarOrganismo(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo, Model model,
-                                 HttpServletRequest request) throws Exception, I18NException {
+    public String asignarOrganismo(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo) throws Exception {
 
 
         UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
@@ -65,8 +64,7 @@ public class PermisosController extends BaseController {
      * Elimina {@link es.caib.regweb3.model.PermisoLibroUsuario} de la relación de uin Usuario y un Organismo
      */
     @RequestMapping(value = "/{idUsuarioEntidad}/{idOrganismo}/eliminar", method = RequestMethod.GET)
-    public String eliminarPermisos(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo, Model model,
-                                   HttpServletRequest request) throws Exception, I18NException {
+    public String eliminarPermisos(@PathVariable Long idUsuarioEntidad,@PathVariable Long idOrganismo) throws Exception {
 
 
         permisoOrganismoUsuarioEjb.eliminarPermisosUsuarioOrganismo(idUsuarioEntidad, idOrganismo);
@@ -218,6 +216,8 @@ public class PermisosController extends BaseController {
             List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByLibro(idLibro);
 
             for(PermisoLibroUsuario plu:permisos){
+
+                Long idUsuario = plu.getUsuario().getId();
 
                 PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
                 pou.setOrganismo(organismo);

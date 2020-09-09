@@ -790,6 +790,9 @@ public class EntidadController extends BaseController {
 
                             Organismo organismoSustituto = new ArrayList<>(sustitutosOficina).get(0);
 
+                            // Activamos la posibilidad de asociarle usuarios
+                            organismoEjb.activarUsuarios(organismoSustituto.getId());
+
                             // Actualizamos el Organismo sustituto todos los permisos
                             for(PermisoOrganismoUsuario permiso:permisos){
                                 permiso.setOrganismo(organismoSustituto);
