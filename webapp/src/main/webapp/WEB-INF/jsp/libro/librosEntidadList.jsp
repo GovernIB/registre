@@ -62,7 +62,7 @@
                                         <th><spring:message code="libro.contador.oficio"/></th>
                                         <th><spring:message code="libro.contador.sir"/></th>
                                         <th><spring:message code="regweb.activo"/></th>
-                                        <th width="95" class="center"><spring:message code="regweb.acciones"/></th>
+                                        <th width="130" class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -83,6 +83,9 @@
                                                 <%--<a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>--%>
                                                 <a class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/inicializar"/>","<spring:message code="regweb.confirmar.inicializacion" htmlEscape="true"/>")' title="<spring:message code="libro.inicializar"/>"><span class="fa fa-clock-o"></span></a>
                                                 <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.organismo.id}/${libro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                                    <c:if test="${libro.activo}">
+                                                        <a class="btn btn-success btn-sm" onclick='javascript:confirm("<c:url value="/permisos/migrarPermisos/${libro.id}"/>","Desea migrar los permisos")' title="Migrar permisos"><span class="fa fa-users"></span></a>
+                                                    </c:if>
                                                 <%--<a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/${libro.organismo.id}/delete"/>", "<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' title="Eliminar" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>--%>
                                             </td>
                                         </tr>

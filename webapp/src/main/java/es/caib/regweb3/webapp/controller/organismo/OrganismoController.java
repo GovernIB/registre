@@ -172,9 +172,14 @@ public class OrganismoController extends BaseController {
     public String activarUsuariosOrganismo(@PathVariable Long idOrganismo, HttpServletRequest request) {
 
         try {
-            organismoEjb.activarUsuarios(idOrganismo);
 
-            return "redirect:/organismo/list";
+            if(oficinaEjb.tieneOficinasServicio(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI)){
+                organismoEjb.activarUsuarios(idOrganismo);
+
+                Mensaje.saveMessageInfo(request, getMessage("organismo.activarUsuarios.ok"));
+            }
+
+            Mensaje.saveMessageError(request, getMessage("organismo.activarUsuarios.error"));
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
@@ -188,7 +193,7 @@ public class OrganismoController extends BaseController {
      * Desactiv los usuarios de un {@link es.caib.regweb3.model.Organismo}
      */
     @RequestMapping(value = "/{idOrganismo}/desactivarUsuarios")
-    public String desactivarrUsuariosOrganismo(@PathVariable Long idOrganismo, HttpServletRequest request) {
+    public String desactivarUsuariosOrganismo(@PathVariable Long idOrganismo, HttpServletRequest request) {
 
         try {
             organismoEjb.desactivarUsuarios(idOrganismo);

@@ -22,7 +22,7 @@
                 <ol class="breadcrumb">
                     <li><a href="<c:url value="/inici"/>"><i class="fa fa-institution"></i> ${loginInfo.entidadActiva.nombre}</a></li>
                     <li><a href="<c:url value="/organismo/list"/>" ><i class="fa fa-list-ul"></i> <spring:message code="organismo.organismos"/> </a></li>
-                    <li class="active"><i class="fa fa-pencil-square-o"></i><strong>Usuarios de ${organismo.denominacion}</strong></li>
+                    <li class="active"><i class="fa fa-pencil-square-o"></i><strong><spring:message code="usuario.usuarios"/> de ${organismo.denominacion}</strong></li>
                 </ol>
             </div>
         </div><!-- Fin miga de pan -->
@@ -36,7 +36,7 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-pencil-square-o"></i>
                             <strong>
-                                Usuarios del Organismo: ${organismo.denominacion}
+                                <spring:message code="organismo.usuarios"/> de ${organismo.denominacion}
                             </strong>
                         </h3>
                     </div>
@@ -45,7 +45,7 @@
 
                         <c:if test="${empty usuarios}">
                             <div class="alert alert-grey">
-                                <strong>No existen usuarios relacionados.</strong>
+                                <strong><spring:message code="organismo.usuarios.noExisten"/></strong>
                             </div>
                         </c:if>
 
@@ -74,6 +74,7 @@
                                                         </td>
                                                     </c:if>
                                                 </c:forEach>
+                                                <td><a class="btn btn-warning btn-sm" href="<c:url value="/permisos/${usuario.id}"/>" target="_blank" title="<spring:message code="usuario.modificar.permisos"/>"><span class="fa fa-key"></span></a></td>
                                             </tr>
                                         </c:forEach>
 

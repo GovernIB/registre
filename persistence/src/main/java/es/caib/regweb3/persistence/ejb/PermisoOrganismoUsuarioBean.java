@@ -116,19 +116,6 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         return q.getResultList();
     }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<PermisoOrganismoUsuario> findByUsuarioOrganismos(Long idUsuarioEntidad, List<Organismo> organismos) throws Exception {
-
-        Query q = em.createQuery("Select pou from PermisoOrganismoUsuario as pou where " +
-                "pou.usuario.id = :idUsuarioEntidad and pou.organismo in(:organismos) order by pou.organismo.id, pou.permiso");
-
-        q.setParameter("idUsuarioEntidad", idUsuarioEntidad);
-        q.setParameter("organismos", organismos);
-
-        return q.getResultList();
-    }
     
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -185,6 +172,19 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         }
 
         return plus;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean tienePermisos(Long idOrganismo) throws Exception {
+
+        Query q = em.createQuery("Select pou.id from PermisoOrganismoUsuario as pou where pou.organismo.id = :idOrganismo " +
+                "and pou.organismo.permiteUsuarios = true order by pou.permiso");
+
+        q.setParameter("idOrganismo",idOrganismo);
+
+        return q.getResultList().size() > 0;
+
     }
 
     @Override
@@ -367,7 +367,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         List<Long> permisos = q.getResultList();
 
-        return permisos.size() == 1;
+        return permisos.size() > 0;
     }
 
     @Override

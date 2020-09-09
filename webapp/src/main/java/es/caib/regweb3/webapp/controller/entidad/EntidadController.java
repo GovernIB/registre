@@ -91,20 +91,6 @@ public class EntidadController extends BaseController {
     private OficioRemisionLocal oficioRemisionEjb;
 
 
-    @ModelAttribute("idiomas")
-    public Long[] idiomas() throws Exception {
-        return RegwebConstantes.IDIOMAS_UI;
-    }
-
-    @ModelAttribute("configuraciones")
-    public long[] configuraciones() throws Exception {
-        return RegwebConstantes.CONFIGURACIONES_PERSONA;
-    }
-
-    @ModelAttribute("perfilesCustodia")
-    public long[] perfilesCustodia() throws Exception {
-        return RegwebConstantes.PERFILES_CUSTODIA;
-    }
 
 
     /**
@@ -123,7 +109,12 @@ public class EntidadController extends BaseController {
             entidad.setLibro(libroEjb.crearLibro(libro));
 
             entidadEjb.merge(entidad);
+
+            Mensaje.saveMessageInfo(request,"Se ha creado el libro a la Entidad");
+        }else{
+            Mensaje.saveMessageError(request,"Ya existe un libro en la Entidad");
         }
+
 
         return "redirect:/inicio";
     }
@@ -686,132 +677,6 @@ public class EntidadController extends BaseController {
 
     }
 
-
-    /**
-     * Carga el formulario para un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
-     */
-    /*@RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.GET)
-    public String asignarUsuario(@PathVariable Long idUsuarioEntidad, Model model,
-                                 HttpServletRequest request) throws Exception, I18NException {
-
-        Entidad entidad = getEntidadActiva(request);
-
-        UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
-        List<Libro> libros = libroEjb.getLibrosEntidad(entidad.getId());
-
-        IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
-        RolesInfo rolesInfo = loginPlugin.getRolesByUsername(usuarioEntidad.getUsuario().getIdentificador());
-
-        List<String> roles = new ArrayList<String>();
-        Collections.addAll(roles, rolesInfo.getRoles());
-
-        if (libros.size() == 0) {
-            Mensaje.saveMessageError(request, getMessage("permisos.libro.ninguno"));
-            return "redirect:/entidad/usuarios";
-        }
-
-        if (roles.contains("RWE_USUARI") || roles.contains("RWE_WS_SALIDA") || roles.contains("RWE_WS_ENTRADA") || !usuarioEntidad.getActivo()) {
-
-            PermisoLibroUsuarioForm permisoLibroUsuarioForm = new PermisoLibroUsuarioForm();
-            permisoLibroUsuarioForm.setUsuarioEntidad(usuarioEntidad);
-
-            List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros);
-
-            // Comprobamos si tiene los permisos creados, si no, lo creamos
-            if (permisos.size() == 0) {
-                permisoLibroUsuarioEjb.crearPermisosUsuarioNuevo(usuarioEntidad, usuarioEntidad.getEntidad().getId());
-                permisos = permisoLibroUsuarioEjb.findByUsuarioLibros(usuarioEntidad.getId(), libros);
-            }
-
-            permisoLibroUsuarioForm.setPermisoLibroUsuarios(permisos);
-
-            model.addAttribute(permisoLibroUsuarioForm);
-            model.addAttribute("entidad", entidad);
-            model.addAttribute("libros", libros);
-            model.addAttribute("permisos", RegwebConstantes.PERMISOS);
-
-            return "usuario/permisoLibroUsuarioForm";
-        } else {
-            Mensaje.saveMessageError(request, getMessage("usuario.asignar.permisos.denegado"));
-            return "redirect:/entidad/usuarios";
-        }
-    }
-
-    *//**
-     * Guardar un nuevo {@link es.caib.regweb3.model.PermisoLibroUsuario}
-     *//*
-    @RequestMapping(value = "/permisos/{idUsuarioEntidad}", method = RequestMethod.POST)
-    public String asignarUsuario(@ModelAttribute PermisoLibroUsuarioForm permisoLibroUsuarioForm,
-                                 @PathVariable Integer idUsuarioEntidad, SessionStatus status, HttpServletRequest request) {
-
-        try {
-
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(Long.valueOf(idUsuarioEntidad));
-
-            for (PermisoLibroUsuario plu : permisoLibroUsuarioForm.getPermisoLibroUsuarios()) {
-                plu.setUsuario(usuarioEntidad);
-
-                // Si ya existe el Permiso, actualiza el valor de ctivo. Si no existe, crea el Permiso en BBDD
-                if (plu.getId() != null) {
-                    permisoLibroUsuarioEjb.actualizarPermiso(plu.getId(), plu.getActivo());
-                } else {
-                    permisoLibroUsuarioEjb.merge(plu);
-                }
-
-            }
-
-            Mensaje.saveMessageInfo(request, getMessage("usuario.asignar.permisos.ok"));
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, getMessage("organismo.usuario.asignar.error"));
-            e.printStackTrace();
-        }
-
-        status.setComplete();
-        return "redirect:/entidad/usuarios";
-    }*/
-
-    /**
-     * Eliminar la asignación de un Usuario a una Entidad
-     */
-    @RequestMapping(value = "/permisos/{idUsuarioEntidad}/delete", method = RequestMethod.GET)
-    public String eliminarAsignacion(@PathVariable Long idUsuarioEntidad, HttpServletRequest request) {
-
-        try {
-            UsuarioEntidad usuarioEntidad = usuarioEntidadEjb.findById(idUsuarioEntidad);
-
-            if (entidadEjb.esAdministrador(usuarioEntidad.getEntidad().getId(), usuarioEntidad)) {
-                Mensaje.saveMessageError(request, getMessage("usuarioEntidad.administrador"));
-                return "redirect:/entidad/usuarios";
-            }
-
-            // Eliminamos todos sus PermisoLibroUsuario
-            permisoOrganismoUsuarioEjb.eliminarByUsuario(idUsuarioEntidad);
-
-            // Comprobar si el usuario tiene Registros en la Entidad
-            if (entidadEjb.puedoEliminarlo(idUsuarioEntidad)) {
-                // Eliminamos las notificaciones
-                notificacionEjb.eliminarByUsuario(usuarioEntidad.getId());
-                // Si no tiene registros relacinados, lo eliminamos definitivamente.
-                usuarioEntidadEjb.remove(usuarioEntidad);
-
-                Mensaje.saveMessageInfo(request, getMessage("usuario.eliminado"));
-            } else {
-                // Desactivamos este usuario de la Entidad
-                usuarioEntidad.setActivo(false);
-                usuarioEntidadEjb.merge(usuarioEntidad);
-
-                Mensaje.saveMessageInfo(request, getMessage("usuario.desactivado"));
-            }
-
-        } catch (Exception e) {
-            Mensaje.saveMessageError(request, "No s'ha eliminat el registre perque està relacionat amb un altra entitat.");
-            e.printStackTrace();
-        }
-
-        return "redirect:/entidad/usuarios";
-    }
-
     /**
      * Reiniciar Contadoresde una Entidad
      */
@@ -892,120 +757,82 @@ public class EntidadController extends BaseController {
      */
     @RequestMapping(value = "/pendientesprocesar", method = RequestMethod.GET)
     public String mostrarPendientesProcesar(HttpServletRequest request, Model model) throws Exception {
-        //log.info("Entro en pendiente de procesar " + new Date() );
-        //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+
+        Entidad entidad = getEntidadActiva(request);
 
         /* Preparamos todos los organismos a procesar (extinguidos, anulados, transitorios,vigentes)*/
-        Entidad entidad = getEntidadActiva(request);
         List<Pendiente> pendientesDeProcesar = pendienteEjb.findPendientesProcesar(entidad.getId());
-        //log.info("Pendientes procesar " + pendientesDeProcesar.size());
+
         if (!pendientesDeProcesar.isEmpty()) {
-            List<Organismo> organismosExtinguidos = new ArrayList<Organismo>();// Organismos extinguidos a procesar por usuario
+
             // Para mostrar información al usuario
             Map<String, Organismo> extinguidosAutomaticos = new HashMap<String, Organismo>();// Organismos extinguidos y sustitutos procesados automaticamente
             List<Organismo> organismosConError = new ArrayList<Organismo>();// Organismos con error pendientes de solucionar (por ejemplo sin oficinas)
+
             for (Pendiente pendiente : pendientesDeProcesar) {
                 if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(pendiente.getEstado())) {
                     // Obtenemos el organismo extinguido
                     Organismo organismoExtinguido = organismoEjb.findById(pendiente.getIdOrganismo());
-                    //Obtenemos libros de organismo extinguido
-                    List<Libro> libros = organismoExtinguido.getLibros();
-                    //Si solo tiene un organismo que le sustituye se asignan los libros a ese organismo
 
-                    Set<Organismo> historicosUOconOficinas = new HashSet<Organismo>();
-                    //Obtenemos los historicos hasta el final para que el usuario decida donde poner el libro.
-                    Set<Organismo> historicosFinales = new HashSet<Organismo>();
-                    organismoEjb.obtenerHistoricosFinales(organismoExtinguido.getId(), historicosFinales);
-                    log.info("HISTORICOS FINALES " + historicosFinales.size());
-                    //Además de estos históricos finales sólo interesan los que tienen oficinas, ya que para asignarle los libros debe tener oficinas
-                    for (Organismo orgHistorico : historicosFinales) {
-                        if (oficinaEjb.tieneOficinasServicio(orgHistorico.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI)) {
-                            historicosUOconOficinas.add(orgHistorico);
-                        }
-                    }
-                    //Reasignamos los historicosConOficina pero no se guardan en BD
-                    organismoExtinguido.setHistoricoUO(historicosUOconOficinas);
-                    //Si no tiene historicos  y tiene libros por ubicar, lo marcamos como error
-                    if (historicosUOconOficinas.size() == 0) {
-                        if (libros.size() > 0) {
+                    //Obtenemos los permisos del organismo extinguido
+                    List<PermisoOrganismoUsuario> permisos = permisoOrganismoUsuarioEjb.findByOrganismo(organismoExtinguido.getId());
+
+                    // Si tiene permisos, hay que cambiarle el Organismo del que dependen
+                    if(permisos.size() > 0){
+
+                        Set<Organismo> sustitutosOficina = obtenerSustitutosOficina(organismoExtinguido.getId());
+
+                        if(sustitutosOficina.size() == 0){ // Error, no hay ningún Organismos sustituto
+
                             organismosConError.add(organismoExtinguido);
-                        }
-                    } else { //Si tiene históricos
-                        if (historicosUOconOficinas.size() == 1) {// Se procesa internamente de manera autómatica porque solo hay 1 histórico
-                            log.info("Se procesa automaticamente porque solo tiene 1 historico" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
-                            if (libros.size() > 0) {
-                                log.info("El organismo " + organismoExtinguido.getDenominacion() + " con 1 histórico tiene libros");
-                                // Asignamos libros misma numeración
-                                Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
 
-                                //Asignamos el libro al organismo que lo sustituye
-                                for (Libro libro : libros) {
-                                    libro.setOrganismo(orgSustituye);
-                                    libroEjb.merge(libro);
-                                }
-                                // asignamos los libros para mostrarlos en el jsp
-                                orgSustituye.setLibros(libros);
-                                log.info("Libros del organismo: " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo() + "han sido reasigandos al organismo:  " + orgSustituye.getDenominacion() + ":" + orgSustituye.getCodigo());
-                                // Añadimos todos los organimos procesados automáticamente
-                                extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), orgSustituye);
-                                //Actualizamos todos los oficios pendientes de llegada por el organismo que los sustituye
-                                oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), orgSustituye.getId());
+                        }else { // Se procesa automáticamente
+
+                            Organismo organismoSustituto = new ArrayList<>(sustitutosOficina).get(0);
+
+                            // Actualizamos el Organismo sustituto todos los permisos
+                            for(PermisoOrganismoUsuario permiso:permisos){
+                                permiso.setOrganismo(organismoSustituto);
+                                permisoOrganismoUsuarioEjb.merge(permiso);
                             }
-                            //actualizar pendiente
+
+                            oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), organismoSustituto.getId());
+
+                            // Añadimos todos los organimos procesados automáticamente
+                            extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), organismoSustituto);
+
+                            // Actualizamos el Pendiente
                             pendiente.setProcesado(true);
                             pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
                             pendienteEjb.merge(pendiente);
-                            log.info("MAP de extinguidos automaticos " + extinguidosAutomaticos.get(organismoExtinguido.getDenominacion()));
-                        } else { // tiene más de un historico
-                            log.info("Entramos en historicos +1 de extinguido(no se procesan automaticamente): " + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
-                            if (libros.size() > 0) {//Si tiene libros se añade para procesarlo
-                                log.info("Tiene libros el organismo:" + organismoExtinguido.getDenominacion() + ":" + organismoExtinguido.getCodigo());
-                                organismosExtinguidos.add(organismoExtinguido);
-                            } else {// no tiene libros, no se hace nada pero se actualiza el estado a procesado
-                                pendiente.setProcesado(true);
-                                pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
-                                pendienteEjb.merge(pendiente);
-                            }
-                            Organismo orgSustituye = new ArrayList<Organismo>(organismoExtinguido.getHistoricoUO()).get(0);
-                            oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), orgSustituye.getId());
+
                         }
+
+                    }else{ // Si el organismos no tiene permisos, se marca como procesado
+                        pendiente.setProcesado(true);
+                        pendiente.setFecha(TimeUtils.formateaFecha(new Date(), RegwebConstantes.FORMATO_FECHA_HORA));
+                        pendienteEjb.merge(pendiente);
                     }
-                } else {  // ANULADOS
-                    // TODO ANULADOS
+
                 }
             }
-            // extinguidosAutomaticos --> organismos que se les ha asignado automaticamente los libros.
-            // organismosExtinguidos --> organismos que estan pendientes de procesar por el usuario que será el que decida
-            // donde colocar finalmente los libros.
-            if (extinguidosAutomaticos.size() > 0 || organismosExtinguidos.size() > 0 || organismosConError.size() > 0) {
-                model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos);
-                model.addAttribute("organismosAProcesar", organismosExtinguidos);
-                model.addAttribute("organismosConError", organismosConError);
-                if (organismosConError.size() > 0) {
-                    List<Organismo> organismosEntidadVigentes = organismoEjb.organismosConOficinas(entidad.getId());
-                    model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
-                }
-            } else {
-                entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
-                log.info("no hay organismos a procesar ");
-                Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
-                return "redirect:/organismo/list";
-            }
-            // Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
-            log.info("Extinguidos automaticos: " + extinguidosAutomaticos.size());
-            log.info("organismosAProcesar: " + organismosExtinguidos.size());
-            log.info("organismosConError: " + organismosConError.size());
-            //con esPendiente indicamos que venimos de una sincro/actualizacion y hay que mostrar el resumen de los autómaticos.
-            model.addAttribute("esPendiente", true);
+
+            model.addAttribute("extinguidosAutomaticos", extinguidosAutomaticos); // organismos que se les ha asignado automaticamente permisos.
+            model.addAttribute("organismosConError", organismosConError); // organismos que no tienen sustituto
+
+            // Quitamos el modo mantenimiento de la Entidad
             entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
+
         } else {
+            // Quitamos el modo mantenimiento de la Entidad
             entidadEjb.marcarEntidadMantenimiento(entidad.getId(), false);
-            log.debug("else no pendientes de procesar");
+
             Mensaje.saveMessageInfo(request, getMessage("organismo.nopendientesprocesar"));
             return "redirect:/organismo/list";
         }
-        model.addAttribute("tituloPagina", getMessage("organismos.resultado.actualizacion"));
-        return "organismo/organismosACambiarLibro";
+
+
+        return "organismo/resumenSincronizacion";
     }
 
 
@@ -1096,8 +923,10 @@ public class EntidadController extends BaseController {
             model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
             model.addAttribute("esPendiente", false);
         }
+
         model.addAttribute("tituloPagina", getMessage("entidad.cambiarlibros"));
         model.addAttribute("tieneLibros", libroEjb.tieneLibrosEntidad(entidad.getId()));
+
         return "/organismo/organismosACambiarLibro";
     }
 
@@ -1282,6 +1111,42 @@ public class EntidadController extends BaseController {
             }
 
         }
+    }
+
+    /**
+     * Obtiene el/los organismos con oficinas que sustituyen a uno Extinguido
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    private Set<Organismo> obtenerSustitutosOficina(Long idOrganismo) throws Exception{
+
+        Set<Organismo> sustitutos =  new HashSet<>();
+        Set<Organismo> sustitutosOficina =  new HashSet<>();
+        organismoEjb.obtenerHistoricosFinales(idOrganismo,sustitutos);
+
+        for (Organismo orgHistorico : sustitutos) {
+            if (oficinaEjb.tieneOficinasServicio(orgHistorico.getId(), RegwebConstantes.OFICINA_VIRTUAL_SI)) {
+                sustitutosOficina.add(orgHistorico);
+            }
+        }
+
+        return sustitutosOficina;
+    }
+
+    @ModelAttribute("idiomas")
+    public Long[] idiomas() throws Exception {
+        return RegwebConstantes.IDIOMAS_UI;
+    }
+
+    @ModelAttribute("configuraciones")
+    public long[] configuraciones() throws Exception {
+        return RegwebConstantes.CONFIGURACIONES_PERSONA;
+    }
+
+    @ModelAttribute("perfilesCustodia")
+    public long[] perfilesCustodia() throws Exception {
+        return RegwebConstantes.PERFILES_CUSTODIA;
     }
 
     @InitBinder({"entidadForm"})

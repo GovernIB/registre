@@ -32,8 +32,9 @@ public class PermisoLibroUsuario implements Serializable {
     public PermisoLibroUsuario() {
     }
 
-    public PermisoLibroUsuario(Long id, Boolean activo, Long idUsuario) {
+    public PermisoLibroUsuario(Long id, Long permiso, Boolean activo, Long idUsuario) {
         this.id = id;
+        this.permiso = permiso;
         this.activo = activo;
         this.usuario = new UsuarioEntidad(idUsuario);
     }

@@ -671,9 +671,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     public List<Organismo> getPermitirUsuarios(Long entidad) throws Exception {
 
         Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion from Organismo as organismo where " +
-                "organismo.entidad.id = :entidad and organismo.permiteUsuarios = true");
+                "organismo.entidad.id = :entidad and organismo.permiteUsuarios = true and organismo.estado.codigoEstadoEntidad = :vigente");
 
         q.setParameter("entidad", entidad);
+        q.setParameter("vigente", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
         q.setHint("org.hibernate.readOnly", true);
 
         List<Organismo> organismos =  new ArrayList<Organismo>();
