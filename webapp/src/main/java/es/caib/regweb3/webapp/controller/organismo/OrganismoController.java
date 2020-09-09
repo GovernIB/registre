@@ -177,9 +177,9 @@ public class OrganismoController extends BaseController {
                 organismoEjb.activarUsuarios(idOrganismo);
 
                 Mensaje.saveMessageInfo(request, getMessage("organismo.activarUsuarios.ok"));
+            }else{
+                Mensaje.saveMessageError(request, getMessage("organismo.activarUsuarios.error"));
             }
-
-            Mensaje.saveMessageError(request, getMessage("organismo.activarUsuarios.error"));
 
         } catch (Exception e) {
             Mensaje.saveMessageError(request, getMessage("regweb.error.registro"));
