@@ -40,8 +40,8 @@
         <%--Organismo destino--%>
         <p>
             <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.organismoDestino"/>:</strong>
-                <c:if test="${not empty oficioRemision.organismoDestinatario}">${oficioRemision.organismoDestinatario.denominacion}</c:if>
-                <c:if test="${empty oficioRemision.organismoDestinatario}">${oficioRemision.destinoExternoDenominacion}</c:if>
+                <c:if test="${not empty oficioRemision.organismoDestinatario}">${oficioRemision.organismoDestinatario.denominacion} (${oficioRemision.organismoDestinatario.codigo})</c:if>
+                <c:if test="${empty oficioRemision.organismoDestinatario}">${oficioRemision.destinoExternoDenominacion} (${oficioRemision.destinoExternoCodigo})</c:if>
             </small>
         </p>
 
@@ -52,10 +52,10 @@
             <c:if test="${not empty oficioRemision.decodificacionEntidadRegistralDestino}">
                 <c:if test="${not empty oficioRemision.contactosEntidadRegistralDestino}">
                     <p id="contactosOficina" data-content="${oficioRemision.contactosEntidadRegistralDestino}" data-toggle="popover" style="cursor:help" rel="popupDerecha">
-                    <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
+                    <small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</small></p>
                 </c:if>
                 <c:if test="${empty oficioRemision.contactosEntidadRegistralDestino}">
-                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino}</small></p>
+                    <p><small><i class="fa fa-exchange"></i> <strong><spring:message code="oficioRemision.oficinaSirDestino"/>:</strong> ${oficioRemision.decodificacionEntidadRegistralDestino} (${oficioRemision.codigoEntidadRegistralDestino})</small></p>
                 </c:if>
             </c:if>
 
