@@ -43,67 +43,95 @@
                             </c:if>
                         </div>
 
-                            <%--DETALLE REGISTRO RECIBIDO SIR--%>
-                            <c:if test="${not empty trazabilidadesSir}">
+                        <%--DETALLE REGISTRO RECIBIDO SIR--%>
+                        <c:if test="${not empty trazabilidadesSir}">
+
+                            <div class="panel-body">
+                                <c:set var="registroSir" value="${trazabilidadesSir[0].registroSir}" scope="request"/>
+                                <c:import url="../registroSir/detalleRegistroSir.jsp"/>
+                            </div>
+                            <%--BOTONERA--%>
+                            <div class="panel-footer center">
+                                <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="registroSir.detalle"/></button></div>
+                            </div>
+
+                        </c:if>
+
+                        <%--DETALLE REGISTRO ENVIADO SIR--%>
+                        <c:if test="${not empty trazabilidades}">
+                            <%--REGISTRO ENTRADA--%>
+                            <c:if test="${trazabilidades[0].oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
 
                                 <div class="panel-body">
-                                    <c:set var="registroSir" value="${trazabilidadesSir[0].registroSir}" scope="request"/>
-                                    <c:import url="../registroSir/detalleRegistroSir.jsp"/>
+                                    <c:set var="registro" value="${trazabilidades[0].registroEntradaOrigen}" scope="request"/>
+                                    <dl class="detalle_registro">
+                                        <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
+                                        <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
+                                        <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.numeroRegistro"/>: </dt>
+                                        <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd>
+                                        <c:import url="../registro/detalleRegistro.jsp">
+                                            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
+                                        </c:import>
+                                    </dl>
                                 </div>
                                 <%--BOTONERA--%>
                                 <div class="panel-footer center">
-                                    <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/registroSir/${registroSir.id}/detalle"/>')" class="btn btn-primary btn-sm"><spring:message code="registroSir.detalle"/></button></div>
+                                    <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
                                 </div>
 
                             </c:if>
 
-                            <%--DETALLE REGISTRO ENVIADO SIR--%>
-                            <c:if test="${not empty trazabilidades}">
-                                <%--REGISTRO ENTRADA--%>
-                                <c:if test="${trazabilidades[0].oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA}">
+                            <%--REGISTRO SALIDA--%>
+                            <c:if test="${trazabilidades[0].oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
+                                <div class="panel-body">
+                                    <c:set var="registro" value="${trazabilidades[0].registroSalida}" scope="request"/>
+                                    <dl class="detalle_registro">
+                                        <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
+                                        <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
+                                        <dt><i class="fa fa-barcode"></i> <spring:message code="registroSalida.numeroRegistro"/>: </dt>
+                                        <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd>
 
-                                    <div class="panel-body">
-                                        <c:set var="registro" value="${trazabilidades[0].registroEntradaOrigen}" scope="request"/>
-                                        <dl class="detalle_registro">
-                                            <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
-                                            <dd><span class="label label-info"><spring:message code="registroSir.entrada"/></span></dd>
-                                            <dt><i class="fa fa-barcode"></i> <spring:message code="registroEntrada.numeroRegistro"/>: </dt>
-                                            <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd>
-                                            <c:import url="../registro/detalleRegistro.jsp">
-                                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_ENTRADA}"/>
-                                            </c:import>
-                                        </dl>
-                                    </div>
-                                    <%--BOTONERA--%>
-                                    <div class="panel-footer center">
-                                        <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>')" class="btn btn-info btn-sm"><spring:message code="registroEntrada.detalle"/></button></div>
-                                    </div>
-
-                                </c:if>
-
-                                <%--REGISTRO SALIDA--%>
-                                <c:if test="${trazabilidades[0].oficioRemision.tipoOficioRemision == RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA}">
-                                    <div class="panel-body">
-                                        <c:set var="registro" value="${trazabilidades[0].registroSalida}" scope="request"/>
-                                        <dl class="detalle_registro">
-                                            <dt><i class="fa fa-file-o"></i> <spring:message code="registroSir.tipoRegistro"/>: </dt>
-                                            <dd><span class="label label-danger"><spring:message code="registroSir.salida"/></span></dd>
-                                            <dt><i class="fa fa-barcode"></i> <spring:message code="registroSalida.numeroRegistro"/>: </dt>
-                                            <dd> ${registro.registroDetalle.numeroRegistroOrigen}</dd>
-
-                                            <c:import url="../registro/detalleRegistro.jsp">
-                                                <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
-                                            </c:import>
-                                        </dl>
-                                    </div>
-                                    <%--BOTONERA--%>
-                                    <div class="panel-footer center">
-                                        <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroSalida/${registro.id}/detalle"/>')" class="btn btn-danger btn-sm"><spring:message code="registroSalida.detalle"/></button></div>
-                                    </div>
-                                </c:if>
+                                        <c:import url="../registro/detalleRegistro.jsp">
+                                            <c:param name="tipoRegistro" value="${RegwebConstantes.REGISTRO_SALIDA}"/>
+                                        </c:import>
+                                    </dl>
+                                </div>
+                                <%--BOTONERA--%>
+                                <div class="panel-footer center">
+                                    <div class="btn-group"><button type="button" onclick="goTo('<c:url value="/adminEntidad/registroSalida/${registro.id}/detalle"/>')" class="btn btn-danger btn-sm"><spring:message code="registroSalida.detalle"/></button></div>
+                                </div>
                             </c:if>
-                        </div>
+                        </c:if>
                     </div>
+                </div>
+
+                    <%--DESTINO--%>
+                    <c:if test="${not empty trazabilidades}">
+                        <div class="col-lg-8">
+                            <div class="panel panel-warning">
+                                <div class="panel-heading">
+                                    <i class="fa fa-institution"></i> <strong><spring:message code="oficioRemision.destino"/></strong>
+                                </div>
+                                <div class="panel-body">
+                                    <p><i class="fa fa-institution"></i> <strong><spring:message code="organismo.organismo"/>:</strong> ${trazabilidades[0].oficioRemision.destinoExternoDenominacion}</p>
+                                    <c:if test="${not empty trazabilidades[0].oficioRemision.decodificacionEntidadRegistralDestino}">
+
+                                        <p><i class="fa fa-home"></i> <strong><spring:message code="oficina.oficina"/>:</strong>${trazabilidades[0].oficioRemision.decodificacionEntidadRegistralDestino} (${trazabilidades[0].oficioRemision.codigoEntidadRegistralDestino})</p>
+                                        <c:if test="${not empty trazabilidades[0].oficioRemision.contactosEntidadRegistralDestino}">
+                                            <div class="alert alert-grey"><small>${trazabilidades[0].oficioRemision.contactosEntidadRegistralDestino}</small></div>
+                                        </c:if>
+
+                                    </c:if>
+
+                                    <c:if test="${not empty trazabilidades[0].oficioRemision.fechaEstado && trazabilidades[0].oficioRemision.estado == RegwebConstantes.OFICIO_ACEPTADO}">
+                                        <p><strong><i class="fa fa-clock-o"></i> <spring:message code="oficioRemision.fecha.aceptado"/>:</strong> <fmt:formatDate value="${trazabilidades[0].oficioRemision.fechaEstado}" pattern="dd/MM/yyyy HH:mm:ss"/></p>
+                                        <p><strong><i class="fa fa-barcode"></i> <spring:message code="registroSir.numeroRegistro"/>:</strong> ${trazabilidades[0].oficioRemision.numeroRegistroEntradaDestino}</p>
+                                    </c:if>
+
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
 
                 <%-- ESTADOS --%>
                 <div class="col-lg-4">
