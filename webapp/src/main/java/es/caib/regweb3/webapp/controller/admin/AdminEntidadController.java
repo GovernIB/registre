@@ -52,6 +52,9 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/HistoricoRegistroEntradaEJB/local")
     private HistoricoRegistroEntradaLocal historicoRegistroEntradaEjb;
 
+    @EJB(mappedName = "regweb3/HistoricoRegistroSalidaEJB/local")
+    private HistoricoRegistroSalidaLocal historicoRegistroSalidaEjb;
+
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
@@ -368,10 +371,10 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         }
 
         // Historicos
-        model.addAttribute("historicos", historicoRegistroEntradaEjb.getByRegistroEntrada(idRegistro));
+        model.addAttribute("historicos", historicoRegistroSalidaEjb.getByRegistroSalida(idRegistro));
 
         // Trazabilidad
-        model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroEntrada(registro.getId()));
+        model.addAttribute("trazabilidades", trazabilidadEjb.getByRegistroSalida(registro.getId()));
 
 
         // Alta en tabla LOPD
