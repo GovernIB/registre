@@ -1655,7 +1655,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         registroDetalle.setInteresados(null);
 
         // Anexos
-        registroDetalle.setAnexos(null);
+        //registroDetalle.setAnexos(null);
 
         return registroDetalle;
     }
