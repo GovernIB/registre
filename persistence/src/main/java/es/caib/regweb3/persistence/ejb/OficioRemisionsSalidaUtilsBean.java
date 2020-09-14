@@ -505,7 +505,7 @@ public class OficioRemisionsSalidaUtilsBean implements OficioRemisionSalidaUtils
 
             // Set Id's a null
             registroDetalle.setId(null);
-            registroDetalle.setAnexos(null);
+            registroDetalle.setAnexos(new ArrayList<Anexo>());
             registroDetalle.setInteresados(null);
 
             for (AnexoFull anexo : anexos) {

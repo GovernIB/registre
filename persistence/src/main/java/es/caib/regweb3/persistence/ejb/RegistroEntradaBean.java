@@ -508,7 +508,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
                 anexo.getAnexo().setId(null);
                 anexo.getAnexo().setJustificante(false);
             }
-            registroEntrada.getRegistroDetalle().setAnexos(null);
+            registroEntrada.getRegistroDetalle().setAnexos(new ArrayList<Anexo>());
 
             registroEntrada.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroEntrada.getNumeroRegistroFormateado());
 
