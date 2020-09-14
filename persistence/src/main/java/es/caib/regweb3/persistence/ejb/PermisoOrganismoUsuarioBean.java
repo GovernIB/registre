@@ -156,7 +156,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
     @SuppressWarnings(value = "unchecked")
     public List<PermisoOrganismoUsuario> findByOrganismo(Long idOrganismo) throws Exception {
 
-        Query q = em.createQuery("Select pou.id, pou.activo, pou.usuario.id from PermisoOrganismoUsuario as pou where pou.organismo.id = :idOrganismo " +
+        Query q = em.createQuery("Select pou.id, pou.activo, pou.usuario.id, pou.permiso from PermisoOrganismoUsuario as pou where pou.organismo.id = :idOrganismo " +
                 "and pou.organismo.permiteUsuarios = true order by pou.permiso");
 
         q.setParameter("idOrganismo",idOrganismo);
@@ -166,7 +166,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         List<Object[]> result = q.getResultList();
 
         for (Object[] object : result) {
-            PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario((Long) object[0], (Boolean) object[1], (Long) object[2]);
+            PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario((Long) object[0], (Boolean) object[1], (Long) object[2], (Long) object[3]);
 
             plus.add(pou);
         }

@@ -38,10 +38,11 @@ public class PermisoOrganismoUsuario implements Serializable {
         this.id = id;
     }
 
-    public PermisoOrganismoUsuario(Long id, Boolean activo, Long idUsuario) {
+    public PermisoOrganismoUsuario(Long id, Boolean activo, Long idUsuario, Long permiso) {
         this.id = id;
         this.activo = activo;
         this.usuario = new UsuarioEntidad(idUsuario);
+        this.permiso = permiso;
     }
 
 
