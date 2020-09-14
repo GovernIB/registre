@@ -393,7 +393,12 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
         // SIR: PONER CONTADOR ID INTERCAMBIO A 0  
         Entidad entidad = findById(idEntidad);
-        contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
+        if(entidad.getContadorSir() != null){
+            contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
+        }
+        if(entidad.getLibro() != null){
+            contadorEjb.reiniciarContador(entidad.getLibro().getContadorSir().getId());
+        }
 
         // Integraciones
         integracionEjb.eliminarByEntidad(idEntidad);
