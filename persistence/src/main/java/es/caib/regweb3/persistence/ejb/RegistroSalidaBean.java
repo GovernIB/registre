@@ -487,7 +487,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 anexo.getAnexo().setId(null);
                 anexo.getAnexo().setJustificante(false);
             }
-            registroSalida.getRegistroDetalle().setAnexos(null);
+            registroSalida.getRegistroDetalle().setAnexos(new ArrayList<Anexo>());
 
             registroSalida.getRegistroDetalle().setObservaciones("Rectificación del registro " + registroSalida.getNumeroRegistroFormateado());
 

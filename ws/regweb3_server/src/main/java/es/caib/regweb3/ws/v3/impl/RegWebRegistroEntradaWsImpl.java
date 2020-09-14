@@ -209,7 +209,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             anexosFull = procesarAnexos(registroEntradaWs.getAnexos(), entidadActiva.getId());
 
             //Asociamos los anexos al Registro de Entrada
-            registroEntrada.getRegistroDetalle().setAnexos(null);
+            //registroEntrada.getRegistroDetalle().setAnexos(null);
 
             peticion.append("anexos: ").append(registroEntradaWs.getAnexos().size()).append(System.getProperty("line.separator"));
         }
