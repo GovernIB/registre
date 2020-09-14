@@ -664,6 +664,11 @@ public class EntidadController extends BaseController {
             } else {
                 jsonResponse.setError(getMessage("regweb.sincronizados.numero") + sincronizados);
                 jsonResponse.setStatus("SUCCESS");
+
+                //Asociamos el Organismo raíz creado al Libro de la Entidad
+                Entidad entidad = entidadEjb.findById(entidadId);
+                entidad.getLibro().setOrganismo(organismoEjb.findByCodigo(entidad.getCodigoDir3()));
+                entidadEjb.merge(entidad);
             }
             entidadEjb.marcarEntidadMantenimiento(entidadId, false);
 
