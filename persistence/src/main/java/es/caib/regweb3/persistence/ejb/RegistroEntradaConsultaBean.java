@@ -97,7 +97,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroEntrada re, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoDest, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -112,9 +112,12 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
-        if(idOrganismo != null){
+        if(organismos.size() == 1){
             where.add(" registroEntrada.oficina.organismoResponsable.id = :idOrganismo ");
-            parametros.put("idOrganismo", idOrganismo);
+            parametros.put("idOrganismo", organismos.get(0));
+        }else{
+            where.add(" registroEntrada.oficina.organismoResponsable.id in (:organismos) ");
+            parametros.put("organismos", organismos);
         }
 
         // Oficina Registro

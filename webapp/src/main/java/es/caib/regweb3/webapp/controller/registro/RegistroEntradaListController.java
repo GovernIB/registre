@@ -105,7 +105,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         model.addAttribute("oficinaActiva", getOficinaActiva(request));
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosDestino", organismosOficinaActiva);
-        //model.addAttribute("oficinasConsultaEntrada", getOficinasConsultaEntrada(request, registroEntradaBusqueda.getIdOrganismo()));
         model.addAttribute("organismosConsultaEntrada", organismosConsultaEntrada);
 
         // Obtenemos los usuarios de la Entidad
@@ -139,7 +138,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             mav.addObject("usuariosEntidad", usuariosEntidad);
             mav.addObject("registroEntradaBusqueda", busqueda);
             mav.addObject("organosDestino", organismosOficinaActiva);
-            //mav.addObject("oficinasConsultaEntrada", getOficinasConsultaEntrada(request, busqueda.getIdOrganismo()));
             mav.addObject("organismosConsultaEntrada", getOrganismosConsultaEntrada(request));
             mav.addObject("anularForm", new AnularForm());
 
@@ -156,7 +154,17 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), busqueda.getIdOrganismo(), busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
+
+            // Organismo origen seleccionado
+            List<Long> organismos = new ArrayList<>();
+            if(busqueda.getIdOrganismo() == null){
+                organismos =  getOrganismosConsultaEntradaId(request);
+            }else{
+                organismos.add(busqueda.getIdOrganismo());
+            }
+
+            //Búsqueda de registros
+            Paginacion paginacion = registroEntradaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroEntrada, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganDestinatari(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
