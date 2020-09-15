@@ -50,6 +50,8 @@ public class Usuario implements Serializable {
     private Boolean rwe_ws_salida = false;
     @XmlTransient
     private Boolean rwe_ws_ciudadano = false;
+    @XmlTransient
+    private Boolean dib_user = false;
 
     @XmlTransient
     private Long idioma;
@@ -222,21 +224,25 @@ public class Usuario implements Serializable {
         this.rwe_ws_ciudadano = rwe_ws_ciudadano;
     }
 
+    @Column(name = "DIB_USER", nullable = false)
+    public Boolean getDib_user() {
+        return dib_user;
+    }
+
+    public void setDib_user(Boolean dib_user) {
+        this.dib_user = dib_user;
+    }
+
     @Transient
     public void setRoles(List<Rol> roles){
 
         setRwe_superadmin(roles.contains(new Rol(RegwebConstantes.RWE_SUPERADMIN)));
-
         setRwe_admin(roles.contains(new Rol(RegwebConstantes.RWE_ADMIN)));
-
         setRwe_usuari(roles.contains(new Rol(RegwebConstantes.RWE_USUARI)));
-
         setRwe_ws_entrada(roles.contains(new Rol(RegwebConstantes.RWE_WS_ENTRADA)));
-
         setRwe_ws_salida(roles.contains(new Rol(RegwebConstantes.RWE_WS_SALIDA)));
-
         setRwe_ws_ciudadano(roles.contains(new Rol(RegwebConstantes.RWE_WS_CIUDADANO)));
-
+        setDib_user(roles.contains(new Rol(RegwebConstantes.DIB_USER)));
     }
 
    @Transient

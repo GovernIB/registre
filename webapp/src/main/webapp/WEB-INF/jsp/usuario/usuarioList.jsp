@@ -188,6 +188,9 @@
                                                             <c:if test="${usuario.rwe_ws_ciudadano}">
                                                                 <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.6.nombre"/>:</strong> <spring:message code="rol.6.descripcion"/>" data-toggle="popover"><i class="fa fa-user"></i></span>
                                                             </c:if>
+                                                            <c:if test="${usuario.dib_user}">
+                                                                <span class="label label-success" rel="popupAbajo" data-content="<strong><spring:message code="rol.7.nombre"/>:</strong> <spring:message code="rol.7.descripcion"/>" data-toggle="popover"><i class="fa fa-print"></i></span>
+                                                            </c:if>
                                                         </td>
                                                         <td class="center">
                                                             <a class="btn btn-warning btn-sm" href="<c:url value="/usuario/${usuario.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>

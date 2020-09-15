@@ -99,6 +99,7 @@ public class LoginService {
 
     /**
      * Obtiene los Roles del usuario autenticado mediante el plugin de Login.
+     * Actualizamos los Roles del usuario en bbdd
      * Almacenanos los Roles del usuario
      * Almacenanos el usuario
      * Crea la variable que contiene todos los Roles
@@ -110,15 +111,21 @@ public class LoginService {
      */
     private Rol obtenerCredenciales(Usuario usuario, LoginInfo loginInfo, HttpServletRequest request) throws Exception {
 
-        List<Rol> rolesUsuario = obtenerRolesUsuarioAutenticado(request);
+        List<Rol> rolesUsuario = obtenerRolesWebUsuarioAutenticado(request);
 
         log.info("Usuario autenticado: " + usuario.getNombreCompleto() + " - Roles: " + Arrays.toString(rolesUsuario.toArray()));
 
         // Actualizamos los Roles del usuario en la bbdd, según los obtenidos del sistema externo
-        usuario.setRoles(rolesUsuario);
-        usuario = usuarioEjb.merge(usuario);
+        try {
+            List<Rol> roles = rolUtils.obtenerRolesUserPlugin(usuario.getIdentificador());
+            usuarioEjb.actualizarRoles(usuario, roles);
+        } catch (I18NException e) {
+            e.printStackTrace();
+            log.info("Ha ocurrido un error actualizando los roles del usuario: " + usuario.getIdentificador());
+            throw new Exception("a ocurrido un error actualizando los roles del usuario");
+        }
 
-        // Almacenamos los Roles que dispone el usuario.
+        // Almacenamos los Roles Web que dispone el usuario.
         loginInfo.setRolesAutenticado(rolesUsuario);
 
         // Almacenamos el RolActivo del usuario.
@@ -528,13 +535,13 @@ public class LoginService {
     }
 
     /**
-     * Obtiene los Roles del usuario autenticado
+     * Obtiene los Roles Web del usuario autenticado
      *
      * @param request
      * @return
      * @throws Exception
      */
-    private List<Rol> obtenerRolesUsuarioAutenticado(HttpServletRequest request) throws Exception {
+    private List<Rol> obtenerRolesWebUsuarioAutenticado(HttpServletRequest request) throws Exception {
 
         List<Rol> rolesUsuario = null;
 
