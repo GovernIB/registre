@@ -793,21 +793,25 @@ public class EntidadController extends BaseController {
 
                         }else { // Se procesa automáticamente
 
-                            Organismo organismoSustituto = new ArrayList<>(sustitutosOficina).get(0);
+                            // Para todos los sustitutos, asignamos los usuarios que tenía el anterior Organismo
+                            for(Organismo organismoSustituto:sustitutosOficina){
 
-                            // Activamos la posibilidad de asociarle usuarios
-                            organismoEjb.activarUsuarios(organismoSustituto.getId());
+                                // Activamos la posibilidad de asociarle usuarios
+                                organismoEjb.activarUsuarios(organismoSustituto.getId());
 
-                            // Actualizamos el Organismo sustituto todos los permisos
-                            for(PermisoOrganismoUsuario permiso:permisos){
-                                permiso.setOrganismo(organismoSustituto);
-                                permisoOrganismoUsuarioEjb.merge(permiso);
+                                // Actualizamos el Organismo sustituto todos los permisos
+                                for(PermisoOrganismoUsuario permiso:permisos){
+                                    permiso.setOrganismo(organismoSustituto);
+                                    permisoOrganismoUsuarioEjb.merge(permiso);
+                                }
+
+                                // Añadimos todos los organimos procesados automáticamente
+                                extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), organismoSustituto);
                             }
 
+                            // Actualizamos el destino de los registros pendientes de llegada uno de los Organismos sustitutos
+                            Organismo organismoSustituto = new ArrayList<>(sustitutosOficina).get(0);
                             oficioRemisionEjb.actualizarDestinoPendientesLlegada(organismoExtinguido.getId(), organismoSustituto.getId());
-
-                            // Añadimos todos los organimos procesados automáticamente
-                            extinguidosAutomaticos.put(organismoExtinguido.getDenominacion(), organismoSustituto);
 
                             // Actualizamos el Pendiente
                             pendiente.setProcesado(true);
