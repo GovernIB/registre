@@ -307,6 +307,22 @@ public class BaseController {
     }
 
     /**
+     * Retorna los Organismos a las que el Usuario autenticado puede consultar registros de entrada
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected List<Long> getOrganismosConsultaEntradaId(HttpServletRequest request) throws Exception {
+        List<Organismo> organismos = getOrganismosConsultaEntrada(request);
+        List<Long> organismosId = new ArrayList<>();
+
+        for(Organismo organismo:organismos){
+            organismosId.add(organismo.getId());
+        }
+        return organismosId;
+    }
+
+    /**
      * Retorna las Oficinas a las que el Usuario autenticado puede consultar registros de salida
      * @param request
      * @return
@@ -347,6 +363,22 @@ public class BaseController {
      */
     protected List<Organismo> getOrganismosConsultaSalida(HttpServletRequest request) throws Exception {
         return getLoginInfo(request).getOrganismosConsultaSalida();
+    }
+
+    /**
+     * Retorna los Organismos a las que el Usuario autenticado puede consultar registros de salida
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    protected List<Long> getOrganismosConsultaSalidaId(HttpServletRequest request) throws Exception {
+        List<Organismo> organismos = getOrganismosConsultaSalida(request);
+        List<Long> organismosId = new ArrayList<>();
+
+        for(Organismo organismo:organismos){
+            organismosId.add(organismo.getId());
+        }
+        return organismosId;
     }
 
     /**

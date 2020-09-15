@@ -76,7 +76,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -91,9 +91,12 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         parametros.put("idEntidad", idEntidad);
 
         // Organismo
-        if(idOrganismo != null){
+        if(organismos.size() == 1){
             where.add(" registroSalida.oficina.organismoResponsable.id = :idOrganismo ");
-            parametros.put("idOrganismo", idOrganismo);
+            parametros.put("idOrganismo", organismos.get(0));
+        }else{
+            where.add(" registroSalida.oficina.organismoResponsable.id in (:organismos) ");
+            parametros.put("organismos", organismos);
         }
 
         // Oficina Registro
@@ -150,18 +153,6 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         if (StringUtils.isNotEmpty(interesadoDoc)) {
             where.add(" (UPPER(interessat.documento) LIKE UPPER(:interesadoDoc)) ");
             parametros.put("interesadoDoc", "%" + interesadoDoc.trim() + "%");
-        }
-
-        // Organismo origen
-        if (StringUtils.isNotEmpty((organoOrigen))) {
-            Organismo organismo = organismoEjb.findByCodigoEntidadSinEstadoLigero(organoOrigen, idEntidad);
-            if (organismo == null) {
-                where.add(" registroSalida.origenExternoCodigo = :organoOrigen ");
-            } else {
-                where.add(" registroSalida.origen.codigo = :organoOrigen ");
-            }
-
-            parametros.put("organoOrigen", organoOrigen);
         }
 
         // Tipo documentación física

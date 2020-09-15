@@ -99,8 +99,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         model.addAttribute(getOficinaActiva(request));
         model.addAttribute("registroSalidaBusqueda", registroSalidaBusqueda);
-        model.addAttribute("organosOrigen", organismosOficinaActiva);
-        //model.addAttribute("oficinasConsultaSalida", getOficinasConsultaSalida(request, registroSalidaBusqueda.getIdOrganismo()));
         model.addAttribute("organismosConsultaSalida", organismosConsultaSalida);
 
         // Obtenemos los usuarios de la Entidad
@@ -131,12 +129,10 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         // Si hay errores volvemos a la vista del formulario
         if (result.hasErrors()) {
             mav.addObject("errors", result.getAllErrors());
-            mav.addObject("organosOrigen", organismosOficinaActiva);
             mav.addObject("oficinaActiva", oficinaActiva);
             mav.addObject("usuariosEntidad", usuariosEntidad);
             mav.addObject("registroSalidaBusqueda", busqueda);
             mav.addObject("oficinasConsultaSalida", getOficinasConsultaSalida(request));
-            //mav.addObject("organismosConsultaSalida", getOficinasConsultaSalida(request, busqueda.getIdOrganismo()));
             mav.addObject("organOrigen", busqueda.getOrganOrigen());
             mav.addObject("anularForm", new AnularForm());
 
@@ -151,7 +147,17 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             String nombreInteresado = new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8");
             String apellido1Interesado = new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8");
             String apellido2Interesado = new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8");
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(),busqueda.getIdOrganismo(), busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getOrganOrigen(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
+
+            // Organismo origen seleccionado
+            List<Long> organismos = new ArrayList<>();
+            if(busqueda.getIdOrganismo() == null){
+                organismos =  getOrganismosConsultaSalidaId(request);
+            }else{
+                organismos.add(busqueda.getIdOrganismo());
+            }
+
+            //Búsqueda de registros
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);
@@ -162,8 +168,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             lopdEjb.insertarRegistros(paginacion, usuarioEntidad.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_LISTADO);
         }
 
-
-        mav.addObject("organosOrigen", organismosOficinaActiva);
         mav.addObject("oficinaActiva", oficinaActiva);
         mav.addObject("usuariosEntidad", usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId()));
         mav.addObject("oficinasConsultaSalida", getOficinasConsultaSalida(request));
@@ -178,7 +182,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         busqueda.setInteressatNom(new String(busqueda.getInteressatNom().getBytes("ISO-8859-1"), "UTF-8"));
         busqueda.setInteressatLli1(new String(busqueda.getInteressatLli1().getBytes("ISO-8859-1"), "UTF-8"));
         busqueda.setInteressatLli2(new String(busqueda.getInteressatLli2().getBytes("ISO-8859-1"), "UTF-8"));
-        busqueda.setOrganOrigenNom(new String(busqueda.getOrganOrigenNom().getBytes("ISO-8859-1"), "UTF-8"));
+
         return mav;
     }
 

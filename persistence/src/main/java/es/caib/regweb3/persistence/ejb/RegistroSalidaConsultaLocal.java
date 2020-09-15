@@ -37,7 +37,7 @@ public interface RegistroSalidaConsultaLocal{
      * @return
      * @throws Exception
      */
-    Paginacion busqueda(Integer pageNumber, Long idOrganismo, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, String organoOrigen, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
+    Paginacion busqueda(Integer pageNumber, List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoDoc, String interesadoLli1, String interesadoLli2, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception;
 
     
     /**

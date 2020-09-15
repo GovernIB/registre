@@ -61,7 +61,12 @@
                                     <label for="idOrganismo" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organismo.busqueda"/>" data-toggle="popover"><spring:message code="organismo.organismo"/></label>
                                 </div>
                                 <div class="col-xs-8">
-                                    <form:select path="idOrganismo" cssClass="chosen-select" items="${organismosConsultaEntrada}" itemValue="id" itemLabel="denominacion" onchange="actualizarOficinas()"/>
+                                    <form:select path="idOrganismo" cssClass="chosen-select" onchange="actualizarOficinas()">
+                                        <form:option value="" label="..."/>
+                                        <c:forEach var="organismo" items="${organismosConsultaEntrada}">
+                                            <form:option value="${organismo.id}">${organismo.denominacion}</form:option>
+                                        </c:forEach>
+                                    </form:select>
                                 </div>
                             </div>
 
@@ -87,12 +92,6 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <form:select path="registroEntrada.oficina.id" cssClass="chosen-select" disabled="true"/>
-                                    <%--<form:select path="registroEntrada.oficina.id" cssClass="chosen-select" id="oficina">
-                                        <form:option value="" label="..."/>
-                                        <c:forEach var="oficina" items="${oficinasConsultaEntrada}">
-                                            <form:option value="${oficina.id}">${oficina.denominacion}</form:option>
-                                        </c:forEach>
-                                    </form:select>--%>
                                 </div>
                             </div>
 
@@ -171,17 +170,17 @@
 
                         <%--Comprueba si debe mostrar las opciones desplegadas o no--%>
                         <c:if test="${empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica &&
-                        empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
-                        empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
-                        empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
-                        empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
+                            empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
+                            empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
+                            empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                         </c:if>
                         <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
-                        not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
-                        not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
-                        not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
-                        not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
+                            not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
+                            not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
+                            not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse in">
                         </c:if>
 
