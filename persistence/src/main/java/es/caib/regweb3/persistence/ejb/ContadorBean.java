@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Stateless(name = "ContadorEJB")
 @SecurityDomain("seycon")
-//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class ContadorBean extends BaseEjbJPA<Contador, Long> implements ContadorLocal{
 
     protected final Logger log = Logger.getLogger(getClass());
