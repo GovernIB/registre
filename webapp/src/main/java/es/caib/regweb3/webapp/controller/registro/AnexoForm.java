@@ -12,7 +12,7 @@ public class AnexoForm extends AnexoFull {
 
     private CommonsMultipartFile documentoFile;
     private CommonsMultipartFile firmaFile;
-    Long tipoRegistro;
+    private Long tipoRegistro;
     private Long registroID;
     private Boolean oficioRemisionSir;
     private Boolean permitirAnexoDetached;

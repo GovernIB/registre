@@ -66,7 +66,7 @@ public class AnexoScanController extends AnexoController {
                 + "," + tipoRegistro + ", " + registroID + ")");
 
        //Actualiza las variables con la ultima acción y prepara el anexoForm
-        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir);
+        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
         request.getSession().setAttribute("anexoForm", anexoForm);
         loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
 
@@ -103,7 +103,7 @@ public class AnexoScanController extends AnexoController {
                     firmaSize = anexoForm.getSignatureCustody().getLength();
                 }
                 //validamos las limitaciones SIR
-                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, null, true);
+                validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), docSize, firmaSize, docExtension, firmaExtension, null, true);
             }
 
             //Validamos la firma del anexoForm que nos indican, previo a crear el anexo

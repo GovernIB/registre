@@ -170,6 +170,23 @@
                                 </div>
                             </div>
 
+                            <div class="col-xs-6">
+                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                    <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.scan"/>" data-toggle="popover"><spring:message code="anexo.escaneado"/></label>
+                                </div>
+                                <div class="col-xs-9 campFormText">
+                                    <c:choose>
+                                        <c:when test="${anexoForm.anexo.scan == true}">
+                                            <spring:message code="regweb.si"/>
+                                        </c:when>
+                                        <c:when test="${anexoForm.anexo.scan == false}">
+                                            <spring:message code="regweb.no"/>
+                                        </c:when>
+
+                                    </c:choose>
+                                </div>
+                            </div>
+
                         </div>
 
 

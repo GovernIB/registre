@@ -71,7 +71,7 @@ public class AnexoFicheroController extends AnexoController {
 
         Entidad entidad = getEntidadActiva(request);
         //Actualiza las variables con la ultima acción y prepara el anexoForm
-        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir);
+        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, false);
 
         anexoForm.setPermitirAnexoDetached(PropiedadGlobalUtil.getPermitirAnexosDetached(entidad.getId()));
         anexoForm.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
@@ -109,7 +109,7 @@ public class AnexoFicheroController extends AnexoController {
             }
 
             //Validamos las limitaciones SIR
-            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.tipoRegistro, docSize, firmaSize, docExtension, firmaExtension, result, false);
+            validarLimitacionesSIRAnexos(anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), docSize, firmaSize, docExtension, firmaExtension, result, false);
 
         }
 
