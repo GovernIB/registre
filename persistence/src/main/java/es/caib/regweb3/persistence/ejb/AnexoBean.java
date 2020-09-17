@@ -291,6 +291,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(entidad.getId(), RegwebConstantes.PLUGIN_CUSTODIA);
             }
 
+            // Validador
+            validateAnexo(anexo, isNew);
+
+            anexo.setFechaCaptura(new Date());
+
             // Integración
             peticion.append("registro: ").append(registro.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
             peticion.append("tipoRegistro: ").append(tipoRegistro).append(System.getProperty("line.separator"));
@@ -307,11 +312,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
                             new Locale("es"), force);
                 }
             }
-
-            // Validador
-            validateAnexo(anexo, isNew);
-
-            anexo.setFechaCaptura(new Date());
 
             //Si firmaValida es null, por defecto marcamos como false
             if (anexo.getFirmaValida() == null) {

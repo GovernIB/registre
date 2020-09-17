@@ -31,17 +31,14 @@ public class Anexo implements Serializable {
 
     @XmlAttribute
     private Long id;
-
     @XmlElement
     private String titulo; // Campo descriptivo del anexo.
-
     @XmlElement
     private TipoDocumental tipoDocumental; // reso, acord, factura, ..
     @XmlElement
     private Long validezDocumento;
     @XmlElement
     private Long tipoDocumento;
-
     @XmlTransient
     private RegistroDetalle registroDetalle;
     @XmlElement
@@ -52,7 +49,6 @@ public class Anexo implements Serializable {
     private Date fechaCaptura;
     @XmlElement
     private int modoFirma;
-
     @XmlElement
     private byte[] certificado;
     @XmlElement
@@ -63,32 +59,27 @@ public class Anexo implements Serializable {
     private byte[] timestamp;
     @XmlElement
     private byte[] hash;
-
     @XmlTransient
-    private String custodiaID;
+    private String custodiaID; // [DocumentCustody {1} uuid del expediente#documento creado]  [ArxiuCaib {2} uuid del documento creado en Arxiu]
     @XmlTransient
     private String csv;
     @XmlTransient
     private Long perfilCustodia; // Tipo de API utilizado para gestionar el Anexo [DocumentCustody {1} || ArxiuCaib {2}]
     @XmlTransient
     private String expedienteID; // uuid del expediente creado en Arxiu
+    @XmlTransient
+    private Boolean scan = false; // Indica si el anexo se ha escaneado o no
 
     //SIR
     private Boolean firmaValida; // Indicará si la firma es vàlida o no
     private boolean justificante = false; // Indica si el anexo es justificante.
 
-
     //Validacion Firma
     private String signType;
-
     private String signFormat;
-
     private String signProfile;
-
     private String motivoNoValidacion;
-
     private Date fechaValidacion;
-
     private int estadoFirma;
 
     //Gestión anexos distribuidos
@@ -130,6 +121,7 @@ public class Anexo implements Serializable {
       this.signProfile = a.signProfile;
       this.signType = a.signType;
       this.purgado=a.purgado;
+      this.scan = a.scan;
     }
 
     public static List<Anexo> clone(List<Anexo> list) {
@@ -197,6 +189,15 @@ public class Anexo implements Serializable {
 
     public void setExpedienteID(String expedienteID) {
         this.expedienteID = expedienteID;
+    }
+
+    @Column(name ="SCAN")
+    public Boolean getScan() {
+        return scan;
+    }
+
+    public void setScan(Boolean scan) {
+        this.scan = scan;
     }
 
     @ManyToOne()
