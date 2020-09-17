@@ -2,6 +2,7 @@ package es.caib.regweb3.ws.v3.test;
 
 import com.anarsoft.vmlens.concurrent.junit.ConcurrentTestRunner;
 import com.anarsoft.vmlens.concurrent.junit.ThreadCount;
+import es.caib.regweb3.utils.TimeUtils;
 import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.BeforeClass;
@@ -33,11 +34,17 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     public void crearAsiento() throws Exception {
 
         try {
+            long inicio = System.currentTimeMillis();
+            AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
+            entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),entrada,null,false,false);
 
-            AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-            asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
+            AsientoRegistralWs salida = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, false);
+            salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,null,false,false);
 
-            printAsientoBasico(asientoRegistralWs);
+            System.out.println("Después crear asiento: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
+
+            printAsientoBasico(entrada);
+            printAsientoBasico(salida);
 
         } catch (WsI18NException e) {
             String msg = WsClientUtils.toString(e);
@@ -51,7 +58,7 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     }
 
 
-    @Test
+    //@Test
     @ThreadCount(THREAD_COUNT)
     public void crearRegistroEntradaApiAntigua() throws Exception {
 

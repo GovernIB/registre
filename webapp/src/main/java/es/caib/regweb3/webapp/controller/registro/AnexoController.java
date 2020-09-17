@@ -152,18 +152,14 @@ public class AnexoController extends BaseController {
 
         // Tipos Validez según casuistica
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
-            log.info("desde archivo");
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
             if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
-                log.info("desde scan con dib_user");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
             }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
-                log.info("desde scan sin dib_user");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
-                log.info("desde scan");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
             }
         }
@@ -223,18 +219,14 @@ public class AnexoController extends BaseController {
 
         // Tipos Validez según casuistica
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
-            log.info("desde archivo");
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
             if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
-                log.info("desde scan con dib_user");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
             }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
-                log.info("desde scan sin dib_user");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
-                log.info("desde scan");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
             }
         }
@@ -279,18 +271,14 @@ public class AnexoController extends BaseController {
 
         // Tipos Validez según casuistica
         if(!anexoForm.getAnexo().getScan()){ // Desde archivo
-            log.info("desde archivo");
             model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         }else{ // Se trata de un Scan
             if(Configuracio.isCAIB() && getLoginInfo(request).getUsuarioAutenticado().getDib_user()) { //  Tiene el rol DIB_USER activo
-                log.info("desde scan con dib_user");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
 
             }else if(Configuracio.isCAIB() && !getLoginInfo(request).getUsuarioAutenticado().getDib_user()){ // NO tiene el rol DIB_USER activo
-                log.info("desde scan sin dib_user");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN);
             } else{
-                log.info("desde scan");
                 model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO_SCAN_ORIGINAL);
             }
         }
