@@ -207,33 +207,9 @@ public class PermisosController extends BaseController {
 
         if(libro != null && libro.getActivo()){
 
-            // Activamos que el organismo pueda tener usuarios
-            Organismo organismo = libro.getOrganismo();
-            organismo.setPermiteUsuarios(true);
-            organismoEjb.merge(organismo);
+            Integer permisos = permisoOrganismoUsuarioEjb.migrarPermisos(libro);
 
-            // Obtenemos los permisos del libro
-            List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByLibro(idLibro);
-
-            for(PermisoLibroUsuario plu:permisos){
-
-                Long idUsuario = plu.getUsuario().getId();
-
-                PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
-                pou.setOrganismo(organismo);
-                pou.setPermiso(plu.getPermiso());
-                pou.setUsuario(plu.getUsuario());
-                pou.setActivo(plu.getActivo());
-
-                permisoOrganismoUsuarioEjb.persist(pou);
-
-            }
-
-            // Inactivamos el libro
-            libro.setActivo(false);
-            libroEjb.merge(libro);
-
-            Mensaje.saveMessageInfo(request,"Se han creado " + permisos.size() + " permisos");
+            Mensaje.saveMessageInfo(request,"Se han creado " + permisos + " permisos");
         }
 
 
