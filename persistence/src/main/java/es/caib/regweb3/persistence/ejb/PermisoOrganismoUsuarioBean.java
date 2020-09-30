@@ -4,6 +4,7 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -34,6 +35,9 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
     @EJB private CatEstadoEntidadLocal catEstadoEntidadEjb;
     @EJB private OficinaLocal oficinaEjb;
+    @EJB private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
+    @EJB private OrganismoLocal organismoEjb;
+    @EJB private LibroLocal libroEjb;
 
     @Override
     public PermisoOrganismoUsuario getReference(Long id) throws Exception {
@@ -551,6 +555,38 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         }
 
         return total;
+    }
+
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public Integer migrarPermisos(Libro libro) throws Exception{
+
+        // Activamos que el organismo pueda tener usuarios
+        Organismo organismo = libro.getOrganismo();
+        organismo.setPermiteUsuarios(true);
+        organismoEjb.merge(organismo);
+
+        // Obtenemos los permisos del libro
+        List<PermisoLibroUsuario> permisos = permisoLibroUsuarioEjb.findByLibro(libro.getId());
+
+        for(PermisoLibroUsuario plu:permisos){
+
+            PermisoOrganismoUsuario pou = new PermisoOrganismoUsuario();
+            pou.setOrganismo(organismo);
+            pou.setPermiso(plu.getPermiso());
+            pou.setUsuario(plu.getUsuario());
+            pou.setActivo(plu.getActivo());
+
+            persist(pou);
+
+        }
+
+        // Inactivamos el libro
+        libro.setActivo(false);
+        libroEjb.merge(libro);
+
+        return permisos.size();
+
     }
 
 }
