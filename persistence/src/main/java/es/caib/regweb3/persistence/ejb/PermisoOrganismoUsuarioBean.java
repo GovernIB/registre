@@ -456,7 +456,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         List<Long> permisos = q.getResultList();
 
-        return permisos.size() == 1;
+        return permisos.size() >= 1;
     }
 
     @Override
