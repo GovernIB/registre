@@ -60,15 +60,6 @@
 
                                <div class="form-group col-xs-12">
                                    <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
-                                       <label for="libro.id" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.libro"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.libro"/></label>
-                                   </div>
-                                   <div class="col-xs-10">
-                                       <form:select path="libro.id" items="${libros}" itemValue="id" itemLabel="nombreCompleto" cssClass="chosen-select"/> <form:errors path="libro.id" cssClass="help-block" element="span"/>
-                                   </div>
-                               </div>
-
-                               <div class="form-group col-xs-12">
-                                   <div class="col-xs-2 pull-left etiqueta_regweb control-label textEsq">
                                        <label for="registroDetalle.reserva" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.reserva"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="registroEntrada.reserva"/></label>
                                    </div>
                                    <div class="col-xs-10">
