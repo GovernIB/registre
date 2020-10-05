@@ -55,6 +55,7 @@
                             <colgroup>
                                 <col>
                                 <col>
+                                <col>
                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
                                     <col>
                                 </c:if>
@@ -64,7 +65,8 @@
                             <thead>
                             <tr>
                                 <th><spring:message code="anexo.titulo"/></th>
-                                <th><spring:message code="anexo.tipoDocumento"/></th>
+                                <th><spring:message code="anexo.sir.validezDocumento"/></th>
+                                <th><spring:message code="anexo.tipoDocumento.corto"/></th>
                                 <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
                                     <th><spring:message code="anexo.tamano"/></th>
                                 </c:if>
@@ -92,6 +94,9 @@
                                                     <c:out value="${anexo.titulo}" escapeXml="true"/>
                                                 </c:if>
                                             </a>
+                                        </td>
+                                        <td>
+                                            <spring:message code="tipoValidezDocumento.${anexo.validezDocumento}"/>
                                         </td>
                                         <td>
                                             <spring:message code="tipoDocumento.0${anexo.tipoDocumento}"/>
@@ -250,6 +255,7 @@
                                 <%-- Fila pel tamany Total dels annexes --%>
                             <c:if test="${registro.estado != RegwebConstantes.REGISTRO_OFICIO_ACEPTADO && !anexosPurgados}">
                                 <tr>
+                                    <td class="senseBorder"></td>
                                     <td class="senseBorder"></td>
                                     <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
                                         <b>${totalA} KB</b></td>

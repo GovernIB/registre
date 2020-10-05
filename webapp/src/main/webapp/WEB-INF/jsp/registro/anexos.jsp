@@ -93,12 +93,14 @@
                             <col>
                             <col>
                             <col>
+                            <col>
                             <col width="100">
                         </colgroup>
                         <thead>
                         <tr>
                             <th><spring:message code="anexo.titulo"/></th>
-                            <th><spring:message code="anexo.tipoDocumento"/></th>
+                            <th><spring:message code="anexo.sir.validezDocumento"/></th>
+                            <th><spring:message code="anexo.tipoDocumento.corto"/></th>
                             <c:if test="${!anexoFull.anexo.purgado}">
                                 <th class="center"><spring:message code="anexo.tamano"/></th>
                             </c:if>
@@ -121,6 +123,7 @@
                                         <c:out value="${anexoFull.anexo.titulo}" escapeXml="true"/>
                                     </c:if>
                                 </td>
+                                <td><spring:message code="tipoValidezDocumento.${anexoFull.anexo.validezDocumento}"/></td>
                                 <td><spring:message code="tipoDocumento.0${anexoFull.anexo.tipoDocumento}"/></td>
                                 <td class="text-right">
                                     <c:if test="${anexoFull.anexo.modoFirma != RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED}">
@@ -287,6 +290,7 @@
                         </c:forEach>
                             <%-- Fila pel tamany Total dels annexes --%>
                         <tr>
+                            <td class="senseBorder"></td>
                             <td class="senseBorder"></td>
                             <td class="senseBorder text-right" colspan="2"><spring:message code="anexo.sumatotaltamany"/>:
                                 <b>${totalA} KB</b></td>
