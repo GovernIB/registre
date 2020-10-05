@@ -1,7 +1,6 @@
 package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.*;
-import es.caib.regweb3.persistence.ejb.PermisoOrganismoUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
@@ -30,8 +29,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb3/RegistroEntradaConsultaEJB/local")
     private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
 
-    @EJB(mappedName = "regweb3/PermisoOrganismoUsuarioEJB/local")
-    private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

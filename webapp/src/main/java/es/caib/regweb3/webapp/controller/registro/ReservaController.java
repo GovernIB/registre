@@ -89,9 +89,6 @@ public class ReservaController  extends BaseController {
         }else{ // Si no hay errores guardamos el registro
 
             try {
-                // Guardar el nuevo registro
-                // Incrementar el contador del Libro
-                // Generar número de registro
                 UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
                 registro.setOficina(getOficinaActiva(request));

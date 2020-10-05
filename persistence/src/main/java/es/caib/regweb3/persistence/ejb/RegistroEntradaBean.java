@@ -118,9 +118,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
                 registroEntrada.getRegistroDetalle().getAnexosFull().addAll(anexosFull);
             }
+
             // Obtenemos el próximo evento del Registro
-            Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
-            registroEntrada.setEvento(evento);
+            if(!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_RESERVA)){
+                Long evento = proximoEventoEntrada(registroEntrada, usuarioEntidad.getEntidad(), registroEntrada.getOficina().getId());
+                registroEntrada.setEvento(evento);
+            }
 
             //Llamamos al plugin de postproceso
             postProcesoNuevoRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());

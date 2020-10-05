@@ -210,11 +210,6 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
 
-        if (registro.getEvento() == null) {
-            Mensaje.saveMessageError(request, getMessage("aviso.registro.evento"));
-            return "redirect:/inici";
-        }
-
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
         Oficina oficinaActiva = getOficinaActiva(request);
