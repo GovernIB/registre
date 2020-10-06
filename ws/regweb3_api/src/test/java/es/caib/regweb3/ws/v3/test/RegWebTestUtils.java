@@ -183,6 +183,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public static RegWebRegistroEntradaWs getRegistroEntradaApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_REGISTRO_ENTRADA);
 
+        if(endpoint.startsWith("https")){
+            XTrustProvider.install();
+        }
+
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebRegistroEntradaWsService service = new RegWebRegistroEntradaWsService(wsdl);
 
@@ -196,6 +200,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public static RegWebRegistroSalidaWs getRegistroSalidaApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_REGISTRO_SALIDA);
 
+        if(endpoint.startsWith("https")){
+            XTrustProvider.install();
+        }
+
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebRegistroSalidaWsService service = new RegWebRegistroSalidaWsService(wsdl);
 
@@ -208,6 +216,10 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
     public static RegWebInfoWs getInfoApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_INFO);
+
+        if(endpoint.startsWith("https")){
+            XTrustProvider.install();
+        }
 
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebInfoWsService service = new RegWebInfoWsService(wsdl);
