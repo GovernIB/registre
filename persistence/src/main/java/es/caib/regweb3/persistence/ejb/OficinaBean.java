@@ -342,14 +342,14 @@ public class OficinaBean extends BaseEjbJPA<Oficina, Long> implements OficinaLoc
     }
 
     @Override
-    public LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos) throws Exception {
+    public LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos, Boolean oficinaVirtual) throws Exception {
 
         LinkedHashSet<Oficina> oficinas = new LinkedHashSet<Oficina>();  // Utilizamos un Set porque no permite duplicados
 
         // Recorremos los Organismos al que pertenecen, obtenemos las Oficinas que pueden Registrar en el.
         for (Organismo organismo : organismos) {
-            oficinas.addAll(oficinasFuncionales(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
-            oficinas.addAll(oficinasOrganizativas(organismo.getId(), RegwebConstantes.OFICINA_VIRTUAL_NO));
+            oficinas.addAll(oficinasFuncionales(organismo.getId(), oficinaVirtual));
+            oficinas.addAll(oficinasOrganizativas(organismo.getId(), oficinaVirtual));
         }
 
         return oficinas;

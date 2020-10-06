@@ -162,10 +162,11 @@ public interface OficinaLocal extends BaseEjb<Oficina, Long> {
     /**
      * Obtiene las Oficinas que dan servicio a los Organismos seleccionados
      * @param organismos
+     * @param oficinaVirtual 'true' se incluirán las Oficinas virtuales
      * @return
      * @throws Exception
      */
-    LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos) throws Exception;
+    LinkedHashSet<Oficina> oficinasServicio(List<Organismo> organismos, Boolean oficinaVirtual) throws Exception;
 
     /**
      * Obtiene las Oficinas que dan servicio SIR a los Libros seleccionados
