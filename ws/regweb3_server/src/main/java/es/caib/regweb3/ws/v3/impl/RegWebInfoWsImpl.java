@@ -278,7 +278,6 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         }
 
-
         LinkedHashSet<Oficina> oficinas = permisoOrganismoUsuarioEjb.getOficinasPermiso(usuarioEntidad.getId(), autorizacion);
 
         // Convertimos el Listado de Oficinas en un Listado de OficinaWs

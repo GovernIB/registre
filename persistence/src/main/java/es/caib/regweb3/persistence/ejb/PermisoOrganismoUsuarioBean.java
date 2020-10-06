@@ -257,7 +257,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
         List<Organismo> organismos =  getOrganismosPermiso(idUsuarioEntidad, idPermiso);
 
         // Devolvemos las Oficinas que dan servicio a los Organismos anteriores
-        return oficinaEjb.oficinasServicio(organismos);
+        return oficinaEjb.oficinasServicio(organismos, true);
     }
 
     @Override
@@ -297,7 +297,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         List<Organismo> organismos =  getOrganismosRegistro(idUsuarioEntidad);
 
-        return oficinaEjb.oficinasServicio(organismos);
+        return oficinaEjb.oficinasServicio(organismos, false);
 
     }
 
@@ -335,7 +335,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         List<Organismo> organismos =  getOrganismosConsulta(idUsuarioEntidad);
 
-        return oficinaEjb.oficinasServicio(organismos);
+        return oficinaEjb.oficinasServicio(organismos, false);
     }
 
     @Override
@@ -344,7 +344,7 @@ public class PermisoOrganismoUsuarioBean extends BaseEjbJPA<PermisoOrganismoUsua
 
         List<Organismo> organismos =  getOrganismosPermiso(idUsuarioEntidad, RegwebConstantes.PERMISO_RESPONSABLE_OFICINA);
 
-        return oficinaEjb.oficinasServicio(organismos);
+        return oficinaEjb.oficinasServicio(organismos, false);
     }
 
     @Override

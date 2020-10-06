@@ -254,7 +254,7 @@ public class LoginService {
 
         // Obtenemos los Organismos donde el usuario puede Registrar entradas y de ahí las oficinas que dan servicio
         List<Organismo> organismosRegistroEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_ENTRADA);
-        LinkedHashSet<Oficina> oficinasRegistroEntrada = oficinaEjb.oficinasServicio(organismosRegistroEntrada);
+        LinkedHashSet<Oficina> oficinasRegistroEntrada = oficinaEjb.oficinasServicio(organismosRegistroEntrada, false);
 
         loginInfo.setOrganismosRegistroEntrada(organismosRegistroEntrada);
         loginInfo.setOficinasRegistroEntrada(oficinasRegistroEntrada);
@@ -264,7 +264,7 @@ public class LoginService {
 
         // Obtenemos los Organismos donde el usuario puede Registrar salidas y de ahí las oficinas que dan servicio
         List<Organismo> organismosRegistroSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
-        LinkedHashSet<Oficina> oficinasRegistroSalida = oficinaEjb.oficinasServicio(organismosRegistroSalida);
+        LinkedHashSet<Oficina> oficinasRegistroSalida = oficinaEjb.oficinasServicio(organismosRegistroSalida, false);
 
         loginInfo.setOrganismosRegistroSalida(organismosRegistroSalida);
         loginInfo.setOficinasRegistroSalida(oficinasRegistroSalida);
@@ -275,7 +275,7 @@ public class LoginService {
 
         // Obtenemos los Organismos donde el usuario puede consultar entradas y de ahí las oficinas que dan servicio
         List<Organismo> organismosConsultaEntrada = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_ENTRADA);
-        LinkedHashSet<Oficina> oficinasConsultaEntrada = oficinaEjb.oficinasServicio(organismosConsultaEntrada);
+        LinkedHashSet<Oficina> oficinasConsultaEntrada = oficinaEjb.oficinasServicio(organismosConsultaEntrada, false);
 
         loginInfo.setOrganismosConsultaEntrada(organismosConsultaEntrada);
         loginInfo.setOficinasConsultaEntrada(oficinasConsultaEntrada);
@@ -285,7 +285,7 @@ public class LoginService {
 
         // Obtenemos los Organismos donde el usuario puede consultar salidas y de ahí las oficinas que dan servicio
         List<Organismo> organismosConsultaSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
-        LinkedHashSet<Oficina> oficinasConsultaSalida = oficinaEjb.oficinasServicio(organismosConsultaSalida);
+        LinkedHashSet<Oficina> oficinasConsultaSalida = oficinaEjb.oficinasServicio(organismosConsultaSalida, false);
 
         loginInfo.setOrganismosConsultaSalida(organismosConsultaSalida);
         loginInfo.setOficinasConsultaSalida(oficinasConsultaSalida);
