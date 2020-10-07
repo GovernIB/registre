@@ -426,7 +426,7 @@ public class RegistroDetalle implements Serializable {
 
     @OneToMany(cascade= CascadeType.ALL,targetEntity=Anexo.class, mappedBy="registroDetalle")
     @LazyCollection(value= LazyCollectionOption.FALSE)
-    @OrderBy("id")
+    @OrderBy("tipoDocumento")
     public List<Anexo> getAnexos() {
         if(anexos == null){
             return new ArrayList<Anexo>();
