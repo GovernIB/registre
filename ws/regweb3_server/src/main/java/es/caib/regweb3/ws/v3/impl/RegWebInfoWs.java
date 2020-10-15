@@ -1,10 +1,8 @@
 package es.caib.regweb3.ws.v3.impl;
 
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.*;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -26,7 +24,6 @@ public interface RegWebInfoWs {
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
     List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
             WsI18NException;
@@ -37,7 +34,6 @@ public interface RegWebInfoWs {
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
     @Deprecated
     List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
@@ -77,7 +73,6 @@ public interface RegWebInfoWs {
      * @throws WsI18NException
      */
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                           @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
 
@@ -91,7 +86,6 @@ public interface RegWebInfoWs {
      * @throws WsI18NException
      */
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
         @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException;
 
@@ -108,7 +102,6 @@ public interface RegWebInfoWs {
                                                @WebParam(name = "organismo") String organismo) throws Throwable, WsI18NException;
 
     @WebMethod
-    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     List<OrganismoWs> listarOrganismos(
         @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
         throws Throwable, WsI18NException;
