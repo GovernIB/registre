@@ -795,6 +795,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }
             resultado.setResults(asientos);
 
+            peticion.append("asientos: ").append(asientos.size()).append(System.getProperty("line.separator"));
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
         }catch (Exception e){
