@@ -1,6 +1,5 @@
 package es.caib.regweb3.ws.v3.impl;
 
-import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.ws.model.IdentificadorWs;
 import es.caib.regweb3.ws.model.JustificanteWs;
 import es.caib.regweb3.ws.model.RegistroSalidaResponseWs;
@@ -8,7 +7,6 @@ import es.caib.regweb3.ws.model.RegistroSalidaWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
 
-import javax.annotation.security.RolesAllowed;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -105,7 +103,6 @@ public interface RegWebRegistroSalidaWs /*extends IBaseWs*/ {
      * @throws Throwable
      * @throws WsI18NException
      */
-    @RolesAllowed({ RegwebConstantes.RWE_USUARI})
     @WebMethod
     @Deprecated
     public IdentificadorWs obtenerRegistroSalidaID(
