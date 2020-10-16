@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-//import org.springframework.stereotype.Component;
-
 /**
  * Created by Fundació BIT.
  *
@@ -40,7 +38,6 @@ import java.util.List;
 @WebService(name = RegWebInfoWsImpl.NAME_WS, portName = RegWebInfoWsImpl.NAME_WS, serviceName = RegWebInfoWsImpl.NAME_WS
         + "Service", endpointInterface = "es.caib.regweb3.ws.v3.impl.RegWebInfoWs")
 @WebContext(contextRoot = "/regweb3/ws", urlPattern = "/v3/" + RegWebInfoWsImpl.NAME, transportGuarantee = TransportGuarantee.NONE, secureWSDLAccess = false, authMethod = "WSBASIC")
-//@Component
 public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebInfoWs {
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -77,7 +74,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
      */
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<TipoDocumentalWs> listarTipoDocumental(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
             WsI18NException {
 
@@ -107,7 +104,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
      */
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<TipoAsuntoWs> listarTipoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3) throws Throwable,
             WsI18NException {
 
@@ -143,7 +140,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
      */
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<CodigoAsuntoWs> listarCodigoAsunto(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "codigoTipoAsunto") String codigoTipoAsunto) throws Throwable,
             WsI18NException {
 
@@ -183,7 +180,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<LibroOficinaWs> obtenerLibrosOficina(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException {
 
         // 1.- Comprobaciones de entidad
@@ -220,7 +217,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<LibroOficinaWs> obtenerLibrosOficinaUsuario(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3, @WebParam(name = "usuario") String usuario, @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException {
 
         // 1.- Comprobaciones de entidad
@@ -255,7 +252,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<OficinaWs> listarOficinas(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                           @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
@@ -292,7 +289,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<LibroWs> listarLibros(@WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3,
                                       @WebParam(name = "oficinaCodigoDir3") String oficinaCodigoDir3, @WebParam(name = "autorizacion") Long autorizacion) throws Throwable, WsI18NException {
 
@@ -339,7 +336,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public LibroWs listarLibroOrganismo(@WebParam(name = "entidad") String entidadCodigo,
                                         @WebParam(name = "organismo") String organismo) throws Throwable, WsI18NException {
 
@@ -376,7 +373,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
     @Override
     @WebMethod
-    @RolesAllowed({RegwebConstantes.RWE_USUARI})
+    @RolesAllowed({RWE_USUARI, RWE_WS_ENTRADA, RWE_WS_SALIDA})
     public List<OrganismoWs> listarOrganismos(
             @WebParam(name = "entidadCodigoDir3") String entidadCodigoDir3)
             throws Throwable, WsI18NException {
