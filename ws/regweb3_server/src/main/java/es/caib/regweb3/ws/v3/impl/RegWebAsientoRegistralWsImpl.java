@@ -502,8 +502,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
                 }
 
-                // Solo se puede generar si el registro es Válido
-                if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
+                // Solo se puede generar si el registro es Válido o está en la Cola de distribución
+                if(registroEntrada.getEstado().equals(REGISTRO_VALIDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUYENDO)){
 
                     try{
                         justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
