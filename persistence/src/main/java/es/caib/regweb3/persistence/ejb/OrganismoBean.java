@@ -712,8 +712,12 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         Organismo organismo = findById(idOrganismo);
 
-        if (organismo.getLibros() != null && organismo.getLibros().size() > 0) {
-            return organismo.getLibros().get(0);
+        if(organismo.getLibros() != null && organismo.getLibros().size() > 0) {
+            for(Libro libro:organismo.getLibros()){
+                if(libro.getActivo()){
+                    return libro;
+                }
+            }
 
         }else if(organismo.getOrganismoSuperior() == null){
             return null;
@@ -721,6 +725,8 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }else{
             return obtenerLibroRegistro(organismo.getOrganismoSuperior().getId());
         }
+
+        return null;
     }
 
 
