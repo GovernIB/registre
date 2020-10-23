@@ -836,6 +836,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         }
 
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
+        peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
 
         try{
 

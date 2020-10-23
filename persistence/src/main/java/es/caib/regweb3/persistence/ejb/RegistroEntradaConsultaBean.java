@@ -786,6 +786,30 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
 
+        Query q;
+        q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setParameter("documento", documento.trim());
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Object[]> result = q.getResultList();
+
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+
+        for (Object[] object : result) {
+            RegistroEntrada registro = new RegistroEntrada();
+            registro.setId((Long) object[0]);
+            registro.setNumeroRegistroFormateado((String) object[1]);
+
+            registros.add(registro);
+        }
+
+        return registros;
+
+        /*
         // Internos
         Query q;
         q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
@@ -835,7 +859,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             registros.add(registro);
         }
 
-        return registros;
+        return registros;*/
     }
 
     @Override
