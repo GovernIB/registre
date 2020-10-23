@@ -238,6 +238,14 @@
                                                         <form:input path="entidad.libro.codigo" cssClass="form-control" maxlength="4"/> <form:errors path="entidad.libro.codigo" cssClass="help-block" element="span"/>
                                                     </div>
                                                 </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <form:label path="entidad.libro.activo"><spring:message code="regweb.activo"/></form:label>
+                                                    </div>
+                                                    <div class="col-xs-8">
+                                                        <form:checkbox path="entidad.libro.activo"/> <form:errors path="entidad.libro.activo" cssClass="help-block" element="span"/>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
