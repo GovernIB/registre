@@ -268,14 +268,18 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
             log.info("La entidad "+codigoEntidad+" no existe.");
             throw new I18NException("registro.entidad.noExiste", codigoEntidad);
         }else if(!entidad.getActivo()){
-            throw new I18NException("registro.entidad.inactiva", codigoEntidad);
+            throw new I18NException("registro.entidad.inactiva", entidad.getNombre());
         }else if(entidad.getMantenimiento()){
-            throw new I18NException("registro.entidad.mantenimiento", codigoEntidad);
+            throw new I18NException("registro.entidad.mantenimiento", entidad.getNombre());
+        }else if(entidad.getLibro() == null){
+            throw new I18NException("entidad.libro.null", entidad.getNombre());
+        }else if(!entidad.getLibro().getActivo()){
+            throw new I18NException("entidad.libro.inactivo", entidad.getNombre());
         }
 
         //Si quedan libros pendientes de procesar no se puede registrar
         if(pendienteEjb.findPendientesProcesar(entidad.getId()).size()>0){
-            throw new I18NException("registro.entidad.mantenimiento", codigoEntidad);
+            throw new I18NException("registro.entidad.mantenimiento", entidad.getNombre());
         }
 
         // 3.- Comprobamos que el Usuario pertenece a la Entidad indicada
