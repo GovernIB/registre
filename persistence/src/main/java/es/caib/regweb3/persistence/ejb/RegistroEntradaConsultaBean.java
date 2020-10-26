@@ -786,21 +786,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
 
-       /* Query q;
-        q = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
-
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("documento", documento.trim());
-        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return q.getResultList();*/
-
-
-        // Internos
         Query q;
-        q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+        q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
+                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
                 "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
@@ -808,41 +796,19 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Object[]> internos = q.getResultList();
-
-        // Externos
-        Query q1;
-        q1 = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destinoExternoCodigo, re.destinoExternoDenominacion from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado and re.destino is null order by re.fecha desc");
-
-        q1.setParameter("idEntidad", idEntidad);
-        q1.setParameter("documento", documento.trim());
-        q1.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q1.setHint("org.hibernate.readOnly", true);
-
-        List<Object[]> externos = q1.getResultList();
+        List<Object[]> result = q.getResultList();
 
         List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
 
-        for (Object[] object : internos) {
+        for (Object[] object : result) {
             RegistroEntrada registro = new RegistroEntrada();
             registro.setId((Long) object[0]);
             registro.setNumeroRegistroFormateado((String) object[1]);
             registro.setFecha((Date) object[2]);
             registro.getRegistroDetalle().setExtracto((String) object[3]);
             registro.setDestino((Organismo) object[4]);
-
-            registros.add(registro);
-        }
-
-        for (Object[] object : externos) {
-            RegistroEntrada registro = new RegistroEntrada();
-            registro.setId((Long) object[0]);
-            registro.setNumeroRegistroFormateado((String) object[1]);
-            registro.setFecha((Date) object[2]);
-            registro.getRegistroDetalle().setExtracto((String) object[3]);
-            registro.setDestinoExternoCodigo((String) object[4]);
-            registro.setDestinoExternoDenominacion((String) object[5]);
+            registro.setDestinoExternoCodigo((String) object[5]);
+            registro.setDestinoExternoDenominacion((String) object[6]);
 
             registros.add(registro);
         }
