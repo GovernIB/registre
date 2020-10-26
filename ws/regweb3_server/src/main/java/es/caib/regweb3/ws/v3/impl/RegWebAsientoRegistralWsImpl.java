@@ -789,8 +789,12 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
             for (RegistroEntrada entrada : entradas) {
 
-                asientos.add(AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, entrada.getNumeroRegistroFormateado(), REGISTRO_ENTRADA,
-                        UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoOrganismoUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
+                asientos.add(AsientoRegistralConverter.transformarRegistro(entrada, REGISTRO_ENTRADA, entidadActiva,
+                        UsuarioAplicacionCache.get().getIdioma(),  oficioRemisionEjb, trazabilidadSirEjb));
+
+
+                //asientos.add(AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, entrada.getNumeroRegistroFormateado(), REGISTRO_ENTRADA,
+                  //      UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoOrganismoUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
 
             }
             resultado.setResults(asientos);
@@ -799,6 +803,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
 
         }catch (Exception e){
+            e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
             throw new I18NException("error.ws.general");
         }
@@ -856,6 +861,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             return asiento;
 
         }catch (Exception e){
+            e.printStackTrace();
             integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }

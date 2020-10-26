@@ -5,7 +5,6 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
-import es.caib.regweb3.ws.model.AnexoWs;
 import es.caib.regweb3.ws.model.AsientoRegistralWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
@@ -179,9 +178,7 @@ public class AsientoRegistralConverter extends CommonConverter {
       }
 
       // Anexos
-      List<AnexoWs> anexosWs = transformarAnexosWs(registro.getRegistroDetalle());
-
-      asientoRegistral.setAnexos(anexosWs);
+      asientoRegistral.setAnexos(transformarAnexosWs(registro.getRegistroDetalle()));
 
       return asientoRegistral;
    }
@@ -308,19 +305,16 @@ public class AsientoRegistralConverter extends CommonConverter {
       asientoRegistral.setEntidadCodigo(entidad.getCodigoDir3());
       asientoRegistral.setEntidadDenominacion(entidad.getNombre());
 
-      asientoRegistral.setNumeroRegistro(registro.getNumeroRegistro());
-      asientoRegistral.setNumeroRegistroFormateado(registro.getNumeroRegistroFormateado());
-      asientoRegistral.setFechaRegistro(registro.getFecha());
-      asientoRegistral.setCodigoUsuario(registro.getUsuario().getUsuario().getIdentificador());
-
-      asientoRegistral.setEntidadRegistralInicioCodigo(registro.getOficina().getCodigo());//Oficina
-      asientoRegistral.setEntidadRegistralInicioDenominacion(registro.getOficina().getDenominacion());
-      asientoRegistral.setLibroCodigo(registro.getLibro().getCodigo());
-
-      asientoRegistral.setResumen(registroDetalle.getExtracto());
-      asientoRegistral.setTipoDocumentacionFisicaCodigo(registroDetalle.getTipoDocumentacionFisica());
-
-      asientoRegistral.setIdioma(registroDetalle.getIdioma());
+      if (registro.getNumeroRegistro() != null) { asientoRegistral.setNumeroRegistro(registro.getNumeroRegistro());}
+      if (registro.getNumeroRegistroFormateado() != null) { asientoRegistral.setNumeroRegistroFormateado(registro.getNumeroRegistroFormateado());}
+      if (registro.getFecha() != null) { asientoRegistral.setFechaRegistro(registro.getFecha());}
+      if (registro.getUsuario() != null) { asientoRegistral.setCodigoUsuario(registro.getUsuario().getUsuario().getIdentificador());}
+      if (registro.getOficina() != null) { asientoRegistral.setEntidadRegistralInicioCodigo(registro.getOficina().getCodigo());}//Oficina
+      if (registro.getOficina() != null) { asientoRegistral.setEntidadRegistralInicioDenominacion(registro.getOficina().getDenominacion());}
+      if (registro.getLibro() != null) { asientoRegistral.setLibroCodigo(registro.getLibro().getCodigo());}
+      if (registroDetalle.getExtracto() != null) { asientoRegistral.setResumen(registroDetalle.getExtracto());}
+      if (registroDetalle.getTipoDocumentacionFisica() != null) { asientoRegistral.setTipoDocumentacionFisicaCodigo(registroDetalle.getTipoDocumentacionFisica());}
+      if (registroDetalle.getIdioma() != null) { asientoRegistral.setIdioma(registroDetalle.getIdioma());}
 
       // Código Asunto
       if(registroDetalle.getCodigoAsunto() != null){
@@ -332,8 +326,8 @@ public class AsientoRegistralConverter extends CommonConverter {
          asientoRegistral.setCodigoAsuntoDenominacion(null);
       }
 
-      asientoRegistral.setReferenciaExterna(registroDetalle.getReferenciaExterna());
-      asientoRegistral.setNumeroExpediente(registroDetalle.getExpediente());
+      if (registroDetalle.getReferenciaExterna() != null) { asientoRegistral.setReferenciaExterna(registroDetalle.getReferenciaExterna());}
+      if (registroDetalle.getExpediente() != null) { asientoRegistral.setNumeroExpediente(registroDetalle.getExpediente());}
 
       if(registroDetalle.getTransporte() != null){
          asientoRegistral.setTipoTransporte(RegwebConstantes.CODIGO_SICRES_BY_TRANSPORTE.get(registroDetalle.getTransporte()));
@@ -342,8 +336,8 @@ public class AsientoRegistralConverter extends CommonConverter {
 
       }
 
-      asientoRegistral.setNumeroTransporte(registroDetalle.getNumeroTransporte());
-      asientoRegistral.setObservaciones(registroDetalle.getObservaciones());
+      if (registroDetalle.getNumeroTransporte() != null) { asientoRegistral.setNumeroTransporte(registroDetalle.getNumeroTransporte());}
+      if (registroDetalle.getObservaciones() != null) { asientoRegistral.setObservaciones(registroDetalle.getObservaciones());}
 
       // Oficina Origen
       if(registroDetalle.getOficinaOrigen() != null){
@@ -354,39 +348,42 @@ public class AsientoRegistralConverter extends CommonConverter {
          asientoRegistral.setEntidadRegistralOrigenDenominacion(registroDetalle.getOficinaOrigenExternoDenominacion());
       }
 
-      asientoRegistral.setAplicacion(registroDetalle.getAplicacion());
-      asientoRegistral.setVersion(registroDetalle.getVersion());
+      if (registroDetalle.getAplicacion() != null) { asientoRegistral.setAplicacion(registroDetalle.getAplicacion());}
+      if (registroDetalle.getVersion() != null) { asientoRegistral.setVersion(registroDetalle.getVersion());}
 
-      asientoRegistral.setExpone(registroDetalle.getExpone());
-      asientoRegistral.setSolicita(registroDetalle.getSolicita());
+      if (registroDetalle.getExpone() != null) { asientoRegistral.setExpone(registroDetalle.getExpone());}
+      if (registroDetalle.getSolicita() != null) { asientoRegistral.setSolicita(registroDetalle.getSolicita());}
 
-      asientoRegistral.setCodigoSia(registroDetalle.getCodigoSia());
-      asientoRegistral.setPresencial(registroDetalle.getPresencial());
-      asientoRegistral.setTipoEnvioDocumentacion(registroDetalle.getTipoEnvioDocumentacion());
+      if (registroDetalle.getCodigoSia() != null) { asientoRegistral.setCodigoSia(registroDetalle.getCodigoSia());}
+      if (registroDetalle.getPresencial() != null) { asientoRegistral.setPresencial(registroDetalle.getPresencial());}
+      if (registroDetalle.getTipoEnvioDocumentacion() != null) { asientoRegistral.setTipoEnvioDocumentacion(registroDetalle.getTipoEnvioDocumentacion());}
 
       // Campos dependientes del Estado
-      if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_ACEPTADO)) {
-         OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), asientoRegistral.getEntidadRegistralInicioCodigo());
-         if (oficioRemision != null) {
-            asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
-            asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
-         }
-      } else if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)) {
+      if(asientoRegistral.getEstado() != null){
 
-         List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
-
-         for (TrazabilidadSir trazaSir : trazabilidades) {
-            if (RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO.equals(trazaSir.getTipo())) {
-               asientoRegistral.setMotivo(trazaSir.getObservaciones());
+         if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_OFICIO_ACEPTADO)) {
+            OficioRemision oficioRemision = oficioRemisionEjb.getByIdentificadorIntercambio(registroDetalle.getIdentificadorIntercambio(), asientoRegistral.getEntidadRegistralInicioCodigo());
+            if (oficioRemision != null) {
+               asientoRegistral.setFechaRegistroDestino(oficioRemision.getFechaEntradaDestino());
+               asientoRegistral.setNumeroRegistroDestino(oficioRemision.getNumeroRegistroEntradaDestino());
             }
-         }
+         } else if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)) {
 
-      } else if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)) {
-         List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
+            List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
 
-         for (TrazabilidadSir trazaSir : trazabilidades) {
-            if (RegwebConstantes.TRAZABILIDAD_SIR_REENVIO.equals(trazaSir.getTipo())) {
-               asientoRegistral.setMotivo(trazaSir.getObservaciones());
+            for (TrazabilidadSir trazaSir : trazabilidades) {
+               if (RegwebConstantes.TRAZABILIDAD_SIR_RECHAZO.equals(trazaSir.getTipo())) {
+                  asientoRegistral.setMotivo(trazaSir.getObservaciones());
+               }
+            }
+
+         } else if (asientoRegistral.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)) {
+            List<TrazabilidadSir> trazabilidades = trazabilidadEjb.getByIdIntercambio(registroDetalle.getIdentificadorIntercambio(), entidad.getId());
+
+            for (TrazabilidadSir trazaSir : trazabilidades) {
+               if (RegwebConstantes.TRAZABILIDAD_SIR_REENVIO.equals(trazaSir.getTipo())) {
+                  asientoRegistral.setMotivo(trazaSir.getObservaciones());
+               }
             }
          }
       }
