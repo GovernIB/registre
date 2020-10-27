@@ -76,19 +76,15 @@ public class ContadorBean extends BaseEjbJPA<Contador, Long> implements Contador
     @Override
     public NumeroRegistro incrementarContador(Long idContador) throws Exception {
 
-        //log.info("Antes: " + findById(idContador).getNumero());
         Query q = em.createQuery("update Contador set numero = numero + 1 where id = :idContador ");
         q.setParameter("idContador", idContador);
         q.executeUpdate();
-        em.flush();
+        //em.flush();
 
-        Query q1 = em.createQuery("select numero from Contador where id = :idContador");
-        q1.setParameter("idContador", idContador);
-        Integer numero = (Integer) q1.getSingleResult();
-        //log.info("Después: " + numero);
+        Integer numero = (Integer) em.createQuery("select numero from Contador where id = :idContador").setParameter("idContador", idContador).getSingleResult();
+        //q.setHint("org.hibernate.cacheMode", CacheMode.IGNORE);
 
         return new NumeroRegistro(numero,Calendar.getInstance().getTime());
-
 
     }
 
