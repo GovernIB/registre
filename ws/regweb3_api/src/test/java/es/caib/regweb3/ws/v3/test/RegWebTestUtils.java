@@ -33,6 +33,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     // TODO GEN APP ADD OTHERS
 
     private static Properties testProperties = new Properties();
+    private static String entorno = "_localhost";
 
     static {
         // Traduccions
@@ -52,56 +53,60 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     }
 
 
+    public static void setEntorno(String entorno) {
+        RegWebTestUtils.entorno = entorno;
+    }
+
     public static String getEndPoint(String api) {
-        return testProperties.getProperty("test_host") + api;
+        return testProperties.getProperty("test_host" + entorno) + api;
     }
 
     public static String getTestAppUserName() {
-        return testProperties.getProperty("test_usr");
+        return testProperties.getProperty("test_usr" + entorno);
     }
 
 
     public static String getTestAppPassword() {
-        return testProperties.getProperty("test_pwd");
+        return testProperties.getProperty("test_pwd" + entorno);
     }
 
     public static String getTestEntidadCodigoDir3() {
-        return testProperties.getProperty("test_entidad_dir3");
+        return testProperties.getProperty("test_entidad_dir3" + entorno);
     }
 
     public static String getTestDestinoCodigoDir3() {
-        return testProperties.getProperty("test_destino_dir3");
+        return testProperties.getProperty("test_destino_dir3" + entorno);
     }
 
     public static String getTestOrigenCodigoDir3() {
-        return testProperties.getProperty("test_origen_dir3");
+        return testProperties.getProperty("test_origen_dir3" + entorno);
     }
 
     public static String getTestOficinaOrigenCodigoDir3() {
-        return testProperties.getProperty("test_oficina_origen_dir3");
+        return testProperties.getProperty("test_oficina_origen_dir3" + entorno);
     }
 
     public static String getTestDestinoLibro() {
-        return testProperties.getProperty("test_libro");
+        return testProperties.getProperty("test_libro" + entorno);
     }
 
     public static String getTestUserName() {
-        return testProperties.getProperty("test_username");
+        return testProperties.getProperty("test_username" + entorno);
     }
 
 
     public static String getTestTipoAsunto() {
-        return testProperties.getProperty("test_tipoasunto");
+        return testProperties.getProperty("test_tipoasunto" + entorno);
     }
 
 
     public static String getTestAnexoTipoDocumental() {
-        return testProperties.getProperty("test_anexo_tipodocumental");
+        return testProperties.getProperty("test_anexo_tipodocumental" + entorno);
     }
 
 
     public static String getTestArchivosPath() {
-        return testProperties.getProperty("test_archivos_path");
+        return testProperties.getProperty("test_archivos_path" + entorno);
     }
 
     public static void configAddressUserPassword(String usr, String pwd,
@@ -114,7 +119,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     }
 
     public static Long getTestCodigoSia() {
-        return new Long(testProperties.getProperty("test_codigo_sia"));
+        return new Long(testProperties.getProperty("test_codigo_sia" + entorno));
     }
 
     public static RegWebHelloWorldWs getHelloWorldApi() throws Exception {
@@ -349,7 +354,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         asiento.getInteresados().add(interesadoWs);
 
         try {
-            //asiento.getAnexos().addAll(getAnexos());
+            asiento.getAnexos().addAll(getAnexos());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -646,6 +651,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             System.out.println("");
             System.out.println("Nombre anexo: " + anexo.getTitulo());
             System.out.println("isJustificante: " + anexo.isJustificante());
+            System.out.println("fichero: " + anexo.getFicheroAnexado().length);
         }
     }
 

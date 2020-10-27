@@ -164,7 +164,7 @@ public class RegwebInfoTest extends RegWebTestUtils {
     }
 
     @Test
-    public void testOficinas() {
+    public void testListarOficinas() {
         String codigoEntidadDir3 = getTestEntidadCodigoDir3();
         try {
             List<OficinaWs> oficinas = infoApi.listarOficinas(codigoEntidadDir3, PERMISO_REGISTRO_ENTRADA);
@@ -176,11 +176,32 @@ public class RegwebInfoTest extends RegWebTestUtils {
 
         } catch (WsI18NException i18ne) {
             System.err.println(WsClientUtils.toString(i18ne));
-            //Assert.assertEquals("error.valor.requerido.ws", i18ne.getFaultInfo().getTranslation().getCode());
 
         } catch (Exception e) {
             System.err.println("Error desconegut: " + e.getMessage());
-            //Assert.fail("WsValidationException no esperada");
+        }
+
+    }
+
+    @Test
+    public void tesListarLibroOrganismo() {
+        String codigoEntidadDir3 = getTestEntidadCodigoDir3();
+
+        try {
+            LibroWs libro = infoApi.listarLibroOrganismo(codigoEntidadDir3, "A04032198");
+
+            if(libro != null){
+                System.out.println("Libro: " + libro.getCodigoLibro());
+
+            }
+
+        } catch (WsI18NException i18ne) {
+            System.err.println(WsClientUtils.toString(i18ne));
+
+
+        } catch (Exception e) {
+            System.err.println("Error desconegut: " + e.getMessage());
+
         }
 
     }
