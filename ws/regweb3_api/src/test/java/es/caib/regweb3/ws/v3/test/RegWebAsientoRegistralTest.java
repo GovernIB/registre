@@ -24,8 +24,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        asientoRegistralApi = getAsientoRegistralApi();
         setEntorno("_localhost");
+        asientoRegistralApi = getAsientoRegistralApi();
     }
 
     @Test
