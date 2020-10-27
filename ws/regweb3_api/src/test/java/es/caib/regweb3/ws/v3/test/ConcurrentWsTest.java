@@ -25,9 +25,9 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
+        setEntorno("_dev");
         asientoRegistralApi = getAsientoRegistralApi();
         registroEntradaApi = getRegistroEntradaApi();
-        setEntorno("_localhost");
     }
 
     @Test
@@ -39,13 +39,13 @@ public class ConcurrentWsTest extends RegWebTestUtils{
             AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),entrada,null,false,false);
 
-            AsientoRegistralWs salida = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, false);
-            salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,null,false,false);
+            //AsientoRegistralWs salida = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, false);
+            //salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,null,false,false);
 
             System.out.println("Después crear asiento: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - inicio));
 
             printAsientoBasico(entrada);
-            printAsientoBasico(salida);
+            //printAsientoBasico(salida);
 
         } catch (WsI18NException e) {
             String msg = WsClientUtils.toString(e);
@@ -59,7 +59,7 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     }
 
 
-    @Test
+    //@Test
     @ThreadCount(THREAD_COUNT)
     public void crearRegistroEntradaApiAntigua() throws Exception {
 

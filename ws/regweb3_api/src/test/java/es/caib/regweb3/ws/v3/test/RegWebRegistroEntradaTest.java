@@ -29,8 +29,8 @@ public class RegWebRegistroEntradaTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        registroEntradaApi = getRegistroEntradaApi();
         setEntorno("_localhost");
+        registroEntradaApi = getRegistroEntradaApi();
     }
 
     //@Test
