@@ -25,6 +25,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         asientoRegistralApi = getAsientoRegistralApi();
+        setEntorno("_localhost");
     }
 
     @Test
@@ -215,16 +216,18 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsiento() throws Exception{
 
         try {
-
             AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-            entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,TIPO_OPERACION_COMUNICACION,true,false);
+            entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,null,false,false);
 
-            Assert.assertNotNull(asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), entrada.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_ENTRADA,false));
+            entrada = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), entrada.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_ENTRADA,false);
+            Assert.assertNotNull(entrada);
 
             AsientoRegistralWs salida = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, true);
-            salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,TIPO_OPERACION_COMUNICACION,true,false);
+            salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,TIPO_OPERACION_COMUNICACION,false,false);
 
-            Assert.assertNotNull(asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),salida.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_SALIDA,false));
+            salida = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),salida.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_SALIDA,false);
+
+            Assert.assertNotNull(salida);
 
             printAsiento(entrada);
             printAsiento(salida);
@@ -272,7 +275,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void obtenerJustificante() throws Exception{
 
-        JustificanteWs justificanteWs = asientoRegistralApi.obtenerJustificante(getTestEntidadCodigoDir3(),"L18E256/2020", RegwebConstantes.REGISTRO_ENTRADA);
+        JustificanteWs justificanteWs = asientoRegistralApi.obtenerJustificante(getTestEntidadCodigoDir3(),"GOIB-E-251/2020", RegwebConstantes.REGISTRO_ENTRADA);
 
         Assert.assertNotNull(justificanteWs.getJustificante());
 
@@ -328,14 +331,14 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientosCiudadano() {
 
         try {
-            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"43146650F",0);
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadano(getTestEntidadCodigoDir3(),"99999999R",0);
 
             System.out.println("Asientos encontrados: " +asientos.getTotalResults());
 
-            /*for (Object asiento : asientos.getResults()) {
+            for (Object asiento : asientos.getResults()) {
                 AsientoRegistralWs asientoRegistralWs = (AsientoRegistralWs) asiento;
-                System.out.println("Numero: " + asientoRegistralWs.getNumeroRegistroFormateado());
-            }*/
+                printAsiento(asientoRegistralWs);
+            }
 
         } catch (WsValidationException | WsI18NException e) {
             e.printStackTrace();
@@ -346,7 +349,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientoCiudadano() {
 
         try {
-            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoCiudadano(getTestEntidadCodigoDir3(),"43146650F","SALU-E-169/2019");
+            AsientoRegistralWs asientoRegistralWs = asientoRegistralApi.obtenerAsientoCiudadano(getTestEntidadCodigoDir3(),"99999999R","GOIBE315/2020");
 
             printAsiento(asientoRegistralWs);
 

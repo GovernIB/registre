@@ -27,6 +27,7 @@ public class ConcurrentWsTest extends RegWebTestUtils{
 
         asientoRegistralApi = getAsientoRegistralApi();
         registroEntradaApi = getRegistroEntradaApi();
+        setEntorno("_localhost");
     }
 
     @Test
@@ -58,7 +59,7 @@ public class ConcurrentWsTest extends RegWebTestUtils{
     }
 
 
-    //@Test
+    @Test
     @ThreadCount(THREAD_COUNT)
     public void crearRegistroEntradaApiAntigua() throws Exception {
 
