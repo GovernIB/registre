@@ -781,6 +781,28 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return registroEntrada;
     }
 
+    /**
+     * Carga los Anexos Ligero al RegistroEntrada pasado por parámetro
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroEntrada cargarAnexosLigero(RegistroEntrada registroEntrada) throws Exception, I18NException {
+        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
+
+        List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
+
+        return registroEntrada;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -832,7 +854,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         List<RegistroEntrada> registros = q.getResultList();
 
         if (registros.size() > 0) {
-            return cargarAnexosFull(registros.get(0));
+            return cargarAnexosLigero(registros.get(0));
         } else {
             return null;
         }
