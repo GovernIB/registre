@@ -758,13 +758,36 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         return registroEntrada;
     }
 
+    /**
+     * Carga los Anexos Ligero al RegistroEntrada pasado por parámetro
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    private RegistroEntrada cargarAnexosLigero(RegistroEntrada registroEntrada) throws Exception, I18NException {
+        Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
+
+        List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de entrada.
+        registroEntrada.getRegistroDetalle().setAnexosFull(anexosFull);
+
+        return registroEntrada;
+    }
+
 
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
 
         Query q;
-        q = em.createQuery("Select DISTINCT re from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat " +
+        q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
+                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
                 "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
 
         q.setParameter("idEntidad", idEntidad);
@@ -772,7 +795,24 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
         q.setHint("org.hibernate.readOnly", true);
 
-        return q.getResultList();
+        List<Object[]> result = q.getResultList();
+
+        List<RegistroEntrada> registros = new ArrayList<RegistroEntrada>();
+
+        for (Object[] object : result) {
+            RegistroEntrada registro = new RegistroEntrada();
+            registro.setId((Long) object[0]);
+            registro.setNumeroRegistroFormateado((String) object[1]);
+            registro.setFecha((Date) object[2]);
+            registro.getRegistroDetalle().setExtracto((String) object[3]);
+            registro.setDestino((Organismo) object[4]);
+            registro.setDestinoExternoCodigo((String) object[5]);
+            registro.setDestinoExternoDenominacion((String) object[6]);
+
+            registros.add(registro);
+        }
+
+        return registros;
     }
 
     @Override
@@ -790,8 +830,8 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         List<RegistroEntrada> registros = q.getResultList();
 
-        if (registros.size() == 1) {
-            return cargarAnexosFull(registros.get(0));
+        if (registros.size() > 0) {
+            return cargarAnexosLigero(registros.get(0));
         } else {
             return null;
         }
