@@ -375,6 +375,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     asiento.setEstado(registroSalida.getEstado());
                     asiento.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
 
+                    // Justificante
+                    if(justificante){
+                        asientoRegistralEjb.crearJustificante(usuario, registroSalida, REGISTRO_SALIDA, "ca");
+                    }
+
                     // Integracion OK
                     peticion.append("oficina: ").append(registroSalida.getOficina().getDenominacion()).append(System.getProperty("line.separator"));
                     peticion.append("registro: ").append(registroSalida.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
