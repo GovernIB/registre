@@ -115,12 +115,12 @@
                                 <c:if test="${distribuirRipea}">
 
                                     <c:if test="${(registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC || registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_COMPLEMENTARIA)
-                                      && fn:length(anexos) == 0}">
+                                      && fn:length(registro.registroDetalle.anexos) == 0}">
                                         <button type="button" onclick='mensajeInformativo("<spring:message code="distribuir.advertencia" htmlEscape="true"/>","<spring:message code="distribuir.tipoDoc.anexos" htmlEscape="true"/>")'
                                                 class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                     </c:if>
 
-                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(anexos) > 0}">
+                                    <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_ACOMPANYA_DOC_REQUERIDA || fn:length(registro.registroDetalle.anexos) > 0}">
                                         <button type="button" onclick='confirmDistribuir("<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")'
                                                 class="btn btn-success btn-sm btn-block"><spring:message code="regweb.distribuir"/></button>
                                     </c:if>
