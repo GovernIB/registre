@@ -6,14 +6,12 @@ import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.plugins.validatesignature.api.ValidateSignatureConstants;
 import org.fundaciobit.pluginsib.core.utils.AbstractPluginProperties;
-import org.fundaciobit.pluginsib.core.utils.XTrustProvider;
 
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -119,9 +117,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
             //Obtenemos la entidad y la unidad Administrativa a donde distribuir el registro
             String entidadCodigo = registro.getOficina().getOrganismoResponsable().getEntidad().getCodigoDir3();
-            log.info("entidadCodigo " + entidadCodigo);
             String unidadAdministrativaCodigo= registro.getDestino().getCodigo();
-            log.info("unidadAdminitrativaCodigo "  + unidadAdministrativaCodigo);
 
             //Método donde se invoca al ws de RIPEA para enviar el registro a los destinatarios(busties en este caso)
             //Propietats per atacar els WS de RIPEA
@@ -133,10 +129,6 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
                endpoint,
                usuario,
                password);
-
-            if(endpoint.startsWith("https") && Configuracio.isDevelopment()){
-                XTrustProvider.install();
-            }
             
             // Le especificamos un timeout mayor que el habitual (1 minuto)
             setTimeoutWSCall(client, 300000);
@@ -147,7 +139,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
 
         } catch (Exception e) {
             if(e.getLocalizedMessage().contains("ja ha estat donada")){
-                log.info("Consideramos que la anotación : " + registro.getNumeroRegistroFormateado()+"  ya esxiste y la marcamos como Distribuida");
+                log.info("Consideramos que la anotacion : " + registro.getNumeroRegistroFormateado()+"  ya existe y la marcamos como Distribuida");
                 return true;
             }else{
                 e.printStackTrace();
