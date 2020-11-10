@@ -156,7 +156,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         Oficina oficina = validarOficina(registroEntradaWs.getOficina(), entidadActiva.getId());
 
         // 4.- Comprobar que el Libro está vigente
-        Libro libro = validarLibro(registroEntradaWs.getLibro(), entidadActiva.getId());
+        Libro libro = validarLibroUnico(registroEntradaWs.getLibro(), entidadActiva);
 
         // 5.- Obtener el usuario aplicación que ha realizado la petición
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
@@ -525,7 +525,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 3.- Existe libro
-        Libro libro = validarLibro(codigoLibro, usuarioEntidad.getEntidad().getId());
+        //Libro libro = validarLibro(codigoLibro, usuarioEntidad.getEntidad()); DEJAMOS DE VALIDARLO PORQUE CON LIBRO ÚNICO SE HAN ANULADO TODOS LOS LIBROS
 
         // 4.- Obtenemos el registro
         RegistroEntrada registro;

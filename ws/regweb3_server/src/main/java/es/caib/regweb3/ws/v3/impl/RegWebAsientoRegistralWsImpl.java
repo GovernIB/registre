@@ -196,7 +196,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             Oficina oficina = validarOficina(asientoRegistral.getEntidadRegistralOrigenCodigo(), entidadActiva.getId());
 
             // Comprobar que el Libro está vigente
-            Libro libro = validarLibro(asientoRegistral.getLibroCodigo(), entidadActiva.getId());
+            Libro libro = validarLibroUnico(asientoRegistral.getLibroCodigo(), entidadActiva);
 
             // Comprobar que el Usuario Entidad persona existe en el sistema, si no existe, se intenta crear
             UsuarioEntidad usuario = asientoRegistralEjb.comprobarUsuarioEntidad(asientoRegistral.getCodigoUsuario(), entidadActiva.getId());
@@ -374,6 +374,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     //Actualizamos el AsientoRegistral
                     asiento.setEstado(registroSalida.getEstado());
                     asiento.setIdentificadorIntercambio(registroSalida.getRegistroDetalle().getIdentificadorIntercambio());
+
+                    // Justificante
+                    if(justificante){
+                        asientoRegistralEjb.crearJustificante(usuario, registroSalida, REGISTRO_SALIDA, "ca");
+                    }
 
                     // Integracion OK
                     peticion.append("oficina: ").append(registroSalida.getOficina().getDenominacion()).append(System.getProperty("line.separator"));

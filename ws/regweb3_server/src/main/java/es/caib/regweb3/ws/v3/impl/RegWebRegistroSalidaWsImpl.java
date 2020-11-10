@@ -133,7 +133,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         Oficina oficina = validarOficina(registroSalidaWs.getOficina(), entidadActiva.getId());
 
         // 4.- Comprobar que el Libro está vigente
-        Libro libro = validarLibro(registroSalidaWs.getLibro(), entidadActiva.getId());
+        Libro libro = validarLibroUnico(registroSalidaWs.getLibro(), entidadActiva);
 
         // 5.- Obtener el usuario aplicación que ha realizado la petición
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
@@ -454,14 +454,14 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         }
 
         // 3.- Existe libro
-        Libro libro = validarLibro(codigoLibro, usuarioEntidad.getEntidad().getId());
+        //Libro libro = validarLibro(codigoLibro, usuarioEntidad.getEntidad()); DEJAMOS DE VALIDARLO PORQUE CON LIBRO ÚNICO SE HAN ANULADO TODOS LOS LIBROS
 
         // 4.- Obtenemos el registro
         RegistroSalida registro;
         registro = registroSalidaConsultaEjb.findByNumeroAnyoLibro(numeroRegistro, anyo, codigoLibro);
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistro
-                    + "/" + anyo + " (" + libro + ")");
+                    + "/" + anyo + " (" + codigoLibro + ")");
         }
 
         // 5.- Comprobamos que el usuario tiene permisos de lectura para el RegistroEntrada
