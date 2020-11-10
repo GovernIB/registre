@@ -295,13 +295,13 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     /**
      * Valida el CódigoLibro indicado
      * @param codigoLibro
-     * @param idEntidad
+     * @param entidad
      * @throws I18NException
      * @throws Exception
      */
-    protected Libro validarLibro(String codigoLibro, Long idEntidad) throws  I18NException, Exception{
+    protected Libro validarLibro(String codigoLibro, Entidad entidad) throws  I18NException, Exception{
 
-        Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, idEntidad);
+        Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, entidad.getId());
 
         if (libro == null) { //No existe
             throw new I18NException("registro.libro.noExiste", codigoLibro);
@@ -311,6 +311,32 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         }
 
         return libro;
+    }
+
+    /**
+     * Valida el CódigoLibro indicado
+     * @param codigoLibro
+     * @param entidad
+     * @throws I18NException
+     * @throws Exception
+     */
+    protected Libro validarLibroUnico(String codigoLibro, Entidad entidad) throws  I18NException, Exception{
+
+        Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, entidad.getId());
+
+        if (libro == null) { //No existe
+            // Crear Notificación a Admin entidad
+            log.info("Libro incorrecto, fijamos Libro unico...");
+
+        } else if (!libro.getActivo()) { //Si está inactivo
+            // Crear Notificación a Admin entidad
+            log.info("Libro incorrecto, fijamos Libro unico...");
+
+        }else if(!libro.equals(entidad.getLibro())){
+            return libro;
+        }
+
+        return entidad.getLibro();
     }
 
     /**
