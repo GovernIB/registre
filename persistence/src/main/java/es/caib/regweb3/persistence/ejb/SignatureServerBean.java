@@ -87,8 +87,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      * @throws Exception
      */
     @Override
-    public Firma signJustificanteArxiu(byte[] pdfsource, String languageUI,
-                                  Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException {
+    public Firma signJustificanteApiArxiu(byte[] pdfsource, String languageUI,
+                                          Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException {
 
         // Cerca el Plugin de Justificant definit a les Propietats Globals
         ISignatureServerPlugin signaturePlugin = (ISignatureServerPlugin) pluginEjb.getPlugin(idEntidadActiva, RegwebConstantes.PLUGIN_FIRMA_SERVIDOR);

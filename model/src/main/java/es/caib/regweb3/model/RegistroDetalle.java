@@ -58,6 +58,8 @@ public class RegistroDetalle implements Serializable {
     private String numeroRegistroOrigen;
     @XmlElement
     private Date fechaOrigen;
+    @XmlElement
+    private String expedienteJustificante; // Identificador, de ArxiuCaib, del expediente del Justificante generado
 
     // Campos añadidos SIR
     @XmlTransient
@@ -131,6 +133,7 @@ public class RegistroDetalle implements Serializable {
       this.oficinaOrigenExternoDenominacion = rd.oficinaOrigenExternoDenominacion;
       this.numeroRegistroOrigen = rd.numeroRegistroOrigen;
       this.fechaOrigen = rd.fechaOrigen;
+      this.expedienteJustificante = rd.expedienteJustificante;
       this.expone = rd.expone;
       this.solicita = rd.solicita;
       this.reserva = rd.reserva;
@@ -328,6 +331,14 @@ public class RegistroDetalle implements Serializable {
         this.fechaOrigen = fechaOrigen;
     }
 
+    @Column(name = "EXPEDIENTE_JUST", length= 256)
+    public String getExpedienteJustificante() {
+        return expedienteJustificante;
+    }
+
+    public void setExpedienteJustificante(String expedienteJustificante) {
+        this.expedienteJustificante = expedienteJustificante;
+    }
 
     @Column(name = "INDICADOR_PRUEBA", length = 1, nullable = true)
     @Enumerated(EnumType.ORDINAL)
