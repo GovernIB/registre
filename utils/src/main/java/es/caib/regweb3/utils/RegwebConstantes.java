@@ -784,17 +784,18 @@ public interface RegwebConstantes {
             COLA_ESTADO_PROCESADO
     };
 
-    String TIPOMIME_JPG  = "image/jpeg";
-    String TIPOMIME_XML  = "application/xml";
-    String TIPOMIME_PDF  = "application/pdf";
-    String TIPOMIME_PNG  = "image/png";
-    String TIPOMIME_RTF  = "text/rtf";
-    String TIPOMIME_SVG  = "image/svg+xml";
-    String TIPOMIME_TIFF = "image/tiff";
-    String TIPOMIME_TXT  = "text/plain";
+    String MIME_JPG  = "image/jpeg";
+    String MIME_XML  = "application/xml";
+    String MIME_PDF  = "application/pdf";
+    String MIME_PNG  = "image/png";
+    String MIME_RTF  = "text/rtf";
+    String MIME_RTF2  = "application/rtf";
+    String MIME_SVG  = "image/svg+xml";
+    String MIME_TIFF = "image/tiff";
+    String MIME_TXT  = "text/plain";
 
-    String[] TIPOS_MIME_ACEPTADO_SIR = {TIPOMIME_JPG, TIPOMIME_XML, TIPOMIME_PDF, TIPOMIME_PNG, TIPOMIME_RTF,
-                                       TIPOMIME_SVG, TIPOMIME_TIFF, TIPOMIME_TXT};
+    String[] TIPOS_MIME_ACEPTADO_SIR = {MIME_JPG, MIME_XML, MIME_PDF, MIME_PNG, MIME_RTF, MIME_RTF2,
+                                       MIME_SVG, MIME_TIFF, MIME_TXT};
 
 
 
