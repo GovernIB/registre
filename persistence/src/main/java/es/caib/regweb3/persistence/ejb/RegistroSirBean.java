@@ -158,10 +158,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
         q.setParameter("eliminado",EstadoRegistroSir.ELIMINADO);
 
         List<RegistroSir> registroSir = q.getResultList();
-        if(registroSir.size() == 1){
+        if(registroSir.size() >= 1){
             return registroSir.get(0);
         }else{
-            return  null;
+            return null;
         }
     }
 
