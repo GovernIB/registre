@@ -74,8 +74,8 @@ public class ArxiuCaibUtils {
      */
     public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
-        String expediente = null;
-        String documento = null;
+        ContingutArxiu expediente = null;
+        ContingutArxiu documento = null;
 
         String serieDocumental = getPropertySerieDocumental();
         String codigoProcedimiento = getPropertyCodigoProcedimiento();
@@ -84,31 +84,29 @@ public class ArxiuCaibUtils {
 
             // Creamos el Expediente del Justificante
             expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-            log.info("Expediente creado: " + expediente);
+            log.info("Expediente creado: " + expediente.getIdentificador());
 
             // Creamos el Documento del Justificante
-            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente);
-            log.info("Documento creado: " + documento);
+            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador());
+            log.info("Documento creado: " + documento.getIdentificador());
 
             //Cerramos el expediente
             if(getPropertyCerrarExpediente()){
-                getArxiuPlugin().expedientTancar(expediente);
+                getArxiuPlugin().expedientTancar(expediente.getIdentificador());
             }
-
 
         }catch (ArxiuException e){
             log.info("Error creando el justificante en Arxiu");
             e.printStackTrace();
 
             if(expediente != null){
-                eliminarExpediente(expediente);
+                eliminarExpediente(expediente.getIdentificador());
             }
 
             throw e;
         }
 
         return new JustificanteArxiu(expediente, documento);
-
     }
 
     /**
@@ -120,8 +118,8 @@ public class ArxiuCaibUtils {
      */
     public JustificanteArxiu crearJustificanteGoib(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
-        String expediente = null;
-        String documento = null;
+        ContingutArxiu expediente = null;
+        ContingutArxiu documento = null;
 
         String serieDocumental = getPropertySerieDocumental();
         String codigoProcedimiento = getPropertyCodigoProcedimiento();
@@ -133,25 +131,25 @@ public class ArxiuCaibUtils {
 
                 // Creamos el Expediente del Justificante
                 expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-                log.info("Expediente creado: " + expediente);
+                log.info("Expediente creado: " + expediente.getIdentificador());
 
                 // Guardamos la referencia del expediente creado
-                registro.getRegistroDetalle().setExpedienteJustificante(expediente);
+                registro.getRegistroDetalle().setExpedienteJustificante(expediente.getIdentificador());
                 registroDetalleEjb.merge(registro.getRegistroDetalle());
 
             }else{
-                expediente = registro.getRegistroDetalle().getExpedienteJustificante();
-                log.info("Expediente ya existia: " + expediente);
+                expediente = new Expedient();
+                expediente.setIdentificador(registro.getRegistroDetalle().getExpedienteJustificante());
+                log.info("Expediente ya existia: " + expediente.getIdentificador());
             }
 
-
             // Creamos el Documento del Justificante
-            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente);
-            log.info("Documento creado: " + documento);
+            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador());
+            log.info("Documento creado: " + documento.getIdentificador());
 
             //Cerramos el expediente
             if(getPropertyCerrarExpediente()){
-                getArxiuPlugin().expedientTancar(expediente);
+                getArxiuPlugin().expedientTancar(expediente.getIdentificador());
             }
 
         }catch (ArxiuException e){
@@ -169,7 +167,7 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    private String crearExpediente(IRegistro registro, Long tipoRegistro, String serieDocumental, String codigoProcedimiento) throws Exception {
+    private ContingutArxiu crearExpediente(IRegistro registro, Long tipoRegistro, String serieDocumental, String codigoProcedimiento) throws Exception {
 
         String nombreExpediente = getNombreExpediente(registro, tipoRegistro);
 
@@ -190,7 +188,7 @@ public class ArxiuCaibUtils {
         // Creamos el Expediente en Arxiu
         ContingutArxiu expedienteCreado = getArxiuPlugin().expedientCrear(expediente);
 
-        return expedienteCreado.getIdentificador();
+        return expedienteCreado;
     }
 
 
@@ -203,7 +201,7 @@ public class ArxiuCaibUtils {
      * @return
      * @throws Exception
      */
-    private String crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient) throws Exception{
+    private ContingutArxiu crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient) throws Exception{
 
         //Generamos el Documento
         Document documento = generarDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro.longValue()), serieDocumental, firma);
@@ -211,7 +209,7 @@ public class ArxiuCaibUtils {
         // Crear el Documento en Arxiu
         ContingutArxiu documentoCreado = getArxiuPlugin().documentCrear(documento, uuidExpedient);
 
-        return documentoCreado.getIdentificador();
+        return documentoCreado;
     }
 
     /**
@@ -384,14 +382,14 @@ public class ArxiuCaibUtils {
             if(justificante.getDocumento() != null){
 
                 log.info("Eliminamos el documento: " + justificante.getDocumento());
-                getArxiuPlugin().documentEsborrar(justificante.getDocumento());
+                getArxiuPlugin().documentEsborrar(justificante.getDocumento().getIdentificador());
             }
 
             //Eliminamos el expediente creado
             if(justificante.getExpediente() != null){
 
                 log.info("Eliminamos el expediente: " + justificante.getExpediente());
-                getArxiuPlugin().expedientEsborrar(justificante.getExpediente());
+                getArxiuPlugin().expedientEsborrar(justificante.getExpediente().getIdentificador());
             }
 
         } catch (Exception e) {

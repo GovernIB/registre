@@ -1,29 +1,31 @@
 package es.caib.regweb3.persistence.integracion;
 
 
+import es.caib.plugins.arxiu.api.ContingutArxiu;
+
 public class JustificanteArxiu {
 
-    private String expediente;
-    private String documento;
+    private ContingutArxiu expediente;
+    private ContingutArxiu documento;
 
-    public JustificanteArxiu(String expediente, String documento) {
+    public JustificanteArxiu(ContingutArxiu expediente, ContingutArxiu documento) {
         this.expediente = expediente;
         this.documento = documento;
     }
 
-    public String getExpediente() {
+    public ContingutArxiu getExpediente() {
         return expediente;
     }
 
-    public void setExpediente(String expediente) {
+    public void setExpediente(ContingutArxiu expediente) {
         this.expediente = expediente;
     }
 
-    public String getDocumento() {
+    public ContingutArxiu getDocumento() {
         return documento;
     }
 
-    public void setDocumento(String documento) {
+    public void setDocumento(ContingutArxiu documento) {
         this.documento = documento;
     }
 }
