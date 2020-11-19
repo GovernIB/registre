@@ -26,13 +26,13 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
      List<Long> getUltimosPendientesProcesarERTE(EstadoRegistroSir estado, String oficinaSir, Date fechaInicio, Date fechaFin, String aplicacion, Integer total) throws Exception;
 
 
-        /**
-         * Obtiene un RegistroSir a partir de los parámetros
-         * @param identificadorIntercambio
-         * @param codigoEntidadRegistralDestino
-         * @return
-         * @throws Exception
-         */
+    /**
+     * Obtiene un RegistroSir a partir de los parámetros
+     * @param identificadorIntercambio
+     * @param codigoEntidadRegistralDestino
+     * @return
+     * @throws Exception
+     */
     RegistroSir getRegistroSir(String identificadorIntercambio, String codigoEntidadRegistralDestino) throws Exception;
 
     /**
