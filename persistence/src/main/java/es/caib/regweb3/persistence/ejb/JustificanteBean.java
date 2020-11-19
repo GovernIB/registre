@@ -339,17 +339,14 @@ public class JustificanteBean implements JustificanteLocal {
                 justificanteArxiu = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, firma);
             }
 
-            // Asociamos el CustodyId al anexo que vamos a crear
-            anexo.setExpedienteID(justificanteArxiu.getExpediente());
-            anexo.setCustodiaID(justificanteArxiu.getDocumento());
-
-            // Obtenemos el csv del documento creado
-            String csv = arxiuCaibUtils.getCsv(anexo.getCustodiaID());
-            anexo.setCsv(csv);
+            // Asociamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
+            anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
+            anexo.setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
+            anexo.setCsv(justificanteArxiu.getDocumento().getDocumentMetadades().getCsv());
 
             peticion.append("expedienteID: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documentoID: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
-            peticion.append("csv: ").append(csv).append(System.getProperty("line.separator"));
+            peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
 
             // Guardamos el Anexo
             anexo = anexoEjb.persist(anexo);
