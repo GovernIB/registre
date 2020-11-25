@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.TimeUtils;
@@ -74,7 +75,7 @@ public class JustificanteBean implements JustificanteLocal {
 
         }else if(usuarioEntidad.getEntidad().getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
-            return crearJustificanteArxiu(usuarioEntidad, registro, tipoRegistro, idioma);
+            return crearJustificanteApiArxiu(usuarioEntidad, registro, tipoRegistro, idioma);
 
         }
 
@@ -196,7 +197,6 @@ public class JustificanteBean implements JustificanteLocal {
             SignatureCustody sign = signatureServerEjb.signJustificante(pdfJustificant, idioma, idEntidad, peticion, registro.getNumeroRegistroFormateado(), nombreFichero);
             sign.setName(nombreFichero);
 
-
             // Cream l'annex justificant
             anexoFull.setSignatureCustody(sign);
             anexoFull.setSignatureFileDelete(false);
@@ -259,7 +259,7 @@ public class JustificanteBean implements JustificanteLocal {
      * @throws I18NException
      * @throws I18NValidationException
      */
-    private AnexoFull crearJustificanteArxiu(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
+    private AnexoFull crearJustificanteApiArxiu(UsuarioEntidad usuarioEntidad, IRegistro registro, Long tipoRegistro, String idioma) throws I18NException, I18NValidationException{
 
         JustificanteArxiu justificanteArxiu = null;
         IArxiuPlugin iArxiuPlugin = null;
@@ -324,7 +324,7 @@ public class JustificanteBean implements JustificanteLocal {
             String observacionesAnexo = I18NLogicUtils.tradueix(locale, "justificante.anexo.observaciones");
 
             // Firma el justificant
-            Firma firma = signatureServerEjb.signJustificanteArxiu(pdfJustificant, idioma, entidad.getId(), peticion, registro.getNumeroRegistroFormateado(), nombreFichero);
+            Firma firma = signatureServerEjb.signJustificanteApiArxiu(pdfJustificant, idioma, entidad.getId(), peticion, registro.getNumeroRegistroFormateado(), nombreFichero);
 
             // Crea el anexo del justificante firmado
             Anexo anexo = crearAnexoJustificante(RegwebConstantes.PERFIL_CUSTODIA_ARXIU, tituloAnexo, observacionesAnexo, registro.getRegistroDetalle(), tipoDocumentalEjb.findByCodigoEntidad("TD99", entidad.getId()));
@@ -333,18 +333,20 @@ public class JustificanteBean implements JustificanteLocal {
             anexo.setHash(RegwebUtils.obtenerHash(firma.getContingut()));
 
             // Guardamos el Justificante en Arxiu
-            justificanteArxiu = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, firma);
+            if(Configuracio.isCAIB()){
+                justificanteArxiu = arxiuCaibUtils.crearJustificanteGoib(registro, tipoRegistro, firma);
+            }else{
+                justificanteArxiu = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, firma);
+            }
 
-            // Asociamos el CustodyId al anexo que vamos a crear
+            // Asociamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
             anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
             anexo.setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
+            anexo.setCsv(justificanteArxiu.getDocumento().getDocumentMetadades().getCsv());
 
-            // Obtenemos el csv del documento creado
-            String csv = arxiuCaibUtils.getCsv(anexo.getCustodiaID());
-            anexo.setCsv(csv);
-
-            peticion.append("custodyID: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
-            peticion.append("csv: ").append(csv).append(System.getProperty("line.separator"));
+            peticion.append("expedienteID: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
+            peticion.append("documentoID: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
+            peticion.append("csv: ").append(anexo.getCsv()).append(System.getProperty("line.separator"));
 
             // Guardamos el Anexo
             anexo = anexoEjb.persist(anexo);
@@ -361,7 +363,7 @@ public class JustificanteBean implements JustificanteLocal {
             return anexoFull;
 
         }catch (Exception e){
-            error = true;
+            //error = true;
 
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_JUSTIFICANTE, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), numRegFormat);

@@ -44,7 +44,7 @@ public interface SignatureServerLocal {
      * @return
      * @throws Exception
      */
-    Firma signJustificanteArxiu(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
+    Firma signJustificanteApiArxiu(byte[] pdfsource, String languageUI, Long idEntidadActiva, StringBuilder peticion, String numeroRegistro, String fileName) throws Exception, I18NException;
     
     
     /**
