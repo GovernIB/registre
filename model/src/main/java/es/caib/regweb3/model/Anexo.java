@@ -281,7 +281,7 @@ public class Anexo implements Serializable {
     }
 
 
-    @Column(name = "CERTIFICADO", nullable = true)
+    @Column(name = "CERTIFICADO", nullable = true, length = 2000)
     public byte[] getCertificado() {
         return certificado;
     }
@@ -290,7 +290,7 @@ public class Anexo implements Serializable {
         this.certificado = certificado;
     }
 
-    @Column(name = "FIRMA", nullable = true)
+    @Column(name = "FIRMA", nullable = true, length = 2000)
     public byte[] getFirma() {
         return firma;
     }
@@ -299,7 +299,7 @@ public class Anexo implements Serializable {
         this.firma = firmaDocumento;
     }
 
-    @Column(name = "TIMESTAMP", nullable = true)
+    @Column(name = "TIMESTAMP", nullable = true, length = 2000)
     public byte[] getTimestamp() {
         return timestamp;
     }
@@ -308,7 +308,7 @@ public class Anexo implements Serializable {
         this.timestamp = timestamp;
     }
 
-    @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true)
+    @Column(name = "VAL_OCSP_CERTIFICADO", nullable = true, length = 2000)
     public byte[] getValidacionOCSPCertificado() {
         return validacionOCSPCertificado;
     }
@@ -317,7 +317,7 @@ public class Anexo implements Serializable {
         this.validacionOCSPCertificado = validacionOCSPCertificado;
     }
 
-    @Column(name = "HASH")
+    @Column(name = "HASH", length = 2000)
     public byte[] getHash() {
         return hash;
     }
