@@ -261,11 +261,20 @@ public interface RegistroEntradaConsultaLocal {
      * Obtiene los registros de un ciudadano
      * @param idEntidad
      * @param documento
+     * @return
+     * @throws Exception
+     */
+    List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws Exception;
+
+    /**
+     * Obtiene los registros de un ciudadano, paginados
+     * @param idEntidad
+     * @param documento
      * @param pageNumber
      * @return
      * @throws Exception
      */
-    List<RegistroEntrada> getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception;
+    Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception;
 
     /**
      * Obtiene un Registro a partir de su número y el documento del Ciudadano
