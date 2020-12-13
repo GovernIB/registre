@@ -806,7 +806,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
+    public List<RegistroEntrada> getByDocumento(Long idEntidad, String documento) throws Exception {
 
         Query q;
         q = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
@@ -836,6 +836,44 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         }
 
         return registros;
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
+
+        Query q1;
+        Query q2;
+
+        // Obtenemos el total de registros del ciudadano
+        q1 = em.createQuery("Select DISTINCT count(re.id) " +
+                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
+        q1.setParameter("idEntidad", idEntidad);
+        q1.setParameter("documento", documento.trim());
+        q1.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q1.setHint("org.hibernate.readOnly", true);
+        Long total = (Long) q1.getSingleResult();
+
+        // Obtenemos solo los paginados
+        q2 = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
+                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
+
+        q2.setParameter("idEntidad", idEntidad);
+        q2.setParameter("documento", documento.trim());
+        q2.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q2.setHint("org.hibernate.readOnly", true);
+
+        int inicio = pageNumber * RESULTADOS_PAGINACION;
+        q2.setFirstResult(inicio);
+        q2.setMaxResults(RESULTADOS_PAGINACION);
+
+        Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
+
+        paginacion.setListado(q2.getResultList());
+
+        return paginacion;
     }
 
     @Override

@@ -7,6 +7,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.AnexoSimple;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.JustificanteReferencia;
+import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
 import es.caib.regweb3.persistence.validator.RegistroEntradaBeanValidator;
@@ -17,6 +18,7 @@ import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.ws.converter.AsientoConverter;
 import es.caib.regweb3.ws.converter.AsientoRegistralConverter;
 import es.caib.regweb3.ws.model.*;
 import es.caib.regweb3.ws.utils.UsuarioAplicacionCache;
@@ -790,7 +792,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             // Obtenemos los Registros de Entrada de un ciudadano
-            List<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
+            List<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento);
             resultado.setTotalResults(entradas.size());
             resultado.setPageNumber(pageNumber);
 
@@ -875,6 +877,77 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
         }
 
+    }
+
+    @RolesAllowed({RWE_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException{
+
+        // Definimos la petición que se guardá en el monitor de integración
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String numRegFormat = "";
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
+        // 1.- Validar campo obligatorio entidad
+        Entidad entidadActiva = validarEntidad(entidad);
+
+        // 2.- Obtener el usuario aplicación que ha realizado la petición
+        UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
+        if (usuarioAplicacion == null) { //No existe
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+        }
+
+        // 3.- Validar campo obligatorio documento
+        if(StringUtils.isEmpty(documento)){
+            throw new I18NException("error.valor.requerido.ws", "documento");
+        }
+
+        // 4.- Validar obligatorio pageNumber
+        if(pageNumber == null){
+            pageNumber = 0;
+        }
+
+        // 4.- Validar campo idioma
+        if(StringUtils.isEmpty(idioma)){
+            idioma = "ca";
+        }
+
+        peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
+
+        ResultadoBusquedaWs<AsientoWs> resultado = new ResultadoBusquedaWs<AsientoWs>();
+
+        try{
+
+            // Obtenemos los Registros de Entrada de un ciudadano
+            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
+            resultado.setTotalResults(entradas.getTotalResults());
+            resultado.setPageNumber(pageNumber);
+
+            // Transformamos los Registros de Entrada en AsientoRegistralWs
+            List<AsientoWs> asientos = new ArrayList<AsientoWs>();
+            for (RegistroEntrada entrada : (List<RegistroEntrada>) entradas.getListado()) {
+
+                asientos.add(AsientoConverter.transformarRegistro(entrada, REGISTRO_ENTRADA, entidadActiva,
+                        idioma,  oficioRemisionEjb, trazabilidadSirEjb));
+
+            }
+            resultado.setResults(asientos);
+
+            peticion.append("asientos: ").append(asientos.size()).append(System.getProperty("line.separator"));
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            throw new I18NException(e, "error.ws.general");
+        }
+
+        return resultado;
     }
 
 
