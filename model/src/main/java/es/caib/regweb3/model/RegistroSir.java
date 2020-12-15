@@ -567,7 +567,7 @@ public class RegistroSir implements Serializable {
 
 
     @OneToMany(cascade= CascadeType.ALL,targetEntity=AnexoSir.class, mappedBy="registroSir")
-    @LazyCollection(value= LazyCollectionOption.FALSE)
+    @LazyCollection(value= LazyCollectionOption.TRUE)
     public List<AnexoSir> getAnexos() {
         if (anexos == null) {
             anexos = new ArrayList<AnexoSir>();
@@ -581,7 +581,7 @@ public class RegistroSir implements Serializable {
     }
 
     @OneToMany(cascade= CascadeType.ALL,targetEntity=InteresadoSir.class, mappedBy="registroSir")
-    @LazyCollection(value= LazyCollectionOption.FALSE)
+    @LazyCollection(value= LazyCollectionOption.TRUE)
     public List<InteresadoSir> getInteresados() {
         if (interesados == null) {
             interesados = new ArrayList<InteresadoSir>();

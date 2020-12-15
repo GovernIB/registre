@@ -25,6 +25,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.fundaciobit.pluginsib.utils.cxf.CXFUtils;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -112,7 +113,11 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @Override
     public RegistroSir findById(Long id) throws Exception {
 
-        return em.find(RegistroSir.class, id);
+        RegistroSir registroSir = em.find(RegistroSir.class, id);
+        Hibernate.initialize(registroSir.getAnexos());
+        Hibernate.initialize(registroSir.getInteresados());
+
+        return registroSir;
     }
 
 
