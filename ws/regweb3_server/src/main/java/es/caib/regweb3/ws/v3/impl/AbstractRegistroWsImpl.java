@@ -329,11 +329,11 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
         String asunto = "Integración WS errónea";
 
         if (libro == null) { //No existe
-            String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición con un Libro inexistente";
+            String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición de nuevo asiento registral con un Libro inexistente.";
             notificacionEjb.notificacionAdminEntidad(entidad.getId(),asunto, mensaje);
 
-        } else if (!libro.getActivo() || !libro.equals(entidad.getLibro())) { //Si está inactivo
-            String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición con un Libro incorrecto";
+        } else if (!libro.getActivo() || !libro.equals(entidad.getLibro())) { //Si está inactivo o no es el Libro único
+            String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición de nuevo asiento registral con un Libro incorrecto.";
             notificacionEjb.notificacionAdminEntidad(entidad.getId(),asunto, mensaje);
         }
 
