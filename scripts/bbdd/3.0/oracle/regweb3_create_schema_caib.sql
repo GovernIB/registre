@@ -1,16 +1,16 @@
 
-create table RWE_ANEXO (
+    create table RWE_ANEXO (
         ID number(19,0) not null,
-        CERTIFICADO raw(255),
+        CERTIFICADO raw(2000),
         CSV varchar2(255 char),
         CUSTODIAID varchar2(256 char),
         ESTADOFIRMA number(10,0),
         EXPEDIENTEID varchar2(256 char),
         FECHACAPTURA timestamp not null,
         FECHAVALIDACION timestamp,
-        FIRMA raw(255),
+        FIRMA raw(2000),
         FIRMAVALIDA number(1,0),
-        HASH raw(255),
+        HASH raw(2000),
         JUSTIFICANTE number(1,0) not null,
         MODOFIRMA number(10,0),
         MOTIVONOVALID varchar2(255 char),
@@ -21,14 +21,14 @@ create table RWE_ANEXO (
         SIGNFORMAT varchar2(255 char),
         SIGNPROFILE varchar2(255 char),
         SIGNTYPE varchar2(255 char),
-        TIMESTAMP raw(255),
+        TIMESTAMP raw(2000),
         TIPODOC number(19,0),
         TITULO varchar2(200 char) not null,
-        VAL_OCSP_CERTIFICADO raw(255),
+        VAL_OCSP_CERTIFICADO raw(2000),
         TVALDOC number(19,0),
         REGISTRODETALLE number(19,0),
         TDOCUMENTAL number(19,0)
-    );
+);
 
     create table RWE_ANEXO_SIR (
         ID number(19,0) not null,
@@ -529,6 +529,7 @@ create table RWE_ANEXO (
         DEC_ENT_REG_DEST varchar2(80 char),
         DEC_T_ANOTACION varchar2(80 char),
         EXPEDIENTE varchar2(80 char),
+        EXPEDIENTE_JUST varchar(256),
         EXPONE varchar2(4000 char),
         EXTRACTO varchar2(240 char),
         FECHAORIGEN timestamp,
