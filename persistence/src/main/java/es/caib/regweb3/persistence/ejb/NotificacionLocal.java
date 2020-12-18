@@ -14,7 +14,7 @@ import java.util.List;
  * Date: 16/01/14
  */
 @Local
-@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI"})
+@RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface NotificacionLocal extends BaseEjb<Notificacion, Long> {
 
     /**
@@ -57,6 +57,15 @@ public interface NotificacionLocal extends BaseEjb<Notificacion, Long> {
      * @throws Exception
      */
      Long notificacionesPendientes(Long idUsuarioEntidad) throws Exception;
+
+    /**
+     * Envía una notificación a cada uno de los administradores de la entidad
+     * @param idEntidad
+     * @param asunto de la notificación
+     * @param mensaje de la notificación
+     * @throws Exception
+     */
+     void notificacionAdminEntidad(Long idEntidad, String asunto, String mensaje) throws Exception;
 
     /**
      * Envía notificaciones a los usuarios de las oficinas con más de 10 registros sir pendientes de procesar

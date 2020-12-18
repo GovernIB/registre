@@ -87,6 +87,9 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     @EJB(mappedName = "regweb3/LopdEJB/local")
     public LopdLocal lopdEjb;
 
+    @EJB(mappedName = "regweb3/NotificacionEJB/local")
+    public NotificacionLocal notificacionEjb;
+
     public AnexoValidator<Anexo> anexoValidator = new AnexoValidator<Anexo>();
 
     InteresadoValidator<Interesado> interesadoValidator = new InteresadoValidator<Interesado>();
@@ -323,17 +326,15 @@ public abstract class AbstractRegistroWsImpl extends AuthenticatedBaseWsImpl {
     protected Libro validarLibroUnico(String codigoLibro, Entidad entidad) throws  I18NException, Exception{
 
         Libro libro = libroEjb.findByCodigoEntidad(codigoLibro, entidad.getId());
+        String asunto = "Integración WS errónea";
 
         if (libro == null) { //No existe
-            // Crear Notificación a Admin entidad
-            log.info("Libro incorrecto, fijamos Libro unico...");
+            String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición con un Libro inexistente";
+            notificacionEjb.notificacionAdminEntidad(entidad.getId(),asunto, mensaje);
 
-        } else if (!libro.getActivo()) { //Si está inactivo
-            // Crear Notificación a Admin entidad
-            log.info("Libro incorrecto, fijamos Libro unico...");
-
-        }else if(!libro.equals(entidad.getLibro())){
-            return libro;
+        } else if (!libro.getActivo() || !libro.equals(entidad.getLibro())) { //Si está inactivo
+            String mensaje = "El usuario "+UsuarioAplicacionCache.get().getUsuario().getIdentificador()+" ha enviado una petición con un Libro incorrecto";
+            notificacionEjb.notificacionAdminEntidad(entidad.getId(),asunto, mensaje);
         }
 
         return entidad.getLibro();
