@@ -39,6 +39,7 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
     @EJB private RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
     @EJB private RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
     @EJB private PermisoOrganismoUsuarioLocal permisoOrganismoUsuarioEjb;
+    @EJB private UsuarioEntidadLocal usuarioEntidadEjb;
 
     @Override
     public Notificacion getReference(Long id) throws Exception {
@@ -204,6 +205,25 @@ public class NotificacionBean extends BaseEjbJPA<Notificacion, Long> implements 
         q.setHint("org.hibernate.readOnly", true);
 
         return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public void notificacionAdminEntidad(Long idEntidad, String asunto, String mensaje) throws Exception{
+
+        List<UsuarioEntidad> administradores = usuarioEntidadEjb.findAdministradoresByEntidad(idEntidad);
+
+        //Crear notificación para cada usuario
+        for (UsuarioEntidad usuario : administradores) {
+
+            Notificacion nueva = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_ERROR);
+            nueva.setRemitente(null);
+            nueva.setAsunto(asunto);
+            nueva.setMensaje(mensaje);
+            nueva.setDestinatario(usuario);
+
+            persist(nueva);
+        }
+
     }
 
     @Override
