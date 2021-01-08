@@ -323,14 +323,16 @@ public class MensajeControlBean extends BaseEjbJPA<MensajeControl, Long> impleme
      */
     private void procesarMensajeACK(RegistroSir registroSir) throws Exception{
 
-        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado())){
+        if (EstadoRegistroSir.REENVIADO.equals(registroSir.getEstado()) ||
+                EstadoRegistroSir.REENVIADO_Y_ERROR.equals(registroSir.getEstado())){
 
             // Actualizamos el registroSir
             registroSir.setEstado(EstadoRegistroSir.REENVIADO_Y_ACK);
             registroSir.setFechaEstado(new Date());
             registroSirEjb.merge(registroSir);
 
-        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado())){
+        } else if (EstadoRegistroSir.RECHAZADO.equals(registroSir.getEstado()) ||
+                EstadoRegistroSir.RECHAZADO_Y_ERROR.equals(registroSir.getEstado())){
 
             // Actualizamos el registroSir
             registroSir.setEstado(EstadoRegistroSir.RECHAZADO_Y_ACK);
