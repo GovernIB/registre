@@ -2,16 +2,16 @@ package es.caib.regweb3.ws.model;
 
 public class FileInfoWs {
 
-    private String fileID;
+    private Long fileID;
     private String name;
     private String mime;
     private Long size;
 
-    public String getFileID() {
+    public Long getFileID() {
         return fileID;
     }
 
-    public void setFileID(String fileID) {
+    public void setFileID(Long fileID) {
         this.fileID = fileID;
     }
 

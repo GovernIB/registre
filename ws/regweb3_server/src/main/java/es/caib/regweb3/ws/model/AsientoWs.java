@@ -1,9 +1,10 @@
 package es.caib.regweb3.ws.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class AsientoWs {
+public class AsientoWs implements Serializable {
 
     private String numeroRegistro;
     private Long tipoRegistro;
@@ -24,6 +25,8 @@ public class AsientoWs {
     private List<FileInfoWs> anexos;
     private FileInfoWs justificante;
 
+    public AsientoWs() {
+    }
 
     public AsientoWs(Long tipoRegistro) {
         this.tipoRegistro = tipoRegistro;
