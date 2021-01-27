@@ -1,11 +1,20 @@
 package es.caib.regweb3.ws.model;
 
-public class FileContentWs {
+import java.io.Serializable;
+
+public class FileContentWs implements Serializable {
 
     FileInfoWs fileInfoWs;
     String error;
     byte[] data;
     String url;
+
+    public FileContentWs() {
+    }
+
+    public FileContentWs(FileInfoWs fileInfoWs) {
+        this.fileInfoWs = fileInfoWs;
+    }
 
     public FileInfoWs getFileInfoWs() {
         return fileInfoWs;

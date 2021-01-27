@@ -136,16 +136,13 @@ public class AnexoFull{
 
             if (getDocumentoCustody() != null) {
                 return getDocumentoCustody().getData();
-
             }
 
         }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
             if(getDocument() != null){
                 return getDocument().getContingut().getContingut();
-
             }
-
         }
 
         return null;
@@ -158,16 +155,13 @@ public class AnexoFull{
 
             if (getSignatureCustody() != null) {
                 return getSignatureCustody().getData();
-
             }
 
         }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
             if(getDocument() != null){
                 return getDocument().getFirmes().get(0).getContingut();
-
             }
-
         }
 
         return null;
@@ -199,7 +193,6 @@ public class AnexoFull{
                     return size / 1024;
                 }
             }
-
         }
 
         return -1;
@@ -223,24 +216,23 @@ public class AnexoFull{
         }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
             if(getDocument() != null){
-                long size = getDocument().getFirmes().get(0).getTamany();
+                if(getDocument().getContingut() != null){
+                    long size = getDocument().getContingut().getTamany();
 
-                if (size < 1024) {
-                    return 1;
-                } else {
-                    return size / 1024;
+                    if (size < 1024) {
+                        return 1;
+                    } else {
+                        return size / 1024;
+                    }
                 }
             }
-
         }
-
 
         return -1;
     }
 
     @Transient
     public String getExtension() {
-
 
         if(getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA || getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
@@ -265,10 +257,7 @@ public class AnexoFull{
                     return null;
                 }
             }
-
-
         }
-
 
         return null;
     }
@@ -285,12 +274,13 @@ public class AnexoFull{
         }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
             if(getDocument() != null){
-                return getDocument().getContingut().getTipusMime();
+                if(getDocument().getContingut() != null){
+                    return getDocument().getContingut().getTipusMime();
+                }
             }
         }
 
         return "";
-
     }
 
     @Transient
@@ -305,13 +295,13 @@ public class AnexoFull{
         }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
 
             if(getDocument() != null){
-                return getDocument().getFirmes().get(0).getTipusMime();
+                if(getDocument().getContingut() != null){
+                    return getDocument().getContingut().getTipusMime();
+                }
             }
         }
 
-
-        return "";
-
+        return null;
     }
 
     @Transient

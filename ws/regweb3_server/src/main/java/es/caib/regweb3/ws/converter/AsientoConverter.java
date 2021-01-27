@@ -1,16 +1,17 @@
 package es.caib.regweb3.ws.converter;
 
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
+import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.ws.model.AsientoWs;
+import es.caib.regweb3.ws.model.FileContentWs;
 import es.caib.regweb3.ws.model.FileInfoWs;
 import es.caib.regweb3.ws.model.InteresadoWs;
 import es.caib.regweb3.ws.v3.impl.CommonConverter;
+import org.fundaciobit.genapp.common.i18n.I18NException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,58 @@ public class AsientoConverter extends CommonConverter {
         return asientoWs;
     }
 
+    /**
+     * Transforma un AnexoFull en un {@link es.caib.regweb3.ws.model.FileContentWs}
+     * @param anexoFull
+     * @param anexoEjb
+     * @param entidad
+     * @return
+     */
+    public static FileContentWs transformarFileContentWs(AnexoFull anexoFull, AnexoLocal anexoEjb, Entidad entidad, String idioma) {
+
+        FileInfoWs fileInfoWs = transformarFileInfoWs(anexoFull);
+
+        FileContentWs fileContentWs = new FileContentWs(fileInfoWs);
+
+        try {
+
+            if(!anexoFull.getAnexo().isPurgado()){
+
+                // Obtenemos al url para descargar el documento
+                String url = anexoEjb.getCsvValidationWeb(anexoFull.getAnexo(),entidad.getId());
+
+                if(StringUtils.isNotEmpty(url)){
+                    fileContentWs.setUrl(url);
+                }else{
+                    byte[] data = anexoEjb.getArchivoContent(anexoFull.getAnexo(), entidad.getId());
+
+                    if(data != null){
+                        fileContentWs.setData(data);
+                    }else{
+                        fileContentWs.setError(I18NLogicUtils.tradueix(new Locale(idioma),"anexo.error.contenido"));
+                    }
+                }
+
+            }else{
+
+                fileContentWs.setError(I18NLogicUtils.tradueix(new Locale(idioma),"anexo.purgado"));
+                // TODO Buscar anexos purgados en Arxiu???
+            }
+
+
+        } catch (I18NException | Exception e) {
+            e.printStackTrace();
+            fileContentWs.setError(I18NLogicUtils.tradueix(new Locale(idioma),"anexo.error") + e.getMessage());
+        }
+
+        return fileContentWs;
+    }
+
+    /**
+     * Transforma los Anexos de un Registro en una Lista de {@link es.caib.regweb3.ws.model.FileInfoWs}
+     * @param registroDetalle
+     * @return
+     */
     private static List<FileInfoWs> transformarFilesInfoWs(RegistroDetalle registroDetalle) {
 
         if(registroDetalle.getAnexosFull() != null){
@@ -79,7 +132,10 @@ public class AsientoConverter extends CommonConverter {
 
             for(AnexoFull anexoFull:registroDetalle.getAnexosFull()){
 
-                ficheros.add(transformarFileInfoWs(anexoFull));
+                if(!anexoFull.getAnexo().isJustificante()){ // Solo los anexos, descartamos el justificante.
+                    ficheros.add(transformarFileInfoWs(anexoFull));
+                }
+
             }
             return ficheros;
         }
@@ -87,6 +143,11 @@ public class AsientoConverter extends CommonConverter {
         return null;
     }
 
+    /**
+     * Transforma un AnexoFull en un {@link es.caib.regweb3.ws.model.FileInfoWs}
+     * @param anexoFull
+     * @return
+     */
     private static FileInfoWs transformarFileInfoWs(AnexoFull anexoFull) {
 
         FileInfoWs fileInfo = new FileInfoWs();
@@ -103,12 +164,16 @@ public class AsientoConverter extends CommonConverter {
 
             fileInfo.setSize(anexoFull.getSignSize());
             fileInfo.setMime(anexoFull.getSignMime());
-
         }
 
         return fileInfo;
     }
 
+    /**
+     * Obtiene el Justificante y lo transforma en un {@link es.caib.regweb3.ws.model.FileInfoWs}
+     * @param registroDetalle
+     * @return
+     */
     private static FileInfoWs getJustificante(RegistroDetalle registroDetalle) {
 
         if(registroDetalle.getAnexosFull() != null){
@@ -119,23 +184,18 @@ public class AsientoConverter extends CommonConverter {
 
                     return transformarFileInfoWs(anexoFull);
                 }
-
             }
-
         }
-
         return null;
     }
 
 
-
-
     /**
-         * Obtiene un {@link AsientoWs}, a partir de un {@link RegistroDetalle}
-         * @param asiento
-         * @param registro
-         * @throws Exception
-         */
+     * Obtiene un {@link AsientoWs}, a partir de un {@link RegistroDetalle}
+     * @param asiento
+     * @param registro
+     * @throws Exception
+     */
     private static void setAsientoComun(AsientoWs asiento, IRegistro registro, String idioma) throws Exception{
 
         RegistroDetalle registroDetalle = registro.getRegistroDetalle();

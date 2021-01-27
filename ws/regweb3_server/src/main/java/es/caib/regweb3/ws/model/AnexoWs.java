@@ -22,42 +22,19 @@ public class AnexoWs {
     private String nombreFicheroAnexado;
     @XmlInlineBinaryData
     private byte[] ficheroAnexado;
-
     private String tipoMIMEFicheroAnexado;
     private String tipoDocumental;
-    /**
-     * Long TIPOVALIDEZDOCUMENTO_COPIA="01";
-     * TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL="03";
-     * TIPOVALIDEZDOCUMENTO_ORIGINAL="04";
-     */
     private String validezDocumento;
-    /** 
-     * Codi NTI: 
-     * 
-     *  TIPO_DOCUMENTO_FORMULARIO = "01";
-     *  TIPO_DOCUMENTO_DOC_ADJUNTO = "02";
-     *  TIPO_DOCUMENTO_FICHERO_TECNICO ="03";
-     *  
-     */
     private String tipoDocumento;
     private String observaciones;
-    /**
-     * ANEXO_ORIGEN_CIUDADANO = 0L;
-     * ANEXO_ORIGEN_ADMINISTRACION = 1L;
-     */
     private Integer origenCiudadanoAdmin;
     private Calendar fechaCaptura;
     private Integer modoFirma;
-    
-    
     private String nombreFirmaAnexada;
     @XmlInlineBinaryData
     private byte[] firmaAnexada;
-
     private String tipoMIMEFirmaAnexada;
-
-
-    private String csv; // TODO este campo se creo para el plugin de digitalización de IECISA, verificar que no se emplee en NTI,SICRES.
+    private String csv;
     private Boolean justificante = false;
 
     public String getTitulo() {

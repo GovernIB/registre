@@ -182,4 +182,15 @@ public interface RegWebAsientoRegistralWs {
     @WebMethod
     AsientoWs obtenerAsientoCiudadanoCarpeta(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "idioma") String idioma) throws Throwable;
 
-    }
+    /**
+     *
+     * @param entidad
+     * @param idAnexo
+     * @param idioma
+     * @return
+     * @throws Throwable
+     */
+    @WebMethod
+    FileContentWs obtenerAnexoCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "idAnexo") Long idAnexo, @WebParam(name = "idioma") String idioma) throws Throwable;
+
+}
