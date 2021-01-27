@@ -40,6 +40,7 @@ public class ArxiuCaibUtils {
     private static final String PROPERTY_SERIE_DOCUMENTAL = basePluginArxiuCaib + "serieDocumental";
     private static final String PROPERTY_NOMBRE_PROCEDIMIENTO = basePluginArxiuCaib + "nombreProcedimiento";
     private static final String PROPERTY_CODIGO_PROCEDIMIENTO = basePluginArxiuCaib + "codigoProcedimiento";
+    private static final String PROPERTY_CSV_VALIDATION_URL = basePluginArxiuCaib + "csv.validation.url";
     private static final String PROPERTY_CONCSV_URL = basePluginArxiuCaib + "concsv.url";
     private static final String PROPERTY_CONCSV_USERNAME = basePluginArxiuCaib + "concsv.username";
     private static final String PROPERTY_CONCSV_PASSWORD = basePluginArxiuCaib + "concsv.password";
@@ -66,57 +67,13 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Crea el Justificante (expediente + documento)
-     * @param registro
-     * @param firma
-     * @return
-     * @throws Exception
-     */
-    public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
-
-        ContingutArxiu expediente = null;
-        ContingutArxiu documento = null;
-
-        String serieDocumental = getPropertySerieDocumental();
-        String codigoProcedimiento = getPropertyCodigoProcedimiento();
-
-        try{
-
-            // Creamos el Expediente del Justificante
-            expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-            log.info("Expediente creado: " + expediente.getIdentificador());
-
-            // Creamos el Documento del Justificante
-            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador());
-            log.info("Documento creado: " + documento.getIdentificador());
-
-            //Cerramos el expediente
-            if(getPropertyCerrarExpediente()){
-                getArxiuPlugin().expedientTancar(expediente.getIdentificador());
-            }
-
-        }catch (ArxiuException e){
-            log.info("Error creando el justificante en Arxiu");
-            e.printStackTrace();
-
-            if(expediente != null){
-                eliminarExpediente(expediente.getIdentificador());
-            }
-
-            throw e;
-        }
-
-        return new JustificanteArxiu(expediente, documento);
-    }
-
-    /**
      * Crea el Justificante en un entorno GOIB (expediente + documento)
      * @param registro
      * @param firma
      * @return
      * @throws Exception
      */
-    public JustificanteArxiu crearJustificanteGoib(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
+    public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
         ContingutArxiu expediente = null;
         ContingutArxiu documento = null;
@@ -204,7 +161,7 @@ public class ArxiuCaibUtils {
     private ContingutArxiu crearDocumentoJustificante(IRegistro registro, Integer tipoRegistro, String serieDocumental, Firma firma, String uuidExpedient) throws Exception{
 
         //Generamos el Documento
-        Document documento = generarDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro.longValue()), serieDocumental, firma);
+        Document documento = generarDocumentoJustificante(registro, tipoRegistro, serieDocumental, firma);
 
         // Crear el Documento en Arxiu
         ContingutArxiu documentoCreado = getArxiuPlugin().documentCrear(documento, uuidExpedient);
@@ -244,13 +201,23 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Obtiene la Url de Validacion {@link es.caib.plugins.arxiu.api.Document}
+     * Obtiene la Url de Printable (CSV incrustado) {@link es.caib.plugins.arxiu.api.Document}
      * @param identificadorDocumento
      * @return
      * @throws Exception
      */
-    public String getUrlValidacion(String identificadorDocumento) throws Exception{
+    public String getUrlPrintable(String identificadorDocumento) throws Exception{
         return getPropertyConCsvUrl(identificadorDocumento);
+    }
+
+    /**
+     * Obtiene la Url de la Web Validacion CSV {@link es.caib.plugins.arxiu.api.Document}
+     * @param identificadorDocumento
+     * @return
+     * @throws Exception
+     */
+    public String getCsvValidationWeb(String identificadorDocumento) throws Exception{
+        return getPropertyCsvValidationWeb(identificadorDocumento);
     }
 
 
@@ -272,12 +239,12 @@ public class ArxiuCaibUtils {
             if(!contenido){ // Solo información del Documento, sin contenido
                 return getArxiuPlugin().documentDetalls(uuidDocument, version, false);
 
-            }else if(original){ // Informaicón + Contenido original
+            }else if(original){ // Información + Contenido  del Documento original
                 return getArxiuPlugin().documentDetalls(uuidDocument, version, true);
 
-            }else { // Informaicón + Contenido desde la UrlValidacion
+            }else { // Información + Contenido desde la PrintableUrl (CSV incrustado)
 
-                documento = getArxiuPlugin().documentDetalls(uuidDocument, version, true); // todo Hay que obtener el contenido, porque si no no viene el nombre del fichero
+                documento = getArxiuPlugin().documentDetalls(uuidDocument, version, true); // todo Hay que obtener el contenido, porque si no no viene el tipo Mime del fichero
 
                 log.info("Obteniendo el documento desde url validacion: " + uuidDocument);
 
@@ -285,7 +252,7 @@ public class ArxiuCaibUtils {
 
                 try{
 
-                    String url = getUrlValidacion(documento.getIdentificador());
+                    String url = getUrlPrintable(documento.getIdentificador());
                     String username = getPropertyConCsvUsername();
                     String password = getPropertyConCsvPassword();
 
@@ -321,7 +288,6 @@ public class ArxiuCaibUtils {
                                 fout.close();
                             }
                         }
-
                     }
 
                 }catch (Exception e){
@@ -329,7 +295,6 @@ public class ArxiuCaibUtils {
                     e.printStackTrace();
                 }
             }
-
 
         }catch (Exception e){
             log.info("Error obteniendo el Documento: " + uuidDocument);
@@ -892,7 +857,17 @@ public class ArxiuCaibUtils {
             return url.concat(custodyId);
         }
 
-        return  null;
+        return null;
+    }
+
+    private String getPropertyCsvValidationWeb(String custodyId) throws Exception {
+        String url = getProperty(PROPERTY_CSV_VALIDATION_URL);
+
+        if(StringUtils.isNotEmpty(url)){
+            return url.concat(custodyId);
+        }
+
+        return null;
     }
 
     private String getPropertyConCsvUsername() throws Exception {

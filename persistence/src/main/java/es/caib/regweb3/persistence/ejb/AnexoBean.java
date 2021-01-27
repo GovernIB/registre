@@ -108,6 +108,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             //Obtenemos el anexo de la tabla de anexos de regweb
             Anexo anexo = em.find(Anexo.class, anexoID);
 
+            if(anexo == null){
+                return null;
+            }
+
             //Montamos un AnexoFull( Anexo + toda la parte de custodia)
             anexoFull = new AnexoFull(anexo);
 
@@ -203,6 +207,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
         try {
             //Obtenemos el anexo de la tabla de anexos de regweb
             Anexo anexo = em.find(Anexo.class, anexoID);
+
+            if(anexo == null){
+                return null;
+            }
 
             //Obtenemos el identificador de custodia
             String custodyID = anexo.getCustodiaID();
@@ -1480,7 +1488,6 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
     }
 
-
     /**
      * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
      *
@@ -1511,7 +1518,43 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             // Cargamos el plugin de Arxiu
             arxiuCaibUtils.cargarPlugin(idEntidad);
 
-            return  arxiuCaibUtils.getUrlValidacion(anexo.getCustodiaID());
+            return arxiuCaibUtils.getUrlPrintable(anexo.getCustodiaID());
+        }
+
+        return null;
+    }
+
+    /**
+     * Obtiene Url dela Web Validacion CSV. Si no soporta url, devuelve null
+     *
+     * @param anexo
+     * @param idEntidad
+     * @return
+     */
+    public String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception {
+
+        if (anexo.getCustodiaID() == null) {
+            log.warn("getUrlValidation :: CustodiaID vale null !!!!!", new Exception());
+            return null;
+        }
+
+        if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)) {
+
+            IDocumentCustodyPlugin custody = null;
+
+            if (anexo.isJustificante()) {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE);
+            } else {
+                custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
+            }
+            return custody.getCsvValidationWeb(anexo.getCustodiaID(), new HashMap<String, Object>());
+
+        } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
+
+            // Cargamos el plugin de Arxiu
+            arxiuCaibUtils.cargarPlugin(idEntidad);
+
+            return arxiuCaibUtils.getCsvValidationWeb(anexo.getCsv());
         }
 
         return null;

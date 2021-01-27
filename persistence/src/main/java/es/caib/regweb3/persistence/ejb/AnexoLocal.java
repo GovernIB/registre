@@ -243,6 +243,16 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     String getUrlValidation(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
     /**
+     * Obtiene Url dela Web Validacion CSV. Si no soporta url, devuelve null
+     * @param anexo
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     * @throws Exception
+     */
+    String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+
+    /**
      * Obtiene el SignatureCustody de un Anexo
      *
      * @param anexo

@@ -803,10 +803,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 asientos.add(AsientoRegistralConverter.transformarRegistro(entrada, REGISTRO_ENTRADA, entidadActiva,
                         UsuarioAplicacionCache.get().getIdioma(),  oficioRemisionEjb, trazabilidadSirEjb));
 
-
-                //asientos.add(AsientoRegistralConverter.getAsientoRegistral(usuarioAplicacion, entrada.getNumeroRegistroFormateado(), REGISTRO_ENTRADA,
-                  //      UsuarioAplicacionCache.get().getIdioma(), false, false, registroEntradaConsultaEjb, registroSalidaConsultaEjb, permisoOrganismoUsuarioEjb, oficioRemisionEjb, trazabilidadSirEjb, lopdEjb));
-
             }
             resultado.setResults(asientos);
 
@@ -892,29 +888,29 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
-        // 1.- Validar campo obligatorio entidad
+        // Validar campo obligatorio entidad
         Entidad entidadActiva = validarEntidad(entidad);
 
-        // 2.- Obtener el usuario aplicación que ha realizado la petición
+        // Obtener el usuario aplicación que ha realizado la petición
         UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         if (usuarioAplicacion == null) { //No existe
             throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
         }
 
-        // 3.- Validar campo obligatorio documento
+        // Validar campo obligatorio documento
         if(StringUtils.isEmpty(documento)){
             throw new I18NException("error.valor.requerido.ws", "documento");
         }
 
-        // 4.- Validar obligatorio pageNumber
+        // Validar obligatorio pageNumber
         if(pageNumber == null){
             pageNumber = 0;
         }
 
-        // 4.- Validar campo idioma
+        // Validar campo idioma
         if(StringUtils.isEmpty(idioma)){
-            idioma = "ca";
+            idioma = Configuracio.getDefaultLanguage();
         }
 
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
@@ -962,7 +958,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
 
-        //  Validar campo obligatorio entidad
+        // Validar campo obligatorio entidad
         Entidad entidadActiva = validarEntidad(entidad);
 
         // Obtener el usuario aplicación que ha realizado la petición
@@ -976,6 +972,11 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         // Validar obligatorio numeroRegistroFormateado
         if(StringUtils.isEmpty(numeroRegistroFormateado)){
             throw new I18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
+        }
+
+        // Validar campo idioma
+        if(StringUtils.isEmpty(idioma)){
+            idioma = Configuracio.getDefaultLanguage();
         }
 
         peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
@@ -996,6 +997,55 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioAplicacion.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
 
             return asiento;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+        }
+    }
+
+    @RolesAllowed({RWE_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public FileContentWs obtenerAnexoCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "idAnexo") Long idAnexo, @WebParam(name = "idioma") String idioma) throws Throwable{
+
+        // Definimos la petición que se guardá en el monitor de integración
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String numRegFormat = "";
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
+        //  Validar campo obligatorio entidad
+        Entidad entidadActiva = validarEntidad(entidad);
+
+        // Validar obligatorio idAnexo
+        if(idAnexo == null){
+            throw new I18NException("error.valor.requerido.ws", "idAnexo");
+        }
+
+        // Validar campo idioma
+        if(StringUtils.isEmpty(idioma)){
+            idioma = Configuracio.getDefaultLanguage();
+        }
+
+        peticion.append("idAnexo: ").append(idAnexo).append(System.getProperty("line.separator"));
+
+        try{
+
+            AnexoFull anexo = anexoEjb.getAnexoFullLigero(idAnexo, entidadActiva.getId());
+
+            if (anexo == null) {
+                throw new I18NException("anexo.noExiste", String.valueOf(idAnexo));
+            }
+
+            FileContentWs fileContentWs = AsientoConverter.transformarFileContentWs(anexo, anexoEjb, entidadActiva, idioma);
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+
+            return fileContentWs;
 
         }catch (Exception e){
             e.printStackTrace();
