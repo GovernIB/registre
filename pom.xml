@@ -26,7 +26,7 @@
     <itext.version>5.4.3</itext.version>
     <bouncycastle.version>1.51</bouncycastle.version>
     <plugin-documentcustody-arxiudigitalcaib.version>4.0.1</plugin-documentcustody-arxiudigitalcaib.version>
-    <arxiu.api.version>2.0.8</arxiu.api.version>
+    <arxiu.api.version>2.0.9</arxiu.api.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
