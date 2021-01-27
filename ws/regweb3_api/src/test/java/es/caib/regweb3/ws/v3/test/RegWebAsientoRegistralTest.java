@@ -94,7 +94,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             try {
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -354,5 +354,74 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         } catch (WsValidationException | WsI18NException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void obtenerAsientosCiudadanoCarpeta() {
+
+        try {
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"43146650F",0,"es");
+
+            System.out.println("Asientos encontrados: " +asientos.getTotalResults());
+
+            for (Object asiento : asientos.getResults()) {
+                AsientoWs asientoWs = (AsientoWs) asiento;
+                System.out.println("Num. Registro: " + asientoWs.getNumeroRegistro());
+                System.out.println("Fecha: " + asientoWs.getFechaRegistro());
+                System.out.println("Destino codigo: " + asientoWs.getCodigoDestino());
+                System.out.println("Destino denominacion: " + asientoWs.getDenominacionDestino());
+                System.out.println("Extracto: " + asientoWs.getExtracto());
+                System.out.println("");
+            }
+
+        } catch (WsValidationException | WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void obtenerAsientoCiudadanoCarpeta() {
+
+        AsientoWs asientoWs = asientoRegistralApi.obtenerAsientoCiudadanoCarpeta(getTestEntidadCodigoDir3(),"43146650F","GOIB-E-463/2021","es");
+
+        System.out.println("Num. Registro: " + asientoWs.getNumeroRegistro());
+        System.out.println("Fecha: " + asientoWs.getFechaRegistro());
+        System.out.println("Destino codigo: " + asientoWs.getCodigoDestino());
+        System.out.println("Destino denominacion: " + asientoWs.getDenominacionDestino());
+        System.out.println("Extracto: " + asientoWs.getExtracto());
+        System.out.println("");
+
+        System.out.println("Justificante Id: " + asientoWs.getJustificante().getFileID());
+        System.out.println("Justificante Nombre: " + asientoWs.getJustificante().getName());
+        System.out.println("Justificante Mime: " + asientoWs.getJustificante().getMime());
+        System.out.println("Justificante Size: " + asientoWs.getJustificante().getSize());
+
+        FileContentWs fileContentWs = asientoRegistralApi.obtenerAnexoCiudadano(getTestEntidadCodigoDir3(),asientoWs.getJustificante().getFileID() , "es");
+        System.out.println("Justificante url: " + fileContentWs.getUrl());
+
+
+        for(FileInfoWs fileInfoWs:asientoWs.getAnexos()){
+            System.out.println("");
+            System.out.println("Anexo Id: " + fileInfoWs.getFileID());
+            System.out.println("Anexo Nombre: " + fileInfoWs.getName());
+            System.out.println("Anexo Mime: " + fileInfoWs.getMime());
+            System.out.println("Anexo Size: " + fileInfoWs.getSize());
+        }
+
+    }
+
+    @Test
+    public void obtenerAnexo() {
+
+        FileContentWs fileContentWs = asientoRegistralApi.obtenerAnexoCiudadano(getTestEntidadCodigoDir3(), 89641L, "es");
+
+        System.out.println("Id: " + fileContentWs.getFileInfoWs().getFileID());
+        System.out.println("Nombre: " + fileContentWs.getFileInfoWs().getName());
+        System.out.println("Mime: " + fileContentWs.getFileInfoWs().getMime());
+        System.out.println("Size: " + fileContentWs.getFileInfoWs().getSize());
+
+        System.out.println("url: " + fileContentWs.getUrl());
+        System.out.println("error: " + fileContentWs.getError());
+        System.out.println("Data: " + fileContentWs.getData().length);
     }
 }
