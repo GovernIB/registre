@@ -9,7 +9,6 @@ import es.caib.regweb3.persistence.integracion.ArxiuCaibUtils;
 import es.caib.regweb3.persistence.integracion.JustificanteArxiu;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.plugins.justificante.IJustificantePlugin;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.RegwebUtils;
 import es.caib.regweb3.utils.TimeUtils;
@@ -333,16 +332,14 @@ public class JustificanteBean implements JustificanteLocal {
             anexo.setHash(RegwebUtils.obtenerHash(firma.getContingut()));
 
             // Guardamos el Justificante en Arxiu
-            if(Configuracio.isCAIB()){
-                justificanteArxiu = arxiuCaibUtils.crearJustificanteGoib(registro, tipoRegistro, firma);
-            }else{
-                justificanteArxiu = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, firma);
-            }
+            justificanteArxiu = arxiuCaibUtils.crearJustificante(registro, tipoRegistro, firma);
 
             // Asociamos el ExpedienteId, CustodyId y Csv al anexo que vamos a crear
             anexo.setExpedienteID(justificanteArxiu.getExpediente().getIdentificador());
             anexo.setCustodiaID(justificanteArxiu.getDocumento().getIdentificador());
-            anexo.setCsv(justificanteArxiu.getDocumento().getDocumentMetadades().getCsv());
+            if(justificanteArxiu.getDocumento().getDocumentMetadades() != null){
+                anexo.setCsv(justificanteArxiu.getDocumento().getDocumentMetadades().getCsv());
+            }
 
             peticion.append("expedienteID: ").append(anexo.getExpedienteID()).append(System.getProperty("line.separator"));
             peticion.append("documentoID: ").append(anexo.getCustodiaID()).append(System.getProperty("line.separator"));
