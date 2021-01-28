@@ -848,7 +848,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         // Obtenemos el total de registros del ciudadano
         q1 = em.createQuery("Select DISTINCT count(re.id) " +
                 "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado order by re.fecha desc");
+                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado");
         q1.setParameter("idEntidad", idEntidad);
         q1.setParameter("documento", documento.trim());
         q1.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
