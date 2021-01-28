@@ -116,7 +116,7 @@ public class EntidadController extends BaseController {
         }
 
 
-        return "redirect:/inicio";
+        return "redirect:/inici";
     }
 
     /**
