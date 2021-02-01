@@ -1525,7 +1525,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
     }
 
     /**
-     * Obtiene Url dela Web Validacion CSV. Si no soporta url, devuelve null
+     * Obtiene Url de la Web Validacion CSV. Si no soporta url, devuelve null
      *
      * @param anexo
      * @param idEntidad
@@ -1547,7 +1547,11 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             } else {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
             }
-            return custody.getCsvValidationWeb(anexo.getCustodiaID(), new HashMap<String, Object>());
+
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("csv", anexo.getCsv());
+
+            return custody.getCsvValidationWeb(anexo.getCustodiaID(), params);
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
