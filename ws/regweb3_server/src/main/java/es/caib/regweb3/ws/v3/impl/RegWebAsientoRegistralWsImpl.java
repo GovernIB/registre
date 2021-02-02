@@ -253,7 +253,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 }
 
                 // Comprobar que el Organismo destino está vigente
-                Organismo destinoInterno = organismoEjb.findByCodigoEntidad(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
+                Organismo destinoInterno = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionDestinoCodigo(), entidadActiva.getId());
                 UnidadTF destinoExterno = null;
 
                 if (destinoInterno == null) { // Se trata de un destino externo
@@ -336,7 +336,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 }
 
                 // Comprobar que el Organismo Origen está vigente
-                Organismo origen = organismoEjb.findByCodigoEntidad(asientoRegistral.getUnidadTramitacionOrigenCodigo(), entidadActiva.getId());
+                Organismo origen = organismoEjb.findByCodigoEntidadLigero(asientoRegistral.getUnidadTramitacionOrigenCodigo(), entidadActiva.getId());
 
                 if (origen == null) {
                     throw new I18NException("registro.organismo.noExiste", asientoRegistral.getUnidadTramitacionOrigenCodigo());

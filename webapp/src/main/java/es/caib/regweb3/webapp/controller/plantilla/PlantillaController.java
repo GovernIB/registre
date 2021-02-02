@@ -156,7 +156,7 @@ public class PlantillaController extends BaseController {
 
             case 1: //RegistroEntrada
                 log.info("Plantilla entrada");
-                Organismo organismoDestino = organismoEjb.findByCodigoEntidad(plantillaJson.getDestinoCodigo(), usuarioEntidad.getEntidad().getId());
+                Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(plantillaJson.getDestinoCodigo(), usuarioEntidad.getEntidad().getId());
 
                 if(organismoDestino != null) { // es interno
                     log.info("Destino: " +plantillaJson.getDestinoDenominacion() + " Interno");
@@ -171,7 +171,7 @@ public class PlantillaController extends BaseController {
 
             case 2: //RegistroSalida
                 log.info("Plantilla salida");
-                Organismo organismoOrigen = organismoEjb.findByCodigoEntidad(plantillaJson.getOrigenCodigo(), usuarioEntidad.getEntidad().getId());
+                Organismo organismoOrigen = organismoEjb.findByCodigoEntidadLigero(plantillaJson.getOrigenCodigo(), usuarioEntidad.getEntidad().getId());
 
                 if(organismoOrigen != null) { // es interno
                     log.info("Origen: " + plantillaJson.getOrigenDenominacion() + " Interno");

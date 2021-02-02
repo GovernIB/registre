@@ -176,7 +176,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
         // Comprobamos si el Organismo destinatario es externo, para añadirlo a la lista.
         if (StringUtils.isNotEmpty(busqueda.getOrganDestinatari())) {
-            Organismo org = organismoEjb.findByCodigoEntidad(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
+            Organismo org = organismoEjb.findByCodigoEntidadLigero(busqueda.getOrganDestinatari(), usuarioEntidad.getEntidad().getId());
             if (org == null || !organismosOficinaActiva.contains(org)) { //Es organismo externo, lo añadimos a la lista
                 organismosOficinaActiva.add(new Organismo(null, busqueda.getOrganDestinatari(), new String(busqueda.getOrganDestinatariNom().getBytes("ISO-8859-1"), "UTF-8")));
             }

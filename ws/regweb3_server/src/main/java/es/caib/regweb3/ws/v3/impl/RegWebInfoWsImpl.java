@@ -355,7 +355,7 @@ public class RegWebInfoWsImpl extends AbstractRegistroWsImpl implements RegWebIn
 
         }
 
-        Organismo organismoActivo = organismoEjb.findByCodigoEntidad(organismo, entidad.getId());
+        Organismo organismoActivo = organismoEjb.findByCodigoEntidadLigero(organismo, entidad.getId());
 
         // 3. Comprobar que el Organismo existe y está vigente
         if (organismoActivo == null) { //No existe

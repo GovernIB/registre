@@ -7,6 +7,7 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.persistence.ejb.InteresadoLocal;
 import es.caib.regweb3.persistence.ejb.PersonaLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
+import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.controller.BaseController;
@@ -65,7 +66,9 @@ public class InteresadoController extends BaseController{
      */
     @RequestMapping(value = "/{tipoRegistro}/addOrganismo", method = RequestMethod.GET)
     @ResponseBody
-    public Boolean addOrganismoInteresado(@PathVariable Long tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
+    public JsonResponse addOrganismoInteresado(@PathVariable Long tipoRegistro, @RequestParam String codigoDir3, @RequestParam String denominacion, @RequestParam String idRegistroDetalle, HttpServletRequest request) {
+
+        JsonResponse jsonResponse = new JsonResponse();
 
         String variableSesion = (tipoRegistro.equals(REGISTRO_ENTRADA) ? RegwebConstantes.SESSION_INTERESADOS_ENTRADA:RegwebConstantes.SESSION_INTERESADOS_SALIDA);
 
@@ -73,6 +76,23 @@ public class InteresadoController extends BaseController{
         Entidad entidadActiva = getEntidadActiva(request);
 
         try {
+
+            if(Configuracio.isCAIB()){ // Comprobamos si el Organismo indicado pruede ser Interesado o Destinatario
+
+                if(organismoEjb.isOrganismoInterno(codigoDir3, entidadActiva.getId())){
+
+                    jsonResponse.setStatus("FAIL");
+
+                    if(tipoRegistro.equals(REGISTRO_ENTRADA)){
+                        jsonResponse.setError(getMessage("interesado.organismo.interno"));
+                    }else if(tipoRegistro.equals(REGISTRO_SALIDA)){
+                        jsonResponse.setError(getMessage("destinatario.organismo.interno"));
+                    }
+
+                    return jsonResponse;
+                }
+            }
+
             denominacion = URLDecoder.decode(denominacion, "UTF-8");
 
             Interesado organismo = new Interesado(codigoDir3,denominacion);
@@ -87,7 +107,6 @@ public class InteresadoController extends BaseController{
                         //log.info("Ya hay un Destinatario Organismo asociado en la sesion, lo sustituimos por el nuevo");
                         eliminarOrganismoSesion(organismoCodigo, session, variableSesion);
                     }
-
                 }
 
                 addInteresadoSesion(organismo, session, variableSesion);
@@ -102,7 +121,6 @@ public class InteresadoController extends BaseController{
                         log.info("Ya hay un Destinatario Organismo asociado en la bbdd, lo eliminamos");
                         eliminarOrganismoBbdd(organismoCodigo, Long.valueOf(idRegistroDetalle),tipoRegistro, entidadActiva.getId());
                     }
-
                 }
 
                 organismo.setRegistroDetalle(registroDetalleEjb.findById(Long.valueOf(idRegistroDetalle)));
@@ -114,14 +132,19 @@ public class InteresadoController extends BaseController{
             }
 
         } catch(I18NException i18ne) {
-          log.error(I18NUtils.getMessage(i18ne), i18ne);
-          return false;
+            log.error(I18NUtils.getMessage(i18ne), i18ne);
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("regweb.error.general"));
+            return jsonResponse;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
-        } 
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(getMessage("regweb.error.general"));
+            return jsonResponse;
+        }
 
-        return true;
+        jsonResponse.setStatus("SUCCESS");
+        return jsonResponse;
     }
 
 

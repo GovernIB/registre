@@ -101,7 +101,7 @@ public class SirEnvioBean implements SirEnvioLocal {
                         camposNTIS.add(campoNTI);
                     }
 
-                    Organismo organismoDestino = organismoEjb.findByCodigoEntidad(destino, idEntidad);
+                    Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(destino, idEntidad);
 
                     //Aceptar el RegistroSir
                     RegistroEntrada registroEntrada = aceptarRegistroSir(registroSir, usuarioEntidad, oficina,idLibro,RegwebConstantes.IDIOMA_CASTELLANO_ID,camposNTIS, organismoDestino.getId(), true);

@@ -132,7 +132,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         Entidad entidadActiva = validarEntidad(entidad);
 
         // 2.- Comprobar que el Organismo destino está vigente
-        Organismo destinoInterno = organismoEjb.findByCodigoEntidad(registroEntradaWs.getDestino(), entidadActiva.getId());
+        Organismo destinoInterno = organismoEjb.findByCodigoEntidadLigero(registroEntradaWs.getDestino(), entidadActiva.getId());
         UnidadTF destinoExterno = null;
 
         if (destinoInterno == null) { // Se trata de un destino externo
