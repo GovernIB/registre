@@ -189,6 +189,26 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @SuppressWarnings(value = "unchecked")
     public Organismo findByCodigoEntidad(String codigo, Long idEntidad) throws Exception {
 
+        Query q = em.createQuery("Select organismo from Organismo as organismo where " +
+                "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad");
+
+        q.setParameter("codigo", codigo);
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Organismo> organismo = q.getResultList();
+        if (organismo.size() == 1) {
+            return organismo.get(0);
+        } else {
+            return null;
+        }
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Organismo findByCodigoEntidadLigero(String codigo, Long idEntidad) throws Exception {
+
         Query q = em.createQuery("Select organismo.id,organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
                 "organismo.codigo = :codigo and organismo.entidad.id = :idEntidad and organismo.estado.codigoEstadoEntidad=:vigente");
 
@@ -372,6 +392,19 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         return organismos;
 
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Boolean isOrganismoInterno(String codigo, Long idEntidad) throws Exception {
+
+        Organismo organismo = findByCodigoEntidad(codigo, idEntidad);
+
+        if(!organismo.getEdp()){ // Si no es EDP
+            return true;
+        }else{
+            return organismo.getPermiteUsuarios() || organismo.getEdpPrincipal().getPermiteUsuarios();
+        }
     }
 
     @Override

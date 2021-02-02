@@ -105,7 +105,7 @@ public class EntidadController extends BaseController {
             Libro libro = new Libro();
             libro.setCodigo("GOIB");
             libro.setNombre(entidad.getNombre());
-            libro.setOrganismo(organismoEjb.findByCodigoEntidad(entidad.getCodigoDir3(), entidad.getId()));
+            libro.setOrganismo(organismoEjb.findByCodigoEntidadLigero(entidad.getCodigoDir3(), entidad.getId()));
             entidad.setLibro(libroEjb.crearLibro(libro));
 
             entidadEjb.merge(entidad);

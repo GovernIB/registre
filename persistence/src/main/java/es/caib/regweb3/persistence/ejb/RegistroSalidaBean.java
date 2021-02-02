@@ -169,7 +169,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         if (StringUtils.isNotEmpty(codigoDir3)) {
             Long idEntidad = registroSalida.getOficina().getOrganismoResponsable().getEntidad().getId();
-            return organismoEjb.findByCodigoEntidad(codigoDir3, idEntidad) != null;
+            return organismoEjb.findByCodigoEntidadLigero(codigoDir3, idEntidad) != null;
         }
 
         return false;
@@ -517,7 +517,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
             /* En el caso de rectificar se escoge el primer sustituto de la lista que nos devuelven y se cambia de manera transparente para el usuario */
             if (interesadoAdministracion != null && !interesadoAdministracion.getCodigoDir3().isEmpty()) {
-                Organismo organismo = organismoEjb.findByCodigoEntidad(codigoDir3, registroSalida.getUsuario().getEntidad().getId());
+                Organismo organismo = organismoEjb.findByCodigoEntidadLigero(codigoDir3, registroSalida.getUsuario().getEntidad().getId());
                 if (organismo != null) { //Destino interno
                     if (!organismo.getEstado().getCodigoEstadoEntidad().equals(RegwebConstantes.ESTADO_ENTIDAD_VIGENTE)) {
                         Set<Organismo> historicosFinales = new HashSet<Organismo>();

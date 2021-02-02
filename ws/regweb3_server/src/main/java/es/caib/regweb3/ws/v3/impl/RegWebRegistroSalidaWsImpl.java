@@ -120,7 +120,7 @@ public class RegWebRegistroSalidaWsImpl extends AbstractRegistroWsImpl implement
         Entidad entidadActiva = validarEntidad(entidad);
 
         // 2.- Comprobar que el Organismo destino está vigente
-        Organismo origen = organismoEjb.findByCodigoEntidad(registroSalidaWs.getOrigen(), entidadActiva.getId());
+        Organismo origen = organismoEjb.findByCodigoEntidadLigero(registroSalidaWs.getOrigen(), entidadActiva.getId());
 
         if (origen == null) { //Si no existe todo: Hay que agregar origenes externos?
             throw new I18NException("registro.organismo.noExiste", registroSalidaWs.getOrigen());

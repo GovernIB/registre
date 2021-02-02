@@ -210,7 +210,7 @@ public class RegistroSirController extends BaseController {
                 // Comprobamos que la unida de tramitación destino está VIGENTE
                 if(registroSir.getCodigoUnidadTramitacionDestino() !=null ){
 
-                    Organismo organismoDestino = organismoEjb.findByCodigoEntidad(registroSir.getCodigoUnidadTramitacionDestino(),getEntidadActiva(request).getId());
+                    Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(registroSir.getCodigoUnidadTramitacionDestino(),getEntidadActiva(request).getId());
                     if(organismoDestino == null) {
                         model.addAttribute("extinguido", true);
                     }

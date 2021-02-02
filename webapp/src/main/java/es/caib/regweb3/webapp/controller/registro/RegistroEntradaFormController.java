@@ -164,7 +164,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
 
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
-                Organismo organismo = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
+                Organismo organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
 
                 if (organismo == null) {// Si es externo, lo creamos nuevo y lo añadimos a la lista del select
 
@@ -337,7 +337,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
             if (registroEntrada.getDestino() != null) { // Si se ha escogido un Organismo destino
 
-                Organismo organismo = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
+                Organismo organismo = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
                 if (organismo == null) { // Si es externo, lo creamos nuevo y lo añadimos a la lista del select
                     log.info("Es organismo externo: " + registroEntrada.getDestino().getCodigo() + " - " + registroEntrada.getDestinoExternoDenominacion());
                     organismosOficinaActiva.add(new Organismo(null, registroEntrada.getDestino().getCodigo(), registroEntrada.getDestinoExternoDenominacion()));
@@ -486,7 +486,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
     private RegistroEntrada procesarRegistroEntrada(RegistroEntrada registroEntrada, Entidad entidad) throws Exception{
 
         // Organismo destinatiario, determinando si es Interno o Externo. Si es organismo interno con una Entidad creada, será externo
-        Organismo orgDestino = organismoEjb.findByCodigoEntidad(registroEntrada.getDestino().getCodigo(), entidad.getId());
+        Organismo orgDestino = organismoEjb.findByCodigoEntidadLigero(registroEntrada.getDestino().getCodigo(), entidad.getId());
 
         if(orgDestino != null){ // es interno
             registroEntrada.setDestino(orgDestino);

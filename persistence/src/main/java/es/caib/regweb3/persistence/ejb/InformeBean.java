@@ -92,7 +92,7 @@ public class InformeBean implements InformeLocal {
 
         // Organismo destinatario
         if (StringUtils.isNotEmpty((organoDest))) {
-            if (/*organismoEjb.findByCodigoLigero(organoDest) == null*/organismoEjb.findByCodigoEntidad(organoDest, idEntidad) == null) {
+            if (/*organismoEjb.findByCodigoLigero(organoDest) == null*/organismoEjb.findByCodigoEntidadLigero(organoDest, idEntidad) == null) {
                 where.add(" registroEntrada.destinoExternoCodigo = :organoDest ");
             } else {
                 where.add(" registroEntrada.destino.codigo = :organoDest ");
@@ -321,7 +321,7 @@ public class InformeBean implements InformeLocal {
 
         // Organismo origen
         if (StringUtils.isNotEmpty((organoOrig))) {
-            Organismo organismo = organismoEjb.findByCodigoEntidad(organoOrig, idEntidad);
+            Organismo organismo = organismoEjb.findByCodigoEntidadLigero(organoOrig, idEntidad);
             if (organismo == null) {
                 where.add(" registroSalida.origenExternoCodigo = :organoOrig ");
             } else {

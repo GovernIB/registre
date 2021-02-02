@@ -49,14 +49,16 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
         data: { codigoDir3: codigoDir3, denominacion: denominacionCodificada, idRegistroDetalle: idRegistroDetalle },
 
         success: function(result) {
-            if(result==true){
+
+            if(result.status === 'SUCCESS'){
                 if(tipoRegistro===2){ //Si es una salida eliminamos los anteriores
                     eliminarTodosInteresados();
                 }
                 addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
 
-            }else{
-                mensajeError("#mensajes", tradsinteresado['interesado.añadir.organismo']);
+            }else if(result.status === 'FAIL'){
+
+                mensajeError("#mensajes", result.error);
             }
 
         }
