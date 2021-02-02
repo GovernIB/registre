@@ -259,8 +259,8 @@ public class LoginService {
         loginInfo.setOrganismosRegistroEntrada(organismosRegistroEntrada);
         loginInfo.setOficinasRegistroEntrada(oficinasRegistroEntrada);
 
-        log.info("Organismos registro entrada usuario: " + Arrays.toString(organismosRegistroEntrada.toArray()));
-        log.info("Oficinas registro entrada usuario: " + Arrays.toString(oficinasRegistroEntrada.toArray()));
+        //log.info("Organismos registro entrada usuario: " + Arrays.toString(organismosRegistroEntrada.toArray()));
+        //log.info("Oficinas registro entrada usuario: " + Arrays.toString(oficinasRegistroEntrada.toArray()));
 
         // Obtenemos los Organismos donde el usuario puede Registrar salidas y de ahí las oficinas que dan servicio
         List<Organismo> organismosRegistroSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_REGISTRO_SALIDA);
@@ -269,8 +269,8 @@ public class LoginService {
         loginInfo.setOrganismosRegistroSalida(organismosRegistroSalida);
         loginInfo.setOficinasRegistroSalida(oficinasRegistroSalida);
 
-        log.info("Organismos registro salida usuario: " + Arrays.toString(organismosRegistroSalida.toArray()));
-        log.info("Oficinas registro salida usuario: " + Arrays.toString(oficinasRegistroSalida.toArray()));
+        //log.info("Organismos registro salida usuario: " + Arrays.toString(organismosRegistroSalida.toArray()));
+        //log.info("Oficinas registro salida usuario: " + Arrays.toString(oficinasRegistroSalida.toArray()));
 
 
         // Obtenemos los Organismos donde el usuario puede consultar entradas y de ahí las oficinas que dan servicio
@@ -280,8 +280,8 @@ public class LoginService {
         loginInfo.setOrganismosConsultaEntrada(organismosConsultaEntrada);
         loginInfo.setOficinasConsultaEntrada(oficinasConsultaEntrada);
 
-        log.info("Organismos consulta entrada: " + Arrays.toString(organismosConsultaEntrada.toArray()));
-        log.info("Oficinas consulta entrada: " + Arrays.toString(oficinasConsultaEntrada.toArray()));
+        //log.info("Organismos consulta entrada: " + Arrays.toString(organismosConsultaEntrada.toArray()));
+        //log.info("Oficinas consulta entrada: " + Arrays.toString(oficinasConsultaEntrada.toArray()));
 
         // Obtenemos los Organismos donde el usuario puede consultar salidas y de ahí las oficinas que dan servicio
         List<Organismo> organismosConsultaSalida = permisoOrganismoUsuarioEjb.getOrganismosPermiso(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.PERMISO_CONSULTA_REGISTRO_SALIDA);
@@ -290,8 +290,8 @@ public class LoginService {
         loginInfo.setOrganismosConsultaSalida(organismosConsultaSalida);
         loginInfo.setOficinasConsultaSalida(oficinasConsultaSalida);
 
-        log.info("Organismos consulta salida: " + Arrays.toString(organismosConsultaSalida.toArray()));
-        log.info("Oficinas consulta salida: " + Arrays.toString(oficinasConsultaSalida.toArray()));
+        //log.info("Organismos consulta salida: " + Arrays.toString(organismosConsultaSalida.toArray()));
+        //log.info("Oficinas consulta salida: " + Arrays.toString(oficinasConsultaSalida.toArray()));
 
         // Creamos la lista de Oficinas en las que el usuario puede situarse
         loginInfo.getOficinasAcceso().addAll(oficinasRegistroEntrada);
@@ -301,14 +301,14 @@ public class LoginService {
 
         // Obtenemos los Organismos donde el UsuarioEntidad es responsable
         loginInfo.setOrganismosResponsable(permisoOrganismoUsuarioEjb.getOrganismosAdministrados(loginInfo.getUsuarioEntidadActivo().getId()));
-        log.info("Organismos responsable usuario: " + Arrays.toString(loginInfo.getOrganismosResponsable().toArray()));
+        //log.info("Organismos responsable usuario: " + Arrays.toString(loginInfo.getOrganismosResponsable().toArray()));
 
         // Si la Entidad está en SIR, obtenemos las Oficinas SIR a las que tiene acceso
         if (loginInfo.getEntidadActiva().getSir()) {
 
             //Obtenemos los Organismos donde el UsuarioEntidad tenga permiso SIR
             LinkedHashSet<Oficina> oficinasSIR = permisoOrganismoUsuarioEjb.getOficinasSir(loginInfo.getUsuarioEntidadActivo().getId());
-            log.info("Organismos SIR usuario: " + Arrays.toString(oficinasSIR.toArray()));
+            //log.info("Organismos SIR usuario: " + Arrays.toString(oficinasSIR.toArray()));
 
             // Las añadimos al listado general de oficinas
             loginInfo.getOficinasAcceso().addAll(oficinasSIR);
