@@ -101,9 +101,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         // Es una Notificación
         if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
-            //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
-            crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
-            registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
+            //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_VALIDO
+            crearJustificanteCambioEstado(registroSalida, REGISTRO_VALIDO);
+            registroSalida.setEstado(REGISTRO_VALIDO);
 
             // Es una Comunicación
         } else if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)) {
@@ -114,9 +114,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
                 //Interesado es una persona física o jurídica es como el caso de notificación
                 if (TIPO_INTERESADO_PERSONA_FISICA.equals(interesado.getTipo())
                         || TIPO_INTERESADO_PERSONA_JURIDICA.equals(interesado.getTipo())) {
-                    //Creamos el justificante del registroSalida y lo marcamos como DISTRIBUIDO
-                    crearJustificanteCambioEstado(registroSalida, REGISTRO_DISTRIBUIDO);
-                    registroSalida.setEstado(REGISTRO_DISTRIBUIDO);
+                    //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_VALIDO
+                    crearJustificanteCambioEstado(registroSalida, REGISTRO_VALIDO);
+                    registroSalida.setEstado(REGISTRO_VALIDO);
 
                     // Interesado es una administración
                 } else if (TIPO_INTERESADO_ADMINISTRACION.equals(interesado.getTipo())) {
