@@ -66,57 +66,13 @@ public class ArxiuCaibUtils {
     }
 
     /**
-     * Crea el Justificante (expediente + documento)
-     * @param registro
-     * @param firma
-     * @return
-     * @throws Exception
-     */
-    public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
-
-        ContingutArxiu expediente = null;
-        ContingutArxiu documento = null;
-
-        String serieDocumental = getPropertySerieDocumental();
-        String codigoProcedimiento = getPropertyCodigoProcedimiento();
-
-        try{
-
-            // Creamos el Expediente del Justificante
-            expediente = crearExpediente(registro, tipoRegistro, serieDocumental, codigoProcedimiento);
-            log.info("Expediente creado: " + expediente.getIdentificador());
-
-            // Creamos el Documento del Justificante
-            documento = crearDocumentoJustificante(registro, getTipoRegistroEni(tipoRegistro), serieDocumental, firma, expediente.getIdentificador());
-            log.info("Documento creado: " + documento.getIdentificador());
-
-            //Cerramos el expediente
-            if(getPropertyCerrarExpediente()){
-                getArxiuPlugin().expedientTancar(expediente.getIdentificador());
-            }
-
-        }catch (ArxiuException e){
-            log.info("Error creando el justificante en Arxiu");
-            e.printStackTrace();
-
-            if(expediente != null){
-                eliminarExpediente(expediente.getIdentificador());
-            }
-
-            throw e;
-        }
-
-        return new JustificanteArxiu(expediente, documento);
-    }
-
-    /**
      * Crea el Justificante en un entorno GOIB (expediente + documento)
      * @param registro
      * @param firma
      * @return
      * @throws Exception
      */
-    public JustificanteArxiu crearJustificanteGoib(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
+    public JustificanteArxiu crearJustificante(IRegistro registro, Long tipoRegistro, Firma firma) throws Exception{
 
         ContingutArxiu expediente = null;
         ContingutArxiu documento = null;
