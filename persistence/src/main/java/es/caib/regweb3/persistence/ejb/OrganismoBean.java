@@ -400,6 +400,10 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
         Organismo organismo = findByCodigoEntidad(codigo, idEntidad);
 
+        if(organismo == null){
+            return false;
+        }
+
         if(!organismo.getEdp()){ // Si no es EDP
             return true;
         }else{
