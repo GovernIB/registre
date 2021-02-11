@@ -2,6 +2,7 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import org.fundaciobit.genapp.common.i18n.I18NException;
@@ -285,5 +286,13 @@ public interface RegistroEntradaConsultaLocal {
      * @throws Exception
      */
     RegistroEntrada getByDocumentoNumeroRegistro(Long idEntidad, String documento, String numeroRegistroFormateado) throws Exception, I18NException;
+
+    /**
+     * Obtiene los últimos organismos interesado de los registros realizados por el usuario indicado
+     * @param usuarioEntidad
+     * @return
+     * @throws Exception
+     */
+    List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception;
 
 }

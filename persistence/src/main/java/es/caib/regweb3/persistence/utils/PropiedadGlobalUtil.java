@@ -20,6 +20,23 @@ public class PropiedadGlobalUtil {
 
 
     /**
+     * Retorna el número de organismos que se mostrarán en el select del módulo de Interesados.
+     * Propiedad: es.caib.regweb3.interesado.organismos
+     * @param idEntidad
+     * @return
+     */
+    public static Integer getTotalOrganismosSelect(Long idEntidad) {
+        final String partialPropertyName = "interesado.organismos";
+        Integer valor = getIntegerByEntidad(idEntidad, partialPropertyName);
+
+        // Valor global si no existeix el de per entitat
+        if (valor == null) {
+            valor = 10;
+        }
+        return valor;
+    }
+
+    /**
      * Retorna el valor de la propiedad de la ruta ERTE
      * Propiedad: es.caib.regweb3.urlvalidation.password
      * @param idEntidad

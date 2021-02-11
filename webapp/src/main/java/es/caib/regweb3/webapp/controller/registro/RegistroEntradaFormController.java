@@ -93,6 +93,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("organismosOficinaActiva", organismosOficinaActiva);
         model.addAttribute("oficinasOrigen", oficinasOrigen);
         model.addAttribute("origenPlantilla", true);
+        model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
 
         return "registroEntrada/registroEntradaForm";
     }
@@ -121,6 +122,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         model.addAttribute("registroEntrada",registroEntrada);
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+        model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
 
         return "registroEntrada/registroEntradaForm";
     }
@@ -158,6 +160,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
             model.addAttribute(getUsuarioAutenticado(request));
             model.addAttribute(getOficinaActiva(request));
             model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+            model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
 
             // Organismo destino: Select
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));

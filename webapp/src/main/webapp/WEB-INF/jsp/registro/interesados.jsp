@@ -53,7 +53,7 @@
                 <div class="col-xs-10">
                     <c:forEach items="${tiposInteresado}" var="tipoInteresado">
                         <label class="radio-inline">
-                            <input type="radio" name="tipoInteresado" value="${tipoInteresado}" <c:if test="${tipoInteresado == RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION}">checked</c:if> > <spring:message code="interesado.tipo.${tipoInteresado}"/>
+                            <input type="radio" name="tipoInteresado" value="${tipoInteresado}" <c:if test="${tipoInteresado == RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA}">checked</c:if> > <spring:message code="interesado.tipo.${tipoInteresado}"/>
                         </label>
                     </c:forEach>
                 </div>
@@ -61,35 +61,36 @@
 
             <div class="form-group col-xs-12">
                 <div class="col-xs-2 pull-left etiqueta_regweb control-label">
-                    <label id="organismoInteresadoLabel" for="organismoInteresado" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organoInteresado"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="interesado.organismo"/></label>
-                    <label id="personaFisicaLabel" for="personaFisica" style="display: none;" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
+                    <label id="personaFisicaLabel" for="personaFisica" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaFisica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.fisica"/></label>
                     <label id="personaJuridicaLabel" for="personaJuridica" style="display: none;" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.personaJuridica"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="persona.juridica"/></label>
+                    <label id="organismoInteresadoLabel" for="organismoInteresado" style="display: none;" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.organoInteresado"/>" data-toggle="popover"><span class="text-danger">*</span> <spring:message code="interesado.organismo"/></label>
+
                 </div>
                 <div class="col-xs-6">
 
-                   <select id="organismoInteresado" name="organismoInteresado" class="chosen-select" style="width:100%;">
-                       <option value="-1">...</option>
-                        <c:forEach items="${loginInfo.organismosOficinaActiva}" var="organismoInteresado">
-                            <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
-                        </c:forEach>
-                    </select>
-
-                    <input id="personaFisica" name="personaFisica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.fisicas"/>" autocomplete="off"/>
+                    <input id="personaFisica" name="personaFisica" type="text" class="form-control" placeholder="<spring:message code="persona.buscar.fisicas"/>" autocomplete="off"/>
 
                     <input id="personaJuridica" name="personaJuridica" type="text" class="form-control" style="display: none;" placeholder="<spring:message code="persona.buscar.juridicas"/>" autocomplete="off"/>
 
+                    <select id="organismoInteresado" name="organismoInteresado" class="chosen-select" style="display: none;">
+                        <option value="-1">...</option>
+                        <c:forEach items="${ultimosOrganismos}" var="organismoInteresado">
+                            <option value="${organismoInteresado.codigo}">${organismoInteresado.denominacion}</option>
+                        </c:forEach>
+                    </select>
                 </div>
+
                 <%--Botones búsqueda--%>
                 <div class="col-xs-2 pull-right boto-panel center">
+                    <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                    <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                     <a id="buscarOrganismo" data-toggle="modal" href="#modalBuscadorOrganismoInteresado"
                        onclick="inicializarBuscador('#codNivelAdministracionOrganismoInteresado','#codComunidadAutonomaOrganismoInteresado','#provinciaOrganismoInteresado','#localidadOrganismoInteresado','${oficina.organismoResponsable.nivelAdministracion.codigoNivelAdministracion}', '${oficina.organismoResponsable.codAmbComunidad.codigoComunidad}', 'OrganismoInteresado' );"
-                       class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
-                    <a id="buscarPersonaFisica" data-toggle="modal" href="#modalBuscadorPersonasFisicas" onclick="limpiarBusquedaPersona('Fisicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
-                    <a id="buscarPersonaJuridica" data-toggle="modal" href="#modalBuscadorPersonasJuridicas" onclick="limpiarBusquedaPersona('Juridicas')" style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
+                       style="display: none;" class="btn btn-warning btn-sm"><spring:message code="regweb.buscar"/></a>
                 </div>
                 <%--Botones nueva persona--%>
                 <div class="col-xs-2 pull-right boto-panel center">
-                    <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
+                    <a id="nuevaPersonaFisica" data-toggle="modal" role="button" href="#modalInteresado" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.fisica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                     <a id="nuevaPersonaJuridica" data-toggle="modal" role="button" href="#modalInteresado" style="display: none;" class="btn btn-warning btn-sm" onclick="nuevoInteresado('<spring:message code="persona.juridica.nueva"/>')"><spring:message code="regweb.nueva"/></a>
                 </div>
             </div>
@@ -220,8 +221,8 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
 
     $(window).load(function() {
 
-        //mostrarOrganismos();
         actualizarCanalNotificacion();
+        mostrarPersonaFisica();
 
         // Muestra u Oculta en función del tipoInteresado seleccionado
         $('input[name=tipoInteresado]:radio').click(function () {
@@ -243,12 +244,10 @@ Mediante el archivo "busquedaorganismo.js" se implementa dicha búsqueda -->
         });
 
         // Gestión de los cambios del Canal de Notificación
-        $('#canal').change(
-                function() {actualizarCanalNotificacion();});
+        $('#canal').change(function() {actualizarCanalNotificacion();});
 
         // Gestión de los cambios de persona
-        $('#pais\\.id').change(
-                function() {actualizarPais();});
+        $('#pais\\.id').change(function() {actualizarPais();});
 
         //Gestión de los cambios de tipo documento
         $('#tipoDocumentoIdentificacion').change(
