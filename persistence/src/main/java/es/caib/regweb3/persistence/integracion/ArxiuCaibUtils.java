@@ -111,6 +111,7 @@ public class ArxiuCaibUtils {
 
         }catch (ArxiuException e){
             log.info("Error creando el justificante en Arxiu");
+            e.printStackTrace();
             throw e;
         }
 
