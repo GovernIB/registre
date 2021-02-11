@@ -248,6 +248,8 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
         if (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && !tieneJustificante) {
 
             initDatosInteresados(model, organismosOficinaActiva);
+            model.addAttribute("ultimosOrganismos",  registroSalidaConsultaEjb.ultimosOrganismosRegistro(usuarioEntidad));
+
         }
 
         // Justificante

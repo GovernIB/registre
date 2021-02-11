@@ -4,10 +4,12 @@ package es.caib.regweb3.persistence.ejb;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.model.utils.RegistroBasico;
 import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
@@ -911,6 +913,38 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         } else {
             return null;
         }
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public List<Organismo> ultimosOrganismosRegistro(UsuarioEntidad usuarioEntidad) throws Exception {
+
+        Query q;
+        q = em.createQuery("Select distinct(re.registroDetalle.id) from RegistroEntrada as re left outer join re.registroDetalle.interesados interesado where " +
+                " re.usuario.id = :idUsuarioEntidad and re.estado != :anulado and interesado.tipo = :administracion order by re.registroDetalle.id desc");
+
+        q.setParameter("idUsuarioEntidad", usuarioEntidad.getId());
+        q.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
+        q.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
+        q.setHint("org.hibernate.readOnly", true);
+        q.setMaxResults(PropiedadGlobalUtil.getTotalOrganismosSelect(usuarioEntidad.getEntidad().getId()));
+
+        List<Long> registros = q.getResultList();
+
+        Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.registroDetalle.id in (:registros)");
+
+        // Parámetros
+        q1.setParameter("registros", registros);
+        q1.setHint("org.hibernate.readOnly", true);
+
+        List<Object[]> destinos = q1.getResultList();
+        List<Organismo> organismos = new ArrayList<>();
+
+        for (Object[] object : destinos) {
+            organismos.add(new Organismo(null, (String) object[0], (String) object[1]));
+        }
+
+        return organismos;
     }
 
 }

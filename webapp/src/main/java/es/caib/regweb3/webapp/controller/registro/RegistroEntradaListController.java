@@ -281,6 +281,8 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             if (registro.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) && puedeEditar && !tieneJustificante) {
 
                 initDatosInteresados(model, organismosOficinaActiva);
+                model.addAttribute("ultimosOrganismos",  registroEntradaConsultaEjb.ultimosOrganismosRegistro(usuarioEntidad));
+
             }
 
             // Justificante

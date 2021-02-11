@@ -85,6 +85,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen", oficinasOrigen);
         model.addAttribute("origenPlantilla", true);
+        model.addAttribute("ultimosOrganismos",  registroSalidaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
 
         return "registroSalida/registroSalidaForm";
     }
@@ -111,6 +112,8 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         model.addAttribute("registroSalida",registroSalida);
         model.addAttribute("organismosOficinaActiva", getOrganismosOficinaActiva(request));
         model.addAttribute("oficinasOrigen",  getOficinasOrigen(request));
+        model.addAttribute("ultimosOrganismos",  registroSalidaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
+
 
         return "registroSalida/registroSalidaForm";
     }
@@ -168,6 +171,8 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 }
             }
             model.addAttribute("oficinasOrigen", oficinasOrigen);
+            model.addAttribute("ultimosOrganismos",  registroSalidaConsultaEjb.ultimosOrganismosRegistro(getUsuarioEntidadActivo(request)));
+
 
             return "registroSalida/registroSalidaForm";
         }else{ // Si no hay errores guardamos el registroSalida
