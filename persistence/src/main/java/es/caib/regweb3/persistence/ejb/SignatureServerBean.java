@@ -264,12 +264,8 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
      */
     public I18NTranslation checkDocument(AnexoFull input, long idEntidad, Locale locale, boolean force) throws I18NException {
 
-
         SignatureCustody sign = input.getSignatureCustody();
         DocumentCustody doc = input.getDocumentoCustody();
-
-        log.info("checkDocument::Document = " + doc);
-        log.info("checkDocument::Signature = " + sign);
 
         if (sign == null && doc == null) {
             throw new I18NException("error.checkanexosir.nifirmanidoc");
@@ -281,7 +277,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             try {
                 resp = callToValidaFirma(locale, sign, doc,idEntidad);
             } catch(I18NException i18ne) {
-                log.info("Entro I18N");
                 input.getAnexo().setEstadoFirma(RegwebConstantes.ANEXO_FIRMA_ERROR);
                 if(i18ne.getCause()!=null) {
                     input.getAnexo().setMotivoNoValidacion(i18ne.getCause().toString());
@@ -299,12 +294,6 @@ public class SignatureServerBean implements SignatureServerLocal, ValidateSignat
             final String perfil = resp.getSignProfile();
             final String tipo = resp.getSignType();
             final String formato = resp.getSignFormat();
-
-            log.info("XYZ ZZZ tipo = " + tipo);
-            log.info("XYZ ZZZ perfil = " + perfil);
-            log.info("XYZ ZZZ formato = " + formato);
-
-
 
             //Guardamos el resultado de la validación de la firma
             Anexo anexo = input.getAnexo();
