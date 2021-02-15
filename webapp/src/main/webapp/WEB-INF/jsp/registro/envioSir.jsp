@@ -53,12 +53,11 @@
                     <div class="panel-heading">
                         <h3 class="panel-title"><i class="fa fa-file-o"></i>
                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">
-                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}<spring:message code="registroSir.mediante"/></strong>
+                                <strong>SIR: <spring:message code="regweb.enviar"/> <spring:message code="registroEntrada.registroEntrada"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}</strong>
                             </c:if>
                             <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_SALIDA}">
-                                <strong><spring:message code="regweb.enviar"/> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}<spring:message code="registroSir.mediante"/></strong>
+                                <strong>SIR: <spring:message code="regweb.enviar"/> <spring:message code="registroSalida.registroSalida"/> ${registro.numeroRegistroFormateado} a ${destino.denominacion}</strong>
                             </c:if>
-
                         </h3>
                     </div>
                     <div class="panel-body">

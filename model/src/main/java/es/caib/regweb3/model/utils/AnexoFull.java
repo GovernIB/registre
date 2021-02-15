@@ -341,11 +341,12 @@ public class AnexoFull{
 
         String custodyId = getAnexo().getCustodiaID() +"#"+getAnexo().getExpedienteID();
         getAnexo().setCustodiaID(custodyId);
+
         SignatureCustody sc = new SignatureCustody();
         sc.setData(getDocument().getContingut().getContingut());
         sc.setLength(getDocument().getContingut().getTamany());
-        sc.setName(getDocument().getNom());
         sc.setMime(getDocument().getContingut().getTipusMime());
+        sc.setName(getDocument().getNom());
         sc.setSignatureType(getAnexo().getSignType());
         sc.setAttachedDocument(null);
 

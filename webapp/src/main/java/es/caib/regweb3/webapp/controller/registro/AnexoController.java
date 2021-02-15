@@ -584,13 +584,12 @@ public class AnexoController extends BaseController {
      */
     private List<AnexoFull> obtenerAnexosFullByRegistro(Long idRegistro, Long tipoRegistro) throws Exception, I18NException {
         if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
-            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getConAnexosFullLigero(idRegistro);
+            RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
             return registroEntrada.getRegistroDetalle().getAnexosFull();
 
         } else {
-            RegistroSalida registroSalida = registroSalidaConsultaEjb.getConAnexosFullLigero(idRegistro);
+            RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFullLigero(idRegistro);
             return registroSalida.getRegistroDetalle().getAnexosFull();
-
         }
     }
 

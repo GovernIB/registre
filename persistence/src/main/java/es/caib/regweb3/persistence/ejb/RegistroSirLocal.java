@@ -1,6 +1,9 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSir;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.model.utils.CamposNTI;
 import es.caib.regweb3.model.utils.EstadoRegistroSir;
 import es.caib.regweb3.persistence.utils.Paginacion;
@@ -123,22 +126,21 @@ public interface RegistroSirLocal extends BaseEjb<RegistroSir, Long> {
 
     /**
      *
-     * @param registroEntrada
+     * @param idRegistroEntrada
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    RegistroSir transformarRegistroEntrada(RegistroEntrada registroEntrada) throws Exception, I18NException;
+    RegistroSir transformarRegistroEntrada(Long idRegistroEntrada) throws Exception, I18NException;
 
     /**
      *
-     * @param registroSalida
+     * @param idRegistroSalida
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    RegistroSir transformarRegistroSalida(RegistroSalida registroSalida)
-            throws Exception, I18NException;
+    RegistroSir transformarRegistroSalida(Long idRegistroSalida) throws Exception, I18NException;
 
     /**
      * Obtiene los RegistroSir que han de reintentar su envío al componente CIR

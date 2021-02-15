@@ -568,6 +568,25 @@ public class RegistroDetalle implements Serializable {
     }
 
     /**
+     * Devuelve el Justificante generado de tipo AnexoFull
+     * @return
+     */
+    @Transient
+    public AnexoFull getJustificanteAnexoFull(){
+
+        if(getAnexosFull() != null && getAnexosFull().size() > 0){
+
+            for (AnexoFull anexoFull : getAnexosFull()) {
+                if(anexoFull.getAnexo().isJustificante()){
+                    return anexoFull;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Devuelve si el registroDetalle tiene anexos
      * @return
      */

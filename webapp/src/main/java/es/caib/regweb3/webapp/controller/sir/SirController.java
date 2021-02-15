@@ -605,18 +605,15 @@ public class SirController extends BaseController {
             OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
             if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
-                registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
+                registroSir = registroSirEjb.transformarRegistroEntrada(oficioRemision.getRegistrosEntrada().get(0).getId());
             }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
-                registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
+                registroSir = registroSirEjb.transformarRegistroSalida(oficioRemision.getRegistrosSalida().get(0).getId());
             }
 
             if(registroSir != null){
                 Document doc = sicres3XML.crearXMLFicheroIntercambioSICRES3(registroSir);
 
                 try {
-
 
                     String filename = registroSir.getIdentificadorIntercambio()+".xml";
                     response.setContentType("text/xml");

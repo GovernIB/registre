@@ -133,16 +133,6 @@ public interface RegistroSalidaConsultaLocal{
     Boolean obtenerPorUsuario(Long idUsuarioEntidad) throws Exception;
 
     /**
-     * Método que devuelve un registro de salida completo, con los anexosFull pero sin los documentos fisicos.
-     * @param id
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     */
-    RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException;
-
-
-    /**
      *
      * @param pageNumber
      * @param idOficina

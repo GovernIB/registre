@@ -70,6 +70,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
     @EJB private InteresadoSirLocal interesadoSirEjb;
     @EJB private AnexoSirLocal anexoSirEjb;
     @EJB private RegistroEntradaLocal registroEntradaEjb;
+    @EJB private RegistroSalidaLocal registroSalidaEjb;
     @EJB private ArchivoLocal archivoEjb;
     @EJB private LibroLocal libroEjb;
     @EJB private CatProvinciaLocal catProvinciaEjb;
@@ -809,9 +810,10 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @throws I18NValidationException
      */
     @Override
-    public RegistroSir transformarRegistroEntrada(RegistroEntrada registroEntrada)
+    public RegistroSir transformarRegistroEntrada(Long idRegistroEntrada)
             throws Exception, I18NException {
 
+        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistroEntrada);
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
         RegistroSir registroSir = new RegistroSir();
@@ -880,16 +882,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
     /**
      * Transforma un {@link RegistroSalida} en un {@link RegistroSir}
-     * @param registroSalida
+     * @param idRegistroSalida
      * @return
      * @throws Exception
      * @throws I18NException
      * @throws I18NValidationException
      */
     @Override
-    public RegistroSir transformarRegistroSalida(RegistroSalida registroSalida)
+    public RegistroSir transformarRegistroSalida(Long idRegistroSalida)
             throws Exception, I18NException{
 
+        RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(idRegistroSalida);
         RegistroDetalle registroDetalle = registroSalida.getRegistroDetalle();
 
         RegistroSir registroSir = new RegistroSir();

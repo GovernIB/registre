@@ -592,6 +592,22 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         return cargarAnexosFull(registroSalida);
     }
 
+    @Override
+    public RegistroSalida getConAnexosFullLigero(Long id) throws Exception, I18NException {
+
+        RegistroSalida rs = em.find(RegistroSalida.class, id);
+        Long idEntidad = rs.getOficina().getOrganismoResponsable().getEntidad().getId();
+        List<Anexo> anexos = rs.getRegistroDetalle().getAnexos();
+        List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
+        for (Anexo anexo : anexos) {
+            AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);
+            anexosFull.add(anexoFull);
+        }
+        //Asignamos los documentos recuperados de custodia al registro de salida.
+        rs.getRegistroDetalle().setAnexosFull(anexosFull);
+        return rs;
+    }
+
     /**
      * Carga los Anexos Completos al RegistroSalida pasado por parámetro
      *
