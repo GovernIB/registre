@@ -332,7 +332,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
         RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
 
         //Obtenemos el destino externo de dir3caib que nos han indicado para ver si está extinguido
-        String destinoExterno = registroEntradaEjb.obtenerDestinoExternoRE(idRegistro);
+        //String destinoExterno = registroEntradaEjb.obtenerDestinoExternoRE(idRegistro);
+        String destinoExterno = registroEntrada.getDestinoExternoCodigo();
+
         if (destinoExterno != null) {
             UnidadTF destino = organismoEjb.obtenerDestinoExterno(destinoExterno);
             mav.addObject("destino", destino);

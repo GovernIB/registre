@@ -206,6 +206,16 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
     RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException;
 
     /**
+     * Método que devuelve un registro de entrada completo, con anexoFull pero sin los documentos fisicos.
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    RegistroEntrada getConAnexosFullLigero(Long id) throws Exception, I18NException;
+
+    /**
      * Método que invoca al plugin post proceso al actualizar un registro entrada.
      *
      * @param re
