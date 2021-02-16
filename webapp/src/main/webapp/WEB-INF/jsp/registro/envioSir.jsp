@@ -206,7 +206,12 @@
                 type:'POST',
                 data: {oficinaSIRCodigo: $("#oficinaSIRCodigo").val()},
                 beforeSend: function(objeto){
-                    waitingDialog.show('<spring:message code="registroSir.enviando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
+                    <c:if test="${registro.registroDetalle.tieneJustificante}">
+                        waitingDialog.show('<spring:message code="registroSir.enviando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
+                    </c:if>
+                    <c:if test="${!registro.registroDetalle.tieneJustificante}">
+                        waitingDialog.show('<spring:message code="registroSir.justificante.enviando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'primary'});
+                    </c:if>
                 },
                 success:function(respuesta){
 
@@ -219,10 +224,8 @@
                             waitingDialog.hide();
                         }
                     }
-
                 }
             });
-
         });
     });
 
