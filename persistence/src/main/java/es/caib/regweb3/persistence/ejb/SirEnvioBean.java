@@ -65,7 +65,6 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private OrganismoLocal organismoEjb;
-    @EJB private AnexoLocal anexoEjb;
 
 
     @Override
