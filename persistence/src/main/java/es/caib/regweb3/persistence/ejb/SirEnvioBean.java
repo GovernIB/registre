@@ -65,6 +65,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     @EJB private IntegracionLocal integracionEjb;
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private AnexoLocal anexoEjb;
 
 
     @Override
@@ -255,7 +256,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
 
-                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFullLigero(idRegistro);
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
                 RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
                 peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));
