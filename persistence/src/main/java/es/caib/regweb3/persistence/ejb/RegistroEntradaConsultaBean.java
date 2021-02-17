@@ -914,6 +914,10 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
         List<Long> registros = q.getResultList();
 
+        if(registros.isEmpty()){
+            return null;
+        }
+
         Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.registroDetalle.id in (:registros)");
 
         // Parámetros
