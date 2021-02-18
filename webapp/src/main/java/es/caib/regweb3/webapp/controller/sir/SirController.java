@@ -605,9 +605,11 @@ public class SirController extends BaseController {
             OficioRemision oficioRemision = oficioRemisionEjb.findById(idOficioRemision);
 
             if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_ENTRADA)){
-                registroSir = registroSirEjb.transformarRegistroEntrada(oficioRemision.getRegistrosEntrada().get(0).getId());
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(oficioRemision.getRegistrosEntrada().get(0).getId());
+                registroSir = registroSirEjb.transformarRegistroEntrada(registroEntrada);
             }else if(oficioRemision.getTipoOficioRemision().equals(RegwebConstantes.TIPO_OFICIO_REMISION_SALIDA)){
-                registroSir = registroSirEjb.transformarRegistroSalida(oficioRemision.getRegistrosSalida().get(0).getId());
+                RegistroSalida registroSalida = registroSalidaEjb.getConAnexosFull(oficioRemision.getRegistrosSalida().get(0).getId());
+                registroSir = registroSirEjb.transformarRegistroSalida(registroSalida);
             }
 
             if(registroSir != null){

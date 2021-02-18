@@ -1,6 +1,8 @@
 package es.caib.regweb3.persistence.ejb;
 
 
+import es.caib.plugins.arxiu.api.Document;
+import es.caib.plugins.arxiu.api.DocumentContingut;
 import es.caib.plugins.arxiu.api.Firma;
 import es.caib.plugins.arxiu.api.IArxiuPlugin;
 import es.caib.regweb3.model.*;
@@ -19,6 +21,7 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.plugins.documentcustody.api.IDocumentCustodyPlugin;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.plugins.signature.api.FileInfoSignature;
 import org.fundaciobit.plugins.signatureserver.api.ISignatureServerPlugin;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
@@ -349,6 +352,17 @@ public class JustificanteBean implements JustificanteLocal {
             anexo = anexoEjb.persist(anexo);
 
             anexoFull.setAnexo(anexo);
+
+            // Document de Arxiu con el Justificante creado
+            Document document = new Document();
+            DocumentContingut dc = new DocumentContingut();
+            document.setNom(firma.getFitxerNom());
+            dc.setContingut(firma.getContingut());
+            dc.setTamany(firma.getContingut().length);
+            dc.setTipusMime(FileInfoSignature.PDF_MIME_TYPE);
+            document.setContingut(dc);
+
+            anexoFull.setDocument(document);
 
             log.info("");
             log.info("Fin Generando Justificante para el registro: " + registro.getNumeroRegistroFormateado() + " en: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempo));
