@@ -857,7 +857,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         List<RegistroEntrada> registros = new ArrayList<>();
 
         for (int i = 0; i < result.size(); i++) {
-            Object[] object = result.get(0);
+            Object[] object = result.get(i);
 
             RegistroEntrada registroEntrada = new RegistroEntrada();
             registroEntrada.setId((Long)  object[0]);
