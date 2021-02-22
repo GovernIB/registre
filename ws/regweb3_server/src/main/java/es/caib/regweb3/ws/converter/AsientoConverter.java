@@ -86,6 +86,8 @@ public class AsientoConverter extends CommonConverter {
 
         FileContentWs fileContentWs = new FileContentWs(fileInfoWs);
 
+        fileContentWs.setFileInfoWs(fileInfoWs);
+
         try {
 
             if(!anexoFull.getAnexo().isPurgado()){
