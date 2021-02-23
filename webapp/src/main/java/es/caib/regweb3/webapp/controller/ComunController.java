@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -98,8 +97,6 @@ public class ComunController extends BaseController {
     @RequestMapping(value = "/cambioOficina/{oficinaId}")
     public String cambioOficina(@PathVariable Long oficinaId, HttpServletRequest request)throws Exception {
 
-        HttpSession session = request.getSession();
-
         LinkedHashSet<Oficina> oficinasAutenticado = getOficinasAcceso(request);
 
         try {
@@ -116,7 +113,6 @@ public class ComunController extends BaseController {
         }
 
         return "redirect:/inici";
-
     }
 
     @RequestMapping(value = "/error/404")
