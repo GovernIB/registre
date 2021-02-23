@@ -34,16 +34,18 @@ public class RegWebLocaleChangeInterceptor extends LocaleChangeInterceptor{
         String newLocale = request.getParameter(getParamName());
 
         LoginInfo loginInfo = (LoginInfo) request.getSession().getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
-        Usuario usuario = loginInfo.getUsuarioAutenticado();
 
+        if(loginInfo != null){
 
-        if(newLocale != null && usuario != null) {
+            Usuario usuario = loginInfo.getUsuarioAutenticado();
 
-            Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(newLocale);
-            usuario.setIdioma(idioma);
-            usuarioEjb.merge(usuario);
+            if(newLocale != null && usuario != null) {
 
+                Long idioma  = RegwebConstantes.IDIOMA_ID_BY_CODIGO.get(newLocale);
+                usuario.setIdioma(idioma);
+                usuarioEjb.merge(usuario);
+
+            }
         }
-
     }
 }
