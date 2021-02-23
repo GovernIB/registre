@@ -124,19 +124,18 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     }
                 }
 
+                // Rutas que se saltarán las comprobaciones
+                if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")
+                        || request.getRequestURI().startsWith("/regweb3/cambioEntidad") || request.getRequestURI().startsWith("/regweb3/entidad/pendientesprocesar")
+                        || request.getRequestURI().startsWith("/regweb3/entidad/procesarlibroorganismo") || request.getRequestURI().startsWith("/regweb3/error")) {
+
+                    return true;
+                }
 
                 //Obtenemos si la entidad tiene libros pendientes de procesar
                 boolean tienePendientesDeProcesar = false;
                 if(loginInfo.getEntidadActiva()!=null) {
                     tienePendientesDeProcesar = pendienteEjb.findPendientesProcesar(loginInfo.getEntidadActiva().getId()).size() > 0;
-                }
-
-                // Rutas que se saltarán las comprobaciones
-                if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")
-                   || request.getRequestURI().startsWith("/regweb3/cambioEntidad") || request.getRequestURI().startsWith("/regweb3/entidad/pendientesprocesar")
-                   || request.getRequestURI().startsWith("/regweb3/entidad/procesarlibroorganismo")) {
-
-                    return true;
                 }
 
                 // Comprobaciones de Configuración obligatoria de la aplicación

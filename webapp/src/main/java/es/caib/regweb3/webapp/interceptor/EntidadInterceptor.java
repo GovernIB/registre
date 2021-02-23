@@ -82,7 +82,7 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Listado de Entidades
-            if(url.equals("/entidad/list")){
+            if(url.contains("/entidad/list")){
                 if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
                     log.info("Error, listar entidades");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.lista"));
