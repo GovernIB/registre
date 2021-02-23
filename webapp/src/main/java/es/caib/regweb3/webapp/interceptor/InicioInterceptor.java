@@ -127,7 +127,8 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                 // Rutas que se saltarán las comprobaciones
                 if (request.getRequestURI().startsWith("/regweb3/rol/") || request.getRequestURI().equals("/regweb3/aviso")
                         || request.getRequestURI().startsWith("/regweb3/cambioEntidad") || request.getRequestURI().startsWith("/regweb3/entidad/pendientesprocesar")
-                        || request.getRequestURI().startsWith("/regweb3/entidad/procesarlibroorganismo") || request.getRequestURI().startsWith("/regweb3/error")) {
+                        || request.getRequestURI().startsWith("/regweb3/entidad/procesarlibroorganismo") || request.getRequestURI().startsWith("/regweb3/error")
+                        || request.getRequestURI().contains("error.jsp")) {
 
                     return true;
                 }
