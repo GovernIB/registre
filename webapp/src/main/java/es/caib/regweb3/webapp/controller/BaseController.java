@@ -211,18 +211,6 @@ public class BaseController {
     }
 
     /**
-     * Retorna las Oficinas que tiene asociadas el usuario autenticado
-     * @param request
-     * @return
-     */
-    @SuppressWarnings(value = "unchecked")
-    protected LinkedHashSet<Oficina> getOficinasAutenticado(HttpServletRequest request){
-
-        return getLoginInfo(request).getOficinasAcceso();
-
-    }
-
-    /**
      * Retorna el Libro de la EntidadActiva
      * @param request
      * @return
