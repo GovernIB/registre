@@ -1,8 +1,6 @@
 package es.caib.regweb3.webapp.controller.notificacion;
 
-import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Notificacion;
-import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,6 +51,8 @@ public class NotificacionController extends BaseController {
 
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("integracionBusqueda", busqueda);
+        model.addAttribute("destinatarios", organismoEjb.findByEntidadLibros(getEntidadActiva(request).getId()));
+        model.addAttribute("tiposNotificacion", RegwebConstantes.NOTIFICACION_TIPOS);
 
         model.addAttribute("nuevas", notificacionEjb.getByEstadoCount(usuario.getId(), RegwebConstantes.NOTIFICACION_ESTADO_NUEVA));
         model.addAttribute("leidas", notificacionEjb.getByEstadoCount(usuario.getId(), RegwebConstantes.NOTIFICACION_ESTADO_LEIDA));
@@ -79,6 +78,8 @@ public class NotificacionController extends BaseController {
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("integracionBusqueda", busqueda);
         model.addAttribute("estado", estado);
+        model.addAttribute("destinatarios", organismoEjb.findByEntidadLibros(getEntidadActiva(request).getId()));
+        model.addAttribute("tiposNotificacion", RegwebConstantes.NOTIFICACION_TIPOS);
 
         model.addAttribute("nuevas", notificacionEjb.getByEstadoCount(usuario.getId(), RegwebConstantes.NOTIFICACION_ESTADO_NUEVA));
         model.addAttribute("leidas", notificacionEjb.getByEstadoCount(usuario.getId(), RegwebConstantes.NOTIFICACION_ESTADO_LEIDA));
@@ -178,37 +179,5 @@ public class NotificacionController extends BaseController {
         jsonResponse.setStatus("SUCCESS");
 
         return jsonResponse;
-    }
-
-
-
-    @ModelAttribute("destinatarios")
-    public List<Organismo> destinatarios(HttpServletRequest request) throws Exception {
-        Entidad entidad = getEntidadActiva(request);
-        return organismoEjb.findByEntidadLibros(entidad.getId());
-    }
-
-    @ModelAttribute("tiposNotificacion")
-    public Long[] tiposNotificacion() throws Exception {
-        return RegwebConstantes.NOTIFICACION_TIPOS;
-    }
-
-    /**
-     *
-     */
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String nueva(HttpServletRequest request) throws Exception{
-
-        Notificacion notificacion = new Notificacion(RegwebConstantes.NOTIFICACION_TIPO_COMUNICADO);
-
-        //notificacion.setRemitente(getUsuarioEntidadActivo(request));
-        notificacion.setDestinatario(getUsuarioEntidadActivo(request));
-        notificacion.setAsunto("Prueba de Notificación");
-        notificacion.setMensaje("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore");
-        notificacion.setFechaEnviado(new Date());
-
-        notificacionEjb.persist(notificacion);
-
-        return "redirect:/notificacion/list/0";
     }
 }

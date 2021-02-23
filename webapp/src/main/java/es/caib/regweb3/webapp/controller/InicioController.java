@@ -3,6 +3,7 @@ package es.caib.regweb3.webapp.controller;
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
 import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.BasicForm;
@@ -57,7 +58,7 @@ public class InicioController extends BaseController{
         if(isOperador(request) && oficinaActiva != null){
 
             LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
-
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             /* RESERVA DE NÚMERO */
             mav.addObject("reservas", registroEntradaConsultaEjb.getByOficinaEstado(oficinaActiva.getId(), RegwebConstantes.REGISTRO_RESERVA, RegwebConstantes.REGISTROS_PANTALLA_INICIO));
@@ -98,10 +99,15 @@ public class InicioController extends BaseController{
                 mav.addObject("pendientesDistribuir", trazabilidadEjb.getPendientesDistribuirSir(oficinaActiva.getId(),entidadActiva.getId(),RegwebConstantes.REGISTROS_PANTALLA_INICIO));
             }
 
+            // Notificaciones
+            mav.addObject("notificacionesPendientes", notificacionEjb.notificacionesPendientes(usuarioEntidad.getId()));
+
         }
 
         // DASHBOARD ADMINISTRADOR ENTIDAD
         if (isAdminEntidad(request) && entidadActiva != null) {
+
+            UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Últimas incidencias de Integraciones
             mav.addObject("incidencias", integracionEjb.ultimasIntegracionesError(entidadActiva.getId()));
@@ -109,6 +115,9 @@ public class InicioController extends BaseController{
 
             // Última sincronización de organismos
             mav.addObject("descargaUnidad", descargaEjb.ultimaDescarga(RegwebConstantes.UNIDAD, entidadActiva.getId()));
+
+            // Notificaciones
+            mav.addObject("notificacionesPendientes", notificacionEjb.notificacionesPendientes(usuarioEntidad.getId()));
 
         }
 

@@ -51,23 +51,29 @@
                         <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu">
+                        <%--Idioma catalán--%>
                         <c:if test="${pageContext.response.locale == 'ca'}">
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=es"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.castellano"/></a></li>
                         </c:if>
+
+                        <%--Idioma castellano--%>
                         <c:if test="${pageContext.response.locale == 'es'}">
                             <li><a href="<c:url value="${requestScope.requestURI}?lang=ca"/>"><i class="fa fa-bullhorn"></i> <spring:message code="menu.idioma.catalan"/></a></li>
                         </c:if>
+
+                        <%--Notificaciones--%>
                         <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' || loginInfo.rolActivo.nombre == 'RWE_USUARI'}">
                             <li>
                                 <a href="<c:url value="/notificacion/list"/>">
-                                    <i class="fa fa-envelope"></i> <spring:message code="notificacion.notificaciones"/> (${notificacionesPendientes})
+                                    <i class="fa fa-envelope"></i> <spring:message code="notificacion.notificaciones"/>
                                 </a>
                             </li>
                         </c:if>
 
+                        <%--Datos usuario--%>
                         <li>
                             <a href="<c:url value="/usuario/${loginInfo.usuarioAutenticado.id}/edit"/>">
-                                <i class="fa fa-gear"></i> <spring:message code="menu.configuracion"/>
+                                <i class="fa fa-gear"></i> <spring:message code="usuario.editar"/>
                             </a>
                         </li>
 
