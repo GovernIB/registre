@@ -517,18 +517,6 @@ public class BaseController {
       
     }
 
-    @ModelAttribute("notificacionesPendientes")
-    public Long notificacionesPendientes(HttpServletRequest request) throws Exception {
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        if (usuarioEntidad != null && (isAdminEntidad(request) || isOperador(request))) {
-
-            return notificacionEjb.notificacionesPendientes(usuarioEntidad.getId());
-        }
-
-        return 0L;
-    }
-
     @ModelAttribute("tiposIntegracion")
     public
     Long[] tiposIntegracion() {
