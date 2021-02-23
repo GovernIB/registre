@@ -7,6 +7,7 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.plugins.distribucion.ConfiguracionDistribucion;
 import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
@@ -138,7 +139,7 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             return true;
 
         } catch (Exception e) {
-            if(e.getLocalizedMessage().contains("ja ha estat donada")){
+            if(StringUtils.isNotEmpty(e.getMessage()) && e.getMessage().contains("ja ha estat donada")){
                 log.info("Consideramos que la anotacion : " + registro.getNumeroRegistroFormateado()+"  ya existe y la marcamos como Distribuida");
                 return true;
             }else{
