@@ -50,8 +50,7 @@ public class ReservaController  extends BaseController {
         RegistroEntrada registro = new RegistroEntrada();
         registro.setLibro(getLibroEntidad(request));
         registro.setOficina(oficina);
-        RegistroDetalle registroDetalle = new RegistroDetalle();
-        registro.setRegistroDetalle(registroDetalle);
+        registro.getRegistroDetalle().setPresencial(true);
 
         Entidad entidad = getEntidadActiva(request);
         if(oficina == null){
