@@ -61,7 +61,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
         // log.info(" ++++++++++++++++++++ ENTRA InicioInterceptor ++++++++++++++");
         //long start = System.currentTimeMillis();
         try {
-            log.info("Inicio interceptor URL: " + request.getRequestURI());
+
             HttpSession session = request.getSession();
             LoginInfo loginInfo = null;
 
@@ -134,7 +134,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                 }
 
 
-
                 //Obtenemos si la entidad tiene libros pendientes de procesar
                 boolean tienePendientesDeProcesar = false;
                 if(loginInfo.getEntidadActiva()!=null) {
@@ -144,7 +143,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                 switch (loginInfo.getRolActivo().getNombre()) {
 
                     case RegwebConstantes.RWE_USUARI:
-                        log.info("Se realizan comprobaciones de RWE_USUARI");
 
                         Entidad entidadActiva =  loginInfo.getEntidadActiva();
 
@@ -236,7 +234,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     break;
 
                     case RegwebConstantes.RWE_ADMIN:
-                        log.info("Se realizan comprobaciones de RWE_ADMIN");
 
                         //Si no ha asignado todos los libros le redirige a la pagina de nuevo para procesarlos
                         if (tienePendientesDeProcesar) {
@@ -248,7 +245,6 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                     break;
 
                     case RegwebConstantes.RWE_SUPERADMIN:
-                        log.info("Se realizan comprobaciones de RWE_SUPERADMIN");
 
                         //Validamos variable es.caib.regweb3.archivos.path
                         if (request.getRequestURI().equals("/regweb3/configuracion/editar") && FileSystemManager.getArchivosPath() == null) {
