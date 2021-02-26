@@ -155,6 +155,7 @@ public class AsientoConverter extends CommonConverter {
         FileInfoWs fileInfo = new FileInfoWs();
         fileInfo.setFileID(anexoFull.getAnexo().getId());
         fileInfo.setName(anexoFull.getAnexo().getTitulo());
+        if(anexoFull.getDocumentoCustody()!=null) {fileInfo.setFilename(anexoFull.getDocumentoCustody().getName());}
 
         if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
                 anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
@@ -208,7 +209,9 @@ public class AsientoConverter extends CommonConverter {
         if (registroDetalle.getTipoDocumentacionFisica() != null) { asiento.setTipoDocumetacionFisica(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica())
         );}
 
-        //if (registroDetalle.getIdioma() != null) { asiento.setIdioma(registroDetalle.getIdioma());}
+        if (registroDetalle.getIdioma() != null) { asiento.setIdioma(registroDetalle.getIdioma());}
+
+        if(registroDetalle.getPresencial()!= null) {asiento.setPresencial(registroDetalle.getPresencial());}
 
         // Oficina Origen
         if(registroDetalle.getOficinaOrigen() != null){

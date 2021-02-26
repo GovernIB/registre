@@ -6,6 +6,7 @@ public class FileInfoWs {
     private String name;
     private String mime;
     private Long size;
+    private String filename;
 
     public Long getFileID() {
         return fileID;
@@ -37,5 +38,13 @@ public class FileInfoWs {
 
     public void setSize(Long size) {
         this.size = size;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
