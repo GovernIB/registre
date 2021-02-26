@@ -287,9 +287,11 @@
       <xs:element minOccurs="0" name="expone" type="xs:string"/>
       <xs:element minOccurs="0" name="extracto" type="xs:string"/>
       <xs:element minOccurs="0" name="fechaRegistro" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="idioma" type="xs:long"/>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="interesados" nillable="true" type="tns:interesadoWs"/>
       <xs:element minOccurs="0" name="justificante" type="tns:fileInfoWs"/>
       <xs:element minOccurs="0" name="numeroRegistro" type="xs:string"/>
+      <xs:element minOccurs="0" name="presencial" type="xs:boolean"/>
       <xs:element minOccurs="0" name="solicita" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoDocumetacionFisica" type="xs:string"/>
       <xs:element minOccurs="0" name="tipoRegistro" type="xs:long"/>
@@ -298,6 +300,7 @@
   <xs:complexType name="fileInfoWs">
     <xs:sequence>
       <xs:element minOccurs="0" name="fileID" type="xs:long"/>
+      <xs:element minOccurs="0" name="filename" type="xs:string"/>
       <xs:element minOccurs="0" name="mime" type="xs:string"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="size" type="xs:long"/>
