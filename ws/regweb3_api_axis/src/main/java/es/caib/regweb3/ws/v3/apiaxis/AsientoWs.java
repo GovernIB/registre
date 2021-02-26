@@ -30,11 +30,15 @@ public class AsientoWs  implements java.io.Serializable {
 
     private java.util.Calendar fechaRegistro;
 
+    private java.lang.Long idioma;
+
     private es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados;
 
     private es.caib.regweb3.ws.v3.apiaxis.FileInfoWs justificante;
 
     private java.lang.String numeroRegistro;
+
+    private java.lang.Boolean presencial;
 
     private java.lang.String solicita;
 
@@ -57,9 +61,11 @@ public class AsientoWs  implements java.io.Serializable {
            java.lang.String expone,
            java.lang.String extracto,
            java.util.Calendar fechaRegistro,
+           java.lang.Long idioma,
            es.caib.regweb3.ws.v3.apiaxis.InteresadoWs[] interesados,
            es.caib.regweb3.ws.v3.apiaxis.FileInfoWs justificante,
            java.lang.String numeroRegistro,
+           java.lang.Boolean presencial,
            java.lang.String solicita,
            java.lang.String tipoDocumetacionFisica,
            java.lang.Long tipoRegistro) {
@@ -74,9 +80,11 @@ public class AsientoWs  implements java.io.Serializable {
            this.expone = expone;
            this.extracto = extracto;
            this.fechaRegistro = fechaRegistro;
+           this.idioma = idioma;
            this.interesados = interesados;
            this.justificante = justificante;
            this.numeroRegistro = numeroRegistro;
+           this.presencial = presencial;
            this.solicita = solicita;
            this.tipoDocumetacionFisica = tipoDocumetacionFisica;
            this.tipoRegistro = tipoRegistro;
@@ -312,6 +320,26 @@ public class AsientoWs  implements java.io.Serializable {
 
 
     /**
+     * Gets the idioma value for this AsientoWs.
+     * 
+     * @return idioma
+     */
+    public java.lang.Long getIdioma() {
+        return idioma;
+    }
+
+
+    /**
+     * Sets the idioma value for this AsientoWs.
+     * 
+     * @param idioma
+     */
+    public void setIdioma(java.lang.Long idioma) {
+        this.idioma = idioma;
+    }
+
+
+    /**
      * Gets the interesados value for this AsientoWs.
      * 
      * @return interesados
@@ -376,6 +404,26 @@ public class AsientoWs  implements java.io.Serializable {
      */
     public void setNumeroRegistro(java.lang.String numeroRegistro) {
         this.numeroRegistro = numeroRegistro;
+    }
+
+
+    /**
+     * Gets the presencial value for this AsientoWs.
+     * 
+     * @return presencial
+     */
+    public java.lang.Boolean getPresencial() {
+        return presencial;
+    }
+
+
+    /**
+     * Sets the presencial value for this AsientoWs.
+     * 
+     * @param presencial
+     */
+    public void setPresencial(java.lang.Boolean presencial) {
+        this.presencial = presencial;
     }
 
 
@@ -483,6 +531,9 @@ public class AsientoWs  implements java.io.Serializable {
             ((this.fechaRegistro==null && other.getFechaRegistro()==null) || 
              (this.fechaRegistro!=null &&
               this.fechaRegistro.equals(other.getFechaRegistro()))) &&
+            ((this.idioma==null && other.getIdioma()==null) || 
+             (this.idioma!=null &&
+              this.idioma.equals(other.getIdioma()))) &&
             ((this.interesados==null && other.getInteresados()==null) || 
              (this.interesados!=null &&
               java.util.Arrays.equals(this.interesados, other.getInteresados()))) &&
@@ -492,6 +543,9 @@ public class AsientoWs  implements java.io.Serializable {
             ((this.numeroRegistro==null && other.getNumeroRegistro()==null) || 
              (this.numeroRegistro!=null &&
               this.numeroRegistro.equals(other.getNumeroRegistro()))) &&
+            ((this.presencial==null && other.getPresencial()==null) || 
+             (this.presencial!=null &&
+              this.presencial.equals(other.getPresencial()))) &&
             ((this.solicita==null && other.getSolicita()==null) || 
              (this.solicita!=null &&
               this.solicita.equals(other.getSolicita()))) &&
@@ -553,6 +607,9 @@ public class AsientoWs  implements java.io.Serializable {
         if (getFechaRegistro() != null) {
             _hashCode += getFechaRegistro().hashCode();
         }
+        if (getIdioma() != null) {
+            _hashCode += getIdioma().hashCode();
+        }
         if (getInteresados() != null) {
             for (int i=0;
                  i<java.lang.reflect.Array.getLength(getInteresados());
@@ -569,6 +626,9 @@ public class AsientoWs  implements java.io.Serializable {
         }
         if (getNumeroRegistro() != null) {
             _hashCode += getNumeroRegistro().hashCode();
+        }
+        if (getPresencial() != null) {
+            _hashCode += getPresencial().hashCode();
         }
         if (getSolicita() != null) {
             _hashCode += getSolicita().hashCode();
@@ -668,6 +728,13 @@ public class AsientoWs  implements java.io.Serializable {
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("idioma");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "idioma"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("interesados");
         elemField.setXmlName(new javax.xml.namespace.QName("", "interesados"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://impl.v3.ws.regweb3.caib.es/", "interesadoWs"));
@@ -686,6 +753,13 @@ public class AsientoWs  implements java.io.Serializable {
         elemField.setFieldName("numeroRegistro");
         elemField.setXmlName(new javax.xml.namespace.QName("", "numeroRegistro"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("presencial");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "presencial"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
