@@ -10,6 +10,8 @@ package es.caib.regweb3.ws.v3.apiaxis;
 public class FileInfoWs  implements java.io.Serializable {
     private java.lang.Long fileID;
 
+    private java.lang.String filename;
+
     private java.lang.String mime;
 
     private java.lang.String name;
@@ -21,10 +23,12 @@ public class FileInfoWs  implements java.io.Serializable {
 
     public FileInfoWs(
            java.lang.Long fileID,
+           java.lang.String filename,
            java.lang.String mime,
            java.lang.String name,
            java.lang.Long size) {
            this.fileID = fileID;
+           this.filename = filename;
            this.mime = mime;
            this.name = name;
            this.size = size;
@@ -48,6 +52,26 @@ public class FileInfoWs  implements java.io.Serializable {
      */
     public void setFileID(java.lang.Long fileID) {
         this.fileID = fileID;
+    }
+
+
+    /**
+     * Gets the filename value for this FileInfoWs.
+     * 
+     * @return filename
+     */
+    public java.lang.String getFilename() {
+        return filename;
+    }
+
+
+    /**
+     * Sets the filename value for this FileInfoWs.
+     * 
+     * @param filename
+     */
+    public void setFilename(java.lang.String filename) {
+        this.filename = filename;
     }
 
 
@@ -125,6 +149,9 @@ public class FileInfoWs  implements java.io.Serializable {
             ((this.fileID==null && other.getFileID()==null) || 
              (this.fileID!=null &&
               this.fileID.equals(other.getFileID()))) &&
+            ((this.filename==null && other.getFilename()==null) || 
+             (this.filename!=null &&
+              this.filename.equals(other.getFilename()))) &&
             ((this.mime==null && other.getMime()==null) || 
              (this.mime!=null &&
               this.mime.equals(other.getMime()))) &&
@@ -147,6 +174,9 @@ public class FileInfoWs  implements java.io.Serializable {
         int _hashCode = 1;
         if (getFileID() != null) {
             _hashCode += getFileID().hashCode();
+        }
+        if (getFilename() != null) {
+            _hashCode += getFilename().hashCode();
         }
         if (getMime() != null) {
             _hashCode += getMime().hashCode();
@@ -171,6 +201,13 @@ public class FileInfoWs  implements java.io.Serializable {
         elemField.setFieldName("fileID");
         elemField.setXmlName(new javax.xml.namespace.QName("", "fileID"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("filename");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "filename"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
