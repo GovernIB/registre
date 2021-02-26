@@ -67,6 +67,9 @@ public class LoginService {
     @EJB(mappedName = "regweb3/PluginEJB/local")
     private PluginLocal pluginEjb;
 
+    @EJB(mappedName = "regweb3/PlantillaEJB/local")
+    private PlantillaLocal plantillaEjb;
+
 
     /**
      * Dado un usuario autenticado, realiza todas las configuraciones necesarias para su funcionamiento en REGWEB3.
@@ -151,26 +154,29 @@ public class LoginService {
         // Reset de las variables
         loginInfo.resetDatos();
 
-        // Si el RolActivo del usuario autenticado es Administrador de Entidad
-        if (rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
 
-            asignarEntidadesAdministradas(loginInfo, loginInfo.getEntidadActiva());
+        switch (rolActivo.getNombre()) {
+            case RegwebConstantes.RWE_ADMIN: // Si el RolActivo del usuario autenticado es Administrador de Entidad
 
-            // Si RolActivo del usuario autenticado es Operador
-        } else if (rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI)) {
+                asignarEntidadesAdministradas(loginInfo, loginInfo.getEntidadActiva());
+            break;
+            case RegwebConstantes.RWE_USUARI: // Si RolActivo del usuario autenticado es Operador
 
-            //Asignamos las Entidades donde tiene acceso el usuario operador
-            asignarEntidadesOperador(loginInfo, loginInfo.getEntidadActiva());
+                //Asignamos las Entidades donde tiene acceso el usuario operador
+                asignarEntidadesOperador(loginInfo, loginInfo.getEntidadActiva());
 
-            //Asignamos las oficinas donde tiene acceso el usuario operador
-            asignarOficinas(loginInfo);
+                //Asignamos las oficinas donde tiene acceso el usuario operador
+                asignarOficinas(loginInfo);
 
-            // Asigna la Configuración del SuperAdministrador
-        } else if (rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)) {
-            List<Configuracion> configuraciones = configuracionEjb.getAll();
-            if (configuraciones.size() > 0) {
-                loginInfo.setConfiguracion(configuraciones.get(0));
-            }
+                //Asignamos las plantillas
+                asignarPlantillas(loginInfo);
+            break;
+            case RegwebConstantes.RWE_SUPERADMIN: // Asigna la Configuración del SuperAdministrador
+                List<Configuracion> configuraciones = configuracionEjb.getAll();
+                if (configuraciones.size() > 0) {
+                    loginInfo.setConfiguracion(configuraciones.get(0));
+                }
+            break;
         }
 
     }
@@ -365,6 +371,17 @@ public class LoginService {
      */
     private void tieneMigrados(LoginInfo loginInfo) throws Exception {
         loginInfo.setRegistrosMigrados(registroMigradoEjb.tieneRegistrosMigrados(loginInfo.getEntidadActiva().getId()));
+
+    }
+
+    /**
+     * Asigna las plantillas que el usuario tiene guardadas
+     * @param loginInfo
+     */
+    private void asignarPlantillas(LoginInfo loginInfo) throws Exception{
+
+        loginInfo.setPlantillasEntrada(plantillaEjb.getActivasbyUsuario(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.REGISTRO_ENTRADA));
+        loginInfo.setPlantillasSalida(plantillaEjb.getActivasbyUsuario(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.REGISTRO_SALIDA));
 
     }
 

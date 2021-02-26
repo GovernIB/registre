@@ -41,6 +41,8 @@ public class LoginInfo {
     private LinkedHashSet<Oficina> oficinasResponsable;
     private Oficina oficinaActiva;
     private LinkedHashSet<Organismo> organismosOficinaActiva;
+    private List<Plantilla> plantillasEntrada;
+    private List<Plantilla> plantillasSalida;
     private Configuracion configuracion;
     private Boolean enlaceDir3 = false;
     private Boolean mostrarAvisos;
@@ -65,6 +67,8 @@ public class LoginInfo {
         oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
         oficinasConsultaSalida = new LinkedHashSet<Oficina>();
         oficinasResponsable = new LinkedHashSet<Oficina>();
+        plantillasEntrada =  new ArrayList<Plantilla>();
+        plantillasSalida =  new ArrayList<Plantilla>();
     }
 
     public Entidad getEntidadActiva() {
@@ -292,6 +296,22 @@ public class LoginInfo {
         this.organismosOficinaActiva = organismosOficinaActiva;
     }
 
+    public List<Plantilla> getPlantillasEntrada() {
+        return plantillasEntrada;
+    }
+
+    public void setPlantillasEntrada(List<Plantilla> plantillasEntrada) {
+        this.plantillasEntrada = plantillasEntrada;
+    }
+
+    public List<Plantilla> getPlantillasSalida() {
+        return plantillasSalida;
+    }
+
+    public void setPlantillasSalida(List<Plantilla> plantillasSalida) {
+        this.plantillasSalida = plantillasSalida;
+    }
+
     public Configuracion getConfiguracion() {
         return configuracion;
     }
@@ -372,6 +392,8 @@ public class LoginInfo {
         this.oficinasConsultaSalida = new LinkedHashSet<Oficina>();
         this.oficinasAcceso = new LinkedHashSet<Oficina>();
         this.oficinasResponsable= new LinkedHashSet<Oficina>();
+        this.plantillasEntrada =  new ArrayList<Plantilla>();
+        this.plantillasSalida =  new ArrayList<Plantilla>();
         this.oficinaActiva = null;
         this.organismosOficinaActiva = null;
         this.configuracion = null;

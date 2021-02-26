@@ -12,8 +12,21 @@
         <spring:message code="menu.entradas"/> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <%--<li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>--%>
-        <c:import url="/plantillasUsuario/1"/>
+        <c:if test="${empty loginInfo.plantillasEntrada}">
+            <li class="submenu-complet"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a></li>
+        </c:if>
+
+        <c:if test="${not empty loginInfo.plantillasEntrada}">
+            <li class="dropdown-submenu-left toggle-left"><a href="<c:url value="/registroEntrada/new"/>"><i class="fa fa-chevron-left"></i> <i class="fa fa-file-o"></i> <spring:message code="registroEntrada.nuevo"/></a>
+                <ul class="dropdown-menu scrollable-menu llistaPlantillaMenu">
+                    <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.plantilla"/></li>
+                    <li class="divider"></li>
+                    <c:forEach items="${loginInfo.plantillasEntrada}" var="plantillaEntrada">
+                        <li class="llista"><a href="<c:url value="/registroEntrada/new/${plantillaEntrada.id}"/>" class="padLlista">${plantillaEntrada.nombre}</a></li>
+                    </c:forEach>
+                </ul>
+            </li>
+        </c:if>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/reserva"/>"><i class="fa fa-file-text-o"></i> <spring:message code="registroEntrada.reserva"/></a></li>
         <li class="submenu-complet"><a href="<c:url value="/registroEntrada/list"/>"><i class="fa fa-search"></i> <spring:message code="registroEntrada.listado"/></a></li>
         <li class="divider"></li>
@@ -37,8 +50,21 @@
         <spring:message code="menu.salidas"/> <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
-        <c:import url="/plantillasUsuario/2"/>
-        <%--<li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a></li>--%>
+        <c:if test="${empty loginInfo.plantillasSalida}">
+            <li class="submenu-complet"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a></li>
+        </c:if>
+
+        <c:if test="${not empty loginInfo.plantillasSalida}">
+            <li class="dropdown-submenu-left toggle-left"><a href="<c:url value="/registroSalida/new"/>"><i class="fa fa-chevron-left"></i> <i class="fa fa-file-o"></i> <spring:message code="registroSalida.nuevo"/></a>
+                <ul class="dropdown-menu scrollable-menu llistaPlantillaMenu">
+                    <li class="pad_left-20 negre"><i class="fa fa-briefcase"></i> <spring:message code="registroEntrada.nuevo.plantilla"/></li>
+                    <li class="divider"></li>
+                    <c:forEach items="${loginInfo.plantillasSalida}" var="plantillaSalida">
+                        <li class="llista"><a href="<c:url value="/registroSalida/new/${plantillaSalida.id}"/>" class="padLateral5">${plantillaSalida.nombre}</a></li>
+                    </c:forEach>
+                </ul>
+            </li>
+        </c:if>
         <li class="submenu-complet"><a href="<c:url value="/registroSalida/list"/>"><i class="fa fa-search"></i> <spring:message code="registroSalida.listado"/></a></li>
     </ul>
 </div>
