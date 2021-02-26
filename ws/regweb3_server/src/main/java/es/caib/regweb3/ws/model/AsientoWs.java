@@ -20,6 +20,8 @@ public class AsientoWs implements Serializable {
     private String expone;
     private String solicita;
     private Long codigoSia;
+    private Boolean presencial;
+    private Long idioma;
 
     private List<InteresadoWs> interesados;
     private List<FileInfoWs> anexos;
@@ -166,5 +168,21 @@ public class AsientoWs implements Serializable {
 
     public void setJustificante(FileInfoWs justificante) {
         this.justificante = justificante;
+    }
+
+    public Boolean getPresencial() {
+        return presencial;
+    }
+
+    public void setPresencial(Boolean presencial) {
+        this.presencial = presencial;
+    }
+
+    public Long getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(Long idioma) {
+        this.idioma = idioma;
     }
 }
