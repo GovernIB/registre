@@ -29,9 +29,11 @@ import java.util.List;
  *         &lt;element name="expone" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="extracto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="fechaRegistro" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
+ *         &lt;element name="idioma" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="interesados" type="{http://impl.v3.ws.regweb3.caib.es/}interesadoWs" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="justificante" type="{http://impl.v3.ws.regweb3.caib.es/}fileInfoWs" minOccurs="0"/>
  *         &lt;element name="numeroRegistro" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="presencial" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
  *         &lt;element name="solicita" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="tipoDocumetacionFisica" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="tipoRegistro" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
@@ -56,9 +58,11 @@ import java.util.List;
     "expone",
     "extracto",
     "fechaRegistro",
+    "idioma",
     "interesados",
     "justificante",
     "numeroRegistro",
+    "presencial",
     "solicita",
     "tipoDocumetacionFisica",
     "tipoRegistro"
@@ -80,10 +84,12 @@ public class AsientoWs {
     @XmlJavaTypeAdapter(Adapter1 .class)
     @XmlSchemaType(name = "dateTime")
     protected Timestamp fechaRegistro;
+    protected Long idioma;
     @XmlElement(nillable = true)
     protected List<InteresadoWs> interesados;
     protected FileInfoWs justificante;
     protected String numeroRegistro;
+    protected Boolean presencial;
     protected String solicita;
     protected String tipoDocumetacionFisica;
     protected Long tipoRegistro;
@@ -358,6 +364,30 @@ public class AsientoWs {
     }
 
     /**
+     * Obtiene el valor de la propiedad idioma.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getIdioma() {
+        return idioma;
+    }
+
+    /**
+     * Define el valor de la propiedad idioma.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setIdioma(Long value) {
+        this.idioma = value;
+    }
+
+    /**
      * Gets the value of the interesados property.
      * 
      * <p>
@@ -432,6 +462,30 @@ public class AsientoWs {
      */
     public void setNumeroRegistro(String value) {
         this.numeroRegistro = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad presencial.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Boolean }
+     *     
+     */
+    public Boolean isPresencial() {
+        return presencial;
+    }
+
+    /**
+     * Define el valor de la propiedad presencial.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Boolean }
+     *     
+     */
+    public void setPresencial(Boolean value) {
+        this.presencial = value;
     }
 
     /**
