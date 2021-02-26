@@ -2,9 +2,7 @@ package es.caib.regweb3.webapp.controller;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Plantilla;
 import es.caib.regweb3.model.Rol;
-import es.caib.regweb3.persistence.ejb.PlantillaLocal;
 import es.caib.regweb3.persistence.ejb.RolLocal;
 import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
@@ -13,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
@@ -37,9 +34,6 @@ public class Regweb3Controller extends BaseController {
     
     @EJB(mappedName = "regweb3/RolEJB/local")
     private RolLocal rolEjb;
-
-    @EJB(mappedName = "regweb3/PlantillaEJB/local")
-    private PlantillaLocal plantillaEjb;
 
 
 
@@ -103,19 +97,6 @@ public class Regweb3Controller extends BaseController {
         }
 
         return "redirect:/inici";
-    }
-
-
-    @RequestMapping(value = "/plantillasUsuario/{tipoRegistro}")
-    public ModelAndView plantillasUsuario(@PathVariable Long tipoRegistro, HttpServletRequest request) throws Exception {
-
-        ModelAndView mav = new ModelAndView("modulos/menuPlantillas");
-
-        List<Plantilla> plantillasUsuario = plantillaEjb.getActivasbyUsuario(getUsuarioEntidadActivo(request).getId(), tipoRegistro);
-        mav.addObject("plantillasUsuario", plantillasUsuario);
-        mav.addObject("tipoRegistro", tipoRegistro);
-
-        return mav;
     }
 
 }
