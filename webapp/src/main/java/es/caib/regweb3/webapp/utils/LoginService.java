@@ -378,7 +378,7 @@ public class LoginService {
      * Asigna las plantillas que el usuario tiene guardadas
      * @param loginInfo
      */
-    private void asignarPlantillas(LoginInfo loginInfo) throws Exception{
+    public void asignarPlantillas(LoginInfo loginInfo) throws Exception{
 
         loginInfo.setPlantillasEntrada(plantillaEjb.getActivasbyUsuario(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.REGISTRO_ENTRADA));
         loginInfo.setPlantillasSalida(plantillaEjb.getActivasbyUsuario(loginInfo.getUsuarioEntidadActivo().getId(), RegwebConstantes.REGISTRO_SALIDA));
@@ -395,11 +395,17 @@ public class LoginService {
         // Asociamos la nueva EntidadActiva
         loginInfo.setEntidadActiva(entidadNueva);
 
-        // Asociamos lel nuevo UsuarioEntidadActivo
+        // Asociamos el nuevo UsuarioEntidadActivo
         setUsuarioEntidadActivo(loginInfo, entidadNueva);
 
         if (loginInfo.getRolActivo().getNombre().equals(RegwebConstantes.RWE_USUARI)) { // Solo si es Operador
+
+            // Asignamos oficinas
+            loginInfo.resetOficinas();
             asignarOficinas(loginInfo);
+
+            //Asignamos las plantillas
+            asignarPlantillas(loginInfo);
 
         } else {
             tieneMigrados(loginInfo);

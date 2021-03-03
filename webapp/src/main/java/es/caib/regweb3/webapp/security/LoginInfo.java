@@ -401,6 +401,29 @@ public class LoginInfo {
         this.ayudaUrl = "";
     }
 
+    /**
+     * Resetea los datos para del usuario autenticado
+     */
+    public void resetOficinas(){
+        this.organismosRegistroEntrada =  new ArrayList<Organismo>();
+        this.organismosRegistroSalida =  new ArrayList<Organismo>();
+        this.organismosConsultaEntrada =  new ArrayList<Organismo>();
+        this.organismosConsultaSalida =  new ArrayList<Organismo>();
+        this.organismosResponsable =  new ArrayList<Organismo>();
+        this.oficinasRegistroEntrada = new LinkedHashSet<Oficina>();
+        this.oficinasRegistroSalida = new LinkedHashSet<Oficina>();
+        this.oficinasConsultaEntrada = new LinkedHashSet<Oficina>();
+        this.oficinasConsultaSalida = new LinkedHashSet<Oficina>();
+        this.oficinasAcceso = new LinkedHashSet<Oficina>();
+        this.oficinasResponsable= new LinkedHashSet<Oficina>();
+        this.plantillasEntrada =  new ArrayList<Plantilla>();
+        this.plantillasSalida =  new ArrayList<Plantilla>();
+        this.oficinaActiva = null;
+        this.organismosOficinaActiva = null;
+        this.enlaceDir3 = false;
+        this.ayudaUrl = "";
+    }
+
     @Override
     public String toString() {
         return "LoginInfo{" +

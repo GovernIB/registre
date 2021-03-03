@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.form.PlantillaForm;
+import es.caib.regweb3.webapp.utils.LoginService;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.PlantillaValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,8 @@ public class PlantillaController extends BaseController {
     @EJB(mappedName = "regweb3/PlantillaEJB/local")
     private PlantillaLocal plantillaEjb;
 
+    @Autowired
+    private LoginService loginService;
 
     @Autowired
     private PlantillaValidator plantillaValidator;
@@ -155,46 +158,37 @@ public class PlantillaController extends BaseController {
         switch (tipoRegistro.intValue()){
 
             case 1: //RegistroEntrada
-                log.info("Plantilla entrada");
                 Organismo organismoDestino = organismoEjb.findByCodigoEntidadLigero(plantillaJson.getDestinoCodigo(), usuarioEntidad.getEntidad().getId());
 
                 if(organismoDestino != null) { // es interno
-                    log.info("Destino: " +plantillaJson.getDestinoDenominacion() + " Interno");
                     plantillaJson.setDestinoExterno(false);
 
                 }else{ // es externo
                     plantillaJson.setDestinoExterno(true);
-                    log.info("Destino: " +plantillaJson.getDestinoDenominacion() + " Externo");
                 }
 
             break;
 
             case 2: //RegistroSalida
-                log.info("Plantilla salida");
                 Organismo organismoOrigen = organismoEjb.findByCodigoEntidadLigero(plantillaJson.getOrigenCodigo(), usuarioEntidad.getEntidad().getId());
 
                 if(organismoOrigen != null) { // es interno
-                    log.info("Origen: " + plantillaJson.getOrigenDenominacion() + " Interno");
                     plantillaJson.setOrigenExterno(false);
 
                 }else{ // es externo
                     plantillaJson.setOrigenExterno(true);
-                    log.info("Origen: " +plantillaJson.getOrigenDenominacion() + " Externo");
                 }
 
             break;
         }
 
-        log.info("OficinaCodigo: " + plantillaJson.getOficinaCodigo());
         if (!plantillaJson.getOficinaCodigo().equals("-1")) {
 
             Oficina oficina = oficinaEjb.findByCodigoEntidad(plantillaJson.getOficinaCodigo(), usuarioEntidad.getEntidad().getId());
 
             if (oficina != null) { // es interna
-                log.info("Oficina: " + plantillaJson.getOficinaDenominacion() + " Interno");
                 plantillaJson.setOficinaExterna(false);
             } else { // es externa
-                log.info("Oficina: " + plantillaJson.getOficinaDenominacion() + " Externa");
                 plantillaJson.setOficinaExterna(true);
             }
         }
@@ -211,6 +205,8 @@ public class PlantillaController extends BaseController {
 
         try {
             plantilla = plantillaEjb.persist(plantilla);
+
+            loginService.asignarPlantillas(getLoginInfo(request));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -353,7 +349,7 @@ public class PlantillaController extends BaseController {
                 plantillaEjb.modificarOrden(plantillaCambiar.getId(), plantillaCambiar.getOrden()-1);
             }
 
-
+            loginService.asignarPlantillas(getLoginInfo(request));
             Mensaje.saveMessageInfo(request, getMessage("regweb.eliminar.registro"));
 
         } catch (Exception e) {
