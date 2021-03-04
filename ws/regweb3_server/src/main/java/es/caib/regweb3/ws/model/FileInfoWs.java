@@ -7,6 +7,7 @@ public class FileInfoWs {
     private String mime;
     private Long size;
     private String filename;
+    private String validezDocumento;
 
     public Long getFileID() {
         return fileID;
@@ -46,5 +47,13 @@ public class FileInfoWs {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getValidezDocumento() {
+        return validezDocumento;
+    }
+
+    public void setValidezDocumento(String validezDocumento) {
+        this.validezDocumento = validezDocumento;
     }
 }

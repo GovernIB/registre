@@ -155,6 +155,10 @@ public class AsientoConverter extends CommonConverter {
         FileInfoWs fileInfo = new FileInfoWs();
         fileInfo.setFileID(anexoFull.getAnexo().getId());
         fileInfo.setName(anexoFull.getAnexo().getTitulo());
+        if(anexoFull.getAnexo().getValidezDocumento()!=null){
+            fileInfo.setValidezDocumento(anexoFull.getAnexo().getValidezDocumento().toString());
+        }
+
         if(anexoFull.getDocumentoCustody()!=null) {fileInfo.setFilename(anexoFull.getDocumentoCustody().getName());}
 
         if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
