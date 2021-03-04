@@ -304,6 +304,7 @@
       <xs:element minOccurs="0" name="mime" type="xs:string"/>
       <xs:element minOccurs="0" name="name" type="xs:string"/>
       <xs:element minOccurs="0" name="size" type="xs:long"/>
+      <xs:element minOccurs="0" name="validezDocumento" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="verificarAsientoRegistral">
