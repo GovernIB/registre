@@ -18,6 +18,8 @@ public class FileInfoWs  implements java.io.Serializable {
 
     private java.lang.Long size;
 
+    private java.lang.String validezDocumento;
+
     public FileInfoWs() {
     }
 
@@ -26,12 +28,14 @@ public class FileInfoWs  implements java.io.Serializable {
            java.lang.String filename,
            java.lang.String mime,
            java.lang.String name,
-           java.lang.Long size) {
+           java.lang.Long size,
+           java.lang.String validezDocumento) {
            this.fileID = fileID;
            this.filename = filename;
            this.mime = mime;
            this.name = name;
            this.size = size;
+           this.validezDocumento = validezDocumento;
     }
 
 
@@ -134,6 +138,26 @@ public class FileInfoWs  implements java.io.Serializable {
         this.size = size;
     }
 
+
+    /**
+     * Gets the validezDocumento value for this FileInfoWs.
+     * 
+     * @return validezDocumento
+     */
+    public java.lang.String getValidezDocumento() {
+        return validezDocumento;
+    }
+
+
+    /**
+     * Sets the validezDocumento value for this FileInfoWs.
+     * 
+     * @param validezDocumento
+     */
+    public void setValidezDocumento(java.lang.String validezDocumento) {
+        this.validezDocumento = validezDocumento;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof FileInfoWs)) return false;
@@ -160,7 +184,10 @@ public class FileInfoWs  implements java.io.Serializable {
               this.name.equals(other.getName()))) &&
             ((this.size==null && other.getSize()==null) || 
              (this.size!=null &&
-              this.size.equals(other.getSize())));
+              this.size.equals(other.getSize()))) &&
+            ((this.validezDocumento==null && other.getValidezDocumento()==null) || 
+             (this.validezDocumento!=null &&
+              this.validezDocumento.equals(other.getValidezDocumento())));
         __equalsCalc = null;
         return _equals;
     }
@@ -186,6 +213,9 @@ public class FileInfoWs  implements java.io.Serializable {
         }
         if (getSize() != null) {
             _hashCode += getSize().hashCode();
+        }
+        if (getValidezDocumento() != null) {
+            _hashCode += getValidezDocumento().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -229,6 +259,13 @@ public class FileInfoWs  implements java.io.Serializable {
         elemField.setFieldName("size");
         elemField.setXmlName(new javax.xml.namespace.QName("", "size"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "long"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("validezDocumento");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "validezDocumento"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
