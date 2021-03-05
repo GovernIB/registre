@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="mime" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="size" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
+ *         &lt;element name="validezDocumento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,7 +36,8 @@ import javax.xml.bind.annotation.XmlType;
     "filename",
     "mime",
     "name",
-    "size"
+    "size",
+    "validezDocumento"
 })
 public class FileInfoWs {
 
@@ -44,6 +46,7 @@ public class FileInfoWs {
     protected String mime;
     protected String name;
     protected Long size;
+    protected String validezDocumento;
 
     /**
      * Obtiene el valor de la propiedad fileID.
@@ -163,6 +166,30 @@ public class FileInfoWs {
      */
     public void setSize(Long value) {
         this.size = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad validezDocumento.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getValidezDocumento() {
+        return validezDocumento;
+    }
+
+    /**
+     * Define el valor de la propiedad validezDocumento.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setValidezDocumento(String value) {
+        this.validezDocumento = value;
     }
 
 }
