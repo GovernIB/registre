@@ -356,7 +356,7 @@ public class AnexoFull{
 
 
     @Transient
-    public String getSignName() {
+    public String getSignFileName() {
 
         if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
 
@@ -377,7 +377,7 @@ public class AnexoFull{
     }
 
     @Transient
-    public String getDocName() {
+    public String getDocFileName() {
 
         if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
 

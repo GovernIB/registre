@@ -98,11 +98,11 @@ public class AsientoConverter extends CommonConverter {
                 if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
                    anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
 
-                    fileContentWs.getFileInfoWs().setFilename(anexoFull.getDocName());
+                    fileContentWs.getFileInfoWs().setFilename(anexoFull.getDocFileName());
 
                 }else if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
 
-                    fileContentWs.getFileInfoWs().setFilename(anexoFull.getSignName());
+                    fileContentWs.getFileInfoWs().setFilename(anexoFull.getSignFileName());
 
                 }
 
