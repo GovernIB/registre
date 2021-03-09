@@ -97,19 +97,55 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long registroDetalle) throws Exception{
-        Query q = em.createQuery("Select interesado from Interesado as interesado where interesado.codigoDir3 = :codigoDir3 " +
-                "and interesado.registroDetalle.id = :registroDetalle");
+    public List<Interesado> findByRegistroDetalle(Long registroDetalle) throws Exception{
 
-        q.setParameter("codigoDir3",codigoDir3);
+        Query q = em.createQuery("Select interesado.tipo, interesado.nombre, interesado.apellido1, interesado.apellido2, interesado.documento, interesado.razonSocial, interesado.codigoDir3 from Interesado as interesado " +
+                "where interesado.registroDetalle.id = :registroDetalle");
+
         q.setParameter("registroDetalle",registroDetalle);
         q.setHint("org.hibernate.readOnly", true);
 
-        List<Interesado> interesado = q.getResultList();
-        if(interesado.size() > 0){
-            return interesado.get(0);
+        List<Object[]> results = q.getResultList();
+        List<Interesado> interesados = new ArrayList<>();
+        if(results.size() > 0){
+
+            for (Object[] result : results) {
+                Interesado interesado = new Interesado();
+                interesado.setTipo((Long) result[0]);
+                interesado.setNombre((String) result[1]);
+                interesado.setApellido1((String) result[2]);
+                interesado.setApellido2((String) result[3]);
+                interesado.setDocumento((String) result[4]);
+                interesado.setRazonSocial((String) result[5]);
+                interesado.setCodigoDir3((String) result[6]);
+
+                interesados.add(interesado);
+            }
+
+            return interesados;
+
         }else{
             return  null;
+        }
+
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
+    public Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws Exception{
+        Query q = em.createQuery("Select interesado.id from Interesado as interesado where interesado.codigoDir3 = :codigoDir3 " +
+                "and interesado.registroDetalle.id = :idRegistroDetalle");
+
+        q.setParameter("codigoDir3", codigoDir3);
+        q.setParameter("idRegistroDetalle",idRegistroDetalle);
+        q.setHint("org.hibernate.readOnly", true);
+
+        Long idInteresado = (Long) q.getSingleResult();
+
+        if(idInteresado != null){
+            return new Interesado(idInteresado);
+        }else{
+            return null;
         }
         
     }
