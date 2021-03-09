@@ -354,4 +354,47 @@ public class AnexoFull{
 
     }
 
+
+    @Transient
+    public String getSignName() {
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getSignatureCustody() != null) {
+                return getSignatureCustody().getName();
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                if(getDocument().getNom() != null){
+                    return getDocument().getNom();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Transient
+    public String getDocName() {
+
+        if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+            if (getDocumentoCustody() != null) {
+                return getDocumentoCustody().getName();
+            }
+
+        }else if(anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+            if(getDocument() != null){
+                if(getDocument().getNom() != null){
+                    return getDocument().getNom();
+                }
+            }
+        }
+
+        return null;
+    }
+
 }
