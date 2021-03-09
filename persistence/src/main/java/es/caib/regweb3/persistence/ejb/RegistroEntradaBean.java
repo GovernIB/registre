@@ -346,7 +346,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public Long proximoEventoEntrada(RegistroEntrada registroEntrada, Entidad entidadActiva, Long idOficina) throws Exception {
 
-
         if (registroEntrada.getDestino() == null) { // Externo
 
             // Si la entidad está en SIR y la Oficina está activada para Envío Sir
@@ -360,25 +359,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
             return RegwebConstantes.EVENTO_OFICIO_EXTERNO;
 
-        } /*else {
-
-            //Añadido marilen, si no se busca antes da un lazy al intentar cargar las relacionesOrganizativasOfi en el método getByOficinaActiva
-            Oficina oficina = oficinaEjb.findById(registroEntrada.getOficina().getId());
-
-            // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
-            LinkedHashSet<Organismo> organismos = organismoEjb.getByOficinaActiva(oficina, RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-            Set<Long> organismosId = new HashSet<Long>();
-
-            for (Organismo organismo : organismos) {
-                organismosId.add(organismo.getId());
-
-            }
-
-            if (isOficioRemisionInterno(registroEntrada.getId(), organismosId)) {
-                return RegwebConstantes.EVENTO_OFICIO_INTERNO;
-            }
-
-        }*/
+        }
 
         return RegwebConstantes.EVENTO_DISTRIBUIR;
     }
