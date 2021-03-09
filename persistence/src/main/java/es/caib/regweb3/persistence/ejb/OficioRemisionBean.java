@@ -52,6 +52,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
     @EJB private TrazabilidadLocal trazabilidadEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private OrganismoLocal organismoEjb;
+    @EJB private InteresadoLocal interesadoEjb;
 
 
     @Override
@@ -712,17 +713,11 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<Object[]> result = q.getResultList();
 
         List<String> numeros = new ArrayList<String>();
-        Query q2;
 
         for (Object[] object : result) {
 
-            q2 = em.createQuery("Select interesado from Interesado as interesado where interesado.registroDetalle.id = :registroDetalle " +
-                    "order by interesado.id");
+            List<Interesado> interesados = interesadoEjb.findByRegistroDetalle((Long) object[0]);
 
-            q2.setParameter("registroDetalle",object[0]);
-            q2.setHint("org.hibernate.readOnly", true);
-
-            List<Interesado> interesados = q2.getResultList();
             String nombreInteresado = "";
             if(interesados.size() > 0){
                 nombreInteresado = interesados.get(0).getNombreCompletoInforme();
@@ -748,17 +743,12 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
         List<Object[]> result = q.getResultList();
 
         List<String> numeros = new ArrayList<String>();
-        Query q2;
+
 
         for (Object[] object : result) {
 
-            q2 = em.createQuery("Select interesado from Interesado as interesado where interesado.registroDetalle.id = :registroDetalle " +
-                    "order by interesado.id");
+            List<Interesado> interesados = interesadoEjb.findByRegistroDetalle((Long) object[0]);
 
-            q2.setParameter("registroDetalle",object[0]);
-            q2.setHint("org.hibernate.readOnly", true);
-
-            List<Interesado> interesados = q2.getResultList();
             String nombreInteresado = "";
             if(interesados.size() > 0){
                 nombreInteresado = interesados.get(0).getNombreCompletoInforme();
