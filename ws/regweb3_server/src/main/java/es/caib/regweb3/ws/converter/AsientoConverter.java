@@ -95,6 +95,17 @@ public class AsientoConverter extends CommonConverter {
                 // Obtenemos al url para descargar el documento
                 String url = anexoEjb.getCsvValidationWeb(anexoFull.getAnexo(),entidad.getId());
 
+                if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
+                   anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+
+                    fileContentWs.getFileInfoWs().setFilename(anexoFull.getDocName());
+
+                }else if(anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+
+                    fileContentWs.getFileInfoWs().setFilename(anexoFull.getSignName());
+
+                }
+
                 if(StringUtils.isNotEmpty(url)){
                     fileContentWs.setUrl(url);
                 }else{
@@ -159,7 +170,6 @@ public class AsientoConverter extends CommonConverter {
             fileInfo.setValidezDocumento(anexoFull.getAnexo().getValidezDocumento().toString());
         }
 
-        if(anexoFull.getDocumentoCustody()!=null) {fileInfo.setFilename(anexoFull.getDocumentoCustody().getName());}
 
         if(anexoFull.getAnexo().getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
                 anexoFull.getAnexo().getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
