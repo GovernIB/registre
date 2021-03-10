@@ -27,13 +27,21 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
     Interesado guardarInteresado(Interesado interesado) throws Exception;
 
     /**
-     * Obtiene un Interesado a partir del CodigoDir3 y Su registroDetalle
-     * @param codigoDir3
+     * Obtiene los Interesados de un RegistroDetalle
      * @param registroDetalle
      * @return
      * @throws Exception
      */
-    Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long registroDetalle) throws Exception;
+    List<Interesado> findByRegistroDetalle(Long registroDetalle) throws Exception;
+
+    /**
+     * Obtiene un Interesado a partir del CodigoDir3 y Su registroDetalle
+     * @param codigoDir3
+     * @param idRegistroDetalle
+     * @return
+     * @throws Exception
+     */
+    Interesado findByCodigoDir3RegistroDetalle(String codigoDir3, Long idRegistroDetalle) throws Exception;
 
     /**
      * Eliminanos el Interesado del RegistroDetalle y luego de la bbdd
