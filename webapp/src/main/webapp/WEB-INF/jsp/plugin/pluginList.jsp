@@ -39,8 +39,6 @@
 
                     <div class="panel-body">
 
-                        <c:import url="../modulos/mensajes.jsp"/>
-
                         <div class="row">
                             <div class="col-xs-6">
                                 <div class="form-group col-xs-12">

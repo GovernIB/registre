@@ -2,10 +2,7 @@ package es.caib.regweb3.webapp.interceptor;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
-import es.caib.regweb3.persistence.ejb.PendienteLocal;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
-import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
-import es.caib.regweb3.persistence.ejb.UsuarioLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.FileSystemManager;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.Configuracio;
@@ -54,6 +51,9 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
     @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
     private TipoDocumentalLocal tipoDocumentalEjb;
 
+    @EJB(mappedName = "regweb3/EntidadEJB/local")
+    private EntidadLocal entidadEjb;
+
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -64,6 +64,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
             HttpSession session = request.getSession();
             LoginInfo loginInfo = null;
+            Entidad entidadActiva = null;
 
             if (request.getRequestURI().equals("/regweb3/noAutorizado")) {
                 return true;
@@ -144,7 +145,7 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
 
                     case RegwebConstantes.RWE_USUARI:
 
-                        Entidad entidadActiva =  loginInfo.getEntidadActiva();
+                        entidadActiva =  loginInfo.getEntidadActiva();
 
                         //No permitir que se hagan registros si la entidad está en mantenimiento
                         if (entidadActiva.getMantenimiento() || tienePendientesDeProcesar) {
@@ -154,92 +155,83 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             return false;
                         }
 
-                        //Plugin Generación Justificante
-                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
-                            log.info("No existe el plugin de generación del justificante");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-                        //Plugin Custodia Justificante
-                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
-                            log.info("No existe el plugin de custodia del justificante");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-
-                        }
-                        // Plugin Custodia
-                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
-                            log.info("No existe el plugin de custodia");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-
-                        }
-                        //Plugin Firma en Servidor
-                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
-                            log.info("No existe el plugin de firma en servidor");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-
-                        }
-                        // Sir ServerBAse
-                        if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
-                            log.info("Error, falta propiedad sirserverbase");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-
-                        // Dir3Caib Server
-                        if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {
-                            log.info("La propiedad Dir3CaibServer no está definida");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-                        // Dir3Caib Username
-                        if (PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()) {
-                            log.info("La propiedad Dir3CaibUsername no está definida");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-                        // Dir3Caib Password
-                        if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
-                            log.info("La propiedad Dir3CaibPassword no está definida");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-
-                        // Tipo documental existente
-                        if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
-                            log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-
-                        //Comprobamos que se haya definido un formato para el número de registro en la Entidad
-                        if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
-                            log.info("No hay configurado el formato del numero de registro para la Entidad activa");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
-                            response.sendRedirect("/regweb3/aviso");
-                            return false;
-                        }
-
                     break;
 
                     case RegwebConstantes.RWE_ADMIN:
+
+                        entidadActiva =  loginInfo.getEntidadActiva();
 
                         //Si no ha asignado todos los libros le redirige a la pagina de nuevo para procesarlos
                         if (tienePendientesDeProcesar) {
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sincronizacion.librospendientes"));
                             response.sendRedirect("/regweb3/entidad/pendientesprocesar");
                             return false;
+                        }
+
+                        //Plugin Generación Justificante
+                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_JUSTIFICANTE)) {
+                            log.info("No existe el plugin de generación del justificante");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+                        //Plugin Custodia Justificante
+                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+                            log.info("No existe el plugin de custodia del justificante");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+
+                        }
+                        // Plugin Custodia
+                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA)) {
+                            log.info("No existe el plugin de custodia");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodia"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+                        //Plugin Firma en Servidor
+                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_FIRMA_SERVIDOR)) {
+                            log.info("No existe el plugin de firma en servidor");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginfirma"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+                        // Sir ServerBAse
+                        if (entidadActiva.getSir() && Configuracio.getSirServerBase() == null) {
+                            log.info("Error, falta propiedad sirserverbase");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.sirserverbase"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                            response.sendRedirect("/regweb3/aviso");
+                        }
+
+                        // Dir3Caib Server
+                        if (PropiedadGlobalUtil.getDir3CaibServer() == null || PropiedadGlobalUtil.getDir3CaibServer().isEmpty()) {
+                            log.info("La propiedad Dir3CaibServer no está definida");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibserver"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+                        // Dir3Caib Username
+                        if (PropiedadGlobalUtil.getDir3CaibUsername() == null || PropiedadGlobalUtil.getDir3CaibUsername().isEmpty()) {
+                            log.info("La propiedad Dir3CaibUsername no está definida");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibusername"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+                        // Dir3Caib Password
+                        if (PropiedadGlobalUtil.getDir3CaibPassword() == null || PropiedadGlobalUtil.getDir3CaibPassword().isEmpty()) {
+                            log.info("La propiedad Dir3CaibPassword no está definida");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.propiedad.dir3caibpassword"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+
+                        // Tipo documental existente
+                        if(tipoDocumentalEjb.getByEntidad(entidadActiva.getId()).size()==0){
+                            log.info("Aviso: No hay ningún Tipo Documental para la Entidad Activa");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoDocumental"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                        }
+
+                        //Comprobamos que se haya definido un formato para el número de registro en la Entidad
+                        if(entidadActiva.getNumRegistro() == null || entidadActiva.getNumRegistro().length()==0){
+                            log.info("No hay configurado el formato del numero de registro para la Entidad activa");
+                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.entidad.formatoRegistro"));
+                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
 
                     break;

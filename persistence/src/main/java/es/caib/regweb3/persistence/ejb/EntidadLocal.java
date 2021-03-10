@@ -20,6 +20,14 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
 
     /**
+     * Obtiene una Entidad con unos campos minimnos
+     * @param idEntidad
+     * @return
+     * @throws Exception
+     */
+    Entidad findByIdLigero(Long idEntidad) throws Exception;
+
+    /**
      * Creamos una nueva Entidad y sus propiedades por defecto
      *
      * @param entidad
@@ -144,10 +152,10 @@ public interface EntidadLocal extends BaseEjb<Entidad, Long> {
 
     /**
      * Marca/Desmarca una entidad que está en mantenimiento durante el proceso de sincronización
-     * @param entidadId
+     * @param idEntidad
      * @param mantenimiento
      * @throws Exception
      */
-    void marcarEntidadMantenimiento(Long entidadId, Boolean mantenimiento) throws Exception;
+    void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception;
 
 }

@@ -25,6 +25,7 @@
             </div>
         </div><!-- /.row -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
 
         <!-- BUSCADOR -->
         <div class="row">

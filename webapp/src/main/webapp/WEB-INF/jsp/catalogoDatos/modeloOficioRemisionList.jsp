@@ -25,6 +25,8 @@
             </div>
         </div><!-- /.row -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
+
         <div class="row">
             <div class="col-xs-12">
 
@@ -37,8 +39,6 @@
                     </div>
 
                     <div class="panel-body">
-
-                        <c:import url="../modulos/mensajes.jsp"/>
 
                         <c:if test="${empty listado}">
                             <div class="alert alert-grey alert-dismissable">

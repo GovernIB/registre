@@ -777,7 +777,7 @@ public class EntidadController extends BaseController {
             for (Pendiente pendiente : pendientesDeProcesar) {
                 if (RegwebConstantes.ESTADO_ENTIDAD_EXTINGUIDO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_TRANSITORIO.equals(pendiente.getEstado()) || RegwebConstantes.ESTADO_ENTIDAD_VIGENTE.equals(pendiente.getEstado())) {
                     // Obtenemos el organismo extinguido
-                    Organismo organismoExtinguido = organismoEjb.findById(pendiente.getIdOrganismo());
+                    Organismo organismoExtinguido = organismoEjb.findByIdLigero(pendiente.getIdOrganismo());
 
                     //Obtenemos los permisos del organismo extinguido
                     List<PermisoOrganismoUsuario> permisos = permisoOrganismoUsuarioEjb.findByOrganismo(organismoExtinguido.getId());
@@ -893,7 +893,7 @@ public class EntidadController extends BaseController {
             }
 
             // Necesitamos su nombre
-            Organismo extinguido = organismoEjb.findById(organismoId);
+            Organismo extinguido = organismoEjb.findByIdLigero(organismoId);
 
             // MONTAMOS LA RESPUESTA JSON
             jsonResponse.setStatus("SUCCESS");
