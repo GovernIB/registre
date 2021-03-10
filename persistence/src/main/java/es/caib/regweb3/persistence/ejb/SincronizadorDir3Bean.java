@@ -73,7 +73,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     @Override
     public int sincronizarActualizar(Long entidadId, Timestamp fechaActualizacion, Timestamp fechaSincronizacion) throws Exception {
 
-        Entidad entidad = entidadEjb.findById(entidadId);
+        Entidad entidad = entidadEjb.findByIdLigero(entidadId);
 
         // Obtenemos el Service de los WS de Unidades
         Dir3CaibObtenerUnidadesWs unidadesService = Dir3CaibUtils.getObtenerUnidadesService(PropiedadGlobalUtil.getDir3CaibServer(), PropiedadGlobalUtil.getDir3CaibUsername(), PropiedadGlobalUtil.getDir3CaibPassword());
@@ -196,7 +196,7 @@ public class SincronizadorDir3Bean implements SincronizadorDir3Local {
     private Organismo sincronizarOrganismo(UnidadTF unidadTF, Long idEntidad) throws Exception {
 
 
-        Entidad entidad = entidadEjb.findById(idEntidad);
+        Entidad entidad = entidadEjb.findByIdLigero(idEntidad);
 
         Organismo organismo = null;
 

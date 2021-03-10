@@ -98,6 +98,11 @@ public class Entidad implements Serializable {
         this.id = id;
     }
 
+    public Entidad(Long id, String nombre, String codigoDir3) {
+        this.id = id;
+        this.nombre = nombre;
+        this.codigoDir3 = codigoDir3;
+    }
 
     /**
      * @param e

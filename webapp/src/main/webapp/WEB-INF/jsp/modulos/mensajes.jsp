@@ -1,5 +1,18 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
+
+<%--Entidad en modo Mantenimiento--%>
+<c:if test="${loginInfo.entidadActiva.mantenimiento}">
+    <div class="alert alert-danger">
+        <div class="row vertical-align">
+            <div class="col-xs-1 text-center">
+                <i class="fa fa-exclamation-triangle fa-2x"></i>
+            </div>
+            <div class="col-xs-11">
+                <strong><spring:message code="entidad.mantenimiento.activo"/></strong>
+            </div>
+        </div>
+    </div>
+</c:if>
 
 <c:if test="${not empty infos}">
     <div class="alert alert-success alert-dismissable">

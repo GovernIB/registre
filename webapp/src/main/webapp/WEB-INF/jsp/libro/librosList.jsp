@@ -25,6 +25,8 @@
            </div>
         </div><!-- /.row -->
 
+        <c:import url="../modulos/mensajes.jsp"/>
+
         <div class="row">
            <div class="col-xs-12">
                <div class="panel panel-warning">
@@ -33,8 +35,6 @@
                        <h3 class="panel-title"><i class="fa fa-list"></i> <strong><spring:message code="organismo.libros"/> de ${organismo.denominacion}</strong></h3>
                    </div>
                    <div class="panel-body">
-
-                       <c:import url="../modulos/mensajes.jsp"/>
 
                        <c:if test="${empty organismo.libros}">
                            <div class="alert alert-grey alert-dismissable">

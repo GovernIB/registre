@@ -80,6 +80,40 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
 
     @Override
     @SuppressWarnings(value = "unchecked")
+    public Entidad findByIdLigero(Long idEntidad) throws Exception {
+
+        Query q = em.createQuery("Select entidad.id, entidad.codigoDir3, entidad.nombre, entidad.logoMenu, entidad.logoPie, entidad.configuracionPersona, " +
+                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
+                "entidad.id = :idEntidad");
+
+        q.setParameter("idEntidad", idEntidad);
+        q.setHint("org.hibernate.readOnly", true);
+
+        List<Object[]> result = q.getResultList();
+
+        if (result.size() == 1) {
+            Entidad entidad = new Entidad();
+            entidad.setId((Long) result.get(0)[0]);
+            entidad.setCodigoDir3((String) result.get(0)[1]);
+            entidad.setNombre((String) result.get(0)[2]);
+            entidad.setLogoMenu((Archivo) result.get(0)[3]);
+            entidad.setLogoPie((Archivo) result.get(0)[4]);
+            entidad.setConfiguracionPersona((Long) result.get(0)[5]);
+            entidad.setSir((Boolean) result.get(0)[6]);
+            entidad.setOficioRemision((Boolean) result.get(0)[7]);
+            entidad.setMantenimiento((Boolean) result.get(0)[8]);
+            entidad.setTextoPie((String)result.get(0)[9]);
+            entidad.setColorMenu((String)result.get(0)[10]);
+            entidad.setNumRegistro((String)result.get(0)[11]);
+
+            return entidad;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @SuppressWarnings(value = "unchecked")
     public List<Entidad> getAll() throws Exception {
 
         return  em.createQuery("Select entidad from Entidad as entidad order by entidad.id").getResultList();
@@ -472,11 +506,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     }
 
     @Override
-    public void marcarEntidadMantenimiento(Long entidadId, Boolean mantenimiento) throws Exception{
+    public void marcarEntidadMantenimiento(Long idEntidad, Boolean mantenimiento) throws Exception{
 
-        Entidad entidad = findById(entidadId);
-        entidad.setMantenimiento(mantenimiento);
-        merge(entidad);
+        em.createQuery("update from Entidad set mantenimiento =:mantenimiento where id =:idEntidad").setParameter("idEntidad", idEntidad).setParameter("mantenimiento",mantenimiento).executeUpdate();
 
     }
 

@@ -61,7 +61,7 @@ public class Regweb3Controller extends BaseController {
         List<Entidad> entidadesAutenticado = getEntidadesAutenticado(request);
 
         try {
-            Entidad entidadNueva = entidadEjb.findById(entidadId);
+            Entidad entidadNueva = entidadEjb.findByIdLigero(entidadId);
 
             if(entidadesAutenticado.contains(entidadNueva)){
 

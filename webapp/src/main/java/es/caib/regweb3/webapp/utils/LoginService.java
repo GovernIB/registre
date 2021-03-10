@@ -205,7 +205,7 @@ public class LoginService {
         if (entidadActiva != null && loginInfo.getEntidades().contains(entidadActiva)) {
             loginInfo.setEntidadActiva(entidadActiva);
         } else if (loginInfo.getEntidades().size() > 0) {
-            entidadActiva = entidadEjb.findById(loginInfo.getEntidades().get(0).getId());
+            entidadActiva = entidadEjb.findByIdLigero(loginInfo.getEntidades().get(0).getId());
             loginInfo.setEntidadActiva(entidadActiva);
         }
 
@@ -239,7 +239,7 @@ public class LoginService {
             if (entidadActiva != null && loginInfo.getEntidades().contains(entidadActiva)) {
                 loginInfo.setEntidadActiva(entidadActiva);
             } else if (loginInfo.getEntidades().size() > 0) {
-                loginInfo.setEntidadActiva(entidadEjb.findById(loginInfo.getEntidades().get(0).getId()));
+                loginInfo.setEntidadActiva(entidadEjb.findByIdLigero(loginInfo.getEntidades().get(0).getId()));
             }
 
             //UsuarioEntidadActivo
