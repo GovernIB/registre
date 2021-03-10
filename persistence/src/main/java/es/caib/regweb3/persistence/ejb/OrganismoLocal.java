@@ -260,6 +260,22 @@ public interface OrganismoLocal extends BaseEjb<Organismo, Long> {
     List<Organismo> getPermitirUsuarios(Long entidad) throws Exception;
 
     /**
+     * Obtiene el id de la entidad a la que pertenece este organismo
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    Long getEntidad(Long idOrganismo) throws Exception;
+
+    /**
+     * Obtiene el OrganismoSuperior de un Organismo, si es que lo tiene
+     * @param idOrganismo
+     * @return
+     * @throws Exception
+     */
+    Organismo getOrganismoSuperior(Long idOrganismo) throws Exception;
+
+    /**
      * Elimina los Organismos de una Entidad
      *
      * @param idEntidad
