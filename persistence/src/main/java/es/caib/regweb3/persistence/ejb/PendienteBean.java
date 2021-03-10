@@ -1,6 +1,5 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.Organismo;
 import es.caib.regweb3.model.Pendiente;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
@@ -70,13 +69,15 @@ public class PendienteBean extends BaseEjbJPA<Pendiente, Long> implements Pendie
     @SuppressWarnings(value = "unchecked")
     public List<Pendiente> findPendientesProcesar(Long idEntidad) throws Exception {
 
+        //TODO Habría que poner el campo identidad en la tabla RWE_PENDIENTE
+
         Query q = em.createQuery("Select pendiente from Pendiente as pendiente where pendiente.procesado = false");
 
         List<Pendiente> pendientes = q.getResultList();
         List<Pendiente> pendientesEntidad= new ArrayList<Pendiente>();
         for(Pendiente pendiente: pendientes){
-            Organismo organismo = organismoEjb.findById(pendiente.getIdOrganismo());
-            if(idEntidad.equals(organismo.getEntidad().getId())){
+            Long entidadOrganismo = organismoEjb.getEntidad(pendiente.getIdOrganismo());
+            if(idEntidad.equals(entidadOrganismo)){
                 pendientesEntidad.add(pendiente);
             }
         }

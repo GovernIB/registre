@@ -73,7 +73,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
     @Override
     @SuppressWarnings(value = "unchecked")
     public Organismo findByIdLigero(Long idOrganismo) throws Exception {
-        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id from Organismo as organismo where " +
+        Query q = em.createQuery("Select organismo.id, organismo.codigo, organismo.denominacion, organismo.codAmbComunidad.id, organismo.estado.id, organismo.entidad.id from Organismo as organismo where " +
                 "organismo.id = :idOrganismo");
 
         q.setParameter("idOrganismo", idOrganismo);
@@ -84,6 +84,7 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
             Organismo organismo = new Organismo((Long) result.get(0)[0], (String) result.get(0)[1], (String) result.get(0)[2]);
             organismo.setCodAmbComunidad(new CatComunidadAutonoma((Long) result.get(0)[3]));
             organismo.setEstado(catEstadoEntidadEjb.findById((Long) result.get(0)[4]));
+            organismo.setEntidad(new Entidad((Long) result.get(0)[5]));
             return organismo;
         } else {
             return null;
@@ -723,6 +724,36 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
         }
 
         return organismos;
+    }
+
+    @Override
+    public Long getEntidad(Long idOrganismo) throws Exception {
+
+        Query q = em.createQuery("Select organismo.entidad.id from Organismo as organismo where " +
+                "organismo.id = :idOrganismo");
+
+        q.setParameter("idOrganismo", idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return (Long) q.getSingleResult();
+    }
+
+    @Override
+    public Organismo getOrganismoSuperior(Long idOrganismo) throws Exception {
+
+        Query q = em.createQuery("Select organismo.organismoSuperior.id from Organismo as organismo where " +
+                "organismo.id = :idOrganismo");
+
+        q.setParameter("idOrganismo", idOrganismo);
+        q.setHint("org.hibernate.readOnly", true);
+
+        Long idOrganismoSuperior = (Long) q.getSingleResult();
+
+        if (idOrganismoSuperior != null) {
+            return new Organismo(idOrganismoSuperior);
+        } else{
+            return null;
+        }
     }
 
     @Override

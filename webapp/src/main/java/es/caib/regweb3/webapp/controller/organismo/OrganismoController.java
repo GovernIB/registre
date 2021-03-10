@@ -114,7 +114,7 @@ public class OrganismoController extends BaseController {
 
         ModelAndView mav = new ModelAndView("organismo/oficinasList");
 
-        Organismo organismo = organismoEjb.findById(idOrganismo);
+        Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
         LinkedHashSet<Oficina> oficinas = oficinaEjb.oficinasServicioCompleto(idOrganismo, RegwebConstantes.OFICINA_VIRTUAL_SI);
 
         mav.addObject("organismo", organismo);
@@ -133,9 +133,8 @@ public class OrganismoController extends BaseController {
     @RequestMapping(value = "/{idOrganismo}/usuarios", method = RequestMethod.GET)
     public String usuariosOrganismo(@PathVariable Long idOrganismo, Model model, HttpServletRequest request)throws Exception {
 
-        Organismo organismo = organismoEjb.findById(idOrganismo);
+        Organismo organismo = organismoEjb.findByIdLigero(idOrganismo);
         Entidad entidadActiva = getEntidadActiva(request);
-
 
         // Comprueba que el Organismo existe
         if(organismo == null) {
