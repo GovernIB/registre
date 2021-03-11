@@ -83,7 +83,7 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     public Entidad findByIdLigero(Long idEntidad) throws Exception {
 
         Query q = em.createQuery("Select entidad.id, entidad.codigoDir3, entidad.nombre, entidad.logoMenu, entidad.logoPie, entidad.configuracionPersona, " +
-                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
+                "entidad.sir, entidad.oficioRemision, entidad.mantenimiento, entidad.textoPie, entidad.colorMenu, entidad.numRegistro, entidad.libro, entidad.diasVisado, entidad.oficioRemision from Entidad as entidad LEFT JOIN entidad.logoMenu logoMenu LEFT JOIN entidad.logoPie logoPie where " +
                 "entidad.id = :idEntidad");
 
         q.setParameter("idEntidad", idEntidad);
@@ -105,6 +105,9 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
             entidad.setTextoPie((String)result.get(0)[9]);
             entidad.setColorMenu((String)result.get(0)[10]);
             entidad.setNumRegistro((String)result.get(0)[11]);
+            entidad.setLibro((Libro) result.get(0)[12]);
+            entidad.setDiasVisado((Integer) result.get(0)[13]);
+            entidad.setOficioRemision((Boolean) result.get(0)[14]);
 
             return entidad;
         } else {
