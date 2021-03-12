@@ -6,6 +6,7 @@ import es.caib.regweb3.persistence.utils.DataBaseUtils;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
+import es.caib.regweb3.utils.TimeUtils;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
@@ -407,7 +408,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
     @Override
     @SuppressWarnings(value = "unchecked")
     public List<ObjetoBasico> busquedaPersonas(String text, Long tipoPersona, Long idEntidad) throws Exception {
-
+long inicio = System.currentTimeMillis();
         Query q;
         String queryBase = "";
 
@@ -416,13 +417,16 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
         if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_FISICA)) {
             queryBase = "Select persona.id, CONCAT(persona.nombre,' ',persona.apellido1,' ', persona.apellido2,' - ', persona.documento) as completo from Persona as persona ";
-            where.add(DataBaseUtils.like("CONCAT(persona.nombre,' ',persona.apellido1,' ',persona.apellido2,' - ', persona.documento)", "text", parametros, text));
+            where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
+            //where.add(DataBaseUtils.like("CONCAT(persona.nombre,' ',persona.apellido1,' ',persona.apellido2,' - ', persona.documento)", "text", parametros, text));
             where.add(" persona.tipo = :tipoPersona ");
             parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_FISICA);
 
         } else if (tipoPersona.equals(RegwebConstantes.TIPO_PERSONA_JURIDICA)) {
             queryBase = "Select persona.id, CONCAT(persona.razonSocial,' - ', persona.documento) as completo from Persona as persona ";
-            where.add(DataBaseUtils.like("CONCAT(persona.razonSocial,' - ', persona.documento)", "text", parametros, text));
+            where.add(DataBaseUtils.like("persona.documento", "text", parametros, text));
+
+            //where.add(DataBaseUtils.like("CONCAT(persona.razonSocial,' - ', persona.documento)", "text", parametros, text));
             where.add(" persona.tipo = :tipoPersona ");
             parametros.put("tipoPersona", RegwebConstantes.TIPO_PERSONA_JURIDICA);
         }
@@ -444,6 +448,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
             query.append(" order by persona.id desc");
         }
 
+        log.info(query.toString());
         q = em.createQuery(query.toString());
 
         for (Map.Entry<String, Object> param : parametros.entrySet()) {
@@ -461,7 +466,7 @@ public class PersonaBean extends BaseEjbJPA<Persona, Long> implements PersonaLoc
 
             personas.add(persona);
         }
-
+log.info("Total busqueda personas: " + TimeUtils.formatElapsedTime(System.currentTimeMillis()-inicio));
         return personas;
     }
 
