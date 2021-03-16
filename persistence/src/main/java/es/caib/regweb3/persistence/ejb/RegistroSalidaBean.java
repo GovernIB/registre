@@ -142,10 +142,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     }
 
     @Override
-    public RegistroSalida actualizar(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
-
-        // Obtenemos el RS antes de guardarlos, para crear el histórico
-        RegistroSalida registroSalidaAntiguo = findById(registroSalida.getId());
+    public RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
 
         registroSalida = merge(registroSalida);
 
@@ -155,7 +152,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
         registroSalida.setEvento(evento);
 
         // Creamos el Historico RegistroEntrada
-        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(registroSalidaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
+        historicoRegistroSalidaEjb.crearHistoricoRegistroSalida(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
         postProcesoActualizarRegistro(registroSalida, usuarioEntidad.getEntidad().getId());
 
         return registroSalida;

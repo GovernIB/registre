@@ -147,10 +147,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public RegistroEntrada actualizar(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
-
-        // Obtenemos el RE antes de guardarlos, para crear el histórico
-        RegistroEntrada registroEntradaAntiguo = findById(registroEntrada.getId());
+    public RegistroEntrada actualizar(RegistroEntrada antiguo, RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception, I18NException {
 
         registroEntrada = merge(registroEntrada);
 
@@ -160,12 +157,22 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         registroEntrada.setEvento(evento);
 
         // Creamos el Historico RegistroEntrada
-        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(registroEntradaAntiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
+        historicoRegistroEntradaEjb.crearHistoricoRegistroEntrada(antiguo, usuarioEntidad, I18NLogicUtils.tradueix(LocaleContextHolder.getLocale(), "registro.modificacion.datos"), true);
         postProcesoActualizarRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
 
         return registroEntrada;
     }
 
+
+    private RegistroEntrada findByIdConsulta(Long idRegistro) throws Exception {
+
+        Query q = em.createQuery("Select re from RegistroEntrada as re where re.id = :idRegistro ");
+
+        q.setParameter("idRegistro", idRegistro);
+        q.setHint("org.hibernate.readOnly", true);
+
+        return (RegistroEntrada) q.getSingleResult();
+    }
 
     @Override
     @SuppressWarnings(value = "unchecked")

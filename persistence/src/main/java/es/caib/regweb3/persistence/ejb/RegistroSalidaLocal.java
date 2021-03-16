@@ -33,13 +33,14 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
     /**
      * Actualiza un Registro salida
+     * @param antiguo
      * @param registroSalida
      * @param usuarioEntidad
      * @return
      * @throws Exception
      * @throws I18NException
      */
-    RegistroSalida actualizar(RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
+    RegistroSalida actualizar(RegistroSalida antiguo, RegistroSalida registroSalida, UsuarioEntidad usuarioEntidad) throws Exception, I18NException;
 
     /**
      * Obtiene el próximo evento que habrá que realizar con el Registro
