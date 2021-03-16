@@ -330,8 +330,11 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                     registroSalida.setEstado(RegwebConstantes.REGISTRO_PENDIENTE_VISAR);
                 }
 
+                // Obtenemos el RE antes de guardarlos, para crear el histórico
+                RegistroSalida antiguo = registroSalidaEjb.findById(registroSalida.getId());
+
                 // Actualizamos el RegistroSalida
-                registroSalida = registroSalidaEjb.actualizar(registroSalida, usuarioEntidad);
+                registroSalida = registroSalidaEjb.actualizar(antiguo, registroSalida, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
 

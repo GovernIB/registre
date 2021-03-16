@@ -400,9 +400,11 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                         registroEntrada.setEstado(RegwebConstantes.REGISTRO_VALIDO);
                     }
                 }
+                // Obtenemos el RE antes de guardarlos, para crear el histórico
+                RegistroEntrada antiguo = registroEntradaEjb.findById(registroEntrada.getId());
 
                 // Actualizamos el RegistroEntrada
-                registroEntrada = registroEntradaEjb.actualizar(registroEntrada, usuarioEntidad);
+                registroEntrada = registroEntradaEjb.actualizar(antiguo, registroEntrada, usuarioEntidad);
 
                 Mensaje.saveMessageInfo(request, getMessage("regweb.actualizar.registro"));
             } catch(I18NException i18ne) {
