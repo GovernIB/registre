@@ -88,6 +88,9 @@ public class AnexoFicheroController extends AnexoController {
 
         log.info(" Passa per ficherosPost");
 
+        // Validad nombre del fichero
+        validadNombreFichero(anexoForm, result);
+
         // Si es oficio de remision sir debemos comprobar la limitación de los anexos impuesta por SIR
         boolean isSIR = anexoForm.getOficioRemisionSir();
 

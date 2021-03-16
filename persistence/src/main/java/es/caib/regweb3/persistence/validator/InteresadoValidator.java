@@ -39,34 +39,33 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
         if (interesado.getTipo() == null) {
             rejectIfEmptyOrWhitespace(errors, __target__, "tipo",
-                    "error.valor.requerido", "El camp és obligatori");
+                    "error.valor.requerido");
         } else {
             if (interesado.getTipo() != null) {
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
 
 
                     rejectIfEmptyOrWhitespace(errors, __target__, "apellido1",
-                            "error.valor.requerido", "El camp és obligatori");
+                            "error.valor.requerido");
 
                     if (!hasFieldErrors(errors, "apellido1")) {
                         if (interesado.getApellido1().length() > 30) {
-                            rejectValue(errors, "apellido1", "error.valor.maxlenght", "Tamaño demasiado largo");
+                            rejectValue(errors, "apellido1", "error.valor.maxlenght");
                         }
                     }
 
 
-                    rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido",
-                            "El camp és obligatori");
+                    rejectIfEmptyOrWhitespace(errors, __target__, "nombre", "error.valor.requerido");
 
                     if (!hasFieldErrors(errors, "nombre")) {
                         if (interesado.getNombre().length() > 30) {
-                            rejectValue(errors, "nombre", "error.valor.maxlenght", "Tamaño demasiado largo");
+                            rejectValue(errors, "nombre", "error.valor.maxlenght");
                         }
                     }
 
                     if (!isNullOrEmpty(interesado.getApellido2())) {
                         if (interesado.getApellido2().length() > 30) {
-                            rejectValue(errors, "apellido2", "error.valor.maxlenght", "Tamaño demasiado largo");
+                            rejectValue(errors, "apellido2", "error.valor.maxlenght");
                         }
                     }
 
@@ -75,13 +74,13 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                 // Validaciones si es Interesado Jurídica
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA)) {
                     rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
-                            "error.valor.requerido", "El camp és obligatori");
+                            "error.valor.requerido");
                 }
 
                 // Validaciones si es ADMINISTRACION
                 if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION)) {
                     rejectIfEmptyOrWhitespace(errors, __target__, "razonSocial",
-                            "error.valor.requerido", "El camp és obligatori");
+                            "error.valor.requerido");
                 }
             }
         }
@@ -94,10 +93,10 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
             if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_POSTAL)) {
 
-                rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido", "El camp és obligatori");
+                rejectIfEmptyOrWhitespace(errors, __target__, "direccion", "error.valor.requerido");
 
                 if (interesado.getPais() == null || interesado.getPais().getId() == null || interesado.getPais().getId() == -1) {
-                    rejectValue(errors, "pais.id", "error.valor.requerido", "El camp és obligatori");
+                    rejectValue(errors, "pais.id", "error.valor.requerido");
                 } else {
 
                     try {
@@ -110,23 +109,23 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                             if (interesado.getProvincia() != null && interesado.getProvincia().getId() != -1) {
 
                                 if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
-                                    rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
+                                    rejectValue(errors, "localidad.id", "error.valor.requerido");
                                 }
 
                             } else {
-                                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido", "El camp és obligatori");
+                                rejectIfEmptyOrWhitespace(errors, __target__, "cp", "error.valor.requerido");
                             }
 
                             // Si no hay CP, es obligatoria la Provincia y Municipio
                             if (StringUtils.isEmpty(interesado.getCp())) {
 
                                 if (interesado.getProvincia() == null || interesado.getProvincia().getId() == -1) {
-                                    rejectValue(errors, "provincia.id", "error.valor.requerido", "El camp és obligatori");
+                                    rejectValue(errors, "provincia.id", "error.valor.requerido");
 
                                 } else { // Comprobamos la Localidad
 
                                     if (interesado.getLocalidad() == null || interesado.getProvincia().getId() == -1) {
-                                        rejectValue(errors, "localidad.id", "error.valor.requerido", "El camp és obligatori");
+                                        rejectValue(errors, "localidad.id", "error.valor.requerido");
                                     }
                                 }
                             }
@@ -142,7 +141,7 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
 
             } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_DIRECCION_ELECTRONICA)) {
 
-                rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido", "El camp és obligatori");
+                rejectIfEmptyOrWhitespace(errors, __target__, "direccionElectronica", "error.valor.requerido");
 
             } else if (interesado.getCanal().equals(RegwebConstantes.CANAL_COMPARECENCIA_ELECTRONICA)) {
 
@@ -154,12 +153,12 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
             if (interesado.getCp().length() == 5) {
                 for (int i = 0; i < interesado.getCp().length(); i++) {
                     if (!Character.isDigit(interesado.getCp().charAt(i))) {
-                        rejectValue(errors, "cp", "error.cp.formato", "El codi postal ha de ser numèric");
+                        rejectValue(errors, "cp", "error.cp.formato");
                         break;
                     }
                 }
             } else {
-                rejectValue(errors, "cp", "error.cp.largo", "El codi postal no té 5 dígits");
+                rejectValue(errors, "cp", "error.cp.largo");
             }
         }
 
@@ -170,20 +169,20 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
         if(tipoDocumento != null){
             // Si TipoDocumento = CIF -> RazonSocial obligatoria
             if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_CIF_ID && isNullOrEmpty(interesado.getRazonSocial())){
-                rejectValue(errors, "razonSocial", "error.valor.requerido", "El camp és obligatori");
+                rejectValue(errors, "razonSocial", "error.valor.requerido");
             }
 
            /* // Si TipoDocumento = NIF -> Documento es obligatorio
             if(tipoDocumento == RegwebConstantes.TIPODOCUMENTOID_NIF_ID && isNullOrEmpty(interesado.getDocumento())){
-                rejectValue(errors, "documento", "error.valor.requerido", "El camp és obligatori");
+                rejectValue(errors, "documento", "error.valor.requerido");
             }*/
 
-            rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido", "El camp és obligatori");
+            rejectIfEmptyOrWhitespace(errors, __target__, "documento", "error.valor.requerido");
         }/*else{
             if (interesado.getTipo().equals(RegwebConstantes.TIPO_INTERESADO_PERSONA_FISICA)) {
                 log.info("Entro en tipo persona fisica");
-                rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
-                rejectValue(errors, "documento", "error.valor.requerido", "El camp és obligatori");
+                rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido");
+                rejectValue(errors, "documento", "error.valor.requerido");
             }
 
         }*/
@@ -218,49 +217,49 @@ public class InteresadoValidator<T> extends AbstractRegWebValidator<T> {
                     }
 
                     if (existe) {
-                        rejectValue(errors, "documento", "error.document.existe", "El document ja existeix");
+                        rejectValue(errors, "documento", "error.document.existe");
                     }
                 }
 
             } else {
-                rejectValue(errors, "documento", validacionDocumento.getCodigoError(), validacionDocumento.getTextoError());
+                rejectValue(errors, "documento", validacionDocumento.getCodigoError());
             }
 
         }else if(StringUtils.isNotEmpty(interesado.getDocumento())){
-            rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido", "El camp és obligatori");
+            rejectValue(errors, "tipoDocumentoIdentificacion", "error.valor.requerido");
         }
 
 
         //DIRECCIÓN
         if (!isNullOrEmpty(interesado.getDireccion())) {
             if (interesado.getDireccion().length() > 160) {
-                rejectValue(errors, "direccion", "error.valor.maxlenght", "Tamaño demasiado largo");
+                rejectValue(errors, "direccion", "error.valor.maxlenght");
             }
         }
 
         //EMAIL
         if (!isNullOrEmpty(interesado.getEmail()) && interesado.getEmail().length() > 160) {
-            rejectValue(errors, "email", "error.valor.maxlenght", "Tamaño demasiado largo");
+            rejectValue(errors, "email", "error.valor.maxlenght");
         }
 
         //TELÉFONO
         if (!isNullOrEmpty(interesado.getTelefono()) && interesado.getTelefono().length() > 20) {
-            rejectValue(errors, "telefono", "error.valor.maxlenght", "Tamaño demasiado largo");
+            rejectValue(errors, "telefono", "error.valor.maxlenght");
         }
 
         //DireccionElectronica
         if (!isNullOrEmpty(interesado.getDireccionElectronica()) && interesado.getDireccionElectronica().length() > 160) {
-            rejectValue(errors, "direccionElectronica", "error.valor.maxlenght", "Tamaño demasiado largo");
+            rejectValue(errors, "direccionElectronica", "error.valor.maxlenght");
         }
 
         //RAZÓN SOCIAL
         if (!isNullOrEmpty(interesado.getRazonSocial()) && interesado.getRazonSocial().length() > 80) {
-            rejectValue(errors, "razonSocial", "error.valor.maxlenght", "Tamaño demasiado largo");
+            rejectValue(errors, "razonSocial", "error.valor.maxlenght");
         }
 
         //OBSERVACIONES
         if (!isNullOrEmpty(interesado.getObservaciones()) && interesado.getObservaciones().length() > 160) {
-            rejectValue(errors, "observaciones", "error.valor.maxlenght", "Tamaño demasiado largo");
+            rejectValue(errors, "observaciones", "error.valor.maxlenght");
         }
 
 

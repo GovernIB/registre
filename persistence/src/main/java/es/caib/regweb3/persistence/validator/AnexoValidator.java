@@ -1,8 +1,13 @@
 package es.caib.regweb3.persistence.validator;
 
 import es.caib.regweb3.model.Anexo;
+import es.caib.regweb3.utils.RegwebConstantes;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.validation.IValidatorResult;
+
+import java.util.Arrays;
 
 
 /**
@@ -60,30 +65,31 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
     }
 
     if(anexo.getTipoDocumental() == null){
-        rejectValue(errors, "tipoDocumental", "error.valor.requerido", "El camp és obligatori");
+        rejectValue(errors, "tipoDocumental", "error.valor.requerido");
     }else{
       if(anexo.getTipoDocumental().getId()== -1){
-          rejectValue(errors, "tipoDocumental", "error.valor.requerido", "El camp és obligatori");
+          rejectValue(errors, "tipoDocumental", "error.valor.requerido");
       }
     }
 
 
     if(anexo.getOrigenCiudadanoAdmin() == null){
-       rejectValue(errors,"origenCiudadanoAdmin", "error.valor.requerido", "El camp és obligatori");
+       rejectValue(errors,"origenCiudadanoAdmin", "error.valor.requerido");
     }else if(anexo.getOrigenCiudadanoAdmin()!= 0 && anexo.getOrigenCiudadanoAdmin() != 1){
-       rejectValue(errors,"origenCiudadanoAdmin", "error.valor.inesperado.origen", "El valor del camp no és l'esperat. Ha de ser 0 o 1");
+       rejectValue(errors,"origenCiudadanoAdmin", "error.valor.inesperado.origen");
     }
 
 
-    //if (anexo.getTitulo() == null || anexo.getTitulo().trim().length() == 0) {
-    //  rejectValue(errors,"titulo", "error.valor.requerido", "El camp és obligatori");
-    //}
-    
-    // TODO NO VA  
-    rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido", "El camp és obligatori");
+    rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido");
+
+    if(StringUtils.isNotEmpty(anexo.getTitulo())){
+        if(StringUtils.indexOfAny(anexo.getTitulo(), RegwebConstantes.CARACTERES_NO_PERMITIDOS) != -1){
+            rejectValue(errors, "titulo", "error.caracteres.noPermitidos", new I18NArgumentString(Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)));
+        }
+    }
 
     if(anexo.getTitulo() != null && anexo.getTitulo().length()>200 ){
-       rejectValue(errors, "titulo", "error.valor.maxlenght", "El camp és massa llarg, màxim 200 caracters");
+       rejectValue(errors, "titulo", "error.valor.maxlenght");
     }
 
     
