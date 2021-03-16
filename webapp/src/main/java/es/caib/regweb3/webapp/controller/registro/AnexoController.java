@@ -17,6 +17,7 @@ import es.caib.regweb3.webapp.controller.BaseController;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.AnexoWebValidator;
+import org.apache.commons.lang.StringUtils;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentCode;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NTranslation;
@@ -43,6 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -663,6 +665,30 @@ public class AnexoController extends BaseController {
                 } else {
                     throw new I18NException("formatonopermitido", firmaExtension, extensionesPermitidas);
                 }
+
+            }
+        }
+
+    }
+
+    /**
+     * Método que valida el nombre del fichero o firma anexado
+     * @param anexoForm
+     * @param result
+     */
+    public void validadNombreFichero(AnexoForm anexoForm, BindingResult result){
+
+        if (anexoForm.getDocumentoFile() != null) {
+
+            if(StringUtils.indexOfAny(anexoForm.getDocumentoFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS) != -1){
+                result.rejectValue("documentoFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)}, I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)));
+
+            }
+        }
+
+        if (anexoForm.getFirmaFile() != null) {
+            if(StringUtils.indexOfAny(anexoForm.getFirmaFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS) != -1){
+                result.rejectValue("firmaFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)},I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)));
 
             }
         }

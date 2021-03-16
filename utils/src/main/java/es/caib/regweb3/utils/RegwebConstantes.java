@@ -585,6 +585,7 @@ public interface RegwebConstantes {
     int    ANEXO_NUMEROMAX_SIR = 5;
     Long   ANEXO_TAMANOMAX_SIR = 10485760L;
     Long   ANEXO_TAMANOMAXTOTAL_SIR = 15728640L;
+    String[] CARACTERES_NO_PERMITIDOS = {">","%","*","&",":",";","¿","?","/","|","!","<","¡","\""};
 
     /* ---------------ANEXO ESTADOS FIRMA -------*/
 

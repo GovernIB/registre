@@ -25,45 +25,45 @@ public class RegistroEntradaValidator<T> extends AbstractRegWebValidator<T> {
         RegistroEntrada registroEntrada = (RegistroEntrada)__target__;
         RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
-        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.extracto", "error.valor.requerido", "El camp és obligatori");
-        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido", "El camp és obligatori");
-        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.idioma", "error.valor.requerido", "El camp és obligatori");
+        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.extracto", "error.valor.requerido");
+        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.tipoDocumentacionFisica", "error.valor.requerido");
+        rejectIfEmptyOrWhitespace(errors, __target__, "registroDetalle.idioma", "error.valor.requerido");
 
 
         if(registroDetalle.getExtracto() != null && registroDetalle.getExtracto().length() > 240){
-            rejectValue(errors,"registroDetalle.extracto","error.valor.maxlenght","Tamaño demasiado largo");
+            rejectValue(errors,"registroDetalle.extracto","error.valor.maxlenght");
         }
 
         if(registroDetalle.getReferenciaExterna() != null && registroDetalle.getReferenciaExterna().length() > 16){
-            rejectValue(errors,"registroDetalle.referenciaExterna","error.valor.maxlenght","Tamaño demasiado largo");
+            rejectValue(errors,"registroDetalle.referenciaExterna","error.valor.maxlenght");
         }
 
         if(registroDetalle.getExpediente() != null && registroDetalle.getExpediente().length() > 80){
-            rejectValue(errors,"registroDetalle.expediente","error.valor.maxlenght","Tamaño demasiado largo");
+            rejectValue(errors,"registroDetalle.expediente","error.valor.maxlenght");
         }
 
         if(registroDetalle.getNumeroTransporte() != null && registroDetalle.getNumeroTransporte().length() > 20){
-            rejectValue(errors,"registroDetalle.numeroTransporte","error.valor.maxlenght","Tamaño demasiado largo");
+            rejectValue(errors,"registroDetalle.numeroTransporte","error.valor.maxlenght");
         }
 
         if(registroDetalle.getObservaciones() != null && registroDetalle.getObservaciones().length() > 50){
-            rejectValue(errors,"registroDetalle.observaciones","error.valor.maxlenght","Tamaño demasiado largo");
+            rejectValue(errors,"registroDetalle.observaciones","error.valor.maxlenght");
         }
 
         if(registroDetalle.getNumeroRegistroOrigen() != null && registroDetalle.getNumeroRegistroOrigen().length() > 256){
-            rejectValue(errors,"registroDetalle.numeroRegistroOrigen","error.valor.maxlenght","Tamaño demasiado largo");
+            rejectValue(errors,"registroDetalle.numeroRegistroOrigen","error.valor.maxlenght");
         }
 
 
         if (StringUtils.isEmpty(registroEntrada.getDestinoExternoCodigo())) {
             if (registroEntrada.getDestino() == null || registroEntrada.getDestino().getCodigo() == null || "".equals(registroEntrada.getDestino().getCodigo())) {
-                rejectValue(errors, "destino.codigo", "error.valor.requerido", "El camp és obligatori");
+                rejectValue(errors, "destino.codigo", "error.valor.requerido");
             }
         }
         //Si el campo expone esta informado, el campo solicita se debe informar también
         if(StringUtils.isNotEmpty(registroDetalle.getExpone())){
             if(StringUtils.isEmpty(registroDetalle.getSolicita())){
-                rejectValue(errors, "registroDetalle.solicita", "error.valor.requerido", "El camp és obligatori");
+                rejectValue(errors, "registroDetalle.solicita", "error.valor.requerido");
             }
         }
 
