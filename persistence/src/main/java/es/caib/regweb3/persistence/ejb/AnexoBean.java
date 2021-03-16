@@ -1344,7 +1344,17 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
             } else {
                 custody = (IDocumentCustodyPlugin) pluginEjb.getPlugin(idEntidad, RegwebConstantes.PLUGIN_CUSTODIA);
             }
-            return custody.getDocument(anexo.getCustodiaID());
+
+            if(anexo.getModoFirma() == RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA ||
+               anexo.getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
+
+                return custody.getDocument(anexo.getCustodiaID());
+
+            }else if(anexo.getModoFirma()== RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED){
+
+                return custody.getSignature(anexo.getCustodiaID());
+
+            }
 
         } else if (anexo.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)) {
 
