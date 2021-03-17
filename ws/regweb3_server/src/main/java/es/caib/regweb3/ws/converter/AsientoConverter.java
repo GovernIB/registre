@@ -47,7 +47,7 @@ public class AsientoConverter extends CommonConverter {
                 asientoWs.setDenominacionDestino(registroEntrada.getDestino().getDenominacion());
             }else{
                 asientoWs.setCodigoDestino(registroEntrada.getDestinoExternoCodigo());
-                asientoWs.setCodigoDestino(registroEntrada.getDestinoExternoDenominacion());
+                asientoWs.setDenominacionDestino(registroEntrada.getDestinoExternoDenominacion());
             }
 
         }else {
