@@ -144,8 +144,8 @@ public class AsientoConverter extends CommonConverter {
             List<FileInfoWs> ficheros =  new ArrayList<>();
 
             for(AnexoFull anexoFull:registroDetalle.getAnexosFull()){
-
-                if(!anexoFull.getAnexo().isJustificante()){ // Solo los anexos, descartamos el justificante.
+                // descartamos el justificante y los ficheros técnicos
+                if(!anexoFull.getAnexo().isJustificante() && !RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())){
                     ficheros.add(transformarFileInfoWs(anexoFull));
                 }
 
