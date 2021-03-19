@@ -1316,7 +1316,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @return
      */
     private AnexoSir crearAnexoSir(String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
-                                   byte[] firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime,
+                                   String firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime,
                                    byte[] anexoData, String identificadorDocumentoFirmado, String observaciones){
         AnexoSir anexoSir = new AnexoSir();
 
@@ -1341,7 +1341,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             anexoSir.setCertificado(Base64.encodeBase64String(certificado));
         }
         if(firma != null){
-            anexoSir.setFirma(Base64.encodeBase64String(firma));
+            anexoSir.setFirma(firma);
         }
         if(timeStamp != null){
             anexoSir.setTimestamp(Base64.encodeBase64String(timeStamp));
@@ -1929,7 +1929,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             // Validez Documento
             if (anexoSir.getValidezDocumento() != null) {
                 //Transformamos de copia compulsada a copia_original = autèntica
-                if(Long.valueOf(anexoSir.getValidezDocumento())== TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA){
+                if(Long.valueOf(anexoSir.getValidezDocumento()).equals(TIPOVALIDEZDOCUMENTO_COPIA_COMPULSADA)){
                     anexo.setValidezDocumento(TIPOVALIDEZDOCUMENTO_COPIA_ORIGINAL);
                 }else {
                     anexo.setValidezDocumento(Long.valueOf(anexoSir.getValidezDocumento()));
@@ -1974,7 +1974,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             }
 
             if (anexoSir.getFirma() != null) {
-                anexo.setFirma(anexoSir.getFirma().getBytes());
+                anexo.setFirma(anexoSir.getFirma());
 
             }
             if (anexoSir.getTimestamp() != null) {

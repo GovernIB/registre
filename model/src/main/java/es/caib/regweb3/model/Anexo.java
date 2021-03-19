@@ -52,7 +52,7 @@ public class Anexo implements Serializable {
     @XmlElement
     private byte[] certificado;
     @XmlElement
-    private byte[] firma;  //Corresponde al campo Firma del Documento del segmento "De_Anexo"( solo viene informado cuando la firma es CSV)
+    private String firma;  //Corresponde al campo Firma del Documento del segmento "De_Anexo"( solo viene informado cuando la firma es CSV)
     @XmlElement
     private byte[] validacionOCSPCertificado;
     @XmlElement
@@ -290,12 +290,13 @@ public class Anexo implements Serializable {
         this.certificado = certificado;
     }
 
-    @Column(name = "FIRMA", nullable = true, length = 2000)
-    public byte[] getFirma() {
+    @Lob
+    @Column(name = "FIRMA", length = 2147483647)
+    public String getFirma() {
         return firma;
     }
 
-    public void setFirma(byte[] firmaDocumento) {
+    public void setFirma(String firmaDocumento) {
         this.firma = firmaDocumento;
     }
 

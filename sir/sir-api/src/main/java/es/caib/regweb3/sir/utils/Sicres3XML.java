@@ -1668,7 +1668,7 @@ public class Sicres3XML {
     }
 
     private void crearAnexo(Element rootNode, String nombreFichero, String identificadorFichero, String validezDocumento, String tipoDocumento, byte[] certificado,
-                            byte[] firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime, byte[] anexo, String identificadorFicheroFirmado, String observaciones){
+                            String firma, byte[] timeStamp, byte[] validacionOCSPCertificado, byte[] hash, String tipoMime, byte[] anexo, String identificadorFicheroFirmado, String observaciones){
 
         Element elem;
         Element rootElement = rootNode.addElement("De_Anexo");
@@ -1709,7 +1709,7 @@ public class Sicres3XML {
         //Firma documento (propiedad Firma Documento del segmento)
         if (firma != null) {
             elem = rootElement.addElement("Firma_Documento");
-            elem.addCDATA(getBase64String(firma));
+            elem.addCDATA(firma);
         }
 
         // TimeStamp
