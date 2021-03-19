@@ -35,6 +35,7 @@ ALTER TABLE RWE_ANEXO MODIFY TIMESTAMP raw(2000);
 --RWE_ANEXO: Cambio de tipo de datos para el campo firma a CLOB
 ALTER TABLE RWE_ANEXO RENAME COLUMN firma TO firma2;
 ALTER TABLE RWE_ANEXO ADD (firma CLOB);
+alter table RWE_ANEXO move lob (firma) store as RWE_ANEXO_FIRMA_lob (tablespace regweb_lob index RWE_ANEXO_FIRMA_lob_i);
 UPDATE RWE_ANEXO SET firma=firma2;
 ALTER TABLE RWE_ANEXO DROP COLUMN firma2;
 ALTER INDEX RWE_ANEXO_PK REBUILD;
