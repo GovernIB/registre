@@ -74,7 +74,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
             if (registroEntrada.getRegistroDetalle().getTieneJustificante()) {
                 String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
-                String url = anexoEjb.getUrlValidation(registroEntrada.getRegistroDetalle().getJustificante(), entidad.getId());
+                String url = anexoEjb.getCsvValidationWeb(registroEntrada.getRegistroDetalle().getJustificante(), entidad.getId());
 
                 return new JustificanteReferencia(csv, url);
 
@@ -86,7 +86,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
             if (registroSalida.getRegistroDetalle().getTieneJustificante()) {
                 String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
-                String url = anexoEjb.getUrlValidation(registroSalida.getRegistroDetalle().getJustificante(), entidad.getId());
+                String url = anexoEjb.getCsvValidationWeb(registroSalida.getRegistroDetalle().getJustificante(), entidad.getId());
                 return new JustificanteReferencia(csv, url);
             } else {
                 throw new I18NException("registro.justificante.noTiene");
