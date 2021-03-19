@@ -14,6 +14,7 @@
 
                 <div class="modal-body" >
                     <div class="row">
+                       <!-- Registro actual -->
                        <div class="col-xs-6">
 
                            <div class="panel panel-info">
@@ -28,18 +29,14 @@
                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                            <label><spring:message code="registroEntrada.libro"/></label>
                                        </div>
-                                       <div class="col-xs-8">
-                                           ${registro.libro.nombre}
-                                       </div>
+                                       <div class="col-xs-8">${registro.libro.nombre}</div>
                                    </div>
 
                                    <div class="form-group col-xs-12">
                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                            <label><spring:message code="registroEntrada.extracto"/></label>
                                        </div>
-                                       <div class="col-xs-8">
-                                           ${registro.registroDetalle.extracto}
-                                       </div>
+                                       <div class="col-xs-8">${registro.registroDetalle.extracto}</div>
                                    </div>
 
                                    <div class="form-group col-xs-12">
@@ -70,27 +67,25 @@
                                            <label><spring:message code="registroEntrada.organismoDestino"/></label>
                                        </div>
                                        <div class="col-xs-8">
-                                           <c:if test="${not empty registro.destino}">
-                                                ${registro.destino.denominacion}
-                                           </c:if>
-                                           <c:if test="${empty registro.destino}">
-                                                ${registro.destinoExternoDenominacion}
-                                           </c:if>
+                                           <c:if test="${not empty registro.destino}">${registro.destino.denominacion}</c:if>
+                                           <c:if test="${empty registro.destino}">${registro.destinoExternoDenominacion}</c:if>
                                        </div>
 
                                    </div>
 
-                                   <div class="form-group col-xs-12">
-                                       <div class="col-xs-4 pull-left etiqueta_regweb control-label">
-                                           <label><spring:message code="registroEntrada.tipoAsunto"/></label>
-                                       </div>
-                                       <div class="col-xs-8">
-                                           <c:if test="${not empty registro.registroDetalle.tipoAsunto}">
-                                               <i:trad value="${registro.registroDetalle.tipoAsunto}" property="nombre"/>
-                                           </c:if>
+                                   <c:if test="${not empty registro.registroDetalle.tipoAsunto}">
+                                       <div class="form-group col-xs-12">
+                                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
+                                               <label><spring:message code="registroEntrada.tipoAsunto"/></label>
+                                           </div>
+                                           <div class="col-xs-8">
+                                               <c:if test="${not empty registro.registroDetalle.tipoAsunto}">
+                                                   <i:trad value="${registro.registroDetalle.tipoAsunto}" property="nombre"/>
+                                               </c:if>
 
+                                           </div>
                                        </div>
-                                   </div>
+                                   </c:if>
 
                                    <c:if test="${not empty registro.registroDetalle.idioma}">
                                        <div class="form-group col-xs-12">
@@ -119,18 +114,14 @@
                                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                               <label><spring:message code="registroEntrada.referenciaExterna"/></label>
                                           </div>
-                                          <div class="col-xs-4">
-                                                  ${registro.registroDetalle.referenciaExterna}
-                                          </div>
+                                          <div class="col-xs-4">${registro.registroDetalle.referenciaExterna}</div>
                                       </c:if>
 
                                       <c:if test="${not empty registro.registroDetalle.expediente}">
                                           <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                               <label><spring:message code="registroEntrada.expediente"/></label>
                                           </div>
-                                          <div class="col-xs-4">
-                                                  ${registro.registroDetalle.expediente}
-                                          </div>
+                                          <div class="col-xs-4">${registro.registroDetalle.expediente}</div>
                                       </c:if>
 
                                   </div>
@@ -142,9 +133,7 @@
                                            <div class="col-xs-6">
                                                <spring:message code="transporte.0${registro.registroDetalle.transporte}" />
                                            </div>
-                                           <div class="col-xs-4">
-                                               ${registro.registroDetalle.numeroTransporte}
-                                           </div>
+                                           <div class="col-xs-4">${registro.registroDetalle.numeroTransporte}</div>
                                        </div>
                                    </c:if>
 
@@ -153,9 +142,7 @@
                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                <label><spring:message code="registroEntrada.observaciones"/></label>
                                            </div>
-                                           <div class="col-xs-8">
-                                                   ${registro.registroDetalle.observaciones}
-                                           </div>
+                                           <div class="col-xs-8">${registro.registroDetalle.observaciones}</div>
                                        </div>
                                    </c:if>
 
@@ -180,9 +167,7 @@
                                            <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                <label><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
                                            </div>
-                                           <div class="col-xs-8">
-                                                   ${registro.registroDetalle.numeroRegistroOrigen}
-                                           </div>
+                                           <div class="col-xs-8">${registro.registroDetalle.numeroRegistroOrigen}</div>
                                        </div>
                                    </c:if>
                                    <c:if test="${not empty registro.registroDetalle.fechaOrigen}">
@@ -228,7 +213,7 @@
                                                        </td>
                                                        <td>
                                                            <c:if test="${interesado.isRepresentante}">
-                                                               <span class="label label-success">Si, Representado: ${interesado.representado.nombreCompleto}</span>
+                                                               <span class="label label-success">Si, <spring:message code="representante.representante"/>: ${interesado.representado.nombreCompleto}</span>
                                                            </c:if>
 
                                                            <c:if test="${!interesado.isRepresentante}">
@@ -241,7 +226,6 @@
                                            </table>
                                        </div>
                                    </c:if>
-
                                </div>
                            </div>
                        </div>
@@ -273,18 +257,14 @@
                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                    <label><spring:message code="registroEntrada.libro"/></label>
                                                </div>
-                                               <div class="col-xs-8">
-                                                       ${reOriginal.libro.nombre}
-                                               </div>
+                                               <div class="col-xs-8">${reOriginal.libro.nombre}</div>
                                            </div>
 
                                            <div class="form-group col-xs-12">
                                                <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                    <label><spring:message code="registroEntrada.extracto"/></label>
                                                </div>
-                                               <div class="col-xs-8">
-                                                       ${reOriginal.registroDetalle.extracto}
-                                               </div>
+                                               <div class="col-xs-8">${reOriginal.registroDetalle.extracto}</div>
                                            </div>
 
                                            <c:if test="${not empty reOriginal.registroDetalle.tipoDocumentacionFisica}">
@@ -319,12 +299,8 @@
                                                    <label><spring:message code="registroEntrada.organismoDestino"/></label>
                                                </div>
                                                <div class="col-xs-8">
-                                                   <c:if test="${not empty reOriginal.destino}">
-                                                       ${reOriginal.destino.denominacion}
-                                                   </c:if>
-                                                   <c:if test="${empty reOriginal.destino}">
-                                                       ${reOriginal.destinoExternoDenominacion}
-                                                   </c:if>
+                                                   <c:if test="${not empty reOriginal.destino}">${reOriginal.destino.denominacion}</c:if>
+                                                   <c:if test="${empty reOriginal.destino}">${reOriginal.destinoExternoDenominacion}</c:if>
                                                </div>
 
                                            </div>
@@ -348,9 +324,7 @@
                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                        <label><spring:message code="registroEntrada.idioma"/></label>
                                                    </div>
-                                                   <div class="col-xs-8">
-                                                      <spring:message code="idioma.${reOriginal.registroDetalle.idioma}"/>
-                                                   </div>
+                                                   <div class="col-xs-8"><spring:message code="idioma.${reOriginal.registroDetalle.idioma}"/></div>
                                                </div>
                                            </c:if>
 
@@ -365,7 +339,6 @@
                                                                obtenerElementoTraducido('<c:url value="/rest/obtenerCodigoAsunto"/>', '${reOriginal.registroDetalle.codigoAsunto.id}', 'codigoAsunto_${status.count}_${reOriginal.registroDetalle.codigoAsunto.id}');
                                                            });
                                                        </script>
-
                                                    </div>
                                                </div>
                                            </c:if>
@@ -376,9 +349,7 @@
                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                        <label><spring:message code="registroEntrada.referenciaExterna"/></label>
                                                    </div>
-                                                   <div class="col-xs-4">
-                                                           ${reOriginal.registroDetalle.referenciaExterna}
-                                                   </div>
+                                                   <div class="col-xs-4">${reOriginal.registroDetalle.referenciaExterna}</div>
                                                </c:if>
 
 
@@ -386,9 +357,7 @@
                                                 <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                     <label><spring:message code="registroEntrada.expediente"/></label>
                                                 </div>
-                                                <div class="col-xs-4">
-                                                        ${reOriginal.registroDetalle.expediente}
-                                                </div>
+                                                <div class="col-xs-4">${reOriginal.registroDetalle.expediente}</div>
                                             </c:if>
 
                                            </div>
@@ -406,9 +375,7 @@
                                                        </script>
 
                                                    </div>
-                                                   <div class="col-xs-4">
-                                                           ${reOriginal.registroDetalle.numeroTransporte}
-                                                   </div>
+                                                   <div class="col-xs-4">${reOriginal.registroDetalle.numeroTransporte}</div>
                                                </div>
                                             </c:if>
 
@@ -417,9 +384,7 @@
                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                        <label><spring:message code="registroEntrada.observaciones"/></label>
                                                    </div>
-                                                   <div class="col-xs-8">
-                                                           ${reOriginal.registroDetalle.observaciones}
-                                                   </div>
+                                                   <div class="col-xs-8">${reOriginal.registroDetalle.observaciones}</div>
                                                </div>
                                            </c:if>
 
@@ -446,9 +411,7 @@
                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label">
                                                        <label><spring:message code="registroEntrada.numeroRegistroOrigen"/></label>
                                                    </div>
-                                                   <div class="col-xs-8">
-                                                           ${reOriginal.registroDetalle.numeroRegistroOrigen}
-                                                   </div>
+                                                   <div class="col-xs-8">${reOriginal.registroDetalle.numeroRegistroOrigen}</div>
                                                </div>
                                            </c:if>
 
@@ -496,7 +459,7 @@
                                                                    </td>
                                                                    <td>
                                                                        <c:if test="${interesado.isRepresentante}">
-                                                                           <span class="label label-success">Si, Representado: ${interesado.representado.nombreCompleto}</span>
+                                                                           <span class="label label-success">Si, <spring:message code="representante.representante"/>: ${interesado.representado.nombreCompleto}</span>
                                                                        </c:if>
 
                                                                        <c:if test="${!interesado.isRepresentante}">
@@ -517,6 +480,8 @@
                        </c:forEach>
 
                     </div>
+                </div>
+                </div>
                 </div>
             </div>
     </div>
