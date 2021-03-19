@@ -468,7 +468,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
     }
 
-    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA})
+    @RolesAllowed({RWE_WS_ENTRADA, RWE_WS_SALIDA, RWE_WS_CIUDADANO})
     @Override
     @WebMethod
     public JustificanteWs obtenerJustificante(
