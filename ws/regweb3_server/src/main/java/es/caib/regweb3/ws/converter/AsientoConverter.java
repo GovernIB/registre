@@ -227,6 +227,8 @@ public class AsientoConverter extends CommonConverter {
 
         if(registroDetalle.getPresencial()!= null) {asiento.setPresencial(registroDetalle.getPresencial());}
 
+        if(registro.getEstado()!=null ){ asiento.setEstado(registro.getEstado());}
+
         // Oficina Origen
         if(registroDetalle.getOficinaOrigen() != null){
             asiento.setCodigoOficinaOrigen(registroDetalle.getOficinaOrigen().getCodigo());
