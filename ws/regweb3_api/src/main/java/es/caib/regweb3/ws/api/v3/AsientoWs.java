@@ -26,6 +26,7 @@ import java.util.List;
  *         &lt;element name="denominacionDestino" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="denominacionOficinaOrigen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="denominacionUnidadOrigen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="estado" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="expone" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="extracto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="fechaRegistro" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
@@ -55,6 +56,7 @@ import java.util.List;
     "denominacionDestino",
     "denominacionOficinaOrigen",
     "denominacionUnidadOrigen",
+    "estado",
     "expone",
     "extracto",
     "fechaRegistro",
@@ -78,6 +80,7 @@ public class AsientoWs {
     protected String denominacionDestino;
     protected String denominacionOficinaOrigen;
     protected String denominacionUnidadOrigen;
+    protected Long estado;
     protected String expone;
     protected String extracto;
     @XmlElement(type = String.class)
@@ -289,6 +292,30 @@ public class AsientoWs {
      */
     public void setDenominacionUnidadOrigen(String value) {
         this.denominacionUnidadOrigen = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad estado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Long }
+     *     
+     */
+    public Long getEstado() {
+        return estado;
+    }
+
+    /**
+     * Define el valor de la propiedad estado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Long }
+     *     
+     */
+    public void setEstado(Long value) {
+        this.estado = value;
     }
 
     /**
