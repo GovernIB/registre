@@ -551,9 +551,10 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
             return null;
         }
 
-        Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.registroDetalle.id in (:registros)");
+        Query q1 = em.createQuery("Select distinct(i.codigoDir3), i.razonSocial from Interesado as i where i.tipo = :administracion and i.registroDetalle.id in (:registros)");
 
         // Parámetros
+        q1.setParameter("administracion", RegwebConstantes.TIPO_INTERESADO_ADMINISTRACION);
         q1.setParameter("registros", registros);
         q1.setHint("org.hibernate.readOnly", true);
 
