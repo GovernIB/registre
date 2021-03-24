@@ -476,7 +476,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado,
        @WebParam(name = "tipoRegistro") Long tipoRegistro) throws Throwable, WsI18NException, WsValidationException{
 
-
         //1.- Validar obligatorios
         Entidad entidadActiva = validarObligatorios(numeroRegistroFormateado,entidad);
 
@@ -497,6 +496,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         AnexoFull justificante = null;
         AnexoSimple anexoSimple = null;
+
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
             // 4.- Obtenemos el RegistroEntrada
             RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
@@ -507,11 +507,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Si no tiene Justificante, lo generamos
             if(!registroEntrada.getRegistroDetalle().getTieneJustificante()){
-
-                // Permisos para Modificar el RegistroEntrada?
-                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_ENTRADA, true)) {
-                    throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
-                }
 
                 // Solo se puede generar si el registro es Válido o está en la Cola de distribución
                 if(registroEntrada.getEstado().equals(REGISTRO_VALIDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUYENDO)){
@@ -529,13 +524,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     throw new I18NException("registro.justificante.valido");
                 }
 
-
             }else{ // Tiene Justificante, lo obtenemos
-
-                // Permisos para Consultar el RegistroEntrada?
-                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_ENTRADA, false)) {
-                    throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
-                }
 
                 // Obtenemos el Justificante
                 try{
@@ -545,7 +534,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
-
             }
 
             // Integracion
@@ -553,6 +541,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
+
         } else if(REGISTRO_SALIDA.equals(tipoRegistro)){
 
             // 4.- Obtenemos el RegistroSalida
@@ -564,11 +553,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Si no tiene Justificante, lo generamos
             if(!registroSalida.getRegistroDetalle().getTieneJustificante()){
-
-                // Permisos para Modificar el RegistroSalida?
-                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_MODIFICACION_REGISTRO_SALIDA, true)) {
-                    throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
-                }
 
                 // Solo se puede generar si el registro es Válido
                 if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
@@ -587,11 +571,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             }else{ // Tiene Justificante, lo obtenemos
 
-                // Permisos para Consultar el RegistroSalida?
-                if (!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroSalida.getOficina().getOrganismoResponsable().getId(), PERMISO_CONSULTA_REGISTRO_SALIDA, false)) {
-                    throw new I18NException("registroEntrada.usuario.permisos", usuario.getNombreCompleto());
-                }
-
                 // Obtenemos el Justificante
                 try{
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
@@ -600,7 +579,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
-
             }
 
             // Integracion
@@ -608,9 +586,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
             // Alta en la tabla de LOPD
             lopdEjb.altaLopd(registroSalida.getNumeroRegistro(), registroSalida.getFecha(), registroSalida.getLibro().getId(), usuario.getId(), RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.LOPD_JUSTIFICANTE);
-
         }
-
 
         return new JustificanteWs(anexoSimple.getData());
 
