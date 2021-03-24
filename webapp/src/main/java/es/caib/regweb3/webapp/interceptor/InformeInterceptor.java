@@ -61,7 +61,7 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
             }
 
             // Comprobamos que el usuario dispone del RWE_ADMIN o RWE_USUARI
-            if(url.equals("/informe/libroRegistro")) {
+            if(url.equals("/informe/registrosOrganismo")) {
                 if (!(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN) || rolActivo.getNombre().equals(RegwebConstantes.RWE_USUARI))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
