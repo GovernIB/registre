@@ -22,7 +22,7 @@ import java.util.Set;
  * Date: 9/5/14
  */
 
-public class LibroRegistroExcel extends AbstractExcelView {
+public class RegistrosOrganismoExcel extends AbstractExcelView {
 
     protected final Logger log = Logger.getLogger(getClass());
 
@@ -151,7 +151,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
 
         //Título
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$1:$G$1"));
-        tittleCell.setCellValue(getMessage("informe.llibreRegistres.informe"));
+        tittleCell.setCellValue(getMessage("informe.organismos"));
         tittleCell.setCellStyle(titulo);
         sheet.addMergedRegion(CellRangeAddress.valueOf("$A$2:$G$2"));
         criterioCell.setCellValue(getMessage("informe.criteris"));
@@ -316,7 +316,7 @@ public class LibroRegistroExcel extends AbstractExcelView {
             sheet.autoSizeColumn(i);
         }
 
-        String nombreFichero = getMessage("informe.nombreFichero.libroRegistro") + tipoRegistro +".xls";
+        String nombreFichero = getMessage("informe.nombreFichero.registrosOrganismos") + tipoRegistro +".xls";
 
         // Cabeceras Response
         response.setHeader("Content-Disposition","attachment; filename="+nombreFichero);

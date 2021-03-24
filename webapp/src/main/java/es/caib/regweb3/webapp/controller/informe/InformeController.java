@@ -58,12 +58,12 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
 
     /**
-     * Listado de registros
+     * Informe de registros de un organismo
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/libroRegistro", method = RequestMethod.GET)
-    public String libroRegistro(Model model, HttpServletRequest request)throws Exception {
+    @RequestMapping(value = "/registrosOrganismo", method = RequestMethod.GET)
+    public String registrosOrganismo(Model model, HttpServletRequest request)throws Exception {
 
         InformeOrganismoBusquedaForm informeOrganismoBusquedaForm = new InformeOrganismoBusquedaForm();
         informeOrganismoBusquedaForm.setFechaFin(new Date());
@@ -81,25 +81,22 @@ public class InformeController extends AbstractRegistroCommonFormController {
         model.addAttribute("organismosConsulta", organismos(request));
         model.addAttribute("oficinasRegistro", oficinaEjb.findByEntidadByEstado(getEntidadActiva(request).getId(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
-        return "informe/libroRegistro";
+        return "informe/registrosOrganismo";
     }
 
     /**
      * Realiza la busqueda de registros según los parametros del formulario
      */
-    @RequestMapping(value = "/libroRegistro", method = RequestMethod.POST)
-    public ModelAndView libroRegistro(@ModelAttribute InformeOrganismoBusquedaForm informeOrganismoBusquedaForm, HttpServletRequest request)throws Exception {
+    @RequestMapping(value = "/registrosOrganismo", method = RequestMethod.POST)
+    public ModelAndView registrosOrganismo(@ModelAttribute InformeOrganismoBusquedaForm informeOrganismoBusquedaForm, HttpServletRequest request)throws Exception {
 
         ModelAndView mav = null;
 
         if(informeOrganismoBusquedaForm.getFormato().equals("pdf")){
-            mav = new ModelAndView("libroRegistroPdf");
+            mav = new ModelAndView("registrosOrganismoPdf");
         }else if(informeOrganismoBusquedaForm.getFormato().equals("excel")){
-            mav = new ModelAndView("libroRegistroExcel");
+            mav = new ModelAndView("registrosOrganismoExcel");
         }
-
-
-        log.info("Organismos id: " + informeOrganismoBusquedaForm.getIdOrganismo());
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
@@ -281,41 +278,41 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         }
                     } else if (valorCamp.equals("nomIn")) {
                         if (registroEntrada.getRegistroDetalle().getInteresados() != null) {
-                            String interessats = "";
+                            StringBuilder interessats = new StringBuilder();
 
                             for (int k = 0; k < registroEntrada.getRegistroDetalle().getInteresados().size(); k++) {
                                 Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
                                 if (interesado.getIsRepresentante()) {
-                                    interessats = interessats + "(Rep.) ";
+                                    interessats.append("(Rep.) ");
                                 }
 
                                 // Añadimos el nombre completo del interesado
-                                interessats = interessats + interesado.getNombreCompletoInforme();
+                                interessats.append(interesado.getNombreCompletoInforme());
 
                                 if (k < registroEntrada.getRegistroDetalle().getInteresados().size() - 1) {
-                                    interessats = interessats + ", ";
+                                    interessats.append(", ");
                                 }
                             }
-                            registrosOrganismo.get(i).add(interessats);
+                            registrosOrganismo.get(i).add(interessats.toString());
                         } else {
                             registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("intMa")) {
                         if (registroEntrada.getRegistroDetalle().getInteresados() != null) {
-                            String mailInteressats = "";
+                            StringBuilder mailInteressats = new StringBuilder();
 
                             for (int k = 0; k < registroEntrada.getRegistroDetalle().getInteresados().size(); k++) {
                                 Interesado interesado = registroEntrada.getRegistroDetalle().getInteresados().get(k);
 
                                 if(interesado.getEmail()!=null) {
-                                    mailInteressats = mailInteressats + interesado.getEmail();
+                                    mailInteressats.append(interesado.getEmail());
 
                                     if (k < registroEntrada.getRegistroDetalle().getInteresados().size() - 1) {
-                                        mailInteressats = mailInteressats + ", ";
+                                        mailInteressats.append(", ");
                                     }
                                 }
                             }
-                            registrosOrganismo.get(i).add(mailInteressats);
+                            registrosOrganismo.get(i).add(mailInteressats.toString());
                         } else {
                             registrosOrganismo.get(i).add("");
                         }
@@ -478,41 +475,41 @@ public class InformeController extends AbstractRegistroCommonFormController {
                         }
                     } else if (valorCamp.equals("nomIn")) {
                         if (registroSalida.getRegistroDetalle().getInteresados() != null) {
-                            String interessats = "";
+                            StringBuilder interessats = new StringBuilder();
 
                             for (int k = 0; k < registroSalida.getRegistroDetalle().getInteresados().size(); k++) {
                                 Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
                                 if (interesado.getIsRepresentante()) {
-                                    interessats = interessats + "(Rep.) ";
+                                    interessats.append("(Rep.) ");
                                 }
 
                                 // Añadimos el nombre completo del interesado
-                                interessats = interessats + interesado.getNombreCompletoInforme();
+                                interessats.append(interesado.getNombreCompletoInforme());
 
                                 if (i < registroSalida.getRegistroDetalle().getInteresados().size() - 1) {
-                                    interessats = interessats + ", ";
+                                    interessats.append(", ");
                                 }
                             }
-                            registrosOrganismo.get(i).add(interessats);
+                            registrosOrganismo.get(i).add(interessats.toString());
                         } else {
                             registrosOrganismo.get(i).add("");
                         }
                     } else if (valorCamp.equals("intMa")) {
                         if (registroSalida.getRegistroDetalle().getInteresados() != null) {
-                            String mailInteressats = "";
+                            StringBuilder mailInteressats = new StringBuilder();
 
                             for (int k = 0; k < registroSalida.getRegistroDetalle().getInteresados().size(); k++) {
                                 Interesado interesado = registroSalida.getRegistroDetalle().getInteresados().get(k);
 
                                 if(interesado.getEmail()!=null) {
-                                    mailInteressats = mailInteressats + interesado.getEmail();
+                                    mailInteressats.append(interesado.getEmail());
 
                                     if (k < registroSalida.getRegistroDetalle().getInteresados().size() - 1) {
-                                        mailInteressats = mailInteressats + ", ";
+                                        mailInteressats.append(", ");
                                     }
                                 }
                             }
-                            registrosOrganismo.get(i).add(mailInteressats);
+                            registrosOrganismo.get(i).add(mailInteressats.toString());
                         } else {
                             registrosOrganismo.get(i).add("");
                         }

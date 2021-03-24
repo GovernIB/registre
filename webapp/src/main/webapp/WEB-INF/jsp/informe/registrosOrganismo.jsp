@@ -21,7 +21,7 @@
             <div class="col-xs-12">
                 <ol class="breadcrumb">
                     <c:import url="../modulos/migadepan.jsp"/>
-                    <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="informe.libroRegistro"/></li>
+                    <li class="active"><i class="fa fa-list-ul"></i> <spring:message code="informe.organismos"/></li>
                 </ol>
             </div>
         </div><!-- /.row -->
@@ -35,7 +35,7 @@
 
                     <div class="panel panel-warning">
                         <div class="panel-heading">
-                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.libroRegistro"/></strong> </h3>
+                            <h3 class="panel-title"><i class="fa fa-search"></i> <strong><spring:message code="informe.organismos"/></strong> </h3>
                         </div>
                         <div class="panel-body">
                             <form:form modelAttribute="informeOrganismoBusquedaForm" method="post" cssClass="form-horizontal" name="informeOrganismoBusquedaForm" onsubmit="return validaFormulario(this)">
@@ -75,7 +75,7 @@
                                                 <form:select path="idOrganismo" items="${organismosConsulta}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" />
                                             </c:if>
                                             <c:if test="${fn:length(organismosConsulta) gt 1}">
-                                                <spring:message code="informe.organismos" var="varOrganismosConsulta"/>
+                                                <spring:message code="informe.organismo.select" var="varOrganismosConsulta"/>
                                                 <form:select data-placeholder="${varOrganismosConsulta}" path="idOrganismo" items="${organismosConsulta}" itemValue="id" itemLabel="denominacion" cssClass="chosen-select" />
                                             </c:if>
                                             <span id="organismosErrors"></span>
