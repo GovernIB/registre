@@ -21,7 +21,7 @@ import java.util.Set;
  * User: jpernia
  * Date: 6/05/14
  */
-public class LibroRegistroPdf extends AbstractIText5PdfView {
+public class RegistrosOrganismoPdf extends AbstractIText5PdfView {
 
 
     protected final Logger log = Logger.getLogger(getClass());
@@ -113,8 +113,8 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
         titulo.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
         titulo.getDefaultCell().setBorder(0);
         titulo.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-        document.addTitle(getMessage("informe.llibreRegistres.informe"));
-        titulo.addCell(new Paragraph(getMessage("informe.llibreRegistres"), font14Bold));
+        document.addTitle(getMessage("informe.organismos"));
+        titulo.addCell(new Paragraph(getMessage("informe.organismos"), font14Bold));
         titulo.addCell(new Paragraph(getMessage("informe.criteris")));
         document.add(titulo);
         document.add(new Paragraph(" "));
@@ -313,7 +313,7 @@ public class LibroRegistroPdf extends AbstractIText5PdfView {
             document.add(buit);
         }
 
-        String nombreFichero = getMessage("informe.nombreFichero.libroRegistro") + tipoRegistro +".pdf";
+        String nombreFichero = getMessage("informe.nombreFichero.registrosOrganismos") + tipoRegistro +".pdf";
 
         // Cabeceras Response
         response.setHeader("Content-Disposition","attachment; filename="+nombreFichero);
