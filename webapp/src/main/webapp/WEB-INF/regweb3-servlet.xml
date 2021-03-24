@@ -241,11 +241,11 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
     <!-- Bean generar el documento de un Oficio Remisión -->
     <bean id="oficioRemision" class="es.caib.regweb3.webapp.view.OficioRemisionRtfView"/>
 
-    <!-- Bean generar el Informe de Libro de Registro en PDF -->
-    <bean id="libroRegistroPdf" class="es.caib.regweb3.webapp.view.LibroRegistroPdf"/>
+    <!-- Bean generar el Informe de Registros Organismo en PDF -->
+    <bean id="registrosOrganismoPdf" class="es.caib.regweb3.webapp.view.RegistrosOrganismoPdf"/>
 
-    <!-- Bean generar el Informe de Libro de Registro en EXCEL-->
-    <bean id="libroRegistroExcel" class="es.caib.regweb3.webapp.view.LibroRegistroExcel"/>
+    <!-- Bean generar el Informe de Registros Organismo en EXCEL-->
+    <bean id="registrosOrganismoExcel" class="es.caib.regweb3.webapp.view.RegistrosOrganismoExcel"/>
 
     <!-- Bean generar el Informe de Indicadores en PDF -->
     <bean id="indicadoresPdf" class="es.caib.regweb3.webapp.view.IndicadoresPdf"/>
