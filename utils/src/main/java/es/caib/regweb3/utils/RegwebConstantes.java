@@ -238,7 +238,6 @@ public interface RegwebConstantes {
     Long REGISTRO_PENDIENTE_VISAR = 3L;
     Long REGISTRO_OFICIO_EXTERNO = 4L;
     Long REGISTRO_OFICIO_INTERNO = 5L;
-    Long REGISTRO_OFICIO_SIR = 13L;
     Long REGISTRO_OFICIO_ACEPTADO = 6L;
     Long REGISTRO_DISTRIBUIDO = 7L;
     Long REGISTRO_ANULADO = 8L;
@@ -246,6 +245,8 @@ public interface RegwebConstantes {
     Long REGISTRO_RECHAZADO = 10L;
     Long REGISTRO_REENVIADO = 11L;
     Long REGISTRO_DISTRIBUYENDO = 12L; //en la cola de distribución
+    Long REGISTRO_OFICIO_SIR = 13L;
+    Long REGISTRO_ENVIADO_NOTIFICAR = 14L; //Creado mediante NOTIB
 
     Long[] ESTADOS_REGISTRO = {
             REGISTRO_VALIDO,
@@ -260,7 +261,8 @@ public interface RegwebConstantes {
             REGISTRO_RECTIFICADO,
             REGISTRO_RECHAZADO,
             REGISTRO_REENVIADO,
-            REGISTRO_DISTRIBUYENDO};
+            REGISTRO_DISTRIBUYENDO,
+            REGISTRO_ENVIADO_NOTIFICAR};
 
     /* -------- TIPOS DE OFICIO DE REMISION ---------- */
     Long TIPO_OFICIO_REMISION_ENTRADA = 1L;
