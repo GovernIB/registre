@@ -141,6 +141,8 @@ public class RegistrosOrganismoExcel extends AbstractExcelView {
             estadoRegistro = getMessage("registro.estado.8");
         }else if(estado.equals(RegwebConstantes.REGISTRO_OFICIO_SIR)) {
             estadoRegistro = getMessage("registro.estado.13");
+        }else if(estado.equals(RegwebConstantes.REGISTRO_ENVIADO_NOTIFICAR)) {
+            estadoRegistro = getMessage("registro.estado.14");
         }
         String tieneAnexos;
         if(anexos){

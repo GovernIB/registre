@@ -20,7 +20,7 @@
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_OFICIO_ACEPTADO}">
         <span class="label label-success"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
-    <c:when test="${param.estado == RegwebConstantes.REGISTRO_DISTRIBUIDO}">
+    <c:when test="${param.estado == RegwebConstantes.REGISTRO_DISTRIBUIDO || param.estado == RegwebConstantes.REGISTRO_ENVIADO_NOTIFICAR}">
         <span class="label label-primary"><spring:message code="registro.estado.${param.estado}" /></span>
     </c:when>
     <c:when test="${param.estado == RegwebConstantes.REGISTRO_DISTRIBUYENDO}">

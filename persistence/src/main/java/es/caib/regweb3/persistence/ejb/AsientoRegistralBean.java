@@ -101,9 +101,9 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         // Es una Notificación
         if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_NOTIFICACION)) {
-            //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_VALIDO
-            crearJustificanteCambioEstado(registroSalida, REGISTRO_VALIDO);
-            registroSalida.setEstado(REGISTRO_VALIDO);
+            //Creamos el justificante del registroSalida y lo marcamos como REGISTRO_ENVIADO_NOTIFICAR
+            crearJustificanteCambioEstado(registroSalida, REGISTRO_ENVIADO_NOTIFICAR);
+            registroSalida.setEstado(REGISTRO_ENVIADO_NOTIFICAR);
 
             // Es una Comunicación
         } else if (tipoOperacion != null && tipoOperacion.equals(TIPO_OPERACION_COMUNICACION)) {
