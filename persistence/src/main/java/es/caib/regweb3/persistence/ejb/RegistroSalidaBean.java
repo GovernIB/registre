@@ -229,7 +229,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
                 if (entidadActiva.getSir() && oficinaEjb.isSIREnvio(registroSalida.getOficina().getId())) {
                     List<OficinaTF> oficinasSIR = isOficioRemisionSir(registroSalida, organismosCodigo);
 
-                    if (!oficinasSIR.isEmpty()) {
+                    if (oficinasSIR != null && !oficinasSIR.isEmpty()) {
                         return RegwebConstantes.EVENTO_OFICIO_SIR;
                     }
                 }
