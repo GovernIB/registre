@@ -1,10 +1,6 @@
 package es.caib.regweb3.ws.converter;
 
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.IRegistro;
-import es.caib.regweb3.model.RegistroDetalle;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSalida;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -221,21 +217,18 @@ public class AsientoConverter extends CommonConverter {
 
         RegistroDetalle registroDetalle = registro.getRegistroDetalle();
 
-        if (registro.getNumeroRegistroFormateado() != null) { asiento.setNumeroRegistro(registro.getNumeroRegistroFormateado());}
+        if (StringUtils.isNotEmpty(registro.getNumeroRegistroFormateado())) { asiento.setNumeroRegistro(registro.getNumeroRegistroFormateado());}
         if (registro.getFecha() != null) { asiento.setFechaRegistro(registro.getFecha());}
-        if (registroDetalle.getExtracto() != null) { asiento.setExtracto(registroDetalle.getExtracto());}
-        if (registroDetalle.getTipoDocumentacionFisica() != null) { asiento.setTipoDocumetacionFisica(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica())
-        );}
-
+        if (StringUtils.isNotEmpty(registroDetalle.getExtracto())) { asiento.setExtracto(registroDetalle.getExtracto());}
+        if (registroDetalle.getTipoDocumentacionFisica() != null) { asiento.setTipoDocumetacionFisica(I18NLogicUtils.tradueix(new Locale(idioma), "tipoDocumentacionFisica." + registroDetalle.getTipoDocumentacionFisica()));}
         if (registroDetalle.getIdioma() != null) { asiento.setIdioma(registroDetalle.getIdioma());}
-
-        if(registroDetalle.getPresencial()!= null) {asiento.setPresencial(registroDetalle.getPresencial());}
+        if (registroDetalle.getPresencial()!= null) {asiento.setPresencial(registroDetalle.getPresencial());}
 
         //estado
         if(registro.getEstado()!=null ){ asiento.setEstado(registro.getEstado());}
 
         //motivo
-        if(registroDetalle.getDecodificacionTipoAnotacion()!= null){ asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());}
+        if(StringUtils.isNotEmpty(registroDetalle.getDecodificacionTipoAnotacion())){ asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());}
 
 
         // Oficina Origen
@@ -247,8 +240,8 @@ public class AsientoConverter extends CommonConverter {
             asiento.setDenominacionOficinaOrigen(registroDetalle.getOficinaOrigenExternoDenominacion());
         }
 
-        if (registroDetalle.getExpone() != null) { asiento.setExpone(registroDetalle.getExpone());}
-        if (registroDetalle.getSolicita() != null) { asiento.setSolicita(registroDetalle.getSolicita());}
+        if (StringUtils.isNotEmpty(registroDetalle.getExpone())) { asiento.setExpone(registroDetalle.getExpone());}
+        if (StringUtils.isNotEmpty(registroDetalle.getSolicita())) { asiento.setSolicita(registroDetalle.getSolicita());}
         if (registroDetalle.getCodigoSia() != null) { asiento.setCodigoSia(registroDetalle.getCodigoSia());}
 
 
