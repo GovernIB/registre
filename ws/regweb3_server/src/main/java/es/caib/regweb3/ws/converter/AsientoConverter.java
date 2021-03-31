@@ -231,18 +231,12 @@ public class AsientoConverter extends CommonConverter {
 
         if(registroDetalle.getPresencial()!= null) {asiento.setPresencial(registroDetalle.getPresencial());}
 
-        //estado y motivo
-        if(registro.getEstado()!=null ){
+        //estado
+        if(registro.getEstado()!=null ){ asiento.setEstado(registro.getEstado());}
 
-            asiento.setEstado(registro.getEstado());
-            if (registro.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)) {
-                asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());
+        //motivo
+        if(registroDetalle.getDecodificacionTipoAnotacion()!= null){ asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());}
 
-            } else if (registro.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)) {
-                asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());
-            }
-
-        }
 
         // Oficina Origen
         if(registroDetalle.getOficinaOrigen() != null){
