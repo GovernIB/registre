@@ -1117,7 +1117,7 @@ public class SirEnvioBean implements SirEnvioLocal {
     private String generarIdentificadorIntercambio(String codOficinaOrigen, Entidad entidad) throws Exception {
 
         SimpleDateFormat anyo = new SimpleDateFormat("yy"); // Just the year, with 2 digits
-        String secuencia = contadorEjb.secuenciaSir(entidad.getContadorSir().getId());
+        String secuencia = contadorEjb.secuenciaSir(entidad.getLibro().getContadorSir().getId());
 
         return codOficinaOrigen + "_" + anyo.format(Calendar.getInstance().getTime()) + "_" + secuencia;
 
