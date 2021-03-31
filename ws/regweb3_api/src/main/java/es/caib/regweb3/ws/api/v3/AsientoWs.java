@@ -26,6 +26,7 @@ import java.util.List;
  *         &lt;element name="denominacionDestino" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="denominacionOficinaOrigen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="denominacionUnidadOrigen" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="descripcionEstado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="estado" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/>
  *         &lt;element name="expone" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="extracto" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -56,6 +57,7 @@ import java.util.List;
     "denominacionDestino",
     "denominacionOficinaOrigen",
     "denominacionUnidadOrigen",
+    "descripcionEstado",
     "estado",
     "expone",
     "extracto",
@@ -80,6 +82,7 @@ public class AsientoWs {
     protected String denominacionDestino;
     protected String denominacionOficinaOrigen;
     protected String denominacionUnidadOrigen;
+    protected String descripcionEstado;
     protected Long estado;
     protected String expone;
     protected String extracto;
@@ -292,6 +295,30 @@ public class AsientoWs {
      */
     public void setDenominacionUnidadOrigen(String value) {
         this.denominacionUnidadOrigen = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad descripcionEstado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getDescripcionEstado() {
+        return descripcionEstado;
+    }
+
+    /**
+     * Define el valor de la propiedad descripcionEstado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setDescripcionEstado(String value) {
+        this.descripcionEstado = value;
     }
 
     /**
