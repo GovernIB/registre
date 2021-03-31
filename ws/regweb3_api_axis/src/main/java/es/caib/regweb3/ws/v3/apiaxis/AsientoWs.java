@@ -24,6 +24,8 @@ public class AsientoWs  implements java.io.Serializable {
 
     private java.lang.String denominacionUnidadOrigen;
 
+    private java.lang.String descripcionEstado;
+
     private java.lang.Long estado;
 
     private java.lang.String expone;
@@ -60,6 +62,7 @@ public class AsientoWs  implements java.io.Serializable {
            java.lang.String denominacionDestino,
            java.lang.String denominacionOficinaOrigen,
            java.lang.String denominacionUnidadOrigen,
+           java.lang.String descripcionEstado,
            java.lang.Long estado,
            java.lang.String expone,
            java.lang.String extracto,
@@ -80,6 +83,7 @@ public class AsientoWs  implements java.io.Serializable {
            this.denominacionDestino = denominacionDestino;
            this.denominacionOficinaOrigen = denominacionOficinaOrigen;
            this.denominacionUnidadOrigen = denominacionUnidadOrigen;
+           this.descripcionEstado = descripcionEstado;
            this.estado = estado;
            this.expone = expone;
            this.extracto = extracto;
@@ -260,6 +264,26 @@ public class AsientoWs  implements java.io.Serializable {
      */
     public void setDenominacionUnidadOrigen(java.lang.String denominacionUnidadOrigen) {
         this.denominacionUnidadOrigen = denominacionUnidadOrigen;
+    }
+
+
+    /**
+     * Gets the descripcionEstado value for this AsientoWs.
+     * 
+     * @return descripcionEstado
+     */
+    public java.lang.String getDescripcionEstado() {
+        return descripcionEstado;
+    }
+
+
+    /**
+     * Sets the descripcionEstado value for this AsientoWs.
+     * 
+     * @param descripcionEstado
+     */
+    public void setDescripcionEstado(java.lang.String descripcionEstado) {
+        this.descripcionEstado = descripcionEstado;
     }
 
 
@@ -546,6 +570,9 @@ public class AsientoWs  implements java.io.Serializable {
             ((this.denominacionUnidadOrigen==null && other.getDenominacionUnidadOrigen()==null) || 
              (this.denominacionUnidadOrigen!=null &&
               this.denominacionUnidadOrigen.equals(other.getDenominacionUnidadOrigen()))) &&
+            ((this.descripcionEstado==null && other.getDescripcionEstado()==null) || 
+             (this.descripcionEstado!=null &&
+              this.descripcionEstado.equals(other.getDescripcionEstado()))) &&
             ((this.estado==null && other.getEstado()==null) || 
              (this.estado!=null &&
               this.estado.equals(other.getEstado()))) &&
@@ -624,6 +651,9 @@ public class AsientoWs  implements java.io.Serializable {
         }
         if (getDenominacionUnidadOrigen() != null) {
             _hashCode += getDenominacionUnidadOrigen().hashCode();
+        }
+        if (getDescripcionEstado() != null) {
+            _hashCode += getDescripcionEstado().hashCode();
         }
         if (getEstado() != null) {
             _hashCode += getEstado().hashCode();
@@ -732,6 +762,13 @@ public class AsientoWs  implements java.io.Serializable {
         elemField = new org.apache.axis.description.ElementDesc();
         elemField.setFieldName("denominacionUnidadOrigen");
         elemField.setXmlName(new javax.xml.namespace.QName("", "denominacionUnidadOrigen"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("descripcionEstado");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "descripcionEstado"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
