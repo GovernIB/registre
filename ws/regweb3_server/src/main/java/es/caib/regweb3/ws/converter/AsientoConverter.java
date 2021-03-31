@@ -1,6 +1,10 @@
 package es.caib.regweb3.ws.converter;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.IRegistro;
+import es.caib.regweb3.model.RegistroDetalle;
+import es.caib.regweb3.model.RegistroEntrada;
+import es.caib.regweb3.model.RegistroSalida;
 import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.AnexoLocal;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
@@ -29,13 +33,13 @@ public class AsientoConverter extends CommonConverter {
      * @return
      * @throws Exception
      */
-    public static AsientoWs transformarRegistro(IRegistro registro, Long tipoRegistro, String idioma) throws Exception{
+    public static AsientoWs transformarRegistro(IRegistro registro, Long tipoRegistro,  String idioma) throws Exception{
 
 
         AsientoWs asientoWs = new AsientoWs(tipoRegistro);
 
         // Convertimos los campos comunes de AsientoWs
-        setAsientoComun(asientoWs, registro, idioma);
+        setAsientoComun(asientoWs, registro,idioma);
 
         if(REGISTRO_ENTRADA.equals(tipoRegistro)){
 
@@ -227,7 +231,18 @@ public class AsientoConverter extends CommonConverter {
 
         if(registroDetalle.getPresencial()!= null) {asiento.setPresencial(registroDetalle.getPresencial());}
 
-        if(registro.getEstado()!=null ){ asiento.setEstado(registro.getEstado());}
+        //estado y motivo
+        if(registro.getEstado()!=null ){
+
+            asiento.setEstado(registro.getEstado());
+            if (registro.getEstado().equals(RegwebConstantes.REGISTRO_RECHAZADO)) {
+                asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());
+
+            } else if (registro.getEstado().equals(RegwebConstantes.REGISTRO_REENVIADO)) {
+                asiento.setDescripcionEstado(registroDetalle.getDecodificacionTipoAnotacion());
+            }
+
+        }
 
         // Oficina Origen
         if(registroDetalle.getOficinaOrigen() != null){
