@@ -284,6 +284,7 @@
       <xs:element minOccurs="0" name="denominacionDestino" type="xs:string"/>
       <xs:element minOccurs="0" name="denominacionOficinaOrigen" type="xs:string"/>
       <xs:element minOccurs="0" name="denominacionUnidadOrigen" type="xs:string"/>
+      <xs:element minOccurs="0" name="descripcionEstado" type="xs:string"/>
       <xs:element minOccurs="0" name="estado" type="xs:long"/>
       <xs:element minOccurs="0" name="expone" type="xs:string"/>
       <xs:element minOccurs="0" name="extracto" type="xs:string"/>
