@@ -23,6 +23,7 @@ public class AsientoWs implements Serializable {
     private Boolean presencial;
     private Long idioma;
     private Long estado;
+    private String descripcionEstado;
 
     private List<InteresadoWs> interesados;
     private List<FileInfoWs> anexos;
@@ -193,5 +194,13 @@ public class AsientoWs implements Serializable {
 
     public void setEstado(Long estado) {
         this.estado = estado;
+    }
+
+    public String getDescripcionEstado() {
+        return descripcionEstado;
+    }
+
+    public void setDescripcionEstado(String descripcionEstado) {
+        this.descripcionEstado = descripcionEstado;
     }
 }
