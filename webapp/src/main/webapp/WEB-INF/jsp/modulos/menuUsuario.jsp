@@ -142,11 +142,11 @@
                         <li><a href="<c:url value="/informe/indicadoresOficina"/>"><i class="fa fa-bar-chart"></i> <spring:message code="informe.indicadoresOficina"/></a></li>
                     </c:if>
                     <li><a href="<c:url value="/informe/registrosOrganismo"/>"><i class="fa fa-book"></i> <spring:message code="informe.organismos"/></a></li>
-                    <%--<c:if test="${fn:length(loginInfo.organismosResponsable) > 0}">
+                    <c:if test="${fn:length(loginInfo.organismosResponsable) > 0}">
                         <li class="divider"></li>
                         <li><a href="<c:url value="/informe/usuarioLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.usuarioLopd"/></a></li>
                         <li><a href="<c:url value="/informe/registroLopd"/>"><i class="fa fa-eye"></i> <spring:message code="informe.registroLopd"/></a></li>
-                    </c:if>--%>
+                    </c:if>
                 </ul>
             </li>
         </c:if>
