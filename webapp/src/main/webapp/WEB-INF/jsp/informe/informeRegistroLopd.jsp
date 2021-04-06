@@ -73,8 +73,7 @@
                             </div>
 
                             <c:if test="${empty registro}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey>
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -113,8 +112,7 @@
                             </div>
 
                             <c:if test="${empty modificaciones}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -150,13 +148,12 @@
                             </c:if>
 
                             <!-- CONSULTAS DEL REGISTRO DE ENTRADA -->
-                            <div class="alert-lopd alert-info alert-dismissable">
+                            <div class="alert-lopd alert-info">
                                 <strong><spring:message code="regweb.consultado"/></strong>
                             </div>
 
                             <c:if test="${empty consultas}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -192,13 +189,12 @@
                             </c:if>
 
                             <!-- LISTADOS SOBRE EL REGISTRO DE ENTRADA -->
-                            <div class="alert-lopd alert-info alert-dismissable">
+                            <div class="alert-lopd alert-info">
                                 <strong><spring:message code="regweb.listado"/></strong>
                             </div>
 
                             <c:if test="${empty listados}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -234,13 +230,12 @@
                             </c:if>
 
                             <!-- DESCARGAS DE JUSTIFICANTE SOBRE EL REGISTRO DE ENTRADA -->
-                            <div class="alert-lopd alert-info alert-dismissable">
+                            <div class="alert-lopd alert-info">
                                 <strong><spring:message code="informe.lopd.justificante"/></strong>
                             </div>
 
                             <c:if test="${empty consultasJustificante}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -294,13 +289,12 @@
                         <div class="panel-body">
 
                             <!-- CREACION REGISTRO SALIDA -->
-                            <div class="alert-lopd alert-danger alert-dismissable">
+                            <div class="alert-lopd alert-danger">
                                 <strong><spring:message code="regweb.creado"/></strong>
                             </div>
 
                             <c:if test="${empty registro}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -334,13 +328,12 @@
                             </c:if>
 
                             <!-- MODIFICACIONES SOBRE EL REGISTRO DE SALIDA -->
-                            <div class="alert-lopd alert-danger alert-dismissable">
+                            <div class="alert-lopd alert-danger">
                                 <strong><spring:message code="regweb.modificado"/></strong>
                             </div>
 
                             <c:if test="${empty modificaciones}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -376,13 +369,12 @@
                             </c:if>
 
                             <!-- CONSULTAS DEL REGISTRO DE SALIDA -->
-                            <div class="alert-lopd alert-danger alert-dismissable">
+                            <div class="alert-lopd alert-danger">
                                 <strong><spring:message code="regweb.consultado"/></strong>
                             </div>
 
                             <c:if test="${empty consultas}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -418,13 +410,12 @@
                             </c:if>
 
                             <!-- LISTADOS SOBRE EL REGISTRO DE SALIDA -->
-                            <div class="alert-lopd alert-danger alert-dismissable">
+                            <div class="alert-lopd alert-danger">
                                 <strong><spring:message code="regweb.listado"/></strong>
                             </div>
 
                             <c:if test="${empty listados}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>
@@ -460,13 +451,12 @@
                             </c:if>
 
                             <!-- DESCARGAS DE JUSTIFICANTE SOBRE EL REGISTRO DE ENTRADA -->
-                            <div class="alert-lopd alert-danger alert-dismissable">
+                            <div class="alert-lopd alert-danger">
                                 <strong><spring:message code="informe.lopd.justificante"/></strong>
                             </div>
 
                             <c:if test="${empty consultasJustificante}">
-                                <div class="alert alert-grey alert-dismissable">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                <div class="alert alert-grey">
                                     <spring:message code="regweb.busqueda.vacio"/>
                                 </div>
                             </c:if>

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Created by Fundació BIT.
@@ -36,13 +35,12 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
             HttpSession session = request.getSession();
             LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
             Rol rolActivo = loginInfo.getRolActivo();
-            //List<Libro> librosAdm = loginInfo.getLibrosAdministrados();
             List<Organismo> organismosResponsable = loginInfo.getOrganismosResponsable();
 
 
             // Comprobamos que el usuario dispone del Rol RWE_ADMIN
             if(url.equals("/informe/registroLopd")||url.equals("/informe/usuarioLopd")) {
-                if (!rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN)) {
+                if (!(organismosResponsable != null || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
                     response.sendRedirect("/regweb3/aviso");
@@ -72,22 +70,10 @@ public class InformeInterceptor extends HandlerInterceptorAdapter {
 
             // Informe Registro Lopd
             if(url.contains("informeRegistroLopd")){
-                String subUrl =  url.replace("/informe/","").replace("/informeRegistroLopd", ""); //Obtenemos el id a partir de la url
-                StringTokenizer tokens = new StringTokenizer(subUrl,"/");
-                String idRegistro = tokens.nextToken();
-                String tipoRegistro = tokens.nextToken();
 
-                if (!(rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
+                if (!(organismosResponsable != null || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
                     log.info("Error de rol");
                     Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
-                    response.sendRedirect("/regweb3/aviso");
-                    return false;
-                }
-
-                // Comprueba que el Tipo de Registro existe
-                if(!tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA.toString()) && !tipoRegistro.equals(RegwebConstantes.REGISTRO_SALIDA.toString())){
-                    log.info("No existe el tipo registro");
-                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.tipoRegistro.noExiste"));
                     response.sendRedirect("/regweb3/aviso");
                     return false;
                 }
