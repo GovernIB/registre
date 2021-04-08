@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="documento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="pageNumber" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
+ *         &lt;element name="idioma" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,13 +32,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "obtenerAsientosCiudadano", propOrder = {
     "entidad",
     "documento",
-    "pageNumber"
+    "pageNumber",
+    "idioma"
 })
 public class ObtenerAsientosCiudadano {
 
     protected String entidad;
     protected String documento;
     protected Integer pageNumber;
+    protected String idioma;
 
     /**
      * Obtiene el valor de la propiedad entidad.
@@ -109,6 +112,30 @@ public class ObtenerAsientosCiudadano {
      */
     public void setPageNumber(Integer value) {
         this.pageNumber = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad idioma.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIdioma() {
+        return idioma;
+    }
+
+    /**
+     * Define el valor de la propiedad idioma.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIdioma(String value) {
+        this.idioma = value;
     }
 
 }
