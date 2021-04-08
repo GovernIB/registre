@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="entidad" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="documento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="idioma" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -31,13 +32,15 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "obtenerAsientoCiudadano", propOrder = {
     "entidad",
     "documento",
-    "numeroRegistroFormateado"
+    "numeroRegistroFormateado",
+    "idioma"
 })
 public class ObtenerAsientoCiudadano {
 
     protected String entidad;
     protected String documento;
     protected String numeroRegistroFormateado;
+    protected String idioma;
 
     /**
      * Obtiene el valor de la propiedad entidad.
@@ -109,6 +112,30 @@ public class ObtenerAsientoCiudadano {
      */
     public void setNumeroRegistroFormateado(String value) {
         this.numeroRegistroFormateado = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad idioma.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIdioma() {
+        return idioma;
+    }
+
+    /**
+     * Define el valor de la propiedad idioma.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIdioma(String value) {
+        this.idioma = value;
     }
 
 }
