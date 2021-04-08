@@ -77,9 +77,9 @@ public class InteresadoController extends BaseController{
 
         try {
 
-            if(Configuracio.isCAIB()){ // Comprobamos si el Organismo indicado pruede ser Interesado o Destinatario
+            if(Configuracio.isCAIB()){ // si la instalación es CAIB, no permitimos realizar registros con interesado administración de la propia entidad
 
-                if(organismoEjb.isOrganismoInterno(codigoDir3, entidadActiva.getId())){
+                if(organismoEjb.isOrganismoInterno(codigoDir3, entidadActiva.getId())){ // Comprobamos si el Organismo indicado pruede ser Interesado o Destinatario
 
                     jsonResponse.setStatus("FAIL");
 
