@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://impl.v3.ws.regweb3.caib.es/}asientoWs" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://impl.v3.ws.regweb3.caib.es/}asientoRegistralWs" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,17 +33,17 @@ import javax.xml.bind.annotation.XmlType;
 public class ObtenerAsientoCiudadanoResponse {
 
     @XmlElement(name = "return")
-    protected AsientoWs _return;
+    protected AsientoRegistralWs _return;
 
     /**
      * Obtiene el valor de la propiedad return.
      * 
      * @return
      *     possible object is
-     *     {@link AsientoWs }
+     *     {@link AsientoRegistralWs }
      *     
      */
-    public AsientoWs getReturn() {
+    public AsientoRegistralWs getReturn() {
         return _return;
     }
 
@@ -52,10 +52,10 @@ public class ObtenerAsientoCiudadanoResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link AsientoWs }
+     *     {@link AsientoRegistralWs }
      *     
      */
-    public void setReturn(AsientoWs value) {
+    public void setReturn(AsientoRegistralWs value) {
         this._return = value;
     }
 

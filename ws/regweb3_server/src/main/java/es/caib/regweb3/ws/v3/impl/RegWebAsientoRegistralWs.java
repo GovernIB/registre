@@ -131,6 +131,32 @@ public interface RegWebAsientoRegistralWs {
        @WebParam(name = "numeroRegistroFormateado")String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
 
     /**
+     * Obtiene los Asientos registral de un ciudadano
+     * @param entidad
+     * @param documento
+     * @param pageNumber
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
+    @WebMethod
+    ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException;
+
+    /**
+     * Obtiene el AsiendoRegistral de un ciudadano a partir de su número de registro
+     * @param entidad
+     * @param documento
+     * @param numeroRegistroFormateado
+     * @return
+     * @throws Throwable
+     * @throws WsI18NException
+     * @throws WsValidationException
+     */
+    @WebMethod
+    AsientoRegistralWs obtenerAsientoCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable, WsI18NException, WsValidationException;
+
+    /**
      *
      * @param entidad
      * @param documento
@@ -142,7 +168,7 @@ public interface RegWebAsientoRegistralWs {
      * @throws WsValidationException
      */
     @WebMethod
-    ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException;
+    ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      *
@@ -154,7 +180,7 @@ public interface RegWebAsientoRegistralWs {
      * @throws Throwable
      */
     @WebMethod
-    AsientoWs obtenerAsientoCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "idioma") String idioma) throws Throwable;
+    AsientoWs obtenerAsientoCiudadanoCarpeta(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "idioma") String idioma) throws Throwable;
 
     /**
      *
