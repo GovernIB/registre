@@ -18,10 +18,14 @@
   <xs:element name="obtenerAnexoCiudadano" type="tns:obtenerAnexoCiudadano"/>
   <xs:element name="obtenerAnexoCiudadanoResponse" type="tns:obtenerAnexoCiudadanoResponse"/>
   <xs:element name="obtenerAsientoCiudadano" type="tns:obtenerAsientoCiudadano"/>
+  <xs:element name="obtenerAsientoCiudadanoCarpeta" type="tns:obtenerAsientoCiudadanoCarpeta"/>
+  <xs:element name="obtenerAsientoCiudadanoCarpetaResponse" type="tns:obtenerAsientoCiudadanoCarpetaResponse"/>
   <xs:element name="obtenerAsientoCiudadanoResponse" type="tns:obtenerAsientoCiudadanoResponse"/>
   <xs:element name="obtenerAsientoRegistral" type="tns:obtenerAsientoRegistral"/>
   <xs:element name="obtenerAsientoRegistralResponse" type="tns:obtenerAsientoRegistralResponse"/>
   <xs:element name="obtenerAsientosCiudadano" type="tns:obtenerAsientosCiudadano"/>
+  <xs:element name="obtenerAsientosCiudadanoCarpeta" type="tns:obtenerAsientosCiudadanoCarpeta"/>
+  <xs:element name="obtenerAsientosCiudadanoCarpetaResponse" type="tns:obtenerAsientosCiudadanoCarpetaResponse"/>
   <xs:element name="obtenerAsientosCiudadanoResponse" type="tns:obtenerAsientosCiudadanoResponse"/>
   <xs:element name="obtenerJustificante" type="tns:obtenerJustificante"/>
   <xs:element name="obtenerJustificanteResponse" type="tns:obtenerJustificanteResponse"/>
@@ -85,6 +89,26 @@
   <xs:complexType name="oficioWs">
     <xs:sequence>
       <xs:element minOccurs="0" name="oficio" type="xs:base64Binary"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerAsientosCiudadanoCarpeta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="documento" type="xs:string"/>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element minOccurs="0" name="idioma" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerAsientosCiudadanoCarpetaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:resultadoBusquedaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="resultadoBusquedaWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="results" nillable="true" type="xs:anyType"/>
+      <xs:element minOccurs="0" name="totalResults" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="distribuirAsientoRegistral">
@@ -213,10 +237,39 @@
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="documento" type="xs:string"/>
       <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-      <xs:element minOccurs="0" name="idioma" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerAsientoCiudadanoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:asientoRegistralWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerReferenciaJustificante">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerReferenciaJustificanteResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:justificanteReferenciaWs"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="justificanteReferenciaWs">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="csv" type="xs:string"/>
+      <xs:element minOccurs="0" name="url" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerAsientoCiudadanoCarpeta">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
+      <xs:element minOccurs="0" name="documento" type="xs:string"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element minOccurs="0" name="idioma" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="obtenerAsientoCiudadanoCarpetaResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:asientoWs"/>
     </xs:sequence>
@@ -256,23 +309,6 @@
       <xs:element minOccurs="0" name="validezDocumento" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="obtenerReferenciaJustificante">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="entidad" type="xs:string"/>
-      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="obtenerReferenciaJustificanteResponse">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="return" type="tns:justificanteReferenciaWs"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="justificanteReferenciaWs">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="csv" type="xs:string"/>
-      <xs:element minOccurs="0" name="url" type="xs:string"/>
-    </xs:sequence>
-  </xs:complexType>
   <xs:complexType name="verificarAsientoRegistral">
     <xs:sequence>
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
@@ -305,19 +341,11 @@
       <xs:element minOccurs="0" name="entidad" type="xs:string"/>
       <xs:element minOccurs="0" name="documento" type="xs:string"/>
       <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
-      <xs:element minOccurs="0" name="idioma" type="xs:string"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerAsientosCiudadanoResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="return" type="tns:resultadoBusquedaWs"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="resultadoBusquedaWs">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
-      <xs:element maxOccurs="unbounded" minOccurs="0" name="results" nillable="true" type="xs:anyType"/>
-      <xs:element minOccurs="0" name="totalResults" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerAnexoCiudadano">
@@ -373,16 +401,56 @@
     <wsdl:part name="parameters" element="tns:obtenerAnexoCiudadano">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="verificarAsientoRegistralResponse">
-    <wsdl:part name="parameters" element="tns:verificarAsientoRegistralResponse">
+  <wsdl:message name="obtenerOficioExternoResponse">
+    <wsdl:part name="parameters" element="tns:obtenerOficioExternoResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerJustificante">
     <wsdl:part name="parameters" element="tns:obtenerJustificante">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerOficioExternoResponse">
-    <wsdl:part name="parameters" element="tns:obtenerOficioExternoResponse">
+  <wsdl:message name="distribuirAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:distribuirAsientoRegistralResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientosCiudadanoCarpetaResponse">
+    <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadanoCarpetaResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoRegistralResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientoCiudadano">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadano">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientosCiudadanoResponse">
+    <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadanoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientosCiudadanoCarpeta">
+    <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadanoCarpeta">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientoRegistral">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoRegistral">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerAsientosCiudadano">
+    <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadano">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verificarAsientoRegistral">
+    <wsdl:part name="parameters" element="tns:verificarAsientoRegistral">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="obtenerSesionRegistroResponse">
+    <wsdl:part name="parameters" element="tns:obtenerSesionRegistroResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="verificarAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:verificarAsientoRegistralResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerReferenciaJustificante">
@@ -393,20 +461,8 @@
     <wsdl:part name="WsI18NException" element="tns:WsI18NError">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="distribuirAsientoRegistralResponse">
-    <wsdl:part name="parameters" element="tns:distribuirAsientoRegistralResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obtenerAsientoRegistralResponse">
-    <wsdl:part name="parameters" element="tns:obtenerAsientoRegistralResponse">
-    </wsdl:part>
-  </wsdl:message>
   <wsdl:message name="obtenerAsientoCiudadanoResponse">
     <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadanoResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obtenerAsientoCiudadano">
-    <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadano">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerAnexoCiudadanoResponse">
@@ -421,32 +477,28 @@
     <wsdl:part name="parameters" element="tns:obtenerSesionRegistro">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerAsientosCiudadanoResponse">
-    <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadanoResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obtenerOficioExterno">
-    <wsdl:part name="parameters" element="tns:obtenerOficioExterno">
+  <wsdl:message name="obtenerAsientoCiudadanoCarpeta">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadanoCarpeta">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="distribuirAsientoRegistral">
     <wsdl:part name="parameters" element="tns:distribuirAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="crearAsientoRegistralResponse">
-    <wsdl:part name="parameters" element="tns:crearAsientoRegistralResponse">
+  <wsdl:message name="obtenerOficioExterno">
+    <wsdl:part name="parameters" element="tns:obtenerOficioExterno">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerAsientoRegistral">
-    <wsdl:part name="parameters" element="tns:obtenerAsientoRegistral">
+  <wsdl:message name="crearAsientoRegistralResponse">
+    <wsdl:part name="parameters" element="tns:crearAsientoRegistralResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerReferenciaJustificanteResponse">
     <wsdl:part name="parameters" element="tns:obtenerReferenciaJustificanteResponse">
     </wsdl:part>
   </wsdl:message>
-  <wsdl:message name="obtenerAsientosCiudadano">
-    <wsdl:part name="parameters" element="tns:obtenerAsientosCiudadano">
+  <wsdl:message name="obtenerAsientoCiudadanoCarpetaResponse">
+    <wsdl:part name="parameters" element="tns:obtenerAsientoCiudadanoCarpetaResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="obtenerJustificanteResponse">
@@ -455,14 +507,6 @@
   </wsdl:message>
   <wsdl:message name="WsValidationException">
     <wsdl:part name="WsValidationException" element="tns:WsValidationErrors">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="obtenerSesionRegistroResponse">
-    <wsdl:part name="parameters" element="tns:obtenerSesionRegistroResponse">
-    </wsdl:part>
-  </wsdl:message>
-  <wsdl:message name="verificarAsientoRegistral">
-    <wsdl:part name="parameters" element="tns:verificarAsientoRegistral">
     </wsdl:part>
   </wsdl:message>
   <wsdl:portType name="RegWebAsientoRegistralWs">
@@ -480,6 +524,16 @@
       <wsdl:input name="obtenerOficioExterno" message="tns:obtenerOficioExterno">
     </wsdl:input>
       <wsdl:output name="obtenerOficioExternoResponse" message="tns:obtenerOficioExternoResponse">
+    </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerAsientosCiudadanoCarpeta">
+      <wsdl:input name="obtenerAsientosCiudadanoCarpeta" message="tns:obtenerAsientosCiudadanoCarpeta">
+    </wsdl:input>
+      <wsdl:output name="obtenerAsientosCiudadanoCarpetaResponse" message="tns:obtenerAsientosCiudadanoCarpetaResponse">
     </wsdl:output>
       <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
     </wsdl:fault>
@@ -511,6 +565,10 @@
     </wsdl:input>
       <wsdl:output name="obtenerAsientoCiudadanoResponse" message="tns:obtenerAsientoCiudadanoResponse">
     </wsdl:output>
+      <wsdl:fault name="WsValidationException" message="tns:WsValidationException">
+    </wsdl:fault>
+      <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
+    </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="obtenerReferenciaJustificante">
       <wsdl:input name="obtenerReferenciaJustificante" message="tns:obtenerReferenciaJustificante">
@@ -521,6 +579,12 @@
     </wsdl:fault>
       <wsdl:fault name="WsI18NException" message="tns:WsI18NException">
     </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerAsientoCiudadanoCarpeta">
+      <wsdl:input name="obtenerAsientoCiudadanoCarpeta" message="tns:obtenerAsientoCiudadanoCarpeta">
+    </wsdl:input>
+      <wsdl:output name="obtenerAsientoCiudadanoCarpetaResponse" message="tns:obtenerAsientoCiudadanoCarpetaResponse">
+    </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="verificarAsientoRegistral">
       <wsdl:input name="verificarAsientoRegistral" message="tns:verificarAsientoRegistral">
@@ -597,6 +661,21 @@
         <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
     </wsdl:operation>
+    <wsdl:operation name="obtenerAsientosCiudadanoCarpeta">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerAsientosCiudadanoCarpeta">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerAsientosCiudadanoCarpetaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
     <wsdl:operation name="distribuirAsientoRegistral">
       <soap:operation soapAction="" style="document"/>
       <wsdl:input name="distribuirAsientoRegistral">
@@ -635,6 +714,12 @@
       <wsdl:output name="obtenerAsientoCiudadanoResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="WsValidationException">
+        <soap:fault name="WsValidationException" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="WsI18NException">
+        <soap:fault name="WsI18NException" use="literal"/>
+      </wsdl:fault>
     </wsdl:operation>
     <wsdl:operation name="obtenerReferenciaJustificante">
       <soap:operation soapAction="" style="document"/>
@@ -650,6 +735,15 @@
       <wsdl:fault name="WsI18NException">
         <soap:fault name="WsI18NException" use="literal"/>
       </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="obtenerAsientoCiudadanoCarpeta">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="obtenerAsientoCiudadanoCarpeta">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="obtenerAsientoCiudadanoCarpetaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
     </wsdl:operation>
     <wsdl:operation name="verificarAsientoRegistral">
       <soap:operation soapAction="" style="document"/>

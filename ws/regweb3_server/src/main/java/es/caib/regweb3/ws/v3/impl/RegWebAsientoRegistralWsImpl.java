@@ -731,7 +731,130 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException{
+    public ResultadoBusquedaWs obtenerAsientosCiudadano(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber) throws Throwable, WsI18NException, WsValidationException{
+
+        // Definimos la petición que se guardá en el monitor de integración
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String numRegFormat = "";
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
+        // 1.- Validar campo obligatorio entidad
+        Entidad entidadActiva = validarEntidad(entidad);
+
+        // 2.- Obtener el usuario aplicación que ha realizado la petición
+        UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
+        if (usuarioAplicacion == null) { //No existe
+            throw new I18NException("registro.usuario.noExiste", UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getNombre());
+        }
+
+        // 3.- Validar campo obligatorio documento
+        if(StringUtils.isEmpty(documento)){
+            throw new I18NException("error.valor.requerido.ws", "documento");
+        }
+
+        // 4.- Validar obligatorio pageNumber
+        if(pageNumber == null){
+            pageNumber = 0;
+        }
+
+        peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
+
+        ResultadoBusquedaWs<AsientoRegistralWs> resultado = new ResultadoBusquedaWs<AsientoRegistralWs>();
+
+        try{
+
+            // Obtenemos los Registros de Entrada de un ciudadano
+            List<RegistroEntrada> entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento);
+            resultado.setTotalResults(entradas.size());
+            resultado.setPageNumber(pageNumber);
+
+            // Transformamos los Registros de Entrada en AsientoRegistralWs
+            List<AsientoRegistralWs> asientos = new ArrayList<AsientoRegistralWs>();
+            for (RegistroEntrada entrada : entradas) {
+
+                asientos.add(AsientoRegistralConverter.transformarRegistro(entrada, REGISTRO_ENTRADA, entidadActiva,
+                        UsuarioAplicacionCache.get().getIdioma(),  oficioRemisionEjb, trazabilidadSirEjb));
+
+            }
+            resultado.setResults(asientos);
+
+            peticion.append("asientos: ").append(asientos.size()).append(System.getProperty("line.separator"));
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            throw new I18NException(e, "error.ws.general");
+        }
+
+        return resultado;
+    }
+
+    @RolesAllowed({RWE_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public AsientoRegistralWs obtenerAsientoCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado) throws Throwable{
+
+        // Definimos la petición que se guardá en el monitor de integración
+        Date inicio = new Date();
+        StringBuilder peticion = new StringBuilder();
+        long tiempo = System.currentTimeMillis();
+        String numRegFormat = "";
+
+        peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+
+        //  Validar campo obligatorio entidad
+        Entidad entidadActiva = validarEntidad(entidad);
+
+        // Obtener el usuario aplicación que ha realizado la petición
+        UsuarioEntidad usuarioAplicacion = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
+
+        // Validar campo obligatorio documento
+        if(StringUtils.isEmpty(documento)){
+            throw new I18NException("error.valor.requerido.ws", "documento");
+        }
+
+        // Validar obligatorio numeroRegistroFormateado
+        if(StringUtils.isEmpty(numeroRegistroFormateado)){
+            throw new I18NException("error.valor.requerido.ws", "numeroRegistroFormateado");
+        }
+
+        peticion.append("documento: ").append(documento).append(System.getProperty("line.separator"));
+        peticion.append("registro: ").append(numeroRegistroFormateado).append(System.getProperty("line.separator"));
+
+        try{
+
+            RegistroEntrada registroEntrada = registroEntradaConsultaEjb.getByDocumentoNumeroRegistro(entidadActiva.getId(), documento, numeroRegistroFormateado);
+
+            if (registroEntrada == null) {
+                throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
+            }
+
+            AsientoRegistralWs asiento = AsientoRegistralConverter.transformarRegistro(registroEntrada, REGISTRO_ENTRADA, entidadActiva,
+                    UsuarioAplicacionCache.get().getIdioma(),  oficioRemisionEjb, trazabilidadSirEjb);
+
+            integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+
+            lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioAplicacion.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_CONSULTA);
+
+            return asiento;
+
+        }catch (Exception e){
+            e.printStackTrace();
+            integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numRegFormat);
+            throw new I18NException("asientoRegistral.obtener.error", e.getLocalizedMessage());
+        }
+
+    }
+
+    @RolesAllowed({RWE_WS_CIUDADANO})
+    @Override
+    @WebMethod
+    public ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
@@ -801,7 +924,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public AsientoWs obtenerAsientoCiudadano(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "idioma") String idioma) throws Throwable{
+    public AsientoWs obtenerAsientoCiudadanoCarpeta(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "idioma") String idioma) throws Throwable{
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
