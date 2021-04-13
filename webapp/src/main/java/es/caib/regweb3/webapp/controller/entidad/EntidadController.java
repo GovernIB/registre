@@ -111,7 +111,7 @@ public class EntidadController extends BaseController {
 
                 entidadEjb.merge(entidad);
 
-                Mensaje.saveMessageInfo(request,"Se ha creado el libro a la Entidad: " + entidad.getNombre() + "modifique el código del libro, editando la entidad");
+                Mensaje.saveMessageInfo(request,"Se ha creado el libro a la Entidad: " + entidad.getNombre() + " modifique el código del libro, editando la entidad");
             }else{
                 Mensaje.saveMessageError(request,"Ya existe un libro en la Entidad: " + entidad.getNombre());
             }
