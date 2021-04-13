@@ -54,6 +54,16 @@ public class EntidadInterceptor extends HandlerInterceptorAdapter {
                 }
             }
 
+            // Crear Libro único
+            if(url.equals("/entidad/crearLibro")){
+                if(!rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN)){
+                    log.info("Error de rol");
+                    Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.rol"));
+                    response.sendRedirect("/regweb3/aviso");
+                    return false;
+                }
+            }
+
             // Editar entidad
             if((url.contains("edit"))){
                 if(!(rolActivo.getNombre().equals(RegwebConstantes.RWE_SUPERADMIN) || rolActivo.getNombre().equals(RegwebConstantes.RWE_ADMIN))) {
