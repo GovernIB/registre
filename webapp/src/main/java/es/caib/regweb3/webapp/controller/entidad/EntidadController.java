@@ -97,24 +97,25 @@ public class EntidadController extends BaseController {
      * Crear Libro
      */
     @RequestMapping(value = "/crearLibro", method = RequestMethod.GET)
-    public String crearLibro(Model model, HttpServletRequest request) throws Exception {
+    public String crearLibro(HttpServletRequest request) throws Exception {
 
-        Entidad entidad = getEntidadActiva(request);
+        List<Entidad> entidades = entidadEjb.getAll();
 
-        if(entidad.getLibro() == null){
-            Libro libro = new Libro();
-            libro.setCodigo("GOIB");
-            libro.setNombre(entidad.getNombre());
-            libro.setOrganismo(organismoEjb.findByCodigoEntidadLigero(entidad.getCodigoDir3(), entidad.getId()));
-            entidad.setLibro(libroEjb.crearLibro(libro));
+        for(Entidad entidad:entidades){
+            if(entidad.getLibro() == null){
+                Libro libro = new Libro();
+                libro.setCodigo(entidad.getCodigoDir3().substring(0,3));
+                libro.setNombre(entidad.getNombre());
+                libro.setOrganismo(organismoEjb.findByCodigoEntidadLigero(entidad.getCodigoDir3(), entidad.getId()));
+                entidad.setLibro(libroEjb.crearLibro(libro));
 
-            entidadEjb.merge(entidad);
+                entidadEjb.merge(entidad);
 
-            Mensaje.saveMessageInfo(request,"Se ha creado el libro a la Entidad");
-        }else{
-            Mensaje.saveMessageError(request,"Ya existe un libro en la Entidad");
+                Mensaje.saveMessageInfo(request,"Se ha creado el libro a la Entidad: " + entidad.getNombre() + "modifique el código del libro, editando la entidad");
+            }else{
+                Mensaje.saveMessageError(request,"Ya existe un libro en la Entidad: " + entidad.getNombre());
+            }
         }
-
 
         return "redirect:/inici";
     }
