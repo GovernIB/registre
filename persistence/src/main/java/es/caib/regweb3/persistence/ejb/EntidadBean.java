@@ -418,30 +418,17 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
         // LOPD 
         log.info("Lopds eliminados: " + lopdEjb.eliminarByEntidad(idEntidad));
 
-        // LIBROS: PONER CONTADORES A 0  
-        List<Libro> libros = libroEjb.getLibrosEntidad(idEntidad);
-        for (Libro libro : libros) {
-           libroEjb.reiniciarContadores(libro.getId());
-        }
-        log.info("Libros reiniciados: " +libros.size());
-
         // REGISTRO SIR 
         log.info("RegistroSir eliminados: " + registroSirEjb.eliminarByEntidad(idEntidad));
 
-        // SIR: PONER CONTADOR ID INTERCAMBIO A 0  
+        // REINCIAR CONTADORES LIBRO ENTIDAD
         Entidad entidad = findById(idEntidad);
-        if(entidad.getContadorSir() != null){
-            contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
-        }
-        if(entidad.getLibro() != null){
-            contadorEjb.reiniciarContador(entidad.getLibro().getContadorSir().getId());
-        }
+        contadorEjb.reiniciarContadoresLibro(entidad.getLibro());
 
         // Integraciones
         integracionEjb.eliminarByEntidad(idEntidad);
 
         em.flush();
-
     }
 
     @Override

@@ -7,6 +7,8 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.form.BasicForm;
+import es.caib.regweb3.webapp.utils.Mensaje;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -123,7 +125,10 @@ public class InicioController extends BaseController{
 
         // Comprobación de si se ha hecho alguna sincronización del Catálogo DIR3
         if (isSuperAdmin(request) || isAdminEntidad(request)) {
-            mav.addObject("catalogo", descargaEjb.findByTipo(RegwebConstantes.CATALOGO));
+            if(descargaEjb.findByTipo(RegwebConstantes.CATALOGO) == null){
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("catalogoDir3.catalogo.vacio"));
+
+            }
         }
 
         // Si es SuperAdmin redireccionamos al listado de Entidades

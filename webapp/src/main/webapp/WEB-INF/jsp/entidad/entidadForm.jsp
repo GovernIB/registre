@@ -117,6 +117,30 @@
                                             <form:input path="entidad.libro.codigo" cssClass="form-control" maxlength="4"/> <form:errors path="entidad.libro.codigo" cssClass="help-block" element="span"/>
                                         </div>
                                     </div>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label> <spring:message code="libro.contador.entrada"/></label>
+                                        </div>
+                                        <div class="col-xs-8">${entidadForm.entidad.libro.contadorEntrada.numero}</div>
+                                    </div>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label> <spring:message code="libro.contador.salida"/></label>
+                                        </div>
+                                        <div class="col-xs-8">${entidadForm.entidad.libro.contadorSalida.numero}</div>
+                                    </div>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label> <spring:message code="libro.contador.oficio"/></label>
+                                        </div>
+                                        <div class="col-xs-8">${entidadForm.entidad.libro.contadorOficioRemision.numero}</div>
+                                    </div>
+                                    <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                        <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                            <label> <spring:message code="libro.contador.sir"/></label>
+                                        </div>
+                                        <div class="col-xs-8">${entidadForm.entidad.libro.contadorSir.numero}</div>
+                                    </div>
                                 </div>
 
                                 <div class="col-xs-12">
@@ -237,6 +261,30 @@
                                                     <div class="col-xs-8">
                                                         <form:input path="entidad.libro.codigo" cssClass="form-control" maxlength="4"/> <form:errors path="entidad.libro.codigo" cssClass="help-block" element="span"/>
                                                     </div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label> <spring:message code="libro.contador.entrada"/></label>
+                                                    </div>
+                                                    <div class="col-xs-8">${entidadForm.entidad.libro.contadorEntrada.numero}</div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label> <spring:message code="libro.contador.salida"/></label>
+                                                    </div>
+                                                    <div class="col-xs-8">${entidadForm.entidad.libro.contadorSalida.numero}</div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label> <spring:message code="libro.contador.oficio"/></label>
+                                                    </div>
+                                                    <div class="col-xs-8">${entidadForm.entidad.libro.contadorOficioRemision.numero}</div>
+                                                </div>
+                                                <div class="form-group col-xs-6 espaiLinies senseMargeLat">
+                                                    <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">
+                                                        <label> <spring:message code="libro.contador.sir"/></label>
+                                                    </div>
+                                                    <div class="col-xs-8">${entidadForm.entidad.libro.contadorSir.numero}</div>
                                                 </div>
                                                 <div class="form-group col-xs-6 espaiLinies senseMargeLat">
                                                     <div class="col-xs-4 pull-left etiqueta_regweb control-label textEsq">

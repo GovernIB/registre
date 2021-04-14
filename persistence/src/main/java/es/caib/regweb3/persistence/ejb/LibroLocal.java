@@ -125,13 +125,6 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     void reiniciarContadores(Long idLibro) throws Exception;
 
     /**
-     * Reinicia los Contadores de todos los Libros de la Entidad
-     * @param idEntidad
-     * @throws Exception
-     */
-    void reiniciarContadoresEntidad(Long idEntidad) throws Exception;
-
-    /**
      * Obtiene los Organismos vigentes que tienen Libro activo de una Entidad
      * @param idEntidad
      * @return
@@ -162,11 +155,5 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @throws Exception
      */
     Long eliminarLibro(Long idLibro) throws Exception;
-
-    /**
-     * Tarea que reinicia los contadores de los libros de una entidad
-     * @param idEntidad
-     */
-    void reiniciarContadoresEntidadTask(Long idEntidad);
 
 }

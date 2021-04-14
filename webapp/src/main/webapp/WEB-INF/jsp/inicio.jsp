@@ -42,21 +42,6 @@
                             </div>
                         </c:if>
 
-                        <c:if test="${loginInfo.rolActivo.nombre == 'RWE_SUPERADMIN' || loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
-                            <c:if test="${catalogo == null}">
-                                <div class="alert alert-danger">
-                                    <div class="row vertical-align">
-                                        <div class="col-xs-1 text-center">
-                                            <i class="fa fa-times-circle fa-2x"></i>
-                                        </div>
-                                        <div class="col-xs-11">
-                                            <strong><spring:message code="regweb.aviso"/>: </strong> <spring:message code="catalogoDir3.catalogo.vacio"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:if>
-                        </c:if>
-
                         <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN' && loginInfo.entidadActiva == null}">
 
                             <div class="alert alert-danger">
