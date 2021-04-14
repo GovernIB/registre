@@ -106,7 +106,6 @@ public class EntidadController extends BaseController {
                 Libro libro = new Libro();
                 libro.setCodigo(entidad.getCodigoDir3().substring(0,3));
                 libro.setNombre(entidad.getNombre());
-                libro.setOrganismo(organismoEjb.findByCodigoEntidadLigero(entidad.getCodigoDir3(), entidad.getId()));
                 entidad.setLibro(libroEjb.crearLibro(libro));
 
                 entidadEjb.merge(entidad);
@@ -691,12 +690,9 @@ public class EntidadController extends BaseController {
 
         try {
 
-            // Reinicia los contadores de los Libros de la Entidad
-            libroEjb.reiniciarContadoresEntidad(idEntidad);
-
-            // Reinicia el contador SIR de la Entidad
+            // Reinicia los contadores del Libro de la entidad
             Entidad entidad = entidadEjb.findById(idEntidad);
-            contadorEjb.reiniciarContador(entidad.getContadorSir().getId());
+            contadorEjb.reiniciarContadoresLibro(entidad.getLibro());
 
             Mensaje.saveMessageInfo(request, getMessage("aviso.contadores.reiniciar"));
 
