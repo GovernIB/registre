@@ -1,0 +1,1 @@
+update RWE_REGISTRO_DETALLE set presencial = true where presencial is null;

@@ -1,0 +1,2 @@
+--Nuevo campo Expediente en la tabla RWE_REGISTRO_DETALLE
+ALTER TABLE RWE_REGISTRO_DETALLE add EXPEDIENTE_JUST varchar(256);
