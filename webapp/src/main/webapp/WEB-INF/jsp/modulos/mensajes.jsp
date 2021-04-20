@@ -40,7 +40,9 @@
                 <i class="fa fa-times-circle fa-2x"></i>
             </div>
             <div class="col-xs-11">
-                <strong>${error}</strong>
+                <c:forEach var="e" items="${error}">
+                    <strong>${e}</strong><br>
+                </c:forEach>
                 <c:remove var="error" scope="session"/>
             </div>
         </div>
