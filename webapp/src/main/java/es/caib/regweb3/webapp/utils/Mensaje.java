@@ -28,9 +28,20 @@ public class Mensaje {
         session.setAttribute("infos", mensajes);
     }
 
+    @SuppressWarnings("unchecked")
     public static void saveMessageError(HttpServletRequest request, String mensaje) {
         HttpSession session = request.getSession();
-        session.setAttribute("error", mensaje);
+
+        List<String> mensajes = (List<String>) session.getAttribute("error");
+
+        if(mensajes == null){
+            mensajes = new ArrayList<String>();
+            mensajes.add(mensaje);
+        }else{
+            mensajes.add(mensaje);
+        }
+
+        session.setAttribute("error", mensajes);
     }
 
     public static void saveMessageAviso(HttpServletRequest request, String mensaje) {
