@@ -67,28 +67,28 @@
                                     </thead>
                                     <tbody>
                                     <c:forEach var="libro" items="${librosList}">
-                                        <tr>
-                                            <td>${libro.nombre}</td>
-                                            <td>${libro.codigo}</td>
-                                            <td>${libro.organismo.nombreCompleto}</td>
-                                            <td>${libro.contadorEntrada.numero}</td>
-                                            <td>${libro.contadorSalida.numero}</td>
-                                            <td>${libro.contadorOficioRemision.numero}</td>
-                                            <td>${libro.contadorSir.numero}</td>
-                                            <td>
-                                                <c:if test="${libro.activo}"><span class="label label-success">Si</span></c:if>
-                                                <c:if test="${not libro.activo}"><span class="label label-danger">No</span></c:if>
-                                            </td>
-                                            <td>
-                                                <%--<a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.id}/usuarios"/>" title="<spring:message code="organismo.usuarios"/>"><span class="fa fa-users"></span></a>--%>
-                                                <a class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/inicializar"/>","<spring:message code="regweb.confirmar.inicializacion" htmlEscape="true"/>")' title="<spring:message code="libro.inicializar"/>"><span class="fa fa-clock-o"></span></a>
-                                                <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.organismo.id}/${libro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
+                                        <c:if test="${loginInfo.entidadActiva.libro.id != libro.id}">
+                                            <tr>
+                                                <td>${libro.nombre}</td>
+                                                <td>${libro.codigo}</td>
+                                                <td>${libro.organismo.nombreCompleto}</td>
+                                                <td>${libro.contadorEntrada.numero}</td>
+                                                <td>${libro.contadorSalida.numero}</td>
+                                                <td>${libro.contadorOficioRemision.numero}</td>
+                                                <td>${libro.contadorSir.numero}</td>
+                                                <td>
+                                                    <c:if test="${libro.activo}"><span class="label label-success">Si</span></c:if>
+                                                    <c:if test="${not libro.activo}"><span class="label label-danger">No</span></c:if>
+                                                </td>
+                                                <td>
+                                                    <a class="btn btn-warning btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/inicializar"/>","<spring:message code="regweb.confirmar.inicializacion" htmlEscape="true"/>")' title="<spring:message code="libro.inicializar"/>"><span class="fa fa-clock-o"></span></a>
+                                                    <a class="btn btn-warning btn-sm" href="<c:url value="/libro/${libro.organismo.id}/${libro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                     <c:if test="${libro.activo}">
                                                         <a class="btn btn-success btn-sm" onclick='javascript:confirm("<c:url value="/permisos/migrarPermisos/${libro.id}"/>","Desea migrar los permisos")' title="Migrar permisos"><span class="fa fa-users"></span></a>
                                                     </c:if>
-                                                <%--<a class="btn btn-danger btn-sm" onclick='javascript:confirm("<c:url value="/libro/${libro.id}/${libro.organismo.id}/delete"/>", "<spring:message code="regweb.confirmar.eliminacion" htmlEscape="true"/>")' title="Eliminar" href="javascript:void(0);"><span class="fa fa-eraser"></span></a>--%>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                        </c:if>
                                     </c:forEach>
                                     </tbody>
                                 </table>
