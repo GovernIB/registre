@@ -2,7 +2,6 @@ package es.caib.regweb3.webapp.controller.permiso;
 
 import es.caib.regweb3.model.*;
 import es.caib.regweb3.persistence.ejb.LibroLocal;
-import es.caib.regweb3.persistence.ejb.PermisoLibroUsuarioLocal;
 import es.caib.regweb3.persistence.ejb.UsuarioLocal;
 import es.caib.regweb3.persistence.utils.RolUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -37,9 +36,6 @@ public class PermisosController extends BaseController {
 
     @EJB(mappedName = "regweb3/UsuarioEJB/local")
     private UsuarioLocal usuarioEjb;
-
-    @EJB(mappedName = "regweb3/PermisoLibroUsuarioEJB/local")
-    private PermisoLibroUsuarioLocal permisoLibroUsuarioEjb;
 
     @EJB(mappedName = "regweb3/LibroEJB/local")
     private LibroLocal libroEjb;

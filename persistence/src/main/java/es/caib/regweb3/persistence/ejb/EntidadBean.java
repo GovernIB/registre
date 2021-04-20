@@ -145,8 +145,6 @@ public class EntidadBean extends BaseEjbJPA<Entidad, Long> implements EntidadLoc
     @Override
     public Entidad nuevaEntidad(Entidad entidad) throws Exception{
 
-        //entidad.setContadorSir(contadorEjb.persist(new Contador()));
-
         // Libro único
         Libro libro = new Libro();
         libro.setCodigo(entidad.getLibro().getCodigo());
