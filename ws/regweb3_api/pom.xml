@@ -314,8 +314,8 @@
 
                     <plugin>
                         <groupId>org.jboss.ws.plugins</groupId>
-                        <artifactId>jaxws-tools-maven-plugin</artifactId>
-                        <version>1.2.0.Final</version>
+                        <artifactId>maven-jaxws-tools-plugin</artifactId>
+                        <version>1.1.1.Final</version>
                         <configuration>
                             <verbose>true</verbose>
                             <goalPrefix>wsconsume</goalPrefix>
