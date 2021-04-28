@@ -335,7 +335,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param representante
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_PersonaFisica(Long tipoRegistro, Boolean representante) {
+    public AsientoRegistralWs getAsiento_to_PersonaFisica(Long tipoRegistro, Boolean representante, Boolean anexos) {
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
@@ -353,10 +353,12 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         asiento.getInteresados().add(interesadoWs);
 
-        try {
-            asiento.getAnexos().addAll(getAnexos());
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return asiento;
@@ -368,7 +370,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param representante
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_PersonaJuridica(Long tipoRegistro, Boolean representante) {
+    public AsientoRegistralWs getAsiento_to_PersonaJuridica(Long tipoRegistro, Boolean representante, Boolean anexos) {
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
@@ -386,7 +388,13 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         asiento.getInteresados().add(interesadoWs);
 
-        //asientoRegistralWs.getAnexos().addAll(getAnexos());
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return asiento;
     }
