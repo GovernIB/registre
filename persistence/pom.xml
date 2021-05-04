@@ -143,6 +143,19 @@
             </exclusions>
         </dependency>
 
+
+        <dependency>
+            <groupId>org.fundaciobit.pluginsib.arxiu</groupId>
+            <artifactId>pluginsib-arxiu-filesystem</artifactId>
+            <version>${arxiu.api.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <dependency>
             <groupId>net.java.xades</groupId>
             <artifactId>jxades</artifactId>
