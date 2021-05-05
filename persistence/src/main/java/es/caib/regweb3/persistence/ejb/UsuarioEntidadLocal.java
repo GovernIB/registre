@@ -135,12 +135,12 @@ public interface UsuarioEntidadLocal extends BaseEjb<UsuarioEntidad, Long> {
     List<Entidad> getEntidadesByUsuario(Long idUsuario) throws Exception;
 
     /**
-    * Retorna los {@link es.caib.regweb3.model.UsuarioEntidad} de un Usuario activos.
+    * Retorna los {@link es.caib.regweb3.model.Entidad} de un Usuario activos.
     * @param idUsuario
     * @return
     * @throws Exception
     */
-    List<UsuarioEntidad> findByUsuario(Long idUsuario) throws Exception;
+    List<Entidad> findByUsuario(Long idUsuario) throws Exception;
 
     /**
      * Realiza una busqueda de {@link es.caib.regweb3.model.UsuarioEntidad} según los parámetros

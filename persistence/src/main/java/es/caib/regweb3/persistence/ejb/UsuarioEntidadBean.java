@@ -149,16 +149,24 @@ public class UsuarioEntidadBean extends BaseEjbJPA<UsuarioEntidad, Long> impleme
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<UsuarioEntidad> findByUsuario(Long idUsuario) throws Exception{
+    public List<Entidad> findByUsuario(Long idUsuario) throws Exception{
 
-        Query q = em.createQuery("Select usuarioEntidad from UsuarioEntidad as usuarioEntidad "
+        Query q = em.createQuery("Select usuarioEntidad.entidad.id, usuarioEntidad.entidad.nombre, usuarioEntidad.entidad.codigoDir3 from UsuarioEntidad as usuarioEntidad "
             + "where usuarioEntidad.usuario.id = :idUsuario and usuarioEntidad.activo = true and " +
                 "usuarioEntidad.entidad.activo = true");
 
         q.setParameter("idUsuario",idUsuario);
         q.setHint("org.hibernate.readOnly", true);
 
-        return q.getResultList();
+        List<Entidad> entidades =  new ArrayList<>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Entidad entidad = new Entidad((Long)object[0],(String)object[1],(String)object[2]);
+            entidades.add(entidad);
+        }
+
+        return entidades;
 
     }
 
