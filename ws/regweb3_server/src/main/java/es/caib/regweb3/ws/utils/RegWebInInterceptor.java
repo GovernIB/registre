@@ -1,7 +1,7 @@
 package es.caib.regweb3.ws.utils;
 
+import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.Usuario;
-import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.utils.I18NLogicUtils;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -115,7 +115,7 @@ public class RegWebInInterceptor extends AbstractPhaseInterceptor<Message> {
 
 
         // Obtenim les entitats a les que pertany
-        List<UsuarioEntidad> entitats;
+        List<Entidad> entitats;
         try {
             entitats = EjbManager.getUsuarioEntidadEJB().findByUsuario(usuariAplicacio.getId());
         } catch (Exception e) {
