@@ -85,7 +85,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request) throws Exception {
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         List<Organismo> organismosConsultaSalida = getOrganismosConsultaSalida(request);
 
         // Fijamos un Libro por defecto
@@ -118,7 +117,6 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
 
         ModelAndView mav = new ModelAndView("registroSalida/registroSalidaList", result.getModel());
 
-        LinkedHashSet<Organismo> organismosOficinaActiva = new LinkedHashSet<Organismo>(getOrganismosOficinaActiva(request));
         List<UsuarioEntidad> usuariosEntidad = usuarioEntidadEjb.findByEntidad(getEntidadActiva(request).getId());
         Oficina oficinaActiva = getOficinaActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -133,6 +131,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             mav.addObject("usuariosEntidad", usuariosEntidad);
             mav.addObject("registroSalidaBusqueda", busqueda);
             mav.addObject("oficinasConsultaSalida", getOficinasConsultaSalida(request));
+            mav.addObject("organismosConsultaSalida", getOrganismosConsultaSalida(request));
             mav.addObject("organOrigen", busqueda.getOrganOrigen());
             mav.addObject("anularForm", new AnularForm());
 
@@ -157,7 +156,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             }
 
             //Búsqueda de registros
-            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getAnexos(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
+            Paginacion paginacion = registroSalidaConsultaEjb.busqueda(busqueda.getPageNumber(), organismos, busqueda.getFechaInicio(), fechaFin, registroSalida, nombreInteresado, apellido1Interesado, apellido2Interesado, busqueda.getInteressatDoc(), busqueda.getObservaciones(), busqueda.getUsuario(), entidadActiva.getId());
 
             busqueda.setPageNumber(1);
             mav.addObject("paginacion", paginacion);

@@ -172,14 +172,14 @@
                             empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                             empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                             empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
-                            empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                                 </c:if>
                         <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                             not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                             not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                             not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
-                            not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse in">
                         </c:if>
 

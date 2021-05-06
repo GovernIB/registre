@@ -150,14 +150,14 @@
                         empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom &&
                         empty registroSalidaBusqueda.interessatLli1 && empty registroSalidaBusqueda.interessatLli2 &&
                         empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.usuario &&
-                        !registroSalidaBusqueda.anexos && !registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        !registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
                     <div id="demo" class="collapse">
                         </c:if>
                     <c:if test="${not empty registroSalidaBusqueda.registroSalida.registroDetalle.tipoDocumentacionFisica ||
                         not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom ||
                         not empty registroSalidaBusqueda.interessatLli1 || not empty registroSalidaBusqueda.interessatLli2 ||
                         not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.usuario ||
-                        registroSalidaBusqueda.anexos || registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
                         <div id="demo" class="collapse in">
                     </c:if>
 
