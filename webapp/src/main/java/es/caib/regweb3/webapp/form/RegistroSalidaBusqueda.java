@@ -17,7 +17,6 @@ public class RegistroSalidaBusqueda implements Serializable {
     private Integer pageNumber;
     private Date fechaInicio;
     private Date fechaFin;
-    private Boolean anexos;
     private String interessatNom;
     private String interessatLli1;
     private String interessatLli2;
@@ -72,14 +71,6 @@ public class RegistroSalidaBusqueda implements Serializable {
 
     public void setFechaFin(Date fechaFin) {
         this.fechaFin = fechaFin;
-    }
-
-    public Boolean getAnexos() {
-        return anexos;
-    }
-
-    public void setAnexos(Boolean anexos) {
-        this.anexos = anexos;
     }
 
 	public String getInteressatNom() {

@@ -155,14 +155,14 @@
                         empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom &&
                         empty registroSalidaBusqueda.interessatLli1 && empty registroSalidaBusqueda.interessatLli2 &&
                         empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.usuario &&
-                        !registroSalidaBusqueda.anexos && !registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        registroSalidaBusqueda.registroSalida.registroDetalle.presencial == null}">
                         <div id="demo" class="collapse">
                     </c:if>
                     <c:if test="${not empty registroSalidaBusqueda.registroSalida.registroDetalle.tipoDocumentacionFisica ||
                         not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom ||
                         not empty registroSalidaBusqueda.interessatLli1 || not empty registroSalidaBusqueda.interessatLli2 ||
                         not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.usuario ||
-                        registroSalidaBusqueda.anexos || registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
                         <div id="demo" class="collapse in">
                     </c:if>
 
@@ -248,16 +248,6 @@
                             </div>
                             <div class="col-xs-6 espaiLinies">
                                 <div class="col-xs-4 pull-left etiqueta_regweb">
-                                    <label for="anexos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anexos.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
-                                </div>
-                                <div class="col-xs-8">
-                                    <form:checkbox path="anexos"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="col-xs-6 espaiLinies">
-                                <div class="col-xs-4 pull-left etiqueta_regweb">
                                     <label for="registroSalida.registroDetalle.presencial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.presencial"/>" data-toggle="popover"><spring:message code="registro.presencial"/></label>
                                 </div>
                                 <div class="col-xs-8">
@@ -268,22 +258,20 @@
                                     </form:select>
                                 </div>
                             </div>
-                            <div class="col-xs-6 espaiLinies"><div class="col-xs-12">&nbsp;</div></div>
                         </div>
-
                     </div>
 
                 <div class="col-xs-12 pad-bottom15 mesOpcions">
                     <a class="btn btn-danger btn-xs pull-right masOpciones-danger" data-toggle="collapse" data-target="#demo">
                         <%--Comprueba si debe mostrar mas opciones o menos--%>
                         <c:if test="${empty registroSalidaBusqueda.interessatDoc && empty registroSalidaBusqueda.interessatNom
-                        && empty registroSalidaBusqueda.organOrigen && empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.usuario && !registroSalidaBusqueda.anexos
-                        && !registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        && empty registroSalidaBusqueda.organOrigen && empty registroSalidaBusqueda.observaciones && empty registroSalidaBusqueda.usuario &&
+                        !registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
                             <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                         </c:if>
                         <c:if test="${not empty registroSalidaBusqueda.interessatDoc || not empty registroSalidaBusqueda.interessatNom
-                        || not empty registroSalidaBusqueda.organOrigen || not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.usuario || registroSalidaBusqueda.anexos
-                        || registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
+                        || not empty registroSalidaBusqueda.organOrigen || not empty registroSalidaBusqueda.observaciones || not empty registroSalidaBusqueda.usuario ||
+                        registroSalidaBusqueda.registroSalida.registroDetalle.presencial}">
                             <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                         </c:if>
                     </a>
@@ -343,7 +331,6 @@
                                         <col>
                                         <col>
                                         <col>
-                                        <col>
                                         <col width="125">
                                     </colgroup>
                                     <thead>
@@ -357,7 +344,6 @@
                                         <th class="center"><spring:message code="registroSalida.estado"/></th>
                                         <th class="center"><spring:message code="registroSalida.destinatarios"/></th>
                                         <th class="center">Doc.</th>
-                                        <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                         <th class="center"><spring:message code="registro.presencial"/></th>
                                         <th class="center"><spring:message code="regweb.acciones"/></th>
                                     </tr>
@@ -410,13 +396,6 @@
                                                     <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
                                                 </c:if>
                                             </td>
-                                            <c:if test="${registro.registroDetalle.anexos != null}">
-                                                <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
-                                                <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>
-                                            </c:if>
-                                            <c:if test="${registro.registroDetalle.anexos == null}">
-                                                <td class="center">0</td>
-                                            </c:if>
                                             <td class="center">
                                                 <c:if test="${registro.registroDetalle.presencial}">
                                                     <span class="label label-success"><spring:message code="regweb.si"/></span>

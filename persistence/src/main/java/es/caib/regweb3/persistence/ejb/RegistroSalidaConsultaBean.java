@@ -78,7 +78,7 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, Boolean anexos, String observaciones, String usuario, Long idEntidad) throws Exception {
+    public Paginacion busqueda(Integer pageNumber,List<Long> organismos, Date fechaInicio, Date fechaFin, RegistroSalida registroSalida, String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc, String observaciones, String usuario, Long idEntidad) throws Exception {
 
         Query q;
         Query q2;
@@ -168,11 +168,6 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         parametros.put("fechaInicio", fechaInicio);
         where.add(" registroSalida.fecha <= :fechaFin) ");
         parametros.put("fechaFin", fechaFin);
-
-        // Buscamos registros de sañida con anexos
-        if (anexos) {
-            where.add(" registroSalida.registroDetalle.id in (select distinct(a.registroDetalle.id) from Anexo as a) ");
-        }
 
         //Presencial
         if(registroSalida.getRegistroDetalle().getPresencial() != null){

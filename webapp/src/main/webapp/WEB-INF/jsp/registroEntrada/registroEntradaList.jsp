@@ -173,14 +173,14 @@
                             empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom &&
                             empty registroEntradaBusqueda.interessatLli1 && empty registroEntradaBusqueda.interessatLli2 &&
                             empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones &&
-                            empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse">
                         </c:if>
                         <c:if test="${not empty registroEntradaBusqueda.registroEntrada.registroDetalle.tipoDocumentacionFisica ||
                             not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom ||
                             not empty registroEntradaBusqueda.interessatLli1 || not empty registroEntradaBusqueda.interessatLli2 ||
                             not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones ||
-                            not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                            not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                             <div id="demo" class="collapse in">
                         </c:if>
 
@@ -266,16 +266,6 @@
                                 </div>
                                 <div class="col-xs-6 espaiLinies">
                                     <div class="col-xs-4 pull-left etiqueta_regweb">
-                                        <label for="anexos" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.anexos.busqueda"/>" data-toggle="popover"><spring:message code="registroEntrada.anexos"/></label>
-                                    </div>
-                                    <div class="col-xs-8">
-                                        <form:checkbox path="anexos"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12">
-                               <div class="col-xs-6 espaiLinies">
-                                    <div class="col-xs-4 pull-left etiqueta_regweb">
                                         <label for="registroEntrada.registroDetalle.presencial" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.presencial"/>" data-toggle="popover"><spring:message code="registro.presencial"/></label>
                                     </div>
                                     <div class="col-xs-8">
@@ -286,7 +276,6 @@
                                         </form:select>
                                     </div>
                                 </div>
-                                <div class="col-xs-6 espaiLinies"><div class="col-xs-12">&nbsp;</div></div>
                             </div>
 
                         </div>
@@ -294,13 +283,13 @@
                             <a class="btn btn-info btn-xs pull-right masOpciones-info" data-toggle="collapse" data-target="#demo">
                                 <%--Comprueba si debe mostrar mas opciones o menos--%>
                                 <c:if test="${empty registroEntradaBusqueda.interessatDoc && empty registroEntradaBusqueda.interessatNom
-                                && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario && !registroEntradaBusqueda.anexos
-                                && !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                && empty registroEntradaBusqueda.organDestinatari && empty registroEntradaBusqueda.observaciones && empty registroEntradaBusqueda.usuario &&
+                                !registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-plus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
                                 <c:if test="${not empty registroEntradaBusqueda.interessatDoc || not empty registroEntradaBusqueda.interessatNom
-                                || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones || not empty registroEntradaBusqueda.usuario || registroEntradaBusqueda.anexos
-                                || registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
+                                || not empty registroEntradaBusqueda.organDestinatari || not empty registroEntradaBusqueda.observaciones || not empty registroEntradaBusqueda.usuario ||
+                                registroEntradaBusqueda.registroEntrada.registroDetalle.presencial}">
                                     <span class="fa fa-minus"></span> <spring:message code="regweb.busquedaAvanzada"/>
                                 </c:if>
                             </a>
@@ -360,7 +349,6 @@
                                                         <col>
                                                         <col>
                                                         <col>
-                                                        <col>
                                                         <col width="125">
                                                     </colgroup>
                                                     <thead>
@@ -379,7 +367,6 @@
                                                             <th class="center"><spring:message code="registroEntrada.estado"/></th>
                                                             <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                             <th class="center">Doc.</th>
-                                                            <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                                             <th class="center"><spring:message code="registro.presencial"/></th>
                                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                                         </tr>
@@ -440,13 +427,6 @@
                                                                         <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
                                                                     </c:if>
                                                                 </td>
-                                                                <c:if test="${registro.registroDetalle.anexos != null}">
-                                                                    <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
-                                                                    <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>
-                                                                </c:if>
-                                                                <c:if test="${registro.registroDetalle.anexos == null}">
-                                                                    <td class="center">0</td>
-                                                                </c:if>
                                                                 <td class="center">
                                                                     <c:if test="${registro.registroDetalle.presencial}">
                                                                         <span class="label label-success"><spring:message code="regweb.si"/></span>
