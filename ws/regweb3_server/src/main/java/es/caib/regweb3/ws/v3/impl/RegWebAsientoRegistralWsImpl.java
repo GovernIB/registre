@@ -854,7 +854,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
     @RolesAllowed({RWE_WS_CIUDADANO})
     @Override
     @WebMethod
-    public ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException{
+    public ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma, @WebParam(name = "fechaInicio") Date fechaInicio, @WebParam(name = "fechaFin") Date fechaFin, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "estados") List<Integer> estados) throws Throwable, WsI18NException, WsValidationException{
 
         // Definimos la petición que se guardá en el monitor de integración
         Date inicio = new Date();
@@ -896,7 +896,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         try{
 
             // Obtenemos los Registros de Entrada de un ciudadano
-            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber);
+            Paginacion entradas = registroEntradaConsultaEjb.getByDocumento(entidadActiva.getId(),documento, pageNumber, fechaInicio, fechaFin,numeroRegistroFormateado,estados);
             resultado.setTotalResults(entradas.getTotalResults());
             resultado.setPageNumber(pageNumber);
 

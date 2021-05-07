@@ -822,42 +822,118 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception {
+    public Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber, Date fechaInicio, Date fechaFin, String numeroRegistro, List<Integer> estados) throws Exception {
 
         Query q1;
         Query q2;
+        Map<String, Object> parametros = new HashMap<String, Object>();
+        List<String> where = new ArrayList<String>();
 
-        // Obtenemos el total de registros del ciudadano
-        q1 = em.createQuery("Select DISTINCT count(re.id) " +
-                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado and re.estado != :rectificado and re.estado != :reserva");
-        q1.setParameter("idEntidad", idEntidad);
-        q1.setParameter("documento", documento.trim());
-        q1.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q1.setParameter("rectificado", RegwebConstantes.REGISTRO_RECTIFICADO);
-        q1.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
-        q1.setHint("org.hibernate.readOnly", true);
-        Long total = (Long) q1.getSingleResult();
+        String queryBase = "Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.fecha " +
+           "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino ";
+        StringBuilder query = new StringBuilder(queryBase);
 
-        // Obtenemos solo los paginados
-        q2 = em.createQuery("Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion " +
-                "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino " +
-                "where (UPPER(interessat.documento) LIKE UPPER(:documento)) and re.usuario.entidad.id = :idEntidad and re.estado != :anulado and re.estado != :rectificado and re.estado != :reserva order by re.fecha desc");
 
-        q2.setParameter("idEntidad", idEntidad);
-        q2.setParameter("documento", documento.trim());
-        q2.setParameter("anulado", RegwebConstantes.REGISTRO_ANULADO);
-        q2.setParameter("rectificado", RegwebConstantes.REGISTRO_RECTIFICADO);
-        q2.setParameter("reserva", RegwebConstantes.REGISTRO_RESERVA);
-        q2.setHint("org.hibernate.readOnly", true);
+        //Documento
+        where.add(" (UPPER(interessat.documento) LIKE UPPER(:documento))");
+        parametros.put("documento", "%" + documento + "%");
+
+        //Entidad
+        where.add(" re.usuario.entidad.id = :idEntidad ");
+        parametros.put("idEntidad" , idEntidad);
+
+        //Estado Anulado
+        where.add(" re.estado != :anulado ");
+        parametros.put("anulado" , RegwebConstantes.REGISTRO_ANULADO);
+
+        //Estado rectificado
+        where.add(" re.estado != :rectificado ");
+        parametros.put("rectificado" , RegwebConstantes.REGISTRO_RECTIFICADO);
+
+        //Estado reserva
+        where.add(" re.estado != :reserva ");
+        parametros.put("reserva" , RegwebConstantes.REGISTRO_RESERVA);
+
+        //Fecha Inicio
+        if(fechaInicio!=null) {
+            where.add("  (re.fecha >= :fechaInicio ");
+            parametros.put("fechaInicio", fechaInicio);
+        }
+        //Fecha fin
+        if(fechaFin !=null) {
+            where.add(" re.fecha <= :fechaFin) ");
+            parametros.put("fechaFin", fechaFin);
+        }
+
+        // Numero registro
+        if(numeroRegistro!=null && !numeroRegistro.isEmpty()){
+            where.add(" re.numeroRegistroFormateado LIKE :numeroRegistroFormateado ");
+            parametros.put("numeroRegistroFormateado", "%" + numeroRegistro + "%");
+        }
+
+
+        //Estados (hacemos una or con todos los estados que nos envian)
+        if(!estados.isEmpty()){
+            StringBuilder sEstados = new StringBuilder();
+            sEstados.append(" ( ");
+            for(int i= 0; i<estados.size(); i++){
+                int estado = estados.get(i);
+                if(i != estados.size()-1) {
+                    sEstados.append(" re.estado= "+estado+" or ");
+                }else{
+                    sEstados.append(" re.estado= "+estado+ " ");
+                };
+            }
+            sEstados.append(" ) ");
+            where.add(sEstados.toString());
+        }
+
+
+        // Añadimos los parámetros a la query
+        if (parametros.size() != 0) {
+
+            query.append("where ");
+            int count = 0;
+            for (String w : where) {
+                if (count != 0) {
+                    query.append(" and ");
+                }
+                query.append(w);
+                count++;
+            }
+
+            // Duplicamos la query solo para obtener los resultados totales
+            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select DISTINCT count(re.id) " +
+               "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
+            query.append(" order by re.fecha desc ");
+            q1 = em.createQuery(query.toString());
+
+            for (Map.Entry<String, Object> param : parametros.entrySet()) {
+
+                q1.setParameter(param.getKey(), param.getValue());
+                q2.setParameter(param.getKey(), param.getValue());
+            }
+
+        } else {
+            // Duplicamos la query solo para obtener los resultados totales
+            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select DISTINCT count(re.id) " +
+               "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino "));
+            query.append(" order by re.fecha desc ");
+            q1 = em.createQuery(query.toString());
+
+
+        }
+
+        Long total = (Long) q2.getSingleResult();
+
 
         int inicio = pageNumber * RESULTADOS_PAGINACION;
-        q2.setFirstResult(inicio);
-        q2.setMaxResults(RESULTADOS_PAGINACION);
+        q1.setFirstResult(inicio);
+        q1.setMaxResults(RESULTADOS_PAGINACION);
 
         Paginacion paginacion = new Paginacion(total.intValue(), pageNumber);
 
-        List<Object[]> result = q2.getResultList();
+        List<Object[]> result = q1.getResultList();
         List<RegistroEntrada> registros = new ArrayList<>();
 
         for (int i = 0; i < result.size(); i++) {
