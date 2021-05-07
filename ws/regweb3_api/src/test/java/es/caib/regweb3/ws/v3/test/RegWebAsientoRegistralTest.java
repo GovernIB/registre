@@ -217,18 +217,36 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
         try {
 
-            AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
-            entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,TIPO_OPERACION_COMUNICACION,true,false);
+            AsientoRegistralWs registroEntrada = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), "GOIB-E-50/2021", RegwebConstantes.REGISTRO_ENTRADA,true);
+            Assert.assertNotNull(registroEntrada);
 
-            Assert.assertNotNull(asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), entrada.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_ENTRADA,false));
+            printAsiento(registroEntrada);
+
+
+        } catch (WsValidationException | WsI18NException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void crearObtenerAsiento() throws Exception{
+
+        try {
+
+            AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
+            entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,TIPO_OPERACION_COMUNICACION,false,false);
+
+            AsientoRegistralWs registroEntrada = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(), entrada.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_ENTRADA,true);
+            Assert.assertNotNull(registroEntrada);
 
             AsientoRegistralWs salida = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, true, true);
-            salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,TIPO_OPERACION_COMUNICACION,true,false);
+            salida = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),salida,TIPO_OPERACION_NOTIFICACION,false,false);
 
-            Assert.assertNotNull(asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),salida.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_SALIDA,false));
+            AsientoRegistralWs registroSalida = asientoRegistralApi.obtenerAsientoRegistral(getTestEntidadCodigoDir3(),salida.getNumeroRegistroFormateado(), RegwebConstantes.REGISTRO_SALIDA,true);
+            Assert.assertNotNull(registroSalida);
 
-            printAsiento(entrada);
-            printAsiento(salida);
+            printAsiento(registroEntrada);
+            printAsiento(registroSalida);
 
         } catch (WsValidationException | WsI18NException e) {
             e.printStackTrace();
@@ -382,7 +400,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     @Test
     public void obtenerAsientoCiudadanoCarpeta() {
 
-        AsientoWs asientoWs = asientoRegistralApi.obtenerAsientoCiudadanoCarpeta(getTestEntidadCodigoDir3(),"43146650F","GOIB-E-463/2021","es");
+        AsientoWs asientoWs = asientoRegistralApi.obtenerAsientoCiudadanoCarpeta(getTestEntidadCodigoDir3(),"46164250F","GOIB-E-50/2021","es");
 
         System.out.println("Num. Registro: " + asientoWs.getNumeroRegistro());
         System.out.println("Fecha: " + asientoWs.getFechaRegistro());
@@ -391,14 +409,15 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
         System.out.println("Extracto: " + asientoWs.getExtracto());
         System.out.println("");
 
-        System.out.println("Justificante Id: " + asientoWs.getJustificante().getFileID());
-        System.out.println("Justificante Nombre: " + asientoWs.getJustificante().getName());
-        System.out.println("Justificante Mime: " + asientoWs.getJustificante().getMime());
-        System.out.println("Justificante Size: " + asientoWs.getJustificante().getSize());
+        if(asientoWs.getJustificante() != null){
+            System.out.println("Justificante Id: " + asientoWs.getJustificante().getFileID());
+            System.out.println("Justificante Nombre: " + asientoWs.getJustificante().getName());
+            System.out.println("Justificante Mime: " + asientoWs.getJustificante().getMime());
+            System.out.println("Justificante Size: " + asientoWs.getJustificante().getSize());
 
-        FileContentWs fileContentWs = asientoRegistralApi.obtenerAnexoCiudadano(getTestEntidadCodigoDir3(),asientoWs.getJustificante().getFileID() , "es");
-        System.out.println("Justificante url: " + fileContentWs.getUrl());
-
+            FileContentWs fileContentWs = asientoRegistralApi.obtenerAnexoCiudadano(getTestEntidadCodigoDir3(),asientoWs.getJustificante().getFileID() , "es");
+            System.out.println("Justificante url: " + fileContentWs.getUrl());
+        }
 
         for(FileInfoWs fileInfoWs:asientoWs.getAnexos()){
             System.out.println("");

@@ -771,7 +771,9 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
     private RegistroEntrada cargarAnexosLigero(RegistroEntrada registroEntrada) throws Exception, I18NException {
         Long idEntidad = registroEntrada.getOficina().getOrganismoResponsable().getEntidad().getId();
 
+        Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
         List<Anexo> anexos = registroEntrada.getRegistroDetalle().getAnexos();
+
         List<AnexoFull> anexosFull = new ArrayList<AnexoFull>();
         for (Anexo anexo : anexos) {
             AnexoFull anexoFull = anexoEjb.getAnexoFullLigero(anexo.getId(), idEntidad);

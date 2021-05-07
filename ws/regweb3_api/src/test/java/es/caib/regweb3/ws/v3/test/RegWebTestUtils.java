@@ -659,7 +659,15 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
             System.out.println("");
             System.out.println("Nombre anexo: " + anexo.getTitulo());
             System.out.println("isJustificante: " + anexo.isJustificante());
-            System.out.println("fichero: " + anexo.getFicheroAnexado().length);
+
+            if(anexo.getModoFirma().equals(0)){
+                System.out.println("fichero: " + anexo.getFicheroAnexado().length);
+
+            }else if(anexo.getModoFirma().equals(1)){
+                System.out.println("firma: " + anexo.getFirmaAnexada().length);
+
+            }
+
         }
     }
 
