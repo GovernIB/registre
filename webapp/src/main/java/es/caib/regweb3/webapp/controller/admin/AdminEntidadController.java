@@ -189,7 +189,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @RequestMapping(value = "/registroEntrada/{idRegistro}/detalle", method = RequestMethod.GET)
     public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException, I18NValidationException {
 
-        RegistroEntrada registro = registroEntradaEjb.findById(idRegistro);
+        RegistroEntrada registro = registroEntradaEjb.findByIdConAnexos(idRegistro);
 
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
@@ -232,7 +232,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @RequestMapping(value = "/registroEntrada/{idRegistro}/procesar", method = RequestMethod.GET)
     public String procesarRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException, I18NValidationException {
 
-        RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+        RegistroEntrada registroEntrada = registroEntradaEjb.findByIdConAnexos(idRegistro);
 
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 

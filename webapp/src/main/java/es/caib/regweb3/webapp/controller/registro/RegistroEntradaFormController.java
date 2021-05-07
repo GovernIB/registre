@@ -253,7 +253,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
         Entidad entidad = getEntidadActiva(request);
 
         try {
-            registroEntrada = registroEntradaEjb.findById(idRegistro);
+            registroEntrada = registroEntradaEjb.findByIdConAnexos(idRegistro);
 
             if(validarPermisosEdicion(registroEntrada, request, RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA)){
                 return "redirect:/aviso";
@@ -401,7 +401,7 @@ public class RegistroEntradaFormController extends AbstractRegistroCommonFormCon
                     }
                 }
                 // Obtenemos el RE antes de guardarlos, para crear el histórico
-                RegistroEntrada antiguo = registroEntradaEjb.findById(registroEntrada.getId());
+                RegistroEntrada antiguo = registroEntradaEjb.findByIdConAnexos(registroEntrada.getId());
 
                 // Actualizamos el RegistroEntrada
                 registroEntrada = registroEntradaEjb.actualizar(antiguo, registroEntrada, usuarioEntidad);

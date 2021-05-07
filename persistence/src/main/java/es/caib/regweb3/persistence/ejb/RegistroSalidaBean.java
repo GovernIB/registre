@@ -18,6 +18,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -64,6 +65,16 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
 
+
+    @Override
+    public RegistroSalida findByIdConAnexos(Long id) throws Exception {
+
+        RegistroSalida registroSalida = findById(id);
+
+        Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
+
+        return registroSalida;
+    }
 
     @Override
     public RegistroSalida registrarSalida(RegistroSalida registroSalida,

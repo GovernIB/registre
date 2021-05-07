@@ -18,6 +18,7 @@ import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.ejb3.annotation.TransactionTimeout;
@@ -65,6 +66,16 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @EJB private PluginLocal pluginEjb;
     @EJB private OrganismoLocal organismoEjb;
 
+
+    @Override
+    public RegistroEntrada findByIdConAnexos(Long id) throws Exception {
+
+        RegistroEntrada registroEntrada = findById(id);
+
+        Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
+
+        return registroEntrada;
+    }
 
     @Override
     public RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,

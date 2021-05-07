@@ -111,13 +111,10 @@ public class ColaController extends BaseController {
 
             // Marcamos el elemento como procesado
             Cola cola = colaEjb.findById(colaId);
-            //colaEjb.procesarElemento(cola,);
 
             // Marcamos como distribuido el Registro
             RegistroEntrada registroEntrada = registroEntradaEjb.findById(cola.getIdObjeto());
             colaEjb.procesarElemento(cola,registroEntrada);
-          //  registroEntradaEjb.distribuirRegistroEntrada(registroEntrada, registroEntrada.getUsuario());
-
 
             Mensaje.saveMessageInfo(request, getMessage("cola.procesar.ok"));
 
