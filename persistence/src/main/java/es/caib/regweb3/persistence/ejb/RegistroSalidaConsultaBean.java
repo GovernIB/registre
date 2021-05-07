@@ -13,6 +13,7 @@ import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -273,7 +274,9 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
         RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
+
         if(registroSalida!= null){
+            Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
             return cargarAnexosFull(registroSalida);
         }else{
             return null;

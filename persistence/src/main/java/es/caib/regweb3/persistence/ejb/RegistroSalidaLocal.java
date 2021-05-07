@@ -21,6 +21,15 @@ import java.util.Set;
 @RolesAllowed({"RWE_SUPERADMIN","RWE_ADMIN","RWE_USUARI","RWE_WS_ENTRADA","RWE_WS_SALIDA", "RWE_WS_CIUDADANO"})
 public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
+
+    /**
+     * Obtiene un Registro de Salida cargardo la relación con la tabla Anexos
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    RegistroSalida findByIdConAnexos(Long id) throws Exception;
+
     /**
      * Guarda un Registro de Salida (con anexos)
      * @param registroSalida

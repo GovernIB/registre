@@ -681,7 +681,7 @@ public class SirEnvioBean implements SirEnvioLocal {
 
             if (tipoRegistro.equals(RegwebConstantes.REGISTRO_ENTRADA)) {
 
-                RegistroEntrada registroEntrada = registroEntradaEjb.findById(idRegistro);
+                RegistroEntrada registroEntrada = registroEntradaEjb.findByIdConAnexos(idRegistro);
                 RegistroDetalle registroDetalle = registroEntrada.getRegistroDetalle();
 
                 peticion.append("Número registro: ").append(registroEntrada.getNumeroRegistroFormateado()).append(System.getProperty("line.separator"));

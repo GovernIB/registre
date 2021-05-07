@@ -440,7 +440,7 @@
                                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
 
                                                                     <%--Botón editar--%>
-                                                                    <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar && !registro.registroDetalle.tieneJustificante}">
+                                                                    <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_RESERVA) && puedeEditar}">
                                                                         <a class="btn btn-warning btn-sm" href="<c:url value="/registroEntrada/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                                     </c:if>
 

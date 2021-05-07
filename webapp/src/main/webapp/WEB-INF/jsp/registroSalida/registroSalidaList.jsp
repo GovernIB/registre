@@ -409,13 +409,12 @@
                                                 <a class="btn btn-info btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
 
                                                 <%--Botón editar--%>
-                                                <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar && !registro.registroDetalle.tieneJustificante}">
+                                                <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO && puedeEditar}">
                                                     <a class="btn btn-warning btn-sm" href="<c:url value="/registroSalida/${registro.id}/edit"/>" title="<spring:message code="regweb.editar"/>"><span class="fa fa-pencil"></span></a>
                                                 </c:if>
 
                                                 <%--Botón anular--%>
                                                 <c:if test="${(registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_PENDIENTE_VISAR) && puedeEditar}">
-                                                    <%--<a class="btn btn-danger btn-sm" href="javascript:void(0);" onclick='javascript:confirm("<c:url value="/registroSalida/${registro.id}/anular"/>","<spring:message code="regweb.confirmar.anular" htmlEscape="true"/>")' title="<spring:message code="regweb.anular"/>"><span class="fa fa-thumbs-o-down"></span></a>--%>
                                                     <a data-toggle="modal" role="button" href="#anularModal" onclick="limpiarModalAnulacion(${registro.id});" class="btn btn-danger btn-sm"><span class="fa fa-thumbs-o-down"></span></a>
                                                 </c:if>
 
