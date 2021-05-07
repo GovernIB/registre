@@ -1,13 +1,22 @@
 package es.caib.regweb3.ws.v3.impl;
 
 
-import es.caib.regweb3.ws.model.*;
+import es.caib.regweb3.ws.model.AsientoRegistralSesionWs;
+import es.caib.regweb3.ws.model.AsientoRegistralWs;
+import es.caib.regweb3.ws.model.AsientoWs;
+import es.caib.regweb3.ws.model.FileContentWs;
+import es.caib.regweb3.ws.model.JustificanteReferenciaWs;
+import es.caib.regweb3.ws.model.JustificanteWs;
+import es.caib.regweb3.ws.model.OficioWs;
+import es.caib.regweb3.ws.model.ResultadoBusquedaWs;
 import org.fundaciobit.genapp.common.ws.WsI18NException;
 import org.fundaciobit.genapp.common.ws.WsValidationException;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Fundació BIT.
@@ -168,7 +177,7 @@ public interface RegWebAsientoRegistralWs {
      * @throws WsValidationException
      */
     @WebMethod
-    ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad,  @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma) throws Throwable, WsI18NException, WsValidationException;
+    ResultadoBusquedaWs obtenerAsientosCiudadanoCarpeta(@WebParam(name = "entidad") String entidad, @WebParam(name = "documento") String documento, @WebParam(name = "pageNumber") Integer pageNumber, @WebParam(name = "idioma") String idioma, @WebParam(name = "fechaInicio") Date fechaInicio, @WebParam(name = "fechaFin") Date fechaFin, @WebParam(name = "numeroRegistroFormateado") String numeroRegistroFormateado, @WebParam(name = "estados") List<Integer> estados) throws Throwable, WsI18NException, WsValidationException;
 
     /**
      *

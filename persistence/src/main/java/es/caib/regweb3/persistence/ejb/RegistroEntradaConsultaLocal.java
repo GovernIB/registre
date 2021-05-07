@@ -265,7 +265,7 @@ public interface RegistroEntradaConsultaLocal {
      * @return
      * @throws Exception
      */
-    Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber) throws Exception;
+    Paginacion getByDocumento(Long idEntidad, String documento, Integer pageNumber, Date fechaInicio, Date fechaFin, String numeroRegistroFormateado, List<Integer> estados) throws Exception;
 
     /**
      * Obtiene un Registro a partir de su número y el documento del Ciudadano
