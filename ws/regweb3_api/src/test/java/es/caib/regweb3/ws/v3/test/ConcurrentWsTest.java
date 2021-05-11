@@ -36,7 +36,7 @@ public class ConcurrentWsTest extends RegWebTestUtils{
 
         try {
             long inicio = System.currentTimeMillis();
-            AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true);
+            AsientoRegistralWs entrada = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true,false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),entrada,null,false,false);
 
             //AsientoRegistralWs salida = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, false);
