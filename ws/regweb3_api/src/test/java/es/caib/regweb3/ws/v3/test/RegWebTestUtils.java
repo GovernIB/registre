@@ -796,4 +796,16 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         System.out.println("");
     }
 
+
+    Timestamp setDate(int day, int month, int year){
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DATE, day);
+        cal.set(Calendar.YEAR, year);
+
+
+        return new Timestamp(cal.getTime().getTime());
+    }
+
 }

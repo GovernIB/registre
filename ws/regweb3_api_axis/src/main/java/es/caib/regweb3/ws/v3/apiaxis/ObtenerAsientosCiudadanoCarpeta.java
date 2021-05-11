@@ -16,6 +16,14 @@ public class ObtenerAsientosCiudadanoCarpeta  implements java.io.Serializable {
 
     private java.lang.String idioma;
 
+    private java.util.Calendar fechaInicio;
+
+    private java.util.Calendar fechaFin;
+
+    private java.lang.String numeroRegistroFormateado;
+
+    private int[] estados;
+
     public ObtenerAsientosCiudadanoCarpeta() {
     }
 
@@ -23,11 +31,19 @@ public class ObtenerAsientosCiudadanoCarpeta  implements java.io.Serializable {
            java.lang.String entidad,
            java.lang.String documento,
            java.lang.Integer pageNumber,
-           java.lang.String idioma) {
+           java.lang.String idioma,
+           java.util.Calendar fechaInicio,
+           java.util.Calendar fechaFin,
+           java.lang.String numeroRegistroFormateado,
+           int[] estados) {
            this.entidad = entidad;
            this.documento = documento;
            this.pageNumber = pageNumber;
            this.idioma = idioma;
+           this.fechaInicio = fechaInicio;
+           this.fechaFin = fechaFin;
+           this.numeroRegistroFormateado = numeroRegistroFormateado;
+           this.estados = estados;
     }
 
 
@@ -110,6 +126,94 @@ public class ObtenerAsientosCiudadanoCarpeta  implements java.io.Serializable {
         this.idioma = idioma;
     }
 
+
+    /**
+     * Gets the fechaInicio value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @return fechaInicio
+     */
+    public java.util.Calendar getFechaInicio() {
+        return fechaInicio;
+    }
+
+
+    /**
+     * Sets the fechaInicio value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @param fechaInicio
+     */
+    public void setFechaInicio(java.util.Calendar fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+
+    /**
+     * Gets the fechaFin value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @return fechaFin
+     */
+    public java.util.Calendar getFechaFin() {
+        return fechaFin;
+    }
+
+
+    /**
+     * Sets the fechaFin value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @param fechaFin
+     */
+    public void setFechaFin(java.util.Calendar fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+
+    /**
+     * Gets the numeroRegistroFormateado value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @return numeroRegistroFormateado
+     */
+    public java.lang.String getNumeroRegistroFormateado() {
+        return numeroRegistroFormateado;
+    }
+
+
+    /**
+     * Sets the numeroRegistroFormateado value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @param numeroRegistroFormateado
+     */
+    public void setNumeroRegistroFormateado(java.lang.String numeroRegistroFormateado) {
+        this.numeroRegistroFormateado = numeroRegistroFormateado;
+    }
+
+
+    /**
+     * Gets the estados value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @return estados
+     */
+    public int[] getEstados() {
+        return estados;
+    }
+
+
+    /**
+     * Sets the estados value for this ObtenerAsientosCiudadanoCarpeta.
+     * 
+     * @param estados
+     */
+    public void setEstados(int[] estados) {
+        this.estados = estados;
+    }
+
+    public int getEstados(int i) {
+        return this.estados[i];
+    }
+
+    public void setEstados(int i, int _value) {
+        this.estados[i] = _value;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof ObtenerAsientosCiudadanoCarpeta)) return false;
@@ -133,7 +237,19 @@ public class ObtenerAsientosCiudadanoCarpeta  implements java.io.Serializable {
               this.pageNumber.equals(other.getPageNumber()))) &&
             ((this.idioma==null && other.getIdioma()==null) || 
              (this.idioma!=null &&
-              this.idioma.equals(other.getIdioma())));
+              this.idioma.equals(other.getIdioma()))) &&
+            ((this.fechaInicio==null && other.getFechaInicio()==null) || 
+             (this.fechaInicio!=null &&
+              this.fechaInicio.equals(other.getFechaInicio()))) &&
+            ((this.fechaFin==null && other.getFechaFin()==null) || 
+             (this.fechaFin!=null &&
+              this.fechaFin.equals(other.getFechaFin()))) &&
+            ((this.numeroRegistroFormateado==null && other.getNumeroRegistroFormateado()==null) || 
+             (this.numeroRegistroFormateado!=null &&
+              this.numeroRegistroFormateado.equals(other.getNumeroRegistroFormateado()))) &&
+            ((this.estados==null && other.getEstados()==null) || 
+             (this.estados!=null &&
+              java.util.Arrays.equals(this.estados, other.getEstados())));
         __equalsCalc = null;
         return _equals;
     }
@@ -156,6 +272,26 @@ public class ObtenerAsientosCiudadanoCarpeta  implements java.io.Serializable {
         }
         if (getIdioma() != null) {
             _hashCode += getIdioma().hashCode();
+        }
+        if (getFechaInicio() != null) {
+            _hashCode += getFechaInicio().hashCode();
+        }
+        if (getFechaFin() != null) {
+            _hashCode += getFechaFin().hashCode();
+        }
+        if (getNumeroRegistroFormateado() != null) {
+            _hashCode += getNumeroRegistroFormateado().hashCode();
+        }
+        if (getEstados() != null) {
+            for (int i=0;
+                 i<java.lang.reflect.Array.getLength(getEstados());
+                 i++) {
+                java.lang.Object obj = java.lang.reflect.Array.get(getEstados(), i);
+                if (obj != null &&
+                    !obj.getClass().isArray()) {
+                    _hashCode += obj.hashCode();
+                }
+            }
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -194,6 +330,35 @@ public class ObtenerAsientosCiudadanoCarpeta  implements java.io.Serializable {
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
         elemField.setMinOccurs(0);
         elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("fechaInicio");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "fechaInicio"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("fechaFin");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "fechaFin"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("numeroRegistroFormateado");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "numeroRegistroFormateado"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("estados");
+        elemField.setXmlName(new javax.xml.namespace.QName("", "estados"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "int"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        elemField.setMaxOccursUnbounded(true);
         typeDesc.addFieldDesc(elemField);
     }
 

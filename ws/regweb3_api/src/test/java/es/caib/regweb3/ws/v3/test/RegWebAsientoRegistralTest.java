@@ -1,11 +1,26 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.api.v3.*;
+import es.caib.regweb3.ws.api.v3.AsientoRegistralSesionWs;
+import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.AsientoWs;
+import es.caib.regweb3.ws.api.v3.FileContentWs;
+import es.caib.regweb3.ws.api.v3.FileInfoWs;
+import es.caib.regweb3.ws.api.v3.JustificanteReferenciaWs;
+import es.caib.regweb3.ws.api.v3.JustificanteWs;
+import es.caib.regweb3.ws.api.v3.OficioWs;
+import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
+import es.caib.regweb3.ws.api.v3.ResultadoBusquedaWs;
+import es.caib.regweb3.ws.api.v3.WsI18NException;
+import es.caib.regweb3.ws.api.v3.WsValidationException;
 import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -378,7 +393,20 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerAsientosCiudadanoCarpeta() {
 
         try {
-            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"43146650F",0,"es");
+
+
+            Timestamp tFechaInicio = setDate(01,01,2020);
+
+            Timestamp tFechaFin = setDate(05,07,2021);
+
+            List<Integer> estados = new ArrayList<>();
+            estados.add(1);
+            estados.add(3);
+            estados.add(5);
+            estados.add(6);
+            estados.add(7);
+
+            ResultadoBusquedaWs asientos = asientoRegistralApi.obtenerAsientosCiudadanoCarpeta(getTestEntidadCodigoDir3(),"44328254D",0,"es",null, null,"GPRO-E-3/2021", estados );
 
             System.out.println("Asientos encontrados: " +asientos.getTotalResults());
 
@@ -389,6 +417,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
                 System.out.println("Destino codigo: " + asientoWs.getCodigoDestino());
                 System.out.println("Destino denominacion: " + asientoWs.getDenominacionDestino());
                 System.out.println("Extracto: " + asientoWs.getExtracto());
+                System.out.println("Estado: " + asientoWs.getDescripcionEstado());
                 System.out.println("");
             }
 

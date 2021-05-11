@@ -873,7 +873,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
 
 
         //Estados (hacemos una or con todos los estados que nos envian)
-        if(!estados.isEmpty()){
+        if(estados != null && !estados.isEmpty()){
             StringBuilder sEstados = new StringBuilder();
             sEstados.append(" ( ");
             for(int i= 0; i<estados.size(); i++){
