@@ -20,7 +20,7 @@
         <module>regweb3_api_axis</module>
     </modules>
    
-    <repositories>
+    <!--<repositories>
         <repository>
             <id>maven-nuxeo</id>
             <name>Maven Nuxeo Repository</name>
@@ -35,7 +35,7 @@
                 <updatePolicy>never</updatePolicy>
             </snapshots>
         </repository>
-    </repositories>
+    </repositories>-->
 
     <build>
         <pluginManagement>
