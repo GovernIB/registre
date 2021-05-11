@@ -35,54 +35,7 @@
 
 			
 			
-			<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>axistools-maven-plugin</artifactId>
-                <version>1.4</version>
-                <configuration>
-				<!--
-                  <urls>
-                    <url>http://localhost:8080/regweb3/ws/v3/RegWebRegistroEntrada?wsdl</url>
-                  </urls>
-				  
-				  -->
-				  <sourceDirectory>
-				    ${basedir}/../regweb3_api/src/main/resources/wsdl
-				  </sourceDirectory>
-				  
-				  <outputDirectory>src/main/java</outputDirectory>
-                  <packageSpace>es.caib.regweb3.ws.v3.apiaxis</packageSpace>
-                  <testCases>false</testCases>
-                  <serverSide>false</serverSide>
-                  <!--<subPackageByFileName>true</subPackageByFileName> -->
-                </configuration>
-				<executions>
-				  <execution>
-					<goals>
-					  <goal>wsdl2java</goal>
-					</goals>
-				  </execution>
-				</executions>
 
-            <dependencies>
-			<dependency>
-				<groupId>org.apache.axis</groupId>
-				<artifactId>axis</artifactId>
-				<version>1.4</version>
-			</dependency>
-              <dependency>
-                <groupId>javax.mail</groupId>
-                <artifactId>mail</artifactId>
-                <version>1.4.1</version>
-              </dependency>
-              <dependency>
-                <groupId>javax.activation</groupId>
-                <artifactId>activation</artifactId>
-                <version>1.1</version>
-              </dependency>
-            </dependencies>
-
-          </plugin>
 			
 			
 			<plugin>
@@ -164,6 +117,72 @@
 		</plugins>
 
     </build>
+
+
+	<profiles>
+	<profile>
+	<id>regenerateapi</id>
+		<activation>
+			<activeByDefault>false</activeByDefault>
+			<property>
+				<name>regenerateapi</name>
+			</property>
+		</activation>
+
+		<build>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>axistools-maven-plugin</artifactId>
+					<version>1.4</version>
+					<configuration>
+						<!--
+                          <urls>
+                            <url>http://localhost:8080/regweb3/ws/v3/RegWebRegistroEntrada?wsdl</url>
+                          </urls>
+
+                          -->
+						<sourceDirectory>
+							${basedir}/../regweb3_api/src/main/resources/wsdl
+						</sourceDirectory>
+
+						<outputDirectory>src/main/java</outputDirectory>
+						<packageSpace>es.caib.regweb3.ws.v3.apiaxis</packageSpace>
+						<testCases>false</testCases>
+						<serverSide>false</serverSide>
+						<!--<subPackageByFileName>true</subPackageByFileName> -->
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>wsdl2java</goal>
+							</goals>
+						</execution>
+					</executions>
+
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.axis</groupId>
+							<artifactId>axis</artifactId>
+							<version>1.4</version>
+						</dependency>
+						<dependency>
+							<groupId>javax.mail</groupId>
+							<artifactId>mail</artifactId>
+							<version>1.4.1</version>
+						</dependency>
+						<dependency>
+							<groupId>javax.activation</groupId>
+							<artifactId>activation</artifactId>
+							<version>1.1</version>
+						</dependency>
+					</dependencies>
+
+				</plugin>
+			</plugins>
+		</build>
+	</profile>
+	</profiles>
 
 	
 	<repositories>
