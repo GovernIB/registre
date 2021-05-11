@@ -3,7 +3,13 @@ package es.caib.regweb3.ws.api.v3;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,6 +26,10 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="documento" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="pageNumber" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
  *         &lt;element name="idioma" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="fechaInicio" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
+ *         &lt;element name="fechaFin" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/>
+ *         &lt;element name="numeroRegistroFormateado" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="estados" type="{http://www.w3.org/2001/XMLSchema}int" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -33,7 +43,11 @@ import javax.xml.bind.annotation.XmlType;
     "entidad",
     "documento",
     "pageNumber",
-    "idioma"
+    "idioma",
+    "fechaInicio",
+    "fechaFin",
+    "numeroRegistroFormateado",
+    "estados"
 })
 public class ObtenerAsientosCiudadanoCarpeta {
 
@@ -41,6 +55,17 @@ public class ObtenerAsientosCiudadanoCarpeta {
     protected String documento;
     protected Integer pageNumber;
     protected String idioma;
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlSchemaType(name = "dateTime")
+    protected Timestamp fechaInicio;
+    @XmlElement(type = String.class)
+    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlSchemaType(name = "dateTime")
+    protected Timestamp fechaFin;
+    protected String numeroRegistroFormateado;
+    @XmlElement(type = Integer.class)
+    protected List<Integer> estados;
 
     /**
      * Obtiene el valor de la propiedad entidad.
@@ -136,6 +161,107 @@ public class ObtenerAsientosCiudadanoCarpeta {
      */
     public void setIdioma(String value) {
         this.idioma = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad fechaInicio.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public Timestamp getFechaInicio() {
+        return fechaInicio;
+    }
+
+    /**
+     * Define el valor de la propiedad fechaInicio.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFechaInicio(Timestamp value) {
+        this.fechaInicio = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad fechaFin.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public Timestamp getFechaFin() {
+        return fechaFin;
+    }
+
+    /**
+     * Define el valor de la propiedad fechaFin.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setFechaFin(Timestamp value) {
+        this.fechaFin = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad numeroRegistroFormateado.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getNumeroRegistroFormateado() {
+        return numeroRegistroFormateado;
+    }
+
+    /**
+     * Define el valor de la propiedad numeroRegistroFormateado.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setNumeroRegistroFormateado(String value) {
+        this.numeroRegistroFormateado = value;
+    }
+
+    /**
+     * Gets the value of the estados property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the estados property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getEstados().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Integer }
+     * 
+     * 
+     */
+    public List<Integer> getEstados() {
+        if (estados == null) {
+            estados = new ArrayList<Integer>();
+        }
+        return this.estados;
     }
 
 }

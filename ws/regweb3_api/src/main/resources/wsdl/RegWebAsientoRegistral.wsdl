@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/"
-                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/"
-                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+<wsdl:definitions name="RegWebAsientoRegistralWsService" targetNamespace="http://impl.v3.ws.regweb3.caib.es/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
   <wsdl:types>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://impl.v3.ws.regweb3.caib.es/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://impl.v3.ws.regweb3.caib.es/">
   <xs:element name="anexoWs" type="tns:anexoWs"/>
@@ -97,6 +95,10 @@
       <xs:element minOccurs="0" name="documento" type="xs:string"/>
       <xs:element minOccurs="0" name="pageNumber" type="xs:int"/>
       <xs:element minOccurs="0" name="idioma" type="xs:string"/>
+      <xs:element minOccurs="0" name="fechaInicio" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="fechaFin" type="xs:dateTime"/>
+      <xs:element minOccurs="0" name="numeroRegistroFormateado" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="estados" type="xs:int"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="obtenerAsientosCiudadanoCarpetaResponse">
