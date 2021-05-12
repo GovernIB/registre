@@ -383,7 +383,7 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             return anexoFull;
 
-        } catch (I18NException i18n) {
+        } catch (I18NException | I18NValidationException i18n) {
             error = true;
             log.info("Error creant un anexe: " + i18n.getMessage(), i18n);
             try {

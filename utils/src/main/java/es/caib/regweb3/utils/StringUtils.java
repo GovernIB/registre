@@ -39,6 +39,22 @@ public class StringUtils {
 
 
     /**
+     * Dada una cadena, busca si existe alguna ocurrencia de los caracteres prohibidos {@link es.caib.regweb3.utils.RegwebConstantes} y los sustituye por el caracter indicado
+     * @param cadena
+     * @return
+     */
+    public static String sustituirCaracteresProhibidos(String cadena, char sustituto){
+
+
+        for (char s: RegwebConstantes.CARACTERES_NO_PERMITIDOS) {
+
+            cadena = cadena.replace(s, sustituto);
+        }
+
+        return cadena;
+    }
+
+    /**
      * Función que recorta un string a una longitud especificada
      * @param nombre nombre a recortar
      * @param length longitud a la que recortar
