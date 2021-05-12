@@ -751,7 +751,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if (de_Anexo != null) {
                         AnexoSir anexo = new AnexoSir();
 
-                        anexo.setNombreFichero(de_Anexo.getNombre_Fichero_Anexado());
+                        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidos(de_Anexo.getNombre_Fichero_Anexado(),'_'));
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
                         anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
