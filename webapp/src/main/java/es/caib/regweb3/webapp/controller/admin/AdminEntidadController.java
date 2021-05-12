@@ -1,10 +1,10 @@
 package es.caib.regweb3.webapp.controller.admin;
 
 import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
-import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.utils.TimeUtils;
@@ -12,12 +12,14 @@ import es.caib.regweb3.webapp.controller.registro.AbstractRegistroCommonListCont
 import es.caib.regweb3.webapp.form.AnularForm;
 import es.caib.regweb3.webapp.form.RegistroEntradaBusqueda;
 import es.caib.regweb3.webapp.form.RegistroSalidaBusqueda;
+import es.caib.regweb3.webapp.utils.JsonResponse;
 import es.caib.regweb3.webapp.utils.Mensaje;
 import es.caib.regweb3.webapp.validator.RegistroEntradaBusquedaValidator;
 import es.caib.regweb3.webapp.validator.RegistroSalidaBusquedaValidator;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
+import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -60,8 +62,8 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @EJB(mappedName = "regweb3/AnexoEJB/local")
     private AnexoLocal anexoEjb;
 
-    @EJB(mappedName = "regweb3/AsientoRegistralEJB/local")
-    private AsientoRegistralLocal asientoRegistralEjb;
+    @EJB(mappedName = "regweb3/JustificanteEJB/local")
+    private JustificanteLocal justificanteEjb;
 
     @EJB(mappedName = "regweb3/PersonaEJB/local")
     private PersonaLocal personaEjb;
@@ -227,40 +229,57 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     }
 
     /**
-     * Marca como Distribuido y genera el Justificante del {@link es.caib.regweb3.model.RegistroEntrada}
+     * Método que genera el Justificante en pdf
+     *
+     * @param idRegistro identificador del registro de entrada
+     * @return
+     * @throws Exception
      */
-    @RequestMapping(value = "/registroEntrada/{idRegistro}/procesar", method = RequestMethod.GET)
-    public String procesarRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception, I18NException, I18NValidationException {
+    @ResponseBody
+    @RequestMapping(value = "/registroEntrada/{idRegistro}/justificante/{idioma}", method = RequestMethod.POST)
+    public JsonResponse justificante(@PathVariable Long idRegistro, @PathVariable String idioma, HttpServletRequest request)
+            throws Exception {
 
-        RegistroEntrada registroEntrada = registroEntradaEjb.findByIdConAnexos(idRegistro);
+        JsonResponse jsonResponse = new JsonResponse();
 
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        try {
 
-        try{
+            synchronized (this) {
 
-            if(registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) ||
-                    registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_DISTRIBUYENDO)){
+                RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-                //Cola elemento = colaEjb.findByIdObjetoEstado(registroEntrada.getId(), usuarioEntidad.getEntidad().getId(), RegwebConstantes.COLA_ESTADO_PROCESADO);
+                // Dispone de permisos para Editar el registro
+                if (permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_ENTRADA, true) && !registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_ANULADO)) {
 
-                //if(elemento != null){ todo: Añadir esta validación al solucionar el bug de Distribuyendo
+                    // Creamos el anexo justificante y lo firmamos
+                    AnexoFull anexoFull = justificanteEjb.crearJustificante(usuarioEntidad, registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, idioma);
 
-                    if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
-                        asientoRegistralEjb.crearJustificante(registroEntrada.getUsuario(),registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                    // Alta en tabla LOPD
+                    if (anexoFull != null) {
+                        lopdEjb.altaLopd(registroEntrada.getNumeroRegistro(), registroEntrada.getFecha(), registroEntrada.getLibro().getId(), usuarioEntidad.getId(), RegwebConstantes.REGISTRO_ENTRADA, RegwebConstantes.LOPD_JUSTIFICANTE);
                     }
 
-                    registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad);
+                    jsonResponse.setStatus("SUCCESS");
 
-                    Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.ok"));
-               // }
+                } else {
+                    jsonResponse.setStatus("FAIL");
+                    jsonResponse.setError(getMessage("aviso.registro.editar"));
+                }
             }
 
-        }catch (Exception e){
+        } catch (I18NException e) {
             e.printStackTrace();
-            Mensaje.saveMessageInfo(request, getMessage("registroEntrada.procesar.error"));
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(e));
+        } catch (I18NValidationException ve) {
+            ve.printStackTrace();
+            jsonResponse.setStatus("FAIL");
+            jsonResponse.setError(I18NUtils.getMessage(ve));
         }
 
-        return "redirect:/adminEntidad/registroEntrada/"+idRegistro+"/detalle";
+        return jsonResponse;
+
     }
 
     /**

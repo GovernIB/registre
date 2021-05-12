@@ -1,6 +1,9 @@
 package es.caib.regweb3.webapp.interceptor;
 
-import es.caib.regweb3.model.*;
+import es.caib.regweb3.model.Entidad;
+import es.caib.regweb3.model.Oficina;
+import es.caib.regweb3.model.Organismo;
+import es.caib.regweb3.model.Rol;
 import es.caib.regweb3.persistence.ejb.RegistroEntradaConsultaLocal;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.security.LoginInfo;
@@ -36,7 +39,6 @@ public class RegistroEntradaInterceptor extends HandlerInterceptorAdapter {
         HttpSession session = request.getSession();
         LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
         Rol rolActivo = loginInfo.getRolActivo();
-        UsuarioEntidad usuarioEntidad = loginInfo.getUsuarioEntidadActivo();
         Oficina oficinaActiva = loginInfo.getOficinaActiva();
         Entidad entidadActiva = loginInfo.getEntidadActiva();
         String url = request.getServletPath();

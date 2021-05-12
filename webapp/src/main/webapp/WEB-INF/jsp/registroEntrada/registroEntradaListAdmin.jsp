@@ -398,9 +398,6 @@
                                                     </td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
-                                                        <c:if test="${registro.estado == RegwebConstantes.REGISTRO_VALIDO || registro.estado == RegwebConstantes.REGISTRO_DISTRIBUYENDO}">
-                                                            <a class="btn btn-success btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${registro.id}/procesar"/>" target="_blank" title="<spring:message code="registroEntrada.procesar"/>"><span class="fa fa-check"></span></a>
-                                                        </c:if>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
