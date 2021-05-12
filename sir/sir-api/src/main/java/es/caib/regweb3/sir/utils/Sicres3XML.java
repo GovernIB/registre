@@ -300,6 +300,7 @@ public class Sicres3XML {
                     // Validar si es Salida y tipo documento 'O'
                     if (fichero.getTipoRegistro().equals(TipoRegistro.SALIDA) && interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CODIGO_ORIGEN))) {
                         Assert.hasText(interesado.getDocumento_Identificacion_Interesado(), "El campo 'DocumentoIdentificacionInteresado' está vacío.");
+                        Assert.isTrue(StringUtils.isBlank(interesado.getNombre_Interesado()), "El campo 'NombreInteresado' del SegmentoInteresados, no debe estar informado.");
                     }else {
                         // Validar que el Tipo Documento concuerda con Nombre o Razon Social
                         if (interesado.getTipo_Documento_Identificacion_Interesado().equals(String.valueOf(TIPODOCUMENTOID_CIF)) ||

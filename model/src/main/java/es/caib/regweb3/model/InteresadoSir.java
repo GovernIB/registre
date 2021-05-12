@@ -365,6 +365,11 @@ public class InteresadoSir implements Serializable {
 
         }else if(StringUtils.isNotEmpty(getRazonSocialInteresado())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+
+        }else if(StringUtils.isNotEmpty(getDocumentoIdentificacionInteresado())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
+            if(getDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
+                return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+            }
         }
 
         return null;
@@ -378,6 +383,11 @@ public class InteresadoSir implements Serializable {
 
         }else if(StringUtils.isNotEmpty(getRazonSocialRepresentante())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+
+        }else if(StringUtils.isNotEmpty(getDocumentoIdentificacionRepresentante())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
+            if(getDocumentoIdentificacionRepresentante().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
+                return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
+            }
         }
 
         return null;
@@ -449,6 +459,8 @@ public class InteresadoSir implements Serializable {
             if(StringUtils.isNotEmpty(getDocumentoIdentificacionInteresado())){
                 personaJuridica = personaJuridica.concat(" - " + getDocumentoIdentificacionInteresado());
             }
+        }else if(StringUtils.isNotEmpty(getDocumentoIdentificacionInteresado())){
+            personaJuridica = getDocumentoIdentificacionInteresado();
         }
 
         return  personaJuridica;
@@ -487,6 +499,8 @@ public class InteresadoSir implements Serializable {
             if(StringUtils.isNotEmpty(getDocumentoIdentificacionRepresentante())){
                 personaJuridica = personaJuridica.concat(" - " + getDocumentoIdentificacionRepresentante());
             }
+        }else if(StringUtils.isNotEmpty(getDocumentoIdentificacionRepresentante())){
+            personaJuridica = getDocumentoIdentificacionRepresentante();
         }
 
         return  personaJuridica;
