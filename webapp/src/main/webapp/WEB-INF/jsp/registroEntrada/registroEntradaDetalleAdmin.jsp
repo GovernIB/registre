@@ -57,9 +57,26 @@
                     </div>
 
                     <%--BOTONERA--%>
-                    <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
-                    <c:if test="${tieneJustificante}">
-                        <div class="panel-footer center">
+                    <div class="panel-footer center">
+                        <c:if test="${registro.estado != RegwebConstantes.REGISTRO_RESERVA}">
+
+                            <%--Si no se ha generado el justificante y el registro no está ANULADO, muestra el boton para generarlo --%>
+                            <c:if test="${idJustificante == null && registro.estado != RegwebConstantes.REGISTRO_ANULADO}">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <spring:message code="justificante.boton"/> <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/adminEntidad/registroEntrada/${idRegistro}/justificante/ca"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.catalan"/></a></li>
+                                        <li class="submenu-complet"><a onclick="crearJustificante('<c:url value="/adminEntidad/registroEntrada/${idRegistro}/justificante/es"/>')" onmouseover="this.style.cursor='pointer';"><spring:message code="regweb.castellano"/></a></li>
+                                    </ul>
+                                </div>
+                            </c:if>
+
+                        </c:if>
+
+                        <%--Si se ha generado el justificante, muestra el boton paras descargarlo --%>
+                        <c:if test="${tieneJustificante}">
                             <%-- Si no tiene urlValidación solo podrá descargar el original --%>
                             <c:if test="${!tieneUrlValidacion}">
                                 <div class="btn-group"><button type="button" class="btn btn-success btn-sm" onclick="goTo('<c:url value="/anexo/descargarJustificante/${idJustificante}/true"/>')"><span class="fa fa-download"></span> <spring:message code="justificante.boton"/></button></div>
@@ -77,8 +94,8 @@
                                     </ul>
                                 </div>
                             </c:if>
-                        </div>
-                    </c:if>
+                        </c:if>
+                    </div>
                 </div>
 
             </div>
@@ -171,6 +188,30 @@
         </c:forEach>
         var elemento = '#'+idHistorico;
         $(elemento).show();
+    }
+
+    /**
+     * Genera el Justificante del Registro
+     * @param url
+     */
+    function crearJustificante(url){
+
+        $.ajax({
+            url:url,
+            type:'POST',
+            beforeSend: function(objeto){
+                waitingDialog.show('<spring:message code="justificante.generando" javaScriptEscape='true'/>', {dialogSize: 'm', progressType: 'info'});
+            },
+            success:function(respuesta){
+                if(respuesta.status == 'SUCCESS'){
+                    goTo('<c:url value="/adminEntidad/registroEntrada/${idRegistro}/detalle"/>');
+                }else if(respuesta.status == 'FAIL') {
+                    mensajeError('#mensajes', respuesta.error);
+                    waitingDialog.hide();
+                }
+            }
+        });
+
     }
 
 </script>
