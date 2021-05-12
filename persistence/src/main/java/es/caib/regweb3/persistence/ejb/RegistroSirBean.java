@@ -1924,7 +1924,8 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             AnexoFull anexoFull = new AnexoFull();
             Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
-            anexo.setTitulo(anexoSir.getNombreFichero());
+            //TODO Temporal hata que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
+            anexo.setTitulo(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidos(anexoSir.getNombreFichero(), '_'));
 
             // Validez Documento
             if (anexoSir.getValidezDocumento() != null) {
