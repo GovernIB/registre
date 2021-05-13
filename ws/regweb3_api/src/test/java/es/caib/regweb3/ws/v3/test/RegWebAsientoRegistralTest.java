@@ -1,18 +1,7 @@
 package es.caib.regweb3.ws.v3.test;
 
 import es.caib.regweb3.utils.RegwebConstantes;
-import es.caib.regweb3.ws.api.v3.AsientoRegistralSesionWs;
-import es.caib.regweb3.ws.api.v3.AsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.AsientoWs;
-import es.caib.regweb3.ws.api.v3.FileContentWs;
-import es.caib.regweb3.ws.api.v3.FileInfoWs;
-import es.caib.regweb3.ws.api.v3.JustificanteReferenciaWs;
-import es.caib.regweb3.ws.api.v3.JustificanteWs;
-import es.caib.regweb3.ws.api.v3.OficioWs;
-import es.caib.regweb3.ws.api.v3.RegWebAsientoRegistralWs;
-import es.caib.regweb3.ws.api.v3.ResultadoBusquedaWs;
-import es.caib.regweb3.ws.api.v3.WsI18NException;
-import es.caib.regweb3.ws.api.v3.WsValidationException;
+import es.caib.regweb3.ws.api.v3.*;
 import es.caib.regweb3.ws.api.v3.utils.WsClientUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -39,7 +28,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        setEntorno("_localhost");
+        setEntorno("_proves");
         asientoRegistralApi = getAsientoRegistralApi();
     }
 
@@ -109,7 +98,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
             try {
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_ENTRADA, true, true);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,true,false);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -150,8 +139,6 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
 
-
-
     @Test
     public void crearAsientoSalida() throws Exception {
 
@@ -159,8 +146,8 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
             try {
 
-                AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionSir(REGISTRO_SALIDA);
-                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,true,false);
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionExterna(REGISTRO_SALIDA, true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,null,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -177,6 +164,10 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     }
 
 
+    /**
+     * Tipo notificación: Se crea el justificante del registroSalida y se marca como REGISTRO_ENVIADO_NOTIFICAR
+     * @throws Exception
+     */
     @Test
     public void crearAsientoSalidaNotificacion() throws Exception {
 
@@ -186,6 +177,36 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
 
                 AsientoRegistralWs asientoRegistralWs = getAsiento_to_PersonaFisica(REGISTRO_SALIDA, false, true);
                 asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_NOTIFICACION,true,false);
+
+                printAsientoBasico(asientoRegistralWs);
+
+            } catch (WsI18NException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsI18NException: " + msg);
+                throw e;
+            } catch (WsValidationException e) {
+                String msg = WsClientUtils.toString(e);
+                System.out.println("Error WsValidationException: " + msg);
+                throw e;
+            }
+        }
+    }
+
+    /**
+     * Tipo comunicación:
+     *                    1-  Si va dirigido a una Persona física o jurídica se crea el justificante y se marca como REGISTRO_VALIDO
+     *                    2-  Si va dirigido a una administración se crea el justificante y dependiendo de si el destino está en SIR o no se envía o se marca como OFICIO_EXTERNO
+     * @throws Exception
+     */
+    @Test
+    public void crearAsientoSalidaComunicacion() throws Exception {
+
+        for (int i = 0; i < 1; i++) {
+
+            try {
+
+                AsientoRegistralWs asientoRegistralWs = getAsiento_to_AdministracionSir(REGISTRO_SALIDA, true);
+                asientoRegistralWs = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(),asientoRegistralWs,TIPO_OPERACION_COMUNICACION,false,false);
 
                 printAsientoBasico(asientoRegistralWs);
 
@@ -331,7 +352,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void distribuirAsientoregistral() throws Exception{
 
         try {
-            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_ENTRADA);
+            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_ENTRADA, false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,null,true,false);
 
             asientoRegistralApi.distribuirAsientoRegistral(getTestEntidadCodigoDir3(),entrada.getNumeroRegistroFormateado());
@@ -345,7 +366,7 @@ public class RegWebAsientoRegistralTest extends RegWebTestUtils {
     public void obtenerOficioExterno() {
 
         try {
-            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_ENTRADA);
+            AsientoRegistralWs entrada = getAsiento_to_AdministracionExterna(REGISTRO_ENTRADA, false);
             entrada = asientoRegistralApi.crearAsientoRegistral(null,getTestEntidadCodigoDir3(), entrada,TIPO_OPERACION_COMUNICACION,true,false);
 
             OficioWs oficio = asientoRegistralApi.obtenerOficioExterno(getTestEntidadCodigoDir3(),entrada.getNumeroRegistroFormateado());

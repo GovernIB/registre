@@ -188,10 +188,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public static RegWebRegistroEntradaWs getRegistroEntradaApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_REGISTRO_ENTRADA);
 
-        if(endpoint.startsWith("https")){
-            XTrustProvider.install();
-        }
-
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebRegistroEntradaWsService service = new RegWebRegistroEntradaWsService(wsdl);
 
@@ -205,10 +201,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
     public static RegWebRegistroSalidaWs getRegistroSalidaApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_REGISTRO_SALIDA);
 
-        if(endpoint.startsWith("https")){
-            XTrustProvider.install();
-        }
-
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebRegistroSalidaWsService service = new RegWebRegistroSalidaWsService(wsdl);
 
@@ -221,10 +213,6 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
     public static RegWebInfoWs getInfoApi() throws Exception {
         final String endpoint = getEndPoint(REGWEB3_INFO);
-
-        if(endpoint.startsWith("https")){
-            XTrustProvider.install();
-        }
 
         final URL wsdl = new URL(endpoint + "?wsdl");
         RegWebInfoWsService service = new RegWebInfoWsService(wsdl);
@@ -277,7 +265,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param tipoRegistro
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_AdministracionSir(Long tipoRegistro){
+    public AsientoRegistralWs getAsiento_to_AdministracionSir(Long tipoRegistro, Boolean anexos){
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
@@ -288,6 +276,14 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         asiento.getInteresados().add(interesadoWs);
 
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return asiento;
     }
 
@@ -296,7 +292,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param tipoRegistro
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_AdministracionInterna(Long tipoRegistro){
+    public AsientoRegistralWs getAsiento_to_AdministracionInterna(Long tipoRegistro, Boolean anexos){
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
@@ -307,6 +303,14 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
 
         asiento.getInteresados().add(interesadoWs);
 
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return asiento;
     }
 
@@ -315,7 +319,7 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
      * @param tipoRegistro
      * @return
      */
-    public AsientoRegistralWs getAsiento_to_AdministracionExterna(Long tipoRegistro){
+    public AsientoRegistralWs getAsiento_to_AdministracionExterna(Long tipoRegistro, boolean anexos){
 
         // Datos comunes
         AsientoRegistralWs asiento = getDatosComunesAsiento(tipoRegistro);
@@ -325,6 +329,14 @@ public abstract class RegWebTestUtils implements RegwebConstantes {
         interesadoWs.setInteresado(getAdministracionExterna());
 
         asiento.getInteresados().add(interesadoWs);
+
+        if(anexos){
+            try {
+                asiento.getAnexos().addAll(getAnexos());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         return asiento;
     }
