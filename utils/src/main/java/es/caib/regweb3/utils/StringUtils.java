@@ -56,6 +56,20 @@ public class StringUtils {
 
     /**
      * Función que recorta un string a una longitud especificada
+     * @param cadena cadena a recortar
+     * @param length longitud a la que recortar
+     * @return
+     * @throws Exception
+     */
+    public static String recortarCadena(String cadena, int length) {
+        if(cadena.length() > length){
+            return cadena.substring(0,length);
+        }
+        return cadena;
+    }
+
+    /**
+     * Función que recorta un string a una longitud especificada
      * @param nombre nombre a recortar
      * @param length longitud a la que recortar
      * @return

@@ -19,6 +19,7 @@ import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.utils.Configuracio;
 import es.caib.regweb3.utils.Dir3CaibUtils;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.i18n.I18NValidationException;
@@ -547,11 +548,13 @@ public class SirEnvioBean implements SirEnvioLocal {
             TrazabilidadSir trazabilidadSir = new TrazabilidadSir(RegwebConstantes.TRAZABILIDAD_SIR_REENVIO);
             trazabilidadSir.setRegistroSir(registroSir);
             trazabilidadSir.setCodigoEntidadRegistralOrigen(oficinaActiva.getCodigo());
-            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(oficinaActiva.getDenominacion());
+            trazabilidadSir.setDecodificacionEntidadRegistralOrigen(StringUtils.recortarCadena(oficinaActiva.getDenominacion(),80));
             trazabilidadSir.setCodigoEntidadRegistralDestino(oficinaReenvio.getCodigo());
-            trazabilidadSir.setDecodificacionEntidadRegistralDestino(oficinaReenvio.getDenominacion());
+            trazabilidadSir.setDecodificacionEntidadRegistralDestino(StringUtils.recortarCadena(oficinaReenvio.getDenominacion(),80));
             trazabilidadSir.setCodigoUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getCodigo());
-            trazabilidadSir.setDecodificacionUnidadTramitacionDestino(oficinaReenvio.getOrganismoResponsable().getDenominacion());
+            if(StringUtils.isNotEmpty(oficinaReenvio.getOrganismoResponsable().getDenominacion())){
+                trazabilidadSir.setDecodificacionUnidadTramitacionDestino(StringUtils.recortarCadena(oficinaReenvio.getOrganismoResponsable().getDenominacion(),80));
+            }
             trazabilidadSir.setAplicacion(RegwebConstantes.CODIGO_APLICACION);
             trazabilidadSir.setNombreUsuario(usuario.getNombreCompleto());
             trazabilidadSir.setContactoUsuario(usuario.getEmail());

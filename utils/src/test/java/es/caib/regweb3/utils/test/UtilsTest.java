@@ -21,4 +21,13 @@ public class UtilsTest {
 
         System.out.println("Cadena corregida: " + StringUtils.sustituirCaracteresProhibidosArxiu(cadena,'_'));
     }
+
+    @Test
+    public void recortarCadena(){
+        String cadena = "taxa_bonif_50_Fam_Num_B1_SET21_Garippa.pdf";
+
+        System.out.println("Cadena inicial: " + cadena);
+
+        System.out.println("Cadena corregida: " + StringUtils.recortarCadena(cadena,20));
+    }
 }
