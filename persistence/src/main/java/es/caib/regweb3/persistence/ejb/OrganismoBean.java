@@ -321,39 +321,6 @@ public class OrganismoBean extends BaseEjbJPA<Organismo, Long> implements Organi
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Organismo> findByEntidadLibros(Long entidad) throws Exception {
-
-        //Obtenemos aquellos organismos de la entidad que tienen libros. Esto devuelve los organismos sin los libros
-        Query q = em.createQuery("Select distinct(organismo.id), organismo.codigo, organismo.denominacion, organismo.estado.id from Organismo as organismo" +
-                " inner join  organismo.libros as libros " +
-                " where organismo.entidad.id = :entidad ");
-
-
-        q.setParameter("entidad", entidad);
-        q.setHint("org.hibernate.readOnly", true);
-
-        // Montamos los organismos con los campos obtenidos de la query anterior, pero faltan los libros.
-        List<Object[]> result = q.getResultList();
-        List<Organismo> organismos = new ArrayList<Organismo>();
-        for (Object[] object : result) {
-            Organismo org = new Organismo((Long) object[0], (String) object[1], (String) object[2]);
-            organismos.add(org);
-        }
-
-        // Realizamos una segunda query para obtener los libros de los organismos, ya que en la query inicial ha sido
-        // imposible
-        for (Organismo org : organismos) {
-            List<Libro> libros = libroEjb.getLibrosOrganismoLigero(org.getId());
-            org.setLibros(libros);
-        }
-
-        return organismos;
-
-    }
-
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
     public List<Organismo> findByEntidadReduce(Long entidad) throws Exception {
 
         Query q = em.createQuery("Select organismo.id, organismo.denominacion from Organismo as organismo where " +

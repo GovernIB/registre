@@ -17,7 +17,6 @@ import es.caib.regweb3.webapp.validator.EntidadValidator;
 import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -908,36 +907,6 @@ public class EntidadController extends BaseController {
             e.printStackTrace();
         }
         return jsonResponse;
-    }
-
-    @RequestMapping(value = "/librosCambiar", method = RequestMethod.GET)
-    public String librosCambiar(HttpServletRequest request, Model model) throws Exception {
-
-
-        Entidad entidad = getEntidadActiva(request);
-
-        List<Organismo> organismosEntidad = organismoEjb.findByEntidadLibros(entidad.getId());
-        log.info("Organismos Entidad " + organismosEntidad.size());
-
-
-        List<Organismo> organismosEntidadVigentes = organismoEjb.organismosConOficinas(entidad.getId());
-        log.info("Organismos entidad con Oficinas " + organismosEntidadVigentes.size());
-        if (organismosEntidad.size() > 0) {
-
-            // Inicializamos sus Historicos, ya la relación está a FetchType.LAZY
-            for (Organismo organismo : organismosEntidad) {
-                Hibernate.initialize(organismo.getHistoricoUO());
-            }
-
-            model.addAttribute("organismosAProcesar", organismosEntidad);
-            model.addAttribute("organismosSustituyentes", organismosEntidadVigentes);
-            model.addAttribute("esPendiente", false);
-        }
-
-        model.addAttribute("tituloPagina", getMessage("entidad.cambiarlibros"));
-        model.addAttribute("tieneLibros", libroEjb.tieneLibrosEntidad(entidad.getId()));
-
-        return "/organismo/organismosACambiarLibro";
     }
 
 
