@@ -826,14 +826,6 @@ public class InformeController extends AbstractRegistroCommonFormController {
 
             List<Libro> libros = null;
 
-           /* // Es operador
-            if (isOperador(request)) {
-                UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-                // Obtenemos los Libros de los cuales el Usuario es administrador
-                libros = permisoLibroUsuarioEjb.getLibrosAdministrados(usuarioEntidad.getId());
-            }*/
-
             // Es Administrador de Entidad
             if (isAdminEntidad(request)) {
                 libros = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
