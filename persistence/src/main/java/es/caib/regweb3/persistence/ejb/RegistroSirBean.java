@@ -1999,14 +1999,14 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 if(anexoSir.getIdentificadorDocumentoFirmado().equals(anexoSir.getIdentificadorFichero())){
                     /** PARCHE ESPU*/
                     if(RegwebConstantes.APLICACION_SIR_ESPU.equals(aplicacion)){
-                        log.info("Documento con firma attached aplicación ESPU: " + anexoSir.getIdentificadorFichero());
+                        //log.info("Documento con firma attached aplicación ESPU: " + anexoSir.getIdentificadorFichero());
                         //En este caso se guarda como un no firmado
                         anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
                         dc = getDocumentCustody(anexoSir);
                         anexoFull.setAnexo(anexo);
                         anexoFull.setDocumentoCustody(dc);
                     }else{
-                        log.info("Documento con firma attached: " + anexoSir.getIdentificadorFichero());
+                        //log.info("Documento con firma attached: " + anexoSir.getIdentificadorFichero());
                         //Caso Firma Attached caso 5, se guarda el documento en signatureCustody, como lo especifica el API DE CUSTODIA(II)
                         anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED);
                         sc = getSignatureCustody(anexoSir, null, anexo.getModoFirma());
@@ -2018,7 +2018,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                 }
 
             } else { // El anexo no es firma de nadie
-                log.info("Documento sin firma: " + anexoSir.getIdentificadorFichero());
+                //log.info("Documento sin firma: " + anexoSir.getIdentificadorFichero());
                 anexo.setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA);
 
                 /** PARCHE GREG PROBLEMA: El campo  firma que se informa es más grande que 255 y al intentar hacer el insert peta por superar longitud
