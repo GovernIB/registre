@@ -751,7 +751,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     if (de_Anexo != null) {
                         AnexoSir anexo = new AnexoSir();
 
-                        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidos(de_Anexo.getNombre_Fichero_Anexado(),'_'));
+                        anexo.setNombreFichero(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu(de_Anexo.getNombre_Fichero_Anexado(),'_'));
                         anexo.setIdentificadorFichero(de_Anexo.getIdentificador_Fichero());
                         anexo.setIdentificadorDocumentoFirmado(de_Anexo.getIdentificador_Documento_Firmado());
                         anexo.setCertificado(Base64.encodeBase64String(de_Anexo.getCertificado()));
@@ -1925,7 +1925,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             Anexo anexo = new Anexo(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY);
 
             //TODO Temporal hata que se acepten todos los registros sir pendientes con anexos que tienen caracteres prohibidos
-            anexo.setTitulo(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidos(anexoSir.getNombreFichero(), '_'));
+            anexo.setTitulo(es.caib.regweb3.utils.StringUtils.sustituirCaracteresProhibidosArxiu(anexoSir.getNombreFichero(), '_'));
 
             // Validez Documento
             if (anexoSir.getValidezDocumento() != null) {
