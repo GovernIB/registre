@@ -39,14 +39,14 @@ public class StringUtils {
 
 
     /**
-     * Dada una cadena, busca si existe alguna ocurrencia de los caracteres prohibidos {@link es.caib.regweb3.utils.RegwebConstantes} y los sustituye por el caracter indicado
+     * Dada una cadena, busca si existe alguna ocurrencia de los caracteres prohibidos por ARXIU {@link es.caib.regweb3.utils.RegwebConstantes} y los sustituye por el caracter indicado
      * @param cadena
      * @return
      */
-    public static String sustituirCaracteresProhibidos(String cadena, char sustituto){
+    public static String sustituirCaracteresProhibidosArxiu(String cadena, char sustituto){
 
 
-        for (char s: RegwebConstantes.CARACTERES_NO_PERMITIDOS) {
+        for (char s: RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) {
 
             cadena = cadena.replace(s, sustituto);
         }

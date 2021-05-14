@@ -83,8 +83,8 @@ public class AnexoValidator<T> extends AbstractRegWebValidator<T> {
     rejectIfEmptyOrWhitespace(errors, __target__, "titulo", "error.valor.requerido");
 
     if(StringUtils.isNotEmpty(anexo.getTitulo())){
-        if(StringUtils.indexOfAny(anexo.getTitulo(), RegwebConstantes.CARACTERES_NO_PERMITIDOS) != -1){
-            rejectValue(errors, "titulo", "error.caracteres.noPermitidos", new I18NArgumentString(Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)));
+        if(StringUtils.indexOfAny(anexo.getTitulo(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1){
+            rejectValue(errors, "titulo", "error.caracteres.noPermitidos", new I18NArgumentString(Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
         }
     }
 

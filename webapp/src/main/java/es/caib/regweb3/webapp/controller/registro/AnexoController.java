@@ -680,15 +680,15 @@ public class AnexoController extends BaseController {
 
         if (anexoForm.getDocumentoFile() != null) {
 
-            if(StringUtils.indexOfAny(anexoForm.getDocumentoFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS) != -1){
-                result.rejectValue("documentoFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)}, I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)));
+            if(StringUtils.indexOfAny(anexoForm.getDocumentoFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1){
+                result.rejectValue("documentoFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)}, I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
 
             }
         }
 
         if (anexoForm.getFirmaFile() != null) {
-            if(StringUtils.indexOfAny(anexoForm.getFirmaFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS) != -1){
-                result.rejectValue("firmaFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)},I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS)));
+            if(StringUtils.indexOfAny(anexoForm.getFirmaFile().getOriginalFilename(), RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU) != -1){
+                result.rejectValue("firmaFile", "error.caracteres.noPermitidos", new Object[]{Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)},I18NUtils.tradueix("error.caracteres.noPermitidos", Arrays.toString(RegwebConstantes.CARACTERES_NO_PERMITIDOS_ARXIU)));
 
             }
         }

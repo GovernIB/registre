@@ -587,7 +587,8 @@ public interface RegwebConstantes {
     int    ANEXO_NUMEROMAX_SIR = 5;
     Long   ANEXO_TAMANOMAX_SIR = 10485760L;
     Long   ANEXO_TAMANOMAXTOTAL_SIR = 15728640L;
-    char[] CARACTERES_NO_PERMITIDOS = {'+','>','%','*','&',':',';','¿','?','/','|','!','<','¡','\''};
+    String CARACTERES_NO_PERMITIDOS_SIR = ">%*&:;¿?/\\|\"!<¡#";
+    char[] CARACTERES_NO_PERMITIDOS_ARXIU = {'+','>','%','*','&',':',';','¿','?','/','|','!','<','¡','\''};
 
     /* ---------------ANEXO ESTADOS FIRMA -------*/
 
