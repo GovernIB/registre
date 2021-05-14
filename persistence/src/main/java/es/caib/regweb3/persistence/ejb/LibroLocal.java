@@ -1,7 +1,6 @@
 package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Organismo;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Local;
@@ -68,13 +67,6 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      */
     List<Libro> getLibrosActivosOrganismo(Long idOrganismo) throws Exception;
 
-    /**
-     * Lista los Libros activos de un Organismo
-     * @param codigoOrganismo
-     * @return
-     * @throws Exception
-     */
-    List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception;
 
     /**
      * Lista los Libros activos de un Organismo de otra entidad
@@ -94,14 +86,6 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     List<Libro> getLibrosOrganismo(Long idOrganismo) throws Exception;
 
     /**
-     * Obtiene los libros de un organismo solo cargando el id, la denominación y el estado
-     * @param idOrganismo
-     * @return
-     * @throws Exception
-     */
-    List<Libro> getLibrosOrganismoLigero(Long idOrganismo) throws Exception;
-
-    /**
      * Retorna todos los Libros de relacionados con algún Organismos de la Entidad, activo o no
      * @param idEntidad
      * @return
@@ -110,27 +94,11 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
     List<Libro> getTodosLibrosEntidad(Long idEntidad) throws Exception;
 
     /**
-     * Retorna si la entidad indicada tiene libros.
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     */
-    Boolean tieneLibrosEntidad(Long idEntidad) throws Exception;
-
-    /**
      * Pone a 0 todos los contadores de un Libro
      * @param idLibro
      * @throws Exception
      */
     void reiniciarContadores(Long idLibro) throws Exception;
-
-    /**
-     * Obtiene los Organismos vigentes que tienen Libro activo de una Entidad
-     * @param idEntidad
-     * @return
-     * @throws Exception
-     */
-    List<Organismo> organismosConLibro(Long idEntidad) throws Exception;
 
     /**
      * Crea un libro y le asocia sus contadores
@@ -147,13 +115,5 @@ public interface LibroLocal extends BaseEjb<Libro, Long> {
      * @throws Exception
      */
     Integer eliminarByEntidad(Long idEntidad) throws Exception;
-
-    /**
-     * Elimina un Libro
-     * @param idLibro
-     * @return
-     * @throws Exception
-     */
-    Long eliminarLibro(Long idLibro) throws Exception;
 
 }

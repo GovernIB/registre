@@ -1,10 +1,7 @@
 package es.caib.regweb3.persistence.ejb;
 
-import es.caib.regweb3.model.CatEstadoEntidad;
 import es.caib.regweb3.model.Contador;
 import es.caib.regweb3.model.Libro;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
@@ -192,28 +189,6 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosActivosOrganismo(String codigoOrganismo) throws Exception{
-
-        Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
-                "libro.organismo.codigo = :codigoOrganismo and libro.activo = true");
-
-        q.setParameter("codigoOrganismo",codigoOrganismo);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Object[]> result = q.getResultList();
-        List<Libro> libros = new ArrayList<Libro>();
-
-        for (Object[] object : result) {
-            Libro libro = new Libro((Long) object[0], (String) object[1], (String) object[2]);
-
-            libros.add(libro);
-        }
-
-        return libros;
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
     public List<Libro> getLibrosActivosOrganismoDiferente(String codigoOrganismo, Long idEntidad) throws Exception{
 
         Query q = em.createQuery("Select libro.id,libro.codigo, libro.nombre from Libro as libro where " +
@@ -248,26 +223,6 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         return  q.getResultList();
     }
 
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<Libro> getLibrosOrganismoLigero(Long idOrganismo) throws Exception {
-
-        Query q = em.createQuery("Select libro.id, libro.nombre, libro.activo from Libro as libro where " +
-                "libro.organismo.id = :idOrganismo");
-
-        q.setParameter("idOrganismo", idOrganismo);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Object[]> result = q.getResultList();
-        List<Libro> libros = new ArrayList<Libro>();
-        for (Object[] object : result) {
-            Libro libro = new Libro((Long) object[0], (String) object[1], "", (Boolean) object[2]);
-            libros.add(libro);
-        }
-
-
-        return libros;
-    }
 
     @Override
     @SuppressWarnings(value = "unchecked")
@@ -281,16 +236,6 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
     }
 
     @Override
-    public Boolean tieneLibrosEntidad(Long idEntidad) throws Exception {
-
-        Query q = em.createQuery("Select count(libro.id) from Libro as libro where libro.organismo.entidad.id = :idEntidad");
-        q.setParameter("idEntidad",idEntidad);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return (Long)q.getSingleResult()>0;
-    }
-
-    @Override
     public void reiniciarContadores(Long idLibro) throws Exception{
 
         Libro libro = findById(idLibro);
@@ -300,30 +245,6 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
         contadorEjb.reiniciarContador(libro.getContadorOficioRemision().getId());
         contadorEjb.reiniciarContador(libro.getContadorSir().getId());
 
-    }
-
-    @Override
-    @SuppressWarnings(value = "unchecked")
-    public List<Organismo> organismosConLibro(Long idEntidad) throws Exception{
-
-        Query q = em.createQuery("Select distinct(libro.organismo.id), libro.organismo.estado from Libro as libro" +
-                " where libro.organismo.entidad.id = :idEntidad and libro.organismo.estado.codigoEstadoEntidad= :estado" +
-                " and libro.activo = true");
-
-        q.setParameter("idEntidad", idEntidad);
-        q.setParameter("estado", RegwebConstantes.ESTADO_ENTIDAD_VIGENTE);
-        q.setHint("org.hibernate.readOnly", true);
-
-        List<Object[]> result = q.getResultList();
-
-        List<Organismo> organismos = new ArrayList<Organismo>();
-        for (Object[] object : result) {
-            Organismo org = new Organismo((Long) object[0]);
-            org.setEstado((CatEstadoEntidad) object[1]);
-            organismos.add(org);
-        }
-
-        return  organismos;
     }
 
     @Override
@@ -359,29 +280,6 @@ public class LibroBean extends BaseEjbJPA<Libro, Long> implements LibroLocal{
 
 
         return libros.size();
-    }
-
-    @Override
-    public Long eliminarLibro(Long idLibro) throws Exception{
-
-        // ELIMINA PERMISOS LIBRO USUARIO
-        List<?> plus = em.createQuery("select distinct(plu.id) from PermisoLibroUsuario as plu where plu.libro.id =:idLibro").setParameter("idLibro",idLibro).getResultList();
-        if(plus.size() > 0){
-            log.info("PermisoLibroUsuarios eliminados: " + em.createQuery("delete from PermisoLibroUsuario where id in (:plus) ").setParameter("plus", plus).executeUpdate());
-        }else{
-            log.info("PermisoLibroUsuarios eliminados: 0");
-        }
-
-        // ELIMINA CONTADORES
-        Libro libro = findById(idLibro);
-        contadorEjb.remove(contadorEjb.findById(libro.getContadorEntrada().getId()));
-        contadorEjb.remove(contadorEjb.findById(libro.getContadorSalida().getId()));
-        contadorEjb.remove(contadorEjb.findById(libro.getContadorOficioRemision().getId()));
-
-        // ELIMINA LIBRO
-        em.createQuery("delete from Libro where id = :idLibro ").setParameter("idLibro", idLibro).executeUpdate();
-
-        return libro.getId();
     }
 
 }
