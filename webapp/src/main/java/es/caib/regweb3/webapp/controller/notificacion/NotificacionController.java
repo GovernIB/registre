@@ -51,7 +51,7 @@ public class NotificacionController extends BaseController {
 
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("integracionBusqueda", busqueda);
-        model.addAttribute("destinatarios", organismoEjb.findByEntidadLibros(getEntidadActiva(request).getId()));
+        model.addAttribute("destinatarios", organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId()));
         model.addAttribute("tiposNotificacion", RegwebConstantes.NOTIFICACION_TIPOS);
 
         model.addAttribute("nuevas", notificacionEjb.getByEstadoCount(usuario.getId(), RegwebConstantes.NOTIFICACION_ESTADO_NUEVA));
@@ -78,7 +78,7 @@ public class NotificacionController extends BaseController {
         model.addAttribute("paginacion", paginacion);
         model.addAttribute("integracionBusqueda", busqueda);
         model.addAttribute("estado", estado);
-        model.addAttribute("destinatarios", organismoEjb.findByEntidadLibros(getEntidadActiva(request).getId()));
+        model.addAttribute("destinatarios", organismoEjb.getPermitirUsuarios(getEntidadActiva(request).getId()));
         model.addAttribute("tiposNotificacion", RegwebConstantes.NOTIFICACION_TIPOS);
 
         model.addAttribute("nuevas", notificacionEjb.getByEstadoCount(usuario.getId(), RegwebConstantes.NOTIFICACION_ESTADO_NUEVA));
