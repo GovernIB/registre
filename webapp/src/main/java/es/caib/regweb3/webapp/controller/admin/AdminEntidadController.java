@@ -80,16 +80,12 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @RequestMapping(value = "/registroEntrada/list", method = RequestMethod.GET)
     public String list(Model model, HttpServletRequest request)throws Exception {
 
-        // Obtenemos los Libros de la Entidad
-        List<Libro> librosConsulta = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
-
         Entidad entidadActiva = getEntidadActiva(request);
 
         RegistroEntradaBusqueda registroEntradaBusqueda = new RegistroEntradaBusqueda(new RegistroEntrada(),1);
         registroEntradaBusqueda.setFechaInicio(new Date());
         registroEntradaBusqueda.setFechaFin(new Date());
 
-        model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroEntradaBusqueda", registroEntradaBusqueda);
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
         model.addAttribute("organosDestino", organismoEjb.getAllByEntidad(entidadActiva.getId()));
@@ -290,9 +286,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @RequestMapping(value = "/registroSalida/list", method = RequestMethod.GET)
     public String listRegistroSalida(Model model, HttpServletRequest request)throws Exception {
 
-        // Obtenemos los Libros de la Entidad
-        List<Libro> librosConsulta = libroEjb.getLibrosEntidad(getEntidadActiva(request).getId());
-
         Entidad entidadActiva = getEntidadActiva(request);
 
         RegistroSalidaBusqueda registroSalidaBusqueda = new RegistroSalidaBusqueda(new RegistroSalida(),1);
@@ -300,7 +293,6 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
         registroSalidaBusqueda.setFechaFin(new Date());
 
         model.addAttribute("organosOrigen", organismoEjb.getPermitirUsuarios(entidadActiva.getId()));
-        model.addAttribute("librosConsulta", librosConsulta);
         model.addAttribute("registroSalidaBusqueda", registroSalidaBusqueda);
         model.addAttribute("oficinasRegistro",  oficinaEjb.findByEntidadByEstado(entidadActiva.getId(), RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
@@ -387,7 +379,7 @@ public class AdminEntidadController extends AbstractRegistroCommonListController
     @RequestMapping(value = "/registroSalida/{idRegistro}/detalle", method = RequestMethod.GET)
     public String detalleRegistroSalida(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
-        RegistroSalida registro = registroSalidaEjb.findById(idRegistro);
+        RegistroSalida registro = registroSalidaEjb.findByIdConAnexos(idRegistro);
 
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
