@@ -310,14 +310,12 @@ public class JustificanteBean implements JustificanteLocal {
             }
 
             // Generamos el pdf del Justificante mediante el Plugin
-            long tiempoGenerarPdf = System.currentTimeMillis();
             byte[] pdfJustificant;
             if (registro instanceof RegistroEntrada) {
                 pdfJustificant = justificantePlugin.generarJustificanteEntrada((RegistroEntrada) registro, "", "", "", idioma);
             } else {
                 pdfJustificant = justificantePlugin.generarJustificanteSalida((RegistroSalida) registro, "", "", "", idioma);
             }
-            log.info("Generar pdf justificante: " + TimeUtils.formatElapsedTime(System.currentTimeMillis() - tiempoGenerarPdf));
 
             // Mensajes traducidos
             String fileName = I18NLogicUtils.tradueix(locale, "justificante.fichero") + "_" + registro.getNumeroRegistroFormateado() + ".pdf";
