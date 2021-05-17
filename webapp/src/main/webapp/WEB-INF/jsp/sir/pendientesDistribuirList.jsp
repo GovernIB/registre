@@ -103,7 +103,6 @@
                                                 <col>
                                                 <col>
                                                 <col>
-                                                <col>
                                             </colgroup>
                                             <thead>
                                             <tr>
@@ -113,7 +112,6 @@
                                                 <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                                 <th><spring:message code="registroEntrada.extracto"/></th>
                                                 <th><spring:message code="registroEntrada.estado"/></th>
-                                                <th><spring:message code="registroEntrada.anexos"/></th>
                                             </tr>
                                             </thead>
 
@@ -131,12 +129,6 @@
                                                             <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
                                                         </c:import>
                                                     </td>
-                                                    <c:if test="${registro.registroDetalle.anexos != null}">
-                                                        <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
-                                                    </c:if>
-                                                    <c:if test="${registro.registroDetalle.anexos == null}">
-                                                        <td class="center">0</td>
-                                                    </c:if>
 
                                                 </tr>
                                             </c:forEach>
