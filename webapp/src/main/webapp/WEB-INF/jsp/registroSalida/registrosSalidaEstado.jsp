@@ -74,7 +74,6 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col>
                                             <col width="50">
                                         </colgroup>
                                         <thead>
@@ -87,7 +86,6 @@
                                                 <th class="center"><spring:message code="registroSalida.extracto"/></th>
                                                 <th class="center"><spring:message code="registroSalida.estado"/></th>
                                                 <th class="center"><spring:message code="registroEntrada.interesados"/></th>
-                                                <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                         </thead>
@@ -117,14 +115,6 @@
                                                 <c:if test="${registro.registroDetalle.interesados == null}">
                                                     <td class="center">0</td>
                                                 </c:if>
-                                                <c:if test="${registro.registroDetalle.anexos != null}">
-                                                    <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
-                                                    <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>
-                                                </c:if>
-                                                <c:if test="${registro.registroDetalle.anexos == null}">
-                                                    <td class="center">0</td>
-                                                </c:if>
-
                                                 <td class="center">
                                                     <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
                                                 </td>

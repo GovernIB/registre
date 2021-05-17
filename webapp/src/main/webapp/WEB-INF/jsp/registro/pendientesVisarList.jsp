@@ -78,7 +78,6 @@
                                         <col>
                                         <col>
                                         <col>
-                                        <col>
                                         <col width="60">
                                     </colgroup>
                                     <thead>
@@ -95,9 +94,6 @@
                                                 <th><spring:message code="registroSalida.organismoOrigen"/></th>
                                             </c:if>
                                             <th><spring:message code="registroEntrada.extracto"/></th>
-
-                                            <th><spring:message code="registroEntrada.anexos"/></th>
-
                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
                                     </thead>
@@ -120,13 +116,6 @@
                                                 </c:if>
 
                                                 <td>${registro.registroDetalle.extracto}</td>
-
-                                                <c:if test="${registro.registroDetalle.anexos != null}">
-                                                    <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
-                                                </c:if>
-                                                <c:if test="${registro.registroDetalle.anexos == null}">
-                                                    <td class="center">0</td>
-                                                </c:if>
 
                                                 <td class="center">
                                                     <c:if test="${tipoRegistro == RegwebConstantes.REGISTRO_ENTRADA}">

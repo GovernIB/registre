@@ -72,7 +72,6 @@
                                         <col>
                                         <col>
                                         <col>
-                                        <col>
                                         <col width="60">
                                     </colgroup>
                                     <thead>
@@ -83,7 +82,6 @@
                                             <th><spring:message code="registroEntrada.oficina"/></th>
                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                             <th><spring:message code="registroEntrada.extracto"/></th>
-                                            <th><spring:message code="registroEntrada.anexos"/></th>
                                             <th class="center"><spring:message code="regweb.acciones"/></th>
                                         </tr>
                                     </thead>
@@ -97,14 +95,6 @@
                                                 <td><label class="no-bold" rel="popupAbajo" data-content="${registro.oficina.denominacion}" data-toggle="popover">${registro.oficina.codigo}</label></td>
                                                 <td>${(empty registro.destino)? registro.destinoExternoDenominacion : registro.destino.denominacion}</td>
                                                 <td>${registro.registroDetalle.extracto}</td>
-
-                                                <c:if test="${registro.registroDetalle.anexos != null}">
-                                                    <td class="center">${fn:length(registro.registroDetalle.anexos)}</td>
-                                                </c:if>
-                                                <c:if test="${registro.registroDetalle.anexos == null}">
-                                                    <td class="center">0</td>
-                                                </c:if>
-
                                                 <td class="center">
                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                 </td>

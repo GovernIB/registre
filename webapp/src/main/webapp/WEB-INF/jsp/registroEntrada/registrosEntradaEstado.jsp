@@ -75,7 +75,6 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col>
                                             <col width="50">
                                         </colgroup>
                                         <thead>
@@ -94,7 +93,6 @@
                                                 <th class="center"><spring:message code="registroEntrada.estado"/></th>
                                                 <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                 <th class="center">Doc.</th>
-                                                <th class="center"><spring:message code="registroEntrada.anexos"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                         </thead>
@@ -140,13 +138,6 @@
                                                         <i class="fa fa-clipboard text-taronja" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>
                                                     </c:if>
                                                 </td>
-                                                <c:if test="${registro.registroDetalle.anexos != null}">
-                                                    <c:if test="${registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)-1}</td></c:if>
-                                                    <c:if test="${!registro.registroDetalle.tieneJustificante}"><td class="center">${fn:length(registro.registroDetalle.anexos)}</td></c:if>
-                                                </c:if>
-                                                <c:if test="${registro.registroDetalle.anexos == null}">
-                                                    <td class="center">0</td>
-                                                </c:if>
 
                                                 <td class="center">
                                                     <a class="btn btn-info btn-sm" href="<c:url value="/registroEntrada/${registro.id}/detalle"/>" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
