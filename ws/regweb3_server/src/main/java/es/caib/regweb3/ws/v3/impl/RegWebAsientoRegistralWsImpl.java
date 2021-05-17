@@ -181,6 +181,8 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
         String numRegFormat = "";
 
         peticion.append("usuario: ").append(UsuarioAplicacionCache.get().getUsuario().getNombreIdentificador()).append(System.getProperty("line.separator"));
+        peticion.append("justificante: ").append(justificante).append(System.getProperty("line.separator"));
+        peticion.append("distribuir: ").append(distribuir).append(System.getProperty("line.separator"));
 
         try{
 
@@ -324,6 +326,9 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
             }else if(REGISTRO_SALIDA.equals(asientoRegistral.getTipoRegistro())){
 
                 peticion.append("tipoRegistro: ").append(REGISTRO_SALIDA_ESCRITO).append(System.getProperty("line.separator"));
+                if(tipoOperacion != null){
+                    peticion.append("tipoOperacion: ").append(tipoOperacion).append(System.getProperty("line.separator"));
+                }
 
                 // Comprobar ROL RWE_WS_SALIDA
                 if(!UsuarioAplicacionCache.get().getUsuario().getRwe_ws_salida()){
