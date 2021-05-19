@@ -5,6 +5,9 @@ echo
 
 cmd /C mvn -DskipTests %* clean install
 
+rem Perfiles de escaneo
+rem mvn -DskipTests -Dhttps.protocols=TLSv1.2 clean install -Piecisascanweb -Pdwtscanweb -Pdigitalibscanweb -Pdigitalibmassivescanweb
+
 if %errorlevel% EQU 0 (
 
 	@echo off
