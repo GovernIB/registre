@@ -2,7 +2,10 @@
 
 cat help.txt
 
-env mvn $@ -DskipTests install 
+env mvn $@ -DskipTests install
+
+# Perfiles de escaneo
+#env mvn $@ -DskipTests -Dhttps.protocols=TLSv1.2 clean install -Piecisascanweb -Pdwtscanweb -Pdigitalibscanweb -Pdigitalibmassivescanweb
 
 if [ $? == 0 ]; then
   if [ "$REGWEB_DEPLOY_DIR" == "" ];  then
