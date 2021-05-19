@@ -2,7 +2,8 @@ package es.caib.regweb3.persistence.ejb;
 
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
+import org.fundaciobit.pluginsib.scanweb.api.IScanWebPlugin;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
 
 import javax.ejb.Local;
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,10 @@ public interface ScanWebModuleLocal {
   Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException;
   
   boolean entitatTeScan(long entitatID) throws I18NException;
+
+  boolean entitatPermetScanMasiu(long entitatID) throws I18NException;
+
+  public ScanWebPlainFile obtenerDocumentoSeparador(long entitatID, String languageUI) throws I18NException;
   
   IScanWebPlugin getInstanceByEntitatID(long entitatID) throws I18NException;
   

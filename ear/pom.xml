@@ -438,7 +438,7 @@
     <dependency>
       <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
       <artifactId>pluginsib-scanweb-api</artifactId>
-      <version>3.0.0</version>
+      <version>${scanweb.api.version}</version>
     </dependency>
 
 
@@ -632,7 +632,7 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-iecisascanweb-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>4.0.0</version>
         </dependency>
       </dependencies>
     </profile>
@@ -645,7 +645,7 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-dynamicwebtwain</artifactId>
-          <version>3.0.2</version>
+          <version>4.0.0</version>
         </dependency>
       </dependencies>
     </profile>
@@ -657,7 +657,7 @@
         <dependency>
           <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
           <artifactId>pluginsib-scanweb-digitalib</artifactId>
-          <version>3.0.4</version>
+          <version>4.0.0</version>
         </dependency>
         <!-- incluimos la dependencia jersey porque si no da un error de json -->
        <dependency>
@@ -696,6 +696,53 @@
        </dependency>
      </dependencies>
    </profile>
+
+    <!-- ========== PLUGIN DE SCAN DE DIGITALIB MASSIVE =========== -->
+    <profile>
+      <id>digitalibmassivescanweb</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.fundaciobit.pluginsib.scanweb</groupId>
+          <artifactId>pluginsib-scanweb-digitalibmassive</artifactId>
+          <version>4.0.0</version>
+        </dependency>
+        <!-- incluimos la dependencia jersey porque si no da un error de json -->
+        <dependency>
+          <groupId>com.sun.jersey</groupId>
+          <artifactId>jersey-json</artifactId>
+          <version>1.19</version>
+
+          <!-- Añadimos estas exclusiones para que funcione el plugin de afirmaserver-->
+          <exclusions>
+            <exclusion>
+              <groupId>javax.xml.bind</groupId>
+              <artifactId>jaxb-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>com.sun.xml.bind</groupId>
+              <artifactId>jaxb-impl</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>javax.xml.stream</groupId>
+              <artifactId>stax-api</artifactId>
+            </exclusion>
+          </exclusions>
+
+        </dependency>
+
+
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-jaxrs</artifactId>
+          <version>1.9.9</version>
+        </dependency>
+        <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-xc</artifactId>
+          <version>1.9.9</version>
+        </dependency>
+      </dependencies>
+    </profile>
 
  </profiles>
 

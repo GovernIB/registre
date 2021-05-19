@@ -49,6 +49,7 @@
                         <form:hidden path="registroID" />
                         <form:hidden path="tipoRegistro" />
                         <form:hidden path="oficioRemisionSir" />
+                        <form:hidden path="numAnexosEscaneados" />
                         <%--
                         <form:hidden path="returnURL" />
 
@@ -256,6 +257,7 @@
 
                         <!-- METADATOS ESCANEO -->
                         <!--PENDENT DE QUE ME DIGUIN DE DGTIC COM LES GESTIONAM-->
+
                         <c:if test="${not empty anexoForm.metadatas}">
                             <h4><spring:message code="anexo.metadatas"/></h4>
                             <div class="divider"></div>
@@ -278,6 +280,7 @@
                                 </c:forEach>
                             </div>
                         </c:if>
+
                     <!-- FIN METADATOS ESCANEO -->
 
                 

@@ -1,28 +1,38 @@
 package es.caib.regweb3.persistence.utils;
 
-import org.fundaciobit.plugins.scanweb.api.ScanWebConfig;
-import org.fundaciobit.plugins.scanweb.api.ScanWebMode;
-import org.fundaciobit.pluginsib.core.utils.Metadata;
-
-import java.util.List;
-import java.util.Set;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequest;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebResult;
 
 /**
  *
  * @author anadal
  *
  */
-public class ScanWebConfigRegWeb extends ScanWebConfig {
+public class ScanWebConfigRegWeb {
+
+  protected final ScanWebRequest scanWebRequest;
+  protected ScanWebResult scanWebResult;
+
 
   protected Long entitatID = null;
 
   protected final long expiryTransaction;
 
-  public ScanWebConfigRegWeb(String scanWebID, String scanType, Set<String> flags,
-                             List<Metadata> metadades, ScanWebMode mode, String languageUI, String urlFinal,
-                             long expiryTransaction) {
-    super(scanWebID, scanType, flags, metadades, mode, languageUI, urlFinal);
+  public ScanWebConfigRegWeb(ScanWebRequest scanWebRequest, long expiryTransaction) {
+    this.scanWebRequest=scanWebRequest;
     this.expiryTransaction = expiryTransaction;
+  }
+
+  public ScanWebRequest getScanWebRequest() {
+    return scanWebRequest;
+  }
+
+  public ScanWebResult getScanWebResult() {
+    return scanWebResult;
+  }
+
+  public void setScanWebResult(ScanWebResult scanWebResult) {
+    this.scanWebResult = scanWebResult;
   }
 
   public Long getEntitatID() {
