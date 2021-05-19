@@ -366,8 +366,8 @@ public class InteresadoSir implements Serializable {
         }else if(StringUtils.isNotEmpty(getRazonSocialInteresado())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
 
-        }else if(StringUtils.isNotEmpty(getDocumentoIdentificacionInteresado())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
-            if(getDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
+        }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionInteresado())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
+            if(getTipoDocumentoIdentificacionInteresado().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
                 return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
             }
         }
@@ -384,8 +384,8 @@ public class InteresadoSir implements Serializable {
         }else if(StringUtils.isNotEmpty(getRazonSocialRepresentante())){
             return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
 
-        }else if(StringUtils.isNotEmpty(getDocumentoIdentificacionRepresentante())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
-            if(getDocumentoIdentificacionRepresentante().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
+        }else if(StringUtils.isNotEmpty(getTipoDocumentoIdentificacionRepresentante())){ // Caso en que es una Administración, pero no han puesto la denominación en Razon social
+            if(getTipoDocumentoIdentificacionRepresentante().equals(String.valueOf(RegwebConstantes.TIPODOCUMENTOID_CODIGO_ORIGEN))){
                 return RegwebConstantes.TIPO_INTERESADO_PERSONA_JURIDICA;
             }
         }
