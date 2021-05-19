@@ -6,7 +6,8 @@ import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NArgumentString;
 import org.fundaciobit.genapp.common.i18n.I18NCommonUtils;
 import org.fundaciobit.genapp.common.i18n.I18NException;
-import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
+import org.fundaciobit.pluginsib.scanweb.api.IScanWebPlugin;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.annotation.security.RunAs;
@@ -58,7 +59,8 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
     String urlToPluginWebPage;
     urlToPluginWebPage = scanWebPlugin.startScanWebTransaction(absolutePluginRequestPath,
-        relativePluginRequestPath, request, scanWebConfig);
+        relativePluginRequestPath, request, scanWebConfig.getScanWebRequest());
+    scanWebConfig.setScanWebResult(scanWebPlugin.getScanWebResult(scanWebConfig.getScanWebRequest().getScanWebID()));
 
     return urlToPluginWebPage;
 
@@ -205,7 +207,7 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
 
   @Override
   public void registerScanWebProcess(HttpServletRequest request, ScanWebConfigRegWeb scanWebConfig) {
-    final String scanWebID = scanWebConfig.getScanWebID();
+    final String scanWebID = scanWebConfig.getScanWebRequest().getScanWebID();
     
     ScanWebConfigRegWeb tmp = getScanWebConfig(request, scanWebID);
     if (tmp != null) {
@@ -222,19 +224,17 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
   @Override
   public Set<String> getDefaultFlags(ScanWebConfigRegWeb ss) throws Exception, I18NException  {
     
-    IScanWebPlugin scanWebPlugin = 
-   //     (IScanWebPlugin)pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
+    IScanWebPlugin scanWebPlugin =
         (IScanWebPlugin)pluginEjb.getPlugin(ss.getEntitatID(), RegwebConstantes.PLUGIN_SCAN);
 
     if (scanWebPlugin == null) {
       
       throw new I18NException("error.plugin.scanweb.noexist", String.valueOf(ss.getEntitatID()));
     }
+
+    Set<String> supFlags = scanWebPlugin.getSupportedFlagsByScanType(ss.getScanWebRequest().getScanType());
     
-    
-    List<Set<String>> supFlags = scanWebPlugin.getSupportedFlagsByScanType(ss.getScanType());
-    
-    return supFlags.get(0);
+    return supFlags;
     
   }
 
@@ -290,6 +290,45 @@ public class ScanWebModuleEjb implements ScanWebModuleLocal {
     }
     */
   }
-  
+
+
+  /**
+   * Comprueba si el plugin de scan permite escaneo masivo
+   * @param entitatID
+   * @return
+   */
+  @Override
+  public boolean entitatPermetScanMasiu(long entitatID) throws I18NException {
+
+    IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+
+    return plugin != null && plugin.isMassiveScanAllowed();
+
+  }
+
+  /**
+   * Obtiene el documento separador para la digitalización masiva
+   * @param entitatID
+   * @return
+   */
+  @Override
+  public ScanWebPlainFile obtenerDocumentoSeparador(long entitatID, String languageUI) throws I18NException {
+
+    IScanWebPlugin plugin = getInstanceByEntitatID(entitatID);
+    try{
+    if(entitatPermetScanMasiu(entitatID)){
+
+      return plugin.getSeparatorForMassiveScan(languageUI);
+
+    }else{
+      return null;
+    }
+    }catch (Exception e){
+       throw new I18NException("error.plugin.scanweb.noseparador");
+
+    }
+
+  }
+
   
 }

@@ -25,6 +25,7 @@ import org.fundaciobit.genapp.common.i18n.I18NValidationException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebPlainFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -130,21 +131,29 @@ public class AnexoController extends BaseController {
         if (!result.hasErrors()) { // Si no hay errores
 
             try {
+
+                //Creamos el anexo
                 anexoEjb.crearAnexo(anexoForm, getUsuarioEntidadActivo(request),
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), null, false);
 
-                model.addAttribute("closeAndReload", "true");
-                return "registro/formularioAnexo";
-            } catch (I18NValidationException i18n) {
+                //Actualizamos el contador de anexos creados
+                anexoForm.setNumAnexosEscaneados(anexoForm.getNumAnexosEscaneados()-1);
+                //fijamos el id a null despues de crearlo para que pueda seguir procesando los siguientes.
+                anexoForm.getAnexo().setId(null);
+                //Si no quedan más anexos acabamos proceso
+                if(anexoForm.getNumAnexosEscaneados() == 0){
+                    model.addAttribute("closeAndReload", "true");
+                    return "registro/formularioAnexo";
+                }else { //si quedan más anexos volvemos a coger el siguiente a procesar
+                    return "redirect:/anexoScan/transforma";
+                }
+            } catch (I18NValidationException | Exception i18n) {
                 log.error(i18n.getMessage(), i18n);
                 // TODO
                  Mensaje.saveMessageError(request, i18n.getMessage());
             } catch (I18NException i18n) {
                 log.debug(i18n.getMessage(), i18n);
                 Mensaje.saveMessageError(request, I18NUtils.tradueix(i18n.getTraduccio()));
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                Mensaje.saveMessageError(request, e.getMessage());
             }
 
         }
@@ -384,6 +393,30 @@ public class AnexoController extends BaseController {
         } else {
             fullDownload(anexo.getAnexo(), anexo.getSignatureCustody().getMime(), true, response, getEntidadActiva(request).getId(), original);
         }
+
+    }
+
+
+    /**
+     * Función que nos permite mostrar el contenido del separador de digitalizacionMasiva
+     *
+     *
+     */
+    @RequestMapping(value = "/descargarSeparador", method = RequestMethod.GET)
+    public void separador( HttpServletRequest request,
+                           HttpServletResponse response) throws Exception, I18NException {
+
+        Entidad entidadActiva = getEntidadActiva(request);
+
+
+        String languageUI = request.getParameter("lang");
+        if (languageUI == null) {
+            languageUI = I18NUtils.getLocale().getLanguage();
+
+        }
+        ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
+
+        obtenerContentType(separador.getMime(), response, separador.getName(), new MimetypesFileTypeMap(),separador.getData());
 
     }
 

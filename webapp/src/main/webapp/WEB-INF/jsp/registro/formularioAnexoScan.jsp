@@ -29,7 +29,7 @@ parent.closeAndReload();
 <c:import url="../modulos/mensajes.jsp"/>
 
 <%-- Formulario que contiene el resto de campos del anexo. --%>
-<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexoScan/new" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
+<form:form id="anexoForm" action="${pageContext.request.contextPath}/anexoScan/transforma" modelAttribute="anexoForm" method="POST"  enctype="multipart/form-data">
 
             <form:hidden path="anexo.id" />
             <form:hidden path="anexo.registroDetalle.id" />
