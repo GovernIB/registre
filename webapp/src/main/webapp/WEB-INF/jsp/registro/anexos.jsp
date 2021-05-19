@@ -34,9 +34,16 @@
                                 <li class="submenu-complet">
                                     <a onClick="nuevoAnexoFichero()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.archivo"/></a>
                                 </li>
+                                <c:if test="${!permiteDigitMasiva}">
                                 <li class="submenu-complet">
                                     <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.escaner"/></a>
                                 </li>
+                                </c:if>
+                                <c:if test="${permiteDigitMasiva}">
+                                    <li class="submenu-complet">
+                                        <a onClick="nuevoAnexoMasivoScan()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.escaner"/></a>
+                                    </li>
+                                </c:if>
                             </ul>
                         </div>
                     </c:if>
@@ -446,6 +453,20 @@
         $('#anexoTitulo').html('<spring:message code="anexo.nuevo"/>');
         // Afegeix el contingut de formularioAnexoFichero.jsp al modal
         loadiframe("<c:url value="/anexoScan/new/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />");
+    }
+
+    // Quan s'espitja botó de nou Scan
+    function nuevoAnexoMasivoScan() {
+        // Fixa el tamany del modal
+        $('#tamanyModal').val(tamModalScan);
+        // Esborra les classes de iframe
+        eliminaCssIframe();
+        // Afegeix la classe a iframe
+        $('#targetiframe').addClass('iframeScan');
+        // Posa el títol al modal
+        $('#anexoTitulo').html('<spring:message code="anexo.scan.masivo"/>');
+        // Afegeix el contingut de formularioAnexoFichero.jsp al modal
+        loadiframe("<c:url value="/anexoScan/new/masivo/${registro.registroDetalle.id}/${param.tipoRegistro}/${registro.id}/${registro.evento == RegwebConstantes.EVENTO_OFICIO_SIR}" />");
     }
 
 

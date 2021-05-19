@@ -2,9 +2,9 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.regweb3.model.Entidad;
 import es.caib.regweb3.model.UsuarioEntidad;
-import es.caib.regweb3.persistence.ejb.PluginLocal;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
+import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
@@ -13,13 +13,13 @@ import org.fundaciobit.genapp.common.i18n.I18NException;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
-import org.fundaciobit.plugins.scanweb.api.IScanWebPlugin;
-import org.fundaciobit.plugins.scanweb.api.ScanWebMode;
-import org.fundaciobit.plugins.scanweb.api.ScannedDocument;
 import org.fundaciobit.pluginsib.core.utils.Metadata;
 import org.fundaciobit.pluginsib.core.utils.MetadataConstants;
-import org.fundaciobit.pluginsib.userinformation.IUserInformationPlugin;
-import org.fundaciobit.pluginsib.userinformation.UserInfo;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebDocument;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebMode;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequest;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebRequestSignatureInfo;
+import org.fundaciobit.pluginsib.scanweb.api.ScanWebResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by mgonzalez on 04/05/2017.
@@ -49,20 +48,19 @@ public class AnexoScanController extends AnexoController {
     @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
     private RegistroDetalleLocal registroDetalleEjb;
 
+    @EJB(mappedName = "regweb3/TipoDocumentalEJB/local")
+    private TipoDocumentalLocal tipoDocumentalEjb;
 
 
 
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
-
-
+    // Prepara el anexo Form para escaneo simple
     @RequestMapping(value = "/new/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
     public String crearAnexoGet(HttpServletRequest request,
                                 HttpServletResponse response, @PathVariable Long registroDetalleID,
                                 @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
                                 Model model) throws I18NException, Exception {
 
-        log.info(" Passa per AnexoScanController::ficherosGet(" + registroDetalleID
+        log.info(" Passa per AnexoScanController::crearAnexoGet(" + registroDetalleID
                 + "," + tipoRegistro + ", " + registroID + ")");
 
        //Actualiza las variables con la ultima acción y prepara el anexoForm
@@ -72,19 +70,59 @@ public class AnexoScanController extends AnexoController {
 
         model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
         model.addAttribute("anexoForm", anexoForm);
+
         return "registro/formularioAnexoScan";
+
+    }
+
+    //Prepara el anexo Form para escaneo masivo
+    @RequestMapping(value = "/new/masivo/{registroDetalleID}/{tipoRegistro}/{registroID}/{isOficioRemisionSir}", method = RequestMethod.GET)
+    public String crearAnexoMasivoGet(HttpServletRequest request,
+                                HttpServletResponse response, @PathVariable Long registroDetalleID,
+                                @PathVariable Long tipoRegistro, @PathVariable Long registroID, @PathVariable Boolean isOficioRemisionSir,
+                                Model model) throws I18NException, Exception {
+
+        log.info(" Passa per AnexoScanController::crearAnexoMasivoGet(" + registroDetalleID
+           + "," + tipoRegistro + ", " + registroID + ")");
+
+        //Actualiza las variables con la ultima acción y prepara el anexoForm
+        AnexoForm anexoForm = prepararAnexoForm(request, registroDetalleID, tipoRegistro, registroID, isOficioRemisionSir, true);
+        request.getSession().setAttribute("anexoForm", anexoForm);
+        loadCommonAttributesScan(request, model, anexoForm.getRegistroID());
+
+        model.addAttribute("tiposValidezDocumento", RegwebConstantes.TIPOS_VALIDEZDOCUMENTO);
+        model.addAttribute("anexoForm", anexoForm);
+
+        return "registro/formularioAnexoScanMasivo";
+
     }
 
 
-    @RequestMapping(value = "/new")
+    /**
+     * Método que transforma los datos de los documentos recibidos a través del request para que se pueda guardar como anexo.
+     * @param request
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    @RequestMapping(value = "/transforma")
     public String crearAnexoPost(HttpServletRequest request) throws Exception, I18NException {
-
 
         AnexoForm anexoForm = (AnexoForm) request.getSession().getAttribute("anexoForm");
         boolean isSIR = anexoForm.getOficioRemisionSir();
+        List<ScanWebDocument> documentosEscaneados = (List<ScanWebDocument>) request.getSession().getAttribute("documentosEscaneados");
+
+
         try {
-            //Preparamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
-            manageDocumentCustodySignatureCustody(request, anexoForm);
+            // Si quedan documentos por transformar
+            if(anexoForm.getNumAnexosEscaneados()>0 && anexoForm.getNumDocumento() <= documentosEscaneados.size()-1) {
+                ScanWebDocument documentoEscaneado = documentosEscaneados.get(anexoForm.getNumDocumento());
+                //Transformamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
+                manageDocumentCustodySignatureCustody(request, anexoForm, documentoEscaneado);
+                //Actualizamos el número de documentos procesados
+                anexoForm.setNumDocumento(anexoForm.getNumDocumento()+1);
+            }
+
 
             //Validamos las condiciones de SIR
             if (isSIR) {
@@ -128,6 +166,48 @@ public class AnexoScanController extends AnexoController {
 
     }
 
+
+    /**
+     * Método que obtiene los documentos escaneados y define el número de documentos escaneados y fija el número de documento a procesar
+     * @param request
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    @RequestMapping(value = "/new")
+    public String crearAnexo2Post(HttpServletRequest request) throws Exception, I18NException {
+
+        log.info("Passa per new   POST");
+
+        AnexoForm anexoForm = (AnexoForm) request.getSession().getAttribute("anexoForm");
+        try {
+            //Documentos obtenidos del scan
+            List<ScanWebDocument> documentosEscaneados = obtenerDocumentosEscaneados(request, anexoForm.getRegistroID());
+
+            log.info("Documentos escaneados: " + documentosEscaneados.size());
+
+            //Fijamos el número total de documentos escaneados
+            anexoForm.setNumAnexosEscaneados(documentosEscaneados.size());
+
+            //Fijamos el número actual de documento a procesar
+            anexoForm.setNumDocumento(0);
+
+            request.getSession().setAttribute("documentosEscaneados", documentosEscaneados);
+
+
+        } catch (I18NException i18n) {
+            String msg = I18NUtils.tradueix(i18n.getTraduccio());
+            log.error(msg, i18n);
+            Mensaje.saveMessageError(request, msg);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            Mensaje.saveMessageError(request, e.getMessage());
+        }
+
+        return "redirect:/anexoScan/transforma";
+}
+
     /**
      * Método que carga una serie de atributos comunes del scan
      *
@@ -149,11 +229,9 @@ public class AnexoScanController extends AnexoController {
         boolean teScan = scanWebModuleEjb.entitatTeScan(entitatID);
         model.addAttribute("teScan", teScan);
 
-
         if (teScan) {//Si tiene scan
 
             String languageUI = request.getParameter("lang");
-
             if (languageUI == null) {
                 languageUI = I18NUtils.getLocale().getLanguage();
 
@@ -164,7 +242,6 @@ public class AnexoScanController extends AnexoController {
             final String scanWebID = String.valueOf(registroID);
 
             String urlToPluginWebPage = initializeScan(request, entitatID, scanWebID, languageUI);
-
             model.addAttribute("urlToPluginWebPage", urlToPluginWebPage);
         }
 
@@ -184,11 +261,15 @@ public class AnexoScanController extends AnexoController {
     private String initializeScan(HttpServletRequest request, long entitatID, final String scanWebID,
                                   String languageUI) throws Exception, I18NException {
 
+        //  Pasamos los datos del funcionario que realiza el escaneo en el list de metadades
+        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
-        final String scanType = IScanWebPlugin.SCANTYPE_PDF;
+
+        final  String scanType = ScanWebDocument.SCANTYPE_MIME_PDF;
 
         // 'null' significa obtenir la configuració per defecte del plugin
-        final Set<String> flags = null;
+        final String flag = ScanWebDocument.FLAG_SIGNED;
+
 
         final List<Metadata> metadades = new ArrayList<Metadata>();
 
@@ -205,38 +286,13 @@ public class AnexoScanController extends AnexoController {
         caducitat.add(Calendar.MINUTE, 10);
 
         long expiryTransaction = caducitat.getTimeInMillis();
+        String transactionName = scanWebID;
+        ScanWebRequestSignatureInfo signatureInfo = new ScanWebRequestSignatureInfo(usuarioEntidad.getNombreCompleto(),  usuarioEntidad.getUsuario().getDocumento(),  usuarioEntidad.getEntidad().getCodigoDir3());
+        ScanWebRequest scanWebRequest = new ScanWebRequest( scanWebID, transactionName,  scanType,  flag,  mode,  languageUI,  usuarioEntidad.getUsuario().getIdentificador(),  urlFinal,  metadades, signatureInfo);
 
-        ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebID, scanType, flags,
-                metadades, mode, languageUI, urlFinal, expiryTransaction);
+        ScanWebConfigRegWeb ss = new ScanWebConfigRegWeb(scanWebRequest,expiryTransaction);
         ss.setEntitatID(entitatID);
 
-        if (ss.getFlags() == null || ss.getFlags().size() == 0) {
-            // Seleccionam el primer suportat
-            Set<String> defaultFlags = scanWebModuleEjb.getDefaultFlags(ss);
-            ss.setFlags(defaultFlags);
-        }
-
-        //  Pasamos los datos del funcionario que realiza el escaneo en el list de metadades
-        UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
-
-        String funcionariNif = "";
-        if(usuarioEntidad.getUsuario().getDocumento() != null){
-            metadades.add(new Metadata( MetadataConstants.FUNCTIONARY_ADMINISTRATIONID, usuarioEntidad.getUsuario().getDocumento())); // "Nif del Funcionari",
-
-        }else{
-            //Si no tiene documento lo recuperamos del sistema de información de usuario(seycon)
-            IUserInformationPlugin loginPlugin = (IUserInformationPlugin) pluginEjb.getPlugin(null, RegwebConstantes.PLUGIN_USER_INFORMATION);
-            UserInfo regwebUserInfo = loginPlugin.getUserInfoByUserName(usuarioEntidad.getUsuario().getIdentificador());
-            funcionariNif = regwebUserInfo.getAdministrationID();
-            if(funcionariNif != null && !funcionariNif.isEmpty()) {
-                metadades.add(new Metadata( MetadataConstants.FUNCTIONARY_ADMINISTRATIONID, funcionariNif)); // "Nif del Funcionari",
-            }
-        }
-
-        metadades.add(new Metadata(MetadataConstants.FUNCTIONARY_FULLNAME,  usuarioEntidad.getNombreCompleto()));
-        metadades.add(new Metadata( MetadataConstants.FUNCTIONARY_USERNAME, usuarioEntidad.getUsuario().getIdentificador())); // "Username del Funcionari
-
-        ss.setMetadades(metadades);
 
         //Obtenemos las url relativas y absolutas del sistema de escaner configurado
         String relativeRequestPluginBasePath = ScanRequestServlet.getRelativeRequestPluginBasePath(request,
@@ -260,95 +316,142 @@ public class AnexoScanController extends AnexoController {
         return urlToPluginWebPage;
     }
 
+
     /**
-     * Método que prepara el DocumentCustody y el Signature Custody de un anexo que viene del escaner
-     *
+     * Método que transforma un documento escaneado al formato DocumentCustody y SignatureCustody y metadatos
      * @param request
      * @param anexoForm
+     * @param documento
      * @throws Exception
      * @throws I18NException
      */
     protected void manageDocumentCustodySignatureCustody(
-            HttpServletRequest request, AnexoForm anexoForm) throws Exception, I18NException {
-
-        final Long registroID = anexoForm.getRegistroID();
+       HttpServletRequest request, AnexoForm anexoForm, ScanWebDocument documento) throws Exception, I18NException {
 
         DocumentCustody dc = null;
         SignatureCustody sc = null;
+
+        // Hem de modificar el Modo de Firma segons el que ens hagin enviat des de SCAN
+        dc = documento.getScannedPlainFile();
+        sc = documento.getScannedSignedFile();
+
+        if (sc != null) {
+            log.info(sc.getName());
+        }
+
+        //Fijamos el MODO DE FIRMA
+        final int modoFirma;
+        if (dc == null) {
+            // Firma: PAdES, CAdES, XAdES
+            // Document amb firma adjunta
+            modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
+        } else if (sc == null) {
+            // Simple document
+            modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA;
+        } else {
+            // Firma i document separat
+            modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED;
+        }
+
+        //TODO ver si es así para todos o solo digitalIB (pendent d'en Felip)
+        //modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
+
+        if (log.isDebugEnabled()) {
+            log.debug("NOU MODE DE FIRMA: " + modoFirma);
+        }
+        anexoForm.getAnexo().setModoFirma(modoFirma);
+
+
+        //Fijamos el tipo de documento como "Documento Adjunto".
+        anexoForm.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
+        //Fijamos la validez del documento como "COPIA"
+        anexoForm.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
+        //Fecha de escaneo
+        anexoForm.getAnexo().setFechaCaptura(documento.getScanDate());
+
+        //Tipo Documental si viene informado
+        if(documento.getDocumentType()!= null) {
+            anexoForm.getAnexo().setTipoDocumental(tipoDocumentalEjb.findByCodigoEntidad(documento.getDocumentType(), getEntidadActiva(request).getId()));
+        }
+
+
+        //Asignamos las metadatas obtenidas del plugin de scan
+        List<Metadata> metadatasScan = new ArrayList<>();
+        if(documento.getDocumentLanguage() != null) {
+            metadatasScan.add(new Metadata(MetadataConstants.EEMGDE_IDIOMA, documento.getDocumentLanguage()));
+        }
+        if(documento.getOcr() != null) {
+            metadatasScan.add(new Metadata(MetadataConstants.OCR, documento.getOcr()));
+        }
+        if(documento.getPaperSize() != null) {
+            metadatasScan.add(new Metadata(MetadataConstants.PAPER_SIZE, documento.getPaperSize()));
+        }
+        if(documento.getPixelType() != null) {
+            metadatasScan.add(new Metadata(MetadataConstants.EEMGDE_PROFUNDIDAD_COLOR, documento.getPixelType()));
+
+        }
+        if(documento.getPppResolution() != null) {
+            metadatasScan.add(new Metadata(MetadataConstants.EEMGDE_RESOLUCION, documento.getPppResolution()));
+        }
+
+        if(documento.getScanDate() != null){
+            metadatasScan.add(new Metadata(MetadataConstants.ENI_FECHA_INICIO, documento.getScanDate()));
+        }
+
+        //Metadatas adicionales
+        if(documento.getAdditionalMetadatas() != null){
+            metadatasScan.addAll(documento.getAdditionalMetadatas());
+        }
+
+        anexoForm.setMetadatas(metadatasScan);
+
+        anexoForm.getAnexo().setTitulo(documento.getTransactionName());
+
+
+        //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
+        anexoForm.setDocumentoCustody(dc);
+        anexoForm.setSignatureCustody(sc);
+
+
+    }
+
+
+    /**
+     * Método que obtiene los documentos escaneados del plugin de scanweb
+     * @param request
+     * @param registroID
+     * @return
+     * @throws Exception
+     * @throws I18NException
+     */
+    protected List<ScanWebDocument> obtenerDocumentosEscaneados(HttpServletRequest request, Long registroID) throws Exception, I18NException{
+
+        List<ScanWebDocument> docsEscaneados = null;
 
         //Recuperamos el identificador de escaneo
         final String scanWebID = String.valueOf(registroID);
 
         //Obtenemos el resultado del escaneo
         ScanWebConfigRegWeb config = scanWebModuleEjb.getScanWebConfig(request, scanWebID);
+        ScanWebResult scanWebResult = config.getScanWebResult();
 
 
-       // log.info("Error detectat REGWEB3: " + config.getStatus().getErrorMsg());
-        if (config.getStatus().getErrorMsg() != null) {
+       // log.info("Error detectat REGWEB3: " + scanWebResult.getStatus().getErrorMsg());
+        if (scanWebResult.getStatus().getErrorMsg() != null) {
+            log.error(scanWebResult.getStatus().getErrorMsg());
             throw new I18NException("anexo.perfilscan.error");
         }
 
 
-        //Tratamiento de los documentos obtenidos del scanner
-        if (config != null && config.getScannedFiles().size() != 0) {
+        //Tratamiento de los documentos obtenidos del escaner
+        if (scanWebResult != null && scanWebResult.getScannedDocuments().size() != 0) {
 
-            if (config.getScannedFiles().size() != 1) {
-                throw new I18NException("anexo.error.scanmultiplefiles",
-                        String.valueOf(config.getScannedFiles().size()));
+            docsEscaneados = scanWebResult.getScannedDocuments();
+
+        }else{
+            if (scanWebResult.getScannedDocuments().size() == 0) {
+                throw new I18NException("anexo.error.noscanedfiles");
             }
-
-            List<ScannedDocument> listDocs = config.getScannedFiles();
-
-            // Només processam el primer fitxer enviat
-            ScannedDocument sd = listDocs.get(0);
-
-            // Hem de modificar el Modo de Firma segons el que ens hagin enviat des de SCAN
-            dc = sd.getScannedPlainFile();
-            sc = sd.getScannedSignedFile();
-
-            if(sc != null) {
-                log.info(sc.getName());
-            }
-
-            //Fijamos el MODO DE FIRMA
-            final int modoFirma;
-            if (dc == null) {
-                // Firma: PAdES, CAdES, XAdES
-                // Document amb firma adjunta
-                modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
-            } else if (sc == null) {
-                // Simple document
-                modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_SINFIRMA;
-            } else {
-                // Firma i document separat
-                modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED;
-            }
-
-            //TODO ver si es así para todos o solo digitalIB (pendent d'en Felip)
-            //modoFirma = RegwebConstantes.MODO_FIRMA_ANEXO_ATTACHED;
-
-            if (log.isDebugEnabled()) {
-                log.debug("NOU MODE DE FIRMA: " + modoFirma);
-            }
-            anexoForm.getAnexo().setModoFirma(modoFirma);
-
-
-            //Fijamos el tipo de documento como "Documento Adjunto".
-            anexoForm.getAnexo().setTipoDocumento(RegwebConstantes.TIPO_DOCUMENTO_DOC_ADJUNTO);
-            //Fijamos la validez del documento como "COPIA"
-            anexoForm.getAnexo().setValidezDocumento(RegwebConstantes.TIPOVALIDEZDOCUMENTO_COPIA);
-
-            //Asignamos las metadatas obtenidas del plugin de scan
-            anexoForm.setMetadatas(sd.getMetadatas());
-
-            //Fijamos el título del anexo si nos lo proporciona el plugin de scan
-            for(Metadata metadata : sd.getMetadatas()){
-
-                if(metadata.getKey().equals(MetadataConstants.TITULO_DOCUMENTO)){
-                    anexoForm.getAnexo().setTitulo(metadata.getValue()); 
-                }
-            }
-
         }
 
         if (config != null) {
@@ -356,10 +459,7 @@ public class AnexoScanController extends AnexoController {
             scanWebModuleEjb.closeScanWebProcess(request, scanWebID);
         }
 
-        //Asignamos los valores de documentCustody y SignatureCustody en función de lo obtenido anteriormente.
-        anexoForm.setDocumentoCustody(dc);
-        anexoForm.setSignatureCustody(sc);
-
+        return docsEscaneados;
 
     }
 }

@@ -962,7 +962,10 @@ public class AnexoBean extends BaseEjbJPA<Anexo, Long> implements AnexoLocal {
 
             doc.setName(checkFileName(doc.getName(), "file.bin"));
 
-            anexo.setFechaCaptura(new Date());
+            if(anexo.getFechaCaptura() == null) {
+                anexo.setFechaCaptura(new Date());
+            }
+
             anexo.setHash(RegwebUtils.obtenerHash(doc.getData()));
 
         }

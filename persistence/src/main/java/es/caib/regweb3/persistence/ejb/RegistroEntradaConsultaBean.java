@@ -829,7 +829,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
 
-        String queryBase = "Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.fecha " +
+        String queryBase = "Select DISTINCT re.id, re.numeroRegistroFormateado, re.fecha, re.registroDetalle.extracto, re.destino, re.destinoExternoCodigo, re.destinoExternoDenominacion, re.estado " +
            "from RegistroEntrada as re left outer join re.registroDetalle.interesados interessat LEFT JOIN re.destino destino ";
         StringBuilder query = new StringBuilder(queryBase);
 
@@ -947,6 +947,7 @@ public class RegistroEntradaConsultaBean implements RegistroEntradaConsultaLocal
             registroEntrada.setDestino((Organismo) object[4]);
             registroEntrada.setDestinoExternoCodigo((String) object[5]);
             registroEntrada.setDestinoExternoDenominacion((String) object[6]);
+            registroEntrada.setEstado((Long) object[7]);
 
             registros.add(registroEntrada);
         }
