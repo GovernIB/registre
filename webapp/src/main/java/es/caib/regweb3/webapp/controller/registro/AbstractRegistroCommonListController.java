@@ -100,8 +100,12 @@ public abstract class AbstractRegistroCommonListController extends BaseControlle
      */
     public void initScanAnexos(Entidad entidad, Model model, HttpServletRequest request,
         Long registroID) throws I18NException {
-      boolean teScan = scanWebModuleEjb.entitatTeScan(entidad.getId());
-      model.addAttribute("teScan", teScan);
+
+        boolean teScan = scanWebModuleEjb.entitatTeScan(entidad.getId());
+        model.addAttribute("teScan", teScan);
+
+        boolean permiteDigitMasiva = scanWebModuleEjb.entitatPermetScanMasiu(entidad.getId());
+        model.addAttribute("permiteDigitMasiva", permiteDigitMasiva);
     }
 
     //Montamos la nota informativa de las limitaciones de los anexos cogiendo los valores de las propiedades configuradas
