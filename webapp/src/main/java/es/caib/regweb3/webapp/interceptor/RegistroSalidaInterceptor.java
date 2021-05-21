@@ -96,7 +96,7 @@ public class RegistroSalidaInterceptor extends HandlerInterceptorAdapter {
                 }
             }else{ // Id de Registro invalido
                 log.info("Aviso: No tiene permisos para consultar este registro");
-                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.libro.noExiste"));
+                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("registro.noExiste"));
                 response.sendRedirect("/regweb3/aviso");
                 return false;
             }
