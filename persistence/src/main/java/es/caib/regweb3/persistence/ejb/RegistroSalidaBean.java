@@ -217,9 +217,6 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public Long proximoEventoSalida(RegistroSalida registroSalida, Entidad entidadActiva) throws Exception {
 
-        String fecha = PropiedadGlobalUtil.getFechaOficiosSalida(); // Fecha a partir de la cual se generarán oficios de salida
-
-        //Añadido marilen, si no se busca antes da un lazy al intentar cargar las relacionesOrganizativasOfi en el método getByOficinaActiva
         Oficina oficina = oficinaEjb.findById(registroSalida.getOficina().getId());
 
         // Obtiene los Organismos de la OficinaActiva en los que puede registrar sin generar OficioRemisión
@@ -232,7 +229,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         }
 
-        if ((StringUtils.isEmpty(fecha) || registroSalida.getFecha().after(new SimpleDateFormat(RegwebConstantes.FORMATO_FECHA).parse(fecha))) && registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
+        if (registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO) || registroSalida.getEstado().equals(RegwebConstantes.REGISTRO_PENDIENTE_VISAR)) {
 
             if (isOficioRemisionExterno(registroSalida, organismosCodigo)) { // Externo
 
@@ -386,7 +383,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
         // Asignamos su evento
         if (registroSalida.getEvento() != null) {
-            Long evento = proximoEventoSalida(findById(registroSalida.getId()), usuarioEntidad.getEntidad());
+            Long evento = proximoEventoSalida(registroSalida, usuarioEntidad.getEntidad());
             registroSalida.setEvento(evento);
             merge(registroSalida);
         }
