@@ -49,7 +49,7 @@
                         <form:hidden path="registroID" />
                         <form:hidden path="tipoRegistro" />
                         <form:hidden path="oficioRemisionSir" />
-                        <form:hidden path="numAnexosEscaneados" />
+                        <form:hidden path="numAnexosRecibidos" />
                         <%--
                         <form:hidden path="returnURL" />
 

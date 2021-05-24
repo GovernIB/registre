@@ -19,8 +19,8 @@ public class AnexoForm extends AnexoFull {
     //propiedades de los anexos escaneados
     private String pixelType;
     private String pppResolution;
-    private int numAnexosEscaneados;
-    private int numDocumento; // En escaneos masivos indica el numero de documento que estamos tratando
+    private int numAnexosRecibidos; // Numero de documentos que hemos recibido o via escaner o via fichero.
+    private int numDocumento; // En escaneos masivos indica el numero de documento que estamos procesando, si el 1,2,3.
 
     public AnexoForm() {
         super();
@@ -106,12 +106,12 @@ public class AnexoForm extends AnexoFull {
         this.pppResolution = pppResolution;
     }
 
-    public int getNumAnexosEscaneados() {
-        return numAnexosEscaneados;
+    public int getNumAnexosRecibidos() {
+        return numAnexosRecibidos;
     }
 
-    public void setNumAnexosEscaneados(int numAnexosEscaneados) {
-        this.numAnexosEscaneados = numAnexosEscaneados;
+    public void setNumAnexosRecibidos(int numAnexosRecibidos) {
+        this.numAnexosRecibidos = numAnexosRecibidos;
     }
 
     public int getNumDocumento() {

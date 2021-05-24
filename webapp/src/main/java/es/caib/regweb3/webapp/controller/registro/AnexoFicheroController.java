@@ -272,6 +272,8 @@ public class AnexoFicheroController extends AnexoController {
 
         anexoForm.setDocumentoCustody(dc);
         anexoForm.setSignatureCustody(sc);
+        //Desde archivo solo se puede adjuntar un archivo cada vez
+        anexoForm.setNumAnexosRecibidos(1);
 
     }
 
