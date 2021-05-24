@@ -121,6 +121,7 @@
                         <c:set var="totalA" value="0"/>
                         <c:forEach var="anexoFull" items="${anexos}">
 
+                            <c:if test="${anexoFull.anexo.titulo != RegwebConstantes.FICHERO_REGISTROELECTRONICO}">
                             <tr id="anexo${anexoFull.anexo.id}">
                                 <td>
                                     <c:if test="${anexoFull.anexo.titulo != anexoFull.anexo.tituloCorto}">
@@ -294,6 +295,7 @@
                                     </c:if>
                                 </td>
                             </tr>
+                            </c:if>
                         </c:forEach>
                             <%-- Fila pel tamany Total dels annexes --%>
                         <tr>
