@@ -51,7 +51,7 @@ function restOrganismoInteresado(codigoDir3, denominacion, idRegistroDetalle, ti
         success: function(result) {
 
             if(result.status === 'SUCCESS'){
-                if(tipoRegistro===2){ //Si es una salida eliminamos los anteriores
+                if(tipoRegistro==2){ //Si es una salida eliminamos los anteriores
                     eliminarTodosInteresados();
                 }
                 addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDetalle, true);
@@ -100,7 +100,7 @@ function addOrganismoInteresadoHtml(codigoDir3, denominacion, tipo, idRegistroDe
             mensajeSuccess("#mensajes", tradsinteresado['interesado.añadido']);
 
             // Actualizamos el evento del registro de salida
-            if(tipoRegistro === '2'){
+            if(tipoRegistro == '2'){
              actualizarEventoRegistroSalida(idRegistroSalida);
              }
         }
@@ -133,7 +133,7 @@ function eliminarOrganisnoInteresado(codigoDir3,idRegistroDetalle){
                     mensajeSuccess("#mensajes", tradsinteresado['interesado.eliminado']);
 
                     // Actualizamos el evento del registro de salida
-                    if(tipoRegistro === 2){
+                    if(tipoRegistro == 2){
                         actualizarEventoRegistroSalida(idRegistroSalida);
                     }
                 }
