@@ -137,11 +137,11 @@ public class AnexoController extends BaseController {
                         anexoForm.getRegistroID(), anexoForm.getTipoRegistro(), null, false);
 
                 //Actualizamos el contador de anexos creados
-                anexoForm.setNumAnexosEscaneados(anexoForm.getNumAnexosEscaneados()-1);
+                anexoForm.setNumAnexosRecibidos(anexoForm.getNumAnexosRecibidos()-1);
                 //fijamos el id a null despues de crearlo para que pueda seguir procesando los siguientes.
                 anexoForm.getAnexo().setId(null);
                 //Si no quedan más anexos acabamos proceso
-                if(anexoForm.getNumAnexosEscaneados() == 0){
+                if(anexoForm.getNumAnexosRecibidos() == 0){
                     model.addAttribute("closeAndReload", "true");
                     return "registro/formularioAnexo";
                 }else { //si quedan más anexos volvemos a coger el siguiente a procesar

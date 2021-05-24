@@ -115,7 +115,7 @@ public class AnexoScanController extends AnexoController {
 
         try {
             // Si quedan documentos por transformar
-            if(anexoForm.getNumAnexosEscaneados()>0 && anexoForm.getNumDocumento() <= documentosEscaneados.size()-1) {
+            if(anexoForm.getNumAnexosRecibidos()>0 && anexoForm.getNumDocumento() <= documentosEscaneados.size()-1) {
                 ScanWebDocument documentoEscaneado = documentosEscaneados.get(anexoForm.getNumDocumento());
                 //Transformamos el DocumentCustody y SignatureCustody de lo que nos envia el anexoForm
                 manageDocumentCustodySignatureCustody(request, anexoForm, documentoEscaneado);
@@ -187,7 +187,7 @@ public class AnexoScanController extends AnexoController {
             log.info("Documentos escaneados: " + documentosEscaneados.size());
 
             //Fijamos el número total de documentos escaneados
-            anexoForm.setNumAnexosEscaneados(documentosEscaneados.size());
+            anexoForm.setNumAnexosRecibidos(documentosEscaneados.size());
 
             //Fijamos el número actual de documento a procesar
             anexoForm.setNumDocumento(0);
