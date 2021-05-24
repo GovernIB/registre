@@ -79,7 +79,7 @@
                             <c:forEach var="anexo" items="${registro.registroDetalle.anexos}">
                                 <c:set var="tamanyAnexo" value="0"/>
                                 <!-- No mostra el justificant ni ho conta pel tamany màxim -->
-                                <c:if test="${!anexo.justificante}">
+                                <c:if test="${!anexo.justificante && anexo.titulo != RegwebConstantes.FICHERO_REGISTROELECTRONICO}">
                                     <tr>
                                         <td>
                                             <a data-toggle="modal" href="#detalleAnexo"
