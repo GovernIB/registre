@@ -1893,7 +1893,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
         // Procesamos las Firma detached
         for (AnexoSir anexoSir : registroSir.getAnexos()) {
-            transformarAnexoFirma(anexoSir, anexosProcesados,registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion());
+            transformarAnexoFirmaDetached(anexoSir, anexosProcesados,registroSir.getEntidad().getId(), anexoSir.getRegistroSir().getAplicacion());
         }
 
         // Eliminam duplicats
@@ -2055,7 +2055,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
      * @param anexosProcesados Lista de anexos procesados anteriores.
      * @return AnexoFull tipo {@link AnexoFull}
      */
-    private void transformarAnexoFirma(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad, String aplicacion) throws Exception {
+    private void transformarAnexoFirmaDetached(AnexoSir anexoSir, Map<String, AnexoFull> anexosProcesados, Long idEntidad, String aplicacion) throws Exception {
 
         // En este método solo se procesan las firmas detached(aquellas que nos informan
         // con el identificador de documento firmado, que son firma de otro segmento anexo
@@ -2064,7 +2064,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
 
-            AnexoFull anexoFirmado = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());
+            AnexoFull anexoFirmado = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el anexo firmado previamente procesado
             if(anexoFirmado.getAnexo().getModoFirma() != MODO_FIRMA_ANEXO_ATTACHED) { // si la firma detached es de un firma attached, la descartamos
 
 
@@ -2191,7 +2191,6 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     // CADES
 
                     //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                    //anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
                     anexoFirmado.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
                     SignatureCustody sc = getSignatureCustody(anexoSir, anexoFirmado.getDocumentoCustody(), anexoFirmado.getAnexo().getModoFirma()); //Asignamos la firma
                     anexoFirmado.setSignatureCustody(sc);
