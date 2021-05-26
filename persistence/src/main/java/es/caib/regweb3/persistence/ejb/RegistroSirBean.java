@@ -2064,20 +2064,24 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
 
             log.info("Firma detached del documento: " + anexoSir.getIdentificadorDocumentoFirmado());
 
-            byte[] anexoSirData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
+            AnexoFull anexoFirmado = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());
+            if(anexoFirmado.getAnexo().getModoFirma() != MODO_FIRMA_ANEXO_ATTACHED) { // si la firma detached es de un firma attached, la descartamos
 
-            // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
-            if(Base64.isBase64(anexoSirData)){
-                log.info("Entramos en decodificar caso ORVE");
-                anexoSirData=Base64.decodeBase64(anexoSirData);
-                anexoSir.setAnexoData(anexoSirData);
-            };
 
-            if(CXFUtils.isXMLFormat(anexoSirData)){ //Miramos si es un formato XML
-                //A pesar de que por identificador de documento firmado nos indican que es una firma detached, debemos
-                // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
+                byte[] anexoSirData = FileSystemManager.getBytesArchivo(anexoSir.getAnexo().getId());
 
-                /*******  COMENTAMOS TEMPORALMENTE MIRAR EL FORMATO DEL XADES YA QUE EN TODOS LOS CASOS SE ELIMINA EL XSIG, LO HACEMOS A RAIZ DEL PROBLEMA DE FORMATO DE GEISER CON EL XML CON CAPA <AFIRMA></AFIRMA>  ********/
+                // CASO ORVE BASE64 Decodificamos previamente porque vienen las firmas codificadas en base64
+                if (Base64.isBase64(anexoSirData)) {
+                    log.info("Entramos en decodificar caso ORVE");
+                    anexoSirData = Base64.decodeBase64(anexoSirData);
+                    anexoSir.setAnexoData(anexoSirData);
+                }
+
+                if (CXFUtils.isXMLFormat(anexoSirData)) { //Miramos si es un formato XML
+                    //A pesar de que por identificador de documento firmado nos indican que es una firma detached, debemos
+                    // averiguar si es una firma attached o detached  y esto nos lo indica el contenido del xml que nos envian.
+
+                    /*******  COMENTAMOS TEMPORALMENTE MIRAR EL FORMATO DEL XADES YA QUE EN TODOS LOS CASOS SE ELIMINA EL XSIG, LO HACEMOS A RAIZ DEL PROBLEMA DE FORMATO DE GEISER CON EL XML CON CAPA <AFIRMA></AFIRMA>  ********/
                 /*String format= getXAdESFormat(anexoSirData);
 
                 if(SIGNFORMAT_EXPLICIT_DETACHED.equals(format)){// XADES Detached
@@ -2182,15 +2186,17 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
                     anexosProcesados.put(anexoSir.getIdentificadorFichero(),anexoFullnou );*//*
 
                 }*/
-            } else {
-                log.info("Entro en CADES");
-                // CADES
+                } else {
+                    log.info("Entro en CADES");
+                    // CADES
 
-                //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
-                AnexoFull anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
-                anexoFull.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
-                SignatureCustody sc = getSignatureCustody(anexoSir, anexoFull.getDocumentoCustody(), anexoFull.getAnexo().getModoFirma()); //Asignamos la firma
-                anexoFull.setSignatureCustody(sc);
+                    //Caso Firma Detached, caso 4, se guarda 1 anexo, con el doc original en documentCustody y la firma en SignatureCustody
+                    //anexoFull = anexosProcesados.get(anexoSir.getIdentificadorDocumentoFirmado());//obtenemos el documento original previamente procesado
+                    anexoFirmado.getAnexo().setModoFirma(RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED); // asignamos el modo de firma
+                    SignatureCustody sc = getSignatureCustody(anexoSir, anexoFirmado.getDocumentoCustody(), anexoFirmado.getAnexo().getModoFirma()); //Asignamos la firma
+                    anexoFirmado.setSignatureCustody(sc);
+
+                }
 
             }
 
@@ -2280,7 +2286,7 @@ public class RegistroSirBean extends BaseEjbJPA<RegistroSir, Long> implements Re
             } else if (modoFirma ==  RegwebConstantes.MODO_FIRMA_ANEXO_DETACHED) {
                 // Firma en document separat CAS 4
                 if (dc == null) {
-                    throw new Exception("Aquesta firma requereix el document "+anexoSir.getIdentificadorFichero()+" original"
+                    throw new Exception("Aquesta firma "+ anexoSir.getIdentificadorFichero() +"  requereix el document original"
                             + " i no s'ha enviat");
                 }
 
