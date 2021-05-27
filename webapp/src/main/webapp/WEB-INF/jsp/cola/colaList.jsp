@@ -111,7 +111,7 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col width="150">
+                                            <col width="160">
                                         </colgroup>
                                         <thead>
                                         <tr>
@@ -172,6 +172,7 @@
                                                         </c:if>
                                                         <a class="btn btn-primary btn-sm" onclick='confirm("<c:url value="/distribucion/${cola.id}/distribuirelementocola/${tipo}"/>","<spring:message code="regweb.confirmar.distribuir" htmlEscape="true"/>")' href="javascript:void(0);" title="<spring:message code="regweb.distribuir"/>"><span class="fa fa-share-square-o"></span></a>
                                                     </c:if>
+                                                    <a class="btn btn-info btn-sm" href="<c:url value="/adminEntidad/registroEntrada/${cola.idObjeto}/detalle"/>" target="_blank" title="<spring:message code="registroEntrada.detalle"/>"><span class="fa fa-eye"></span></a>
                                                 </td>
                                             </tr>
                                         </c:forEach>
