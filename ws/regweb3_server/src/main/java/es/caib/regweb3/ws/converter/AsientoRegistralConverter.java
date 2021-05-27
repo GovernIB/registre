@@ -210,7 +210,7 @@ public class AsientoRegistralConverter extends CommonConverter {
          RegistroEntrada registro;
 
          if(conAnexos){
-            registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+            registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
          }else{
             registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
          }
@@ -248,7 +248,7 @@ public class AsientoRegistralConverter extends CommonConverter {
          RegistroSalida registro;
 
          if(conAnexos){
-            registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
+            registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
          }else{
             registro = registroSalidaConsultaEjb.findByNumeroRegistroFormateado(usuario.getEntidad().getCodigoDir3(), numeroRegistro);
          }

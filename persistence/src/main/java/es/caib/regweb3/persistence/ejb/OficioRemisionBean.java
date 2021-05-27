@@ -227,7 +227,7 @@ public class OficioRemisionBean extends BaseEjbJPA<OficioRemision, Long> impleme
                 // Creamos un Registro de Salida y Trazabilidad por cada Registro de Entrada que contenga el OficioRemision
                 for (RegistroEntrada registroEntrada : oficioRemision.getRegistrosEntrada()) {
 
-                    registroEntrada = registroEntradaEjb.findByIdConAnexos(registroEntrada.getId());
+                    registroEntrada = registroEntradaEjb.findByIdCompleto(registroEntrada.getId());
 
                     RegistroSalida registroSalida = new RegistroSalida();
 

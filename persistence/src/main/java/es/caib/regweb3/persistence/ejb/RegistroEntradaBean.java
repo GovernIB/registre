@@ -68,11 +68,12 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
 
 
     @Override
-    public RegistroEntrada findByIdConAnexos(Long id) throws Exception {
+    public RegistroEntrada findByIdCompleto(Long id) throws Exception {
 
         RegistroEntrada registroEntrada = findById(id);
 
         Hibernate.initialize(registroEntrada.getRegistroDetalle().getAnexos());
+        Hibernate.initialize(registroEntrada.getRegistroDetalle().getInteresados());
 
         return registroEntrada;
     }
@@ -172,17 +173,6 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         postProcesoActualizarRegistro(registroEntrada, usuarioEntidad.getEntidad().getId());
 
         return registroEntrada;
-    }
-
-
-    private RegistroEntrada findByIdConsulta(Long idRegistro) throws Exception {
-
-        Query q = em.createQuery("Select re from RegistroEntrada as re where re.id = :idRegistro ");
-
-        q.setParameter("idRegistro", idRegistro);
-        q.setHint("org.hibernate.readOnly", true);
-
-        return (RegistroEntrada) q.getSingleResult();
     }
 
     @Override
@@ -595,7 +585,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     @Override
     public RegistroEntrada getConAnexosFull(Long id) throws Exception, I18NException {
 
-        RegistroEntrada re = findById(id);
+        RegistroEntrada re = findByIdCompleto(id);
 
         return cargarAnexosFull(re);
     }

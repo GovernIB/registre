@@ -260,7 +260,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
 
         if (registroEntrada == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
@@ -429,7 +429,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         UsuarioEntidad usuario = usuarioEntidadEjb.findByIdentificadorEntidad(UsuarioAplicacionCache.get().getUsuario().getIdentificador(), entidadActiva.getId());
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
 
 
         if (registroEntrada == null) {
@@ -575,7 +575,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         }
 
         // 4.- Obtenemos el RegistroEntrada
-        RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad, numeroRegistroFormateado);
+        RegistroEntrada registro = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad, numeroRegistroFormateado);
 
         if (registro == null) {
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);

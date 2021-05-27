@@ -23,12 +23,12 @@ public interface RegistroSalidaLocal extends RegistroSalidaCambiarEstadoLocal {
 
 
     /**
-     * Obtiene un Registro de Salida cargardo la relación con la tabla Anexos
+     * Obtiene un Registro de Salida cargardo la relación con la tabla Anexos e Interesados
      * @param id
      * @return
      * @throws Exception
      */
-    RegistroSalida findByIdConAnexos(Long id) throws Exception;
+    RegistroSalida findByIdCompleto(Long id) throws Exception;
 
     /**
      * Guarda un Registro de Salida (con anexos)

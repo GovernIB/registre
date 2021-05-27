@@ -143,7 +143,6 @@
                                             </c:if>
                                             <col width="100">
                                             <col>
-                                            <col>
                                             <col width="50">
                                         </colgroup>
                                         <thead>
@@ -155,7 +154,6 @@
                                             </c:if>
                                             <th><spring:message code="registroEntrada.organismoDestino"/></th>
                                             <th><spring:message code="registroEntrada.extracto"/></th>
-                                            <th><spring:message code="registroEntrada.interesados"/></th>
                                             <th><spring:message code="regweb.acciones"/></th>
                                         </tr>
                                         </thead>
@@ -214,11 +212,6 @@
                                                         <c:if test="${fn:length(registroEntrada.registroDetalle.extracto) > 40}">
                                                             <p rel="popupArriba" data-content="<c:out value="${registroEntrada.registroDetalle.extracto}" escapeXml="true"/>" data-toggle="popover"><c:out value="${registroEntrada.registroDetalle.extractoCorto}" escapeXml="true"/></p>
                                                         </c:if>
-                                                    </td>
-
-                                                    <td class="center"><label class="no-bold representante" rel="popupAbajo"
-                                                                              data-content="<c:out value="${registroEntrada.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
-                                                                              data-toggle="popover">${registroEntrada.registroDetalle.totalInteresados}</label>
                                                     </td>
                                                     <td class="center">
                                                         <a class="btn btn-info btn-sm"

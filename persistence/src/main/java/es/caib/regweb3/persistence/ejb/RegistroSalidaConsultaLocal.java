@@ -68,7 +68,7 @@ public interface RegistroSalidaConsultaLocal{
      * @throws Exception
      * @throws I18NException
      */
-    public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
+    public RegistroSalida findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
 
 
     /**

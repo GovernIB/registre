@@ -191,7 +191,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
     public String detalleRegistroSalida(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
 
-        RegistroSalida registro = registroSalidaEjb.findByIdConAnexos(idRegistro);
+        RegistroSalida registro = registroSalidaEjb.findByIdCompleto(idRegistro);
 
         if (registro.getEvento() == null) {
             Mensaje.saveMessageError(request, getMessage("aviso.registro.evento"));

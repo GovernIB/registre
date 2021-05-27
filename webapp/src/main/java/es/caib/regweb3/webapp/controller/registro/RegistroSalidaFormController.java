@@ -229,7 +229,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
         Entidad entidad = getEntidadActiva(request);
 
         try {
-            registroSalida = registroSalidaEjb.findByIdConAnexos(idRegistro);
+            registroSalida = registroSalidaEjb.findByIdCompleto(idRegistro);
 
             if(validarPermisosEdicion(registroSalida, request, RegwebConstantes.PERMISO_MODIFICACION_REGISTRO_SALIDA)){
                 return "redirect:/aviso";
@@ -332,7 +332,7 @@ public class RegistroSalidaFormController extends AbstractRegistroCommonFormCont
                 }
 
                 // Obtenemos el RE antes de guardarlos, para crear el histórico
-                RegistroSalida antiguo = registroSalidaEjb.findByIdConAnexos(registroSalida.getId());
+                RegistroSalida antiguo = registroSalidaEjb.findByIdCompleto(registroSalida.getId());
 
                 // Actualizamos el RegistroSalida
                 registroSalida = registroSalidaEjb.actualizar(antiguo, registroSalida, usuarioEntidad);

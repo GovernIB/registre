@@ -124,7 +124,7 @@ public interface RegistroEntradaConsultaLocal {
      * @throws Exception
      * @throws I18NException
      */
-    RegistroEntrada findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
+    RegistroEntrada findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException;
 
     /**
      * Obtiene el numero de registro formateado de un RegistroEntrada
