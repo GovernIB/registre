@@ -914,7 +914,7 @@ public class AnexoController extends BaseController {
     protected AnexoForm prepararAnexoForm(HttpServletRequest request, Long registroDetalleID, Long tipoRegistro, Long registroID, Boolean isOficioRemisionSir, Boolean scan) throws Exception {
 
         saveLastAnnexoAction(request, registroDetalleID, registroID, tipoRegistro, null, isOficioRemisionSir);
-        RegistroDetalle registroDetalle = registroDetalleEjb.getReference(registroDetalleID);
+        RegistroDetalle registroDetalle = registroDetalleEjb.findById(registroDetalleID);
 
         //Prepara el anexoForm con los datos
         AnexoForm anexoForm = new AnexoForm();
