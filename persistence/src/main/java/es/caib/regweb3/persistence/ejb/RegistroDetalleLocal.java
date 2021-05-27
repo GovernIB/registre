@@ -19,6 +19,14 @@ import java.util.Set;
 public interface RegistroDetalleLocal extends BaseEjb<RegistroDetalle, Long> {
 
     /**
+     * Obtiene el RegistroDetalle cargando los Interesados
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    RegistroDetalle findByIdConInteresados(Long id) throws Exception;
+
+    /**
      * Obtiene el RegistroDetalle de un RegistroEntrada
      * @param idRegistroEntrada
      * @return
