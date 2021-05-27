@@ -88,35 +88,32 @@ public interface InteresadoLocal extends BaseEjb<Interesado, Long> {
     /**
      * Método que invoca al plugin de post proceso cuando se crea un interesado. Se indica el tipo de registro y el numero de registro
      * @param interesado
-     * @param numRegistro
+     * @param idRegistroDetalle
      * @param tipoRegistro
      * @return
      * @throws Exception
      */
-    void postProcesoNuevoInteresado(Interesado interesado, String numRegistro,
-                                    Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+    void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se actualiza un interesado. Se indica el tipo de registro y el numero de registro
      * @param interesado
-     * @param numRegistro
+     * @param idRegistroDetalle
      * @param tipoRegistro
      * @return
      * @throws Exception
      */
-    void postProcesoActualizarInteresado(Interesado interesado, String numRegistro,
-                                         Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+    void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException;
 
     /**
      * Método que invoca al plugin de post proceso cuando se elimina un interesado. Se indica el tipo de registro y el numero de registro
      * @param idInteresado
-     * @param numRegistro
+     * @param idRegistroDetalle
      * @param tipoRegistro
      * @return
      * @throws Exception
      */
-    void postProcesoEliminarInteresado(Long idInteresado, String numRegistro,
-                                       Long tipoRegistro, Long entidadId) throws Exception, I18NException;
+    void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException;
 
     /**
      *

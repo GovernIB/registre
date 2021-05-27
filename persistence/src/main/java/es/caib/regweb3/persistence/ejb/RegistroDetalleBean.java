@@ -5,6 +5,7 @@ import es.caib.regweb3.model.RegistroDetalle;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.i18n.I18NException;
+import org.hibernate.Hibernate;
 import org.jboss.ejb3.annotation.SecurityDomain;
 
 import javax.ejb.EJB;
@@ -47,6 +48,16 @@ public class RegistroDetalleBean extends BaseEjbJPA<RegistroDetalle, Long> imple
     public RegistroDetalle findById(Long id) throws Exception {
 
         return em.find(RegistroDetalle.class, id);
+    }
+
+    @Override
+    public RegistroDetalle findByIdConInteresados(Long id) throws Exception {
+
+        RegistroDetalle registroDetalle = findById(id);
+
+        Hibernate.initialize(registroDetalle.getInteresados());
+
+        return registroDetalle;
     }
 
     @Override

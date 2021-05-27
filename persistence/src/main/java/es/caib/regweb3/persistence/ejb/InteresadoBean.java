@@ -36,11 +36,10 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     @PersistenceContext(unitName="regweb3")
     private EntityManager em;
 
-    @EJB(mappedName = "regweb3/RegistroDetalleEJB/local")
-    private RegistroDetalleLocal registroDetalleEjb;
-
-    @EJB(mappedName = "regweb3/PluginEJB/local")
-    private PluginLocal pluginEjb;
+    @EJB private RegistroDetalleLocal registroDetalleEjb;
+    @EJB private PluginLocal pluginEjb;
+    @EJB public RegistroEntradaConsultaLocal registroEntradaConsultaEjb;
+    @EJB public RegistroSalidaConsultaLocal registroSalidaConsultaEjb;
 
 
     @Override
@@ -154,7 +153,7 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
     public void eliminarInteresadoRegistroDetalle(Long idInteresado, Long idRegistroDetalle) throws Exception{
 
         Interesado interesado = findById(idInteresado);
-        RegistroDetalle registroDetalle = registroDetalleEjb.findById(idRegistroDetalle);
+        RegistroDetalle registroDetalle = registroDetalleEjb.findByIdConInteresados(idRegistroDetalle);
 
         if(interesado != null && registroDetalle != null){
             if(interesado.getRepresentante() != null){ // Si tiene representante, lo eliminamos
@@ -271,43 +270,48 @@ public class InteresadoBean extends BaseEjbJPA<Interesado, Long> implements Inte
         return interesados;
     }
 
-    public void postProcesoNuevoInteresado(Interesado interesado, String numRegistro, 
-        Long tipoRegistro, Long entidadId) throws Exception, I18NException {
+    public void postProcesoNuevoInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
-        if(postProcesoPlugin !=null) {
+
+        if(postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
-                postProcesoPlugin.nuevoInteresadoEntrada(interesado, numRegistro);
+                String numeroRegistroFormateado = registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+                postProcesoPlugin.nuevoInteresadoEntrada(interesado, numeroRegistroFormateado);
             } else {
-                postProcesoPlugin.nuevoInteresadoSalida(interesado, numRegistro);
+                String numeroRegistroFormateado = registroSalidaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+                postProcesoPlugin.nuevoInteresadoSalida(interesado, numeroRegistroFormateado);
             }
         }
 
     }
 
-    public void postProcesoActualizarInteresado(Interesado interesado, String numRegistro,
-        Long tipoRegistro, Long entidadId) throws Exception, I18NException {
+    public void postProcesoActualizarInteresado(Interesado interesado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
-        if(postProcesoPlugin !=null) {
+
+        if(postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
-                postProcesoPlugin.actualizarInteresadoEntrada(interesado, numRegistro);
+                String numeroRegistroFormateado = registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+                postProcesoPlugin.actualizarInteresadoEntrada(interesado, numeroRegistroFormateado);
             } else {
-                postProcesoPlugin.actualizarInteresadoSalida(interesado, numRegistro);
+                String numeroRegistroFormateado = registroSalidaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+                postProcesoPlugin.actualizarInteresadoSalida(interesado, numeroRegistroFormateado);
             }
         }
 
     }
 
-    public void postProcesoEliminarInteresado(Long idInteresado, String numRegistro,
-        Long tipoRegistro, Long entidadId) throws Exception, I18NException {
+    public void postProcesoEliminarInteresado(Long idInteresado, Long idRegistroDetalle, Long tipoRegistro, Long entidadId) throws Exception, I18NException {
         IPostProcesoPlugin postProcesoPlugin = (IPostProcesoPlugin) pluginEjb.getPlugin(entidadId, RegwebConstantes.PLUGIN_POSTPROCESO);
-        if(postProcesoPlugin !=null) {
+
+        if(postProcesoPlugin != null) {
             if (tipoRegistro.equals(REGISTRO_ENTRADA)) {
-                postProcesoPlugin.eliminarInteresadoEntrada(idInteresado, numRegistro);
+                String numeroRegistroFormateado = registroEntradaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+                postProcesoPlugin.eliminarInteresadoEntrada(idInteresado, numeroRegistroFormateado);
             } else {
-                postProcesoPlugin.eliminarInteresadoSalida(idInteresado, numRegistro);
+                String numeroRegistroFormateado = registroSalidaConsultaEjb.findNumeroRegistroFormateadoByRegistroDetalle(idRegistroDetalle);
+                postProcesoPlugin.eliminarInteresadoSalida(idInteresado, numeroRegistroFormateado);
             }
         }
-
     }
 
     @Override
