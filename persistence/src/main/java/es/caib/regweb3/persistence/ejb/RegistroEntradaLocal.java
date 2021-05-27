@@ -23,21 +23,21 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
 
 
     /**
-     * Obtiene un Registro de Entrada cargardo la relación con la tabla Anexos
+     * Obtiene un Registro de Entrada cargardo la relación con la tabla Anexos e Interesados
      * @param id
      * @return
      * @throws Exception
      */
-    RegistroEntrada findByIdConAnexos(Long id) throws Exception;
+    RegistroEntrada findByIdCompleto(Long id) throws Exception;
 
 
-        /**
-         * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)
-         *
-         * @param registroEntrada
-         * @return
-         * @throws Exception
-         */
+    /**
+     * Guarda un Registro de Entrada y le asocia un número de registro (con anexos)
+     *
+     * @param registroEntrada
+     * @return
+     * @throws Exception
+     */
     RegistroEntrada registrarEntrada(RegistroEntrada registroEntrada,
                                      UsuarioEntidad usuarioEntidad, List<Interesado> interesados, List<AnexoFull> anexosFull, Boolean validarAnexos)
             throws Exception, I18NException, I18NValidationException;

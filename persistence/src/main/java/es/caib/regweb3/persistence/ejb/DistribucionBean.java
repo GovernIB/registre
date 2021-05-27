@@ -99,27 +99,13 @@ public class DistribucionBean implements DistribucionLocal {
             respuestaDistribucion.setEnviado(distribuido);
 
 
-        } catch (I18NException i18ne) {
+        } catch (I18NException | Exception | I18NValidationException i18ne) {
             try {
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), i18ne, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             throw i18ne;
-        } catch (Exception e) {
-            try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            throw e;
-        } catch (I18NValidationException i18vn) {
-            try {
-                integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), i18vn, null, System.currentTimeMillis() - tiempo, usuarioEntidad.getEntidad().getId(), numRegFormat);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            throw i18vn;
         }
 
         return respuestaDistribucion;

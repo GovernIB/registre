@@ -224,7 +224,7 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @RequestMapping(value = "/{idRegistro}/detalle", method = RequestMethod.GET)
     public String detalleRegistroEntrada(@PathVariable Long idRegistro, Model model, HttpServletRequest request) throws Exception, I18NException {
 
-        RegistroEntrada registro = registroEntradaEjb.findByIdConAnexos(idRegistro);
+        RegistroEntrada registro = registroEntradaEjb.findByIdCompleto(idRegistro);
 
         Entidad entidadActiva = getEntidadActiva(request);
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);

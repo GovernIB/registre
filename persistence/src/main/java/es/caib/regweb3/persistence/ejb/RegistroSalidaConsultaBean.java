@@ -85,8 +85,15 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         Query q2;
         Map<String, Object> parametros = new HashMap<String, Object>();
         List<String> where = new ArrayList<String>();
+        boolean busquedaInteresados = busquedaInteresados(interesadoNom, interesadoLli1, interesadoLli2, interesadoDoc);
 
-        String queryBase = "Select DISTINCT registroSalida from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat ";
+        StringBuilder queryBase = new StringBuilder("Select DISTINCT registroSalida from RegistroSalida as registroSalida ");
+
+        // Si la búsqueda incluye referencias al interesado, hacemos la left outer join
+        if(busquedaInteresados){
+            queryBase.append("left outer join registroSalida.registroDetalle.interesados interessat ");
+        }
+
         StringBuilder query = new StringBuilder(queryBase);
 
         // Entidad
@@ -177,35 +184,34 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         }
 
         // Añadimos los parámetros a la query
-        if (parametros.size() != 0) {
-            query.append("where ");
-            int count = 0;
-            for (String w : where) {
-                if (count != 0) {
-                    query.append(" and ");
-                }
-                query.append(w);
-                count++;
+        query.append("where ");
+        int count = 0;
+        for (String w : where) {
+            if (count != 0) {
+                query.append(" and ");
             }
-            // Duplicamos la query solo para obtener los resultados totales
-            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat "));
-            query.append(" order by registroSalida.id desc");
-            q = em.createQuery(query.toString());
-
-            for (Map.Entry<String, Object> param : parametros.entrySet()) {
-
-                q.setParameter(param.getKey(), param.getValue());
-                q2.setParameter(param.getKey(), param.getValue());
-            }
-
-        } else {
-            // Duplicamos la query solo para obtener los resultados totales
-            q2 = em.createQuery(query.toString().replaceAll(queryBase, "Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida left outer join registroSalida.registroDetalle.interesados interessat "));
-            query.append("order by registroSalida.id desc");
-            q = em.createQuery(query.toString());
+            query.append(w);
+            count++;
         }
 
+        // Duplicamos la query solo para obtener los resultados totales
+        StringBuilder queryCount = new StringBuilder("Select count(DISTINCT registroSalida.id) from RegistroSalida as registroSalida ");
+        if(busquedaInteresados){
+            queryCount.append("left outer join registroSalida.registroDetalle.interesados interessat ");
+        }
+        q2 = em.createQuery(query.toString().replaceAll(queryBase.toString(), queryCount.toString()));
 
+        // añadimos el order by
+        query.append(" order by registroSalida.id desc");
+        q = em.createQuery(query.toString());
+
+        // Mapeamos los parámetros
+        for (Map.Entry<String, Object> param : parametros.entrySet()) {
+            q.setParameter(param.getKey(), param.getValue());
+            q2.setParameter(param.getKey(), param.getValue());
+        }
+
+        // Ejecutamos las queries
         Paginacion paginacion;
 
         if (pageNumber != null) { // Comprobamos si es una busqueda paginada o no
@@ -271,12 +277,13 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
     }
 
     @Override
-    public RegistroSalida findByNumeroRegistroFormateadoConAnexos(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
+    public RegistroSalida findByNumeroRegistroFormateadoCompleto(String codigoEntidad, String numeroRegistroFormateado) throws Exception, I18NException {
 
         RegistroSalida registroSalida = findByNumeroRegistroFormateado(codigoEntidad,numeroRegistroFormateado);
 
         if(registroSalida!= null){
             Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
+            Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
             return cargarAnexosFull(registroSalida);
         }else{
             return null;
@@ -586,6 +593,19 @@ public class RegistroSalidaConsultaBean implements RegistroSalidaConsultaLocal {
         //Asignamos los documentos recuperados de custodia al registro de salida.
         registroSalida.getRegistroDetalle().setAnexosFull(anexosFull);
         return registroSalida;
+    }
+
+    /**
+     * Comprueba si alguno de los valores de búsqueda referentes al Interesado se ha rellenado
+     * @param interesadoNom
+     * @param interesadoLli1
+     * @param interesadoLli2
+     * @param interesadoDoc
+     * @return
+     */
+    private boolean busquedaInteresados(String interesadoNom, String interesadoLli1, String interesadoLli2, String interesadoDoc) {
+
+        return StringUtils.isNotEmpty(interesadoNom) || StringUtils.isNotEmpty(interesadoLli1) || StringUtils.isNotEmpty(interesadoLli2) || StringUtils.isNotEmpty(interesadoDoc);
     }
 
 }

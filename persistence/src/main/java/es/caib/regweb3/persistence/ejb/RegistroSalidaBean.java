@@ -67,11 +67,12 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
 
 
     @Override
-    public RegistroSalida findByIdConAnexos(Long id) throws Exception {
+    public RegistroSalida findByIdCompleto(Long id) throws Exception {
 
         RegistroSalida registroSalida = findById(id);
 
         Hibernate.initialize(registroSalida.getRegistroDetalle().getAnexos());
+        Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
 
         return registroSalida;
     }
@@ -254,6 +255,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     public void actualizarEvento(Long idRegistro, Entidad entidadActiva) throws Exception {
 
         RegistroSalida registroSalida = findById(idRegistro);
+        Hibernate.initialize(registroSalida.getRegistroDetalle().getInteresados());
 
         Long evento = proximoEventoSalida(registroSalida, entidadActiva);
 
@@ -593,7 +595,7 @@ public class RegistroSalidaBean extends RegistroSalidaCambiarEstadoBean
     @Override
     public RegistroSalida getConAnexosFull(Long id) throws Exception, I18NException {
 
-        RegistroSalida registroSalida = findById(id);
+        RegistroSalida registroSalida = findByIdCompleto(id);
         return cargarAnexosFull(registroSalida);
     }
 

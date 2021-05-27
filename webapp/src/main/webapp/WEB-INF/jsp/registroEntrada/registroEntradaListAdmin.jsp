@@ -335,7 +335,6 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col>
                                             <col width="101">
                                         </colgroup>
                                         <thead>
@@ -346,7 +345,6 @@
                                                 <th class="center"><spring:message code="registroEntrada.oficina"/></th>
                                                 <th class="center"><spring:message code="organismo.destino.corto"/></th>
                                                 <th class="center"><spring:message code="registroEntrada.estado"/></th>
-                                                <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                 <th class="center">Doc.</th>
                                                 <th class="center"><spring:message code="registro.presencial"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
@@ -367,16 +365,6 @@
                                                             <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
                                                         </c:import>
                                                     </td>
-                                                    <c:if test="${registro.registroDetalle.interesados != null}">
-                                                        <td class="center"><label
-                                                                class="no-bold representante" rel="popupAbajo"
-                                                                data-content="<c:out value="${registro.registroDetalle.nombreInteresadosHtml}" escapeXml="true"/>"
-                                                                data-toggle="popover"><c:out value="${registro.registroDetalle.totalInteresados}" escapeXml="true"/></label>
-                                                        </td>
-                                                    </c:if>
-                                                    <c:if test="${registro.registroDetalle.interesados == null}">
-                                                        <td class="center">0</td>
-                                                    </c:if>
                                                     <td class="center">
                                                         <c:if test="${registro.registroDetalle.tipoDocumentacionFisica == RegwebConstantes.TIPO_DOCFISICA_NO_ACOMPANYA_DOC}">
                                                             <i class="fa fa-print text-verd" title="<spring:message code="tipoDocumentacionFisica.${registro.registroDetalle.tipoDocumentacionFisica}"/>"></i>

@@ -1,9 +1,6 @@
 package es.caib.regweb3.utils;
 
 
-
-import org.springframework.stereotype.Component;
-
 /**
  * Created with IntelliJ IDEA.
  * User: jpernia
@@ -11,7 +8,6 @@ import org.springframework.stereotype.Component;
  * Time: 12:08
  * To change this template use File | Settings | File Templates.
  */
-@Component
 public class ConvertirTexto {
 
     // Converteix caràcters especials

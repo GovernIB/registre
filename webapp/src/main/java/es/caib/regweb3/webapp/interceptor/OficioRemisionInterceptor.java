@@ -130,7 +130,6 @@ public class OficioRemisionInterceptor extends HandlerInterceptorAdapter {
 
             for(Organismo organismo:organismos){
                 organismosId.add(organismo.getId());
-                log.info(organismo.getId());
             }
 
             // Comprueba que el usuario tiene permiso

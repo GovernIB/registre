@@ -67,8 +67,8 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     @Override
     public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
 
-        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(), numeroRegistroformateado);
-        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoConAnexos(entidad.getCodigoDir3(), numeroRegistroformateado);
+        RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
 
         if (registroEntrada != null) {
 
@@ -182,10 +182,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
             // Distribuimos el registro de entrada
             asynchDistribucion.distribuir(registroEntrada, usuario);
 
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new I18NException("registroEntrada.distribuir.error");
-        } catch (I18NValidationException e) {
+        }catch (Exception | I18NValidationException e){
             e.printStackTrace();
             throw new I18NException("registroEntrada.distribuir.error");
         }

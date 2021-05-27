@@ -73,7 +73,6 @@
                                             <col>
                                             <col>
                                             <col>
-                                            <col>
                                             <col width="50">
                                         </colgroup>
                                         <thead>
@@ -85,7 +84,6 @@
                                                 <th class="center"><spring:message code="organismo.destino"/></th>
                                                 <th class="center"><spring:message code="registroSalida.extracto"/></th>
                                                 <th class="center"><spring:message code="registroSalida.estado"/></th>
-                                                <th class="center"><spring:message code="registroEntrada.interesados"/></th>
                                                 <th class="center"><spring:message code="regweb.acciones"/></th>
                                             </tr>
                                         </thead>
@@ -105,16 +103,6 @@
                                                         <c:param name="decodificacionTipoAnotacion" value="${registro.registroDetalle.decodificacionTipoAnotacion}"/>
                                                     </c:import>
                                                 </td>
-                                                <c:if test="${registro.registroDetalle.interesados != null}">
-                                                    <td class="center"><label
-                                                            class="no-bold representante" rel="popupAbajo"
-                                                            data-content="${registro.registroDetalle.nombreInteresadosHtml}"
-                                                            data-toggle="popover">${registro.registroDetalle.totalInteresados}</label>
-                                                    </td>
-                                                </c:if>
-                                                <c:if test="${registro.registroDetalle.interesados == null}">
-                                                    <td class="center">0</td>
-                                                </c:if>
                                                 <td class="center">
                                                     <a class="btn btn-danger btn-sm" href="<c:url value="/registroSalida/${registro.id}/detalle"/>" title="<spring:message code="registroSalida.detalle"/>"><span class="fa fa-eye"></span></a>
                                                 </td>
