@@ -50,7 +50,7 @@ public interface IntegracionLocal extends BaseEjb<Integracion, Long> {
      * @return
      * @throws Exception
      */
-    List<Integracion> ultimasIntegracionesError(Long idEntidad) throws Exception;
+    List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws Exception;
 
     /**
      *
