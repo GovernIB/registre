@@ -112,7 +112,10 @@ public class InicioController extends BaseController{
             UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
 
             // Últimas incidencias de Integraciones
-            mav.addObject("incidencias", integracionEjb.ultimasIntegracionesError(entidadActiva.getId()));
+            mav.addObject("incidenciasSir", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_SIR));
+            mav.addObject("incidenciasJustificante", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_JUSTIFICANTE));
+            mav.addObject("incidenciasFirma", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_FIRMA));
+            mav.addObject("incidenciasWs", integracionEjb.ultimasIntegracionesErrorTipo(entidadActiva.getId(), RegwebConstantes.INTEGRACION_WS));
             model.addAttribute("integracion", new BasicForm());
 
             // Última sincronización de organismos

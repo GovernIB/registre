@@ -185,22 +185,31 @@ public class IntegracionBean extends BaseEjbJPA<Integracion, Long> implements In
 
     @Override
     @SuppressWarnings(value = "unchecked")
-    public List<Integracion> ultimasIntegracionesError(Long idEntidad) throws Exception{
+    public List<Integracion> ultimasIntegracionesErrorTipo(Long idEntidad, Long tipo) throws Exception{
 
-        Query q = em.createQuery("Select integracion from Integracion as integracion where " +
-                "integracion.entidad.id = :idEntidad and integracion.estado =:estado and " +
-                "integracion.fecha >= :fecha order by integracion.fecha desc");
+        Query q = em.createQuery("Select i.fecha, i.tipo, i.numRegFormat, i.descripcion from Integracion as i where " +
+                "i.entidad.id = :idEntidad and i.estado =:estado and i.tipo = :tipo and " +
+                "i.fecha >= :fecha order by i.fecha desc");
 
         q.setParameter("idEntidad",idEntidad);
         q.setParameter("estado",RegwebConstantes.INTEGRACION_ESTADO_ERROR);
+        q.setParameter("tipo",tipo);
 
         Calendar hoy = Calendar.getInstance(); //obtiene la fecha de hoy
         hoy.add(Calendar.DATE, -2); //el -2 indica que se le restaran 3 dias
         q.setParameter("fecha", hoy.getTime());
-        q.setMaxResults(10);
+        q.setMaxResults(7);
         q.setHint("org.hibernate.readOnly", true);
 
-        return q.getResultList();
+        List<Integracion> integraciones =  new ArrayList<Integracion>();
+        List<Object[]> result = q.getResultList();
+
+        for (Object[] object : result){
+            Integracion integracion = new Integracion((Date)object[0],(Long)object[1],(String)object[2],(String)object[3]);
+            integraciones.add(integracion);
+        }
+
+        return integraciones;
 
     }
 

@@ -44,6 +44,13 @@ public class Integracion implements Serializable {
         this.tipo = tipo;
     }
 
+    public Integracion(Date fecha, Long tipo, String numRegFormat, String descripcion) {
+        this.tipo = tipo;
+        this.descripcion = descripcion;
+        this.fecha = fecha;
+        this.numRegFormat = numRegFormat;
+    }
+
     public Integracion(Date inicio, Long tipo, Long estado, String descripcion, String peticion, Long tiempo,Long idEntidad, String numRegFormat) {
         this.tipo = tipo;
         this.estado = estado;
