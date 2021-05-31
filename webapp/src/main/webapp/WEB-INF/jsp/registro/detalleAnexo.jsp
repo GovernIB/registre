@@ -6,8 +6,7 @@
     <div class="modal-dialog modal-lg" id="formularioAnexo">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                        onclick="limpiarAnexoDetalle()">x
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="limpiarAnexoDetalle()">x
                 </button>
                 <h3 id="anexoTitulo"></h3>
             </div>
@@ -62,6 +61,28 @@
                     <div class="col-xs-7" id="mime"></div>
                 </div>
 
+                <div id="firmaInformacion">
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.tipoFirma"/></label>
+                        </div>
+                        <div class="col-xs-7" id="tipoFirma"></div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.perfilFirma"/></label>
+                        </div>
+                        <div class="col-xs-7" id="perfilFirma"></div>
+                    </div>
+                    <div class="form-group col-xs-6">
+                        <div class="col-xs-5 pull-left etiqueta_regweb control-label">
+                            <label><spring:message code="anexo.formatoFirma"/></label>
+                        </div>
+                        <div class="col-xs-7" id="formatoFirma"></div>
+                    </div>
+                </div>
+
+
                 <div class="clearfix"></div>
 
             </div>
@@ -88,7 +109,6 @@
     tradsanexo['tipoValidezDocumento.2'] = "<spring:message code='tipoValidezDocumento.2' javaScriptEscape='true' />";
     tradsanexo['tipoValidezDocumento.3'] = "<spring:message code='tipoValidezDocumento.3' javaScriptEscape='true' />";
     tradsanexo['tipoValidezDocumento.4'] = "<spring:message code='tipoValidezDocumento.4' javaScriptEscape='true' />";
-
     tradsanexo['anexo.origen.0'] = "<spring:message code='anexo.origen.0' javaScriptEscape='true' />";
     tradsanexo['anexo.origen.1'] = "<spring:message code='anexo.origen.1' javaScriptEscape='true' />";
 
