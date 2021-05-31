@@ -91,8 +91,7 @@
                                         <!-- Si hay sustitutos es que el organismo al que va dirigido está extinguido -->
                                         <c:if test="${fn:length(sustitutos) > 1}">
                                             <p><span class="text-vermell ">
-                                                    <strong><spring:message code="registroSir.organismo.destino.extinguido"/> ${destino.denominacion}
-                                                    <spring:message code="registroSir.organismo.destino.extinguido2"/></strong>
+                                                    <strong><spring:message code="registroSir.organismo.destino.extinguido"/> ${destino.denominacion}</strong>
                                             </span></p>
                                         </c:if>
 
