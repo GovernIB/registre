@@ -294,9 +294,7 @@ public class RegistroSalidaListController extends AbstractRegistroCommonListCont
             return new ModelAndView("redirect:/registroSalida/" + idRegistro + "/detalle");
         }
 
-
-        RegistroSalida registroSalida = registroSalidaEjb.findById(idRegistro);
-        //List<OficinaTF> oficinasSIR = registroSalidaEjb.isOficioRemisionSir(registroSalida, getOrganismosOficioRemisionSalida(organismosOficinaActiva));
+        RegistroSalida registroSalida = registroSalidaEjb.findByIdCompleto(idRegistro);
 
         //Obtenemos el destino externo de dir3caib que nos han indicado para ver si está extinguido
         String codigoDir3 = RegistroUtils.obtenerCodigoDir3Interesado(registroSalida);
