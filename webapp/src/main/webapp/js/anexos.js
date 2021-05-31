@@ -18,10 +18,8 @@ function obtenerAnexo(idAnexo, idEntidad){
         success: function(result) {
 
             $('#anexoTitulo').html(result.anexo.titulo);
-
             $('#titulo').html(result.anexo.titulo);
             $('#validezDocumento').html(tradsanexo['tipoValidezDocumento.'+result.anexo.validezDocumento]);
-
             $('#tipoDocumento').html(tradsanexo['tipoDocumento.0'+result.anexo.tipoDocumento]);
             $('#observacionesAnexo').html(result.anexo.observaciones);
             $('#origen').html(tradsanexo['anexo.origen.'+result.anexo.origenCiudadanoAdmin]);
@@ -32,10 +30,16 @@ function obtenerAnexo(idAnexo, idEntidad){
                 $('#mime').html(result.signMime);
             }
 
+            if(result.anexo.modoFirma !== 0){ // Firma Attached o detached
+                $('#tipoFirma').html(result.anexo.signType);
+                $('#perfilFirma').html(result.anexo.signProfile);
+                $('#formatoFirma').html(result.anexo.signFormat);
+                $('#firmaInformacion').show();
+            }else{
+                $('#firmaInformacion').hide();
+            }
         }
     });
-
-
 }
 
 /**
@@ -44,13 +48,15 @@ function obtenerAnexo(idAnexo, idEntidad){
 function limpiarAnexoDetalle(){
 
     $('#anexoTitulo').html('');
-
     $('#titulo').html('');
     $('#validezDocumento').html('');
     $('#tipoDocumento').html('');
     $('#observacionesAnexo').html('');
     $('#origen').html('');
-    $('#tipoDocumental').html('');
+    $('#mime').html('');
+    $('#tipoFirma').html('');
+    $('#perfilFirma').html('');
+    $('#formatoFirma').html('');
 
 }
 
