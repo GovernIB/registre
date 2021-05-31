@@ -347,13 +347,13 @@
 
     /* SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
     if(${anexoDetachedPermitido}) {
-        tamModalAnexo = 340;
-        tamModalFitxer = 500;
+        tamModalAnexo = 400;
+        tamModalFitxer = 550;
     } else{   /* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
         tamModalAnexo = 260;
-        tamModalFitxer = 450;
+        tamModalFitxer = 500;
     }
-    var tamModalScan = 610;
+    var tamModalScan = 710;
 
 
     // Afegeix el contingut HTML amb imatge de "pensar"
