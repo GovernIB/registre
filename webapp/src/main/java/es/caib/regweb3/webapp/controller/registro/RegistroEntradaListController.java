@@ -2,24 +2,14 @@ package es.caib.regweb3.webapp.controller.registro;
 
 import es.caib.dir3caib.ws.api.oficina.OficinaTF;
 import es.caib.dir3caib.ws.api.unidad.UnidadTF;
-import es.caib.regweb3.model.Anexo;
-import es.caib.regweb3.model.Entidad;
-import es.caib.regweb3.model.Oficina;
-import es.caib.regweb3.model.Organismo;
-import es.caib.regweb3.model.RegistroEntrada;
-import es.caib.regweb3.model.RegistroSir;
-import es.caib.regweb3.model.UsuarioEntidad;
+import es.caib.regweb3.model.*;
 import es.caib.regweb3.model.utils.AnexoFull;
-import es.caib.regweb3.persistence.ejb.AnexoLocal;
-import es.caib.regweb3.persistence.ejb.BaseEjbJPA;
-import es.caib.regweb3.persistence.ejb.DistribucionLocal;
-import es.caib.regweb3.persistence.ejb.HistoricoRegistroEntradaLocal;
-import es.caib.regweb3.persistence.ejb.JustificanteLocal;
-import es.caib.regweb3.persistence.ejb.SirEnvioLocal;
+import es.caib.regweb3.persistence.ejb.*;
 import es.caib.regweb3.persistence.utils.Paginacion;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.RegistroUtils;
 import es.caib.regweb3.persistence.utils.RespuestaDistribucion;
+import es.caib.regweb3.plugins.distribucion.IDistribucionPlugin;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.utils.StringUtils;
 import es.caib.regweb3.webapp.form.AnularForm;
@@ -39,18 +29,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.ejb.EJB;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -86,6 +70,9 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
 
     @EJB(mappedName = "regweb3/DistribucionEJB/local")
     private DistribucionLocal distribucionEjb;
+
+    @EJB(mappedName = "regweb3/PluginEJB/local")
+    private PluginLocal pluginEjb;
 
 
     /**
@@ -714,13 +701,19 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
     @ResponseBody
     JsonResponse distribuirRegistroEntrada(@PathVariable Long idRegistro, HttpServletRequest request) throws Exception, I18NException, I18NValidationException {
 
-
-        RegistroEntrada registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
-        log.info("Distribución de registro: " + registroEntrada.getNumeroRegistroFormateado());
         UsuarioEntidad usuarioEntidad = getUsuarioEntidadActivo(request);
+        RegistroEntrada registroEntrada;
         RespuestaDistribucion respuesta = new RespuestaDistribucion();
-
         JsonResponse response = new JsonResponse();
+        IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(getEntidadActiva(request).getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
+
+        if(distribucionPlugin.configurarDistribucion().isEnvioCola()){ // Si va a la Cola, no hace falta cargar los anexos
+            registroEntrada = registroEntradaEjb.findById(idRegistro);
+        }else{
+            registroEntrada = registroEntradaEjb.getConAnexosFull(idRegistro);
+        }
+
+        log.info("Distribución de registro: " + registroEntrada.getNumeroRegistroFormateado());
 
         // Comprobamos si el RegistroEntrada tiene el estado Válido
         if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
@@ -778,21 +771,13 @@ public class RegistroEntradaListController extends AbstractRegistroCommonListCon
             response.setError(I18NUtils.getMessage(ie));
             response.setResult(respuesta);
             return response;
-        } catch (SocketTimeoutException ste) {
+        } catch (Exception ste) {
             ste.printStackTrace();
             response.setStatus("FAIL");
             response.setError(ste.getMessage());
             response.setResult(respuesta);
             return response;
-        } catch (Exception iie) {
-            iie.printStackTrace();
-            response.setStatus("FAIL");
-            response.setError(iie.getMessage());
-            response.setResult(respuesta);
-            return response;
         }
-
-        // TODO eliminar referencia de custodia en los anexos si plugin arxiu digital
 
         return response;
     }
