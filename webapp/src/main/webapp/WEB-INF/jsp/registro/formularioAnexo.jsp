@@ -150,11 +150,10 @@
                             </div>
                         </div>
 
-
-                        <div class="form-group col-xs-12" id="divmodofirma">
+                         <div class="form-group col-xs-12" id="divmodofirma">
                             <div class="col-xs-6">
                                 <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <label for="tipoFirma" rel="popupAbajo" data-content="<spring:message code="registro.ayuda.tipoFirma"/>" data-toggle="popover"><spring:message code="anexo.tipofirma"/></label>
+                                    <label for="firma"><spring:message code="anexo.firma"/></label>
                                 </div>
                                 <div class="col-xs-9 campFormText">
                                     <c:choose>
@@ -171,26 +170,50 @@
                                 </div>
                             </div>
 
-                            <div class="col-xs-6">
-                                <div class="col-xs-3 pull-left etiqueta_regweb control-label">
-                                    <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.scan"/>" data-toggle="popover"><spring:message code="anexo.escaneado"/></label>
-                                </div>
-                                <div class="col-xs-9 campFormText">
-                                    <c:choose>
-                                        <c:when test="${anexoForm.anexo.scan == true}">
-                                            <spring:message code="regweb.si"/>
-                                        </c:when>
-                                        <c:when test="${anexoForm.anexo.scan == false}">
-                                            <spring:message code="regweb.no"/>
-                                        </c:when>
+                             <div class="col-xs-6">
+                                 <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                     <label rel="popupAbajo" data-content="<spring:message code="registro.ayuda.scan"/>" data-toggle="popover"><spring:message code="anexo.escaneado"/></label>
+                                 </div>
+                                 <div class="col-xs-9 campFormText">
+                                     <c:choose>
+                                         <c:when test="${anexoForm.anexo.scan == true}">
+                                             <spring:message code="regweb.si"/>
+                                         </c:when>
+                                         <c:when test="${anexoForm.anexo.scan == false}">
+                                             <spring:message code="regweb.no"/>
+                                         </c:when>
 
-                                    </c:choose>
+                                     </c:choose>
+                                 </div>
+                             </div>
+                        </div>
+
+                        <%--Si el documento está firmado, mostramos la información de la firma--%>
+                        <c:if test="${anexoForm.anexo.modoFirma != 0}">
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                        <label for="tipoFirma" ><spring:message code="anexo.tipofirma"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">${anexoForm.anexo.signType}</div>
+                                </div>
+                                <div class="col-xs-6">
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                        <label for="perfilFirma" ><spring:message code="anexo.perfilFirma"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">${anexoForm.anexo.signProfile}</div>
                                 </div>
                             </div>
 
-                        </div>
-
-
+                            <div class="form-group col-xs-12">
+                                <div class="col-xs-6">
+                                    <div class="col-xs-3 pull-left etiqueta_regweb control-label">
+                                        <label for="formatoFirma" ><spring:message code="anexo.formatoFirma"/></label>
+                                    </div>
+                                    <div class="col-xs-9 campFormText">${anexoForm.anexo.signFormat}</div>
+                                </div>
+                            </div>
+                        </c:if>
 
                         <!--ANEXO-->
                         <c:if test="${not empty anexoForm.documentoCustody}">
@@ -201,14 +224,10 @@
                                     </div>
                                     <div class="col-xs-9 campFormText">
                                         <c:if test="${empty anexoForm.anexo.id}">
-                                            <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">
-                                                    ${anexoForm.documentTituloCorto}
-                                            </a>
-
+                                            <a href="<c:url value="/anexo/descargarDocumentoCustody" />" target="_blank">${anexoForm.documentTituloCorto}</a>
                                         </c:if>
                                         <c:if test="${not empty anexoForm.anexo.id}">
-                                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">
-                                                    ${anexoForm.documentTituloCorto}</a>
+                                            <a href="<c:url value="/anexo/descargarDocumento/${anexoForm.anexo.id}" />" target="_blank">${anexoForm.documentTituloCorto}</a>
                                         </c:if>
                                     </div>
                                 </div>
@@ -216,9 +235,7 @@
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                         <label><spring:message code="anexo.mime.documento"/></label>
                                     </div>
-                                    <div class="col-xs-9 campFormText">
-                                         ${anexoForm.docMime}
-                                    </div>
+                                    <div class="col-xs-9 campFormText">${anexoForm.docMime}</div>
                                 </div>
                             </div>
 
@@ -234,12 +251,10 @@
                                     </div>
                                     <div class="col-xs-9 campFormText">
                                     <c:if test="${empty anexoForm.anexo.id}">
-                                        <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">
-                                                ${anexoForm.signaturaTituloCorto}</a>
+                                        <a href="<c:url value="/anexo/descargarSignatureCustody" />" target="_blank">${anexoForm.signaturaTituloCorto}</a>
                                     </c:if>
                                     <c:if test="${not empty anexoForm.anexo.id}">
-                                        <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">
-                                                ${anexoForm.signaturaTituloCorto}</a>
+                                        <a href="<c:url value="/anexo/descargarFirma/${anexoForm.anexo.id}/true" />" target="_blank">${anexoForm.signaturaTituloCorto}</a>
                                     </c:if>
                                     </div>
                                 </div>
@@ -247,9 +262,7 @@
                                     <div class="col-xs-3 pull-left etiqueta_regweb control-label">
                                         <label><spring:message code="anexo.mime.firma"/></label>
                                     </div>
-                                    <div class="col-xs-9 campFormText">
-                                            ${anexoForm.signMime}
-                                    </div>
+                                    <div class="col-xs-9 campFormText">${anexoForm.signMime}</div>
                                 </div>
                             </div>
                         </c:if>
