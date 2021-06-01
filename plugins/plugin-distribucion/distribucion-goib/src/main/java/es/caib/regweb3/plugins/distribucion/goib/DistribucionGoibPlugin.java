@@ -507,6 +507,8 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             return RegwebConstantes.CODIGO_NTI_BY_TIPOFIRMA.get(RegwebConstantes.TIPO_FIRMA_OOXML);
         }
 
+        log.info("No hay ninguna coincidencia de TipoFirma para el Anexo: " + anexo.getId());
+
         return null;
     }
 
@@ -539,6 +541,9 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
         }else  if(ValidateSignatureConstants.SIGNPROFILE_A.equals(anexo.getSignProfile())){
             return RegwebConstantes.PERFIL_FIRMA_A;
         }
+
+        log.info("No hay ninguna coincidencia de PerfilFirma para el Anexo: " + anexo.getId());
+
 
         return null;
     }
