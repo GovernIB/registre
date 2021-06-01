@@ -36,7 +36,7 @@
                                 </li>
                                 <c:if test="${!permiteDigitMasiva}">
                                 <li class="submenu-complet">
-                                    <a onClick="nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.escaner"/></a>
+                                    <a onClick=" nuevoAnexoScan()" data-toggle="modal" data-target="#modalAnexos"><spring:message code="anexo.origen.escaner"/></a>
                                 </li>
                                 </c:if>
                                 <c:if test="${permiteDigitMasiva}">
@@ -347,13 +347,13 @@
 
     /* SI HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
     if(${anexoDetachedPermitido}) {
-        tamModalAnexo = 400;
-        tamModalFitxer = 550;
+        tamModalAnexo = 340;
+        tamModalFitxer = 560;
     } else{   /* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
         tamModalAnexo = 260;
-        tamModalFitxer = 500;
+        tamModalFitxer = 450;
     }
-    var tamModalScan = 710;
+    var tamModalScan = 650;
 
 
     // Afegeix el contingut HTML amb imatge de "pensar"
