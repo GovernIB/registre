@@ -68,7 +68,7 @@ public interface ColaLocal extends BaseEjb<Cola, Long> {
      * @return
      * @throws Exception
      */
-    List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception;
+    List<Cola> findByTipoMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception;
 
     /**
      * Realiza la busqueda de los elementos de la cola por entidad
