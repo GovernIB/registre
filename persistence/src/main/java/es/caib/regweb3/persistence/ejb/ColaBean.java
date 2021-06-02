@@ -118,12 +118,14 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
 
 
     @Override
-    public List<Cola> findByTipoEntidadMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception {
+    public List<Cola> findByTipoMaxReintentos(Long tipo, Long idEntidad, int maxReintentos) throws Exception {
 
-        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad  and cola.numeroReintentos = :maxReintentos order by cola.usuarioEntidad.entidad.id asc");
+        Query q = em.createQuery( "select cola from Cola as cola where cola.tipo=:tipo and cola.usuarioEntidad.entidad.id=:idEntidad " +
+                "and cola.numeroReintentos = :maxReintentos and cola.estado = :error order by cola.usuarioEntidad.entidad.id asc");
         q.setParameter("tipo", tipo);
         q.setParameter("idEntidad", idEntidad);
         q.setParameter("maxReintentos", maxReintentos);
+        q.setParameter("error", RegwebConstantes.COLA_ESTADO_ERROR);
 
         return q.getResultList();
     }
@@ -304,7 +306,7 @@ public class ColaBean extends BaseEjbJPA<Cola, Long> implements ColaLocal {
         Integer maxReintentos = PropiedadGlobalUtil.getMaxReintentosCola(idEntidad);
 
         //Obtenemos todos los que han alcanzado el máximo de reintentos.
-        List<Cola> pendientesDistribuir = findByTipoEntidadMaxReintentos(tipo, idEntidad, maxReintentos);
+        List<Cola> pendientesDistribuir = findByTipoMaxReintentos(tipo, idEntidad, maxReintentos);
 
         //Reseteamos los valores de los pendientes para que vuelvan a entrar en la cola.
         for(Cola pendiente: pendientesDistribuir){
