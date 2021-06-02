@@ -62,7 +62,6 @@ parent.closeAndReload();
 
 </c:if>
 
-
 <!-- INICI JAVASCRIPT INCLOS DEL PEU -->
 <%@ include file="/WEB-INF/jsp/modulos/includes.jsp" %>
 

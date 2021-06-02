@@ -5,6 +5,7 @@ import es.caib.regweb3.model.UsuarioEntidad;
 import es.caib.regweb3.persistence.ejb.RegistroDetalleLocal;
 import es.caib.regweb3.persistence.ejb.ScanWebModuleLocal;
 import es.caib.regweb3.persistence.ejb.TipoDocumentalLocal;
+import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.persistence.utils.ScanWebConfigRegWeb;
 import es.caib.regweb3.utils.RegwebConstantes;
 import es.caib.regweb3.webapp.utils.AnexoUtils;
@@ -177,8 +178,6 @@ public class AnexoScanController extends AnexoController {
     @RequestMapping(value = "/new")
     public String crearAnexo2Post(HttpServletRequest request) throws Exception, I18NException {
 
-        log.info("Passa per new   POST");
-
         AnexoForm anexoForm = (AnexoForm) request.getSession().getAttribute("anexoForm");
         try {
             //Documentos obtenidos del scan
@@ -275,7 +274,9 @@ public class AnexoScanController extends AnexoController {
 
         final ScanWebMode mode = ScanWebMode.SYNCHRONOUS;
 
-        final String urlFinal = request.getContextPath() + "/anexoScan/new";
+
+        final String urlFinal = PropiedadGlobalUtil.getScanWebAbsoluteURL() + PublicScanWebController.CONTEXT_WEB + scanWebID;
+
 
         //final ScanWebMode mode = ScanWebMode.ASYNCHRONOUS;
         // Si és asincron no hi ha necessitat de urlFinal
