@@ -30,13 +30,14 @@ public class RegWebSessionLocaleResolver extends SessionLocaleResolver {
       HttpSession session = request.getSession();
       LoginInfo loginInfo = (LoginInfo) session.getAttribute(RegwebConstantes.SESSION_LOGIN_INFO);
 
-      Usuario usuario = loginInfo.getUsuarioAutenticado();
-            
-
       String idioma = null;
-      if (usuario != null && usuario.getIdioma() != null) {
-        idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getIdioma());
+      if(loginInfo!=null){
+        Usuario usuario = loginInfo.getUsuarioAutenticado();
+        if (usuario != null && usuario.getIdioma() != null) {
+          idioma = RegwebConstantes.CODIGO_BY_IDIOMA_ID.get(usuario.getIdioma());
+        }
       }
+
         
       if (idioma == null) {
         idioma = Configuracio.getDefaultLanguage();

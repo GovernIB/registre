@@ -26,7 +26,8 @@
   $('#targetiframe').removeClass('iframeScan');
   $('#targetiframe').height('');
   $('#modalAnexos').find('.modal-content').css('height', '');
-  parent.parent.window.location.href=parent.parent.window.location.href;
+  //parent.parent.window.location.href=parent.parent.window.location.href;
+  top.window.location.href=top.window.location.href;
 
 </script>
 
@@ -341,7 +342,7 @@
         <c:if test="${not empty anexoForm.metadatas}">
         $(function () {
 
-            parent.redimensionaModalScan("metadades");
+            top.redimensionaModalScan("metadades");
         });
 
         </c:if>
@@ -350,7 +351,7 @@
         <c:if test="${empty anexoForm.metadatas}">
         $(function () {
 
-            parent.redimensionaModalAnnexe();
+            top.redimensionaModalAnnexe();
         });
         </c:if>
     });
@@ -364,31 +365,31 @@
         $(function () {
 
             <%-- Elimina el Height del iframe --%>
-            parent.eliminaHeightIframe();
+            top.eliminaHeightIframe();
 
             var incrementError = 85;
-            var iframe = parent.$('#targetiframe').height();
-            var modal = parent.$('#modalAnexos').find('.modal-content').height();
+            var iframe = top.$('#targetiframe').height();
+            var modal = top.$('#modalAnexos').find('.modal-content').height();
 
             if($('#mensajeError').length !== 0){
-                iframe = iframe + incrementError;
-                parent.$('#targetiframe').height(iframe);
+                top.iframe = iframe + incrementError;
+                top.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
-                parent.$('#modalAnexos').find('.modal-content').height(modal);
+                top.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
             if($('.alert-warning').length !== 0){
                 iframe = iframe + incrementError + 40;
-                parent.$('#targetiframe').height(iframe);
+                top.$('#targetiframe').height(iframe);
                 modal = modal + incrementError + 40;
-                parent.$('#modalAnexos').find('.modal-content').height(modal);
+                top.$('#modalAnexos').find('.modal-content').height(modal);
             }
 
             if($('.alert-success').length !== 0){
                 iframe = iframe + incrementError;
-                parent.$('#targetiframe').height(iframe);
+                top.$('#targetiframe').height(iframe);
                 modal = modal + incrementError;
-                parent.$('#modalAnexos').find('.modal-content').height(modal);
+                top.$('#modalAnexos').find('.modal-content').height(modal);
             }
         });
     });
@@ -398,15 +399,15 @@
 <script>
     function eliminarErrors() {
         var incrementError = 85;
-        var iframe = parent.$('#targetiframe').height();
-        var modal = parent.$('#modalAnexos').find('.modal-content').height();
+        var iframe = top.$('#targetiframe').height();
+        var modal = top.$('#modalAnexos').find('.modal-content').height();
 
         if($('#mensajeError').length !== 0){
             $('#mensajeError').remove();
             iframe = iframe - incrementError;
-            parent.$('#targetiframe').height(iframe);
+            top.$('#targetiframe').height(iframe);
             modal = modal - incrementError;
-            parent.$('#modalAnexos').find('.modal-content').height(modal);
+            top.$('#modalAnexos').find('.modal-content').height(modal);
         }
         $('#reload').show();
     }
