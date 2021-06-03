@@ -16,6 +16,7 @@ import es.caib.regweb3.sir.ejb.MensajeLocal;
 import es.caib.regweb3.sir.utils.Sicres3XML;
 import es.caib.regweb3.sir.utils.XPathReaderUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
+import es.caib.regweb3.utils.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
@@ -24,6 +25,7 @@ import javax.ejb.Stateless;
 import javax.xml.xpath.XPathConstants;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 /**
  * Ejb para la gestión de la Recepción de Ficheros de Intercambios y Mensajes de Dtos de Control
@@ -38,7 +40,7 @@ public class RecepcionBean implements RecepcionLocal{
 
     private Sicres3XML sicres3XML = new Sicres3XML();
 
-    private String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO
+    private final String errorGenerico = Errores.ERROR_0065.getValue(); // ERROR GENÉRICO: ERROR_EN_EL_ASIENTO
     private final String Codigo_Entidad_Registral_Destino_Xpath = "//Codigo_Entidad_Registral_Destino/text()";
     private final String Codigo_Entidad_Registral_Origen_Xpath = "//Codigo_Entidad_Registral_Origen/text()";
     private final String Identificador_Intercambio_Xpath = "//Identificador_Intercambio/text()";
@@ -60,6 +62,7 @@ public class RecepcionBean implements RecepcionLocal{
         Entidad entidad = null;
         FicheroIntercambio ficheroIntercambio = null;
         MensajeControl mensajeError = null;
+        Date inicio = new Date();
         StringBuilder peticion = new StringBuilder();
         String descripcion = "Recepción FicheroIntercambio: ";
         long tiempo = System.currentTimeMillis();
@@ -95,6 +98,11 @@ public class RecepcionBean implements RecepcionLocal{
                 webServicesMethodsEjb.guardarMensajeControl(mensajeACK);
             }
 
+            // Integración
+            descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
+            datosIntegracion(ficheroIntercambio, peticion);
+            webServicesMethodsEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
+
         }catch (ValidacionException e) {
             Errores errorValidacion = e.getErrorValidacion();
             String descripcionError = e.getMensajeError();
@@ -107,11 +115,7 @@ public class RecepcionBean implements RecepcionLocal{
                 // Integración
                 if(entidad != null){
                     descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
-                    peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
-                    peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
-                    peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
-                    peticion.append("Destino: ").append(ficheroIntercambio.getDescripcionEntidadRegistralDestino()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
-
+                    datosIntegracion(ficheroIntercambio, peticion);
                     webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e,descripcionError, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
                 }
 
@@ -150,11 +154,7 @@ public class RecepcionBean implements RecepcionLocal{
             // Integración
             if(entidad != null){
                 descripcion = descripcion.concat(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName());
-                peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
-                peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
-                peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
-                peticion.append("Destino: ").append(ficheroIntercambio.getDescripcionEntidadRegistralDestino()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
-
+                datosIntegracion(ficheroIntercambio, peticion);
                 webServicesMethodsEjb.addIntegracionError(RegwebConstantes.INTEGRACION_SIR, descripcion, peticion.toString(), e, null, System.currentTimeMillis() - tiempo, entidad.getId(), ficheroIntercambio.getIdentificadorIntercambio());
             }
             log.info("");
@@ -300,6 +300,22 @@ public class RecepcionBean implements RecepcionLocal{
         }
 
         return null;
+    }
+
+    /**
+     *
+     * @param ficheroIntercambio
+     * @param peticion
+     */
+    private void datosIntegracion(FicheroIntercambio ficheroIntercambio, StringBuilder peticion){
+        peticion.append("TipoAnotación: ").append(TipoAnotacion.getTipoAnotacion(ficheroIntercambio.getTipoAnotacion()).getName()).append(System.getProperty("line.separator"));
+        peticion.append("IdentificadorIntercambio: ").append(ficheroIntercambio.getIdentificadorIntercambio()).append(System.getProperty("line.separator"));
+        peticion.append("Origen: ").append(ficheroIntercambio.getDecodificacionEntidadRegistralOrigen()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralOrigen()).append(")").append(System.getProperty("line.separator"));
+        peticion.append("Destino: ").append(ficheroIntercambio.getDescripcionEntidadRegistralDestino()).append(" (").append(ficheroIntercambio.getCodigoEntidadRegistralDestino()).append(")").append(System.getProperty("line.separator"));
+
+        if(StringUtils.isNotEmpty(ficheroIntercambio.getDescripcionTipoAnotacion())){
+            peticion.append("Motivo: ").append(ficheroIntercambio.getDescripcionTipoAnotacion()).append(System.getProperty("line.separator"));
+        }
     }
 
 }

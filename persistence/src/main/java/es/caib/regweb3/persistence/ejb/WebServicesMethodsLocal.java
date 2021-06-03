@@ -9,6 +9,7 @@ import es.caib.regweb3.persistence.utils.RespuestaRecepcionSir;
 import es.caib.regweb3.sir.core.utils.FicheroIntercambio;
 
 import javax.ejb.Local;
+import java.util.Date;
 
 /**
  * Created by Fundacio Bit
@@ -87,4 +88,17 @@ public interface WebServicesMethodsLocal {
      * @throws Exception
      */
     void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception;
+
+    /**
+     *
+     * @param inicio
+     * @param tipo
+     * @param descripcion
+     * @param peticion
+     * @param tiempo
+     * @param idEntidad
+     * @param numregformat
+     * @throws Exception
+     */
+    void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception;
 }

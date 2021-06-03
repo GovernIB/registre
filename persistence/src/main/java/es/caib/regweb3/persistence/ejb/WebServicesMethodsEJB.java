@@ -14,6 +14,7 @@ import org.jboss.ejb3.annotation.SecurityDomain;
 import javax.annotation.security.RunAs;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import java.util.Date;
 
 /**
  * Created by Fundacio Bit
@@ -84,5 +85,10 @@ public class WebServicesMethodsEJB implements WebServicesMethodsLocal {
     @Override
     public void addIntegracionError(Long tipo, String descripcion, String peticion, Throwable th, String error, Long tiempo, Long idEntidad, String numregformat) throws Exception {
         integracionEjb.addIntegracionError(tipo, descripcion, peticion, th, error, tiempo, idEntidad, numregformat);
+    }
+
+    @Override
+    public void addIntegracionOk(Date inicio, Long tipo, String descripcion, String peticion, Long tiempo, Long idEntidad, String numregformat) throws Exception {
+        integracionEjb.addIntegracionOk(inicio, tipo, descripcion, peticion, tiempo, idEntidad, numregformat);
     }
 }
