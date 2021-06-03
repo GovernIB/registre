@@ -351,7 +351,7 @@
         tamModalFitxer = 560;
     } else{   /* SI NO HI HA L'OPCIO DE DOCUMENT AMB FIRMA SEPARADA*/
         tamModalAnexo = 260;
-        tamModalFitxer = 450;
+        tamModalFitxer = 560;
     }
     var tamModalScan = 650;
 
@@ -401,6 +401,7 @@
         $('#targetiframe').removeClass('iframeAnexoGros');
         $('#targetiframe').removeClass('iframeAnexoFileGros');
         $('#targetiframe').removeClass('iframeScan');
+        $('#targetiframe').removeClass('metadades');
     }
 
 
