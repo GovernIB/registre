@@ -685,7 +685,7 @@ public interface RegwebConstantes {
     String CRON_ENVIOS_SIR_PENDIENTES = "0 0/2 * 1/1 * ? *"; //0 0 0/2 1/1 * ? *
 
     /* -------------- TIPO PLUGIN --------------*/
-    Long PLUGIN_CUSTODIA = 0L;
+    Long PLUGIN_CUSTODIA_ANEXOS = 0L;
     Long PLUGIN_JUSTIFICANTE = 1L;
     Long PLUGIN_DISTRIBUCION = 2L;
     Long PLUGIN_POSTPROCESO = 3L;
@@ -694,11 +694,11 @@ public interface RegwebConstantes {
     Long PLUGIN_SCAN = 6L;
     Long PLUGIN_CUSTODIA_JUSTIFICANTE = 7L;
     Long PLUGIN_VALIDACION_FIRMAS = 8L;
-    Long PLUGIN_ARXIU = 9L;
+    Long PLUGIN_ARXIU_FS_JUSTIFICANTE = 9L;
     Long PLUGIN_ARXIU_JUSTIFICANTE = 10L;
 
     Long[] TIPOS_PLUGIN = {
-            PLUGIN_CUSTODIA,
+            PLUGIN_CUSTODIA_ANEXOS,
             PLUGIN_JUSTIFICANTE,
             PLUGIN_DISTRIBUCION,
             PLUGIN_POSTPROCESO,
@@ -707,7 +707,20 @@ public interface RegwebConstantes {
             PLUGIN_SCAN,
             PLUGIN_CUSTODIA_JUSTIFICANTE,
             PLUGIN_VALIDACION_FIRMAS,
-            PLUGIN_ARXIU,
+            PLUGIN_ARXIU_JUSTIFICANTE
+    };
+
+    Long[] TIPOS_PLUGIN_CAIB = {
+            PLUGIN_CUSTODIA_ANEXOS,
+            PLUGIN_JUSTIFICANTE,
+            PLUGIN_DISTRIBUCION,
+            PLUGIN_POSTPROCESO,
+            PLUGIN_FIRMA_SERVIDOR,
+            PLUGIN_USER_INFORMATION,
+            PLUGIN_SCAN,
+            PLUGIN_CUSTODIA_JUSTIFICANTE,
+            PLUGIN_VALIDACION_FIRMAS,
+            PLUGIN_ARXIU_FS_JUSTIFICANTE,
             PLUGIN_ARXIU_JUSTIFICANTE
     };
 
@@ -772,9 +785,11 @@ public interface RegwebConstantes {
     /* ------------ COLA -------------------------*/
 
     Long COLA_DISTRIBUCION = 0L;
+    Long COLA_CUSTODIA = 1L;
 
     Long[] COLA_TIPOS = {
-            COLA_DISTRIBUCION
+            COLA_DISTRIBUCION,
+            COLA_CUSTODIA
     };
 
     /* -------------- ESTADO COLAS --------------*/
