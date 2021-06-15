@@ -4,11 +4,15 @@ import es.caib.regweb3.model.utils.AnexoFull;
 import es.caib.regweb3.persistence.utils.PropiedadGlobalUtil;
 import es.caib.regweb3.utils.RegwebConstantes;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 import org.fundaciobit.genapp.common.web.i18n.I18NUtils;
 import org.fundaciobit.plugins.documentcustody.api.DocumentCustody;
 import org.fundaciobit.plugins.documentcustody.api.SignatureCustody;
 import org.springframework.web.util.UriUtils;
 
+import javax.activation.MimetypesFileTypeMap;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharsetEncoder;
@@ -23,6 +27,7 @@ import static java.nio.charset.StandardCharsets.ISO_8859_1;
  */
 public class AnexoUtils {
 
+    public static final Logger log = Logger.getLogger(AnexoUtils.class);
 
     /**
      *
@@ -141,7 +146,34 @@ public class AnexoUtils {
         return FilenameUtils.getExtension(fileName).toLowerCase();
     }
 
+    /**
+     * Obtiene el ContentType de un fichero
+     * @param fileName
+     * @param data
+     * @return
+     */
+    public static String getContentType(String fileName, byte[] data){
 
+        String contentType;
+        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
+
+        try {
+            File tmp = File.createTempFile("regweb_annex_", fileName);
+            FileOutputStream fos = new FileOutputStream(tmp);
+            fos.write(data);
+            fos.flush();
+            fos.close();
+            contentType = mimeTypesMap.getContentType(tmp);
+            if (!tmp.delete()) {
+                tmp.deleteOnExit();
+            }
+        } catch (Throwable th) {
+            log.error("Error intentant obtenir el tipus MIME: " + th.getMessage(), th);
+            contentType = "application/octet-stream";
+        }
+
+        return contentType;
+    }
 
     /**
      * Retorna el contingut de la capçalera <i>Content-Disposition</i> que compleix

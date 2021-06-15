@@ -166,17 +166,6 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
 
 
     /**
-     * Obtiene el contenido físico de la firma como byte[]
-     *
-     * @param custodiaID
-     * @param isJustificante
-     * @param idEntidad
-     * @return
-     */
-    byte[] getFirmaContent(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
-
-
-    /**
      * Obtiene la info + contenido físico(byte[]) del fichero existente en el sistema de archivos
      *
      * @param anexo
@@ -228,11 +217,11 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
      * Elimina completamente una custodia ( = elimicion completa de Anexo)
      *
      * @param custodiaID
-     * @param isJustificante
+     * @param anexo
      * @return true si l'arxiu no existeix o s'ha borrat. false en els altres
      * casos.
      */
-    boolean eliminarCustodia(String custodiaID, boolean isJustificante, Long idEntidad) throws Exception, I18NException;
+    boolean eliminarCustodia(String custodiaID, Anexo anexo, Long idEntidad) throws Exception, I18NException;
 
     /**
      * Obtiene la url de validacion del documento. Si no soporta url, devuelve null
@@ -253,12 +242,22 @@ public interface AnexoLocal extends BaseEjb<Anexo, Long> {
     String getCsvValidationWeb(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
     /**
-     * Obtiene el SignatureCustody de un Anexo
+     * Obtiene un Anexo con firma attached desde la url de validación
      *
      * @param anexo
      * @param idEntidad
      * @return SignatureCustody
      */
     AnexoSimple descargarFirmaDesdeUrlValidacion(Anexo anexo, Long idEntidad) throws I18NException, Exception;
+
+    /**
+     * Descarga un Justificante
+     * @param anexo
+     * @param idEntidad
+     * @return
+     * @throws I18NException
+     * @throws Exception
+     */
+    AnexoSimple descargarJustificante(Anexo anexo, Long idEntidad) throws I18NException, Exception;
 
 }

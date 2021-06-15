@@ -1,6 +1,9 @@
 package es.caib.regweb3.model.utils;
 
 import es.caib.plugins.arxiu.api.Document;
+import es.caib.plugins.arxiu.api.Firma;
+import es.caib.plugins.arxiu.api.FirmaPerfil;
+import es.caib.plugins.arxiu.api.FirmaTipus;
 import es.caib.regweb3.model.Anexo;
 import es.caib.regweb3.model.TipoDocumental;
 import es.caib.regweb3.utils.RegwebConstantes;
@@ -351,6 +354,29 @@ public class AnexoFull{
         sc.setAttachedDocument(null);
 
         setSignatureCustody(sc);
+    }
+
+    @Transient
+    public Firma signatureCustodytoFirma(){
+
+        getAnexo().setPerfilCustodia(RegwebConstantes.PERFIL_CUSTODIA_ARXIU);
+
+        if(getSignatureCustody() != null){
+
+            // Creamos la Firma
+            Firma firma = new Firma();
+            firma.setFitxerNom(getSignatureCustody().getName());
+            firma.setContingut(getSignatureCustody().getData());
+            firma.setTamany(getSignatureCustody().getData().length);
+            firma.setPerfil(FirmaPerfil.EPES);
+            firma.setTipus(FirmaTipus.PADES);
+            firma.setTipusMime(getSignatureCustody().getMime());
+            firma.setCsvRegulacio("");
+
+            return firma;
+        }
+
+        return null;
 
     }
 
