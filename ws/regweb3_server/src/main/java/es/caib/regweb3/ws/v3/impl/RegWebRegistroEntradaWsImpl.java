@@ -39,7 +39,10 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Fundació BIT.
@@ -282,14 +285,14 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             if(registroEntrada.getEstado().equals(REGISTRO_VALIDO)){
 
                 try{
-                    justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
+                    justificante = justificanteEjb.crearJustificanteWS(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
                 }catch (I18NException e){
                     log.info("----------------Error generado justificante via WS------------------");
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                 }
 
-                anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
             }else{
                 throw new I18NException("registro.justificante.valido");
             }
@@ -305,7 +308,7 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             // Obtenemos el Justificante
             try{
                 justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
-                anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
             }catch (Exception e){
                 integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                 throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -396,23 +399,29 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
             throw new I18NException("registroEntrada.noExiste", numeroRegistroFormateado);
         }
 
-        // 4.- Comprobamos si el RegistroEntrada tiene el estado Válido
-        if (!registroEntrada.getEstado().equals(RegwebConstantes.REGISTRO_VALIDO)) {
-            throw new I18NException("registroEntrada.tramitar.error");
-        }
-
         // 5.- Comprobamos que el Organismo destino pertenece a la misma administración
         if (!registroEntrada.getOficina().getOrganismoResponsable().equals(registroEntrada.getDestino())) {
             throw new I18NException("registroEntrada.tramitar.error");
         }
 
-        // 6.- Generamos el justificante del RegistroEntrada
-        justificanteEjb.crearJustificante(usuarioEntidad,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA,Configuracio.getDefaultLanguage());
-        //registroEntrada = registroEntradaEjb.generarJustificanteRegistroEntrada(registroEntrada, usuarioEntidad);
+        //  Comprobamos que el usuario tiene permisos para Distribuir el registro
+        if(!permisoOrganismoUsuarioEjb.tienePermiso(usuarioEntidad.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
+            throw new I18NException("registroEntrada.distribuir.error.permiso");
+        }
 
+        // Comprobamos que el RegistroEntrada se puede Distribuir
+        if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
+            throw new I18NException("registroEntrada.distribuir.noPermitido");
+        }
 
-        // 7.- Tramitamos el RegistroEntrada
-        registroEntradaEjb.marcarDistribuido(registroEntrada, usuarioEntidad);
+        try{
+            // Distribuimos el registro de entrada
+            distribucionEjb.distribuir(registroEntrada, usuarioEntidad);
+
+        }catch (Exception | I18NValidationException e){
+            e.printStackTrace();
+            throw new I18NException("registroEntrada.distribuir.error");
+        }
 
     }
 
@@ -440,9 +449,6 @@ public class RegWebRegistroEntradaWsImpl extends AbstractRegistroWsImpl
         if(!permisoOrganismoUsuarioEjb.tienePermiso(usuario.getId(), registroEntrada.getOficina().getOrganismoResponsable().getId(), RegwebConstantes.PERMISO_DISTRIBUCION_REGISTRO, true)){
             throw new I18NException("registroEntrada.distribuir.error.permiso");
         }
-
-        //6.- Obtenemos los organismos de la oficina en la que se ha realizado el registro que hace de oficinaActiva
-        LinkedHashSet<Organismo> organismosOficinaRegistro = new LinkedHashSet<Organismo>(organismoEjb.getByOficinaActiva(registroEntrada.getOficina(),RegwebConstantes.ESTADO_ENTIDAD_VIGENTE));
 
         // Comprobamos que el RegistroEntrada se puede Distribuir
         if (!registroEntradaConsultaEjb.isDistribuir(registroEntrada.getId())) {
