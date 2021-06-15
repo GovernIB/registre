@@ -1,4 +1,5 @@
 <%@ page import="es.caib.regweb3.persistence.utils.PropiedadGlobalUtil" %>
+<%@ page import="es.caib.regweb3.utils.Configuracio" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -80,10 +81,12 @@
             </li>
             <li class="divider"></li>
             <li class="dropdown-submenu-left toggle-left">
-                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.distribucion"/></a>
+                <a href="javascript:void(0);"><i class="fa fa-chevron-left"></i> <spring:message code="menu.colas"/></a>
                 <ul class="dropdown-menu">
-                    <li><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-ellipsis-h"></i> <spring:message code="cola.cola"/></a></li>
-                    <li><a href="<c:url value="/sir/pendientesDistribuir/list"/>"><i class="fa fa-sign-out"></i> <spring:message code="menu.pendientesDistribuir"/></a></li>
+                    <li><a href="<c:url value="/cola/list/0"/>"><i class="fa fa-sign-out"></i> <spring:message code="cola.tipo.0" /></a></li>
+                    <%if (Configuracio.isCAIB()) {%>
+                        <li><a href="<c:url value="/cola/list/1"/>"><i class="fa fa-file-archive-o"></i> <spring:message code="cola.tipo.1" /></a></li>
+                    <%}%>
                 </ul>
             </li>
             <li class="divider"></li>
