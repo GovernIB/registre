@@ -133,7 +133,13 @@ public class LoginService {
 
         // Almacenamos el RolActivo del usuario.
         if (rolesUsuario.size() > 0) {
-            loginInfo.setRolActivo(rolesUsuario.get(0));
+
+            if(rolesUsuario.contains(new Rol(RegwebConstantes.RWE_ADMIN))){
+                loginInfo.setRolActivo(rolesUsuario.get(rolesUsuario.indexOf(new Rol(RegwebConstantes.RWE_ADMIN))));
+            }else{
+                loginInfo.setRolActivo(rolesUsuario.get(0));
+            }
+
         }
 
         return loginInfo.getRolActivo();
