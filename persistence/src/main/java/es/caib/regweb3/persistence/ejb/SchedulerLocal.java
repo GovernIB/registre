@@ -50,6 +50,12 @@ public interface SchedulerLocal {
     void distribuirRegistrosEnCola() throws Exception;
 
     /**
+     * Inicia la custodia de Justificantes en Cola de cada entidad.
+     * @throws Exception
+     */
+    void custodiarJustificantesEnCola() throws Exception;
+
+    /**
      *
      * @throws Exception
      */

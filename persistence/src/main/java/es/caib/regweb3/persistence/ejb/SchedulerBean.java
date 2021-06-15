@@ -30,7 +30,6 @@ public class SchedulerBean implements SchedulerLocal{
 
     @EJB private SirEnvioLocal sirEnvioEjb;
     @EJB private EntidadLocal entidadEjb;
-    @EJB private LibroLocal libroEjb;
     @EJB private ContadorLocal contadorEjb;
     @EJB private IntegracionLocal integracionEjb;
     @EJB private ArxiuLocal arxiuEjb;
@@ -40,6 +39,7 @@ public class SchedulerBean implements SchedulerLocal{
     @EJB private DistribucionLocal distribucionEjb;
     @EJB private SesionLocal sesionEjb;
     @EJB private ColaLocal colaEjb;
+    @EJB private CustodiaLocal custodiaEjb;
 
 
     @Override
@@ -247,13 +247,34 @@ public class SchedulerBean implements SchedulerLocal{
 
                 if(!PropiedadGlobalUtil.pararDistribucion(entidad.getId())) {
 
-                    distribucionEjb.procesarRegistrosEnCola(entidad.getId());
+                    distribucionEjb.distribuirRegistrosEnCola(entidad.getId());
 
                 }
             }
 
         }catch (Exception e){
             log.error("Error distribuyendo registros de la Cola ...", e);
+        }
+    }
+
+    /**
+     * Inicia la custodia de Justificantes en cola de cada entidad.
+     * @throws Exception
+     */
+    @Override
+    @TransactionTimeout(value = 1800)  // 30 minutos
+    public void custodiarJustificantesEnCola() throws Exception{
+
+        try {
+            List<Entidad> entidades = entidadEjb.getEntidadesActivas();
+
+            for (Entidad entidad : entidades) {
+
+                custodiaEjb.custodiarJustificantesEnCola(entidad.getId());
+            }
+
+        }catch (Exception e){
+            log.error("Error custodiando justificantes de la Cola ...", e);
         }
     }
 
