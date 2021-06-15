@@ -34,14 +34,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -416,7 +413,7 @@ public class AnexoController extends BaseController {
         }
         ScanWebPlainFile separador = scanWebModuleEjb.obtenerDocumentoSeparador(entidadActiva.getId(), languageUI);
 
-        obtenerContentType(separador.getMime(), response, separador.getName(), new MimetypesFileTypeMap(),separador.getData());
+        download(separador.getMime(), response, separador.getName(),separador.getData());
 
     }
 
@@ -443,7 +440,7 @@ public class AnexoController extends BaseController {
             Document justificante = arxiuCaibUtils.getDocumento(anexo.getCustodiaID(), null, true, original);
 
             if(justificante != null){
-                obtenerContentType(justificante.getContingut().getTipusMime(), response, justificante.getNom(),null,justificante.getContingut().getContingut());
+                download(justificante.getContingut().getTipusMime(), response, justificante.getNom(),justificante.getContingut().getContingut());
             }else {
                 log.info("No se ha obtenido el  justificante");
             }
@@ -460,10 +457,7 @@ public class AnexoController extends BaseController {
                 fullDownload(anexoFull.getAnexo(), anexoFull.getSignatureCustody().getMime(),
                         true, response, getEntidadActiva(request).getId(), original);
             }
-
         }
-
-
     }
 
 
@@ -483,7 +477,6 @@ public class AnexoController extends BaseController {
 
         String filename = null;
         OutputStream output;
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
         byte[] data;
 
         try {
@@ -508,7 +501,7 @@ public class AnexoController extends BaseController {
                     }
                 }
 
-                obtenerContentType(contentType, response, filename, mimeTypesMap, data);
+                download(contentType, response, filename, data);
             }
         } catch (I18NException i18ne) {
             log.error(I18NUtils.getMessage(i18ne), i18ne);
@@ -534,7 +527,7 @@ public class AnexoController extends BaseController {
         String contentType = anexoForm.getDocumentoCustody().getMime();
         String filename = anexoForm.getDocumentoCustody().getName();
 
-        fullDownload(filename, contentType, data, response);
+        download(contentType, response, filename, data);
     }
 
 
@@ -549,28 +542,9 @@ public class AnexoController extends BaseController {
         byte[] data = anexoForm.getSignatureCustody().getData();
         String contentType = anexoForm.getSignatureCustody().getMime();
         String filename = anexoForm.getSignatureCustody().getName();
-        fullDownload(filename, contentType, data, response);
+
+        download(contentType, response, filename, data);
     }
-
-    /*
-    Método que muestra y carga un archivo a partir del nombre del archivo y de su byte[]
-     */
-    private void fullDownload(String filename, String contentType, byte[] data,
-                              HttpServletResponse response) {
-
-        MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
-
-        try {
-            obtenerContentType(contentType, response, filename, mimeTypesMap, data);
-
-        } catch (NumberFormatException e) {
-            // TODO QUE FER
-            log.info(e);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * Guarda en sesión los datos asociados al ultimo anexo
@@ -865,32 +839,21 @@ public class AnexoController extends BaseController {
     }
 
     /**
-     * Método que obtiene el contentType de un documento para posteriormente visualizarlo.
+     * Método que descarga un fichero mediante HttpServletResponse response
      * @param contentType
      * @param response
      * @param filename
-     * @param mimeTypesMap
      * @param data
      * @throws IOException
      */
-    private void obtenerContentType(String contentType, HttpServletResponse response, String filename, MimetypesFileTypeMap mimeTypesMap, byte[] data) throws IOException, Exception {
+    private void download(String contentType, HttpServletResponse response, String filename, byte[] data) throws IOException, Exception {
         OutputStream output;
-        if (contentType == null) {
-            try {
-                File tmp = File.createTempFile("regweb_annex_", filename);
-                FileOutputStream fos = new FileOutputStream(tmp);
-                fos.write(data);
-                fos.flush();
-                fos.close();
-                contentType = mimeTypesMap.getContentType(tmp);
-                if (!tmp.delete()) {
-                    tmp.deleteOnExit();
-                }
-            } catch (Throwable th) {
-                log.error("Error intentant obtenir el tipus MIME: " + th.getMessage(), th);
-                contentType = "application/octet-stream";
-            }
+
+        // Obtenemos el ContentType si el que nos indican es null
+        if (StringUtils.isEmpty(contentType)) {
+            contentType = AnexoUtils.getContentType(filename, data);
         }
+
         response.setContentType(contentType);
         response.setHeader("Content-Disposition", AnexoUtils.getContentDispositionHeader(true, filename));
         response.setContentLength(data.length);

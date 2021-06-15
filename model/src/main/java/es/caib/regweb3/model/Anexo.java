@@ -68,6 +68,8 @@ public class Anexo implements Serializable {
     @XmlTransient
     private String expedienteID; // uuid del expediente creado en Arxiu
     @XmlTransient
+    private Boolean custodiado = false; // Indica si el Anexo está custodiado, es decir, si tiene csv
+    @XmlTransient
     private Boolean scan = false; // Indica si el anexo se ha escaneado o no
 
     //SIR
@@ -189,6 +191,15 @@ public class Anexo implements Serializable {
 
     public void setExpedienteID(String expedienteID) {
         this.expedienteID = expedienteID;
+    }
+
+    @Column(name = "CUSTODIADO", nullable = true)
+    public Boolean getCustodiado() {
+        return custodiado;
+    }
+
+    public void setCustodiado(Boolean filesystem) {
+        this.custodiado = filesystem;
     }
 
     @Column(name ="SCAN")
