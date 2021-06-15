@@ -174,13 +174,25 @@ public class InicioInterceptor extends HandlerInterceptorAdapter {
                             Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.pluginjustificante"));
                             entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
                         }
-                        //Plugin Custodia Justificante
-                        if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
-                            log.info("No existe el plugin de custodia del justificante");
-                            Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
-                            entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
 
+                        //Plugin Custodia Justificante
+                        if(entidadActiva.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_DOCUMENT_CUSTODY)){
+
+                            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_JUSTIFICANTE)) {
+                                log.info("No existe el plugin de custodia del justificante");
+                                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
+                                entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                            }
+
+                        }else if(entidadActiva.getPerfilCustodia().equals(RegwebConstantes.PERFIL_CUSTODIA_ARXIU)){
+
+                            if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_ARXIU_JUSTIFICANTE)) {
+                                log.info("No existe el plugin de custodia del justificante");
+                                Mensaje.saveMessageAviso(request, I18NUtils.tradueix("aviso.plugincustodiajustificante"));
+                                entidadEjb.marcarEntidadMantenimiento(entidadActiva.getId(), true);
+                            }
                         }
+
                         // Plugin Custodia
                         if (!pluginEjb.existPlugin(entidadActiva.getId(), RegwebConstantes.PLUGIN_CUSTODIA_ANEXOS)) {
                             log.info("No existe el plugin de custodia");
