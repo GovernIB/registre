@@ -68,26 +68,34 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
     public JustificanteReferencia obtenerReferenciaJustificante(String numeroRegistroformateado, Entidad entidad) throws Exception, I18NException {
 
         RegistroEntrada registroEntrada = registroEntradaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
-        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
 
         if (registroEntrada != null) {
 
-            if (registroEntrada.getRegistroDetalle().getTieneJustificante()) {
+            if (registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) {
                 String csv = registroEntrada.getRegistroDetalle().getJustificante().getCsv();
                 String url = anexoEjb.getCsvValidationWeb(registroEntrada.getRegistroDetalle().getJustificante(), entidad.getId());
 
                 return new JustificanteReferencia(csv, url);
 
+            } else if(registroEntrada.getRegistroDetalle().getTieneJustificante()){
+                throw new I18NException("registro.justificante.noCustodiado");
             } else {
                 throw new I18NException("registro.justificante.noTiene");
             }
+        }
 
-        } else if (registroSalida != null) {
+        RegistroSalida registroSalida = registroSalidaConsultaEjb.findByNumeroRegistroFormateadoCompleto(entidad.getCodigoDir3(), numeroRegistroformateado);
 
-            if (registroSalida.getRegistroDetalle().getTieneJustificante()) {
+        if (registroSalida != null) {
+
+            if (registroSalida.getRegistroDetalle().getTieneJustificanteCustodiado()) {
                 String csv = registroSalida.getRegistroDetalle().getJustificante().getCsv();
                 String url = anexoEjb.getCsvValidationWeb(registroSalida.getRegistroDetalle().getJustificante(), entidad.getId());
+
                 return new JustificanteReferencia(csv, url);
+
+            } else if(registroSalida.getRegistroDetalle().getTieneJustificante()){
+                throw new I18NException("registro.justificante.noCustodiado");
             } else {
                 throw new I18NException("registro.justificante.noTiene");
             }
@@ -158,7 +166,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
 
         //Llamada asincrona al método para generar el justficante dle regitro
         JustificanteLocal asynchJustificante = AsyncUtils.mixinAsync(justificanteEjb);
-        asynchJustificante.crearJustificante(usuarioEntidad, registro, tipoRegistro, idioma);
+        asynchJustificante.crearJustificanteWS(usuarioEntidad, registro, tipoRegistro, idioma);
 
     }
 
@@ -211,7 +219,7 @@ public class AsientoRegistralBean implements AsientoRegistralLocal {
      */
     private void crearJustificanteCambioEstado(RegistroSalida registroSalida, Long estado) throws Exception, I18NValidationException, I18NException {
         //Crear Justificante
-        crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, "ca");
+        crearJustificante(registroSalida.getUsuario(), registroSalida, RegwebConstantes.REGISTRO_SALIDA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
 
         //Cambiar estado
         registroSalidaEjb.cambiarEstado(registroSalida.getId(), estado);

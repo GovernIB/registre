@@ -304,10 +304,10 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
                     // Distribuir / Generar justificante
                     if(justificante && distribuir){
-                        // Solo distribuimos, ya que la distribución lleva implicita la generación del Justificante
+                        asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
                     }else if(justificante){
-                        asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, "ca");
+                        asientoRegistralEjb.crearJustificante(usuario, registroEntrada, REGISTRO_ENTRADA, RegwebConstantes.IDIOMA_CATALAN_CODIGO);
                     }else if(distribuir){
                         asientoRegistralEjb.distribuirRegistroEntrada(registroEntrada, usuarioAplicacion);
                     }
@@ -517,14 +517,14 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(registroEntrada.getEstado().equals(REGISTRO_VALIDO) || registroEntrada.getEstado().equals(REGISTRO_DISTRIBUYENDO)){
 
                     try{
-                        justificante = justificanteEjb.crearJustificante(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
+                        justificante = justificanteEjb.crearJustificanteWS(usuario,registroEntrada,RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
                     }catch (I18NException e){
                         log.info("----------------Error generado justificante via WS------------------");
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
-                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }else{
                     throw new I18NException("registro.justificante.valido");
                 }
@@ -534,7 +534,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 // Obtenemos el Justificante
                 try{
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroEntrada.getRegistroDetalle().getId()), entidadActiva.getId());
-                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -563,13 +563,13 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 if(registroSalida.getEstado().equals(REGISTRO_VALIDO)) {
 
                     try{
-                        justificante = justificanteEjb.crearJustificante(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
+                        justificante = justificanteEjb.crearJustificanteWS(usuario,registroSalida,RegwebConstantes.REGISTRO_SALIDA,Configuracio.getDefaultLanguage());
                     }catch (I18NException e){
                         integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                         throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
                     }
 
-                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }else{
                     throw new I18NException("registro.justificante.valido");
                 }
@@ -579,7 +579,7 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
                 // Obtenemos el Justificante
                 try{
                     justificante = anexoEjb.getAnexoFullLigero(anexoEjb.getIdJustificante(registroSalida.getRegistroDetalle().getId()), entidadActiva.getId());
-                    anexoSimple = anexoEjb.descargarFirmaDesdeUrlValidacion(justificante.getAnexo(), entidadActiva.getId());
+                    anexoSimple = anexoEjb.descargarJustificante(justificante.getAnexo(), entidadActiva.getId());
                 }catch (Exception e){
                     integracionEjb.addIntegracionError(RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(), peticion.toString(), e, null,System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
                     throw new I18NException("registro.justificante.error", numeroRegistroFormateado);
@@ -617,9 +617,6 @@ public class RegWebAsientoRegistralWsImpl extends AbstractRegistroWsImpl impleme
 
         try{
             JustificanteReferencia jref = asientoRegistralEjb.obtenerReferenciaJustificante(numeroRegistroFormateado, entidadActiva);
-
-            log.info("CSV: " + jref.getCsv());
-            log.info("URL: " + jref.getUrl());
 
             // Integracion
             integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_WS, UsuarioAplicacionCache.get().getMethod().getName(),peticion.toString(), System.currentTimeMillis() - tiempo, entidadActiva.getId(), numeroRegistroFormateado);
