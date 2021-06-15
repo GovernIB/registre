@@ -73,7 +73,7 @@
                                     <div class="col-xs-6 filas">
                                         <div class="panel panel-warning">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-book"></i> <strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.4" /></strong> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> <a href="<c:url value="/integracion/list/4"/>" class="warning"><strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.4" /></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -114,7 +114,7 @@
                                     <div class="col-xs-6 filas">
                                         <div class="panel panel-warning">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-book"></i> <strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.1" /></strong> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> <a href="<c:url value="/integracion/list/1"/>" class="warning"><strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.1" /></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -151,7 +151,7 @@
                                     <div class="col-xs-6 filas">
                                         <div class="panel panel-warning">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-book"></i> <strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.5" /></strong> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> <a href="<c:url value="/integracion/list/5"/>" class="warning"><strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.5" /></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
@@ -188,7 +188,7 @@
                                     <div class="col-xs-6 filas">
                                         <div class="panel panel-warning">
                                             <div class="panel-heading">
-                                                <h3 class="panel-title"><i class="fa fa-book"></i> <strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.3" /></strong> </h3>
+                                                <h3 class="panel-title"><i class="fa fa-book"></i> <a href="<c:url value="/integracion/list/3"/>" class="warning"><strong><spring:message code="integracion.incidencias"/> <spring:message code="integracion.tipo.3" /></strong></a> </h3>
                                             </div>
 
                                             <div class="panel-body">
