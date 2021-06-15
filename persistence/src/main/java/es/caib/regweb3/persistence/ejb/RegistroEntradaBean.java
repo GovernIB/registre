@@ -438,8 +438,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
     }
 
     @Override
-    public void marcarDistribuido(RegistroEntrada registroEntrada,
-                                  UsuarioEntidad usuarioEntidad) throws Exception {
+    public void marcarDistribuido(RegistroEntrada registroEntrada) throws Exception {
 
         // CREAMOS LA TRAZABILIDAD
         Trazabilidad trazabilidad = new Trazabilidad();
@@ -451,7 +450,7 @@ public class RegistroEntradaBean extends RegistroEntradaCambiarEstadoBean
         trazabilidad.setRegistroEntradaDestino(null);
         trazabilidadEjb.persist(trazabilidad);
 
-        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, usuarioEntidad);
+        cambiarEstadoHistorico(registroEntrada, RegwebConstantes.REGISTRO_DISTRIBUIDO, registroEntrada.getUsuario());
 
     }
 

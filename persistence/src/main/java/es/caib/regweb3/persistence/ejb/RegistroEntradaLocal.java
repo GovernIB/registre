@@ -171,10 +171,9 @@ public interface RegistroEntradaLocal extends RegistroEntradaCambiarEstadoLocal 
      * Tramita un RegistroEntrada, cambiandole el estado a tramitado.
      *
      * @param registroEntrada
-     * @param usuarioEntidad
      * @throws Exception
      */
-    void marcarDistribuido(RegistroEntrada registroEntrada, UsuarioEntidad usuarioEntidad) throws Exception;
+    void marcarDistribuido(RegistroEntrada registroEntrada) throws Exception;
 
 
     /**
