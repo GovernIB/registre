@@ -68,6 +68,10 @@
 
                             <c:if test="${loginInfo.rolActivo.nombre == 'RWE_ADMIN'}">
 
+                                <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
+                                    <form:hidden path="texto"/>
+                                </form:form>
+
                                 <%--INCIDENCIAS INTEGRACIONES SIR--%>
                                 <c:if test="${not empty incidenciasSir}">
                                     <div class="col-xs-6 filas">
@@ -92,17 +96,13 @@
                                                         <c:forEach var="incidenciaSir" items="${incidenciasSir}">
                                                             <tr>
                                                                 <td><fmt:formatDate value="${incidenciaSir.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                                <td><span class="label label-primary"><spring:message code="integracion.tipo.${incidenciaSir.tipo}"/></span></td>
+                                                                <td><span class="label label-danger"><spring:message code="integracion.tipo.${incidenciaSir.tipo}"/></span></td>
                                                                 <td><a href="javascript:void(0);" onclick="buscarIntegraciones('${incidenciaSir.numRegFormat}')">${incidenciaSir.numRegFormat}</a> </td>
                                                                 <td>${incidenciaSir.descripcion}</td>
                                                             </tr>
                                                         </c:forEach>
                                                         </tbody>
                                                     </table>
-
-                                                    <form:form modelAttribute="integracion" action="${pageContext.request.contextPath}/integracion/busqueda" method="post" cssClass="form-horizontal" target="_blank">
-                                                        <form:hidden path="texto"/>
-                                                    </form:form>
                                                 </div>
                                             </div>
                                         </div>
@@ -170,7 +170,7 @@
                                                         <c:forEach var="incidenciaJust" items="${incidenciasJustificante}">
                                                             <tr>
                                                                 <td><fmt:formatDate value="${incidenciaJust.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                                <td><span class="label label-success"><spring:message code="integracion.tipo.${incidenciaJust.tipo}"/></span></td>
+                                                                <td><span class="label label-danger"><spring:message code="integracion.tipo.${incidenciaJust.tipo}"/></span></td>
                                                                 <td><a href="javascript:void(0);" onclick="buscarIntegraciones('${incidenciaJust.numRegFormat}')">${incidenciaJust.numRegFormat}</a> </td>
                                                                 <td>${incidenciaJust.descripcion}</td>
                                                             </tr>
@@ -207,7 +207,7 @@
                                                         <c:forEach var="incidenciaWs" items="${incidenciasWs}">
                                                             <tr>
                                                                 <td><fmt:formatDate value="${incidenciaWs.fecha}" pattern="dd/MM/yyyy HH:mm:ss"/></td>
-                                                                <td><span class="label label-warning"><spring:message code="integracion.tipo.${incidenciaWs.tipo}"/></span></td>
+                                                                <td><span class="label label-danger"><spring:message code="integracion.tipo.${incidenciaWs.tipo}"/></span></td>
                                                                 <td><a href="javascript:void(0);" onclick="buscarIntegraciones('${incidenciaWs.numRegFormat}')">${incidenciaWs.numRegFormat}</a> </td>
                                                                 <td>${incidenciaWs.descripcion}</td>
                                                             </tr>
