@@ -102,15 +102,18 @@ public class DistribucionGoibPlugin extends AbstractPluginProperties implements 
             /*En el caso de DISTRIBUCIÓ no se tiene en cuenta la configuración de los Anexos.
             Siempre se envia el identificador de custodia del Justificante +  el contenido completo de los anexos.*/
             for (AnexoFull anexoFull : registro.getRegistroDetalle().getAnexosFull()) {
-                //Transformar a RegistreAnnex
-                RegistreAnnex registreAnnex;
-                Anexo anexo = anexoFull.getAnexo();
-                if (anexo.isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
-                    registreAnnex = transformarARegistreAnnexJustificante(anexo);
-                    registreAnotacio.setJustificant(registreAnnex);
-                } else {
-                    registreAnnex = transformarARegistreAnnex(anexoFull); //Montamos contenido completo
-                    registreAnotacio.getAnnexos().add(registreAnnex);
+
+                // No distribuimos los Ficheros técnicos a Arxiu-Caib
+                if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())) {
+
+                    RegistreAnnex registreAnnex;
+                    if (anexoFull.getAnexo().isJustificante()) { //Si es justificante, solo enviamos referencia Arxiu
+                        registreAnnex = transformarARegistreAnnexJustificante(anexoFull.getAnexo());
+                        registreAnotacio.setJustificant(registreAnnex);
+                    } else {
+                        registreAnnex = transformarARegistreAnnex(anexoFull); //Montamos contenido completo
+                        registreAnotacio.getAnnexos().add(registreAnnex);
+                    }
                 }
             }
 

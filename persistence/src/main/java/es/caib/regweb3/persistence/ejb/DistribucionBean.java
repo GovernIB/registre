@@ -22,8 +22,6 @@ import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,9 +37,6 @@ import java.util.Locale;
 public class DistribucionBean implements DistribucionLocal {
 
     protected final Logger log = Logger.getLogger(getClass());
-
-    @PersistenceContext(unitName = "regweb3")
-    private EntityManager em;
 
     @EJB private RegistroEntradaLocal registroEntradaEjb;
     @EJB private JustificanteLocal justificanteEjb;
@@ -73,7 +68,7 @@ public class DistribucionBean implements DistribucionLocal {
         try {
             IDistribucionPlugin distribucionPlugin = (IDistribucionPlugin) pluginEjb.getPlugin(usuarioEntidad.getEntidad().getId(), RegwebConstantes.PLUGIN_DISTRIBUCION);
 
-            //Si han especificado plug-in
+            // Si el plugin está configurado para enviarse a la Cola
             if (distribucionPlugin != null && distribucionPlugin.configurarDistribucion().isEnvioCola()) {
 
                 peticion.append("clase: ").append(distribucionPlugin.getClass().getName()).append(System.getProperty("line.separator"));
@@ -92,7 +87,7 @@ public class DistribucionBean implements DistribucionLocal {
             distribuido = distribuirRegistroEntrada(re, distribucionPlugin);
 
             if(distribuido){ // Si ha ido bien la Distribución, marcamos el Registro de Entrada
-                registroEntradaEjb.marcarDistribuido(re, re.getUsuario());
+                registroEntradaEjb.marcarDistribuido(re);
                 integracionEjb.addIntegracionOk(inicio, RegwebConstantes.INTEGRACION_DISTRIBUCION, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, re.getUsuario().getEntidad().getId(), re.getNumeroRegistroFormateado());
             }
 
@@ -134,18 +129,21 @@ public class DistribucionBean implements DistribucionLocal {
         if (!registroEntrada.getRegistroDetalle().getTieneJustificante()) {
             AnexoFull justificante = justificanteEjb.crearJustificante(registroEntrada.getUsuario(), registroEntrada, RegwebConstantes.REGISTRO_ENTRADA, Configuracio.getDefaultLanguage());
             registroEntrada.getRegistroDetalle().getAnexosFull().add(justificante);
+
+        }else if (Configuracio.isCAIB() && !registroEntrada.getRegistroDetalle().getTieneJustificanteCustodiado()) { // Si tiene Justificante, pero no está custodiado custodiado, no distribuimos
+            log.info("El registro: " + registroEntrada.getNumeroRegistroFormateado()+" no se distribuira en esta iteracion porque no tiene el Justificante custodiado");
+            return false;
         }
 
+        // Si no hay plugin de distribución configurado, marcamos correctamente la Distribución
         if (distribucionPlugin == null) {
             return true;
+        }else{
+
+            distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
         }
 
-        //Gestionamos los ficheros ténicos antes de distribuir
-        registroEntrada = gestionFicherosTecnicos(registroEntrada);
-        distribuido = distribucionPlugin.distribuir(registroEntrada, new Locale(RegwebConstantes.IDIOMA_CATALAN_CODIGO));
-
         return distribuido;
-
     }
 
     /**
@@ -158,7 +156,7 @@ public class DistribucionBean implements DistribucionLocal {
      * @throws I18NException
      */
     @Override
-    public Boolean procesarRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracon) throws Exception {
+    public Boolean distribuirRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracon) throws Exception {
 
         Boolean distribuido = false;
 
@@ -192,8 +190,8 @@ public class DistribucionBean implements DistribucionLocal {
             distribuido = distribuirRegistroEntrada(registroEntrada, distribucionPlugin);
 
             if (distribuido) { //Si la distribución ha ido bien
-
-                colaEjb.procesarElemento(elemento, registroEntrada); //Eliminamos el elemento de la cola
+                registroEntradaEjb.marcarDistribuido(registroEntrada);
+                colaEjb.procesarElemento(elemento); //Eliminamos el elemento de la cola
                 integracionEjb.addIntegracionOk(inicio, tipoIntegracon, descripcion, peticion.toString(), System.currentTimeMillis() - tiempo, registroEntrada.getUsuario().getEntidad().getId(), registroEntrada.getNumeroRegistroFormateado());
             }
 
@@ -219,7 +217,7 @@ public class DistribucionBean implements DistribucionLocal {
 
     @Override
     @TransactionTimeout(value = 1800)  // 30 minutos
-    public void procesarRegistrosEnCola(Long idEntidad) throws Exception {
+    public void distribuirRegistrosEnCola(Long idEntidad) throws Exception {
 
         //obtiene un numero de elementos (configurable) pendientes de distribuir que estan en la cola
         List<Cola> elementosADistribuir = colaEjb.findByTipoEntidad(RegwebConstantes.COLA_DISTRIBUCION, idEntidad, PropiedadGlobalUtil.getElementosCola(idEntidad));
@@ -229,7 +227,7 @@ public class DistribucionBean implements DistribucionLocal {
 
         for (Cola elemento : elementosADistribuir) {
 
-            procesarRegistroEnCola(elemento, idEntidad, RegwebConstantes.INTEGRACION_SCHEDULERS);
+            distribuirRegistroEnCola(elemento, idEntidad, RegwebConstantes.INTEGRACION_SCHEDULERS);
         }
 
     }
@@ -307,34 +305,6 @@ public class DistribucionBean implements DistribucionLocal {
 
         gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_REGISTROELECTRONICO, anexosFull, anexosFullIntermedio);
         gestionarByAplicacionByNombreFichero(RegwebConstantes.FICHERO_DEFENSORPUEBLO, anexosFullIntermedio, anexosFullADistribuir);
-
-        original.getRegistroDetalle().setAnexosFull(anexosFullADistribuir);
-
-        return original;
-    }
-
-
-    /**
-     * Este método elimina los anexos que no se pueden enviar a Arxiu porque no estan soportados.
-     * Son ficheros xml de los cuales no puede hacer el upgrade de la firma y se ha decidido que no se distribuyan.
-     *
-     * @param original
-     * @return
-     * @throws Exception
-     * @throws I18NException
-     * @throws I18NValidationException
-     */
-    private RegistroEntrada gestionFicherosTecnicos(RegistroEntrada original) throws Exception, I18NException, I18NValidationException {
-
-        List<AnexoFull> anexosFullADistribuir = new ArrayList<AnexoFull>();
-        //Obtenemos los anexos del registro para tratarlos
-        List<AnexoFull> anexosFull = original.getRegistroDetalle().getAnexosFull();
-
-        for (AnexoFull anexoFull : anexosFull) {
-            if (!RegwebConstantes.TIPO_DOCUMENTO_FICHERO_TECNICO.equals(anexoFull.getAnexo().getTipoDocumento())) {
-                anexosFullADistribuir.add(anexoFull);
-            }
-        }
 
         original.getRegistroDetalle().setAnexosFull(anexosFullADistribuir);
 

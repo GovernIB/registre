@@ -38,7 +38,7 @@ public interface DistribucionLocal {
      * @param idEntidad
      * @throws Exception
      */
-    void procesarRegistrosEnCola(Long idEntidad) throws Exception;
+    void distribuirRegistrosEnCola(Long idEntidad) throws Exception;
 
     /**
      * Envia un email con los errores de la cola de distribución a los Administradores de la Entidad
@@ -57,5 +57,5 @@ public interface DistribucionLocal {
      * @throws Exception
      * @throws I18NException
      */
-    Boolean procesarRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception;
+    Boolean distribuirRegistroEnCola(Cola elemento, Long idEntidad, Long tipoIntegracion) throws Exception;
 }
